@@ -12,7 +12,7 @@ task checkstyle(type: Checkstyle) {
     source 'src'
     include '**/*.java'
     exclude '**/gen/**'
-    exclude '**/style/*LayerTest.java'
+    exclude '**/*FeatureOverviewActivity.java'
     classpath = files()
     ignoreFailures = false
 }
