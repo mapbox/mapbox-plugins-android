@@ -10,12 +10,19 @@ android {
         versionCode 1
         versionName "0.1"
     }
-}
 
-dependencies {
-    compile ('com.mapbox.mapboxsdk:mapbox-android-sdk:5.0.2@aar'){
-        transitive=true
+    configurations {
+        javadocDeps
     }
 }
 
+dependencies {
+    compile('com.mapbox.mapboxsdk:mapbox-android-sdk:5.0.2@aar') {
+        transitive = true
+    }
+    javadocDeps 'com.mapbox.mapboxsdk:mapbox-android-sdk:5.0.2'
+}
+
+apply from: 'javadoc.gradle'
+apply from: '../mvn-push-android.gradle'
 apply from: '../checkstyle.gradle'
