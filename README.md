@@ -4,7 +4,7 @@ Experimental plugins to supercharge your maps ⚡️
 
 ### About plugins
 
-Plugins are single-purpose libraries built on top of the Mapbox Android SDK that you can include in your apps like any other Android library.
+Plugins are single-purpose libraries built on top of the Mapbox Android SDK that you can include in your apps like any other Android library. Rather than automatically including these libraries into our SDK, plugins help keep our base Maps SDK light and nimble for your use.
 
 These are the plugins currently available:
 
