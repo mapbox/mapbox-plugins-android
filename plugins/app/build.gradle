@@ -26,7 +26,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha7'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
 
     compile 'com.jakewharton.timber:timber:4.5.1'
@@ -36,4 +36,4 @@ dependencies {
     compile project(':traffic')
 }
 
-apply from: 'gradle-checkstyle.gradle'
+apply from: '../checkstyle.gradle'

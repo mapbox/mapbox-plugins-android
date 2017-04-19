@@ -1,18 +1,17 @@
 apply plugin: 'checkstyle'
 
-checkstyle {
-    toolVersion = "7.1.1" // 7.3
-    configFile = "../checkstyle.xml" as File
-}
+checkstyle.toolVersion = '7.1.1'
 
 task checkstyle(type: Checkstyle) {
     description 'Checks if the code adheres to coding standards'
     group 'verification'
-    configFile file("../checkstyle.xml")
+
+    configFile = new File(rootDir, "checkstyle.xml")
     source 'src'
     include '**/*.java'
     exclude '**/gen/**'
     exclude '**/*FeatureOverviewActivity.java'
+
     classpath = files()
     ignoreFailures = false
 }

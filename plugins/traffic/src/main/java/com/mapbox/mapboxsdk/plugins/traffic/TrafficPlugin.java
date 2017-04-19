@@ -48,7 +48,7 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
   /**
    * Create a traffic plugin.
    *
-   * @param mapView the MapView to apply the traffic plugin to
+   * @param mapView   the MapView to apply the traffic plugin to
    * @param mapboxMap the MapboxMap to apply traffic plugin with
    */
   public TrafficPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
@@ -113,24 +113,39 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
     mapboxMap.addSource(trafficSource);
 
     // functions
-    Function lineColor = TrafficFunction.getLineColorFunction(TrafficColor.BASE_GREEN, TrafficColor.BASE_YELLOW, TrafficColor.BASE_ORANGE, TrafficColor.BASE_RED);
-    Function lineColorCase = TrafficFunction.getLineColorFunction(TrafficColor.CASE_GREEN, TrafficColor.CASE_YELLOW, TrafficColor.CASE_ORANGE, TrafficColor.CASE_RED);
-    Function motorwayOffset = TrafficFunction.getOffsetFunction(stop(5, lineOffset(0.5f)), stop(13, lineOffset(3.0f)), stop(18, lineOffset(7.0f)));
-    Function otherOffset = TrafficFunction.getOffsetFunction(stop(7, lineOffset(0.3f)), stop(18, lineOffset(6.0f)), stop(22, lineOffset(100.0f)));
-    CameraFunction motorwayWidth = TrafficFunction.getWidthFunction(stop(7, lineWidth(1.5f)), stop(18, lineWidth(20.0f)));
-    CameraFunction motorwayCaseWidth = TrafficFunction.getWidthFunction(stop(7, lineWidth(3.0f)), stop(18, lineWidth(24.0f)));
-    CameraFunction otherWidth = TrafficFunction.getWidthFunction(stop(11, lineWidth(1.0f)), stop(14, lineWidth(2.0f)), stop(17, lineWidth(4.0f)), stop(22, lineWidth(30.0f)));
-    CameraFunction otherCaseWidth = TrafficFunction.getWidthFunction(stop(11, lineWidth(1.25f)), stop(14, lineWidth(2.5f)), stop(17, lineWidth(5.5f)), stop(22, lineWidth(34.0f)));
+    Function lineColor = TrafficFunction.getLineColorFunction(TrafficColor.BASE_GREEN, TrafficColor.BASE_YELLOW,
+      TrafficColor.BASE_ORANGE, TrafficColor.BASE_RED);
+    Function lineColorCase = TrafficFunction.getLineColorFunction(TrafficColor.CASE_GREEN, TrafficColor.CASE_YELLOW,
+      TrafficColor.CASE_ORANGE, TrafficColor.CASE_RED);
+    Function motorwayOffset = TrafficFunction.getOffsetFunction(stop(5, lineOffset(0.5f)), stop(13, lineOffset(3.0f)),
+      stop(18, lineOffset(7.0f)));
+    Function otherOffset = TrafficFunction.getOffsetFunction(stop(7, lineOffset(0.3f)), stop(18, lineOffset(6.0f)),
+      stop(22, lineOffset(100.0f)));
+    CameraFunction motorwayWidth = TrafficFunction.getWidthFunction(stop(7, lineWidth(1.5f)),
+      stop(18, lineWidth(20.0f)));
+    CameraFunction motorwayCaseWidth = TrafficFunction.getWidthFunction(stop(7, lineWidth(3.0f)),
+      stop(18, lineWidth(24.0f)));
+    CameraFunction otherWidth = TrafficFunction.getWidthFunction(stop(11, lineWidth(1.0f)), stop(14, lineWidth(2.0f)),
+      stop(17, lineWidth(4.0f)), stop(22, lineWidth(30.0f)));
+    CameraFunction otherCaseWidth = TrafficFunction.getWidthFunction(stop(11, lineWidth(1.25f)),
+      stop(14, lineWidth(2.5f)), stop(17, lineWidth(5.5f)), stop(22, lineWidth(34.0f)));
 
     // layers
-    LineLayer motorWay = TrafficLayer.getLineLayer(MotorWay.BASE_LAYER_ID, lineColor, motorwayWidth, motorwayOffset, MotorWay.ZOOM_LEVEL, MotorWay.FILTER);
-    LineLayer motorwayCase = TrafficLayer.getLineLayer(MotorWay.CASE_LAYER_ID, lineColorCase, motorwayCaseWidth, motorwayOffset, MotorWay.ZOOM_LEVEL, MotorWay.FILTER);
-    LineLayer primary = TrafficLayer.getLineLayer(Primary.BASE_LAYER_ID, lineColor, otherWidth, otherOffset, Primary.ZOOM_LEVEL, Primary.FILTER);
-    LineLayer primaryCase = TrafficLayer.getLineLayer(Primary.CASE_LAYER_ID, lineColorCase, otherCaseWidth, otherOffset, Primary.ZOOM_LEVEL, Primary.FILTER);
-    LineLayer local = TrafficLayer.getLineLayer(Local.BASE_LAYER_ID, lineColor, otherWidth, otherOffset, Local.ZOOM_LEVEL, Local.FILTER);
-    LineLayer localCase = TrafficLayer.getLineLayer(Local.LOCAL_CASE_LAYER_ID, lineColorCase, otherCaseWidth, otherOffset, Local.ZOOM_LEVEL, Local.FILTER);
+    LineLayer motorWay = TrafficLayer.getLineLayer(MotorWay.BASE_LAYER_ID, lineColor, motorwayWidth, motorwayOffset,
+      MotorWay.ZOOM_LEVEL, MotorWay.FILTER);
+    LineLayer motorwayCase = TrafficLayer.getLineLayer(MotorWay.CASE_LAYER_ID, lineColorCase, motorwayCaseWidth,
+      motorwayOffset, MotorWay.ZOOM_LEVEL, MotorWay.FILTER);
+    LineLayer primary = TrafficLayer.getLineLayer(Primary.BASE_LAYER_ID, lineColor, otherWidth, otherOffset,
+      Primary.ZOOM_LEVEL, Primary.FILTER);
+    LineLayer primaryCase = TrafficLayer.getLineLayer(Primary.CASE_LAYER_ID, lineColorCase, otherCaseWidth,
+      otherOffset, Primary.ZOOM_LEVEL, Primary.FILTER);
+    LineLayer local = TrafficLayer.getLineLayer(Local.BASE_LAYER_ID, lineColor, otherWidth, otherOffset,
+      Local.ZOOM_LEVEL, Local.FILTER);
+    LineLayer localCase = TrafficLayer.getLineLayer(Local.LOCAL_CASE_LAYER_ID, lineColorCase, otherCaseWidth,
+      otherOffset, Local.ZOOM_LEVEL, Local.FILTER);
 
-    // // TODO: add above highest road label instead of bridge-motorway https://github.com/mapbox/mapbox-gl-native/issues/8663
+    // // TODO: add above highest road label instead of bridge-motorway https://github
+    // .com/mapbox/mapbox-gl-native/issues/8663
     mapboxMap.addLayerAbove(localCase, "bridge-motorway");
     mapboxMap.addLayerAbove(local, localCase.getId());
     mapboxMap.addLayerAbove(primaryCase, local.getId());
@@ -158,7 +173,8 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
   }
 
   private static class TrafficFunction {
-    private static Function getLineColorFunction(@ColorInt int low, @ColorInt int moderate, @ColorInt int heavy, @ColorInt int severe) {
+    private static Function getLineColorFunction(@ColorInt int low, @ColorInt int moderate, @ColorInt int heavy,
+                                                 @ColorInt int severe) {
       return Function.property(
         "congestion",
         categorical(
@@ -181,7 +197,8 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
 
   private static class TrafficLayer {
 
-    private static LineLayer getLineLayer(String lineLayerId, Function lineColor, CameraFunction lineWidth, Function lineOffset, float minZoom, Filter.Statement statement) {
+    private static LineLayer getLineLayer(String lineLayerId, Function lineColor, CameraFunction lineWidth, Function
+      lineOffset, float minZoom, Filter.Statement statement) {
       LineLayer lineLayer = new LineLayer(lineLayerId, SourceData.SOURCE_ID);
       lineLayer.setSourceLayer(SourceData.SOURCE_LAYER);
       lineLayer.setMinZoom(minZoom);
