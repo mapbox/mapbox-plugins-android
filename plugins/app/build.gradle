@@ -65,6 +65,7 @@ dependencies {
 
     // Plugin modules
     compile project(':traffic')
+    compile project(':locationlayer')
 }
 
 apply from: '../checkstyle.gradle'

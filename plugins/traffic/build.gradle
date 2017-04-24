@@ -23,10 +23,11 @@ dependencies {
     testCompile rootProject.ext.dep.mockito
 
     // Mapbox dependencies
-    compile('com.mapbox.mapboxsdk:mapbox-android-sdk:5.0.2@aar') {
+    compile(rootProject.ext.dep.mapSdk + '@aar') {
         transitive = true
     }
-    javadocDeps 'com.mapbox.mapboxsdk:mapbox-android-sdk:5.0.2'
+
+    javadocDeps rootProject.ext.dep.mapSdk
 }
 
 apply from: 'javadoc.gradle'

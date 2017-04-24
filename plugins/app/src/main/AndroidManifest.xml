@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.mapbox.mapboxsdk.plugins.testapp">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -20,6 +22,42 @@
             android:name=".activity.TrafficActivity"
             android:description="@string/description_traffic"
             android:label="@string/title_traffic">
+            <meta-data
+                android:name="@string/category"
+                android:value="@string/category_runtime_styling"/>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.FeatureOverviewActivity"/>
+        </activity>
+
+        <activity
+            android:name=".activity.location.LocationLayerModesActivity"
+            android:description="@string/description_location_modes"
+            android:label="@string/title_location_modes">
+            <meta-data
+                android:name="@string/category"
+                android:value="@string/category_runtime_styling"/>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.FeatureOverviewActivity"/>
+        </activity>
+
+        <activity
+            android:name=".activity.location.LocationLayerMapChangeActivity"
+            android:description="@string/description_location_map_change"
+            android:label="@string/title_location_map_change">
+            <meta-data
+                android:name="@string/category"
+                android:value="@string/category_runtime_styling"/>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.FeatureOverviewActivity"/>
+        </activity>
+
+        <activity
+            android:name=".activity.location.ManualLocationUpdatesActivity"
+            android:description="@string/description_location_manual_update"
+            android:label="@string/title_location_manual_update">
             <meta-data
                 android:name="@string/category"
                 android:value="@string/category_runtime_styling"/>
