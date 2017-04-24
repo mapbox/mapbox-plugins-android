@@ -7,8 +7,10 @@
 
     <!-- Titles -->
     <string name="title_traffic">Traffic Plugin</string>
+    <string name="title_basic_location">Location View Plugin</string>
 
     <!-- Descriptions -->
     <string name="description_traffic">Add Traffic layers to any Mapbox basemap.</string>
+    <string name="description_basic_location">Toggle the location view on and off.</string>
 
 </resources>

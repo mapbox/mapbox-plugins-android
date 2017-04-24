@@ -1,0 +1,30 @@
+apply plugin: 'com.android.library'
+
+android {
+  compileSdkVersion 25
+  buildToolsVersion "25.0.2"
+
+  defaultConfig {
+    minSdkVersion 15
+    targetSdkVersion 25
+    versionCode 1
+    versionName "0.1"
+  }
+
+  configurations {
+    javadocDeps
+  }
+
+}
+
+dependencies {
+  compile('com.mapbox.mapboxsdk:mapbox-android-sdk:5.0.2@aar') {
+    transitive = true
+  }
+  javadocDeps 'com.mapbox.mapboxsdk:mapbox-android-sdk:5.0.2'
+}
+
+
+apply from: 'javadoc.gradle'
+apply from: '../mvn-push-android.gradle'
+apply from: '../checkstyle.gradle'
