@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.plugins.locationview.LocationViewPlugin;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 
 import butterknife.BindView;
@@ -29,6 +30,9 @@ public class BasicLocationActivity extends AppCompatActivity implements OnMapRea
 
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
+
+    LocationViewPlugin locationView = new LocationViewPlugin(BasicLocationActivity.this, mapboxMap);
+    locationView.setMyLocationEnabled(true);
 
   }
 
