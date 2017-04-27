@@ -1,8 +1,4 @@
-# Mapbox Plugins for Android
-
-Experimental plugins to supercharge your maps ⚡️
-
-### About plugins
+## Getting Started
 
 Plugins are single-purpose libraries built on top of the Mapbox Android SDK that you can include in your apps like any other Android library. Rather than automatically including these libraries into our SDK, plugins help keep our base Maps SDK light and nimble for your use.
 
@@ -10,7 +6,18 @@ These are the plugins currently available:
 
 * **Traffic.** Adds a traffic layer to any Mapbox basemap.
 
-### Contributing
+
+## Documentation
+
+## Getting Help
+
+Please note that a plugin is simply a library module built on top of the Mapbox Android SDK. For now, we are not requiring plugins to register themselves or to implement any specific interfaces. This might change in the future as we build more plugins and learn how developers use them. We'd love to [hear your ideas](https://github.com/mapbox/mapbox-plugins-android/issues).
+
+
+## Sample code
+
+
+## Contributing
 
 We welcome contributions to this plugin repository! If you're interested in building and sharing your own, please follow these steps:
 
@@ -27,4 +34,3 @@ We welcome contributions to this plugin repository! If you're interested in buil
 
 1. Finally, once you're ready to share your code, list your plugin in this file and then open a PR for the `@mapbox/android` team to review.
 
-Please note that a plugin is simply a library module built on top of the Mapbox Android SDK. For now, we are not requiring plugins to register themselves or to implement any specific interfaces. This might change in the future as we build more plugins and learn how developers use them. We'd love to [hear your ideas](https://github.com/mapbox/mapbox-plugins-android/issues).
