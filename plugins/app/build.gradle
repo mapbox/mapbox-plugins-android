@@ -37,3 +37,4 @@ dependencies {
 }
 
 apply from: '../checkstyle.gradle'
+apply from: 'generate-token.gradle'
