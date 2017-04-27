@@ -2,12 +2,13 @@
 
 Plugins are single-purpose libraries built on top of the Mapbox Android SDK that you can include in your apps like any other Android library. Rather than automatically including these libraries into our SDK, plugins help keep our base Maps SDK light and nimble for your use.
 
-These are the plugins currently available:
+These plugins are currently available:
 
-* **Traffic.** Adds a traffic layer to any Mapbox basemap.
+[Traffic –– Adds a traffic layer to any Mapbox basemap.](https://github.com/mapbox/mapbox-plugins-android/issues/4)
+
+![ezgif com-crop](https://cloud.githubusercontent.com/assets/4394910/24972279/bf88b170-1f6f-11e7-8638-6afe08369d9d.gif)
 
 
-## Documentation
 
 ## Getting Help
 
