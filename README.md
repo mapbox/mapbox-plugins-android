@@ -9,13 +9,25 @@ These plugins are currently available:
 ![ezgif com-crop](https://cloud.githubusercontent.com/assets/4394910/24972279/bf88b170-1f6f-11e7-8638-6afe08369d9d.gif)
 
 
+### Installing plugins with Maven & Gradle
+
+
+Set `IS_LOCAL_DEVELOPMENT` gradle property to `true` (is `false` by default)
+`$> gradlew uploadArchives`
+`aar` or `jar` will be automatically installed in your Maven local repo folder (`.m2/M2_HOME`)
+Remember to add `mavenLocal()` in `repositories{}` (`build.gradle`) in the project in which you'd like to use Maven local repository
+
+
+Now if you want to install `aars` or `jars` in your Maven local repository you should define `IS_LOCAL_DEVELOPMENT` environment variable like this:
+
+`$> export IS_LOCAL_DEVELOPMENT=true`
+
+And `$> export IS_LOCAL_DEVELOPMENT=false` if you want same behavior as before. If `IS_LOCAL_DEVELOPMENT` is not exported also works as before.
+
 
 ## Getting Help
 
 Please note that a plugin is simply a library module built on top of the Mapbox Android SDK. For now, we are not requiring plugins to register themselves or to implement any specific interfaces. This might change in the future as we build more plugins and learn how developers use them. We'd love to [hear your ideas](https://github.com/mapbox/mapbox-plugins-android/issues).
-
-
-## Sample code
 
 
 ## Contributing
