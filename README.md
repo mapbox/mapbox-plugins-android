@@ -9,7 +9,7 @@ These plugins are currently available:
 ![ezgif com-crop](https://cloud.githubusercontent.com/assets/4394910/24972279/bf88b170-1f6f-11e7-8638-6afe08369d9d.gif)
 
 
-### Installing plugins with Maven & Gradle
+### Installing plugins with Gradle & Maven
 
 
 Set `IS_LOCAL_DEVELOPMENT` gradle property to `true` (is `false` by default)
