@@ -11,6 +11,12 @@ trigger_map:
 workflows:
   primary:
     steps:
+    - script:
+        title: Download Mapbox Access token
+        inputs:
+        - content: |-
+           #!/bin/bash
+           wget -O plugins/app/src/main/res/values/developer-config.xml "$BITRISEIO_MAPBOX_ACCESS_TOKEN_URL"
     - gradle-runner@1.5.4:
         inputs:
         - gradle_task: "$CHECKSTYLE_TASK"
