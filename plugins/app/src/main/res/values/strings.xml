@@ -11,7 +11,4 @@
     <!-- Descriptions -->
     <string name="description_traffic">Add Traffic layers to any Mapbox basemap.</string>
 
-    <!-- Access token -->
-    <string name="mapbox_access_token" translatable="false">pk.eyJ1IjoiY2FtbWFjZSIsImEiOiJjaW9vbGtydnQwMDAwdmRrcWlpdDVoM3pjIn0.Oy_gHelWnV12kJxHQWV7XQ</string>
-
 </resources>
