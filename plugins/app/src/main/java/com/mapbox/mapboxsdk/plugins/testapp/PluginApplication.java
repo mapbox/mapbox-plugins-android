@@ -20,6 +20,7 @@ public class PluginApplication extends Application {
     LeakCanary.install(this);
     initializeLogger();
     Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
+    Timber.plant(new Timber.DebugTree());
   }
 
   private void initializeLogger() {

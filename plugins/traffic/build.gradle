@@ -1,33 +1,33 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+  compileSdkVersion rootProject.ext.compileSdkVersion
+  buildToolsVersion rootProject.ext.buildToolsVersion
 
-    defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "0.1"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
+  defaultConfig {
+    minSdkVersion rootProject.ext.minSdkVersion
+    targetSdkVersion rootProject.ext.targetSdkVersion
+    versionCode 1
+    versionName "0.1"
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+  }
 
-    configurations {
-        javadocDeps
-    }
+  configurations {
+    javadocDeps
+  }
 }
 
 dependencies {
-    // Unit testing
-    testCompile rootProject.ext.dep.junit
-    testCompile rootProject.ext.dep.mockito
+  // Unit testing
+  testCompile rootProject.ext.dep.junit
+  testCompile rootProject.ext.dep.mockito
 
-    // Mapbox dependencies
-    compile(rootProject.ext.dep.mapSdk + '@aar') {
-        transitive = true
-    }
+  // Mapbox dependencies
+  compile(rootProject.ext.dep.mapSdk + '@aar') {
+    transitive = true
+  }
 
-    javadocDeps rootProject.ext.dep.mapSdk
+  javadocDeps rootProject.ext.dep.mapSdk
 }
 
 apply from: 'javadoc.gradle'
