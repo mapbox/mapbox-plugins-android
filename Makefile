@@ -1,10 +1,10 @@
 checkstyle:
 	cd plugins; ./gradlew checkstyle
 
-test-android:
+test:
 	cd plugins; ./gradlew :traffic:test
 
-build-release-android:
+build-release:
 	cd plugins; ./gradlew :traffic:assembleRelease
 
 javadoc:
@@ -12,7 +12,7 @@ javadoc:
 	# Output is ./mapbox/*/build/docs/javadoc/release
 	cd plugins; ./gradlew :traffic:javadocrelease
 
-publish-android:
+publish:
 	cd plugins; export IS_LOCAL_DEVELOPMENT=false; ./gradlew :traffic:uploadArchives
 
 publish-local:

@@ -1,0 +1,26 @@
+//
+// Configuration file for adding a developer-config.xml containing the MAPBOX_ACCESS_TOKEN env. variable.
+//
+task accessToken {
+    def tokenFile = new File("${projectDir}/src/main/res/values/developer-config.xml")
+    if (!tokenFile.exists()) {
+        String envToken = "$System.env.MAPBOX_ACCESS_TOKEN"
+        if(envToken == "null"){
+            envToken = "YOUR_MAPBOX_ACCESS_TOKEN_GOES_HERE"
+        }
+        String tokenFileContents = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+                "<resources>\n" +
+                "    <string name=\"mapbox_access_token\">" + envToken + "</string>\n" +
+                "</resources>"
+
+        if (tokenFileContents == null) {
+            throw new InvalidUserDataException("You haven't set the MAPBOX_ACCESS_TOKEN environment variable. " +
+                    "Replace YOUR_MAPBOX_ACCESS_TOKEN_GOES_HERE in /src/main/res/values/developer-config.xml")
+        }
+        tokenFile.write(tokenFileContents)
+    }
+}
+
+gradle.projectsEvaluated {
+    preBuild.dependsOn('accessToken')
+}
