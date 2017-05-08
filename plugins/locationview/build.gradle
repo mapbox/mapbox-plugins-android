@@ -19,10 +19,12 @@ android {
 }
 
 dependencies {
-  compile('com.mapbox.mapboxsdk:mapbox-android-sdk:5.0.2@aar') {
+  compile 'com.mapbox.mapboxsdk:mapbox-java-services:2.1.0'
+
+  compile('com.mapbox.mapboxsdk:mapbox-android-sdk:5.1.0-beta.1@aar') {
     transitive = true
   }
-  javadocDeps 'com.mapbox.mapboxsdk:mapbox-android-sdk:5.0.2'
+  javadocDeps 'com.mapbox.mapboxsdk:mapbox-android-sdk:5.1.0-beta.1'
 }
 
 

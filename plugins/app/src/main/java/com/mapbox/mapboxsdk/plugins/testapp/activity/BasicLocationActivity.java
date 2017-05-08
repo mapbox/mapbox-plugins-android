@@ -4,10 +4,12 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.constants.MyLocationTracking;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.plugins.locationview.LocationViewPlugin;
+import com.mapbox.mapboxsdk.plugins.mylocationlayer.MyLocationLayerPlugin;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 
 import butterknife.BindView;
@@ -17,6 +19,8 @@ public class BasicLocationActivity extends AppCompatActivity implements OnMapRea
 
   @BindView(R.id.mapView)
   MapView mapView;
+
+  private MyLocationLayerPlugin locationLayer;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +35,12 @@ public class BasicLocationActivity extends AppCompatActivity implements OnMapRea
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
 
-    LocationViewPlugin locationView = new LocationViewPlugin(BasicLocationActivity.this, mapboxMap);
-    locationView.setMyLocationEnabled(true);
+    locationLayer = new MyLocationLayerPlugin(mapView, mapboxMap);
+    mapboxMap.moveCamera(CameraUpdateFactory.zoomBy(12));
+    locationLayer.setMyLocationEnabled(true);
+    mapboxMap.setMyLocationEnabled(true);
+    mapboxMap.getTrackingSettings().setMyLocationTrackingMode(MyLocationTracking.TRACKING_FOLLOW);
+    mapboxMap.getTrackingSettings().setDismissAllTrackingOnGesture(false);
 
   }
 
@@ -51,6 +59,7 @@ public class BasicLocationActivity extends AppCompatActivity implements OnMapRea
   @Override
   protected void onStop() {
     super.onStop();
+    locationLayer.onStop();
     mapView.onStop();
   }
 
