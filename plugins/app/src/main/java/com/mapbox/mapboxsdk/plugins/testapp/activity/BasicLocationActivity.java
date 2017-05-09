@@ -1,6 +1,7 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -9,7 +10,9 @@ import com.mapbox.mapboxsdk.constants.MyLocationTracking;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.maps.widgets.MyLocationViewSettings;
 import com.mapbox.mapboxsdk.plugins.mylocationlayer.MyLocationLayerPlugin;
+import com.mapbox.mapboxsdk.plugins.mylocationlayer.MyLocationLayerOptions;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 
 import butterknife.BindView;
@@ -36,11 +39,19 @@ public class BasicLocationActivity extends AppCompatActivity implements OnMapRea
   public void onMapReady(MapboxMap mapboxMap) {
 
     locationLayer = new MyLocationLayerPlugin(mapView, mapboxMap);
-    mapboxMap.moveCamera(CameraUpdateFactory.zoomBy(12));
     locationLayer.setMyLocationEnabled(true);
+    locationLayer.setMyBearingEnabled(true);
+
+    MyLocationLayerOptions locationSettings = locationLayer.getMyLocationLayerOptions();
+    locationSettings.setAccuracyAlpha(0.20f);
+
+    mapboxMap.moveCamera(CameraUpdateFactory.zoomBy(12));
     mapboxMap.setMyLocationEnabled(true);
     mapboxMap.getTrackingSettings().setMyLocationTrackingMode(MyLocationTracking.TRACKING_FOLLOW);
     mapboxMap.getTrackingSettings().setDismissAllTrackingOnGesture(false);
+
+    MyLocationViewSettings settings = mapboxMap.getMyLocationViewSettings();
+    settings.setAccuracyAlpha(0);
 
   }
 
@@ -53,6 +64,10 @@ public class BasicLocationActivity extends AppCompatActivity implements OnMapRea
   @Override
   protected void onStart() {
     super.onStart();
+    // TODO this shouldn't be required
+    if (locationLayer != null) {
+      locationLayer.onStart();
+    }
     mapView.onStart();
   }
 

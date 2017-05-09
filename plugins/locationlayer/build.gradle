@@ -25,6 +25,10 @@ dependencies {
     transitive = true
   }
   javadocDeps 'com.mapbox.mapboxsdk:mapbox-android-sdk:5.1.0-beta.1'
+
+  testCompile 'junit:junit:4.12'
+  testCompile 'org.hamcrest:hamcrest-junit:2.0.0.0'
+  testCompile 'org.mockito:mockito-core:2.7.22'
 }
 
 
