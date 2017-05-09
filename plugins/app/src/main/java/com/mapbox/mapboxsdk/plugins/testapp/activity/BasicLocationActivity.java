@@ -42,8 +42,9 @@ public class BasicLocationActivity extends AppCompatActivity implements OnMapRea
     locationLayer.setMyLocationEnabled(true);
     locationLayer.setMyBearingEnabled(true);
 
-    MyLocationLayerOptions locationSettings = locationLayer.getMyLocationLayerOptions();
-    locationSettings.setAccuracyAlpha(0.20f);
+    MyLocationLayerOptions locationOptions = locationLayer.getMyLocationLayerOptions();
+    locationOptions.setAccuracyAlpha(0.20f);
+    locationOptions.setLocationTextAnnotation("2568 Sherman Ave NW");
 
     mapboxMap.moveCamera(CameraUpdateFactory.zoomBy(12));
     mapboxMap.setMyLocationEnabled(true);
@@ -52,6 +53,8 @@ public class BasicLocationActivity extends AppCompatActivity implements OnMapRea
 
     MyLocationViewSettings settings = mapboxMap.getMyLocationViewSettings();
     settings.setAccuracyAlpha(0);
+    settings.setForegroundTintColor(Color.TRANSPARENT);
+    settings.setBackgroundTintColor(Color.TRANSPARENT);
 
   }
 

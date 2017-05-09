@@ -2,15 +2,19 @@ package com.mapbox.mapboxsdk.plugins.mylocationlayer;
 
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
+import android.graphics.Color;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.mapbox.mapboxsdk.location.LocationSource;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.Layer;
+import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.services.android.telemetry.location.LocationEngine;
 import com.mapbox.services.android.telemetry.location.LocationEngineListener;
@@ -200,6 +204,24 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
     if (bearingEnabled && compassListener.isSensorAvailable()) {
       compassListener.onStart();
     }
+  }
+
+  public void myLocationText(String description) {
+    SymbolLayer nameLayer = new SymbolLayer("annotation", MyLocationLayerConstants.LOCATION_SOURCE
+    ).withProperties(
+      PropertyFactory.textSize(14f),
+      PropertyFactory.textFont(new String[] {"Open Sans Bold", "Arial Unicode MS Bold"}),
+      PropertyFactory.textHaloColor(Color.WHITE),
+      PropertyFactory.textHaloWidth(0.75f),
+      PropertyFactory.textIgnorePlacement(true),
+      PropertyFactory.textPadding(0f),
+      PropertyFactory.textColor(ContextCompat.getColor(mapView.getContext(), R.color.mapbox_blue)),
+      PropertyFactory.textTranslate(new Float[] {0f, 30f}),
+      PropertyFactory.textAnchor(Property.TEXT_ANCHOR_BOTTOM),
+      PropertyFactory.textField(description),
+      PropertyFactory.textMaxWidth(8f)
+    );
+    mapboxMap.addLayer(nameLayer);
   }
 
   @Override

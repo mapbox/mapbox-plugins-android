@@ -7,11 +7,15 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.FloatRange;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.style.functions.Function;
+import com.mapbox.mapboxsdk.style.functions.stops.IntervalStops;
+import com.mapbox.mapboxsdk.style.functions.stops.Stops;
 import com.mapbox.mapboxsdk.style.layers.FillLayer;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.Property;
@@ -20,6 +24,8 @@ import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.services.commons.geojson.Feature;
 import com.mapbox.services.commons.geojson.FeatureCollection;
+
+import static com.mapbox.mapboxsdk.style.functions.stops.Stop.stop;
 
 /**
  * Options exposed for you to modify the visual appearance of the My Location layer plugin. This objects automatically
@@ -323,6 +329,41 @@ public class MyLocationLayerOptions implements MapView.OnMapChangedListener {
    */
   public int getAccuracyTintColor() {
     return accuracyTintColor;
+  }
+
+  /**
+   * Optionally place a string annotation beneath the My Location layer icon. Recommended to use this with the geocoder
+   * inside Mapbox Java to show the users current address.
+   *
+   * @param annotation the string you'd like to be placed below the location icon
+   * @since 0.1.0
+   */
+  public void setLocationTextAnnotation(@NonNull String annotation) {
+    Layer layer = mapboxMap.getLayer(MyLocationLayerConstants.LOCATION_TEXT_ANNOTATION_LAYER);
+    if (layer == null) {
+      layer = new SymbolLayer(
+        MyLocationLayerConstants.LOCATION_TEXT_ANNOTATION_LAYER, MyLocationLayerConstants.LOCATION_SOURCE
+      ).withProperties(
+        PropertyFactory.textSize(12f),
+        PropertyFactory.textFont(new String[] {"Open Sans Bold", "Arial Unicode MS Bold"}),
+        PropertyFactory.textHaloColor(Color.WHITE),
+        PropertyFactory.textHaloWidth(0.5f),
+        PropertyFactory.textPadding(2f),
+        PropertyFactory.textColor(ContextCompat.getColor(mapView.getContext(), R.color.mapbox_blue)),
+        PropertyFactory.textOffset(new Float[] {0f, 1f}),
+        PropertyFactory.textAnchor(Property.TEXT_ANCHOR_TOP),
+        PropertyFactory.textField(annotation),
+        PropertyFactory.textMaxWidth(8f),
+        PropertyFactory.textOpacity(Function.zoom(Stops.exponential(
+          stop(14.5f, PropertyFactory.textOpacity(0f)),
+          stop(15f, PropertyFactory.textOpacity(1f))
+        ))));
+      mapboxMap.addLayer(layer);
+    } else {
+      layer.setProperties(
+        PropertyFactory.textField(annotation)
+      );
+    }
   }
 
   /**

@@ -18,6 +18,7 @@ class MyLocationLayerConstants {
   static final String LOCATION_LAYER = "mapbox-location-layer";
   static final String LOCATION_BACKGROUND_LAYER = "mapbox-location-stroke-layer";
   static final String LOCATION_ACCURACY_LAYER = "mapbox-location-accuracy-layer";
+  static final String LOCATION_TEXT_ANNOTATION_LAYER = "mapbox-user-location-text-annotation-layer";
 
   // Icons
   static final String USER_LOCATION_ICON = "mapbox-user-location-icon";
