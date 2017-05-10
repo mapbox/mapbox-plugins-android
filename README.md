@@ -18,7 +18,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    compile 'com.mapbox.mapboxsdk:mapbox-android-traffic-plugin:0.1.0'
+    compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-traffic:0.1.0'
 }
 ```
 
@@ -35,7 +35,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    compile 'com.mapbox.mapboxsdk:mapbox-android-traffic-plugin:0.1.0-SNAPSHOT'
+    compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-traffic:0.1.0-SNAPSHOT'
 }
 ```
 
