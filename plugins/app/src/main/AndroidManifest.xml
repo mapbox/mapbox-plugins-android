@@ -31,9 +31,21 @@
         </activity>
 
         <activity
-            android:name=".activity.BasicLocationActivity"
-            android:description="@string/description_basic_location"
-            android:label="@string/title_basic_location">
+            android:name=".activity.location.MyLocationModesActivity"
+            android:description="@string/description_location_modes"
+            android:label="@string/title_location_modes">
+            <meta-data
+                android:name="@string/category"
+                android:value="@string/category_runtime_styling"/>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.FeatureOverviewActivity"/>
+        </activity>
+
+        <activity
+            android:name=".activity.location.MyLocationOptionsActivity"
+            android:description="@string/description_location_options"
+            android:label="@string/title_location_options">
             <meta-data
                 android:name="@string/category"
                 android:value="@string/category_runtime_styling"/>

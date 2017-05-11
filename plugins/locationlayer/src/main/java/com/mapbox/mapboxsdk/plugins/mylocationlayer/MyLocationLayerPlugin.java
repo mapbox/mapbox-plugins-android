@@ -2,11 +2,11 @@ package com.mapbox.mapboxsdk.plugins.mylocationlayer;
 
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
-import android.graphics.Color;
 import android.location.Location;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 
 import com.mapbox.mapboxsdk.location.LocationSource;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -14,7 +14,6 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.services.android.telemetry.location.LocationEngine;
 import com.mapbox.services.android.telemetry.location.LocationEngineListener;
@@ -28,8 +27,13 @@ import com.mapbox.services.commons.models.Position;
 
 /**
  * The My Location layer plugin provides location awareness to your mobile application. Enabling this plugin provides a
- * contextual experience to your users by showing an icon representing the users current location. Enabling bearing
- * tracking allows you to display an arrow icon (by default) that points in the direction the device is pointing in.
+ * contextual experience to your users by showing an icon representing the users current location. A few different modes
+ * are offered to provide the right context to your users at the correct time. {@link MyLocationLayerMode#TRACKING}
+ * simply shows the users location on the map represented as a dot. {@link MyLocationLayerMode#COMPASS} mode allows you
+ * to display an arrow icon (by default) that points in the direction the device is pointing in.
+ * {@link MyLocationLayerMode#NAVIGATION} can be used in conjunction with our Navigation SDK to display a larger icon we
+ * call the user puck. Lastly, {@link MyLocationLayerMode#NONE} can be used to disable the Location Layer but keep the
+ * instance around till the activity is destroyed.
  * <p>
  * Using this plugin requires you to request permission beforehand manually or using
  * {@link com.mapbox.services.android.telemetry.permissions.PermissionsManager}. Either {@code ACCESS_COARSE_LOCATION}
@@ -49,8 +53,8 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
   private MapView mapView;
 
   // Enabled booleans
-  private boolean locationEnabled;
-  private boolean bearingEnabled;
+  @MyLocationLayerMode.Mode
+  private int myLocationLayerMode;
 
   // Previous compass and location values
   private float previousMagneticHeading;
@@ -59,6 +63,9 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
   // Animators
   private ValueAnimator locationChangeAnimator;
   private ValueAnimator bearingChangeAnimator;
+
+  private long locationUpdateTimestamp;
+  private boolean linearAnimation;
 
   /**
    * Construct a {@code MyLocationLayerPlugin}
@@ -71,6 +78,7 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
     this.mapView = mapView;
     this.mapboxMap = mapboxMap;
 
+    myLocationLayerMode = MyLocationLayerMode.NONE;
     options = new MyLocationLayerOptions(this, mapView, mapboxMap);
     compassListener = new CompassManager(mapView.getContext(), this);
   }
@@ -86,26 +94,30 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
   }
 
   /**
-   * Enable or disable the My Location layer by passing in a boolean here. If locationEnabled, the users current
-   * position will be displayed on the map. Note that before enabling the My Location layer, you will need to ensure
-   * that you have the requested the required user location permissions.
+   * After creating an instance of this plugin, you can use this API to enable the location mode of your choice. These
+   * modes can be found in the {@link MyLocationLayerMode} class and the parameter only accepts one of those modes. Note
+   * that before enabling the My Location layer, you will need to ensure that you have the requested the required user
+   * location permissions.
    * <p>
-   * The location is indicated on the map by default as a small blue dot if the device is stationary, or as a chevron
-   * if the you enabled {@link MyLocationLayerPlugin#bearingEnabled}.
+   * <ul>
+   * <li>{@link MyLocationLayerMode#TRACKING}: Display the user location on the map as a small dot</li>
+   * <li>{@link MyLocationLayerMode#COMPASS}: Display the user location and current heading/bearing</li>
+   * <li>{@link MyLocationLayerMode#NAVIGATION}: Display the user location on the map using a navigation icon</li>
+   * <li>{@link MyLocationLayerMode#NONE}: Disable user location showing on the map</li>
+   * </ul>
    *
-   * @param enable boolean true if you'd like to enable the user location, otherwise, false will disable
+   * @param myLocationLayerMode one of the modes found in {@link MyLocationLayerMode}
    * @since 0.1.0
    */
-  public void setMyLocationEnabled(boolean enable) {
-    this.locationEnabled = enable;
+  public void setMyLocationEnabled(@MyLocationLayerMode.Mode int myLocationLayerMode) {
     if (locationSource == null) {
       locationSource = LocationSource.getLocationEngine(mapView.getContext());
     }
 
-    if (enable) {
-      locationSource.addLocationEngineListener(this);
-      locationSource.setPriority(LocationEnginePriority.HIGH_ACCURACY);
-      locationSource.activate();
+    if (myLocationLayerMode != MyLocationLayerMode.NONE) {
+      enableLocationUpdates();
+
+      options.initialize();
 
       // Set an initial location if one available
       Location lastLocation = locationSource.getLastLocation();
@@ -114,57 +126,36 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
         setLocation(lastLocation);
         setAccuracy(lastLocation);
       }
+
+      if (myLocationLayerMode == MyLocationLayerMode.COMPASS) {
+        setNavigationEnabled(false);
+        setMyBearingEnabled(true);
+      } else if (myLocationLayerMode == MyLocationLayerMode.NAVIGATION) {
+        setMyBearingEnabled(false);
+        setNavigationEnabled(true);
+      } else if (myLocationLayerMode == MyLocationLayerMode.TRACKING) {
+        setMyBearingEnabled(false);
+        setNavigationEnabled(false);
+      }
     } else {
-      // Location locationEnabled has been set to false
-      previousLocation = null;
-      locationSource.removeLocationEngineListener(this);
-      locationSource.removeLocationUpdates();
-      locationSource.deactivate();
+      // Check that the mode isn't already none
+      if (this.myLocationLayerMode != MyLocationLayerMode.NONE) {
+        disableLocationUpdates();
+
+        options.removeLayerAndSources();
+      }
     }
+    this.myLocationLayerMode = myLocationLayerMode;
   }
 
   /**
-   * Enable or disable the My Location bearing by passing in a boolean here. Once enabled, The users location and
-   * bearing's indicated on the map by default as a small blue dot with a chevron pointing in the direction of the
-   * devices compass bearing.
+   * Returns the current location mode being used with this plugin.
    *
-   * @param bearingEnabled boolean true if you'd like to enable the user location bearing, otherwise, false will disable
+   * @return on of the {@link MyLocationLayerMode} values
    * @since 0.1.0
    */
-  public void setMyBearingEnabled(boolean bearingEnabled) {
-    this.bearingEnabled = bearingEnabled;
-    Layer layer = mapboxMap.getLayer(MyLocationLayerConstants.LOCATION_LAYER);
-    if (layer != null) {
-      layer.setProperties(
-        PropertyFactory.iconImage(bearingEnabled ? MyLocationLayerConstants.USER_LOCATION_BEARING_ICON
-          : MyLocationLayerConstants.USER_LOCATION_ICON)
-      );
-    }
-    if (bearingEnabled) {
-      compassListener.onStart();
-    } else {
-      compassListener.onStop();
-    }
-  }
-
-  /**
-   * Returns true if the My Location layer is currently enabled.
-   *
-   * @return true if the location layer's enabled, false otherwise
-   * @since 0.1.0
-   */
-  public boolean isMyLocationEnabled() {
-    return locationEnabled;
-  }
-
-  /**
-   * Returns true if the My Location bearing layer is currently enabled.
-   *
-   * @return true if the location bearing layer's enabled, false otherwise
-   * @since 0.1.0
-   */
-  public boolean isMyBearingEnabled() {
-    return bearingEnabled;
+  public int getMyLocationMode() {
+    return myLocationLayerMode;
   }
 
   /**
@@ -183,45 +174,51 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
       bearingChangeAnimator = null;
     }
 
-    if (bearingEnabled && compassListener.isSensorAvailable()) {
+    if (myLocationLayerMode == MyLocationLayerMode.COMPASS && compassListener.isSensorAvailable()) {
       compassListener.onStop();
     }
 
-    if (locationSource != null) {
-      setMyLocationEnabled(false);
+    if (mapboxMap.getLayer(MyLocationLayerConstants.LOCATION_LAYER) != null) {
+      disableLocationUpdates();
     }
   }
 
   /**
-   * Required to place inside your activities {@code onStart} method.
+   * Required to place inside your activities {@code onStart} method. You'll also most likely want to check that this
+   * Location Layer plugin instance inside your activity is null or not.
    *
    * @since 0.1.0
    */
   public void onStart() {
-    if (isMyLocationEnabled()) {
-      setMyLocationEnabled(true);
+    if (myLocationLayerMode != MyLocationLayerMode.NONE) {
+      setMyLocationEnabled(myLocationLayerMode);
     }
-    if (bearingEnabled && compassListener.isSensorAvailable()) {
+
+    if (myLocationLayerMode == MyLocationLayerMode.COMPASS && compassListener.isSensorAvailable()) {
       compassListener.onStart();
     }
   }
 
-  public void myLocationText(String description) {
-    SymbolLayer nameLayer = new SymbolLayer("annotation", MyLocationLayerConstants.LOCATION_SOURCE
-    ).withProperties(
-      PropertyFactory.textSize(14f),
-      PropertyFactory.textFont(new String[] {"Open Sans Bold", "Arial Unicode MS Bold"}),
-      PropertyFactory.textHaloColor(Color.WHITE),
-      PropertyFactory.textHaloWidth(0.75f),
-      PropertyFactory.textIgnorePlacement(true),
-      PropertyFactory.textPadding(0f),
-      PropertyFactory.textColor(ContextCompat.getColor(mapView.getContext(), R.color.mapbox_blue)),
-      PropertyFactory.textTranslate(new Float[] {0f, 30f}),
-      PropertyFactory.textAnchor(Property.TEXT_ANCHOR_BOTTOM),
-      PropertyFactory.textField(description),
-      PropertyFactory.textMaxWidth(8f)
-    );
-    mapboxMap.addLayer(nameLayer);
+  /**
+   * Check whether the location update animator is using a linear or an accelerate/decelerate interpolator. When the
+   * navigation mode is being used, the animator automatically become linear.
+   *
+   * @return boolean true if the location update animator is set to linear, otherwise false
+   * @since 0.1.0
+   */
+  public boolean isLinearAnimation() {
+    return linearAnimation;
+  }
+
+  /**
+   * Set whether the location update animator is using linear (true) or an accelerate/decelerate (false) interpolator.
+   * When the navigation mode is being used, the animator automatically become linear.
+   *
+   * @param linearAnimation boolean true if you'd like to set the location update animator to linear, otherwise false
+   * @since 0.1.0
+   */
+  public void setLinearAnimation(boolean linearAnimation) {
+    this.linearAnimation = linearAnimation;
   }
 
   @Override
@@ -232,15 +229,107 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
   @Override
   public void onLocationChanged(Location location) {
     if (location == null) {
+      locationUpdateTimestamp = SystemClock.elapsedRealtime();
       return;
     }
-    setAccuracy(location);
+    if (myLocationLayerMode == MyLocationLayerMode.NAVIGATION) {
+      bearingChangeAnimate(location.getBearing());
+    } else {
+      setAccuracy(location);
+    }
     setLocation(location);
   }
 
   @Override
   public void onCompassChanged(float magneticHeading) {
     bearingChangeAnimate(magneticHeading);
+  }
+
+  /**
+   * Used internally in this class to disable Location Updates.
+   *
+   * @since 0.1.0
+   */
+  private void disableLocationUpdates() {
+    previousLocation = null;
+    if (locationSource != null) {
+      locationSource.removeLocationEngineListener(this);
+      locationSource.removeLocationUpdates();
+      locationSource.deactivate();
+    }
+  }
+
+  /**
+   * Used internally in this class to enable Location Updates.
+   *
+   * @since 0.1.0
+   */
+  private void enableLocationUpdates() {
+    if (locationSource != null) {
+      locationSource.addLocationEngineListener(this);
+      locationSource.setPriority(LocationEnginePriority.HIGH_ACCURACY);
+      locationSource.activate();
+    }
+  }
+
+  /**
+   * Enable or disable the My Location bearing by passing in a boolean here. Once enabled, The users location and
+   * bearing's indicated on the map by default as a small blue dot with a chevron pointing in the direction of the
+   * devices compass bearing.
+   *
+   * @param bearingEnabled boolean true if you'd like to enable the user location bearing, otherwise, false will disable
+   * @since 0.1.0
+   */
+  private void setMyBearingEnabled(boolean bearingEnabled) {
+    Layer layer = mapboxMap.getLayer(MyLocationLayerConstants.LOCATION_LAYER);
+    if (layer != null) {
+      layer.setProperties(
+        PropertyFactory.iconImage(bearingEnabled ? MyLocationLayerConstants.USER_LOCATION_BEARING_ICON
+          : MyLocationLayerConstants.USER_LOCATION_ICON)
+      );
+    }
+    if (bearingEnabled) {
+      compassListener.onStart();
+    } else {
+      compassListener.onStop();
+    }
+  }
+
+  /**
+   * Enable or disable the My Location navigation by passing in a boolean here. Once enabled, The users location
+   * indicated on the map will show (by default) as a large navigation puck with a cheveron/arrow showing the users GPS
+   * location bearing.
+   *
+   * @param navigationEnabled boolean true if you'd like to enable the user location navigation, otherwise, false will
+   *                          disable
+   * @since 0.1.0
+   */
+  private void setNavigationEnabled(boolean navigationEnabled) {
+    Layer layer = mapboxMap.getLayer(MyLocationLayerConstants.LOCATION_LAYER);
+    if (layer != null) {
+      layer.setProperties(
+        PropertyFactory.iconImage(navigationEnabled ? MyLocationLayerConstants.USER_LOCATION_PUCK_ICON
+          : MyLocationLayerConstants.USER_LOCATION_ICON)
+      );
+    }
+
+    setLinearAnimation(true);
+
+    Layer textAnnotation = mapboxMap.getLayer(MyLocationLayerConstants.NAVIGATION_ANNOTATION_LAYER);
+    if (textAnnotation != null) {
+      if (!navigationEnabled) {
+        mapboxMap.removeLayer(MyLocationLayerConstants.NAVIGATION_ANNOTATION_LAYER);
+      } else {
+        options.setLocationTextAnnotation(options.getLocationTextAnnotation());
+      }
+    }
+
+    Layer accuracyLayer = mapboxMap.getLayer(MyLocationLayerConstants.LOCATION_ACCURACY_LAYER);
+    if (accuracyLayer != null) {
+      accuracyLayer.setProperties(
+        PropertyFactory.visibility(navigationEnabled ? Property.NONE : Property.VISIBLE)
+      );
+    }
   }
 
   /**
@@ -312,8 +401,14 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
       Point.fromCoordinates(new double[] {previousLocation.getLongitude(), previousLocation.getLatitude()}),
       Point.fromCoordinates(new double[] {location.getLongitude(), location.getLatitude()})
     );
-    locationChangeAnimator.setDuration(500);
-    locationChangeAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+    locationChangeAnimator.setDuration(linearAnimation ? getLocationUpdateDuration()
+      : MyLocationLayerConstants.LOCATION_UPDATE_DELAY_MS);
+    if (linearAnimation) {
+      locationChangeAnimator.setInterpolator(new LinearInterpolator());
+    } else {
+      locationChangeAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+    }
     locationChangeAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
       @Override
       public void onAnimationUpdate(ValueAnimator animation) {
@@ -325,6 +420,19 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
       }
     });
     locationChangeAnimator.start();
+  }
+
+  /**
+   * Internal method being used to calculate the time duration for the location change animator.
+   *
+   * @return millisecond time value as a long value
+   * @since 0.1.0
+   */
+  private long getLocationUpdateDuration() {
+    // calculate updateLatLng time + add some extra offset to improve animation
+    long previousUpdateTimeStamp = locationUpdateTimestamp;
+    locationUpdateTimestamp = SystemClock.elapsedRealtime();
+    return (long) ((locationUpdateTimestamp - previousUpdateTimeStamp) * 1.2f);
   }
 
   /**
