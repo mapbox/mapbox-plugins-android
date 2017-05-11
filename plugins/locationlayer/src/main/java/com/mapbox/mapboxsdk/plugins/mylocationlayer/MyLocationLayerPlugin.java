@@ -487,9 +487,9 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
     public Point evaluate(float fraction, Point startValue, Point endValue) {
       return Point.fromCoordinates(new double[] {
         startValue.getCoordinates().getLongitude()
-          + ((endValue.getCoordinates().getLongitude() - startValue.getCoordinates().getLongitude()) * fraction),
+        + ((endValue.getCoordinates().getLongitude() - startValue.getCoordinates().getLongitude()) * fraction),
         startValue.getCoordinates().getLatitude()
-          + ((endValue.getCoordinates().getLatitude() - startValue.getCoordinates().getLatitude()) * fraction)
+        + ((endValue.getCoordinates().getLatitude() - startValue.getCoordinates().getLatitude()) * fraction)
       });
     }
   }
