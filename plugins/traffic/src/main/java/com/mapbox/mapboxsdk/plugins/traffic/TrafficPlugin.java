@@ -137,7 +137,7 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
       addPrimaryLayer();
       addTrunkLayer();
       addMotorwayLayer();
-    }catch (Exception exception){
+    } catch (Exception exception) {
       Timber.e("Unable to attach Traffic Layers to current style.");
     }
   }
