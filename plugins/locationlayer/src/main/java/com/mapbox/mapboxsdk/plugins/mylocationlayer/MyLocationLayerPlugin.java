@@ -66,6 +66,7 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
 
   private long locationUpdateTimestamp;
   private boolean linearAnimation;
+  private boolean manualLocation;
 
   /**
    * Construct a {@code MyLocationLayerPlugin}
@@ -75,8 +76,22 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
    * @since 0.1.0
    */
   public MyLocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
+    this(mapView, mapboxMap, false);
+  }
+
+  /**
+   * Construct a {@code MyLocationLayerPlugin}
+   *
+   * @param mapView        the MapView to apply the My Location layer plugin to
+   * @param mapboxMap      the MapboxMap to apply the My Location layer plugin with
+   * @param manualLocation setting to true allows you to manually update the location using
+   *                       {@link MyLocationLayerPlugin#setMyLocation(Location)}
+   * @since 0.1.0
+   */
+  public MyLocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, boolean manualLocation) {
     this.mapView = mapView;
     this.mapboxMap = mapboxMap;
+    this.manualLocation = manualLocation;
 
     myLocationLayerMode = MyLocationLayerMode.NONE;
     options = new MyLocationLayerOptions(this, mapView, mapboxMap);
@@ -146,6 +161,16 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
       }
     }
     this.myLocationLayerMode = myLocationLayerMode;
+  }
+
+  /**
+   * Use to either force a location update or to manually control when the user location gets updated.
+   *
+   * @param location where you'd like the location icon to be placed on the map
+   * @since 0.1.0
+   */
+  public void setMyLocation(Location location) {
+    updateLocation(location);
   }
 
   /**
@@ -228,6 +253,15 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
 
   @Override
   public void onLocationChanged(Location location) {
+    updateLocation(location);
+  }
+
+  @Override
+  public void onCompassChanged(float magneticHeading) {
+    bearingChangeAnimate(magneticHeading);
+  }
+
+  private void updateLocation(Location location) {
     if (location == null) {
       locationUpdateTimestamp = SystemClock.elapsedRealtime();
       return;
@@ -240,11 +274,6 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
     setLocation(location);
   }
 
-  @Override
-  public void onCompassChanged(float magneticHeading) {
-    bearingChangeAnimate(magneticHeading);
-  }
-
   /**
    * Used internally in this class to disable Location Updates.
    *
@@ -252,7 +281,7 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
    */
   private void disableLocationUpdates() {
     previousLocation = null;
-    if (locationSource != null) {
+    if (!manualLocation && locationSource != null) {
       locationSource.removeLocationEngineListener(this);
       locationSource.removeLocationUpdates();
       locationSource.deactivate();
@@ -265,7 +294,7 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
    * @since 0.1.0
    */
   private void enableLocationUpdates() {
-    if (locationSource != null) {
+    if (!manualLocation && locationSource != null) {
       locationSource.addLocationEngineListener(this);
       locationSource.setPriority(LocationEnginePriority.HIGH_ACCURACY);
       locationSource.activate();
@@ -487,9 +516,9 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
     public Point evaluate(float fraction, Point startValue, Point endValue) {
       return Point.fromCoordinates(new double[] {
         startValue.getCoordinates().getLongitude()
-        + ((endValue.getCoordinates().getLongitude() - startValue.getCoordinates().getLongitude()) * fraction),
+          + ((endValue.getCoordinates().getLongitude() - startValue.getCoordinates().getLongitude()) * fraction),
         startValue.getCoordinates().getLatitude()
-        + ((endValue.getCoordinates().getLatitude() - startValue.getCoordinates().getLatitude()) * fraction)
+          + ((endValue.getCoordinates().getLatitude() - startValue.getCoordinates().getLatitude()) * fraction)
       });
     }
   }
