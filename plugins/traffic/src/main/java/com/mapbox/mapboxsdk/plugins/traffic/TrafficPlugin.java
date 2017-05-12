@@ -240,13 +240,13 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
   }
 
   private static class TrafficColor {
-    private static final int BASE_GREEN = Color.parseColor("#4CAF50");
-    private static final int CASE_GREEN = Color.parseColor("#388E3C");
-    private static final int BASE_YELLOW = Color.parseColor("#FFEB3B");
-    private static final int CASE_YELLOW = Color.parseColor("#FBC02D");
-    private static final int BASE_ORANGE = Color.parseColor("#FF9800");
-    private static final int CASE_ORANGE = Color.parseColor("#F57C00");
-    private static final int BASE_RED = Color.parseColor("#f44336");
-    private static final int CASE_RED = Color.parseColor("#D32F2F");
+    private static final int BASE_GREEN = Color.parseColor("#39c66d");
+    private static final int CASE_GREEN = Color.parseColor("#059441");
+    private static final int BASE_YELLOW = Color.parseColor("#ff8c1a");
+    private static final int CASE_YELLOW = Color.parseColor("#d66b00");
+    private static final int BASE_ORANGE = Color.parseColor("#ff0015");
+    private static final int CASE_ORANGE = Color.parseColor("#bd0010");
+    private static final int BASE_RED = Color.parseColor("#981b25");
+    private static final int CASE_RED = Color.parseColor("#5f1117");
   }
 }
