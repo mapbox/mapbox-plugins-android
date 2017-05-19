@@ -1,4 +1,4 @@
-package com.mapbox.mapboxsdk.plugins.mylocationlayer;
+package com.mapbox.mapboxsdk.plugins.locationlayer;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -111,7 +111,7 @@ public class LocationLayerOptions implements MapView.OnMapChangedListener {
     setForegroundDrawable(foregroundDrawable, foregroundBearingDrawable, foregroundPuckDrawable);
 
     setForegroundTintColor((foregroundTintColor == 0)
-      ? ContextCompat.getColor(mapView.getContext(), R.color.mapbox_plugin_blue) : foregroundTintColor
+      ? ContextCompat.getColor(mapView.getContext(), R.color.mapbox_plugin_location_layer_blue) : foregroundTintColor
     );
 
     if (backgroundDrawable == null) {
@@ -121,7 +121,7 @@ public class LocationLayerOptions implements MapView.OnMapChangedListener {
     setBackgroundTintColor((backgroundTintColor == 0) ? Color.WHITE : backgroundTintColor);
     setAccuracyAlpha((accuracyAlpha == null) ? 0.15f : accuracyAlpha);
     setAccuracyTintColor((accuracyTintColor == 0)
-      ? ContextCompat.getColor(mapView.getContext(), R.color.mapbox_plugin_blue) : accuracyTintColor);
+      ? ContextCompat.getColor(mapView.getContext(), R.color.mapbox_plugin_location_layer_blue) : accuracyTintColor);
   }
 
   /**
@@ -379,7 +379,9 @@ public class LocationLayerOptions implements MapView.OnMapChangedListener {
         PropertyFactory.textHaloColor(Color.WHITE),
         PropertyFactory.textHaloWidth(0.5f),
         PropertyFactory.textPadding(2f),
-        PropertyFactory.textColor(ContextCompat.getColor(mapView.getContext(), R.color.mapbox_plugin_blue)),
+        PropertyFactory.textColor(
+          ContextCompat.getColor(mapView.getContext(), R.color.mapbox_plugin_location_layer_blue)
+        ),
         PropertyFactory.textOffset(new Float[] {0f, 1f}),
         PropertyFactory.textAnchor(Property.TEXT_ANCHOR_TOP),
         PropertyFactory.textField(textAnnotation),

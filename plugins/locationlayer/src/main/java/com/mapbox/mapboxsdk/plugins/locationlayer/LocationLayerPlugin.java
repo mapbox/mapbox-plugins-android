@@ -1,4 +1,4 @@
-package com.mapbox.mapboxsdk.plugins.mylocationlayer;
+package com.mapbox.mapboxsdk.plugins.locationlayer;
 
 import android.Manifest;
 import android.animation.TypeEvaluator;
@@ -8,6 +8,7 @@ import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
@@ -95,6 +96,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     this.mapboxMap = mapboxMap;
     this.manualLocation = manualLocation;
 
+    AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     myLocationLayerMode = LocationLayerMode.NONE;
     options = new LocationLayerOptions(this, mapView, mapboxMap);
     compassListener = new CompassManager(mapView.getContext(), this);

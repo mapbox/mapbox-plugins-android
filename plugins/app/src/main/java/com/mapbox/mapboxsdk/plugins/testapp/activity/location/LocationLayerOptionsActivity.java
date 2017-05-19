@@ -10,9 +10,9 @@ import android.widget.Button;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.plugins.mylocationlayer.LocationLayerMode;
-import com.mapbox.mapboxsdk.plugins.mylocationlayer.LocationLayerOptions;
-import com.mapbox.mapboxsdk.plugins.mylocationlayer.LocationLayerPlugin;
+import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerMode;
+import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerOptions;
+import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 
 import butterknife.BindView;
@@ -52,7 +52,8 @@ public class LocationLayerOptionsActivity extends AppCompatActivity implements O
       return;
     }
     options.setForegroundTintColor(
-      options.getForegroundTintColor() == Color.GREEN ? ContextCompat.getColor(this, R.color.mapbox_plugin_location_layer_blue)
+      options.getForegroundTintColor() == Color.GREEN
+        ? ContextCompat.getColor(this, R.color.mapbox_plugin_location_layer_blue)
         : Color.GREEN
     );
   }
@@ -63,7 +64,8 @@ public class LocationLayerOptionsActivity extends AppCompatActivity implements O
       return;
     }
     options.setAccuracyTintColor(
-      options.getAccuracyTintColor() == Color.BLUE ? ContextCompat.getColor(this, R.color.mapbox_plugin_location_layer_blue)
+      options.getAccuracyTintColor() == Color.BLUE
+        ? ContextCompat.getColor(this, R.color.mapbox_plugin_location_layer_blue)
         : Color.BLUE
     );
     options.setAccuracyAlpha(options.getAccuracyAlpha() == 1f ? 0.15f : 1f);

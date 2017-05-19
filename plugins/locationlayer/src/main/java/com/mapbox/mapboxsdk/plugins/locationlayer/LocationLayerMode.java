@@ -1,4 +1,4 @@
-package com.mapbox.mapboxsdk.plugins.mylocationlayer;
+package com.mapbox.mapboxsdk.plugins.locationlayer;
 
 import android.support.annotation.IntDef;
 

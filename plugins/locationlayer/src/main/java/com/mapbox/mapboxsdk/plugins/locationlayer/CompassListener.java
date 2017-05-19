@@ -1,4 +1,4 @@
-package com.mapbox.mapboxsdk.plugins.mylocationlayer;
+package com.mapbox.mapboxsdk.plugins.locationlayer;
 
 /**
  * Callback occurs when a new compass update occurs and is used to update the UI chevron/arrow for example

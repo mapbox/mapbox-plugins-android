@@ -3,14 +3,13 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity.location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.plugins.mylocationlayer.LocationLayerMode;
-import com.mapbox.mapboxsdk.plugins.mylocationlayer.LocationLayerOptions;
-import com.mapbox.mapboxsdk.plugins.mylocationlayer.LocationLayerPlugin;
+import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerMode;
+import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerOptions;
+import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 
 import butterknife.BindView;
