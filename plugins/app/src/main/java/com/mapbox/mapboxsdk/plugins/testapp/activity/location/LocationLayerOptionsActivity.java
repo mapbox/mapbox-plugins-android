@@ -52,7 +52,7 @@ public class LocationLayerOptionsActivity extends AppCompatActivity implements O
       return;
     }
     options.setForegroundTintColor(
-      options.getForegroundTintColor() == Color.GREEN ? ContextCompat.getColor(this, R.color.mapbox_plugin_blue)
+      options.getForegroundTintColor() == Color.GREEN ? ContextCompat.getColor(this, R.color.mapbox_plugin_location_layer_blue)
         : Color.GREEN
     );
   }
@@ -63,7 +63,7 @@ public class LocationLayerOptionsActivity extends AppCompatActivity implements O
       return;
     }
     options.setAccuracyTintColor(
-      options.getAccuracyTintColor() == Color.BLUE ? ContextCompat.getColor(this, R.color.mapbox_plugin_blue)
+      options.getAccuracyTintColor() == Color.BLUE ? ContextCompat.getColor(this, R.color.mapbox_plugin_location_layer_blue)
         : Color.BLUE
     );
     options.setAccuracyAlpha(options.getAccuracyAlpha() == 1f ? 0.15f : 1f);

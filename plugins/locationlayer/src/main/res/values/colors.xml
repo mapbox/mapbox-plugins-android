@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="mapbox_plugin_blue">#4882C6</color>
-    <color name="mapbox_plugin_gray">#263D57</color>
+    <color name="mapbox_plugin_location_layer_blue">#4882C6</color>
+    <color name="mapbox_plugin_location_layer_gray">#263D57</color>
 
 </resources>
