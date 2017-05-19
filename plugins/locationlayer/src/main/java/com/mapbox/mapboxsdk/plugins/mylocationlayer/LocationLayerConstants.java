@@ -5,7 +5,7 @@ package com.mapbox.mapboxsdk.plugins.mylocationlayer;
  *
  * @since 0.1.0
  */
-class MyLocationLayerConstants {
+class LocationLayerConstants {
 
   // Controls the compass update rate in milliseconds
   static final int COMPASS_UPDATE_RATE_MS = 500;

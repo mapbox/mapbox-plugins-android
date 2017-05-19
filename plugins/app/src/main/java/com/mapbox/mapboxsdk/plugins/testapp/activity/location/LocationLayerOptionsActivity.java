@@ -10,16 +10,16 @@ import android.widget.Button;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.plugins.mylocationlayer.MyLocationLayerMode;
-import com.mapbox.mapboxsdk.plugins.mylocationlayer.MyLocationLayerOptions;
-import com.mapbox.mapboxsdk.plugins.mylocationlayer.MyLocationLayerPlugin;
+import com.mapbox.mapboxsdk.plugins.mylocationlayer.LocationLayerMode;
+import com.mapbox.mapboxsdk.plugins.mylocationlayer.LocationLayerOptions;
+import com.mapbox.mapboxsdk.plugins.mylocationlayer.LocationLayerPlugin;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MyLocationOptionsActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class LocationLayerOptionsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
   @BindView(R.id.mapView)
   MapView mapView;
@@ -32,8 +32,8 @@ public class MyLocationOptionsActivity extends AppCompatActivity implements OnMa
   @BindView(R.id.button_location_option_compass)
   Button locationOptionCompassButton;
 
-  private MyLocationLayerOptions options;
-  private MyLocationLayerPlugin locationPlugin;
+  private LocationLayerOptions options;
+  private LocationLayerPlugin locationPlugin;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -83,15 +83,15 @@ public class MyLocationOptionsActivity extends AppCompatActivity implements OnMa
       return;
     }
     locationPlugin.setMyLocationEnabled(
-      locationPlugin.getMyLocationMode() == MyLocationLayerMode.COMPASS ? MyLocationLayerMode.TRACKING
-        : MyLocationLayerMode.COMPASS
+      locationPlugin.getMyLocationMode() == LocationLayerMode.COMPASS ? LocationLayerMode.TRACKING
+        : LocationLayerMode.COMPASS
     );
   }
 
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
-    locationPlugin = new MyLocationLayerPlugin(mapView, mapboxMap);
-    locationPlugin.setMyLocationEnabled(MyLocationLayerMode.TRACKING);
+    locationPlugin = new LocationLayerPlugin(mapView, mapboxMap);
+    locationPlugin.setMyLocationEnabled(LocationLayerMode.TRACKING);
     options = locationPlugin.getMyLocationLayerOptions();
   }
 

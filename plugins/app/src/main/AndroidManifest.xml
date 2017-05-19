@@ -31,7 +31,7 @@
         </activity>
 
         <activity
-            android:name=".activity.location.MyLocationModesActivity"
+            android:name=".activity.location.LocationLayerModesActivity"
             android:description="@string/description_location_modes"
             android:label="@string/title_location_modes">
             <meta-data
@@ -43,7 +43,7 @@
         </activity>
 
         <activity
-            android:name=".activity.location.MyLocationOptionsActivity"
+            android:name=".activity.location.LocationLayerOptionsActivity"
             android:description="@string/description_location_options"
             android:label="@string/title_location_options">
             <meta-data

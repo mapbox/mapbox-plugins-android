@@ -5,10 +5,10 @@ import android.support.annotation.IntDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-public class MyLocationLayerMode {
+public class LocationLayerMode {
 
   /**
-   * One of these constants should be used when {@link MyLocationLayerPlugin#setMyLocationEnabled(int)}'s called. The
+   * One of these constants should be used when {@link LocationLayerPlugin#setMyLocationEnabled(int)}'s called. The
    * mode can be switched at anytime by calling the {@code setMyLocationEnabled} method passing in the new mode you'd
    * like the location layer to be in.
    *

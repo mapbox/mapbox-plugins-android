@@ -29,15 +29,15 @@ import static com.mapbox.mapboxsdk.style.functions.stops.Stop.stop;
 
 /**
  * Options exposed for you to modify the visual appearance of the My Location layer plugin. This objects automatically
- * created when a new instance of {@link MyLocationLayerPlugin} is created.
- * {@link MyLocationLayerPlugin#getMyLocationLayerOptions()} should be used instead of creating your own instance of
+ * created when a new instance of {@link LocationLayerPlugin} is created.
+ * {@link LocationLayerPlugin#getMyLocationLayerOptions()} should be used instead of creating your own instance of
  * this object.
  *
  * @since 0.1.0
  */
-public class MyLocationLayerOptions implements MapView.OnMapChangedListener {
+public class LocationLayerOptions implements MapView.OnMapChangedListener {
 
-  private MyLocationLayerPlugin myLocationLayer;
+  private LocationLayerPlugin myLocationLayer;
   private MapboxMap mapboxMap;
   private MapView mapView;
 
@@ -61,14 +61,14 @@ public class MyLocationLayerOptions implements MapView.OnMapChangedListener {
   private Drawable backgroundDrawable;
 
   /**
-   * Construct a {@code MyLocationLayerOptions} object. The {@link MyLocationLayerPlugin} is in charge of this, and the
-   * object can be acquired using {@link MyLocationLayerPlugin#getMyLocationLayerOptions()}
+   * Construct a {@code LocationLayerOptions} object. The {@link LocationLayerPlugin} is in charge of this, and the
+   * object can be acquired using {@link LocationLayerPlugin#getMyLocationLayerOptions()}
    *
    * @param mapView   the MapView to apply the My Location layer plugin to
    * @param mapboxMap the MapboxMap to apply the My Location layer plugin with
    * @since 0.1.0
    */
-  MyLocationLayerOptions(MyLocationLayerPlugin myLocationLayer, MapView mapView, MapboxMap mapboxMap) {
+  LocationLayerOptions(LocationLayerPlugin myLocationLayer, MapView mapView, MapboxMap mapboxMap) {
     this.myLocationLayer = myLocationLayer;
     this.mapView = mapView;
     this.mapboxMap = mapboxMap;
@@ -88,13 +88,13 @@ public class MyLocationLayerOptions implements MapView.OnMapChangedListener {
     FeatureCollection emptyFeature = FeatureCollection.fromFeatures(new Feature[] {});
 
     // Create the sources
-    if (mapboxMap.getSource(MyLocationLayerConstants.LOCATION_SOURCE) == null) {
-      GeoJsonSource locationSource = new GeoJsonSource(MyLocationLayerConstants.LOCATION_SOURCE, emptyFeature);
+    if (mapboxMap.getSource(LocationLayerConstants.LOCATION_SOURCE) == null) {
+      GeoJsonSource locationSource = new GeoJsonSource(LocationLayerConstants.LOCATION_SOURCE, emptyFeature);
       mapboxMap.addSource(locationSource);
     }
-    if (mapboxMap.getSource(MyLocationLayerConstants.LOCATION_ACCURACY_SOURCE) == null) {
+    if (mapboxMap.getSource(LocationLayerConstants.LOCATION_ACCURACY_SOURCE) == null) {
       GeoJsonSource locationAccuracySource
-        = new GeoJsonSource(MyLocationLayerConstants.LOCATION_ACCURACY_SOURCE, emptyFeature);
+        = new GeoJsonSource(LocationLayerConstants.LOCATION_ACCURACY_SOURCE, emptyFeature);
       mapboxMap.addSource(locationAccuracySource);
     }
 
@@ -132,7 +132,7 @@ public class MyLocationLayerOptions implements MapView.OnMapChangedListener {
    */
   @Override
   public void onMapChanged(int change) {
-    if (change == MapView.DID_FINISH_LOADING_STYLE && myLocationLayer.getMyLocationMode() != MyLocationLayerMode.NONE) {
+    if (change == MapView.DID_FINISH_LOADING_STYLE && myLocationLayer.getMyLocationMode() != LocationLayerMode.NONE) {
       initialize();
     }
   }
@@ -150,13 +150,13 @@ public class MyLocationLayerOptions implements MapView.OnMapChangedListener {
                                     Drawable foregroundPuckDrawable) {
     // Remove previous icon if one has been added already
     if (this.foregroundDrawable != null) {
-      mapboxMap.removeImage(MyLocationLayerConstants.USER_LOCATION_ICON);
+      mapboxMap.removeImage(LocationLayerConstants.USER_LOCATION_ICON);
     }
     if (this.foregroundBearingDrawable != null) {
-      mapboxMap.removeImage(MyLocationLayerConstants.USER_LOCATION_BEARING_ICON);
+      mapboxMap.removeImage(LocationLayerConstants.USER_LOCATION_BEARING_ICON);
     }
     if (this.foregroundPuckDrawable != null) {
-      mapboxMap.removeImage(MyLocationLayerConstants.USER_LOCATION_PUCK_ICON);
+      mapboxMap.removeImage(LocationLayerConstants.USER_LOCATION_PUCK_ICON);
     }
 
     this.foregroundDrawable = foregroundDrawable;
@@ -164,17 +164,17 @@ public class MyLocationLayerOptions implements MapView.OnMapChangedListener {
     this.foregroundPuckDrawable = foregroundPuckDrawable;
     // Add the location icon image to the map
     Bitmap icon = getBitmapFromDrawable(foregroundDrawable);
-    mapboxMap.addImage(MyLocationLayerConstants.USER_LOCATION_ICON, icon);
+    mapboxMap.addImage(LocationLayerConstants.USER_LOCATION_ICON, icon);
     Bitmap bearingIcon = getBitmapFromDrawable(foregroundBearingDrawable);
-    mapboxMap.addImage(MyLocationLayerConstants.USER_LOCATION_BEARING_ICON, bearingIcon);
+    mapboxMap.addImage(LocationLayerConstants.USER_LOCATION_BEARING_ICON, bearingIcon);
     Bitmap puckIcon = getBitmapFromDrawable(foregroundPuckDrawable);
-    mapboxMap.addImage(MyLocationLayerConstants.USER_LOCATION_PUCK_ICON, puckIcon);
+    mapboxMap.addImage(LocationLayerConstants.USER_LOCATION_PUCK_ICON, puckIcon);
 
-    if (mapboxMap.getLayer(MyLocationLayerConstants.LOCATION_LAYER) == null) {
+    if (mapboxMap.getLayer(LocationLayerConstants.LOCATION_LAYER) == null) {
       SymbolLayer locationLayer = new SymbolLayer(
-        MyLocationLayerConstants.LOCATION_LAYER, MyLocationLayerConstants.LOCATION_SOURCE
+        LocationLayerConstants.LOCATION_LAYER, LocationLayerConstants.LOCATION_SOURCE
       ).withProperties(
-        PropertyFactory.iconImage(MyLocationLayerConstants.USER_LOCATION_ICON),
+        PropertyFactory.iconImage(LocationLayerConstants.USER_LOCATION_ICON),
         PropertyFactory.iconAllowOverlap(true),
         PropertyFactory.iconIgnorePlacement(true),
         PropertyFactory.iconRotationAlignment(Property.ICON_ROTATION_ALIGNMENT_MAP));
@@ -183,7 +183,7 @@ public class MyLocationLayerOptions implements MapView.OnMapChangedListener {
   }
 
   /**
-   * Get the foreground drawable when {@link MyLocationLayerMode#TRACKING} mode is enabled.
+   * Get the foreground drawable when {@link LocationLayerMode#TRACKING} mode is enabled.
    *
    * @return the drawable used as foreground
    * @since 0.1.0
@@ -193,7 +193,7 @@ public class MyLocationLayerOptions implements MapView.OnMapChangedListener {
   }
 
   /**
-   * Get the foreground drawable when {@link MyLocationLayerMode#COMPASS} mode is enabled.
+   * Get the foreground drawable when {@link LocationLayerMode#COMPASS} mode is enabled.
    *
    * @return the bearing drawable used as foreground
    * @since 0.1.0
@@ -203,7 +203,7 @@ public class MyLocationLayerOptions implements MapView.OnMapChangedListener {
   }
 
   /**
-   * Get the foreground drawable when {@link MyLocationLayerMode#NAVIGATION} mode is enabled.
+   * Get the foreground drawable when {@link LocationLayerMode#NAVIGATION} mode is enabled.
    *
    * @return the puck drawable used as foreground
    * @since 0.1.0
@@ -223,13 +223,13 @@ public class MyLocationLayerOptions implements MapView.OnMapChangedListener {
     if (foregroundDrawable != null) {
       DrawableCompat.setTint(foregroundDrawable, foregroundTintColor);
       Bitmap userLocationIcon = getBitmapFromDrawable(foregroundDrawable);
-      mapboxMap.removeImage(MyLocationLayerConstants.USER_LOCATION_ICON);
-      mapboxMap.addImage(MyLocationLayerConstants.USER_LOCATION_ICON, userLocationIcon);
+      mapboxMap.removeImage(LocationLayerConstants.USER_LOCATION_ICON);
+      mapboxMap.addImage(LocationLayerConstants.USER_LOCATION_ICON, userLocationIcon);
     }
     if (foregroundBearingDrawable != null) {
       DrawableCompat.setTint(foregroundBearingDrawable, foregroundTintColor);
       Bitmap userBearingIcon = getBitmapFromDrawable(foregroundBearingDrawable);
-      mapboxMap.addImage(MyLocationLayerConstants.USER_LOCATION_BEARING_ICON, userBearingIcon);
+      mapboxMap.addImage(LocationLayerConstants.USER_LOCATION_BEARING_ICON, userBearingIcon);
     }
   }
 
@@ -253,17 +253,17 @@ public class MyLocationLayerOptions implements MapView.OnMapChangedListener {
     this.backgroundDrawable = backgroundDrawable;
 
     Bitmap bitmap = getBitmapFromDrawable(backgroundDrawable);
-    mapboxMap.addImage(MyLocationLayerConstants.USER_LOCATION_BACKGROUND_ICON, bitmap);
+    mapboxMap.addImage(LocationLayerConstants.USER_LOCATION_BACKGROUND_ICON, bitmap);
 
-    if (mapboxMap.getLayer(MyLocationLayerConstants.LOCATION_BACKGROUND_LAYER) == null) {
+    if (mapboxMap.getLayer(LocationLayerConstants.LOCATION_BACKGROUND_LAYER) == null) {
       SymbolLayer locationBackgroundLayer = new SymbolLayer(
-        MyLocationLayerConstants.LOCATION_BACKGROUND_LAYER, MyLocationLayerConstants.LOCATION_SOURCE
+        LocationLayerConstants.LOCATION_BACKGROUND_LAYER, LocationLayerConstants.LOCATION_SOURCE
       ).withProperties(
-        PropertyFactory.iconImage(MyLocationLayerConstants.USER_LOCATION_BACKGROUND_ICON),
+        PropertyFactory.iconImage(LocationLayerConstants.USER_LOCATION_BACKGROUND_ICON),
         PropertyFactory.iconAllowOverlap(true),
         PropertyFactory.iconIgnorePlacement(true),
         PropertyFactory.iconRotationAlignment(Property.ICON_ROTATION_ALIGNMENT_MAP));
-      mapboxMap.addLayerBelow(locationBackgroundLayer, MyLocationLayerConstants.LOCATION_LAYER);
+      mapboxMap.addLayerBelow(locationBackgroundLayer, LocationLayerConstants.LOCATION_LAYER);
     }
   }
 
@@ -287,7 +287,7 @@ public class MyLocationLayerOptions implements MapView.OnMapChangedListener {
     this.backgroundTintColor = backgroundTintColor;
     DrawableCompat.setTint(backgroundDrawable, backgroundTintColor);
     Bitmap bitmap = getBitmapFromDrawable(backgroundDrawable);
-    mapboxMap.addImage(MyLocationLayerConstants.USER_LOCATION_BACKGROUND_ICON, bitmap);
+    mapboxMap.addImage(LocationLayerConstants.USER_LOCATION_BACKGROUND_ICON, bitmap);
   }
 
   /**
@@ -309,15 +309,15 @@ public class MyLocationLayerOptions implements MapView.OnMapChangedListener {
    */
   public void setAccuracyAlpha(@FloatRange(from = 0, to = 1.0) float accuracyAlpha) {
     this.accuracyAlpha = accuracyAlpha;
-    Layer layer = mapboxMap.getLayer(MyLocationLayerConstants.LOCATION_ACCURACY_LAYER);
+    Layer layer = mapboxMap.getLayer(LocationLayerConstants.LOCATION_ACCURACY_LAYER);
     if (layer == null) {
       FillLayer locationAccuracyLayer = new FillLayer(
-        MyLocationLayerConstants.LOCATION_ACCURACY_LAYER, MyLocationLayerConstants.LOCATION_ACCURACY_SOURCE
+        LocationLayerConstants.LOCATION_ACCURACY_LAYER, LocationLayerConstants.LOCATION_ACCURACY_SOURCE
       ).withProperties(
         PropertyFactory.fillColor(Color.parseColor("#4882C6")),
         PropertyFactory.fillOpacity(accuracyAlpha)
       );
-      mapboxMap.addLayerBelow(locationAccuracyLayer, MyLocationLayerConstants.LOCATION_BACKGROUND_LAYER);
+      mapboxMap.addLayerBelow(locationAccuracyLayer, LocationLayerConstants.LOCATION_BACKGROUND_LAYER);
     } else {
       layer.setProperties(
         PropertyFactory.fillOpacity(accuracyAlpha)
@@ -343,7 +343,7 @@ public class MyLocationLayerOptions implements MapView.OnMapChangedListener {
    */
   public void setAccuracyTintColor(@ColorInt int accuracyTintColor) {
     this.accuracyTintColor = accuracyTintColor;
-    Layer layer = mapboxMap.getLayer(MyLocationLayerConstants.LOCATION_ACCURACY_LAYER);
+    Layer layer = mapboxMap.getLayer(LocationLayerConstants.LOCATION_ACCURACY_LAYER);
     if (layer != null) {
       layer.setProperties(
         PropertyFactory.fillColor(accuracyTintColor)
@@ -370,10 +370,10 @@ public class MyLocationLayerOptions implements MapView.OnMapChangedListener {
    */
   public void setLocationTextAnnotation(@NonNull String textAnnotation) {
     this.textAnnotation = textAnnotation;
-    Layer layer = mapboxMap.getLayer(MyLocationLayerConstants.LOCATION_TEXT_ANNOTATION_LAYER);
+    Layer layer = mapboxMap.getLayer(LocationLayerConstants.LOCATION_TEXT_ANNOTATION_LAYER);
     if (layer == null) {
       layer = new SymbolLayer(
-        MyLocationLayerConstants.LOCATION_TEXT_ANNOTATION_LAYER, MyLocationLayerConstants.LOCATION_SOURCE
+        LocationLayerConstants.LOCATION_TEXT_ANNOTATION_LAYER, LocationLayerConstants.LOCATION_SOURCE
       ).withProperties(
         PropertyFactory.textSize(12f),
         PropertyFactory.textHaloColor(Color.WHITE),
@@ -398,8 +398,8 @@ public class MyLocationLayerOptions implements MapView.OnMapChangedListener {
 
   /**
    * Recieve the current set {@code String} being used for the tracking/compass annotation. This is only shown when
-   * either {@link MyLocationLayerMode#TRACKING} or {@link MyLocationLayerMode#COMPASS} mode are being used. It will
-   * return {@code null} if {@link MyLocationLayerOptions#setLocationTextAnnotation(String)} hasn't been called yet.
+   * either {@link LocationLayerMode#TRACKING} or {@link LocationLayerMode#COMPASS} mode are being used. It will
+   * return {@code null} if {@link LocationLayerOptions#setLocationTextAnnotation(String)} hasn't been called yet.
    *
    * @return String being used for the location annotation
    * @since 0.1.0
@@ -411,19 +411,19 @@ public class MyLocationLayerOptions implements MapView.OnMapChangedListener {
   /**
    * Optionally, set a text annotation to show below the navigation puck/icon. Typically this would be either the
    * current street name or the duration left till a users maneuver if being used during a navigation session. This will
-   * only show when {@link MyLocationLayerMode#NAVIGATION}'s being used.
+   * only show when {@link LocationLayerMode#NAVIGATION}'s being used.
    *
    * @param navigigationTextAnnotation NonNull String value to be used for the annotation below the user puck/icon.
    * @since 0.1.0
    */
   public void setNavigationTextAnnotation(@NonNull String navigigationTextAnnotation) {
     this.navigigationTextAnnotation = navigigationTextAnnotation;
-    Layer layer = mapboxMap.getLayer(MyLocationLayerConstants.NAVIGATION_ANNOTATION_LAYER);
+    Layer layer = mapboxMap.getLayer(LocationLayerConstants.NAVIGATION_ANNOTATION_LAYER);
     if (layer == null) {
       Drawable icon = ContextCompat.getDrawable(mapView.getContext(), R.drawable.mapbox_text_annotation_bg);
-      mapboxMap.addImage(MyLocationLayerConstants.NAVIGATION_ANNOTATION_BACKGROUND_ICON, getBitmapFromDrawable(icon));
+      mapboxMap.addImage(LocationLayerConstants.NAVIGATION_ANNOTATION_BACKGROUND_ICON, getBitmapFromDrawable(icon));
       layer = new SymbolLayer(
-        MyLocationLayerConstants.NAVIGATION_ANNOTATION_LAYER, MyLocationLayerConstants.LOCATION_SOURCE
+        LocationLayerConstants.NAVIGATION_ANNOTATION_LAYER, LocationLayerConstants.LOCATION_SOURCE
       ).withProperties(
         PropertyFactory.textSize(16f),
         PropertyFactory.textPadding(2f),
@@ -434,7 +434,7 @@ public class MyLocationLayerOptions implements MapView.OnMapChangedListener {
         PropertyFactory.textMaxWidth(8f),
         PropertyFactory.iconTextFit(Property.ICON_TEXT_FIT_HEIGHT),
         PropertyFactory.iconTextFitPadding(new Float[] {8f, 15f, 8f, 15f}),
-        PropertyFactory.iconImage(MyLocationLayerConstants.NAVIGATION_ANNOTATION_BACKGROUND_ICON)
+        PropertyFactory.iconImage(LocationLayerConstants.NAVIGATION_ANNOTATION_BACKGROUND_ICON)
       );
       mapboxMap.addLayer(layer);
     } else {
@@ -446,8 +446,8 @@ public class MyLocationLayerOptions implements MapView.OnMapChangedListener {
 
   /**
    * Recieve the current set {@code String} being used for the navigation annotation. This is only shown when
-   * {@link MyLocationLayerMode#NAVIGATION} mode is being used. It will return {@code null} if
-   * {@link MyLocationLayerOptions#setNavigationTextAnnotation(String)} hasn't been called yet.
+   * {@link LocationLayerMode#NAVIGATION} mode is being used. It will return {@code null} if
+   * {@link LocationLayerOptions#setNavigationTextAnnotation(String)} hasn't been called yet.
    *
    * @return String being used for the navigation annotation
    * @since 0.1.0
@@ -457,7 +457,7 @@ public class MyLocationLayerOptions implements MapView.OnMapChangedListener {
   }
 
   /**
-   * When the user wants to disable location tracking, such as when {@link MyLocationLayerMode#NONE} is called, all the
+   * When the user wants to disable location tracking, such as when {@link LocationLayerMode#NONE} is called, all the
    * layers and sources should be removed from the map.
    *
    * @since 0.1.0

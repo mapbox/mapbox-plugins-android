@@ -8,30 +8,22 @@ import android.widget.Button;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.plugins.mylocationlayer.MyLocationLayerMode;
-import com.mapbox.mapboxsdk.plugins.mylocationlayer.MyLocationLayerOptions;
-import com.mapbox.mapboxsdk.plugins.mylocationlayer.MyLocationLayerPlugin;
+import com.mapbox.mapboxsdk.plugins.mylocationlayer.LocationLayerMode;
+import com.mapbox.mapboxsdk.plugins.mylocationlayer.LocationLayerOptions;
+import com.mapbox.mapboxsdk.plugins.mylocationlayer.LocationLayerPlugin;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MyLocationModesActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class LocationLayerModesActivity extends AppCompatActivity implements OnMapReadyCallback {
 
   @BindView(R.id.mapView)
   MapView mapView;
-  @BindView(R.id.button_location_mode_none)
-  Button locationModeNoneButton;
-  @BindView(R.id.button_location_mode_compass)
-  Button locationModeCompassButton;
-  @BindView(R.id.button_location_mode_tracking)
-  Button locationModeTrackingButton;
-  @BindView(R.id.button_location_mode_navigation)
-  Button locationModeNavigationButton;
 
-  private MyLocationLayerOptions options;
-  private MyLocationLayerPlugin locationPlugin;
+  private LocationLayerOptions options;
+  private LocationLayerPlugin locationPlugin;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +41,7 @@ public class MyLocationModesActivity extends AppCompatActivity implements OnMapR
     if (locationPlugin == null) {
       return;
     }
-    locationPlugin.setMyLocationEnabled(MyLocationLayerMode.NONE);
+    locationPlugin.setMyLocationEnabled(LocationLayerMode.NONE);
   }
 
   @OnClick(R.id.button_location_mode_compass)
@@ -57,7 +49,7 @@ public class MyLocationModesActivity extends AppCompatActivity implements OnMapR
     if (locationPlugin == null) {
       return;
     }
-    locationPlugin.setMyLocationEnabled(MyLocationLayerMode.COMPASS);
+    locationPlugin.setMyLocationEnabled(LocationLayerMode.COMPASS);
   }
 
   @OnClick(R.id.button_location_mode_tracking)
@@ -65,7 +57,7 @@ public class MyLocationModesActivity extends AppCompatActivity implements OnMapR
     if (locationPlugin == null) {
       return;
     }
-    locationPlugin.setMyLocationEnabled(MyLocationLayerMode.TRACKING);
+    locationPlugin.setMyLocationEnabled(LocationLayerMode.TRACKING);
     options.setLocationTextAnnotation("1509 16th St NW");
   }
 
@@ -74,13 +66,13 @@ public class MyLocationModesActivity extends AppCompatActivity implements OnMapR
     if (locationPlugin == null) {
       return;
     }
-    locationPlugin.setMyLocationEnabled(MyLocationLayerMode.NAVIGATION);
+    locationPlugin.setMyLocationEnabled(LocationLayerMode.NAVIGATION);
     options.setNavigationTextAnnotation("16th St NW");
   }
 
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
-    locationPlugin = new MyLocationLayerPlugin(mapView, mapboxMap);
+    locationPlugin = new LocationLayerPlugin(mapView, mapboxMap);
     options = locationPlugin.getMyLocationLayerOptions();
   }
 

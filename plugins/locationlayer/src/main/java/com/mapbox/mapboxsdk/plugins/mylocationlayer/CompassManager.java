@@ -19,8 +19,8 @@ class CompassManager implements SensorEventListener {
   private CompassListener compassListener;
 
   private Sensor rotationVectorSensor;
-  float[] matrix = new float[9];
-  float[] orientation = new float[3];
+  private float[] matrix = new float[9];
+  private float[] orientation = new float[3];
 
   // CompassManager data
   private long compassUpdateNextTimestamp = 0;
@@ -62,7 +62,7 @@ class CompassManager implements SensorEventListener {
       float magneticHeading = (float) Math.toDegrees(SensorManager.getOrientation(matrix, orientation)[0]);
       compassListener.onCompassChanged(magneticHeading);
 
-      compassUpdateNextTimestamp = currentTime + MyLocationLayerConstants.COMPASS_UPDATE_RATE_MS;
+      compassUpdateNextTimestamp = currentTime + LocationLayerConstants.COMPASS_UPDATE_RATE_MS;
     }
   }
 

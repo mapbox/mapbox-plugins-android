@@ -1,10 +1,13 @@
 package com.mapbox.mapboxsdk.plugins.mylocationlayer;
 
+import android.Manifest;
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.location.Location;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresPermission;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
@@ -28,11 +31,11 @@ import com.mapbox.services.commons.models.Position;
 /**
  * The My Location layer plugin provides location awareness to your mobile application. Enabling this plugin provides a
  * contextual experience to your users by showing an icon representing the users current location. A few different modes
- * are offered to provide the right context to your users at the correct time. {@link MyLocationLayerMode#TRACKING}
- * simply shows the users location on the map represented as a dot. {@link MyLocationLayerMode#COMPASS} mode allows you
+ * are offered to provide the right context to your users at the correct time. {@link LocationLayerMode#TRACKING}
+ * simply shows the users location on the map represented as a dot. {@link LocationLayerMode#COMPASS} mode allows you
  * to display an arrow icon (by default) that points in the direction the device is pointing in.
- * {@link MyLocationLayerMode#NAVIGATION} can be used in conjunction with our Navigation SDK to display a larger icon we
- * call the user puck. Lastly, {@link MyLocationLayerMode#NONE} can be used to disable the Location Layer but keep the
+ * {@link LocationLayerMode#NAVIGATION} can be used in conjunction with our Navigation SDK to display a larger icon we
+ * call the user puck. Lastly, {@link LocationLayerMode#NONE} can be used to disable the Location Layer but keep the
  * instance around till the activity is destroyed.
  * <p>
  * Using this plugin requires you to request permission beforehand manually or using
@@ -41,19 +44,18 @@ import com.mapbox.services.commons.models.Position;
  *
  * @since 0.1.0
  */
-@SuppressWarnings( {"MissingPermission"})
-public class MyLocationLayerPlugin implements LocationEngineListener, CompassListener {
+public class LocationLayerPlugin implements LocationEngineListener, CompassListener {
 
   private static final int ACCURACY_CIRCLE_STEPS = 48;
 
-  private MyLocationLayerOptions options;
+  private LocationLayerOptions options;
   private CompassManager compassListener;
   private LocationEngine locationSource;
   private MapboxMap mapboxMap;
   private MapView mapView;
 
   // Enabled booleans
-  @MyLocationLayerMode.Mode
+  @LocationLayerMode.Mode
   private int myLocationLayerMode;
 
   // Previous compass and location values
@@ -69,67 +71,68 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
   private boolean manualLocation;
 
   /**
-   * Construct a {@code MyLocationLayerPlugin}
+   * Construct a {@code LocationLayerPlugin}
    *
    * @param mapView   the MapView to apply the My Location layer plugin to
    * @param mapboxMap the MapboxMap to apply the My Location layer plugin with
    * @since 0.1.0
    */
-  public MyLocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
+  public LocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
     this(mapView, mapboxMap, false);
   }
 
   /**
-   * Construct a {@code MyLocationLayerPlugin}
+   * Construct a {@code LocationLayerPlugin}
    *
    * @param mapView        the MapView to apply the My Location layer plugin to
    * @param mapboxMap      the MapboxMap to apply the My Location layer plugin with
    * @param manualLocation setting to true allows you to manually update the location using
-   *                       {@link MyLocationLayerPlugin#setMyLocation(Location)}
+   *                       {@link LocationLayerPlugin#setMyLocation(Location)}
    * @since 0.1.0
    */
-  public MyLocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, boolean manualLocation) {
+  public LocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, boolean manualLocation) {
     this.mapView = mapView;
     this.mapboxMap = mapboxMap;
     this.manualLocation = manualLocation;
 
-    myLocationLayerMode = MyLocationLayerMode.NONE;
-    options = new MyLocationLayerOptions(this, mapView, mapboxMap);
+    myLocationLayerMode = LocationLayerMode.NONE;
+    options = new LocationLayerOptions(this, mapView, mapboxMap);
     compassListener = new CompassManager(mapView.getContext(), this);
   }
 
   /**
-   * Get the current {@link MyLocationLayerOptions} object which can be used to customize the look of the location icon.
+   * Get the current {@link LocationLayerOptions} object which can be used to customize the look of the location icon.
    *
-   * @return the {@link MyLocationLayerOptions} object this My Location layer plugin instance's using
+   * @return the {@link LocationLayerOptions} object this My Location layer plugin instance's using
    * @since 0.1.0
    */
-  public MyLocationLayerOptions getMyLocationLayerOptions() {
+  public LocationLayerOptions getMyLocationLayerOptions() {
     return options;
   }
 
   /**
    * After creating an instance of this plugin, you can use this API to enable the location mode of your choice. These
-   * modes can be found in the {@link MyLocationLayerMode} class and the parameter only accepts one of those modes. Note
+   * modes can be found in the {@link LocationLayerMode} class and the parameter only accepts one of those modes. Note
    * that before enabling the My Location layer, you will need to ensure that you have the requested the required user
    * location permissions.
    * <p>
    * <ul>
-   * <li>{@link MyLocationLayerMode#TRACKING}: Display the user location on the map as a small dot</li>
-   * <li>{@link MyLocationLayerMode#COMPASS}: Display the user location and current heading/bearing</li>
-   * <li>{@link MyLocationLayerMode#NAVIGATION}: Display the user location on the map using a navigation icon</li>
-   * <li>{@link MyLocationLayerMode#NONE}: Disable user location showing on the map</li>
+   * <li>{@link LocationLayerMode#TRACKING}: Display the user location on the map as a small dot</li>
+   * <li>{@link LocationLayerMode#COMPASS}: Display the user location and current heading/bearing</li>
+   * <li>{@link LocationLayerMode#NAVIGATION}: Display the user location on the map using a navigation icon</li>
+   * <li>{@link LocationLayerMode#NONE}: Disable user location showing on the map</li>
    * </ul>
    *
-   * @param myLocationLayerMode one of the modes found in {@link MyLocationLayerMode}
+   * @param myLocationLayerMode one of the modes found in {@link LocationLayerMode}
    * @since 0.1.0
    */
-  public void setMyLocationEnabled(@MyLocationLayerMode.Mode int myLocationLayerMode) {
+  @RequiresPermission(anyOf = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+  public void setMyLocationEnabled(@LocationLayerMode.Mode int myLocationLayerMode) {
     if (locationSource == null) {
       locationSource = LocationSource.getLocationEngine(mapView.getContext());
     }
 
-    if (myLocationLayerMode != MyLocationLayerMode.NONE) {
+    if (myLocationLayerMode != LocationLayerMode.NONE) {
       enableLocationUpdates();
 
       options.initialize();
@@ -142,19 +145,19 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
         setAccuracy(lastLocation);
       }
 
-      if (myLocationLayerMode == MyLocationLayerMode.COMPASS) {
+      if (myLocationLayerMode == LocationLayerMode.COMPASS) {
         setNavigationEnabled(false);
         setMyBearingEnabled(true);
-      } else if (myLocationLayerMode == MyLocationLayerMode.NAVIGATION) {
+      } else if (myLocationLayerMode == LocationLayerMode.NAVIGATION) {
         setMyBearingEnabled(false);
         setNavigationEnabled(true);
-      } else if (myLocationLayerMode == MyLocationLayerMode.TRACKING) {
+      } else if (myLocationLayerMode == LocationLayerMode.TRACKING) {
         setMyBearingEnabled(false);
         setNavigationEnabled(false);
       }
     } else {
       // Check that the mode isn't already none
-      if (this.myLocationLayerMode != MyLocationLayerMode.NONE) {
+      if (this.myLocationLayerMode != LocationLayerMode.NONE) {
         disableLocationUpdates();
 
         options.removeLayerAndSources();
@@ -169,14 +172,14 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
    * @param location where you'd like the location icon to be placed on the map
    * @since 0.1.0
    */
-  public void setMyLocation(Location location) {
+  public void setMyLocation(@Nullable Location location) {
     updateLocation(location);
   }
 
   /**
    * Returns the current location mode being used with this plugin.
    *
-   * @return on of the {@link MyLocationLayerMode} values
+   * @return on of the {@link LocationLayerMode} values
    * @since 0.1.0
    */
   public int getMyLocationMode() {
@@ -199,11 +202,11 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
       bearingChangeAnimator = null;
     }
 
-    if (myLocationLayerMode == MyLocationLayerMode.COMPASS && compassListener.isSensorAvailable()) {
+    if (myLocationLayerMode == LocationLayerMode.COMPASS && compassListener.isSensorAvailable()) {
       compassListener.onStop();
     }
 
-    if (mapboxMap.getLayer(MyLocationLayerConstants.LOCATION_LAYER) != null) {
+    if (mapboxMap.getLayer(LocationLayerConstants.LOCATION_LAYER) != null) {
       disableLocationUpdates();
     }
   }
@@ -214,12 +217,13 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
    *
    * @since 0.1.0
    */
+  @RequiresPermission(anyOf = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
   public void onStart() {
-    if (myLocationLayerMode != MyLocationLayerMode.NONE) {
+    if (myLocationLayerMode != LocationLayerMode.NONE) {
       setMyLocationEnabled(myLocationLayerMode);
     }
 
-    if (myLocationLayerMode == MyLocationLayerMode.COMPASS && compassListener.isSensorAvailable()) {
+    if (myLocationLayerMode == LocationLayerMode.COMPASS && compassListener.isSensorAvailable()) {
       compassListener.onStart();
     }
   }
@@ -247,6 +251,7 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
   }
 
   @Override
+  @SuppressWarnings( {"MissingPermission"})
   public void onConnected() {
     locationSource.requestLocationUpdates();
   }
@@ -266,7 +271,7 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
       locationUpdateTimestamp = SystemClock.elapsedRealtime();
       return;
     }
-    if (myLocationLayerMode == MyLocationLayerMode.NAVIGATION) {
+    if (myLocationLayerMode == LocationLayerMode.NAVIGATION) {
       bearingChangeAnimate(location.getBearing());
     } else {
       setAccuracy(location);
@@ -310,11 +315,11 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
    * @since 0.1.0
    */
   private void setMyBearingEnabled(boolean bearingEnabled) {
-    Layer layer = mapboxMap.getLayer(MyLocationLayerConstants.LOCATION_LAYER);
+    Layer layer = mapboxMap.getLayer(LocationLayerConstants.LOCATION_LAYER);
     if (layer != null) {
       layer.setProperties(
-        PropertyFactory.iconImage(bearingEnabled ? MyLocationLayerConstants.USER_LOCATION_BEARING_ICON
-          : MyLocationLayerConstants.USER_LOCATION_ICON)
+        PropertyFactory.iconImage(bearingEnabled ? LocationLayerConstants.USER_LOCATION_BEARING_ICON
+          : LocationLayerConstants.USER_LOCATION_ICON)
       );
     }
     if (bearingEnabled) {
@@ -334,26 +339,26 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
    * @since 0.1.0
    */
   private void setNavigationEnabled(boolean navigationEnabled) {
-    Layer layer = mapboxMap.getLayer(MyLocationLayerConstants.LOCATION_LAYER);
+    Layer layer = mapboxMap.getLayer(LocationLayerConstants.LOCATION_LAYER);
     if (layer != null) {
       layer.setProperties(
-        PropertyFactory.iconImage(navigationEnabled ? MyLocationLayerConstants.USER_LOCATION_PUCK_ICON
-          : MyLocationLayerConstants.USER_LOCATION_ICON)
+        PropertyFactory.iconImage(navigationEnabled ? LocationLayerConstants.USER_LOCATION_PUCK_ICON
+          : LocationLayerConstants.USER_LOCATION_ICON)
       );
     }
 
     setLinearAnimation(true);
 
-    Layer textAnnotation = mapboxMap.getLayer(MyLocationLayerConstants.NAVIGATION_ANNOTATION_LAYER);
+    Layer textAnnotation = mapboxMap.getLayer(LocationLayerConstants.NAVIGATION_ANNOTATION_LAYER);
     if (textAnnotation != null) {
       if (!navigationEnabled) {
-        mapboxMap.removeLayer(MyLocationLayerConstants.NAVIGATION_ANNOTATION_LAYER);
+        mapboxMap.removeLayer(LocationLayerConstants.NAVIGATION_ANNOTATION_LAYER);
       } else {
         options.setLocationTextAnnotation(options.getLocationTextAnnotation());
       }
     }
 
-    Layer accuracyLayer = mapboxMap.getLayer(MyLocationLayerConstants.LOCATION_ACCURACY_LAYER);
+    Layer accuracyLayer = mapboxMap.getLayer(LocationLayerConstants.LOCATION_ACCURACY_LAYER);
     if (accuracyLayer != null) {
       accuracyLayer.setProperties(
         PropertyFactory.visibility(navigationEnabled ? Property.NONE : Property.VISIBLE)
@@ -381,7 +386,7 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
     );
 
     // Update the location accuracy source with new GeoJson object
-    GeoJsonSource locationGeoJsonSource = mapboxMap.getSourceAs(MyLocationLayerConstants.LOCATION_ACCURACY_SOURCE);
+    GeoJsonSource locationGeoJsonSource = mapboxMap.getSourceAs(LocationLayerConstants.LOCATION_ACCURACY_SOURCE);
     if (locationGeoJsonSource != null) {
       locationGeoJsonSource.setGeoJson(featureCollection);
     }
@@ -394,7 +399,7 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
    * @since 0.1.0
    */
   private void setLocation(final Location location) {
-    GeoJsonSource locationGeoJsonSource = mapboxMap.getSourceAs(MyLocationLayerConstants.LOCATION_SOURCE);
+    GeoJsonSource locationGeoJsonSource = mapboxMap.getSourceAs(LocationLayerConstants.LOCATION_SOURCE);
 
     if (previousLocation == null) {
       // Create new GeoJson object with the new user location
@@ -432,7 +437,7 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
     );
 
     locationChangeAnimator.setDuration(linearAnimation ? getLocationUpdateDuration()
-      : MyLocationLayerConstants.LOCATION_UPDATE_DELAY_MS);
+      : LocationLayerConstants.LOCATION_UPDATE_DELAY_MS);
     if (linearAnimation) {
       locationChangeAnimator.setInterpolator(new LinearInterpolator());
     } else {
@@ -489,11 +494,11 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
       magneticHeading -= 360.f;
     }
     bearingChangeAnimator = ValueAnimator.ofFloat(previousMagneticHeading, magneticHeading);
-    bearingChangeAnimator.setDuration(MyLocationLayerConstants.COMPASS_UPDATE_RATE_MS);
+    bearingChangeAnimator.setDuration(LocationLayerConstants.COMPASS_UPDATE_RATE_MS);
     bearingChangeAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
       @Override
       public void onAnimationUpdate(ValueAnimator valueAnimator) {
-        Layer locationLayer = mapboxMap.getLayer(MyLocationLayerConstants.LOCATION_LAYER);
+        Layer locationLayer = mapboxMap.getLayer(LocationLayerConstants.LOCATION_LAYER);
         if (locationLayer != null) {
           locationLayer.setProperties(
             PropertyFactory.iconRotate((float) valueAnimator.getAnimatedValue())
@@ -515,10 +520,10 @@ public class MyLocationLayerPlugin implements LocationEngineListener, CompassLis
     @Override
     public Point evaluate(float fraction, Point startValue, Point endValue) {
       return Point.fromCoordinates(new double[] {
-        startValue.getCoordinates().getLongitude()
-          + ((endValue.getCoordinates().getLongitude() - startValue.getCoordinates().getLongitude()) * fraction),
-        startValue.getCoordinates().getLatitude()
-          + ((endValue.getCoordinates().getLatitude() - startValue.getCoordinates().getLatitude()) * fraction)
+        startValue.getCoordinates().getLongitude() + (
+          (endValue.getCoordinates().getLongitude() - startValue.getCoordinates().getLongitude()) * fraction),
+        startValue.getCoordinates().getLatitude() + (
+          (endValue.getCoordinates().getLatitude() - startValue.getCoordinates().getLatitude()) * fraction)
       });
     }
   }
