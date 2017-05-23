@@ -19,6 +19,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    configurations {
+        javadocDeps
+    }
 }
 
 dependencies {
@@ -30,5 +33,9 @@ dependencies {
     compile('com.mapbox.mapboxsdk:mapbox-android-sdk:5.0.2@aar') {
         transitive=true
     }
+    javadocDeps 'com.mapbox.mapboxsdk:mapbox-android-sdk:5.0.2'
     testCompile 'junit:junit:4.12'
+    apply from: 'javadoc.gradle'
+    apply from: '../mvn-push-android.gradle'
+    apply from: '../checkstyle.gradle'
 }
