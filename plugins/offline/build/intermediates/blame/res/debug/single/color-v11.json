@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/Nurbot/mapbox-plugins-android/plugins/offline/build/intermediates/res/merged/debug/color-v11/abc_background_cache_hint_selector_material_light.xml",
+        "source": "/Users/Nurbot/.android/build-cache/1f9453966af70ce796eb960f8d1321aa5e2c0c2e/output/res/color-v11/abc_background_cache_hint_selector_material_light.xml"
+    },
+    {
+        "merged": "/Users/Nurbot/mapbox-plugins-android/plugins/offline/build/intermediates/res/merged/debug/color-v11/abc_background_cache_hint_selector_material_dark.xml",
+        "source": "/Users/Nurbot/.android/build-cache/1f9453966af70ce796eb960f8d1321aa5e2c0c2e/output/res/color-v11/abc_background_cache_hint_selector_material_dark.xml"
+    }
+]

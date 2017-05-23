@@ -1,0 +1,32 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "0.1"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    configurations {
+        javadocDeps
+    }
+}
+
+dependencies {
+    compile(rootProject.ext.dep.mapSdk + '@aar') {
+        transitive = true
+    }
+
+    javadocDeps rootProject.ext.dep.mapSdk
+
+    compile 'com.android.support:appcompat-v7:25.3.1'
+}
+
+apply from: 'javadoc.gradle'
+apply from: '../mvn-push-android.gradle'
+apply from: '../checkstyle.gradle'
