@@ -8,4 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="CustomLocationLayer" parent="LocationLayer">
+        <item name="backgroundDrawable">@drawable/custom_user_stroke_icon</item>
+    </style>
+
 </resources>

@@ -71,7 +71,7 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
 
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
-    locationPlugin = new LocationLayerPlugin(mapView, mapboxMap);
+    locationPlugin = new LocationLayerPlugin(mapView, mapboxMap, R.style.CustomLocationLayer);
     options = locationPlugin.getMyLocationLayerOptions();
   }
 

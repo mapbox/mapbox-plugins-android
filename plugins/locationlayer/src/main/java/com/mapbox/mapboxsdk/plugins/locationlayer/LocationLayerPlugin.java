@@ -3,11 +3,15 @@ package com.mapbox.mapboxsdk.plugins.locationlayer;
 import android.Manifest;
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
+import android.support.annotation.StyleRes;
 import android.support.v7.app.AppCompatDelegate;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
@@ -91,15 +95,49 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
    *                       {@link LocationLayerPlugin#setMyLocation(Location)}
    * @since 0.1.0
    */
+  public LocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @StyleRes int styleRes) {
+    this(mapView, mapboxMap, styleRes, false);
+  }
+
+  /**
+   * Construct a {@code LocationLayerPlugin}
+   *
+   * @param mapView        the MapView to apply the My Location layer plugin to
+   * @param mapboxMap      the MapboxMap to apply the My Location layer plugin with
+   * @param manualLocation setting to true allows you to manually update the location using
+   *                       {@link LocationLayerPlugin#setMyLocation(Location)}
+   * @since 0.1.0
+   */
   public LocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, boolean manualLocation) {
+    this(mapView, mapboxMap, R.style.LocationLayer, manualLocation);
+  }
+
+  /**
+   * Construct a {@code LocationLayerPlugin}
+   *
+   * @param mapView        the MapView to apply the My Location layer plugin to
+   * @param mapboxMap      the MapboxMap to apply the My Location layer plugin with
+   * @param manualLocation setting to true allows you to manually update the location using
+   *                       {@link LocationLayerPlugin#setMyLocation(Location)}
+   * @since 0.1.0
+   */
+  public LocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @StyleRes int styleRes, boolean manualLocation) {
     this.mapView = mapView;
     this.mapboxMap = mapboxMap;
     this.manualLocation = manualLocation;
 
     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     myLocationLayerMode = LocationLayerMode.NONE;
-    options = new LocationLayerOptions(this, mapView, mapboxMap);
     compassListener = new CompassManager(mapView.getContext(), this);
+    loadAttributes(mapView.getContext(), styleRes);
+  }
+
+  private void loadAttributes(@NonNull Context context, @StyleRes int styleRes) {
+    int backgroundAttrs[] = {R.attr.backgroundDrawable};
+    TypedArray drawableArray = context.obtainStyledAttributes(styleRes, backgroundAttrs);
+    Drawable backgroundDrawable = drawableArray.getDrawable(0);
+    options = new LocationLayerOptions(this, mapView, mapboxMap, backgroundDrawable);
+    drawableArray.recycle();
   }
 
   /**

@@ -68,11 +68,11 @@ public class LocationLayerOptions implements MapView.OnMapChangedListener {
    * @param mapboxMap the MapboxMap to apply the My Location layer plugin with
    * @since 0.1.0
    */
-  LocationLayerOptions(LocationLayerPlugin myLocationLayer, MapView mapView, MapboxMap mapboxMap) {
+  LocationLayerOptions(LocationLayerPlugin myLocationLayer, MapView mapView, MapboxMap mapboxMap, Drawable backgroundDrawable) {
     this.myLocationLayer = myLocationLayer;
     this.mapView = mapView;
     this.mapboxMap = mapboxMap;
-
+    this.backgroundDrawable = backgroundDrawable;
     mapView.addOnMapChangedListener(this);
     initialize();
   }
@@ -114,11 +114,8 @@ public class LocationLayerOptions implements MapView.OnMapChangedListener {
       ? ContextCompat.getColor(mapView.getContext(), R.color.mapbox_plugin_location_layer_blue) : foregroundTintColor
     );
 
-    if (backgroundDrawable == null) {
-      backgroundDrawable = ContextCompat.getDrawable(mapView.getContext(), R.drawable.mapbox_user_stroke_icon);
-    }
     setBackgroundDrawable(backgroundDrawable);
-    setBackgroundTintColor((backgroundTintColor == 0) ? Color.WHITE : backgroundTintColor);
+    //setBackgroundTintColor((backgroundTintColor == 0) ? Color.WHITE : backgroundTintColor);
     setAccuracyAlpha((accuracyAlpha == null) ? 0.15f : accuracyAlpha);
     setAccuracyTintColor((accuracyTintColor == 0)
       ? ContextCompat.getColor(mapView.getContext(), R.color.mapbox_plugin_location_layer_blue) : accuracyTintColor);
