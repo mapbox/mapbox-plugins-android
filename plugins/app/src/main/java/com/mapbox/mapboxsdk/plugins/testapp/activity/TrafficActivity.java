@@ -46,7 +46,7 @@ public class TrafficActivity extends AppCompatActivity implements OnMapReadyCall
   }
 
   @Override
-  public void onMapReady(MapboxMap mapboxMap) {
+  public void onMapReady(final MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
     this.trafficPlugin = new TrafficPlugin(mapView, mapboxMap);
     this.trafficPlugin.toggle(); // Enable the traffic view by default
@@ -107,6 +107,10 @@ public class TrafficActivity extends AppCompatActivity implements OnMapReadyCall
   public void onLowMemory() {
     super.onLowMemory();
     mapView.onLowMemory();
+  }
+
+  public TrafficPlugin getTrafficPlugin() {
+    return trafficPlugin;
   }
 
   private static class StyleCycle {
