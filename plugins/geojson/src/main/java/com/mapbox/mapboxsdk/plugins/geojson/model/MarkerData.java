@@ -1,13 +1,12 @@
 package com.mapbox.mapboxsdk.plugins.geojson.model;
 
 
+import com.google.gson.JsonObject;
 import com.mapbox.mapboxsdk.geometry.LatLng;
-
-import org.json.JSONObject;
 
 public class MarkerData {
     private LatLng point;
-    private JSONObject properties;
+    private JsonObject properties;
 
     public LatLng getPoint() {
         return point;
@@ -17,11 +16,11 @@ public class MarkerData {
         this.point = point;
     }
 
-    public JSONObject getProperties() {
+    public JsonObject getProperties() {
         return properties;
     }
 
-    public void setProperties(JSONObject properties) {
+    public void setProperties(JsonObject properties) {
         this.properties = properties;
     }
 }
