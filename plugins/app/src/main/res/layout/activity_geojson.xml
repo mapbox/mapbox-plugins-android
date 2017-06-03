@@ -15,6 +15,19 @@
         app:mapbox_cameraZoom="9" />
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabPath"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="150dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/ic_path"
+        android:tint="@android:color/white"
+        app:backgroundTint="@color/colorPrimary"
+        app:layout_anchorGravity="top" />
+
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabURL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,6 +40,7 @@
         app:backgroundTint="@color/colorAccent"
         app:layout_anchorGravity="top" />
 
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabAssets"
         android:layout_width="wrap_content"
@@ -36,6 +50,7 @@
         android:src="@drawable/ic_file"
         android:tint="@android:color/white"
         app:backgroundTint="@color/colorPrimary" />
+
 
     <ProgressBar
         android:id="@+id/progressBar"
