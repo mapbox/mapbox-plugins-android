@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.plugins.geojson.listener.OnLoadingGeoJsonListener;
@@ -20,17 +19,15 @@ public class GeoJsonPluginBuilder {
     private OnLoadingGeoJsonListener loadFileAssets;
     private OnLoadingGeoJsonListener loadURL;
     private OnMarkerEventListener markerEventListener;
-
-    private
     @ColorInt
+    private
     int fillColor = Color.argb(50, 0, 0, 250);
-    private
     @ColorInt
+    private
     int stockColor = Color.argb(80, 250, 0, 0);
     private int width = 3;
     private boolean isRandomFillColor = false;
     private boolean isRandomStockColor = false;
-
 
     /**
      * @param context the context of parent activity
@@ -54,7 +51,7 @@ public class GeoJsonPluginBuilder {
      * @param fileNameAssets the file name of GeoJson in Assets folder
      * @return instance of GeoJsonPluginBuilder class
      */
-    public GeoJsonPluginBuilder withFileNameAssets(String fileNameAssets) {
+    public GeoJsonPluginBuilder withAssetsName(String fileNameAssets) {
         this.fileNameAssets = fileNameAssets;
         return this;
     }
@@ -168,13 +165,7 @@ public class GeoJsonPluginBuilder {
     /**
      * @return instance of GeoJsonPlugin
      */
-    public GeoJsonPlugin draw() {
-        if (filePath == null && fileNameAssets == null && url == null) {
-            throw new IllegalStateException("at last one value should be provide for loading on the map. all value is null");
-        }
-        if (TextUtils.isEmpty(filePath) && TextUtils.isEmpty(fileNameAssets) && TextUtils.isEmpty(url)) {
-            throw new IllegalStateException("at last one value should be provide for loading on the map. all value is empty");
-        }
+    public GeoJsonPlugin build() {
         return new GeoJsonPlugin(context, map, fileNameAssets, filePath, url, loadFilePath, loadFileAssets, loadURL, fillColor, stockColor, width, isRandomFillColor, isRandomStockColor, markerEventListener);
     }
 }
