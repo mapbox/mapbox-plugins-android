@@ -1,5 +1,6 @@
 package com.mapbox.mapboxsdk.plugins.geojson;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -7,7 +8,6 @@ import android.os.AsyncTask;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.mapbox.mapboxsdk.annotations.Marker;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
@@ -22,6 +22,12 @@ import com.mapbox.mapboxsdk.plugins.geojson.listener.OnMarkerEventListener;
 import com.mapbox.mapboxsdk.plugins.geojson.model.DataModel;
 import com.mapbox.mapboxsdk.plugins.geojson.model.MarkerData;
 import com.mapbox.mapboxsdk.plugins.geojson.model.PolyData;
+import com.mapbox.services.commons.geojson.Feature;
+import com.mapbox.services.commons.geojson.FeatureCollection;
+import com.mapbox.services.commons.geojson.LineString;
+import com.mapbox.services.commons.geojson.Point;
+import com.mapbox.services.commons.geojson.Polygon;
+import com.mapbox.services.commons.models.Position;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,6 +49,7 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import timber.log.Timber;
 
 /**
  * The GeoJson plugin allows to add GeoJson file to the Mapbox Android SDK v5.0.2.
@@ -55,7 +62,6 @@ import okhttp3.Response;
  */
 
 public class GeoJsonPlugin {
-    private static String EXCEPTION = "Exception";
     private Context context;
     private MapboxMap map;
     private String fileName;
@@ -66,11 +72,11 @@ public class GeoJsonPlugin {
     private OnLoadingGeoJsonListener loadFileAssets;
     private OnLoadingGeoJsonListener loadURL;
     private OnMarkerEventListener markerEventListener;
-    private
     @ColorInt
+    private
     int fillColor;
-    private
     @ColorInt
+    private
     int stockColor;
     private int width;
     private boolean isRandomFillColor;
@@ -93,13 +99,9 @@ public class GeoJsonPlugin {
      * @param isRandomStockColor  if true, stock color will be randomize
      * @param markerEventListener the instance of OnMarkerEventListener class. using for detect Marker click event
      */
-
     public GeoJsonPlugin(Context context, MapboxMap map, String fileName, String filePath, String url, OnLoadingGeoJsonListener loadFilePath, OnLoadingGeoJsonListener loadFileAssets, OnLoadingGeoJsonListener loadURL, int fillColor, int stockColor, int width, boolean isRandomFillColor, boolean isRandomStockColor, OnMarkerEventListener markerEventListener) {
         this.context = context;
         this.map = map;
-        this.fileName = fileName;
-        this.filePath = filePath;
-        this.url = url;
         this.loadFilePath = loadFilePath;
         this.loadFileAssets = loadFileAssets;
         this.loadURL = loadURL;
@@ -109,18 +111,51 @@ public class GeoJsonPlugin {
         this.width = width;
         this.isRandomFillColor = isRandomFillColor;
         this.isRandomStockColor = isRandomStockColor;
+        setFilePath(filePath);
+        setAssetsName(fileName);
+        setUrl(url);
+    }
 
-        if (fileName != null)
-            if (!TextUtils.isEmpty(fileName))
-                new DrawGeoJsonFromAssets().execute();
-        if (filePath != null)
-            if (!TextUtils.isEmpty(filePath))
-                new DrawGeoJsonFromPath().execute();
-        if (url != null)
-            if (!TextUtils.isEmpty(url))
+    /**
+     * update GeoJson source from url and draw on Map
+     *
+     * @param url the url of GeoJson file
+     */
+    public void setUrl(String url) {
+        this.url = url;
+        if (url != null) {
+            if (!TextUtils.isEmpty(url)) {
                 loadGeoJson();
+            }
+        }
+    }
 
+    /**
+     * update GeoJson source from Assets folder file and draw on Map
+     *
+     * @param fileName the name of file in Assets folder
+     */
+    public void setAssetsName(String fileName) {
+        this.fileName = fileName;
+        if (fileName != null) {
+            if (!TextUtils.isEmpty(fileName)) {
+                new DrawGeoJsonFromAssets().execute();
+            }
+        }
+    }
 
+    /**
+     * update GeoJson source from path of external storage and draw on Map
+     *
+     * @param filePath the path of file in external storage
+     */
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+        if (filePath != null) {
+            if (!TextUtils.isEmpty(filePath)) {
+                new DrawGeoJsonFromPath().execute();
+            }
+        }
     }
 
     /**
@@ -144,10 +179,11 @@ public class GeoJsonPlugin {
             public void onResponse(Call call, Response response) {
                 try {
                     geoJson = response.body().string();
-                    if (isJSONValid(geoJson))
+                    if (isJSONValid(geoJson)) {
                         new ParseGeoJsonFromString().execute();
-                    else
-                        loadURL.onLoadFailed(new IllegalStateException(geoJson));
+                    } else {
+                        triggerOnLoadFailed(loadURL, new IllegalStateException(geoJson));
+                    }
                 } catch (IOException e) {
                     loadURL.onLoadFailed(e);
                 }
@@ -180,8 +216,9 @@ public class GeoJsonPlugin {
     private class DrawGeoJsonFromPath extends AsyncTask<Void, Void, DataModel> {
         @Override
         protected void onPreExecute() {
-            if (loadFilePath != null)
+            if (loadFilePath != null) {
                 loadFilePath.onPreLoading();
+            }
         }
 
         @Override
@@ -191,7 +228,7 @@ public class GeoJsonPlugin {
                 InputStream inputStream = new FileInputStream(filePath);
                 dataModel = parseGeoJsonInputStream(inputStream, loadFilePath);
             } catch (FileNotFoundException e) {
-                loadFilePath.onLoadFailed(e);
+                triggerOnLoadFailed(loadFilePath, e);
             }
             return dataModel;
         }
@@ -201,8 +238,9 @@ public class GeoJsonPlugin {
             super.onPostExecute(dataModel);
             if (dataModel != null) {
                 DrawOnMap(dataModel);
-                if (loadFilePath != null)
+                if (loadFilePath != null) {
                     loadFilePath.onLoaded();
+                }
             }
         }
     }
@@ -213,8 +251,9 @@ public class GeoJsonPlugin {
     private class DrawGeoJsonFromAssets extends AsyncTask<Void, Void, DataModel> {
         @Override
         protected void onPreExecute() {
-            if (loadFileAssets != null)
+            if (loadFileAssets != null) {
                 loadFileAssets.onPreLoading();
+            }
         }
 
         @Override
@@ -224,7 +263,7 @@ public class GeoJsonPlugin {
                 InputStream inputStream = context.getAssets().open(fileName);
                 dataModel = parseGeoJsonInputStream(inputStream, loadFileAssets);
             } catch (IOException e) {
-                loadFileAssets.onLoadFailed(e);
+                triggerOnLoadFailed(loadFileAssets, e);
             }
 
             return dataModel;
@@ -235,9 +274,20 @@ public class GeoJsonPlugin {
             super.onPostExecute(dataModel);
             if (dataModel != null) {
                 DrawOnMap(dataModel);
-                if (loadFileAssets != null)
+                if (loadFileAssets != null) {
                     loadFileAssets.onLoaded();
+                }
             }
+        }
+    }
+
+    private void triggerOnLoadFailed(final OnLoadingGeoJsonListener listener, final Exception e) {
+        if (listener != null) {
+            ((Activity) context).runOnUiThread(new Runnable() {
+                public void run() {
+                    listener.onLoadFailed(e);
+                }
+            });
         }
     }
 
@@ -249,65 +299,52 @@ public class GeoJsonPlugin {
         int pointCount = 0;
         DataModel dataModel = new DataModel();
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        try {
-            JSONObject json = new JSONObject(geoJson);
-            JSONArray features = json.getJSONArray("features");
-            for (int i = 0; i < features.length(); i++) {
-                JSONObject feature = features.getJSONObject(i);
-                JSONObject geometry = feature.getJSONObject("geometry");
-                JSONObject properties = feature.getJSONObject("properties");
-                if (geometry != null) {
-                    String type = geometry.getString("type");
-                    if (!TextUtils.isEmpty(type)) {
-                        if (type.equalsIgnoreCase("LineString")) {
-                            List<LatLng> latLngs = new ArrayList<>();
-                            JSONArray coords = geometry.getJSONArray("coordinates");
-                            for (int lc = 0; lc < coords.length(); lc++) {
-                                JSONArray coord = coords.getJSONArray(lc);
-                                LatLng latLng = new LatLng(coord.getDouble(1), coord.getDouble(0));
-                                latLngs.add(latLng);
-                                pointCount++;
-                                builder.include(latLng);
-                            }
-                            PolyData polylinePolyData = new PolyData();
-                            polylinePolyData.setPoints(latLngs);
-                            polylinePolyData.setType("LineString");
-                            dataModel.addPolyline(polylinePolyData);
-                        } else if (type.equalsIgnoreCase("Point")) {
-                            JSONArray coordinates = geometry.getJSONArray("coordinates");
-                            for (int lc = 0; lc < coordinates.length(); lc++) {
-                                LatLng latLng = new LatLng(coordinates.getDouble(1), coordinates.getDouble(0));
-                                MarkerData markerData = new MarkerData();
-                                markerData.setPoint(latLng);
-                                markerData.setProperties(properties);
-                                dataModel.addMarker(markerData);
-                                pointCount++;
-                                builder.include(latLng);
-                            }
-
-                        } else if (type.equalsIgnoreCase("Polygon")) {
-                            List<LatLng> latLngs = new ArrayList<>();
-                            JSONArray fullCoordinates = geometry.getJSONArray("coordinates");
-                            JSONArray coordinates = fullCoordinates.getJSONArray(0);
-                            for (int lc = 0; lc < coordinates.length(); lc++) {
-                                JSONArray coord = coordinates.getJSONArray(lc);
-                                LatLng latLng = new LatLng(coord.getDouble(1), coord.getDouble(0));
-                                latLngs.add(latLng);
-                                pointCount++;
-                                builder.include(latLng);
-                            }
-                            PolyData polygonPolyData = new PolyData();
-                            polygonPolyData.setPoints(latLngs);
-                            polygonPolyData.setType("Polygon");
-                            dataModel.addPolygon(polygonPolyData);
-                        } else {
-                            //TODO parse other type of Element like multiPolygon & etc
-                        }
+        FeatureCollection featureCollection = FeatureCollection.fromJson(geoJson);
+        List<Feature> listFeature = featureCollection.getFeatures();
+        for (Feature feature : listFeature) {
+            String featureType = feature.getGeometry().getType();
+            if (!TextUtils.isEmpty(featureType)) {
+                if (featureType.equalsIgnoreCase("LineString")) {
+                    List<LatLng> latLngs = new ArrayList<>();
+                    LineString lineString = (LineString) feature.getGeometry().getCoordinates();
+                    List<Position> coordinates = lineString.getCoordinates();
+                    for (Position position : coordinates) {
+                        LatLng latLng = new LatLng(position.getLatitude(), position.getLongitude());
+                        latLngs.add(latLng);
+                        pointCount++;
+                        builder.include(latLng);
                     }
+                    PolyData polylinePolyData = new PolyData();
+                    polylinePolyData.setPoints(latLngs);
+                    polylinePolyData.setType(featureType);
+                    dataModel.addPolyline(polylinePolyData);
+                } else if (featureType.equalsIgnoreCase("Point")) {
+                    Point point = (Point) feature.getGeometry();
+                    LatLng latLng = new LatLng(point.getCoordinates().getLatitude(), point.getCoordinates().getLongitude());
+                    MarkerData markerData = new MarkerData();
+                    markerData.setPoint(latLng);
+                    markerData.setProperties(feature.getProperties());
+                    dataModel.addMarker(markerData);
+                    pointCount++;
+                    builder.include(latLng);
+                } else if (featureType.equalsIgnoreCase("Polygon")) {
+                    List<LatLng> latLngs = new ArrayList<>();
+                    Polygon polygon = (Polygon) feature.getGeometry();
+                    List<Position> listPosition = polygon.getCoordinates().get(0);
+                    for (Position position : listPosition) {
+                        LatLng latLng = new LatLng(position.getLatitude(), position.getLongitude());
+                        latLngs.add(latLng);
+                        pointCount++;
+                        builder.include(latLng);
+                    }
+                    PolyData polygonPolyData = new PolyData();
+                    polygonPolyData.setPoints(latLngs);
+                    polygonPolyData.setType(featureType);
+                    dataModel.addPolygon(polygonPolyData);
+                } else {
+                    //TODO
                 }
             }
-        } catch (Exception exception) {
-            Log.e(EXCEPTION, "Exception Parse GeoJSON: " + exception.toString());
         }
         if (pointCount > 1)
             dataModel.setBounds(builder.build());
@@ -332,12 +369,12 @@ public class GeoJsonPlugin {
             }
             inputStream.close();
             if (!isJSONValid(sb.toString())) {
-                if (listener != null)
-                    listener.onLoadFailed(new IllegalStateException("GeoJson string is not valid"));
+                triggerOnLoadFailed(listener, new IllegalStateException("GeoJson string is not valid"));
+            } else {
+                dataModel = parseGeoJsonString(sb.toString());
             }
-            dataModel = parseGeoJsonString(sb.toString());
         } catch (IOException e) {
-            Log.e(EXCEPTION, "Exception InputStream To String: " + e.toString());
+            Timber.e("Exception InputStream To String: " + e.toString());
         }
         return dataModel;
     }
@@ -350,23 +387,26 @@ public class GeoJsonPlugin {
 
     private void DrawOnMap(DataModel dataModel) {
         if (dataModel != null) {
-            if (dataModel.getMarkers() != null) {
-                if (dataModel.getMarkers().size() > 0) {
+            List<MarkerData> markers = dataModel.getMarkers();
+            if (markers != null) {
+                if (!markers.isEmpty()) {
                     for (MarkerData markerData : dataModel.getMarkers()) {
                         Marker marker = map.addMarker(new MarkerOptions()
                                 .position(markerData.getPoint()));
                         markerCollectionHashMap.put(marker, markerData);
-
                     }
                 }
             }
-            if (dataModel.getPolygons() != null) {
-                if (dataModel.getPolygons().size() > 0) {
-                    for (PolyData polyData : dataModel.getPolygons()) {
-                        if (isRandomFillColor)
+            List<PolyData> polygons = dataModel.getPolygons();
+            if (polygons != null) {
+                if (!polygons.isEmpty()) {
+                    for (PolyData polyData : polygons) {
+                        if (isRandomFillColor) {
                             fillColor = getRandomMaterialColor("400");
-                        if (isRandomStockColor)
+                        }
+                        if (isRandomStockColor) {
                             stockColor = getRandomMaterialColor("400");
+                        }
                         map.addPolygon(new PolygonOptions()
                                 .addAll(polyData.getPoints())
                                 .fillColor(fillColor)
@@ -374,11 +414,13 @@ public class GeoJsonPlugin {
                     }
                 }
             }
-            if (dataModel.getPolylines() != null) {
-                if (dataModel.getPolylines().size() > 0) {
-                    for (PolyData polyData : dataModel.getPolylines()) {
-                        if (isRandomStockColor)
+            List<PolyData> polylines = dataModel.getPolylines();
+            if (polylines != null) {
+                if (!polylines.isEmpty()) {
+                    for (PolyData polyData : polylines) {
+                        if (isRandomStockColor) {
                             stockColor = getRandomMaterialColor("400");
+                        }
                         map.addPolyline(new PolylineOptions()
                                 .addAll(polyData.getPoints())
                                 .color(stockColor)
@@ -386,8 +428,9 @@ public class GeoJsonPlugin {
                     }
                 }
             }
-            if (dataModel.getBounds() != null)
+            if (dataModel.getBounds() != null) {
                 map.easeCamera(CameraUpdateFactory.newLatLngBounds(dataModel.getBounds(), 50), 500);
+            }
 
             /*
              * set onMarkerClick Listener and pass properties of marker to the MarkerEventListener
