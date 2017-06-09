@@ -43,9 +43,9 @@
         </activity>
 
         <activity
-            android:name=".activity.location.LocationLayerOptionsActivity"
-            android:description="@string/description_location_options"
-            android:label="@string/title_location_options">
+            android:name=".activity.location.LocationLayerMapChangeActivity"
+            android:description="@string/description_location_map_change"
+            android:label="@string/title_location_map_change">
             <meta-data
                 android:name="@string/category"
                 android:value="@string/category_runtime_styling"/>

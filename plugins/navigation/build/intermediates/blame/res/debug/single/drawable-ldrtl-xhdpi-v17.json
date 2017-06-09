@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/Users/cameron/Mapbox/mapbox-plugins-android/plugins/navigation/build/intermediates/res/merged/debug/drawable-ldrtl-xhdpi-v17/abc_ic_menu_cut_mtrl_alpha.png",
+        "source": "/Users/cameron/.android/build-cache/7f349649622226f1594e31bb1672e4ca95253583/output/res/drawable-ldrtl-xhdpi-v17/abc_ic_menu_cut_mtrl_alpha.png"
+    },
+    {
+        "merged": "/Users/cameron/Mapbox/mapbox-plugins-android/plugins/navigation/build/intermediates/res/merged/debug/drawable-ldrtl-xhdpi-v17/abc_spinner_mtrl_am_alpha.9.png",
+        "source": "/Users/cameron/.android/build-cache/7f349649622226f1594e31bb1672e4ca95253583/output/res/drawable-ldrtl-xhdpi-v17/abc_spinner_mtrl_am_alpha.9.png"
+    },
+    {
+        "merged": "/Users/cameron/Mapbox/mapbox-plugins-android/plugins/navigation/build/intermediates/res/merged/debug/drawable-ldrtl-xhdpi-v17/abc_ic_menu_copy_mtrl_am_alpha.png",
+        "source": "/Users/cameron/.android/build-cache/7f349649622226f1594e31bb1672e4ca95253583/output/res/drawable-ldrtl-xhdpi-v17/abc_ic_menu_copy_mtrl_am_alpha.png"
+    }
+]

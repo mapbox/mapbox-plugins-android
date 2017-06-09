@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "/Users/cameron/Mapbox/mapbox-plugins-android/plugins/navigation/build/intermediates/res/merged/androidTest/debug/layout-v11/notification_template_big_media_narrow.xml",
+        "source": "/Users/cameron/.android/build-cache/7f349649622226f1594e31bb1672e4ca95253583/output/res/layout-v11/notification_template_big_media_narrow.xml"
+    },
+    {
+        "merged": "/Users/cameron/Mapbox/mapbox-plugins-android/plugins/navigation/build/intermediates/res/merged/androidTest/debug/layout-v11/notification_template_big_media.xml",
+        "source": "/Users/cameron/.android/build-cache/7f349649622226f1594e31bb1672e4ca95253583/output/res/layout-v11/notification_template_big_media.xml"
+    },
+    {
+        "merged": "/Users/cameron/Mapbox/mapbox-plugins-android/plugins/navigation/build/intermediates/res/merged/androidTest/debug/layout-v11/notification_template_big_media_narrow_custom.xml",
+        "source": "/Users/cameron/.android/build-cache/7f349649622226f1594e31bb1672e4ca95253583/output/res/layout-v11/notification_template_big_media_narrow_custom.xml"
+    },
+    {
+        "merged": "/Users/cameron/Mapbox/mapbox-plugins-android/plugins/navigation/build/intermediates/res/merged/androidTest/debug/layout-v11/notification_template_big_media_custom.xml",
+        "source": "/Users/cameron/.android/build-cache/7f349649622226f1594e31bb1672e4ca95253583/output/res/layout-v11/notification_template_big_media_custom.xml"
+    },
+    {
+        "merged": "/Users/cameron/Mapbox/mapbox-plugins-android/plugins/navigation/build/intermediates/res/merged/androidTest/debug/layout-v11/notification_media_action.xml",
+        "source": "/Users/cameron/.android/build-cache/7f349649622226f1594e31bb1672e4ca95253583/output/res/layout-v11/notification_media_action.xml"
+    },
+    {
+        "merged": "/Users/cameron/Mapbox/mapbox-plugins-android/plugins/navigation/build/intermediates/res/merged/androidTest/debug/layout-v11/notification_media_cancel_action.xml",
+        "source": "/Users/cameron/.android/build-cache/7f349649622226f1594e31bb1672e4ca95253583/output/res/layout-v11/notification_media_cancel_action.xml"
+    }
+]

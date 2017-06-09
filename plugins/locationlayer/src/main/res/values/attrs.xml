@@ -2,5 +2,12 @@
 <resources>
     <declare-styleable name="LocationLayer">
         <attr name="backgroundDrawable" format="integer"/>
+        <attr name="foregroundDrawable" format="integer"/>
+        <attr name="bearingDrawable" format="integer"/>
+        <attr name="navigationDrawable" format="integer"/>
+
+        <attr name="accuracyAlpha" format="float"/>
+        <attr name="accuracyColor" format="color"/>
+
     </declare-styleable>
 </resources>

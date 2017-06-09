@@ -7,25 +7,18 @@
 
     <!-- Titles -->
     <string name="title_traffic">Traffic Plugin</string>
-    <string name="title_basic_location">Location View Plugin</string>
     <string name="title_location_modes">Location Modes</string>
-    <string name="title_location_options">My Location Options</string>
+    <string name="title_location_map_change">Location Layer Map Change</string>
 
     <!-- Descriptions -->
     <string name="description_traffic">Add Traffic layers to any Mapbox basemap.</string>
-    <string name="description_basic_location">Toggle the location view on and off.</string>
     <string name="description_location_modes">Switch between the different location modes.</string>
-    <string name="description_location_options">Customize the look of the user location dot.</string>
+    <string name="description_location_map_change">Change map styles while the location layers on the map.</string>
 
     <!-- Buttons -->
     <string name="button_location_mode_none">None</string>
     <string name="button_location_mode_tracking">Tracking</string>
     <string name="button_location_mode_compass">Compass</string>
     <string name="button_location_mode_navigation">Nav</string>
-
-    <string name="button_location_option_tint">Tint</string>
-    <string name="button_location_option_accuracy">Accuracy</string>
-    <string name="button_location_option_bg_tint">Bg Tint</string>
-    <string name="button_location_option_compass">Compass</string>
 
 </resources>

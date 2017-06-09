@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/cameron/Mapbox/mapbox-plugins-android/plugins/navigation/build/intermediates/res/merged/release/anim-v21/design_bottom_sheet_slide_out.xml",
+        "source": "/Users/cameron/.android/build-cache/d37f60a4ff69703cb0d51817da25940516c44a6f/output/res/anim-v21/design_bottom_sheet_slide_out.xml"
+    },
+    {
+        "merged": "/Users/cameron/Mapbox/mapbox-plugins-android/plugins/navigation/build/intermediates/res/merged/release/anim-v21/design_bottom_sheet_slide_in.xml",
+        "source": "/Users/cameron/.android/build-cache/d37f60a4ff69703cb0d51817da25940516c44a6f/output/res/anim-v21/design_bottom_sheet_slide_in.xml"
+    }
+]

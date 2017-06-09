@@ -10,6 +10,7 @@
 
     <style name="CustomLocationLayer" parent="LocationLayer">
         <item name="backgroundDrawable">@drawable/custom_user_stroke_icon</item>
+        <item name="foregroundDrawable">@drawable/custom_user_icon</item>
     </style>
 
 </resources>

@@ -22,13 +22,12 @@ class LocationLayerConstants {
   static final String LOCATION_LAYER = "mapbox-location-layer";
   static final String LOCATION_BACKGROUND_LAYER = "mapbox-location-stroke-layer";
   static final String LOCATION_ACCURACY_LAYER = "mapbox-location-accuracy-layer";
-  static final String LOCATION_TEXT_ANNOTATION_LAYER = "mapbox-location-text-annotation-layer";
-  static final String NAVIGATION_ANNOTATION_LAYER = "mapbox-location-navigation-text-annotation-layer";
+  static final String LOCATION_BEARING_LAYER = "mapbox-location-bearing-layer";
+  static final String LOCATION_NAVIGATION_LAYER = "mapbox-location-navigation-layer";
 
   // Icons
   static final String USER_LOCATION_ICON = "mapbox-location-icon";
   static final String USER_LOCATION_BEARING_ICON = "mapbox-location-bearing-icon";
   static final String USER_LOCATION_BACKGROUND_ICON = "mapbox-location-stroke-icon";
   static final String USER_LOCATION_PUCK_ICON = "mapbox-location-puck-icon";
-  static final String NAVIGATION_ANNOTATION_BACKGROUND_ICON = "mapbox-location-navigation-annotation-bg-icon";
 }

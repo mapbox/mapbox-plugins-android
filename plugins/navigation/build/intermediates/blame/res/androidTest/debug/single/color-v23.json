@@ -1,0 +1,46 @@
+[
+    {
+        "merged": "/Users/cameron/Mapbox/mapbox-plugins-android/plugins/navigation/build/intermediates/res/merged/androidTest/debug/color-v23/abc_btn_colored_borderless_text_material.xml",
+        "source": "/Users/cameron/.android/build-cache/7f349649622226f1594e31bb1672e4ca95253583/output/res/color-v23/abc_btn_colored_borderless_text_material.xml"
+    },
+    {
+        "merged": "/Users/cameron/Mapbox/mapbox-plugins-android/plugins/navigation/build/intermediates/res/merged/androidTest/debug/color-v23/abc_btn_colored_text_material.xml",
+        "source": "/Users/cameron/.android/build-cache/7f349649622226f1594e31bb1672e4ca95253583/output/res/color-v23/abc_btn_colored_text_material.xml"
+    },
+    {
+        "merged": "/Users/cameron/Mapbox/mapbox-plugins-android/plugins/navigation/build/intermediates/res/merged/androidTest/debug/color-v23/design_tint_password_toggle.xml",
+        "source": "/Users/cameron/.android/build-cache/d37f60a4ff69703cb0d51817da25940516c44a6f/output/res/color-v23/design_tint_password_toggle.xml"
+    },
+    {
+        "merged": "/Users/cameron/Mapbox/mapbox-plugins-android/plugins/navigation/build/intermediates/res/merged/androidTest/debug/color-v23/abc_tint_switch_thumb.xml",
+        "source": "/Users/cameron/.android/build-cache/7f349649622226f1594e31bb1672e4ca95253583/output/res/color-v23/abc_tint_switch_thumb.xml"
+    },
+    {
+        "merged": "/Users/cameron/Mapbox/mapbox-plugins-android/plugins/navigation/build/intermediates/res/merged/androidTest/debug/color-v23/abc_tint_switch_track.xml",
+        "source": "/Users/cameron/.android/build-cache/7f349649622226f1594e31bb1672e4ca95253583/output/res/color-v23/abc_tint_switch_track.xml"
+    },
+    {
+        "merged": "/Users/cameron/Mapbox/mapbox-plugins-android/plugins/navigation/build/intermediates/res/merged/androidTest/debug/color-v23/abc_tint_edittext.xml",
+        "source": "/Users/cameron/.android/build-cache/7f349649622226f1594e31bb1672e4ca95253583/output/res/color-v23/abc_tint_edittext.xml"
+    },
+    {
+        "merged": "/Users/cameron/Mapbox/mapbox-plugins-android/plugins/navigation/build/intermediates/res/merged/androidTest/debug/color-v23/abc_tint_btn_checkable.xml",
+        "source": "/Users/cameron/.android/build-cache/7f349649622226f1594e31bb1672e4ca95253583/output/res/color-v23/abc_tint_btn_checkable.xml"
+    },
+    {
+        "merged": "/Users/cameron/Mapbox/mapbox-plugins-android/plugins/navigation/build/intermediates/res/merged/androidTest/debug/color-v23/abc_color_highlight_material.xml",
+        "source": "/Users/cameron/.android/build-cache/7f349649622226f1594e31bb1672e4ca95253583/output/res/color-v23/abc_color_highlight_material.xml"
+    },
+    {
+        "merged": "/Users/cameron/Mapbox/mapbox-plugins-android/plugins/navigation/build/intermediates/res/merged/androidTest/debug/color-v23/abc_tint_spinner.xml",
+        "source": "/Users/cameron/.android/build-cache/7f349649622226f1594e31bb1672e4ca95253583/output/res/color-v23/abc_tint_spinner.xml"
+    },
+    {
+        "merged": "/Users/cameron/Mapbox/mapbox-plugins-android/plugins/navigation/build/intermediates/res/merged/androidTest/debug/color-v23/abc_tint_seek_thumb.xml",
+        "source": "/Users/cameron/.android/build-cache/7f349649622226f1594e31bb1672e4ca95253583/output/res/color-v23/abc_tint_seek_thumb.xml"
+    },
+    {
+        "merged": "/Users/cameron/Mapbox/mapbox-plugins-android/plugins/navigation/build/intermediates/res/merged/androidTest/debug/color-v23/abc_tint_default.xml",
+        "source": "/Users/cameron/.android/build-cache/7f349649622226f1594e31bb1672e4ca95253583/output/res/color-v23/abc_tint_default.xml"
+    }
+]

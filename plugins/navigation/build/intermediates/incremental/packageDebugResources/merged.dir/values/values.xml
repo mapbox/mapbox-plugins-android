@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="mapbox_plugin_navigation_route_default_blue">#4882C6</color>
+    <color name="mapbox_plugin_navigation_route_default_casing_blue">#2C5F99</color>
+    <string name="app_name">Navigation</string>
+</resources>

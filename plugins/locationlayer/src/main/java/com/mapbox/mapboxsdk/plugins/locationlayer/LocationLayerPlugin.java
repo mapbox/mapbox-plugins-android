@@ -1,11 +1,7 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer;
 
 import android.Manifest;
-import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
@@ -53,7 +49,10 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
 
   private static final int ACCURACY_CIRCLE_STEPS = 48;
 
-  private LocationLayerOptions options;
+  @StyleRes
+  private int styleRes;
+
+  private LocationLayer locationLayer;
   private CompassManager compassListener;
   private LocationEngine locationSource;
   private MapboxMap mapboxMap;
@@ -89,10 +88,9 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   /**
    * Construct a {@code LocationLayerPlugin}
    *
-   * @param mapView        the MapView to apply the My Location layer plugin to
-   * @param mapboxMap      the MapboxMap to apply the My Location layer plugin with
-   * @param manualLocation setting to true allows you to manually update the location using
-   *                       {@link LocationLayerPlugin#setMyLocation(Location)}
+   * @param mapView   the MapView to apply the My Location layer plugin to
+   * @param mapboxMap the MapboxMap to apply the My Location layer plugin with
+   * @param styleRes  customize the user location icons inside your apps {@code style.xml}
    * @since 0.1.0
    */
   public LocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @StyleRes int styleRes) {
@@ -117,37 +115,25 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
    *
    * @param mapView        the MapView to apply the My Location layer plugin to
    * @param mapboxMap      the MapboxMap to apply the My Location layer plugin with
+   * @param styleRes       customize the user location icons inside your apps {@code style.xml}
    * @param manualLocation setting to true allows you to manually update the location using
    *                       {@link LocationLayerPlugin#setMyLocation(Location)}
    * @since 0.1.0
    */
-  public LocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @StyleRes int styleRes, boolean manualLocation) {
-    this.mapView = mapView;
-    this.mapboxMap = mapboxMap;
+  public LocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap,
+                             @StyleRes int styleRes, boolean manualLocation) {
     this.manualLocation = manualLocation;
+    this.mapboxMap = mapboxMap;
+    this.styleRes = styleRes;
+    this.mapView = mapView;
+    initialize();
+  }
 
+  private void initialize() {
     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     myLocationLayerMode = LocationLayerMode.NONE;
     compassListener = new CompassManager(mapView.getContext(), this);
-    loadAttributes(mapView.getContext(), styleRes);
-  }
-
-  private void loadAttributes(@NonNull Context context, @StyleRes int styleRes) {
-    int backgroundAttrs[] = {R.attr.backgroundDrawable};
-    TypedArray drawableArray = context.obtainStyledAttributes(styleRes, backgroundAttrs);
-    Drawable backgroundDrawable = drawableArray.getDrawable(0);
-    options = new LocationLayerOptions(this, mapView, mapboxMap, backgroundDrawable);
-    drawableArray.recycle();
-  }
-
-  /**
-   * Get the current {@link LocationLayerOptions} object which can be used to customize the look of the location icon.
-   *
-   * @return the {@link LocationLayerOptions} object this My Location layer plugin instance's using
-   * @since 0.1.0
-   */
-  public LocationLayerOptions getMyLocationLayerOptions() {
-    return options;
+    locationLayer = new LocationLayer(mapView, mapboxMap, styleRes);
   }
 
   /**
@@ -173,9 +159,13 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     }
 
     if (myLocationLayerMode != LocationLayerMode.NONE) {
-      enableLocationUpdates();
+      if (manualLocation) {
+        locationSource.removeLocationEngineListener(this);
+      } else {
+        enableLocationUpdates();
+      }
 
-      options.initialize();
+      locationLayer.setLayerVisibility(true);
 
       // Set an initial location if one available
       Location lastLocation = locationSource.getLastLocation();
@@ -186,12 +176,14 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
       }
 
       if (myLocationLayerMode == LocationLayerMode.COMPASS) {
+        setLinearAnimation(false);
         setNavigationEnabled(false);
         setMyBearingEnabled(true);
       } else if (myLocationLayerMode == LocationLayerMode.NAVIGATION) {
         setMyBearingEnabled(false);
         setNavigationEnabled(true);
       } else if (myLocationLayerMode == LocationLayerMode.TRACKING) {
+        setLinearAnimation(false);
         setMyBearingEnabled(false);
         setNavigationEnabled(false);
       }
@@ -200,7 +192,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
       if (this.myLocationLayerMode != LocationLayerMode.NONE) {
         disableLocationUpdates();
 
-        options.removeLayerAndSources();
+        locationLayer.setLayerVisibility(false);
       }
     }
     this.myLocationLayerMode = myLocationLayerMode;
@@ -213,7 +205,9 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
    * @since 0.1.0
    */
   public void setMyLocation(@Nullable Location location) {
-    updateLocation(location);
+    if (manualLocation) {
+      updateLocation(location);
+    }
   }
 
   /**
@@ -326,7 +320,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
    */
   private void disableLocationUpdates() {
     previousLocation = null;
-    if (!manualLocation && locationSource != null) {
+    if (locationSource != null) {
       locationSource.removeLocationEngineListener(this);
       locationSource.removeLocationUpdates();
       locationSource.deactivate();
@@ -355,11 +349,10 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
    * @since 0.1.0
    */
   private void setMyBearingEnabled(boolean bearingEnabled) {
-    Layer layer = mapboxMap.getLayer(LocationLayerConstants.LOCATION_LAYER);
+    Layer layer = mapboxMap.getLayer(LocationLayerConstants.LOCATION_BEARING_LAYER);
     if (layer != null) {
       layer.setProperties(
-        PropertyFactory.iconImage(bearingEnabled ? LocationLayerConstants.USER_LOCATION_BEARING_ICON
-          : LocationLayerConstants.USER_LOCATION_ICON)
+        PropertyFactory.visibility(bearingEnabled ? Property.VISIBLE : Property.NONE)
       );
     }
     if (bearingEnabled) {
@@ -379,30 +372,22 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
    * @since 0.1.0
    */
   private void setNavigationEnabled(boolean navigationEnabled) {
-    Layer layer = mapboxMap.getLayer(LocationLayerConstants.LOCATION_LAYER);
-    if (layer != null) {
-      layer.setProperties(
-        PropertyFactory.iconImage(navigationEnabled ? LocationLayerConstants.USER_LOCATION_PUCK_ICON
-          : LocationLayerConstants.USER_LOCATION_ICON)
-      );
-    }
 
-    setLinearAnimation(true);
-
-    Layer textAnnotation = mapboxMap.getLayer(LocationLayerConstants.NAVIGATION_ANNOTATION_LAYER);
-    if (textAnnotation != null) {
-      if (!navigationEnabled) {
-        mapboxMap.removeLayer(LocationLayerConstants.NAVIGATION_ANNOTATION_LAYER);
-      } else {
-        options.setLocationTextAnnotation(options.getLocationTextAnnotation());
-      }
-    }
+    setNavigationLayerVisibility(navigationEnabled);
+    setLinearAnimation(navigationEnabled);
 
     Layer accuracyLayer = mapboxMap.getLayer(LocationLayerConstants.LOCATION_ACCURACY_LAYER);
     if (accuracyLayer != null) {
       accuracyLayer.setProperties(
         PropertyFactory.visibility(navigationEnabled ? Property.NONE : Property.VISIBLE)
       );
+    }
+  }
+
+  private void setNavigationLayerVisibility(boolean visible) {
+    Layer layer = mapboxMap.getLayer(LocationLayerConstants.LOCATION_NAVIGATION_LAYER);
+    if (layer != null) {
+      layer.setProperties(PropertyFactory.visibility(visible ? Property.VISIBLE : Property.NONE));
     }
   }
 
@@ -455,9 +440,15 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
       return;
     }
 
-    locationChangeAnimate(locationGeoJsonSource, location);
+    if (locationGeoJsonSource != null) {
+      locationChangeAnimate(locationGeoJsonSource, location);
+    }
     previousLocation = location;
   }
+
+  /*
+   * Animators
+   */
 
   /**
    * Handles the animation from previous user location to the current.
@@ -466,12 +457,12 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
    * @param location              the latest user location
    * @since 0.1.0
    */
-  private void locationChangeAnimate(final GeoJsonSource locationGeoJsonSource, Location location) {
+  private void locationChangeAnimate(@NonNull final GeoJsonSource locationGeoJsonSource, @NonNull Location location) {
     if (locationChangeAnimator != null) {
       locationChangeAnimator.end();
     }
 
-    locationChangeAnimator = ValueAnimator.ofObject(new PointEvaluator(),
+    locationChangeAnimator = ValueAnimator.ofObject(new Utils.PointEvaluator(),
       Point.fromCoordinates(new double[] {previousLocation.getLongitude(), previousLocation.getLatitude()}),
       Point.fromCoordinates(new double[] {location.getLongitude(), location.getLatitude()})
     );
@@ -494,19 +485,6 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
       }
     });
     locationChangeAnimator.start();
-  }
-
-  /**
-   * Internal method being used to calculate the time duration for the location change animator.
-   *
-   * @return millisecond time value as a long value
-   * @since 0.1.0
-   */
-  private long getLocationUpdateDuration() {
-    // calculate updateLatLng time + add some extra offset to improve animation
-    long previousUpdateTimeStamp = locationUpdateTimestamp;
-    locationUpdateTimestamp = SystemClock.elapsedRealtime();
-    return (long) ((locationUpdateTimestamp - previousUpdateTimeStamp) * 1.2f);
   }
 
   /**
@@ -538,7 +516,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     bearingChangeAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
       @Override
       public void onAnimationUpdate(ValueAnimator valueAnimator) {
-        Layer locationLayer = mapboxMap.getLayer(LocationLayerConstants.LOCATION_LAYER);
+        Layer locationLayer = mapboxMap.getLayer(LocationLayerConstants.LOCATION_BEARING_LAYER);
         if (locationLayer != null) {
           locationLayer.setProperties(
             PropertyFactory.iconRotate((float) valueAnimator.getAnimatedValue())
@@ -551,20 +529,15 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   }
 
   /**
-   * Used for animating the user location icon
+   * Internal method being used to calculate the time duration for the location change animator.
    *
+   * @return millisecond time value as a long value
    * @since 0.1.0
    */
-  private static class PointEvaluator implements TypeEvaluator<Point> {
-    // Method is used to interpolate the user icon animation.
-    @Override
-    public Point evaluate(float fraction, Point startValue, Point endValue) {
-      return Point.fromCoordinates(new double[] {
-        startValue.getCoordinates().getLongitude() + (
-          (endValue.getCoordinates().getLongitude() - startValue.getCoordinates().getLongitude()) * fraction),
-        startValue.getCoordinates().getLatitude() + (
-          (endValue.getCoordinates().getLatitude() - startValue.getCoordinates().getLatitude()) * fraction)
-      });
-    }
+  private long getLocationUpdateDuration() {
+    // calculate updateLatLng time + add some extra offset to improve animation
+    long previousUpdateTimeStamp = locationUpdateTimestamp;
+    locationUpdateTimestamp = SystemClock.elapsedRealtime();
+    return (long) ((locationUpdateTimestamp - previousUpdateTimeStamp) * 1.2f);
   }
 }

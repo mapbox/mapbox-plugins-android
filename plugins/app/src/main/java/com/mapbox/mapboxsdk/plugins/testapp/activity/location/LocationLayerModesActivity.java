@@ -8,7 +8,6 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerMode;
-import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerOptions;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 
@@ -21,7 +20,6 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
   @BindView(R.id.mapView)
   MapView mapView;
 
-  private LocationLayerOptions options;
   private LocationLayerPlugin locationPlugin;
 
   @Override
@@ -30,7 +28,6 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     setContentView(R.layout.activity_my_location_mode);
     ButterKnife.bind(this);
 
-    mapView = (MapView) findViewById(R.id.mapView);
     mapView.onCreate(savedInstanceState);
     mapView.getMapAsync(this);
   }
@@ -57,7 +54,6 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
       return;
     }
     locationPlugin.setMyLocationEnabled(LocationLayerMode.TRACKING);
-    options.setLocationTextAnnotation("1509 16th St NW");
   }
 
   @OnClick(R.id.button_location_mode_navigation)
@@ -66,13 +62,11 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
       return;
     }
     locationPlugin.setMyLocationEnabled(LocationLayerMode.NAVIGATION);
-    options.setNavigationTextAnnotation("16th St NW");
   }
 
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
-    locationPlugin = new LocationLayerPlugin(mapView, mapboxMap, R.style.CustomLocationLayer);
-    options = locationPlugin.getMyLocationLayerOptions();
+    locationPlugin = new LocationLayerPlugin(mapView, mapboxMap);
   }
 
   @Override
