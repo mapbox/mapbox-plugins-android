@@ -1,4 +1,21 @@
+buildscript {
+    ext.kotlinVersion = '1.1.2-4'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 25
@@ -38,6 +55,8 @@ dependencies {
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
 
     compile project(':traffic')
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    compile project(':traffic-kotlin')
 }
 
 apply from: '../checkstyle.gradle'

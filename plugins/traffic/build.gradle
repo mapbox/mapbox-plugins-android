@@ -17,10 +17,10 @@ android {
 }
 
 dependencies {
-    compile('com.mapbox.mapboxsdk:mapbox-android-sdk:5.0.2@aar') {
+    compile('com.mapbox.mapboxsdk:mapbox-android-sdk:5.1.0-beta.3@aar') {
         transitive = true
     }
-    javadocDeps 'com.mapbox.mapboxsdk:mapbox-android-sdk:5.0.2'
+    javadocDeps 'com.mapbox.mapboxsdk:mapbox-android-sdk:5.1.0-beta.3'
 }
 
 apply from: 'javadoc.gradle'

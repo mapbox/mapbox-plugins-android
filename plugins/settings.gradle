@@ -1,1 +1,1 @@
-include ':app', ':traffic'
+include ':app', ':traffic', ':traffic-kotlin'

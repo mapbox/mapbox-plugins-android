@@ -7,6 +7,7 @@
 
     <!-- Titles -->
     <string name="title_traffic">Traffic Plugin</string>
+    <string name="title_traffic_kotlin">Traffic Plugin (Kotlin)</string>
 
     <!-- Descriptions -->
     <string name="description_traffic">Add Traffic layers to any Mapbox basemap.</string>
