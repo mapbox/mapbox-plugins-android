@@ -44,7 +44,7 @@ android {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    compile('com.mapbox.mapboxsdk:mapbox-android-sdk:5.0.2@aar') {
+    compile('com.mapbox.mapboxsdk:mapbox-android-sdk:5.1.0-beta.3@aar') {
         transitive = true
     }
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
