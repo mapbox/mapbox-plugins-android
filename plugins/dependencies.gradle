@@ -16,8 +16,13 @@ ext {
 
     dep = [
             // mapbox
-            mapSdk                 : 'com.mapbox.mapboxsdk:mapbox-android-sdk:5.1.3',
-            mapboxServices         : 'com.mapbox.mapboxsdk:mapbox-android-services:2.2.1',
+            mapSdk                 : 'com.mapbox.mapboxsdk:mapbox-android-sdk:5.1.1',
+            mapboxServices         : 'com.mapbox.mapboxsdk:mapbox-android-services:2.1.3',
+
+            // lifecycle
+            lifecycleRuntime       : 'android.arch.lifecycle:runtime:1.0.0-alpha3',
+            lifecycleExtension     : 'android.arch.lifecycle:extensions:1.0.0-alpha3',
+            lifecycleCompiler      : 'android.arch.lifecycle:compiler:1.0.0-alpha3',
 
             // unit test
             junit                  : 'junit:junit:4.12',

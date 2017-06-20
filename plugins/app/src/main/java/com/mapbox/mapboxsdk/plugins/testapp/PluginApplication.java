@@ -17,6 +17,11 @@ public class PluginApplication extends Application {
       // You should not init your app in this process.
       return;
     }
+
+    if (BuildConfig.DEBUG) {
+      Timber.plant(new Timber.DebugTree());
+    }
+
     LeakCanary.install(this);
     initializeLogger();
     Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
