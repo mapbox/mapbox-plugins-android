@@ -1,14 +1,15 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 25
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "0.1"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     configurations {
@@ -17,6 +18,11 @@ android {
 }
 
 dependencies {
+    // Unit testing
+    testCompile rootProject.ext.dep.junit
+    testCompile rootProject.ext.dep.mockito
+
+    // Mapbox dependencies
     compile('com.mapbox.mapboxsdk:mapbox-android-sdk:5.0.2@aar') {
         transitive = true
     }

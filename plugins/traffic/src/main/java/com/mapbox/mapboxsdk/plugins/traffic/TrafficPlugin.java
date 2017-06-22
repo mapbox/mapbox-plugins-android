@@ -115,8 +115,15 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
    */
   private void initialise() {
     layerIds = new ArrayList<>();
-    addTrafficSource();
-    addTrafficLayers();
+
+    try {
+      addTrafficSource();
+      addTrafficLayers();
+    } catch (Exception exception) {
+      Timber.e("Unable to attach Traffic to current style: ", exception);
+    } catch (UnsatisfiedLinkError error) {
+      Timber.e("Unable to load native libraries: ", error);
+    }
   }
 
   /**
@@ -131,15 +138,11 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
    * Adds traffic layers to the map.
    */
   private void addTrafficLayers() {
-    try {
-      addLocalLayer();
-      addSecondaryLayer();
-      addPrimaryLayer();
-      addTrunkLayer();
-      addMotorwayLayer();
-    } catch (Exception exception) {
-      Timber.e("Unable to attach Traffic Layers to current style.");
-    }
+    addLocalLayer();
+    addSecondaryLayer();
+    addPrimaryLayer();
+    addTrunkLayer();
+    addMotorwayLayer();
   }
 
   /**
@@ -156,7 +159,7 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
     );
 
     LineLayer localCase = TrafficLayer.getLineLayer(
-      Local.LOCAL_CASE_LAYER_ID,
+      Local.CASE_LAYER_ID,
       Local.ZOOM_LEVEL,
       Local.FILTER,
       Local.FUNCTION_LINE_COLOR_CASE,
@@ -363,105 +366,105 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
     }
   }
 
-  private static class TrafficData {
-    private static final String SOURCE_ID = "traffic";
-    private static final String SOURCE_LAYER = "traffic";
-    private static final String SOURCE_URL = "mapbox://mapbox.mapbox-traffic-v1";
+  static class TrafficData {
+    static final String SOURCE_ID = "traffic";
+    static final String SOURCE_LAYER = "traffic";
+    static final String SOURCE_URL = "mapbox://mapbox.mapbox-traffic-v1";
   }
 
-  private static class TrafficType {
+  static class TrafficType {
     static final Function FUNCTION_LINE_COLOR = TrafficFunction.getLineColorFunction(TrafficColor.BASE_GREEN,
       TrafficColor.BASE_YELLOW, TrafficColor.BASE_ORANGE, TrafficColor.BASE_RED);
     static final Function FUNCTION_LINE_COLOR_CASE = TrafficFunction.getLineColorFunction(
       TrafficColor.CASE_GREEN, TrafficColor.CASE_YELLOW, TrafficColor.CASE_ORANGE, TrafficColor.CASE_RED);
   }
 
-  private static class MotorWay extends TrafficType {
-    private static final String BASE_LAYER_ID = "traffic-motorway";
-    private static final String CASE_LAYER_ID = "traffic-motorway-bg";
-    private static final float ZOOM_LEVEL = 6.0f;
-    private static final Filter.Statement FILTER = in("class", "motorway");
-    private static final CameraFunction FUNCTION_LINE_WIDTH = TrafficFunction.getWidthFunction(
+  static class MotorWay extends TrafficType {
+    static final String BASE_LAYER_ID = "traffic-motorway";
+    static final String CASE_LAYER_ID = "traffic-motorway-bg";
+    static final float ZOOM_LEVEL = 6.0f;
+    static final Filter.Statement FILTER = in("class", "motorway");
+    static final CameraFunction FUNCTION_LINE_WIDTH = TrafficFunction.getWidthFunction(
       stop(6, lineWidth(0.5f)), stop(9, lineWidth(1.5f)), stop(18.0f, lineWidth(14.0f)),
       stop(20.0f, lineWidth(18.0f)));
-    private static final CameraFunction FUNCTION_LINE_WIDTH_CASE = TrafficFunction.getWidthFunction(
+    static final CameraFunction FUNCTION_LINE_WIDTH_CASE = TrafficFunction.getWidthFunction(
       stop(6, lineWidth(0.5f)), stop(9, lineWidth(3.0f)), stop(18.0f, lineWidth(16.0f)),
       stop(20.0f, lineWidth(20.0f)));
-    private static final CameraFunction FUNCTION_LINE_OFFSET = TrafficFunction.getOffsetFunction(
+    static final CameraFunction FUNCTION_LINE_OFFSET = TrafficFunction.getOffsetFunction(
       stop(7, lineOffset(0.0f)), stop(9, lineOffset(1.2f)), stop(11, lineOffset(1.2f)),
       stop(18, lineOffset(10.0f)), stop(20, lineOffset(15.5f)));
   }
 
-  private static class Trunk extends TrafficType {
-    private static final String BASE_LAYER_ID = "traffic-trunk";
-    private static final String CASE_LAYER_ID = "traffic-trunk-bg";
-    private static final float ZOOM_LEVEL = 6.0f;
-    private static final Filter.Statement FILTER = in("class", "trunk");
-    private static final CameraFunction FUNCTION_LINE_WIDTH = TrafficFunction.getWidthFunction(
+  static class Trunk extends TrafficType {
+    static final String BASE_LAYER_ID = "traffic-trunk";
+    static final String CASE_LAYER_ID = "traffic-trunk-bg";
+    static final float ZOOM_LEVEL = 6.0f;
+    static final Filter.Statement FILTER = in("class", "trunk");
+    static final CameraFunction FUNCTION_LINE_WIDTH = TrafficFunction.getWidthFunction(
       stop(8, lineWidth(0.75f)), stop(18, lineWidth(11f)), stop(20f, lineWidth(15.0f)));
-    private static final CameraFunction FUNCTION_LINE_WIDTH_CASE = TrafficFunction.getWidthFunction(
+    static final CameraFunction FUNCTION_LINE_WIDTH_CASE = TrafficFunction.getWidthFunction(
       stop(8, lineWidth(0.5f)), stop(9, lineWidth(2.25f)), stop(18.0f, lineWidth(13.0f)),
       stop(20.0f, lineWidth(17.5f)));
-    private static final CameraFunction FUNCTION_LINE_OFFSET = TrafficFunction.getOffsetFunction(
+    static final CameraFunction FUNCTION_LINE_OFFSET = TrafficFunction.getOffsetFunction(
       stop(7, lineOffset(0.0f)), stop(9, lineOffset(1f)), stop(18, lineOffset(13f)),
       stop(20, lineOffset(18.0f)));
   }
 
-  private static class Primary extends TrafficType {
-    private static final String BASE_LAYER_ID = "traffic-primary";
-    private static final String CASE_LAYER_ID = "traffic-primary-bg";
-    private static final float ZOOM_LEVEL = 6.0f;
-    private static final Filter.Statement FILTER = in("class", "primary");
-    private static final CameraFunction FUNCTION_LINE_WIDTH = TrafficFunction.getWidthFunction(
+  static class Primary extends TrafficType {
+    static final String BASE_LAYER_ID = "traffic-primary";
+    static final String CASE_LAYER_ID = "traffic-primary-bg";
+    static final float ZOOM_LEVEL = 6.0f;
+    static final Filter.Statement FILTER = in("class", "primary");
+    static final CameraFunction FUNCTION_LINE_WIDTH = TrafficFunction.getWidthFunction(
       stop(10, lineWidth(1.0f)), stop(15, lineWidth(4.0f)), stop(20, lineWidth(16f)));
-    private static final CameraFunction FUNCTION_LINE_WIDTH_CASE = TrafficFunction.getWidthFunction(
+    static final CameraFunction FUNCTION_LINE_WIDTH_CASE = TrafficFunction.getWidthFunction(
       stop(10, lineWidth(0.75f)), stop(15, lineWidth(6f)), stop(20.0f, lineWidth(18.0f)));
-    private static final CameraFunction FUNCTION_LINE_OFFSET = TrafficFunction.getOffsetFunction(
+    static final CameraFunction FUNCTION_LINE_OFFSET = TrafficFunction.getOffsetFunction(
       stop(10, lineOffset(0.0f)), stop(12, lineOffset(1.5f)), stop(18, lineOffset(13f)),
       stop(20, lineOffset(16.0f)));
-    private static final Function FUNCTION_LINE_OPACITY_CASE = TrafficFunction.getOpacityFunction(
+    static final Function FUNCTION_LINE_OPACITY_CASE = TrafficFunction.getOpacityFunction(
       stop(11, lineOpacity(0.0f)), stop(12, lineOpacity(1.0f)));
   }
 
-  private static class Secondary extends TrafficType {
-    private static final String BASE_LAYER_ID = "traffic-secondary-tertiary";
-    private static final String CASE_LAYER_ID = "traffic-secondary-tertiary-bg";
-    private static final float ZOOM_LEVEL = 6.0f;
-    private static final Filter.Statement FILTER = in("class", "secondary", "tertiary");
-    private static final CameraFunction FUNCTION_LINE_WIDTH = TrafficFunction.getWidthFunction(
+  static class Secondary extends TrafficType {
+    static final String BASE_LAYER_ID = "traffic-secondary-tertiary";
+    static final String CASE_LAYER_ID = "traffic-secondary-tertiary-bg";
+    static final float ZOOM_LEVEL = 6.0f;
+    static final Filter.Statement FILTER = in("class", "secondary", "tertiary");
+    static final CameraFunction FUNCTION_LINE_WIDTH = TrafficFunction.getWidthFunction(
       stop(9, lineWidth(0.5f)), stop(18, lineWidth(9.0f)), stop(20, lineWidth(14f)));
-    private static final CameraFunction FUNCTION_LINE_WIDTH_CASE = TrafficFunction.getWidthFunction(
+    static final CameraFunction FUNCTION_LINE_WIDTH_CASE = TrafficFunction.getWidthFunction(
       stop(9, lineWidth(1.5f)), stop(18, lineWidth(11f)), stop(20.0f, lineWidth(16.5f)));
-    private static final CameraFunction FUNCTION_LINE_OFFSET = TrafficFunction.getOffsetFunction(
+    static final CameraFunction FUNCTION_LINE_OFFSET = TrafficFunction.getOffsetFunction(
       stop(10, lineOffset(0.5f)), stop(15, lineOffset(5f)), stop(18, lineOffset(11f)),
       stop(20, lineOffset(14.5f)));
-    private static final Function FUNCTION_LINE_OPACITY_CASE = TrafficFunction.getOpacityFunction(
+    static final Function FUNCTION_LINE_OPACITY_CASE = TrafficFunction.getOpacityFunction(
       stop(13, lineOpacity(0.0f)), stop(14, lineOpacity(1.0f)));
   }
 
-  private static class Local extends TrafficType {
-    private static final String BASE_LAYER_ID = "traffic-local";
-    private static final String LOCAL_CASE_LAYER_ID = "traffic-local-case";
-    private static final float ZOOM_LEVEL = 15.0f;
-    private static final Filter.Statement FILTER = in("class", "motorway_link", "service", "street");
-    private static final CameraFunction FUNCTION_LINE_WIDTH = TrafficFunction.getWidthFunction(
+  static class Local extends TrafficType {
+    static final String BASE_LAYER_ID = "traffic-local";
+    static final String CASE_LAYER_ID = "traffic-local-case";
+    static final float ZOOM_LEVEL = 15.0f;
+    static final Filter.Statement FILTER = in("class", "motorway_link", "service", "street");
+    static final CameraFunction FUNCTION_LINE_WIDTH = TrafficFunction.getWidthFunction(
       stop(14, lineWidth(1.5f)), stop(20, lineWidth(13.5f)));
-    private static final CameraFunction FUNCTION_LINE_WIDTH_CASE = TrafficFunction.getWidthFunction(
+    static final CameraFunction FUNCTION_LINE_WIDTH_CASE = TrafficFunction.getWidthFunction(
       stop(14, lineWidth(2.5f)), stop(20, lineWidth(15.5f)));
-    private static final CameraFunction FUNCTION_LINE_OFFSET = TrafficFunction.getOffsetFunction(
+    static final CameraFunction FUNCTION_LINE_OFFSET = TrafficFunction.getOffsetFunction(
       stop(14, lineOffset(2f)), stop(20, lineOffset(18f)));
-    private static final Function FUNCTION_LINE_OPACITY_CASE = TrafficFunction.getOpacityFunction(
+    static final Function FUNCTION_LINE_OPACITY_CASE = TrafficFunction.getOpacityFunction(
       stop(15, lineOpacity(0.0f)), stop(16, lineOpacity(1.0f)));
   }
 
-  private static class TrafficColor {
-    private static final int BASE_GREEN = Color.parseColor("#39c66d");
-    private static final int CASE_GREEN = Color.parseColor("#059441");
-    private static final int BASE_YELLOW = Color.parseColor("#ff8c1a");
-    private static final int CASE_YELLOW = Color.parseColor("#d66b00");
-    private static final int BASE_ORANGE = Color.parseColor("#ff0015");
-    private static final int CASE_ORANGE = Color.parseColor("#bd0010");
-    private static final int BASE_RED = Color.parseColor("#981b25");
-    private static final int CASE_RED = Color.parseColor("#5f1117");
+  static class TrafficColor {
+    static final int BASE_GREEN = Color.parseColor("#39c66d");
+    static final int CASE_GREEN = Color.parseColor("#059441");
+    static final int BASE_YELLOW = Color.parseColor("#ff8c1a");
+    static final int CASE_YELLOW = Color.parseColor("#d66b00");
+    static final int BASE_ORANGE = Color.parseColor("#ff0015");
+    static final int CASE_ORANGE = Color.parseColor("#bd0010");
+    static final int BASE_RED = Color.parseColor("#981b25");
+    static final int CASE_RED = Color.parseColor("#5f1117");
   }
 }
