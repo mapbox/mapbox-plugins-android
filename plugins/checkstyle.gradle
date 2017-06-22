@@ -1,6 +1,6 @@
 apply plugin: 'checkstyle'
 
-checkstyle.toolVersion = '7.1.1'
+checkstyle.toolVersion = '7.8.2'
 
 task checkstyle(type: Checkstyle) {
     description 'Checks if the code adheres to coding standards'
@@ -10,7 +10,6 @@ task checkstyle(type: Checkstyle) {
     source 'src'
     include '**/*.java'
     exclude '**/gen/**'
-    exclude '**/*FeatureOverviewActivity.java'
 
     classpath = files()
     ignoreFailures = false
