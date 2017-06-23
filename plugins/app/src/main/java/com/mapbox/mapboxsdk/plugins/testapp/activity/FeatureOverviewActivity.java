@@ -471,20 +471,20 @@ public class FeatureOverviewActivity extends AppCompatActivity {
         }
       }
     };
-    private RecyclerView.OnChildAttachStateChangeListener attachListener
-      = new RecyclerView.OnChildAttachStateChangeListener() {
-      @Override
-      public void onChildViewAttachedToWindow(View view) {
-        if (onItemClickListener != null) {
-          view.setOnClickListener(onClickListener);
+    private RecyclerView.OnChildAttachStateChangeListener attachListener =
+      new RecyclerView.OnChildAttachStateChangeListener() {
+        @Override
+        public void onChildViewAttachedToWindow(View view) {
+          if (onItemClickListener != null) {
+            view.setOnClickListener(onClickListener);
+          }
         }
-      }
 
-      @Override
-      public void onChildViewDetachedFromWindow(View view) {
+        @Override
+        public void onChildViewDetachedFromWindow(View view) {
 
-      }
-    };
+        }
+      };
 
     private ItemClickSupport(RecyclerView recyclerView) {
       this.recyclerView = recyclerView;
