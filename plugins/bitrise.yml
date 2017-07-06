@@ -123,6 +123,17 @@ workflows:
             #!/bin/bash
             make publish
         title: Publish Plugins To Maven Central
+    - slack:
+        title: Post to Slack
+        inputs:
+        - webhook_url: "$SLACK_HOOK_URL"
+        - channel: "#mobile-bots"
+        - from_username: Bitrise Mapbox Plugins Android
+        - from_username_on_error: Bitrise Mapbox Plugins Android
+        - message: "Release of Mapbox Android Plugins success"
+        - message_on_error: "Release of Mapbox Android Plugins failed! @android_team"
+        - icon_url: https://bitrise-public-content-production.s3.amazonaws.com/slack/bitrise-slack-icon-128.png
+        - icon_url_on_error: https://bitrise-public-content-production.s3.amazonaws.com/slack/bitrise-slack-error-icon-128.png
 app:
   envs:
   - opts:
