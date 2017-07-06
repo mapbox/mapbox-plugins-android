@@ -60,7 +60,7 @@ workflows:
         inputs:
         - content: |-
             #!/bin/bash
-            gcloud beta test android run --type instrumentation --app ./plugins/app/build/outputs/apk/app-debug.apk --test ./plugins/app/build/outputs/apk/app-debug-androidTest.apk --device-ids shamu --os-version-ids 22 --locales en --orientations portrait --timeout 15m
+            gcloud firebase test android run --type instrumentation --app ./plugins/app/build/outputs/apk/app-debug.apk --test ./plugins/app/build/outputs/apk/app-debug-androidTest.apk --device-ids shamu --os-version-ids 22 --locales en --orientations portrait --timeout 15m
     - deploy-to-bitrise-io@1.2.9: {}
     - slack:
         title: Post to Slack
