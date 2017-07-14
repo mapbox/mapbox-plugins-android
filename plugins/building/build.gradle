@@ -1,26 +1,27 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+  compileSdkVersion rootProject.ext.compileSdkVersion
+  buildToolsVersion rootProject.ext.buildToolsVersion
 
-    defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 25
-        versionCode 1
-        versionName "0.1"
-    }
+  defaultConfig {
+    minSdkVersion rootProject.ext.minSdkVersion
+    targetSdkVersion rootProject.ext.targetSdkVersion
+    versionCode 1
+    versionName "0.1"
+  }
 
-    configurations {
-        javadocDeps
-    }
+  configurations {
+    javadocDeps
+  }
 }
 
 dependencies {
-    compile('com.mapbox.mapboxsdk:mapbox-android-sdk:5.1.0@aar') {
-        transitive = true
-    }
-    javadocDeps 'com.mapbox.mapboxsdk:mapbox-android-sdk:5.1.0'
+  compile(rootProject.ext.dep.mapSdk + '@aar') {
+    transitive = true
+  }
+
+  javadocDeps rootProject.ext.dep.mapSdk
 }
 
 apply from: 'javadoc.gradle'
