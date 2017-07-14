@@ -24,8 +24,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.plugins.testapp.R;
+import com.mapbox.services.android.telemetry.permissions.PermissionsListener;
+import com.mapbox.services.android.telemetry.permissions.PermissionsManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,13 +42,14 @@ import timber.log.Timber;
 /**
  * Activity showing a RecyclerView with Activities generated from AndroidManifest.xml
  */
-public class FeatureOverviewActivity extends AppCompatActivity {
+public class FeatureOverviewActivity extends AppCompatActivity implements PermissionsListener {
 
   private static final String KEY_STATE_FEATURES = "featureList";
 
   private RecyclerView recyclerView;
   private FeatureSectionAdapter sectionAdapter;
   private List<Feature> features;
+  private PermissionsManager permissionsManager;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +77,13 @@ public class FeatureOverviewActivity extends AppCompatActivity {
     } else {
       features = savedInstanceState.getParcelableArrayList(KEY_STATE_FEATURES);
       onFeaturesLoaded(features);
+    }
+
+    // Check for location permission
+    permissionsManager = new PermissionsManager(this);
+    if (!PermissionsManager.areLocationPermissionsGranted(this)) {
+      recyclerView.setEnabled(false);
+      permissionsManager.requestLocationPermissions(this);
     }
   }
 
@@ -110,6 +121,27 @@ public class FeatureOverviewActivity extends AppCompatActivity {
     Intent intent = new Intent();
     intent.setComponent(new ComponentName(getPackageName(), feature.getName()));
     startActivity(intent);
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
+  }
+
+  @Override
+  public void onExplanationNeeded(List<String> permissionsToExplain) {
+    Toast.makeText(this, "This app needs location permissions in order to show its functionality.",
+      Toast.LENGTH_LONG).show();
+  }
+
+  @Override
+  public void onPermissionResult(boolean granted) {
+    if (granted) {
+      recyclerView.setEnabled(true);
+    } else {
+      Toast.makeText(this, "You didn't grant location permissions.",
+        Toast.LENGTH_LONG).show();
+    }
   }
 
   @Override
@@ -349,7 +381,6 @@ public class FeatureOverviewActivity extends AppCompatActivity {
         }
       });
     }
-
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int typeView) {
