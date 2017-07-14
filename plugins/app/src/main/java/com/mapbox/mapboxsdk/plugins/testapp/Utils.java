@@ -18,9 +18,7 @@ public class Utils {
     Style.OUTDOORS,
     Style.LIGHT,
     Style.DARK,
-    Style.SATELLITE_STREETS,
-    Style.TRAFFIC_DAY,
-    Style.TRAFFIC_NIGHT
+    Style.SATELLITE_STREETS
   };
 
   private static int index;
