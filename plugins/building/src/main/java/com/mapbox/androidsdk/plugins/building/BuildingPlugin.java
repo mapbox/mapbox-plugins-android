@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.support.annotation.ColorInt;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.mapbox.mapboxsdk.constants.MapboxConstants;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -42,6 +43,7 @@ public final class BuildingPlugin {
   private float opacity = 0.6f;
   private float minZoomLevel = 15.0f;
   private Light light;
+  private MapboxMap mapboxMap;
 
   /**
    * Create a building plugin.
@@ -51,12 +53,25 @@ public final class BuildingPlugin {
    * @since 0.1.0
    */
   public BuildingPlugin(@NonNull MapView mapView, @NonNull final MapboxMap mapboxMap) {
-    initLayer(mapboxMap);
+    this(mapView, mapboxMap, null);
+  }
+
+  /**
+   * Create a building plugin.
+   *
+   * @param mapView   the MapView to apply the building plugin to
+   * @param mapboxMap the MapboxMap to apply building plugin with
+   * @since 0.1.0
+   */
+  public BuildingPlugin(@NonNull MapView mapView, @NonNull final MapboxMap mapboxMap,
+                        @Nullable final String belowLayer) {
+    this.mapboxMap = mapboxMap;
+    initLayer(belowLayer);
     mapView.addOnMapChangedListener(new MapView.OnMapChangedListener() {
       @Override
       public void onMapChanged(int change) {
         if (change == MapView.DID_FINISH_LOADING_STYLE && mapboxMap.getLayer(LAYER_ID) == null) {
-          initLayer(mapboxMap);
+          initLayer(belowLayer);
         }
       }
     });
@@ -65,9 +80,9 @@ public final class BuildingPlugin {
   /**
    * Initialises and adds the fill extrusion layer used by this plugin.
    *
-   * @param mapboxMap the MapboxMap instance to add the layer to
+   * @param belowLayer optionally place the buildings layer below a provided layer id
    */
-  private void initLayer(MapboxMap mapboxMap) {
+  private void initLayer(String belowLayer) {
     light = mapboxMap.getLight();
     fillExtrusionLayer = new FillExtrusionLayer(LAYER_ID, "composite");
     fillExtrusionLayer.setSourceLayer("building");
@@ -84,7 +99,15 @@ public final class BuildingPlugin {
         ))),
       fillExtrusionOpacity(opacity)
     );
-    mapboxMap.addLayer(fillExtrusionLayer);
+    addLayer(fillExtrusionLayer, belowLayer);
+  }
+
+  private void addLayer(FillExtrusionLayer fillExtrusionLayer, String belowLayer) {
+    if (belowLayer != null && !belowLayer.isEmpty()) {
+      mapboxMap.addLayerBelow(fillExtrusionLayer, belowLayer);
+    } else {
+      mapboxMap.addLayer(fillExtrusionLayer);
+    }
   }
 
   /**
