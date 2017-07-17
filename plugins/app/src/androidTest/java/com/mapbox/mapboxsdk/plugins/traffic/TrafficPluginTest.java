@@ -44,7 +44,7 @@ public class TrafficPluginTest {
   @Rule
   public ActivityTestRule<TrafficActivity> rule = new ActivityTestRule<>(TrafficActivity.class);
 
-  public static final String ROUND = "round";
+  private static final String ROUND = "round";
 
   private OnMapReadyIdlingResource idlingResource;
   private MapboxMap mapboxMap;
@@ -78,7 +78,7 @@ public class TrafficPluginTest {
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController uiController) {
-        assertTrue(trafficPlugin.isEnabled());
+        assertTrue(trafficPlugin.isVisible());
       }
     });
   }
@@ -88,8 +88,8 @@ public class TrafficPluginTest {
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController uiController) {
-        trafficPlugin.toggle();
-        assertFalse(trafficPlugin.isEnabled());
+        trafficPlugin.setVisibility(false);
+        assertFalse(trafficPlugin.isVisible());
       }
     });
   }
@@ -409,7 +409,7 @@ public class TrafficPluginTest {
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        trafficPlugin.toggle();
+        trafficPlugin.setVisibility(false);
         assertTrue(mapboxMap.getLayer(Local.BASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
       }
     });
@@ -420,7 +420,7 @@ public class TrafficPluginTest {
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        trafficPlugin.toggle();
+        trafficPlugin.setVisibility(false);
         assertTrue(mapboxMap.getLayer(Local.CASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
       }
     });
@@ -431,7 +431,7 @@ public class TrafficPluginTest {
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        trafficPlugin.toggle();
+        trafficPlugin.setVisibility(false);
         assertTrue(mapboxMap.getLayer(Secondary.BASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
       }
     });
@@ -442,7 +442,7 @@ public class TrafficPluginTest {
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        trafficPlugin.toggle();
+        trafficPlugin.setVisibility(false);
         assertTrue(mapboxMap.getLayer(Secondary.CASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
       }
     });
@@ -453,7 +453,7 @@ public class TrafficPluginTest {
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        trafficPlugin.toggle();
+        trafficPlugin.setVisibility(false);
         assertTrue(mapboxMap.getLayer(Primary.BASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
       }
     });
@@ -464,7 +464,7 @@ public class TrafficPluginTest {
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        trafficPlugin.toggle();
+        trafficPlugin.setVisibility(false);
         assertTrue(mapboxMap.getLayer(Primary.CASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
       }
     });
@@ -476,7 +476,7 @@ public class TrafficPluginTest {
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        trafficPlugin.toggle();
+        trafficPlugin.setVisibility(false);
         assertTrue(mapboxMap.getLayer(Trunk.BASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
       }
     });
@@ -487,7 +487,7 @@ public class TrafficPluginTest {
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        trafficPlugin.toggle();
+        trafficPlugin.setVisibility(false);
         assertTrue(mapboxMap.getLayer(Trunk.CASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
       }
     });
@@ -498,7 +498,7 @@ public class TrafficPluginTest {
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        trafficPlugin.toggle();
+        trafficPlugin.setVisibility(false);
         assertTrue(mapboxMap.getLayer(MotorWay.BASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
       }
     });
@@ -509,7 +509,7 @@ public class TrafficPluginTest {
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        trafficPlugin.toggle();
+        trafficPlugin.setVisibility(false);
         assertTrue(mapboxMap.getLayer(MotorWay.CASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
       }
     });

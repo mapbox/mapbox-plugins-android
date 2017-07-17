@@ -36,8 +36,8 @@ public class TrafficPluginTest {
   @Test
   public void testToggle() {
     TrafficPlugin trafficPlugin = new TrafficPlugin(mapView, mapboxMap);
-    assertFalse(trafficPlugin.isEnabled());
-    trafficPlugin.toggle();
-    assertTrue(trafficPlugin.isEnabled());
+    assertFalse(trafficPlugin.isVisible());
+    trafficPlugin.setVisibility(true);
+    assertTrue(trafficPlugin.isVisible());
   }
 }
