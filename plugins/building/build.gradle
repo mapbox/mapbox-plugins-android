@@ -9,7 +9,6 @@ android {
     targetSdkVersion rootProject.ext.targetSdkVersion
     versionCode 1
     versionName "0.1"
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 
   configurations {
@@ -18,11 +17,6 @@ android {
 }
 
 dependencies {
-  // Unit testing
-  testCompile rootProject.ext.dep.junit
-  testCompile rootProject.ext.dep.mockito
-
-  // Mapbox dependencies
   compile(rootProject.ext.dep.mapSdk + '@aar') {
     transitive = true
   }

@@ -24,7 +24,18 @@
             android:label="@string/title_traffic">
             <meta-data
                 android:name="@string/category"
-                android:value="@string/category_runtime_styling"/>
+                android:value="@string/category_navigation"/>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.FeatureOverviewActivity"/>
+        </activity>
+        <activity
+            android:name=".activity.BuildingActivity"
+            android:description="@string/description_building"
+            android:label="@string/title_building">
+            <meta-data
+                android:name="@string/category"
+                android:value="@string/category_extrusions"/>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.FeatureOverviewActivity"/>

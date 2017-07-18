@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/menu_building_min_zoom"
+          android:title="Set min zoom to 14"
+          app:showAsAction="never"/>
+    <item android:id="@+id/menu_building_opacity"
+          android:title="Set opacity to 1.0"
+          app:showAsAction="never"/>
+    <item android:id="@+id/menu_building_color"
+          android:title="Set color to Red"
+          app:showAsAction="never"/>
+    <item android:id="@+id/menu_building_style"
+          android:title="Load different style"
+          app:showAsAction="never"/>
+</menu>
