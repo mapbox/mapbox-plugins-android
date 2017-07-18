@@ -48,14 +48,14 @@ public class TrafficActivity extends AppCompatActivity implements OnMapReadyCall
   public void onMapReady(final MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
     this.trafficPlugin = new TrafficPlugin(mapView, mapboxMap);
-    this.trafficPlugin.toggle(); // Enable the traffic view by default
+    this.trafficPlugin.setVisibility(true); // Enable the traffic view by default
   }
 
   @OnClick(R.id.fabTraffic)
   public void onTrafficFabClick() {
     if (mapboxMap != null) {
-      trafficPlugin.toggle();
-      Timber.e("Traffic plugin is enabled :%s", trafficPlugin.isEnabled());
+      trafficPlugin.setVisibility(!trafficPlugin.isVisible());
+      Timber.e("Traffic plugin is enabled :%s", trafficPlugin.isVisible());
     }
   }
 

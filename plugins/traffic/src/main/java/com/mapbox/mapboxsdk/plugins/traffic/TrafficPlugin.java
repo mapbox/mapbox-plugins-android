@@ -3,6 +3,7 @@ package com.mapbox.mapboxsdk.plugins.traffic;
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -12,6 +13,8 @@ import com.mapbox.mapboxsdk.style.functions.stops.Stop;
 import com.mapbox.mapboxsdk.style.layers.Filter;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
+import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.Source;
 import com.mapbox.mapboxsdk.style.sources.VectorSource;
 
@@ -35,21 +38,22 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
 
 /**
- * The traffic plugin allows to add Mapbox Traffic v1 to the Mapbox Android SDK v5.0.2.
+ * The Traffic Plugin allows you to add Mapbox Traffic v1 to the Mapbox Android SDK.
  * <p>
  * Initialise this plugin in the {@link com.mapbox.mapboxsdk.maps.OnMapReadyCallback#onMapReady(MapboxMap)} and provide
  * a valid instance of {@link MapView} and {@link MapboxMap}.
  * </p>
  * <p>
- * Use {@link #toggle()} to switch state of this plugin to enable or disabled.
- * Use {@link #isEnabled()} to validate if the plugin is active or not.
+ * Use {@link #setVisibility(boolean)} to switch state of this plugin to enable or disabled.
+ * Use {@link #isVisible()} to validate if the plugin is active or not.
  * </p>
  */
 public final class TrafficPlugin implements MapView.OnMapChangedListener {
 
   private MapboxMap mapboxMap;
   private List<String> layerIds;
-  private boolean enabled;
+  private String belowLayer;
+  private boolean visible;
 
   /**
    * Create a traffic plugin.
@@ -58,8 +62,21 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
    * @param mapboxMap the MapboxMap to apply traffic plugin with
    */
   public TrafficPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
+    this(mapView, mapboxMap, null);
+  }
+
+  /**
+   * Create a traffic plugin.
+   *
+   * @param mapView    the MapView to apply the traffic plugin to
+   * @param mapboxMap  the MapboxMap to apply traffic plugin with
+   * @param belowLayer the layer id where you'd like the traffic to display below
+   */
+  public TrafficPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @Nullable String belowLayer) {
     this.mapboxMap = mapboxMap;
+    this.belowLayer = belowLayer;
     mapView.addOnMapChangedListener(this);
+    updateState();
   }
 
   /**
@@ -67,20 +84,23 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
    *
    * @return true if enabled, false otherwise
    */
-  public boolean isEnabled() {
-    return enabled;
+  public boolean isVisible() {
+    return visible;
   }
 
   /**
-   * Toggles the traffic plugin state.
-   * <p>
-   * If the traffic plugin wasn't initialised yet, traffic source and layers will be added to the current map style.
-   * Else visibility will be toggled based on the current state.
-   * </p>
+   * Toggles the visibility of the traffic layers.
+   *
+   * @param visible true for visible, false for none
    */
-  public void toggle() {
-    enabled = !enabled;
-    updateState();
+  public void setVisibility(boolean visible) {
+    this.visible = visible;
+    List<Layer> layers = mapboxMap.getLayers();
+    for (Layer layer : layers) {
+      if (layerIds.contains(layer.getId())) {
+        layer.setProperties(visibility(visible ? Property.VISIBLE : Property.NONE));
+      }
+    }
   }
 
   /**
@@ -93,7 +113,7 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
    */
   @Override
   public void onMapChanged(int change) {
-    if (change == MapView.DID_FINISH_LOADING_STYLE && isEnabled()) {
+    if (change == MapView.DID_FINISH_LOADING_STYLE && isVisible()) {
       updateState();
     }
   }
@@ -107,7 +127,7 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
       initialise();
       return;
     }
-    setVisibility(enabled);
+    setVisibility(visible);
   }
 
   /**
@@ -168,8 +188,25 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
       Local.FUNCTION_LINE_OPACITY_CASE
     );
 
-    // #TODO https://github.com/mapbox/mapbox-plugins-android/issues/14
-    addTrafficLayersToMap(localCase, local, "bridge-motorway");
+    addTrafficLayersToMap(localCase, local, placeLayerBelow());
+  }
+
+  /**
+   * Attempts to find the layer which the traffic should be placed below. Depending on the style, this might not always
+   * be accurate.
+   */
+  private String placeLayerBelow() {
+    if (belowLayer == null || belowLayer.isEmpty()) {
+      List<Layer> styleLayers = mapboxMap.getLayers();
+      Layer layer;
+      for (int i = styleLayers.size() - 1; i >= 0; i--) {
+        layer = styleLayers.get(i);
+        if (!(layer instanceof SymbolLayer)) {
+          return layer.getId();
+        }
+      }
+    }
+    return belowLayer;
   }
 
   /**
@@ -290,24 +327,10 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
    * @param idAboveLayer the id of the layer above
    */
   private void addTrafficLayersToMap(Layer layerCase, Layer layer, String idAboveLayer) {
-    mapboxMap.addLayerAbove(layerCase, idAboveLayer);
+    mapboxMap.addLayerBelow(layerCase, idAboveLayer);
     mapboxMap.addLayerAbove(layer, layerCase.getId());
     layerIds.add(layerCase.getId());
     layerIds.add(layer.getId());
-  }
-
-  /**
-   * Toggles the visibility of the traffic layers.
-   *
-   * @param visible true for visible, false for none
-   */
-  private void setVisibility(boolean visible) {
-    List<Layer> layers = mapboxMap.getLayers();
-    for (Layer layer : layers) {
-      if (layerIds.contains(layer.getId())) {
-        layer.setProperties(visibility(visible ? "visible" : "none"));
-      }
-    }
   }
 
   private static class TrafficLayer {
