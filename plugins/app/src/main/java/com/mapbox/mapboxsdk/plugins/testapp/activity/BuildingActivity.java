@@ -64,6 +64,7 @@ public class BuildingActivity extends AppCompatActivity implements OnMapReadyCal
     initLightSeekbar();
   }
 
+  // See https://en.wikipedia.org/wiki/Spherical_coordinate_system for more information on these values
   private void initLightSeekbar() {
     seekbarRadialCoordinate.setMax(24); // unknown?
     seekbarAzimuthalAngle.setMax(180); // unknown?
