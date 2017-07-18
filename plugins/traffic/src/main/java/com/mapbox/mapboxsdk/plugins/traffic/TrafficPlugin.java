@@ -188,16 +188,21 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
       Local.FUNCTION_LINE_OPACITY_CASE
     );
 
-    // #TODO https://github.com/mapbox/mapbox-plugins-android/issues/14
     addTrafficLayersToMap(localCase, local, placeLayerBelow());
   }
 
+  /**
+   * Attempts to find the layer which the traffic should be placed below. Depending on the style, this might not always
+   * be accurate.
+   */
   private String placeLayerBelow() {
     if (belowLayer == null || belowLayer.isEmpty()) {
       List<Layer> styleLayers = mapboxMap.getLayers();
+      Layer layer;
       for (int i = styleLayers.size() - 1; i >= 0; i--) {
-        if (!(styleLayers.get(i) instanceof SymbolLayer)) {
-          return styleLayers.get(i).getId();
+        layer = styleLayers.get(i);
+        if (!(layer instanceof SymbolLayer)) {
+          return layer.getId();
         }
       }
     }
