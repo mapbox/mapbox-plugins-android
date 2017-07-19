@@ -67,9 +67,10 @@ dependencies {
     compile project(':traffic')
     compile project(':locationlayer')
     compile project(':building')
-
-    compile 'com.afollestad.material-dialogs:commons:0.9.4.5'
     compile project(':geojson')
+
+    //External libs
+    compile 'com.afollestad.material-dialogs:commons:0.9.4.5'
 }
 
 apply from: '../checkstyle.gradle'

@@ -6,6 +6,7 @@
     <string name="category_extrusions">Extrusions</string>
     <string name="category_navigation">Navigation</string>
     <string name="category_location">Location</string>
+    <string name="category_drawing">Drawing</string>
 
     <!-- Titles -->
     <string name="title_traffic">Traffic Plugin</string>
