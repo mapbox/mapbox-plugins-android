@@ -41,18 +41,26 @@ workflows:
             echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
             curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
             sudo apt-get update && sudo apt-get install -y google-cloud-sdk
-    - script:
-        title: Run Firebase Roboto tests
-        inputs:
-        - content: |-
-            #!/bin/bash
+            # Configure
             set -euo pipefail
             echo "Downloading Google Cloud authentication:"
             wget -O google-services.json "$BITRISEIO_GOOGLE_SERVICES_JSON_URL"
-
-            echo "Run tests on firebase:"
             gcloud auth activate-service-account --key-file google-services.json --project mapbox-plugins-android-4e407
+    - script:
+        title: Run Firebase Roboto tests on test application
+        inputs:
+        - content: |-
+            #!/bin/bash
             gcloud firebase test android run --type robo --app "$BITRISE_APK_PATH" --device-ids shamu --os-version-ids 22 --locales en --orientations portrait --timeout 10m
+    - gradle-runner@1.5.4:
+        inputs:
+        - gradle_task: "$INSTRUMENTATIONTEST_TASK"
+    - script:
+        title: Run Firebase Instrumentation tests
+        inputs:
+        - content: |-
+            #!/bin/bash
+            gcloud firebase test android run --type instrumentation --app ./plugins/app/build/outputs/apk/app-debug.apk --test ./plugins/app/build/outputs/apk/app-debug-androidTest.apk --device-ids shamu --os-version-ids 22 --locales en --orientations portrait --timeout 15m
     - deploy-to-bitrise-io@1.2.9: {}
     - slack:
         title: Post to Slack
@@ -115,6 +123,17 @@ workflows:
             #!/bin/bash
             make publish
         title: Publish Plugins To Maven Central
+    - slack:
+        title: Post to Slack
+        inputs:
+        - webhook_url: "$SLACK_HOOK_URL"
+        - channel: "#mobile-bots"
+        - from_username: Bitrise Mapbox Plugins Android
+        - from_username_on_error: Bitrise Mapbox Plugins Android
+        - message: "Release of Mapbox Android Plugins success"
+        - message_on_error: "Release of Mapbox Android Plugins failed! @android_team"
+        - icon_url: https://bitrise-public-content-production.s3.amazonaws.com/slack/bitrise-slack-icon-128.png
+        - icon_url_on_error: https://bitrise-public-content-production.s3.amazonaws.com/slack/bitrise-slack-error-icon-128.png
 app:
   envs:
   - opts:
@@ -129,6 +148,9 @@ app:
   - opts:
       is_expand: false
     UNITTEST_TASK: test
+  - opts:
+      is_expand: false
+    INSTRUMENTATIONTEST_TASK: assembleAndroidTest
   - opts:
       is_expand: false
     GRADLEW_PATH: plugins/gradlew

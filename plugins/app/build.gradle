@@ -1,45 +1,72 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
-    defaultConfig {
-        applicationId "com.mapbox.mapboxsdk.plugins.testapp"
-        minSdkVersion 15
-        targetSdkVersion 25
-        versionCode 1
-        versionName "0.1"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+  compileSdkVersion rootProject.ext.compileSdkVersion
+  buildToolsVersion rootProject.ext.buildToolsVersion
+
+  defaultConfig {
+    applicationId "com.mapbox.mapboxsdk.plugins.testapp"
+    minSdkVersion rootProject.ext.minSdkVersion
+    targetSdkVersion rootProject.ext.targetSdkVersion
+    versionCode rootProject.ext.versionCode
+    versionName rootProject.ext.versionName
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+  }
+
+  buildTypes {
+    debug {
+      testCoverageEnabled true
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
+  }
+
+  dexOptions {
+    maxProcessCount 8
+    javaMaxHeapSize "2g"
+    preDexLibraries true
+  }
 }
 
 dependencies {
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.afollestad.material-dialogs:commons:0.9.4.5'
-    testCompile 'junit:junit:4.12'
+  // Support libraries
+  compile rootProject.ext.dep.supportAnnotations
+  compile rootProject.ext.dep.supportAppcompatV7
+  compile rootProject.ext.dep.supportDesign
+  compile rootProject.ext.dep.supportRecyclerView
+  compile rootProject.ext.dep.supportConstraintLayout
 
-    compile 'com.jakewharton.timber:timber:4.5.1'
-    compile 'com.jakewharton:butterknife:8.5.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+  // Unit testing
+  testCompile rootProject.ext.dep.junit
+  testCompile rootProject.ext.dep.mockito
 
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+  // Instrumentation testing
+  androidTestCompile(rootProject.ext.dep.testRunner, {
+    exclude group: 'com.android.support', module: 'support-annotations'
+  })
+  androidTestCompile(rootProject.ext.dep.testRules, {
+    exclude group: 'com.android.support', module: 'support-annotations'
+  })
+  androidTestCompile(rootProject.ext.dep.testEspressoCore, {
+    exclude group: 'com.android.support', module: 'support-annotations'
+  })
 
-    compile project(':traffic')
-    compile project(':geojson')
+  // Square crew
+  compile rootProject.ext.dep.timber
+  compile rootProject.ext.dep.butterKnife
+  annotationProcessor rootProject.ext.dep.butterKnifeProcessor
+
+  // Leak canary
+  debugCompile rootProject.ext.dep.leakCanaryDebug
+  releaseCompile rootProject.ext.dep.leakCanaryRelease
+  testCompile rootProject.ext.dep.leakCanaryTest
+
+  // Plugin modules
+  compile project(':traffic')
+  compile project(':locationlayer')
+  compile project(':building')
 }
 
 apply from: '../checkstyle.gradle'

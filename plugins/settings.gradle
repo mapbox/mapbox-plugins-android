@@ -1,1 +1,1 @@
-include ':app', ':traffic', ':geojson'
+include ':app', ':traffic', ':locationlayer', ':building'
