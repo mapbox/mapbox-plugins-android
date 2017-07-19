@@ -2,7 +2,7 @@
 
 # Mapbox Plugins for Android
 
-Plugins are single-purpose libraries built on top of the [Mapbox Android SDK](https://www.mapbox.com/android-sdk/) that you can include in your apps like any other Android dependency.
+Plugins are single-purpose libraries built on top of the [Mapbox Android SDK](https://www.mapbox.com/android-docs/) that you can include in your apps like any other Android dependency. You'll [find documentation](https://www.mapbox.com/android-docs/plugins/overview/) for each plugin on our website. A full list of the current plugins is available below.
 
 ## Getting Started
 
@@ -18,7 +18,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-traffic:0.1.0'
+    compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-traffic:0.3.0'
 }
 ```
 
@@ -45,7 +45,18 @@ These plugins are currently available:
 
 * **Traffic plugin:** Adds a real-time traffic layer to any Mapbox basemap.
 
+Dependency: `compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-traffic:0.3.0'`
+
+
 ![ezgif com-crop](https://cloud.githubusercontent.com/assets/4394910/24972279/bf88b170-1f6f-11e7-8638-6afe08369d9d.gif)
+
+* **Location layer:** Add a location marker on your map indicating the users location.
+
+Dependency: `compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.1.0'`
+
+* **Building:** Add extruded buildings in your map style.
+
+Dependency: `compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-building:0.1.0'`
 
 ## Help and Usage
 
