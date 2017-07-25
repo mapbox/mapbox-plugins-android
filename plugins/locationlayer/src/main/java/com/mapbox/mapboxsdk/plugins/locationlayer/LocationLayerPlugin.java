@@ -296,7 +296,9 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   @Override
   @SuppressWarnings( {"MissingPermission"})
   public void onConnected() {
-    locationEngine.requestLocationUpdates();
+    if (locationEngine != null) {
+      locationEngine.requestLocationUpdates();
+    }
   }
 
   @Override
