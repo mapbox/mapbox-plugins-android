@@ -47,7 +47,6 @@ These plugins are currently available:
 
 Dependency: `compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-traffic:0.3.0'`
 
-
 ![ezgif com-crop](https://cloud.githubusercontent.com/assets/4394910/24972279/bf88b170-1f6f-11e7-8638-6afe08369d9d.gif)
 
 * **Location layer:** Add a location marker on your map indicating the users location.
