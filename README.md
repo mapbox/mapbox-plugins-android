@@ -52,11 +52,13 @@ Dependency: `compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-traffic:0.3.0'`
 * **Location layer:** Add a location marker on your map indicating the users location.
 
 Dependency: `compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.1.0'`
+
 ![location-plugin](https://user-images.githubusercontent.com/4394910/28844322-1c52a672-76b9-11e7-904a-fcf6f51c1481.gif)
 
 * **Building:** Add extruded buildings in your map style.
 
 Dependency: `compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-building:0.1.0'`
+
 ![buildings-plugin](https://user-images.githubusercontent.com/4394910/28844435-71442d04-76b9-11e7-8866-ee6a94306353.gif)
 
 ## Help and Usage
