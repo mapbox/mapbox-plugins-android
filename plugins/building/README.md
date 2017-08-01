@@ -1,0 +1,68 @@
+[![Build Status](https://www.bitrise.io/app/a3a5f64a6d4a78c3.svg?token=RJY5I160EZSKZr1e0KgLrw&branch=master)](https://www.bitrise.io/app/a3a5f64a6d4a78c3)
+
+# Mapbox building plugin
+
+
+![buildings-plugin](https://user-images.githubusercontent.com/4394910/28844435-71442d04-76b9-11e7-8866-ee6a94306353.gif)
+
+## Getting Started
+
+To use a plugin you include it in your `build.gradle` file. For example, to add the traffic plugin to your app include the following:
+
+```
+// In the root build.gradle file
+repositories {
+    mavenCentral()
+}
+
+...
+
+// In the app build.gradle file
+dependencies {
+    compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-building:0.1.0'
+}
+```
+
+All plugins are published to Maven Central, and nightly SNAPSHOTs are available on Sonatype:
+
+```
+// In the root build.gradle file
+repositories {
+    mavenCentral()
+    maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
+}
+
+...
+
+// In the app build.gradle file
+dependencies {
+    compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-building:0.1.0-SNAPSHOT'
+}
+```
+
+## Examples
+
+- [This repo's test app](https://github.com/mapbox/mapbox-plugins-android/blob/ls-readme-updates/plugins/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/BuildingActivity.java)
+
+- [The Mapbox Android demo app](https://github.com/mapbox/mapbox-android-demo/blob/a411fa95cd71c1b90a30895060b319310444aebb/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/plugins/LocationPluginActivity.java)
+
+
+## Help and Usage
+
+This repository includes an app that shows how to use each plugins in this repository. [Check out its code](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugins/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp) for ready-to-use snippets.
+
+Plugins are easy to use. A plugin is simply a library module built on top of the Mapbox Android SDK. Currently, we are not requiring plugins to register themselves or to implement any specific interfaces so that they're simple to consume.
+
+This might change in the future as we build more plugins and learn how you use them. We'd love to [hear your feedback](https://github.com/mapbox/mapbox-plugins-android/issues).
+
+## Why Plugins
+
+Splitting specific functionality into plugins makes our Map SDK lighter and nimble for you to use, and it also lets us iterate faster. We can release plugins more often than the SDK, which requires a slower pace due to its larger codebase.
+
+Also, because it's easier to build a plugin than a SDK feature, it's easier to [contribute plugins](https://github.com/mapbox/mapbox-plugins-android#contributing).
+
+## Contributing
+
+We welcome contributions to this plugin repository!
+
+If you're interested in building and sharing your own plugin, please read [the contribution guide](https://github.com/mapbox/mapbox-plugins-android/blob/master/CONTRIBUTING.md) to learn how to get started.
