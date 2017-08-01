@@ -43,23 +43,11 @@ dependencies {
 
 These plugins are currently available:
 
-* **Traffic plugin:** Adds a real-time traffic layer to any Mapbox basemap.
+* [**Traffic plugin:** Adds a real-time traffic layer to any Mapbox basemap.](https://github.com/mapbox/mapbox-plugins-android/plugins/traffic/)
 
-Dependency: `compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-traffic:0.3.0'`
+* [**Location layer:** Add a location marker on your map indicating the users location.](https://github.com/mapbox/mapbox-plugins-android/plugins/locationlayer/)
 
-![ezgif com-crop](https://cloud.githubusercontent.com/assets/4394910/24972279/bf88b170-1f6f-11e7-8638-6afe08369d9d.gif)
-
-* **Location layer:** Add a location marker on your map indicating the users location.
-
-Dependency: `compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.1.0'`
-
-![location-plugin](https://user-images.githubusercontent.com/4394910/28844322-1c52a672-76b9-11e7-904a-fcf6f51c1481.gif)
-
-* **Building:** Add extruded buildings in your map style.
-
-Dependency: `compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-building:0.1.0'`
-
-![buildings-plugin](https://user-images.githubusercontent.com/4394910/28844435-71442d04-76b9-11e7-8866-ee6a94306353.gif)
+* [**Building:** Add extruded buildings in your map style.](https://github.com/mapbox/mapbox-plugins-android/plugins/building/)
 
 ## Help and Usage
 
