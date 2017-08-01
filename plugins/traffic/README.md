@@ -8,7 +8,7 @@ The traffic plugin adds a real-time traffic layer to any Mapbox basemap.
 
 ## Getting Started
 
-To use a plugin you include it in your `build.gradle` file.
+To use the traffic plugin, you include it in your `build.gradle` file.
 
 ```
 // In the root build.gradle file
