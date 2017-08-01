@@ -8,7 +8,7 @@ The traffic plugin adds a real-time traffic layer to any Mapbox basemap.
 
 ## Getting Started
 
-To use a plugin you include it in your `build.gradle` file. For example, to add the traffic plugin to your app include the following:
+To use a plugin you include it in your `build.gradle` file.
 
 ```
 // In the root build.gradle file
@@ -45,7 +45,7 @@ dependencies {
 
 - [This repo's test app](https://github.com/mapbox/mapbox-plugins-android/blob/ls-readme-updates/plugins/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/TrafficActivity.java)
 
-- [The Mapbox Android demo app](https://github.com/mapbox/mapbox-android-demo/blob/a411fa95cd71c1b90a30895060b319310444aebb/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/plugins/TrafficPluginActivity.java) – (Don't have the app? [Download it on Google Play](https://play.google.com/store/apps/details?id=com.mapbox.mapboxandroiddemo)
+- [The Mapbox Android demo app](https://github.com/mapbox/mapbox-android-demo/blob/a411fa95cd71c1b90a30895060b319310444aebb/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/plugins/TrafficPluginActivity.java) – (Don't have the app? [Download it on Google Play](https://play.google.com/store/apps/details?id=com.mapbox.mapboxandroiddemo).)
 
 
 ## Help and Usage
