@@ -4,41 +4,6 @@
 
 Plugins are single-purpose libraries built on top of the [Mapbox Android SDK](https://www.mapbox.com/android-docs/) that you can include in your apps like any other Android dependency. You'll [find documentation](https://www.mapbox.com/android-docs/plugins/overview/) for each plugin on our website. A full list of the current plugins is available below.
 
-## Getting Started
-
-To use a plugin you include it in your `build.gradle` file. For example, to add the traffic plugin to your app include the following:
-
-```
-// In the root build.gradle file
-repositories {
-    mavenCentral()
-}
-
-...
-
-// In the app build.gradle file
-dependencies {
-    compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-traffic:0.3.0'
-}
-```
-
-All plugins are published to Maven Central, and nightly SNAPSHOTs are available on Sonatype:
-
-```
-// In the root build.gradle file
-repositories {
-    mavenCentral()
-    maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
-}
-
-...
-
-// In the app build.gradle file
-dependencies {
-    compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-traffic:0.1.0-SNAPSHOT'
-}
-```
-
 ## Available Plugins
 
 * [**Traffic plugin:** Adds a real-time traffic layer to any Mapbox basemap.](https://github.com/mapbox/mapbox-plugins-android/plugins/traffic/)
