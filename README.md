@@ -41,8 +41,6 @@ dependencies {
 
 ## Available Plugins
 
-These plugins are currently available:
-
 * [**Traffic plugin:** Adds a real-time traffic layer to any Mapbox basemap.](https://github.com/mapbox/mapbox-plugins-android/plugins/traffic/)
 
 * [**Location layer:** Add a location marker on your map indicating the users location.](https://github.com/mapbox/mapbox-plugins-android/plugins/locationlayer/)
