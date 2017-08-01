@@ -44,7 +44,7 @@ dependencies {
 
 - [This repo's test app](https://github.com/mapbox/mapbox-plugins-android/blob/ls-readme-updates/plugins/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/BuildingActivity.java)
 
-- [The Mapbox Android demo app](https://github.com/mapbox/mapbox-android-demo/blob/a411fa95cd71c1b90a30895060b319310444aebb/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/plugins/LocationPluginActivity.java)
+- [The Mapbox Android demo app](https://github.com/mapbox/mapbox-android-demo/blob/a411fa95cd71c1b90a30895060b319310444aebb/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/plugins/BuildingPluginActivity.java) – [Download from Google Play](https://play.google.com/store/apps/details?id=com.mapbox.mapboxandroiddemo)
 
 
 ## Help and Usage
