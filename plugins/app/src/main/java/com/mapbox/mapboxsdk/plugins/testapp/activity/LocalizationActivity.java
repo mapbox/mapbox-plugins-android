@@ -17,6 +17,7 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
   MapView mapView;
 
   private MapboxMap mapboxMap;
+  private LocalizationPlugin localizationPlugin;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +31,7 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
-
-
+    localizationPlugin = new LocalizationPlugin(mapView, mapboxMap);
   }
 
   @Override
@@ -75,4 +75,6 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
     super.onLowMemory();
     mapView.onLowMemory();
   }
+
 }
+
