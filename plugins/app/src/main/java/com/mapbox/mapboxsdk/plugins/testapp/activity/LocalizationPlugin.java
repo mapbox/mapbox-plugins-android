@@ -35,22 +35,20 @@ public final class LocalizationPlugin {
    * @param mapboxMap the MapboxMap to apply localization plugin with
    * @since 0.1.0
    */
-  public LocalizationPlugin(@NonNull MapView mapView, @NonNull final MapboxMap mapboxMap, boolean pluginEnabled) {
-    this.localizationEnabled = pluginEnabled;
+  public LocalizationPlugin(@NonNull MapView mapView, @NonNull final MapboxMap mapboxMap) {
 
     mapView.getMapAsync(new OnMapReadyCallback() {
       @Override
       public void onMapReady(MapboxMap mapboxMap) {
-        if (localizationEnabled) {
-          listOfMapLayers = mapboxMap.getLayers();
-          String deviceLanguage = Locale.getDefault().getLanguage();
-          for (Layer layer : listOfMapLayers) {
-            if (layer.getId().contains("")) {
-              layer.setProperties(textField(String.format("{name_%s}", deviceLanguage)));
-              Log.d("LocalizationPlugin", "LocalizationPlugin: for textField = " + String.format("{name_%s}", deviceLanguage));
-            }
+        listOfMapLayers = mapboxMap.getLayers();
+        String deviceLanguage = Locale.getDefault().getLanguage();
+        for (Layer layer : listOfMapLayers) {
+          if (layer.getId().contains("")) {
+            layer.setProperties(textField(String.format("{name_%s}", deviceLanguage)));
+            Log.d("LocalizationPlugin", "LocalizationPlugin: for textField = " + String.format("{name_%s}", deviceLanguage));
           }
         }
+
       }
     });
   }
@@ -60,11 +58,11 @@ public final class LocalizationPlugin {
    *
    * @param localizationEnabled true for text being allowed, false for blocked
    * @since 0.1.0
-   */
+   *//*
   public void enablePlugin(boolean localizationEnabled) {
     Log.d(TAG, "enablePlugin: About to run this");
     LocalizationPlugin.this.localizationEnabled = localizationEnabled;
-  }
+  }*/
 
   /**
    * Resets map text to English language (default)
@@ -75,11 +73,9 @@ public final class LocalizationPlugin {
    * @since 0.1.0
    */
   public void setMapLanguageTo(String languageToSetMapTo) {
-    if (localizationEnabled) {
-      for (Layer layer : listOfMapLayers) {
-        layer.setProperties(textField(String.format("{name_%s}", languageToSetMapTo)));
-        Log.d(TAG, "setMapLanguageTo: run");
-      }
+    for (Layer layer : listOfMapLayers) {
+      layer.setProperties(textField(String.format("{name_%s}", languageToSetMapTo)));
+      Log.d(TAG, "setMapLanguageTo: run");
     }
   }
 }

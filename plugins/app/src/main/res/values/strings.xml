@@ -31,8 +31,8 @@
     <string name="button_location_mode_navigation">Nav</string>
 
     <!-- Buttons -->
-    <string name="change_language_instruction">Change the device\'s default langauge in Settings to view this example</string>
-    <string name="map_not_localized">Map no longer localized to device language</string>
+    <string name="change_language_instruction">Make sure that the device\'s default language is not English to best view this example</string>
+    <string name="map_not_localized">Map no longer localized to device language and set to English</string>
     <string name="map_localized">Map localized to device language</string>
 
 
