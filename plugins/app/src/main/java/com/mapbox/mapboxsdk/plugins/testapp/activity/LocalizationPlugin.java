@@ -24,10 +24,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
  */
 public final class LocalizationPlugin {
 
-  private MapView mapView;
-  private MapboxMap mapboxMap;
   private boolean localizationEnabled;
-  private String deviceLanguage;
   private String TAG = "LocalizationPlugin";
   private List<Layer> listOfMapLayers;
 
@@ -38,11 +35,9 @@ public final class LocalizationPlugin {
    * @param mapboxMap the MapboxMap to apply localization plugin with
    * @since 0.1.0
    */
-  public LocalizationPlugin(@NonNull MapView mapView, @NonNull final MapboxMap mapboxMap) {
-    this.mapboxMap = mapboxMap;
-    this.localizationEnabled = true;
+  public LocalizationPlugin(@NonNull MapView mapView, @NonNull final MapboxMap mapboxMap, boolean pluginEnabled) {
+    this.localizationEnabled = pluginEnabled;
 
-    // TODO: Is getMapAsync() the right method to call on mapView below?
     mapView.getMapAsync(new OnMapReadyCallback() {
       @Override
       public void onMapReady(MapboxMap mapboxMap) {
@@ -61,13 +56,13 @@ public final class LocalizationPlugin {
   }
 
   /**
-   * Toggles the localization of the map's layers that have text.
+   * Toggles whether localization of the map's layers is allowed.
    *
-   * @param localizationEnabled true for text being localized, false for none
+   * @param localizationEnabled true for text being allowed, false for blocked
    * @since 0.1.0
    */
-  public void setLocalization(boolean localizationEnabled) {
-    Log.d(TAG, "setLocalization: About to run this");
+  public void enablePlugin(boolean localizationEnabled) {
+    Log.d(TAG, "enablePlugin: About to run this");
     LocalizationPlugin.this.localizationEnabled = localizationEnabled;
   }
 
@@ -80,9 +75,11 @@ public final class LocalizationPlugin {
    * @since 0.1.0
    */
   public void setMapLanguageTo(String languageToSetMapTo) {
-    for (Layer layer : listOfMapLayers) {
-      layer.setProperties(textField(String.format("{name_%s}", languageToSetMapTo)));
-      Log.d(TAG, "setMapLanguageTo: run");
+    if (localizationEnabled) {
+      for (Layer layer : listOfMapLayers) {
+        layer.setProperties(textField(String.format("{name_%s}", languageToSetMapTo)));
+        Log.d(TAG, "setMapLanguageTo: run");
+      }
     }
   }
 }

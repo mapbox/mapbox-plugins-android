@@ -30,7 +30,6 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_localization);
     ButterKnife.bind(this);
-    mapIsLocalized = true;
     Toast.makeText(this, R.string.change_language_instruction, Toast.LENGTH_LONG).show();
     mapView.onCreate(savedInstanceState);
     mapView.getMapAsync(this);
@@ -39,19 +38,19 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
-    localizationPlugin = new LocalizationPlugin(mapView, mapboxMap);
+    localizationPlugin = new LocalizationPlugin(mapView, mapboxMap, true);
   }
 
   @OnClick(R.id.localize_fab)
   public void localizeToggleFab() {
     if (mapIsLocalized) {
       Log.d(TAG, "localizeToggleFab: mapIsLocalized = " + mapIsLocalized);
-      localizationPlugin.setLocalization(false);
+      localizationPlugin.enablePlugin(false);
       localizationPlugin.setMapLanguageTo(ENGLISH_LANGUAGE_CODE);
       Toast.makeText(this, R.string.map_not_localized, Toast.LENGTH_SHORT).show();
     } else {
       Log.d(TAG, "localizeToggleFab: mapIsLocalized = " + mapIsLocalized);
-      localizationPlugin.setLocalization(true);
+      localizationPlugin.enablePlugin(true);
       Toast.makeText(this, R.string.map_localized, Toast.LENGTH_SHORT).show();
     }
   }
