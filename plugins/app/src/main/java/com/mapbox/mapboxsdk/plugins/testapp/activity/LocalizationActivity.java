@@ -25,7 +25,6 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
   private LocalizationPlugin localizationPlugin;
   private boolean mapIsLocalized;
   private String ENGLISH_LANGUAGE_CODE = "en";
-  private String TAG = "LocalizationPluginActivity";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -47,13 +46,10 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
   @OnClick(R.id.localize_fab)
   public void localizeToggleFab() {
     if (mapIsLocalized) {
-      Log.d(TAG, "localizeToggleFab: mapIsLocalized = " + mapIsLocalized);
-//      localizationPlugin.ena(false);
       localizationPlugin.setMapLanguageTo(ENGLISH_LANGUAGE_CODE);
       Toast.makeText(this, R.string.map_not_localized, Toast.LENGTH_SHORT).show();
       mapIsLocalized = false;
     } else {
-      Log.d(TAG, "localizeToggleFab: mapIsLocalized = " + mapIsLocalized);
       localizationPlugin.setMapLanguageTo(Locale.getDefault().getLanguage());
       Toast.makeText(this, R.string.map_localized, Toast.LENGTH_SHORT).show();
       mapIsLocalized = true;
