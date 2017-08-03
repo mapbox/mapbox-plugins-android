@@ -1,10 +1,17 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.style.layers.Layer;
+
+import java.util.List;
+import java.util.Locale;
+
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
 
 /**
  * The localization plugin enables automatic localization of map labels into the user’s preferred language
@@ -21,7 +28,8 @@ public final class LocalizationPlugin {
   private MapboxMap mapboxMap;
   private boolean localizationEnabled;
   private String deviceLanguage;
-
+  private String TAG = "LocalizationPlugin";
+  private List<Layer> listOfMapLayers;
 
   /**
    * Create a localization plugin.
@@ -32,34 +40,49 @@ public final class LocalizationPlugin {
    */
   public LocalizationPlugin(@NonNull MapView mapView, @NonNull final MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
+    this.localizationEnabled = true;
 
-    // TODO: I don't think getMapAsync() is the right method to call on mapView below...
+    // TODO: Is getMapAsync() the right method to call on mapView below?
     mapView.getMapAsync(new OnMapReadyCallback() {
       @Override
       public void onMapReady(MapboxMap mapboxMap) {
-
+        if (localizationEnabled) {
+          listOfMapLayers = mapboxMap.getLayers();
+          String deviceLanguage = Locale.getDefault().getLanguage();
+          for (Layer layer : listOfMapLayers) {
+            if (layer.getId().contains("")) {
+              layer.setProperties(textField(String.format("{name_%s}", deviceLanguage)));
+              Log.d("LocalizationPlugin", "LocalizationPlugin: for textField = " + String.format("{name_%s}", deviceLanguage));
+            }
+          }
+        }
       }
     });
   }
 
   /**
-   * Initialises and adds the localized language by this plugin.
+   * Toggles the localization of the map's layers that have text.
    *
-   * @param belowLayer optionally place the buildings layer below a provided layer id
+   * @param localizationEnabled true for text being localized, false for none
+   * @since 0.1.0
    */
-  private void initLayer(String belowLayer) {
-    get
-
+  public void setLocalization(boolean localizationEnabled) {
+    Log.d(TAG, "setLocalization: About to run this");
+    LocalizationPlugin.this.localizationEnabled = localizationEnabled;
   }
 
   /**
-   * Toggles the localization of the map's layers that have text.
+   * Resets map text to English language (default)
+   * <p>
+   * Full list of language codes supported by Android system: https://stackoverflow.com/a/30028371/6358488
    *
-   * @param localized true for visible, false for none
+   * @param languageToSetMapTo The language that you'd like to set the map text to.
    * @since 0.1.0
    */
-  public void setLocalization(boolean localiztionEnabled) {
-    LocalizationPlugin.this.localizationEnabled = localiztionEnabled;
+  public void setMapLanguageTo(String languageToSetMapTo) {
+    for (Layer layer : listOfMapLayers) {
+      layer.setProperties(textField(String.format("{name_%s}", languageToSetMapTo)));
+      Log.d(TAG, "setMapLanguageTo: run");
+    }
   }
-
 }

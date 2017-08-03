@@ -30,4 +30,10 @@
     <string name="button_location_mode_compass">Compass</string>
     <string name="button_location_mode_navigation">Nav</string>
 
+    <!-- Buttons -->
+    <string name="change_language_instruction">Change the device\'s default langauge in Settings to view this example</string>
+    <string name="map_not_localized">Map no longer localized to device language</string>
+    <string name="map_localized">Map localized to device language</string>
+
+
 </resources>

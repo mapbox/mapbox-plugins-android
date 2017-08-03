@@ -2,6 +2,8 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -10,6 +12,7 @@ import com.mapbox.mapboxsdk.plugins.testapp.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class LocalizationActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -18,12 +21,17 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
 
   private MapboxMap mapboxMap;
   private LocalizationPlugin localizationPlugin;
+  private boolean mapIsLocalized;
+  private String ENGLISH_LANGUAGE_CODE = "en";
+  private String TAG = "LocalizationPluginActivity";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_localization);
     ButterKnife.bind(this);
+    mapIsLocalized = true;
+    Toast.makeText(this, R.string.change_language_instruction, Toast.LENGTH_LONG).show();
     mapView.onCreate(savedInstanceState);
     mapView.getMapAsync(this);
   }
@@ -32,6 +40,20 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
   public void onMapReady(MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
     localizationPlugin = new LocalizationPlugin(mapView, mapboxMap);
+  }
+
+  @OnClick(R.id.localize_fab)
+  public void localizeToggleFab() {
+    if (mapIsLocalized) {
+      Log.d(TAG, "localizeToggleFab: mapIsLocalized = " + mapIsLocalized);
+      localizationPlugin.setLocalization(false);
+      localizationPlugin.setMapLanguageTo(ENGLISH_LANGUAGE_CODE);
+      Toast.makeText(this, R.string.map_not_localized, Toast.LENGTH_SHORT).show();
+    } else {
+      Log.d(TAG, "localizeToggleFab: mapIsLocalized = " + mapIsLocalized);
+      localizationPlugin.setLocalization(true);
+      Toast.makeText(this, R.string.map_localized, Toast.LENGTH_SHORT).show();
+    }
   }
 
   @Override
@@ -75,6 +97,5 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
     super.onLowMemory();
     mapView.onLowMemory();
   }
-
 }
 

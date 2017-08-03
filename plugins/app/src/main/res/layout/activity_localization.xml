@@ -13,11 +13,11 @@
         app:mapbox_cameraTargetLat="51.505300"
         app:mapbox_cameraTargetLng="-0.075073"
         app:mapbox_cameraTilt="60"
-        app:mapbox_cameraZoom="16"
-        app:mapbox_styleUrl="@string/mapbox_style_mapbox_streets"/>
+        app:mapbox_cameraZoom="4"
+        app:mapbox_styleUrl="@string/mapbox_style_light"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabBuilding"
+        android:id="@+id/localize_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
