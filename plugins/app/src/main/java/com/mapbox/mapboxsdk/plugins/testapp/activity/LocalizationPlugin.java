@@ -1,9 +1,7 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
-import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
@@ -16,6 +14,7 @@ import java.util.Locale;
  * <p>
  * Initialise this plugin in the {@link com.mapbox.mapboxsdk.maps.OnMapReadyCallback#onMapReady(MapboxMap)} and provide
  * a valid instance of {@link MapView} and {@link MapboxMap}.
+ * a valid instance of a {@link MapboxMap}.
  * </p>
  * <ul>
  * </ul>
@@ -35,13 +34,14 @@ public final class LocalizationPlugin {
    */
   public LocalizationPlugin(@NonNull MapView mapView, @NonNull final MapboxMap mapboxMap) {
 
+  public LocalizationPlugin(@NonNull final MapboxMap mapboxMap) {
     listOfMapLayers = mapboxMap.getLayers();
     String deviceLanguage = Locale.getDefault().getLanguage();
     for (Layer layer : listOfMapLayers) {
       // TODO: Fix if() statement? What should if statement be looking for?
+      // TODO: Fix if() statement? What should if statement be looking for in layer ids?
       if (layer.getId().contains("")) {
         layer.setProperties(PropertyFactory.textField(String.format("{name_%s}", deviceLanguage)));
-        Log.d("LocalizationPlugin", "LocalizationPlugin: for textField = " + String.format("{name_%s}", deviceLanguage));
       }
     }
   }
@@ -57,7 +57,6 @@ public final class LocalizationPlugin {
   public void setMapTextLanguage(String languageToSetMapTo) {
     for (Layer layer : listOfMapLayers) {
       layer.setProperties(PropertyFactory.textField(String.format("{name_%s}", languageToSetMapTo)));
-      Log.d(TAG, "setMapTextLanguage: run");
     }
   }
 
