@@ -62,63 +62,63 @@ public final class LocalizationPlugin {
   }
 
   /**
-   * Sets map text to English language
+   * Sets map text to English.
    */
   public void setMapTextToEnglish() {
     setMapTextLanguage("en");
   }
 
   /**
-   * Sets map text to Spanish language
+   * Sets map text to Spanish.
    */
   public void setMapTextToSpanish() {
     setMapTextLanguage("es");
   }
 
   /**
-   * Sets map text to French language
+   * Sets map text to French.
    */
   public void setMapTextToFrench() {
     setMapTextLanguage("fr");
   }
 
   /**
-   * Sets map text to German language
+   * Sets map text to German.
    */
   public void setMapTextToGerman() {
     setMapTextLanguage("de");
   }
 
   /**
-   * Sets map text to Russian language
+   * Sets map text to Russian.
    */
   public void setMapTextToRussian() {
     setMapTextLanguage("ru");
   }
 
   /**
-   * Sets map text to Traditional Chinese language
+   * Sets map text to Traditional Chinese.
    */
   public void setMapTextToTraditionalChinese() {
     setMapTextLanguage("zh");
   }
 
   /**
-   * Sets map text to Simplified Chinese language
+   * Sets map text to Simplified Chinese.
    */
   public void setMapTextToSimplifiedChinese() {
     setMapTextLanguage("zh-Hans");
   }
 
   /**
-   * Sets map text to Portuguese language
+   * Sets map text to Portuguese.
    */
   public void setMapTextToPortuguese() {
     setMapTextLanguage("pt");
   }
 
   /**
-   * Sets map text to Arabic language
+   * Sets map text to Arabic.
    */
   public void setMapTextToArabic() {
     setMapTextLanguage("ar");

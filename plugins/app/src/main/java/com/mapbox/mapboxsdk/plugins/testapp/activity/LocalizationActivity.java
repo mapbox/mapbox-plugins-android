@@ -17,14 +17,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
-
 public class LocalizationActivity extends AppCompatActivity implements OnMapReadyCallback {
 
   @BindView(R.id.mapView)
   MapView mapView;
 
-  private MapboxMap mapboxMap;
   private LocalizationPlugin localizationPlugin;
   private boolean mapIsLocalized;
   private String ENGLISH_LANGUAGE_CODE = "en";
@@ -42,8 +39,8 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
 
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
-    this.mapboxMap = mapboxMap;
-    localizationPlugin = new LocalizationPlugin(mapView, mapboxMap);
+    localizationPlugin = new LocalizationPlugin(mapboxMap);
+    localizationPlugin.enableLocalization(true);
   }
 
   @OnClick(R.id.localize_fab)
@@ -143,6 +140,5 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
     }
     return super.onOptionsItemSelected(item);
   }
-
 }
 
