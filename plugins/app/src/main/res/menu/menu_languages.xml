@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/english"
+        android:title="English"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/spanish"
+        android:title="Spanish"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/french"
+        android:title="French"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/german"
+        android:title="German"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/russian"
+        android:title="Russian"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/traditional_chinese"
+        android:title="Traditional Chinese"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/simplified_chinese"
+        android:title="Simplified Chinese"
+        app:showAsAction="never"/>
+
+
+    <item
+        android:id="@+id/portuguese"
+        android:title="Portuguese"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/arabic"
+        android:title="Arabic"
+        app:showAsAction="never"/>
+
+
+</menu>

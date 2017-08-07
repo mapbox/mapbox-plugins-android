@@ -67,6 +67,7 @@ dependencies {
   compile project(':traffic')
   compile project(':locationlayer')
   compile project(':building')
+  compile project(':localization')
 }
 
 apply from: '../checkstyle.gradle'

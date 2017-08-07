@@ -2,7 +2,8 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -15,6 +16,8 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
 
 public class LocalizationActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -46,11 +49,11 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
   @OnClick(R.id.localize_fab)
   public void localizeToggleFab() {
     if (mapIsLocalized) {
-      localizationPlugin.setMapLanguageTo(ENGLISH_LANGUAGE_CODE);
+      localizationPlugin.setMapTextLanguage(ENGLISH_LANGUAGE_CODE);
       Toast.makeText(this, R.string.map_not_localized, Toast.LENGTH_SHORT).show();
       mapIsLocalized = false;
     } else {
-      localizationPlugin.setMapLanguageTo(Locale.getDefault().getLanguage());
+      localizationPlugin.setMapTextLanguage(Locale.getDefault().getLanguage());
       Toast.makeText(this, R.string.map_localized, Toast.LENGTH_SHORT).show();
       mapIsLocalized = true;
     }
@@ -97,5 +100,49 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
     super.onLowMemory();
     mapView.onLowMemory();
   }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_languages, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.english:
+        localizationPlugin.setMapTextToEnglish();
+        return true;
+      case R.id.spanish:
+        localizationPlugin.setMapTextToSpanish();
+        return true;
+      case R.id.french:
+        localizationPlugin.setMapTextToFrench();
+        return true;
+      case R.id.german:
+        localizationPlugin.setMapTextToGerman();
+        return true;
+      case R.id.russian:
+        localizationPlugin.setMapTextToRussian();
+        return true;
+      case R.id.traditional_chinese:
+        localizationPlugin.setMapTextToTraditionalChinese();
+        return true;
+      case R.id.simplified_chinese:
+        localizationPlugin.setMapTextToSimplifiedChinese();
+        return true;
+      case R.id.portuguese:
+        localizationPlugin.setMapTextToPortuguese();
+        return true;
+      case R.id.arabic:
+        localizationPlugin.setMapTextToArabic();
+        return true;
+      case android.R.id.home:
+        finish();
+        return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
 }
 
