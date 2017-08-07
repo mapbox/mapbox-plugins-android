@@ -10,35 +10,26 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * The localization plugin enables automatic localization of map labels into the user’s preferred language
+ * The localization plugin enables localization of map labels into the user’s preferred language
  * <p>
  * Initialise this plugin in the {@link com.mapbox.mapboxsdk.maps.OnMapReadyCallback#onMapReady(MapboxMap)} and provide
- * a valid instance of {@link MapView} and {@link MapboxMap}.
  * a valid instance of a {@link MapboxMap}.
  * </p>
- * <ul>
- * </ul>
  */
 public final class LocalizationPlugin {
 
-  private boolean localizationEnabled;
-  private String TAG = "LocalizationPlugin";
   private List<Layer> listOfMapLayers;
 
   /**
    * Create a localization plugin.
    *
-   * @param mapView   the MapView to apply the localization plugin to
    * @param mapboxMap the MapboxMap to apply localization plugin with
    * @since 0.1.0
    */
-  public LocalizationPlugin(@NonNull MapView mapView, @NonNull final MapboxMap mapboxMap) {
-
   public LocalizationPlugin(@NonNull final MapboxMap mapboxMap) {
     listOfMapLayers = mapboxMap.getLayers();
     String deviceLanguage = Locale.getDefault().getLanguage();
     for (Layer layer : listOfMapLayers) {
-      // TODO: Fix if() statement? What should if statement be looking for?
       // TODO: Fix if() statement? What should if statement be looking for in layer ids?
       if (layer.getId().contains("")) {
         layer.setProperties(PropertyFactory.textField(String.format("{name_%s}", deviceLanguage)));
@@ -47,9 +38,7 @@ public final class LocalizationPlugin {
   }
 
   /**
-   * Resets map text to English language (default)
-   * <p>
-   * Full list of language codes supported by Android system: https://stackoverflow.com/a/30028371/6358488
+   * Sets map text to specified language
    *
    * @param languageToSetMapTo The language that you'd like to set the map text to.
    * @since 0.1.0

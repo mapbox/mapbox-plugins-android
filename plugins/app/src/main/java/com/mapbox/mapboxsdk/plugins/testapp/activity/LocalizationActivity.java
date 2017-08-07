@@ -40,7 +40,6 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
     localizationPlugin = new LocalizationPlugin(mapboxMap);
-    localizationPlugin.enableLocalization(true);
   }
 
   @OnClick(R.id.localize_fab)
