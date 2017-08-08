@@ -24,7 +24,7 @@ dependencies {
 }
 ```
 
-All plugins are published to Maven Central, and nightly SNAPSHOTs are available on Sonatype:
+The traffic plugin is published to Maven Central and nightly SNAPSHOTs are available on Sonatype:
 
 ```
 // In the root build.gradle file
@@ -41,11 +41,11 @@ dependencies {
 }
 ```
 
-## Examples
+## Traffic plugin examples
 
-- [This repo's test app](https://github.com/mapbox/mapbox-plugins-android/blob/ls-readme-updates/plugins/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/TrafficActivity.java)
+- [In this repo's test app](https://github.com/mapbox/mapbox-plugins-android/blob/ls-readme-updates/plugins/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/TrafficActivity.java)
 
-- [The Mapbox Android demo app](https://github.com/mapbox/mapbox-android-demo/blob/a411fa95cd71c1b90a30895060b319310444aebb/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/plugins/TrafficPluginActivity.java) – (Don't have the app? [Download it on Google Play](https://play.google.com/store/apps/details?id=com.mapbox.mapboxandroiddemo).)
+- [In the Mapbox Android demo app](https://github.com/mapbox/mapbox-android-demo/blob/a411fa95cd71c1b90a30895060b319310444aebb/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/plugins/TrafficPluginActivity.java) – (Don't have the app? [Download it on Google Play](https://play.google.com/store/apps/details?id=com.mapbox.mapboxandroiddemo).)
 
 
 ## Help and Usage
@@ -54,7 +54,7 @@ This repository includes an app that shows how to use each plugins in this repos
 
 Plugins are easy to use. A plugin is simply a library module built on top of the Mapbox Android SDK. Currently, we are not requiring plugins to register themselves or to implement any specific interfaces so that they're simple to consume.
 
-This might change in the future as we build more plugins and learn how you use them. We'd love to [hear your feedback](https://github.com/mapbox/mapbox-plugins-android/issues).
+We'd love to [hear your feedback](https://github.com/mapbox/mapbox-plugins-android/issues) as we build more plugins and learn how you use them.
 
 ## Why Plugins
 
