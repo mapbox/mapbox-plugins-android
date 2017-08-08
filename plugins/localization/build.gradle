@@ -17,9 +17,15 @@ android {
 }
 
 dependencies {
+    // Unit testing
+    testCompile rootProject.ext.dep.junit
+    testCompile rootProject.ext.dep.mockito
+
+    // Mapbox dependencies
     compile(rootProject.ext.dep.mapSdk + '@aar') {
         transitive = true
     }
+
 
     javadocDeps rootProject.ext.dep.mapSdk
 }
