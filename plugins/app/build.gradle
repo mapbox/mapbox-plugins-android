@@ -1,72 +1,75 @@
 apply plugin: 'com.android.application'
 
 android {
-  compileSdkVersion rootProject.ext.compileSdkVersion
-  buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
-  defaultConfig {
-    applicationId "com.mapbox.mapboxsdk.plugins.testapp"
-    minSdkVersion rootProject.ext.minSdkVersion
-    targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode rootProject.ext.versionCode
-    versionName rootProject.ext.versionName
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-  }
-
-  buildTypes {
-    debug {
-      testCoverageEnabled true
+    defaultConfig {
+        applicationId "com.mapbox.mapboxsdk.plugins.testapp"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-    }
-  }
 
-  dexOptions {
-    maxProcessCount 8
-    javaMaxHeapSize "2g"
-    preDexLibraries true
-  }
+    buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    dexOptions {
+        maxProcessCount 8
+        javaMaxHeapSize "2g"
+        preDexLibraries true
+    }
 }
 
 dependencies {
-  // Support libraries
-  compile rootProject.ext.dep.supportAnnotations
-  compile rootProject.ext.dep.supportAppcompatV7
-  compile rootProject.ext.dep.supportDesign
-  compile rootProject.ext.dep.supportRecyclerView
-  compile rootProject.ext.dep.supportConstraintLayout
+    // Support libraries
+    compile rootProject.ext.dep.supportAnnotations
+    compile rootProject.ext.dep.supportAppcompatV7
+    compile rootProject.ext.dep.supportDesign
+    compile rootProject.ext.dep.supportRecyclerView
+    compile rootProject.ext.dep.supportConstraintLayout
 
-  // Unit testing
-  testCompile rootProject.ext.dep.junit
-  testCompile rootProject.ext.dep.mockito
+    // Unit testing
+    testCompile rootProject.ext.dep.junit
+    testCompile rootProject.ext.dep.mockito
 
-  // Instrumentation testing
-  androidTestCompile(rootProject.ext.dep.testRunner, {
-    exclude group: 'com.android.support', module: 'support-annotations'
-  })
-  androidTestCompile(rootProject.ext.dep.testRules, {
-    exclude group: 'com.android.support', module: 'support-annotations'
-  })
-  androidTestCompile(rootProject.ext.dep.testEspressoCore, {
-    exclude group: 'com.android.support', module: 'support-annotations'
-  })
+    // Instrumentation testing
+    androidTestCompile(rootProject.ext.dep.testRunner, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    androidTestCompile(rootProject.ext.dep.testRules, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    androidTestCompile(rootProject.ext.dep.testEspressoCore, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
 
-  // Square crew
-  compile rootProject.ext.dep.timber
-  compile rootProject.ext.dep.butterKnife
-  annotationProcessor rootProject.ext.dep.butterKnifeProcessor
+    compile 'com.afollestad.material-dialogs:commons:0.9.4.5'
 
-  // Leak canary
-  debugCompile rootProject.ext.dep.leakCanaryDebug
-  releaseCompile rootProject.ext.dep.leakCanaryRelease
-  testCompile rootProject.ext.dep.leakCanaryTest
+    // Square crew
+    compile rootProject.ext.dep.timber
+    compile rootProject.ext.dep.butterKnife
+    annotationProcessor rootProject.ext.dep.butterKnifeProcessor
 
-  // Plugin modules
-  compile project(':traffic')
-  compile project(':locationlayer')
-  compile project(':building')
+    // Leak canary
+    debugCompile rootProject.ext.dep.leakCanaryDebug
+    releaseCompile rootProject.ext.dep.leakCanaryRelease
+    testCompile rootProject.ext.dep.leakCanaryTest
+
+    // Plugin modules
+    compile project(':traffic')
+    compile project(':locationlayer')
+    compile project(':building')
+    compile project(':geojson')
 }
 
 apply from: '../checkstyle.gradle'
