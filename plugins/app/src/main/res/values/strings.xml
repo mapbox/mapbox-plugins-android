@@ -7,6 +7,8 @@
     <string name="category_navigation">Navigation</string>
     <string name="category_location">Location</string>
     <string name="category_localization">Localization</string>
+    <string name="category_runtime_loading">Navigation</string>
+    <string name="category_drawing">Drawing</string>
 
     <!-- Titles -->
     <string name="title_traffic">Traffic Plugin</string>
@@ -15,6 +17,7 @@
     <string name="title_location_map_change">Location Layer Map Change</string>
     <string name="title_location_manual_update">Toggle Manual Location Updates</string>
     <string name="title_localization">Localization Plugin</string>
+    <string name="title_geojson">GeoJson Plugin</string>
 
     <!-- Descriptions -->
     <string name="description_traffic">Add Traffic layers to any Mapbox basemap.</string>
@@ -23,6 +26,7 @@
     <string name="description_location_map_change">Change map styles while the location layers on the map.</string>
     <string name="description_location_manual_update">Toggle the user location manual mode on and off.</string>
     <string name="description_localization">Automatically localize the map labels into the device\'s set language.</string>
+    <string name="description_geojson">Load GeoJson file from assets, path or url to the Mapbox.</string>
 
     <!-- Buttons -->
     <string name="button_location_mode_none">None</string>
@@ -34,6 +38,5 @@
     <string name="change_language_instruction">Make sure that the device\'s default language is not English</string>
     <string name="map_not_localized">Map not localized to device language and now set to English</string>
     <string name="map_localized">Map localized to device language</string>
-
 
 </resources>
