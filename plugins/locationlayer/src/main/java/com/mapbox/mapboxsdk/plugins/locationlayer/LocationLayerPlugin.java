@@ -1,6 +1,8 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
@@ -519,11 +521,11 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     locationChangeAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
       @Override
       public void onAnimationUpdate(ValueAnimator animation) {
-        locationGeoJsonSource.setGeoJson((Point) animation.getAnimatedValue());
+        previousPoint = (Point) animation.getAnimatedValue();
+        locationGeoJsonSource.setGeoJson(previousPoint);
       }
     });
     locationChangeAnimator.start();
-    previousPoint = newPoint;
   }
 
   /**
