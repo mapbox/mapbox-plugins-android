@@ -486,10 +486,8 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
       return;
     }
 
-    // TODO use toEqual once MAS supports added
     // Do nothing if the location source's current Point is identical to the new location Point.
-    if (previousPoint.getCoordinates().getLatitude() == newPoint.getCoordinates().getLatitude()
-      && previousPoint.getCoordinates().getLongitude() == newPoint.getCoordinates().getLongitude()) {
+    if (previousPoint.getCoordinates().equals(newPoint.getCoordinates())) {
       return;
     }
     locationChangeAnimate(locationGeoJsonSource, previousPoint, newPoint);
