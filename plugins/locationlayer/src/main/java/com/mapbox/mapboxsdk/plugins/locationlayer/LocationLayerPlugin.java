@@ -31,8 +31,6 @@ import com.mapbox.services.commons.geojson.Point;
 import com.mapbox.services.commons.geojson.Polygon;
 import com.mapbox.services.commons.models.Position;
 
-import java.util.List;
-
 import timber.log.Timber;
 
 /**
@@ -71,6 +69,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
 
   // Previous compass and location values
   private float previousMagneticHeading;
+  private Point previousPoint;
 
   // Animators
   private ValueAnimator locationChangeAnimator;
@@ -477,32 +476,23 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
       return;
     }
 
-    // Get the location sources current point position
-    Point currentSourcePoint = getCurrentSourcePoint(locationGeoJsonSource);
     // Convert the new location to a Point object.
     Point newPoint = Point.fromCoordinates(new double[] {location.getLongitude(), location.getLatitude()});
 
     // If the source doesn't have geometry, a Point gets added.
-    if (currentSourcePoint == null) {
+    if (previousPoint == null) {
       locationGeoJsonSource.setGeoJson(newPoint);
+      previousPoint = newPoint;
       return;
     }
 
     // TODO use toEqual once MAS supports added
     // Do nothing if the location source's current Point is identical to the new location Point.
-    if (currentSourcePoint.getCoordinates().getLatitude() == newPoint.getCoordinates().getLatitude()
-      && currentSourcePoint.getCoordinates().getLongitude() == newPoint.getCoordinates().getLongitude()) {
+    if (previousPoint.getCoordinates().getLatitude() == newPoint.getCoordinates().getLatitude()
+      && previousPoint.getCoordinates().getLongitude() == newPoint.getCoordinates().getLongitude()) {
       return;
     }
-    locationChangeAnimate(locationGeoJsonSource, currentSourcePoint, newPoint);
-  }
-
-  private Point getCurrentSourcePoint(@NonNull GeoJsonSource geoJsonSource) {
-    List<Feature> features = geoJsonSource.querySourceFeatures(null);
-    if (features.isEmpty()) {
-      return null;
-    }
-    return (Point) features.get(0).getGeometry();
+    locationChangeAnimate(locationGeoJsonSource, previousPoint, newPoint);
   }
 
   /*
@@ -529,7 +519,8 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     locationChangeAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
       @Override
       public void onAnimationUpdate(ValueAnimator animation) {
-        locationGeoJsonSource.setGeoJson((Point) animation.getAnimatedValue());
+        previousPoint = (Point) animation.getAnimatedValue();
+        locationGeoJsonSource.setGeoJson(previousPoint);
       }
     });
     locationChangeAnimator.start();
