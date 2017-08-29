@@ -83,7 +83,9 @@ public class LocationLayerMapChangeActivity extends AppCompatActivity implements
   @Override
   protected void onStop() {
     super.onStop();
-    locationPlugin.onStop();
+    if (locationPlugin != null) {
+      locationPlugin.onStop();
+    }
     if (locationEngine != null) {
       locationEngine.removeLocationUpdates();
     }
