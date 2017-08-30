@@ -31,8 +31,6 @@ import com.mapbox.services.commons.geojson.Point;
 import com.mapbox.services.commons.geojson.Polygon;
 import com.mapbox.services.commons.models.Position;
 
-import java.util.List;
-
 import timber.log.Timber;
 
 /**
@@ -60,7 +58,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   private int styleRes;
 
   private LocationLayer locationLayer;
-  private CompassManager compassListener;
+  private CompassManager compassManager;
   private LocationEngine locationEngine;
   private MapboxMap mapboxMap;
   private MapView mapView;
@@ -71,6 +69,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
 
   // Previous compass and location values
   private float previousMagneticHeading;
+  private Point previousPoint;
 
   // Animators
   private ValueAnimator locationChangeAnimator;
@@ -115,6 +114,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     locationLayerMode = LocationLayerMode.NONE;
     locationLayer = new LocationLayer(mapView, mapboxMap, styleRes);
+    compassManager = new CompassManager(mapView.getContext(), this);
   }
 
   /**
@@ -243,9 +243,8 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
   public void onStop() {
     stopAllAnimations();
-    if (compassListener != null && locationLayerMode == LocationLayerMode.COMPASS
-      && compassListener.isSensorAvailable()) {
-      compassListener.onStop();
+    if (compassManager != null && compassManager.isSensorAvailable()) {
+      compassManager.onStop();
     }
     if (locationEngine != null) {
       locationEngine.removeLocationEngineListener(this);
@@ -266,8 +265,9 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
       setLocationLayerEnabled(locationLayerMode);
     }
 
-    if (locationLayerMode == LocationLayerMode.COMPASS && compassListener.isSensorAvailable()) {
-      compassListener.onStart();
+    if (compassManager.getCompassListeners().size() > 0
+      || locationLayerMode == LocationLayerMode.COMPASS && compassManager.isSensorAvailable()) {
+      compassManager.onStart();
     }
   }
 
@@ -293,6 +293,32 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     this.linearAnimation = linearAnimation;
   }
 
+  /**
+   * Add a compass listener to get heading updates every second. Once the first listener gets added,
+   * the sensor gets initiated and starts returning values.
+   *
+   * @param compassListener a {@link CompassListener} for listening into compass heading and accuracy
+   *                        changes
+   * @since 0.2.0
+   */
+  public void addCompassListener(@NonNull CompassListener compassListener) {
+    compassManager.addCompassListener(compassListener);
+    compassManager.onStart();
+  }
+
+  /**
+   * Remove either a single instance of compass listener or all the listeners using null.
+   *
+   * @param compassListener the {@link CompassListener} which you'd like to remove from the listener
+   *                        list. You can optionally pass in null to remove all listeners
+   */
+  public void removeCompassListener(@Nullable CompassListener compassListener) {
+    compassManager.removeCompassListener(compassListener);
+    if (compassManager.getCompassListeners().size() < 1) {
+      compassManager.onStop();
+    }
+  }
+
   @Override
   @SuppressWarnings( {"MissingPermission"})
   public void onConnected() {
@@ -307,8 +333,13 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   }
 
   @Override
-  public void onCompassChanged(float magneticHeading) {
-    bearingChangeAnimate(magneticHeading);
+  public void onCompassChanged(float userHeading) {
+    bearingChangeAnimate(userHeading);
+  }
+
+  @Override
+  public void onCompassAccuracyChange(int compassStatus) {
+    // Currently don't handle this inside SDK
   }
 
   private void updateLocation(Location location) {
@@ -386,13 +417,10 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   private void setMyBearingEnabled(boolean bearingEnabled) {
     toggleBearingLayerVisibility(bearingEnabled);
     if (bearingEnabled) {
-      if (compassListener == null) {
-        compassListener = new CompassManager(mapView.getContext(), this);
-      }
-      compassListener.onStart();
+      compassManager.onStart();
     } else {
-      if (compassListener != null) {
-        compassListener.onStop();
+      if (compassManager != null && compassManager.getCompassListeners().size() < 1) {
+        compassManager.onStop();
       }
     }
   }
@@ -419,7 +447,6 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
    * @since 0.1.0
    */
   private void setNavigationEnabled(boolean navigationEnabled) {
-
     setNavigationLayerVisibility(navigationEnabled);
     setLinearAnimation(navigationEnabled);
 
@@ -477,32 +504,21 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
       return;
     }
 
-    // Get the location sources current point position
-    Point currentSourcePoint = getCurrentSourcePoint(locationGeoJsonSource);
     // Convert the new location to a Point object.
     Point newPoint = Point.fromCoordinates(new double[] {location.getLongitude(), location.getLatitude()});
 
     // If the source doesn't have geometry, a Point gets added.
-    if (currentSourcePoint == null) {
+    if (previousPoint == null) {
       locationGeoJsonSource.setGeoJson(newPoint);
+      previousPoint = newPoint;
       return;
     }
 
-    // TODO use toEqual once MAS supports added
     // Do nothing if the location source's current Point is identical to the new location Point.
-    if (currentSourcePoint.getCoordinates().getLatitude() == newPoint.getCoordinates().getLatitude()
-      && currentSourcePoint.getCoordinates().getLongitude() == newPoint.getCoordinates().getLongitude()) {
+    if (previousPoint.getCoordinates().equals(newPoint.getCoordinates())) {
       return;
     }
-    locationChangeAnimate(locationGeoJsonSource, currentSourcePoint, newPoint);
-  }
-
-  private Point getCurrentSourcePoint(@NonNull GeoJsonSource geoJsonSource) {
-    List<Feature> features = geoJsonSource.querySourceFeatures(null);
-    if (features.isEmpty()) {
-      return null;
-    }
-    return (Point) features.get(0).getGeometry();
+    locationChangeAnimate(locationGeoJsonSource, previousPoint, newPoint);
   }
 
   /*
@@ -529,7 +545,8 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     locationChangeAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
       @Override
       public void onAnimationUpdate(ValueAnimator animation) {
-        locationGeoJsonSource.setGeoJson((Point) animation.getAnimatedValue());
+        previousPoint = (Point) animation.getAnimatedValue();
+        locationGeoJsonSource.setGeoJson(previousPoint);
       }
     });
     locationChangeAnimator.start();
