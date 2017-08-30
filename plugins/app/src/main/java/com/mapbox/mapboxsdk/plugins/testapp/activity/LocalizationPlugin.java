@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 
 import java.util.List;
 import java.util.Locale;
@@ -30,8 +31,7 @@ public final class LocalizationPlugin {
     listOfMapLayers = mapboxMap.getLayers();
     String deviceLanguage = Locale.getDefault().getLanguage();
     for (Layer layer : listOfMapLayers) {
-      // TODO: Fix if() statement? What should if statement be looking for in layer ids?
-      if (layer.getId().contains("")) {
+      if (layer instanceof SymbolLayer) {
         layer.setProperties(PropertyFactory.textField(String.format("{name_%s}", deviceLanguage)));
       }
     }
