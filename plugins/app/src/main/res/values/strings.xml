@@ -15,6 +15,7 @@
     <string name="title_location_modes">Location Modes</string>
     <string name="title_location_map_change">Location Layer Map Change</string>
     <string name="title_location_manual_update">Toggle Manual Location Updates</string>
+    <string name="title_compass_listener">Compass Listener</string>
     <string name="title_geojson">GeoJson Plugin</string>
 
     <!-- Descriptions -->
@@ -23,6 +24,7 @@
     <string name="description_location_modes">Switch between the different location modes.</string>
     <string name="description_location_map_change">Change map styles while the location layers on the map.</string>
     <string name="description_location_manual_update">Toggle the user location manual mode on and off.</string>
+    <string name="description_compass_listener">Add a compass listener to know when heading changes or when the accuracy dropsx</string>
     <string name="description_geojson">Load GeoJson file from assets, path or url to the Mapbox.</string>
 
     <!-- Buttons -->

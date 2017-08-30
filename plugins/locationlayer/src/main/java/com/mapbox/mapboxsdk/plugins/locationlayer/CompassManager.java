@@ -6,9 +6,13 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Surface;
 import android.view.WindowManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import timber.log.Timber;
 
@@ -29,7 +33,8 @@ class CompassManager implements SensorEventListener {
 
   private final WindowManager windowManager;
   private final SensorManager sensorManager;
-  private CompassListener compassListener;
+  private CompassListener internalCompassListener;
+  private List<CompassListener> compassListeners;
 
   // Not all devices have a compassSensor
   @Nullable
@@ -40,7 +45,13 @@ class CompassManager implements SensorEventListener {
   // CompassManager data
   private long compassUpdateNextTimestamp = 0;
 
-  CompassManager(Context context, CompassListener compassListener) {
+  /**
+   * Construct a new instance of the this class. A internal compass listeners needed to separate it
+   * from the cleared list of public listeners.
+   */
+  CompassManager(Context context, CompassListener internalCompassListener) {
+    this.internalCompassListener = internalCompassListener;
+    compassListeners = new ArrayList<>();
 
     windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
     sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
@@ -50,10 +61,26 @@ class CompassManager implements SensorEventListener {
       Timber.d("Rotation vector sensor not supported on device, falling back to orientation.");
       compassSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
     }
-    this.compassListener = compassListener;
+  }
+
+  void addCompassListener(@NonNull CompassListener compassListener) {
+    compassListeners.add(compassListener);
+  }
+
+  void removeCompassListener(@Nullable CompassListener compassListener) {
+    if (compassListener == null) {
+      compassListeners.clear();
+      return;
+    }
+    compassListeners.remove(compassListener);
+  }
+
+  List<CompassListener> getCompassListeners() {
+    return compassListeners;
   }
 
   void onStart() {
+    // Does nothing if the sensors already registered.
     sensorManager.registerListener(this, compassSensor, SENSOR_DELAY_MICROS);
   }
 
@@ -67,7 +94,7 @@ class CompassManager implements SensorEventListener {
 
   @Override
   public void onSensorChanged(SensorEvent event) {
-    if (compassListener == null) {
+    if (internalCompassListener == null) {
       return;
     }
     // check when the last time the compass was updated, return if too soon.
@@ -85,13 +112,20 @@ class CompassManager implements SensorEventListener {
       // Update the compassUpdateNextTimestamp
       compassUpdateNextTimestamp = currentTime + LocationLayerConstants.COMPASS_UPDATE_RATE_MS;
     } else if (event.sensor.getType() == Sensor.TYPE_ORIENTATION) {
-      compassListener.onCompassChanged((event.values[0] + 360) % 360);
+      internalCompassListener.onCompassChanged((event.values[0] + 360) % 360);
+      for (CompassListener compassListener : compassListeners) {
+        compassListener.onCompassChanged((event.values[0] + 360) % 360);
+      }
     }
   }
 
   @Override
   public void onAccuracyChanged(Sensor sensor, int accuracy) {
     if (lastAccuracy != accuracy) {
+      internalCompassListener.onCompassAccuracyChange(accuracy);
+      for (CompassListener compassListener : compassListeners) {
+        compassListener.onCompassAccuracyChange(accuracy);
+      }
       lastAccuracy = accuracy;
     }
   }
@@ -135,6 +169,9 @@ class CompassManager implements SensorEventListener {
     SensorManager.getOrientation(adjustedRotationMatrix, orientation);
 
     // The x-axis is all we care about here.
-    compassListener.onCompassChanged((float) Math.toDegrees(orientation[0]));
+    internalCompassListener.onCompassChanged((float) Math.toDegrees(orientation[0]));
+    for (CompassListener compassListener : compassListeners) {
+      compassListener.onCompassChanged((float) Math.toDegrees(orientation[0]));
+    }
   }
 }

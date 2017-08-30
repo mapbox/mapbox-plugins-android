@@ -11,6 +11,9 @@ import android.support.v4.content.ContextCompat;
 
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.style.functions.Function;
+import com.mapbox.mapboxsdk.style.functions.stops.Stop;
+import com.mapbox.mapboxsdk.style.functions.stops.Stops;
 import com.mapbox.mapboxsdk.style.layers.FillLayer;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.Property;
@@ -141,11 +144,23 @@ final class LocationLayer {
   }
 
   private void addNavigationLayer(Drawable navigationDrawable) {
-    Layer navigationLayer = getLayer(
-      LocationLayerConstants.LOCATION_NAVIGATION_LAYER,
-      LocationLayerConstants.USER_LOCATION_PUCK_ICON,
-      navigationDrawable
-    );
+    Bitmap bitmap = getBitmapFromDrawable(navigationDrawable);
+    mapboxMap.addImage(LocationLayerConstants.USER_LOCATION_PUCK_ICON, bitmap);
+    SymbolLayer navigationLayer = new SymbolLayer(
+      LocationLayerConstants.LOCATION_NAVIGATION_LAYER, LocationLayerConstants.LOCATION_SOURCE).withProperties(
+      PropertyFactory.iconImage(LocationLayerConstants.USER_LOCATION_PUCK_ICON),
+      PropertyFactory.iconAllowOverlap(true),
+      PropertyFactory.iconIgnorePlacement(true),
+      PropertyFactory.iconSize(Function.zoom(
+        Stops.exponential(
+          Stop.stop(22f, PropertyFactory.iconSize(1f)),
+          Stop.stop(12f, PropertyFactory.iconSize(1f)),
+          Stop.stop(10f, PropertyFactory.iconSize(0.6f)),
+          Stop.stop(0f, PropertyFactory.iconSize(0.6f))
+        ).withBase(1f)
+      )),
+      PropertyFactory.iconRotationAlignment(Property.ICON_ROTATION_ALIGNMENT_MAP));
+
     addLocationLayerToMap(navigationLayer, null);
   }
 
@@ -158,7 +173,6 @@ final class LocationLayer {
     );
     addLocationLayerToMap(locationAccuracyLayer, LocationLayerConstants.LOCATION_BACKGROUND_LAYER);
   }
-
 
   private Layer getLayer(String layerId, String image, Drawable drawable) {
     Bitmap bitmap = getBitmapFromDrawable(drawable);
