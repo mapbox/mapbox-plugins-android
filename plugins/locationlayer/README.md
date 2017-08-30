@@ -52,7 +52,7 @@ This repository includes an app that shows how to use each plugins in this repos
 
 We'd love to [hear your feedback](https://github.com/mapbox/mapbox-plugins-android/issues) as we build more plugins and learn how you use them.
 
-## Why Plugins
+## Why plugins
 
 Splitting specific functionality into plugins makes our Map SDK lighter and nimble for you to use, and it also lets us iterate faster. We can release plugins more often than the SDK, which requires a slower pace due to its larger codebase.
 
