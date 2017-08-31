@@ -85,14 +85,21 @@ public final class LocalizationPlugin {
   }
 
   /**
-   * Sets map text to Traditional Chinese.
+   * Sets map text to Chinese.
+   *
+   * This method uses simplified Chinese characters for custom label layers: #country_label, #state_label,
+   * and #marine_label. All other label layers are sourced from OpenStreetMap and may contain one of several dialects
+   * and either simplified or traditional Chinese characters in the {name_zh} field.
    */
-  public void setMapTextToTraditionalChinese() {
+  public void setMapTextToChinese() {
     setMapTextLanguage("zh");
   }
 
   /**
    * Sets map text to Simplified Chinese.
+   *
+   * Using his method is similar to setMapTextToChinese() (see above), except any Traditional Chinese
+   * characters are automatically transformed to Simplified Chinese.
    */
   public void setMapTextToSimplifiedChinese() {
     setMapTextLanguage("zh-Hans");

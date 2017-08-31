@@ -28,7 +28,7 @@
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/traditional_chinese"
+        android:id="@+id/chinese"
         android:title="Traditional Chinese"
         app:showAsAction="never"/>
 

@@ -121,8 +121,8 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
       case R.id.russian:
         localizationPlugin.setMapTextToRussian();
         return true;
-      case R.id.traditional_chinese:
-        localizationPlugin.setMapTextToTraditionalChinese();
+      case R.id.chinese:
+        localizationPlugin.setMapTextToChinese();
         return true;
       case R.id.simplified_chinese:
         localizationPlugin.setMapTextToSimplifiedChinese();
