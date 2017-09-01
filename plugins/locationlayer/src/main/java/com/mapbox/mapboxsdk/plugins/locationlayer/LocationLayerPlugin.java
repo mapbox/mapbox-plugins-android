@@ -347,9 +347,9 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
       locationUpdateTimestamp = SystemClock.elapsedRealtime();
       return;
     }
-    if (locationLayerMode == LocationLayerMode.NAVIGATION) {
+    if (locationLayerMode == LocationLayerMode.NAVIGATION && location.hasBearing()) {
       bearingChangeAnimate(location.getBearing());
-    } else {
+    } else if (locationLayerMode != LocationLayerMode.NAVIGATION) {
       setAccuracy(location);
     }
     setLocation(location);
