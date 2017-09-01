@@ -12,6 +12,8 @@ Plugins are single-purpose libraries built on top of the [Mapbox Android SDK](ht
 
 * [**Building:** Add extruded buildings in your map style.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugins/building)
 
+* [**GeoJSON:** Load GeoJSON data from a URL, an asset file, or path.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugins/geojson)
+
 ## Help and Usage
 
 This repository includes an app that shows how to use each plugins in this repository. [Check out its code](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugins/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp) for ready-to-use snippets.
