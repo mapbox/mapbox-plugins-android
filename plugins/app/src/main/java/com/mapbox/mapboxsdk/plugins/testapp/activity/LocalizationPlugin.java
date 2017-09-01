@@ -22,9 +22,9 @@ public final class LocalizationPlugin {
   private List<Layer> listOfMapLayers;
 
   /**
-   * Create a localization plugin.
+   * Create a {@link LocalizationPlugin}.
    *
-   * @param mapboxMap the MapboxMap to apply localization plugin with
+   * @param mapboxMap the MapboxMap to apply the localization plugin to
    * @since 0.1.0
    */
   public LocalizationPlugin(@NonNull final MapboxMap mapboxMap) {
@@ -38,7 +38,7 @@ public final class LocalizationPlugin {
   }
 
   /**
-   * Sets map text to specified language
+   * Sets map text to the specified language
    *
    * @param languageToSetMapTo The language that you'd like to set the map text to.
    * @since 0.1.0
@@ -98,7 +98,7 @@ public final class LocalizationPlugin {
   /**
    * Sets map text to Simplified Chinese.
    *
-   * Using his method is similar to setMapTextToChinese() (see above), except any Traditional Chinese
+   * Using this method is similar to setMapTextToChinese(), except any Traditional Chinese
    * characters are automatically transformed to Simplified Chinese.
    */
   public void setMapTextToSimplifiedChinese() {
