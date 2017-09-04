@@ -21,9 +21,6 @@ dependencies {
     compile(rootProject.ext.dep.mapSdk + '@aar') {
         transitive = true
     }
-
-    javadocDeps rootProject.ext.dep.mapSdk
-
     compile 'com.android.support:appcompat-v7:25.3.1'
 }
 
