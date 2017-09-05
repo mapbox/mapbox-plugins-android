@@ -52,12 +52,12 @@ import okhttp3.Response;
 import timber.log.Timber;
 
 /**
- * The GeoJson plugin allows to add GeoJson file to the Mapbox Android SDK v5.0.2.
+ * The GeoJson plugin enables you to easily load GeoJSON data into your project from a URL, an asset file, or path.
  * <p>
- * using {@link GeoJsonPluginBuilder} class for build {@link GeoJsonPlugin} with specific variables
+ * using {@link GeoJsonPluginBuilder} class for building {@link GeoJsonPlugin} with specific variables
  * with {@link Context}
  * with {@link MapboxMap}
- * at last one of the fileName, filePath or Url of GeoJson file
+ * and one the file's name, the file's path, or a URL that points to a GeoJSON file.
  * </p>
  */
 
@@ -82,23 +82,23 @@ public class GeoJsonPlugin {
   private HashMap<Marker, MarkerData> markerCollectionHashMap = new HashMap<>();
 
   /**
-   * @param context             the context of parent activity class
-   * @param map                 the MapboxMap to apply elements on it
-   * @param fileName            the file name that located in Assets folder
-   * @param filePath            the path of file located in device
-   * @param url                 the url of GeoJson file
-   * @param loadFilePath        the instance of onLoadingGeoJsonListener class.
-   *                            using for detect time of loading GeoJson from path
-   * @param loadFileAssets      the instance of onLoadingGeoJsonListener class.
-   *                            using for detect time of loading GeoJson from Assets
-   * @param loadURL             the instance of onLoadingGeoJsonListener class.
-   *                            using for detect time of loading GeoJson from url
-   * @param fillColor           the fill color of polygons
-   * @param stockColor          the stock color of polygons and polylines
-   * @param width               the width of polyline stock
-   * @param isRandomFillColor   if true, fill color will be randomize
-   * @param isRandomStockColor  if true, stock color will be randomize
-   * @param markerEventListener the instance of OnMarkerEventListener class. using for detect Marker click event
+   * @param context             the context of parent activity
+   * @param map                 the MapboxMap to apply elements to
+   * @param fileName            the file name that located in the Assets folder
+   * @param filePath            the path of file located on the device
+   * @param url                 the URL of the GeoJSON file
+   * @param loadFilePath        the instance of onLoadingGeoJsonListener used for detecting when the file
+   *                            is loaded via a certain path
+   * @param loadFileAssets      the instance of onLoadingGeoJsonListener used for detecting when the file
+   *                            is located in the assets folder
+   * @param loadURL             the instance of onLoadingGeoJsonListener used for detecting when the file
+   *                            is loaded via specific URL
+   * @param fillColor           the fill color of polygons that are drawn on the map
+   * @param stockColor          the stock color of polygons and polylines that are drawn on the map
+   * @param width               the width of the polyline
+   * @param isRandomFillColor   if true, the fill color will be random
+   * @param isRandomStockColor  if true, the stock color will be random
+   * @param markerEventListener the instance of OnMarkerEventListener used to detect a marker click event
    */
   public GeoJsonPlugin(Context context, MapboxMap map, String fileName, String filePath, String url,
                        OnLoadingGeoJsonListener loadFilePath, OnLoadingGeoJsonListener loadFileAssets,
@@ -122,9 +122,9 @@ public class GeoJsonPlugin {
   }
 
   /**
-   * update GeoJson source from url and draw on Map
+   * Updates the GeoJSON source from a URL and draws the GeoJSON on the map
    *
-   * @param url the url of GeoJson file
+   * @param url the URL of GeoJson file
    */
   public void setUrl(String url) {
     this.url = url;
@@ -136,7 +136,7 @@ public class GeoJsonPlugin {
   }
 
   /**
-   * update GeoJson source from Assets folder file and draw on Map
+   * Updates the GeoJSON source from the assets folder file and draws the GeoJSON on the map
    *
    * @param fileName the name of file in Assets folder
    */
@@ -150,7 +150,7 @@ public class GeoJsonPlugin {
   }
 
   /**
-   * update GeoJson source from path of external storage and draw on Map
+   * Updates the GeoJSON source from an external storage path and draws the GeoJSON on the map
    *
    * @param filePath the path of file in external storage
    */
@@ -164,7 +164,7 @@ public class GeoJsonPlugin {
   }
 
   /**
-   * load GeoJson from URL and pass GeoJson as String to {@link ParseGeoJsonFromString} AsyncTask class.
+   * Load the GeoJSON from a URL and pass the GeoJSON as String to the {@link ParseGeoJsonFromString} AsyncTask class.
    */
   private void loadGeoJson() {
     OkHttpClient client = new OkHttpClient();
@@ -197,7 +197,7 @@ public class GeoJsonPlugin {
   }
 
   /**
-   * AsyncTask that parse GeoJson String to {@link JSONObject}
+   * AsyncTask that parses a GeoJSON String to {@link JSONObject}
    */
   private class ParseGeoJsonFromString extends AsyncTask<Void, Void, DataModel> {
     @Override
@@ -216,7 +216,7 @@ public class GeoJsonPlugin {
   }
 
   /**
-   * AsyncTask that loading GeoJson file from special path
+   * AsyncTask that loads a GeoJSON file from a special path
    */
   private class DrawGeoJsonFromPath extends AsyncTask<Void, Void, DataModel> {
     @Override
@@ -251,7 +251,7 @@ public class GeoJsonPlugin {
   }
 
   /**
-   * AsyncTask that loading GeoJson file from Assets folder
+   * AsyncTask that loads a GeoJSON file from the assets folder
    */
   private class DrawGeoJsonFromAssets extends AsyncTask<Void, Void, DataModel> {
     @Override
@@ -297,8 +297,8 @@ public class GeoJsonPlugin {
   }
 
   /**
-   * @param geoJson String of GeoJson file
-   * @return DataModel list of polylines, polygons and point with bounded
+   * @param geoJson String of the GeoJSON file
+   * @return DataModel list of polylines, polygons, and point with bounded
    */
   private DataModel parseGeoJsonString(String geoJson) {
     int pointCount = 0;
@@ -358,9 +358,9 @@ public class GeoJsonPlugin {
   }
 
   /**
-   * convert InputStream to String and pass to parseGeoJsonString function
+   * Converts a InputStream to a String and passes it to a parseGeoJsonString method
    *
-   * @param inputStream the input stream of GeoJson file
+   * @param inputStream the input stream of GeoJSON file
    * @param listener    the instance of onLoadingGeoJsonListener
    * @return DataModel that generated by parseGeoJsonString function
    */
@@ -375,7 +375,7 @@ public class GeoJsonPlugin {
       }
       inputStream.close();
       if (!isJSONValid(sb.toString())) {
-        triggerOnLoadFailed(listener, new IllegalStateException("GeoJson string is not valid"));
+        triggerOnLoadFailed(listener, new IllegalStateException("GeoJSON string is not valid"));
       } else {
         dataModel = parseGeoJsonString(sb.toString());
       }
@@ -386,9 +386,9 @@ public class GeoJsonPlugin {
   }
 
   /**
-   * Drawing element of {@link DataModel} on the map
+   * Drawing {@link DataModel} element on to the map
    *
-   * @param dataModel list of polylines, polygons and points
+   * @param dataModel list of polylines, polygons, and points
    */
   private void drawOnMap(DataModel dataModel) {
     if (dataModel != null) {
@@ -454,7 +454,7 @@ public class GeoJsonPlugin {
 
   /**
    * @param typeColor the type of color as String
-   * @return random color as integer value
+   * @return random color as an integer value
    */
   private int getRandomMaterialColor(String typeColor) {
     int returnColor = Color.GRAY;
@@ -469,10 +469,10 @@ public class GeoJsonPlugin {
   }
 
   /**
-   * check validate String of GeoJson before parse it
+   * Validates the GeoJSON String before parsing it
    *
-   * @param jsonString the string of GeoJson file
-   * @return if string is valid JSON return true
+   * @param jsonString the string of the GeoJSON file
+   * @return returns true if the String is valid JSON
    */
   private boolean isJSONValid(String jsonString) {
     try {
