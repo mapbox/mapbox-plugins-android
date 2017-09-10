@@ -43,8 +43,8 @@ dependencies {
 
 ## GeoJSON plugin examples
 
-- [In this repo's test app](https://github.com/mapbox/mapbox-plugins-android/blob/ls-readme-updates/plugins/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/GeoJsonActivity.java)
-
+- [In this repo's test app](
+https://github.com/mapbox/mapbox-plugins-android/blob/master/plugins/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/GeoJsonActivity.java)
 
 ## Help and Usage
 
