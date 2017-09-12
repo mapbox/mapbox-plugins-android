@@ -4,7 +4,8 @@
 
 The GeoJSON plugin makes it simple to load GeoJSON data from a URL, an asset file, or path. It also has a `OnLoadingGeoJsonListener` for handling GeoJSON preload, loaded GeoJSON, and failed GeoJSON load events.
 
-![geojson-plugin](https://user-images.githubusercontent.com/4394910/29901400-a1f37194-8dac-11e7-8362-a8ec562513b4.gif)
+![geojson-plugin](https://user-images.githubusercontent.com/4394910/30302839-b66253a0-9718-11e7-8c8e-e61825e237d2.gif)
+
 
 ## Getting Started
 
