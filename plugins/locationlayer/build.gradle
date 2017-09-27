@@ -21,9 +21,7 @@ dependencies {
   testCompile rootProject.ext.dep.junit
   testCompile rootProject.ext.dep.mockito
 
-  compile rootProject.ext.dep.lifecycleRuntime
-  compile rootProject.ext.dep.lifecycleExtension
-  annotationProcessor rootProject.ext.dep.lifecycleCompiler
+  compile rootProject.ext.dep.supportAppcompatV7
 
   compile rootProject.ext.dep.mapboxServices
 
