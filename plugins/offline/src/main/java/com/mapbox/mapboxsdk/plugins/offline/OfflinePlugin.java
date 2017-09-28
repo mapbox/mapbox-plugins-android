@@ -2,23 +2,14 @@ package com.mapbox.mapboxsdk.plugins.offline;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-
 
 public class OfflinePlugin {
 
-  //  private WeakReference<Context> context;
-  //  private static OfflinePlugin instance;
-
-  //  public static synchronized OfflinePlugin getInstance(@NonNull Context context) {
-  //    if (instance == null) {
-  //      instance = new OfflinePlugin(context);
-  //    }
-  //    return instance;
-  //  }
-
-  public void downloadRegion(@NonNull Context context, OfflineDownload offlineDownload, String returnActivity) {
-    //    Context appContext = context.get();
+  // TODO replace with options/builder pattern
+  public void downloadRegion(@NonNull Context context, OfflineDownload offlineDownload, String returnActivity,
+                             @DrawableRes int iconRes) {
     Context appContext = context.getApplicationContext();
     Intent intent = new Intent(appContext, DownloadService.class);
     intent.setAction(DownloadService.ACTION_START_DOWNLOAD);
@@ -32,6 +23,7 @@ public class OfflinePlugin {
     intent.putExtra(DownloadService.RegionConstants.MIN_ZOOM, offlineDownload.getMinZoom());
     intent.putExtra(DownloadService.RegionConstants.MAX_ZOOM, offlineDownload.getMaxZoom());
     intent.putExtra(DownloadService.RegionConstants.STYLE, offlineDownload.getStyleUrl());
+    intent.putExtra(DownloadService.NotificationConstants.ICON_RES, iconRes);
     appContext.startService(intent);
   }
 }
