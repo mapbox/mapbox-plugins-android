@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.mapbox.mapboxsdk.offline.OfflineManager;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
+import com.mapbox.mapboxsdk.plugins.offline.DownloadService;
 import com.mapbox.mapboxsdk.plugins.offline.OfflineUtils;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 
@@ -45,7 +46,7 @@ public class OfflineRegionListActivity extends AppCompatActivity implements Adap
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     OfflineRegion region = adapter.getItem(position);
     Intent intent = new Intent(this, OfflineRegionDetailActivity.class);
-    intent.putExtra(OfflineRegionDetailActivity.KEY_ID_OFFLINE_REGION, region.getID());
+    intent.putExtra(DownloadService.RegionConstants.ID, region.getID());
     startActivity(intent);
   }
 

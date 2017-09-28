@@ -13,7 +13,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.widget.Toast;
 
+import com.mapbox.androidsdk.plugins.offline.R;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -33,13 +35,14 @@ import timber.log.Timber;
 
 // TODO check for connection status
 // TODO handle multiple requests
-// TODO add ability to cancel ongoing
 public class DownloadService extends Service implements ConnectivityListener {
 
   private final IBinder myBinder = new DownloadServiceBinder();
 
   static final String BUNDLE_KEY_NOTIFICATION_RETURN_ACTIVITY = "com.mapbox.mapboxsdk.plugins.offline.bundle.activity";
   static final String ACTION_START_DOWNLOAD = "com.mapbox.mapboxsdk.plugins.offline.download.start";
+  static final String ACTION_CANCEL_DOWNLOAD = "com.mapbox.mapboxsdk.plugins.offline.download.cancel";
+  static final int REQ_CANCEL_DOWNLOAD = 98;
   static final int ONGOING_NOTIFICATION_ID = 99;
 
   private DownloadServiceResponder downloadServiceResponder;
@@ -76,15 +79,14 @@ public class DownloadService extends Service implements ConnectivityListener {
   }
 
   @Override
-  public int onStartCommand(Intent intent, int flags, final int startId) {
+  public int onStartCommand(final Intent intent, int flags, final int startId) {
+    Toast.makeText(this, "onStartCommnad with StartId " + startId, Toast.LENGTH_SHORT).show();
+
     String intentAction = intent.getAction();
     if (ACTION_START_DOWNLOAD.equals(intentAction)) {
-      Bundle bundle = intent.getExtras();
+      final Bundle bundle = intent.getExtras();
       final String regionName = bundle.getString(RegionConstants.REGION_NAME);
-      OfflineTilePyramidRegionDefinition definition = createDefinition(bundle);
-
-      // Show a notification of the offline download
-      showNotification(intent, definition, bundle.getInt(NotificationConstants.ICON_RES));
+      final OfflineTilePyramidRegionDefinition definition = createDefinition(bundle);
 
       // Create region, if success start download
       OfflineManager.getInstance(getApplicationContext())
@@ -94,9 +96,17 @@ public class DownloadService extends Service implements ConnectivityListener {
           new OfflineManager.CreateOfflineRegionCallback() {
             @Override
             public void onCreate(OfflineRegion offlineRegion) {
+              Timber.e("offline region created with %s", offlineRegion.getID());
               offlineRegion.setDeliverInactiveMessages(false);
               regionMap.put(offlineRegion, startId);
               launchDownload(offlineRegion, regionName);
+
+              showNotification(
+                intent,
+                definition,
+                offlineRegion.getID(),
+                bundle.getInt(NotificationConstants.ICON_RES)
+              );
             }
 
             @Override
@@ -105,10 +115,15 @@ public class DownloadService extends Service implements ConnectivityListener {
               Timber.e("Error creating offline region: %s", error);
             }
           });
+    } else if (ACTION_CANCEL_DOWNLOAD.equals(intentAction)) {
+      Toast.makeText(this, "Cancel downloads", Toast.LENGTH_SHORT).show();
+      cancelOngoingDownloads();
+      stopSelf(startId);
+    } else {
+      stopSelf(startId);
     }
-    return START_STICKY;
+    return START_REDELIVER_INTENT;
   }
-
 
   private OfflineTilePyramidRegionDefinition createDefinition(Bundle bundle) {
     // TODO replace below with Parceable OfflineRegion (OfflineDownload for now).
@@ -128,16 +143,30 @@ public class DownloadService extends Service implements ConnectivityListener {
       styleUrl, bounds, minZoom, maxZoom, pixelRatio);
   }
 
-  private void showNotification(final Intent intent, OfflineTilePyramidRegionDefinition definition,
+  private void showNotification(final Intent startIntent, OfflineTilePyramidRegionDefinition definition, long regionId,
                                 @DrawableRes final int notificationIcon) {
-    Intent notificationIntent = new Intent(this, resolveActivityForIntent(intent));
-    PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+    Intent notificationIntent = new Intent(this, resolveActivityForIntent(startIntent));
+    notificationIntent.putExtras(startIntent.getExtras());
+    notificationIntent.putExtra(RegionConstants.ID, regionId);
+
+    Intent cancelIntent = new Intent(this, DownloadService.class);
+    cancelIntent.setAction(ACTION_CANCEL_DOWNLOAD);
+
+    PendingIntent pendingIntent = PendingIntent.getActivity(
+      this,
+      0,
+      notificationIntent,
+      PendingIntent.FLAG_UPDATE_CURRENT
+    );
+
     notificationBuilder = new NotificationCompat.Builder(this)
       .setContentTitle("Offline Download")
       .setContentText("Downloading..")
       .setCategory(NotificationCompat.CATEGORY_PROGRESS)
       .setSmallIcon(notificationIcon)
       .setContentIntent(pendingIntent)
+      .addAction(R.drawable.ic_cancel_black_24dp, "Cancel", PendingIntent.getService(this,
+        REQ_CANCEL_DOWNLOAD, cancelIntent, PendingIntent.FLAG_CANCEL_CURRENT))
       .setTicker("Downloading map for offline use");
     startForeground(ONGOING_NOTIFICATION_ID, notificationBuilder.build());
 
@@ -171,19 +200,41 @@ public class DownloadService extends Service implements ConnectivityListener {
     });
   }
 
+  public void cancelOngoingDownloads() {
+    for (OfflineRegion offlineRegion : regionMap.keySet()) {
+      offlineRegion.setDownloadState(OfflineRegion.STATE_INACTIVE);
+      offlineRegion.delete(new OfflineRegion.OfflineRegionDeleteCallback() {
+        @Override
+        public void onDelete() {
+          Timber.e("OFFLINE REGION CANCELED AND DELETED");
+        }
+
+        @Override
+        public void onError(String error) {
+          Timber.e("COULD NOT REMOVE OFFLINE REGION WHILE CANCELLING");
+        }
+      });
+      dispatchCancelBroadcast(OfflineDownload.fromRegion(offlineRegion));
+      notificationManager.cancelAll();
+      stopSelf(regionMap.get(offlineRegion));
+    }
+  }
+
   private void launchDownload(final OfflineRegion offlineRegion, final String regionName) {
     progressDownloadCounter = 0;
 
+    final long hashCode = offlineRegion.hashCode();
     // Set an observer
     offlineRegion.setObserver(new OfflineRegion.OfflineRegionObserver() {
       @Override
       public void onStatusChanged(OfflineRegionStatus status) {
 
         // Debug
-        Timber.d("%s/%s resources; %s bytes downloaded.",
+        Timber.d("%s/%s resources; %s bytes downloaded. for region %s",
           String.valueOf(status.getCompletedResourceCount()),
           String.valueOf(status.getRequiredResourceCount()),
-          String.valueOf(status.getCompletedResourceSize()));
+          String.valueOf(status.getCompletedResourceSize()),
+          hashCode);
 
         if (status.isComplete()) {
           Timber.e("Download complete");
@@ -241,11 +292,18 @@ public class DownloadService extends Service implements ConnectivityListener {
   }
 
   private void dispatchErrorBroadcast(OfflineDownload offlineDownload, String error, String message) {
-    Intent intent = new Intent(OfflineDownload.STATE_FINISHED);
+    Intent intent = new Intent(OfflineDownload.ACTION_OFFLINE);
     intent.putExtra(OfflineDownload.KEY_STATE, OfflineDownload.STATE_ERROR);
     intent.putExtra(OfflineDownload.KEY_BUNDLE_OFFLINE_REGION, offlineDownload);
     intent.putExtra(OfflineDownload.KEY_BUNDLE_ERROR, error);
     intent.putExtra(OfflineDownload.KEY_BUNDLE_MESSAGE, message);
+    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+  }
+
+  private void dispatchCancelBroadcast(OfflineDownload offlineDownload) {
+    Intent intent = new Intent(OfflineDownload.ACTION_OFFLINE);
+    intent.putExtra(OfflineDownload.KEY_STATE, OfflineDownload.STATE_CANCEL);
+    intent.putExtra(OfflineDownload.KEY_BUNDLE_OFFLINE_REGION, offlineDownload);
     LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
   }
 
@@ -285,13 +343,14 @@ public class DownloadService extends Service implements ConnectivityListener {
   }
 
   public static class RegionConstants {
-    static final String REGION_NAME = "com.mapbox.mapboxsdk.plugins.offline.bundle.name";
-    static final String STYLE = "com.mapbox.mapboxsdk.plugins.offline.bundle.style";
-    static final String MIN_ZOOM = "com.mapbox.mapboxsdk.plugins.offline.bundle.minzoom";
-    static final String MAX_ZOOM = "com.mapbox.mapboxsdk.plugins.offline.bundle.maxzoom";
-    static final String LAT_NORTH_BOUNDS = "com.mapbox.mapboxsdk.plugins.offline.bundle.north";
-    static final String LON_EAST_BOUNDS = "com.mapbox.mapboxsdk.plugins.offline.bundle.east";
-    static final String LAT_SOUTH_BOUNDS = "com.mapbox.mapboxsdk.plugins.offline.bundle.south";
-    static final String LON_WEST_BOUNDS = "com.mapbox.mapboxsdk.plugins.offline.bundle.west";
+    public static final String REGION_NAME = "com.mapbox.mapboxsdk.plugins.offline.bundle.name";
+    public static final String STYLE = "com.mapbox.mapboxsdk.plugins.offline.bundle.style";
+    public static final String MIN_ZOOM = "com.mapbox.mapboxsdk.plugins.offline.bundle.minzoom";
+    public static final String MAX_ZOOM = "com.mapbox.mapboxsdk.plugins.offline.bundle.maxzoom";
+    public static final String LAT_NORTH_BOUNDS = "com.mapbox.mapboxsdk.plugins.offline.bundle.north";
+    public static final String LON_EAST_BOUNDS = "com.mapbox.mapboxsdk.plugins.offline.bundle.east";
+    public static final String LAT_SOUTH_BOUNDS = "com.mapbox.mapboxsdk.plugins.offline.bundle.south";
+    public static final String LON_WEST_BOUNDS = "com.mapbox.mapboxsdk.plugins.offline.bundle.west";
+    public static final String ID = "com.mapbox.mapboxsdk.plugins.offline.bundle.id";
   }
 }
