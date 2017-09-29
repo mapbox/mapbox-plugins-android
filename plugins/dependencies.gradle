@@ -16,7 +16,7 @@ ext {
 
     dep = [
             // mapbox
-            mapSdk                 : 'com.mapbox.mapboxsdk:mapbox-android-sdk:5.1.3',
+            mapSdk                 : 'com.mapbox.mapboxsdk:mapbox-android-sdk:5.2.0-SNAPSHOT',
             mapboxServices         : 'com.mapbox.mapboxsdk:mapbox-android-services:2.2.1',
 
             // unit test

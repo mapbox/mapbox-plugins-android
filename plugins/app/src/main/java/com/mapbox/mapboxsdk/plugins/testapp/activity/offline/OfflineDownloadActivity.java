@@ -116,6 +116,10 @@ public class OfflineDownloadActivity extends AppCompatActivity {
       .setMaxZoom(maxZoom)
       .build();
 
-    new OfflinePlugin().downloadRegion(this, offlineDownload, OfflineRegionDetailActivity.class.getName());
+    new OfflinePlugin().downloadRegion(this,
+      offlineDownload,
+      OfflineRegionDetailActivity.class.getName(),
+      R.drawable.mapbox_logo_icon
+    );
   }
 }
