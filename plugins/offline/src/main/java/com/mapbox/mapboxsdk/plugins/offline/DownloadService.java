@@ -43,7 +43,6 @@ public class DownloadService extends Service implements ConnectivityListener {
   static final String ACTION_START_DOWNLOAD = "com.mapbox.mapboxsdk.plugins.offline.download.start";
   static final String ACTION_CANCEL_DOWNLOAD = "com.mapbox.mapboxsdk.plugins.offline.download.cancel";
   static final int REQ_CANCEL_DOWNLOAD = 98;
-  static final int ONGOING_NOTIFICATION_ID = 99;
 
   private DownloadServiceResponder downloadServiceResponder;
 
@@ -99,12 +98,13 @@ public class DownloadService extends Service implements ConnectivityListener {
               Timber.e("offline region created with %s", offlineRegion.getID());
               offlineRegion.setDeliverInactiveMessages(false);
               regionMap.put(offlineRegion, startId);
-              launchDownload(offlineRegion, regionName);
+              launchDownload(offlineRegion, regionName, startId);
 
               showNotification(
                 intent,
                 definition,
                 offlineRegion.getID(),
+                startId,
                 bundle.getInt(NotificationConstants.ICON_RES)
               );
             }
@@ -117,12 +117,37 @@ public class DownloadService extends Service implements ConnectivityListener {
           });
     } else if (ACTION_CANCEL_DOWNLOAD.equals(intentAction)) {
       Toast.makeText(this, "Cancel downloads", Toast.LENGTH_SHORT).show();
-      cancelOngoingDownloads();
-      stopSelf(startId);
+
+      final int notificationId = intent.getIntExtra(NotificationConstants.ID, -1);
+      if (notificationId == -1) {
+        throw new RuntimeException();
+      }
+
+      final long regionId = intent.getLongExtra(RegionConstants.ID, -1);
+      if (regionId == -1) {
+        throw new RuntimeException();
+      }
+
+      OfflineManager.getInstance(this).listOfflineRegions(new OfflineManager.ListOfflineRegionsCallback() {
+        @Override
+        public void onList(OfflineRegion[] offlineRegions) {
+          for (OfflineRegion offlineRegion : offlineRegions) {
+            if (offlineRegion.getID() == regionId) {
+              cancelOngoingDownload(offlineRegion, notificationId);
+            }
+            stopSelf(startId);
+          }
+        }
+
+        @Override
+        public void onError(String error) {
+          Timber.e("Unable to list ");
+        }
+      });
     } else {
       stopSelf(startId);
     }
-    return START_REDELIVER_INTENT;
+    return START_NOT_STICKY;
   }
 
   private OfflineTilePyramidRegionDefinition createDefinition(Bundle bundle) {
@@ -144,10 +169,11 @@ public class DownloadService extends Service implements ConnectivityListener {
   }
 
   private void showNotification(final Intent startIntent, OfflineTilePyramidRegionDefinition definition, long regionId,
-                                @DrawableRes final int notificationIcon) {
+                                final int notificationId, @DrawableRes final int notificationIcon) {
     Intent notificationIntent = new Intent(this, resolveActivityForIntent(startIntent));
     notificationIntent.putExtras(startIntent.getExtras());
     notificationIntent.putExtra(RegionConstants.ID, regionId);
+    notificationIntent.putExtra(NotificationConstants.ID, notificationId);
 
     Intent cancelIntent = new Intent(this, DownloadService.class);
     cancelIntent.setAction(ACTION_CANCEL_DOWNLOAD);
@@ -168,7 +194,7 @@ public class DownloadService extends Service implements ConnectivityListener {
       .addAction(R.drawable.ic_cancel_black_24dp, "Cancel", PendingIntent.getService(this,
         REQ_CANCEL_DOWNLOAD, cancelIntent, PendingIntent.FLAG_CANCEL_CURRENT))
       .setTicker("Downloading map for offline use");
-    startForeground(ONGOING_NOTIFICATION_ID, notificationBuilder.build());
+    startForeground(notificationId, notificationBuilder.build());
 
     // create map bitmap to show as notification icon
     createMapSnapshot(definition, new MapboxMap.SnapshotReadyCallback() {
@@ -176,7 +202,7 @@ public class DownloadService extends Service implements ConnectivityListener {
       public void onSnapshotReady(Bitmap snapshot) {
         notificationBuilder.setSmallIcon(notificationIcon);
         notificationBuilder.setLargeIcon(snapshot);
-        notificationManager.notify(ONGOING_NOTIFICATION_ID, notificationBuilder.build());
+        notificationManager.notify(notificationId, notificationBuilder.build());
       }
     });
   }
@@ -200,27 +226,29 @@ public class DownloadService extends Service implements ConnectivityListener {
     });
   }
 
-  public void cancelOngoingDownloads() {
-    for (OfflineRegion offlineRegion : regionMap.keySet()) {
-      offlineRegion.setDownloadState(OfflineRegion.STATE_INACTIVE);
-      offlineRegion.delete(new OfflineRegion.OfflineRegionDeleteCallback() {
-        @Override
-        public void onDelete() {
-          Timber.e("OFFLINE REGION CANCELED AND DELETED");
-        }
+  private void cancelOngoingDownload(OfflineRegion offlineRegion, int notificationId) {
+    offlineRegion.setDownloadState(OfflineRegion.STATE_INACTIVE);
+    offlineRegion.delete(new OfflineRegion.OfflineRegionDeleteCallback() {
+      @Override
+      public void onDelete() {
+        Timber.e("OFFLINE REGION CANCELED AND DELETED");
+      }
 
-        @Override
-        public void onError(String error) {
-          Timber.e("COULD NOT REMOVE OFFLINE REGION WHILE CANCELLING");
-        }
-      });
-      dispatchCancelBroadcast(OfflineDownload.fromRegion(offlineRegion));
-      notificationManager.cancelAll();
-      stopSelf(regionMap.get(offlineRegion));
-    }
+      @Override
+      public void onError(String error) {
+        Timber.e("COULD NOT REMOVE OFFLINE REGION WHILE CANCELLING");
+      }
+    });
+    dispatchCancelBroadcast(OfflineDownload.fromRegion(offlineRegion));
+    notificationManager.cancel(notificationId);
+    stopSelf(regionMap.get(offlineRegion));
   }
 
-  private void launchDownload(final OfflineRegion offlineRegion, final String regionName) {
+  public void cancelOngoingDownload(OfflineRegion offlineRegion) {
+    cancelOngoingDownload(offlineRegion, regionMap.get(offlineRegion));
+  }
+
+  private void launchDownload(final OfflineRegion offlineRegion, final String regionName, final int notifcationId) {
     progressDownloadCounter = 0;
 
     final long hashCode = offlineRegion.hashCode();
@@ -237,16 +265,19 @@ public class DownloadService extends Service implements ConnectivityListener {
           hashCode);
 
         if (status.isComplete()) {
-          Timber.e("Download complete");
+          Timber.e("Download complete for %s with notification id %s", hashCode, notifcationId);
           if (notificationBuilder != null) {
-            notificationBuilder.setContentText(regionName + "has completed downloading").setProgress(0, 0, false);
-            notificationManager.notify(ONGOING_NOTIFICATION_ID, notificationBuilder.build());
+            notificationManager.cancel(notifcationId);
           }
           dispatchSuccessBroadcast(OfflineDownload.fromRegion(offlineRegion));
+          offlineRegion.setDownloadState(OfflineRegion.STATE_INACTIVE);
           offlineRegion.setObserver(null);
-          stopSelf(regionMap.get(offlineRegion));
+          int startId = regionMap.get(offlineRegion);
+          regionMap.remove(offlineRegion);
+          stopSelf(startId);
           return;
         }
+
         progressDownloadCounter++;
         if (progressDownloadCounter % 10 == 0) {
           int percentage = (int) (status.getRequiredResourceCount() >= 0
@@ -254,7 +285,7 @@ public class DownloadService extends Service implements ConnectivityListener {
             0.0);
 
           if (downloadServiceResponder != null) {
-            downloadServiceResponder.onDownloadProgressChanged(percentage);
+            downloadServiceResponder.onDownloadProgressChanged(offlineRegion.getID(), percentage);
           }
 
           if (notificationBuilder == null) {
@@ -263,7 +294,7 @@ public class DownloadService extends Service implements ConnectivityListener {
           }
 
           notificationBuilder.setProgress(100, percentage, false);
-          notificationManager.notify(ONGOING_NOTIFICATION_ID, notificationBuilder.build());
+          notificationManager.notify(notifcationId, notificationBuilder.build());
         }
       }
 
@@ -335,11 +366,12 @@ public class DownloadService extends Service implements ConnectivityListener {
   }
 
   public interface DownloadServiceResponder {
-    void onDownloadProgressChanged(int percentage);
+    void onDownloadProgressChanged(long offlineRegionId, int percentage);
   }
 
   public static class NotificationConstants {
     static final String ICON_RES = "com.mapbox.mapboxsdk.plugins.offline.bundle.iconres";
+    static final String ID = "com.mapbox.mapboxsdk.pluings.offline.bundle.notification.id";
   }
 
   public static class RegionConstants {
