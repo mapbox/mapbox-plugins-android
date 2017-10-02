@@ -248,6 +248,10 @@ public class OfflineRegionDetailActivity extends AppCompatActivity {
     new DownloadService.DownloadServiceResponder() {
       @Override
       public void onDownloadProgressChanged(long offlineRegionId, int percentage) {
+        if (offlineRegion == null) {
+          return;
+        }
+
         if (offlineRegionId == offlineRegion.getID()) {
           if (progressBar.getVisibility() != View.VISIBLE) {
             progressBar.setVisibility(View.VISIBLE);
