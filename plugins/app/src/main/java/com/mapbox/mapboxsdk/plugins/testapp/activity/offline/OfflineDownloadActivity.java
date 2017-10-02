@@ -9,6 +9,9 @@ import android.widget.Spinner;
 
 import com.mapbox.mapboxsdk.constants.MapboxConstants;
 import com.mapbox.mapboxsdk.constants.Style;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.geometry.LatLngBounds;
+import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
 import com.mapbox.mapboxsdk.plugins.offline.NotificationOptions;
 import com.mapbox.mapboxsdk.plugins.offline.OfflineDownload;
 import com.mapbox.mapboxsdk.plugins.offline.OfflinePlugin;
@@ -106,15 +109,17 @@ public class OfflineDownloadActivity extends AppCompatActivity {
     float maxZoom = maxZoomView.getProgress();
     float minZoom = minZoomView.getProgress();
 
+    OfflineTilePyramidRegionDefinition definition = new OfflineTilePyramidRegionDefinition(
+      styleUrl,
+      new LatLngBounds.Builder().include(new LatLng(latitudeNorth, longitudeEast)).include(new LatLng(latitudeSouth, longitudeWest)).build(),
+      minZoom,
+      maxZoom,
+      getResources().getDisplayMetrics().density
+    );
+
     OfflineDownload offlineDownload = new OfflineDownload.Builder()
-      .setLatNorth(latitudeNorth)
-      .setLatSouth(latitudeSouth)
-      .setLonEast(longitudeEast)
-      .setLonWest(longitudeWest)
-      .setRegionName(regionName)
-      .setStyleUrl(styleUrl)
-      .setMinZoom(minZoom)
-      .setMaxZoom(maxZoom)
+      .setDefinition(definition)
+      .setName(regionName)
       .build();
 
     NotificationOptions notificationOptions = new NotificationOptions()

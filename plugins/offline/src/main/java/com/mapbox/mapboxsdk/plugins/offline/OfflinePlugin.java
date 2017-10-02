@@ -12,15 +12,8 @@ public class OfflinePlugin {
     Context appContext = context.getApplicationContext();
     Intent intent = new Intent(appContext, DownloadService.class);
     intent.setAction(DownloadService.ACTION_START_DOWNLOAD);
-    // todo replace below with parceable OfflineDownload
-    intent.putExtra(DownloadService.RegionConstants.REGION_NAME, offlineDownload.getRegionName());
-    intent.putExtra(DownloadService.RegionConstants.LAT_NORTH_BOUNDS, offlineDownload.getLatNorth());
-    intent.putExtra(DownloadService.RegionConstants.LON_EAST_BOUNDS, offlineDownload.getLonEast());
-    intent.putExtra(DownloadService.RegionConstants.LAT_SOUTH_BOUNDS, offlineDownload.getLatSouth());
-    intent.putExtra(DownloadService.RegionConstants.LON_WEST_BOUNDS, offlineDownload.getLonWest());
-    intent.putExtra(DownloadService.RegionConstants.MIN_ZOOM, offlineDownload.getMinZoom());
-    intent.putExtra(DownloadService.RegionConstants.MAX_ZOOM, offlineDownload.getMaxZoom());
-    intent.putExtra(DownloadService.RegionConstants.STYLE, offlineDownload.getStyleUrl());
+    intent.putExtra(DownloadService.RegionConstants.REGION_DEFINTION, offlineDownload.getRegionDefinition());
+    intent.putExtra(DownloadService.RegionConstants.NAME, offlineDownload.getName());
     intent.putExtra(DownloadService.NotificationConstants.OPTIONS, notificationOptions);
     appContext.startService(intent);
   }
