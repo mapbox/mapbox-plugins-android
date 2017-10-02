@@ -12,11 +12,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.util.LongSparseArray;
 import android.widget.Toast;
 
 import com.mapbox.androidsdk.plugins.offline.R;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.net.ConnectivityListener;
 import com.mapbox.mapboxsdk.net.ConnectivityReceiver;
@@ -27,8 +26,8 @@ import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
 import com.mapbox.mapboxsdk.snapshotter.MapSnapshotter;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import timber.log.Timber;
 
@@ -47,8 +46,10 @@ public class DownloadService extends Service implements ConnectivityListener {
   private NotificationCompat.Builder notificationBuilder;
   private int progressDownloadCounter;
 
+  private List<Integer> startCommands = new ArrayList<>();
+
   // map offline regions to requests, ids are received through onStartCommand
-  private final Map<OfflineRegion, Integer> regionMap = new HashMap<>();
+  private final LongSparseArray<OfflineRegion> regionLongSparseArray = new LongSparseArray<>();
 
   @Override
   public void onCreate() {
@@ -76,13 +77,15 @@ public class DownloadService extends Service implements ConnectivityListener {
   @Override
   public int onStartCommand(final Intent intent, int flags, final int startId) {
     Toast.makeText(this, "onStartCommnad with StartId " + startId, Toast.LENGTH_SHORT).show();
+    startCommands.add(startId);
 
     String intentAction = intent.getAction();
     if (ACTION_START_DOWNLOAD.equals(intentAction)) {
       final Bundle bundle = intent.getExtras();
-      final OfflineTilePyramidRegionDefinition definition = bundle.getParcelable(RegionConstants.REGION_DEFINTION);
-      final String regionName = bundle.getString(RegionConstants.NAME);
-      final NotificationOptions notificationOptions = bundle.getParcelable(NotificationConstants.OPTIONS);
+      final OfflineDownload offlineDownload = bundle.getParcelable(OfflineDownload.KEY_OBJECT);
+      final OfflineTilePyramidRegionDefinition definition = offlineDownload.getRegionDefinition();
+      final String regionName = offlineDownload.getName();
+      offlineDownload.setServiceId(startId);
 
       // Create region, if success start download
       OfflineManager.getInstance(getApplicationContext())
@@ -93,16 +96,13 @@ public class DownloadService extends Service implements ConnectivityListener {
             @Override
             public void onCreate(OfflineRegion offlineRegion) {
               Timber.e("offline region created with %s", offlineRegion.getID());
+              offlineDownload.setRegionId(offlineRegion.getID());
               offlineRegion.setDeliverInactiveMessages(false);
-              regionMap.put(offlineRegion, startId);
-              launchDownload(offlineRegion, startId);
+              regionLongSparseArray.put(offlineDownload.getServiceId(), offlineRegion);
+              launchDownload(offlineDownload, offlineRegion);
 
               showNotification(
-                intent,
-                definition,
-                offlineRegion.getID(),
-                startId,
-                notificationOptions
+                offlineDownload
               );
             }
 
@@ -114,50 +114,23 @@ public class DownloadService extends Service implements ConnectivityListener {
           });
     } else if (ACTION_CANCEL_DOWNLOAD.equals(intentAction)) {
       Toast.makeText(this, "Cancel downloads", Toast.LENGTH_SHORT).show();
-
-      final int notificationId = intent.getIntExtra(NotificationConstants.ID, -1);
-      if (notificationId == -1) {
-        throw new RuntimeException();
-      }
-
-      final long regionId = intent.getLongExtra(RegionConstants.ID, -1);
-      if (regionId == -1) {
-        throw new RuntimeException();
-      }
-
-      OfflineManager.getInstance(this).listOfflineRegions(new OfflineManager.ListOfflineRegionsCallback() {
-        @Override
-        public void onList(OfflineRegion[] offlineRegions) {
-          for (OfflineRegion offlineRegion : offlineRegions) {
-            if (offlineRegion.getID() == regionId) {
-              cancelOngoingDownload(offlineRegion, notificationId);
-            }
-            stopSelf(startId);
-          }
-        }
-
-        @Override
-        public void onError(String error) {
-          Timber.e("Unable to list ");
-        }
-      });
+      OfflineDownload offlineDownload = intent.getParcelableExtra(OfflineDownload.KEY_OBJECT);
+      cancelOngoingDownload(offlineDownload);
+      stopService(startId);
     } else {
-      stopSelf(startId);
+      stopService(startId);
     }
-    return START_REDELIVER_INTENT;
+    return START_STICKY;
   }
 
-  private void showNotification(final Intent startIntent, OfflineTilePyramidRegionDefinition definition, long regionId,
-                                final int notificationId, final NotificationOptions notificationOptions) {
+  private void showNotification(final OfflineDownload offlineDownload) {
+    NotificationOptions notificationOptions = offlineDownload.getNotificationOptions();
+
     Intent notificationIntent = new Intent(this, notificationOptions.getReturnActivity());
-    notificationIntent.putExtras(startIntent.getExtras());
-    notificationIntent.putExtra(RegionConstants.ID, regionId);
-    notificationIntent.putExtra(NotificationConstants.ID, notificationId);
+    notificationIntent.putExtra(OfflineDownload.KEY_OBJECT, offlineDownload);
 
     Intent cancelIntent = new Intent(this, DownloadService.class);
-    cancelIntent.putExtras(startIntent.getExtras());
-    cancelIntent.putExtra(RegionConstants.ID, regionId);
-    cancelIntent.putExtra(NotificationConstants.ID, notificationId);
+    cancelIntent.putExtra(OfflineDownload.KEY_OBJECT, offlineDownload);
     cancelIntent.setAction(ACTION_CANCEL_DOWNLOAD);
 
     PendingIntent pendingIntent = PendingIntent.getActivity(
@@ -176,14 +149,14 @@ public class DownloadService extends Service implements ConnectivityListener {
       .addAction(R.drawable.ic_cancel_black_24dp, "Cancel", PendingIntent.getService(this,
         REQ_CANCEL_DOWNLOAD, cancelIntent, PendingIntent.FLAG_CANCEL_CURRENT))
       .setTicker(notificationOptions.getTicker());
-    startForeground(notificationId, notificationBuilder.build());
+    startForeground(offlineDownload.getServiceId(), notificationBuilder.build());
 
     // create map bitmap to show as notification icon
-    createMapSnapshot(definition, new MapboxMap.SnapshotReadyCallback() {
+    createMapSnapshot(offlineDownload.getRegionDefinition(), new MapboxMap.SnapshotReadyCallback() {
       @Override
       public void onSnapshotReady(Bitmap snapshot) {
         notificationBuilder.setLargeIcon(snapshot);
-        notificationManager.notify(notificationId, notificationBuilder.build());
+        notificationManager.notify(offlineDownload.getServiceId(), notificationBuilder.build());
       }
     });
   }
@@ -198,17 +171,17 @@ public class DownloadService extends Service implements ConnectivityListener {
     options.withStyle(definition.getStyleURL());
     options.withRegion(definition.getBounds());
     mapSnapshotter = new MapSnapshotter(this, options);
-    mapSnapshotter.start(callback, new MapSnapshotter.ErrorHandler() {
-      @Override
-      public void onError(String error) {
-        // TODO handle error
-        Timber.e("Can't create map snapshot: %s", error);
-      }
-    });
+    mapSnapshotter.start(callback);
   }
 
-  private void cancelOngoingDownload(OfflineRegion offlineRegion, int notificationId) {
+  public void cancelOngoingDownload(OfflineDownload offlineDownload) {
+    int serviceId = offlineDownload.getServiceId();
+    if (serviceId == -1) {
+      throw new RuntimeException();
+    }
+    OfflineRegion offlineRegion = regionLongSparseArray.get(offlineDownload.getServiceId());
     offlineRegion.setDownloadState(OfflineRegion.STATE_INACTIVE);
+    offlineRegion.setObserver(null);
     offlineRegion.delete(new OfflineRegion.OfflineRegionDeleteCallback() {
       @Override
       public void onDelete() {
@@ -220,20 +193,16 @@ public class DownloadService extends Service implements ConnectivityListener {
         Timber.e("COULD NOT REMOVE OFFLINE REGION WHILE CANCELLING");
       }
     });
-    dispatchCancelBroadcast();
-    notificationManager.cancel(notificationId);
-    Timber.e("size %s"+regionMap.size());
-    stopSelf(regionMap.get(offlineRegion));
+    dispatchCancelBroadcast(offlineDownload);
+    notificationManager.cancel(serviceId);
+    stopService(serviceId);
   }
 
-  public void cancelOngoingDownload(OfflineRegion offlineRegion) {
-    cancelOngoingDownload(offlineRegion, regionMap.get(offlineRegion));
-  }
-
-  private void launchDownload(final OfflineRegion offlineRegion, final int notifcationId) {
+  private void launchDownload(final OfflineDownload offlineDownload, final OfflineRegion offlineRegion) {
     progressDownloadCounter = 0;
 
     final long hashCode = offlineRegion.hashCode();
+    final int serviceId = offlineDownload.getServiceId();
     // Set an observer
     offlineRegion.setObserver(new OfflineRegion.OfflineRegionObserver() {
       @Override
@@ -247,16 +216,15 @@ public class DownloadService extends Service implements ConnectivityListener {
           hashCode);
 
         if (status.isComplete()) {
-          Timber.e("Download complete for %s with notification id %s", hashCode, notifcationId);
+          Timber.e("Download complete for %s with notification id %s", hashCode, serviceId);
           if (notificationBuilder != null) {
-            notificationManager.cancel(notifcationId);
+            notificationManager.cancel(serviceId);
           }
-          dispatchSuccessBroadcast();
+          dispatchSuccessBroadcast(offlineDownload);
           offlineRegion.setDownloadState(OfflineRegion.STATE_INACTIVE);
           offlineRegion.setObserver(null);
-          int startId = regionMap.get(offlineRegion);
-          regionMap.remove(offlineRegion);
-          stopSelf(startId);
+          regionLongSparseArray.remove(offlineDownload.getServiceId());
+          stopService(serviceId);
           return;
         }
 
@@ -276,15 +244,15 @@ public class DownloadService extends Service implements ConnectivityListener {
           }
 
           notificationBuilder.setProgress(100, percentage, false);
-          notificationManager.notify(notifcationId, notificationBuilder.build());
+          notificationManager.notify(serviceId, notificationBuilder.build());
         }
       }
 
       @Override
       public void onError(OfflineRegionError error) {
         Timber.e("onError: %s, %s", error.getReason(), error.getMessage());
-        dispatchErrorBroadcast(error.getReason(), error.getMessage());
-        stopSelf(regionMap.get(offlineRegion));
+        dispatchErrorBroadcast(offlineDownload, error.getReason(), error.getMessage());
+        stopService(offlineDownload.getServiceId());
       }
 
       @Override
@@ -297,26 +265,26 @@ public class DownloadService extends Service implements ConnectivityListener {
     offlineRegion.setDownloadState(OfflineRegion.STATE_ACTIVE);
   }
 
-  private void dispatchSuccessBroadcast() {
+  private void dispatchSuccessBroadcast(OfflineDownload offlineDownload) {
     Intent intent = new Intent(OfflineDownload.ACTION_OFFLINE);
     intent.putExtra(OfflineDownload.KEY_STATE, OfflineDownload.STATE_FINISHED);
-//    intent.putExtra(OfflineDownload.KEY_BUNDLE_OFFLINE_REGION, offlineDownload);
+    intent.putExtra(OfflineDownload.KEY_OBJECT, offlineDownload);
     LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
   }
 
-  private void dispatchErrorBroadcast(String error, String message) {
+  private void dispatchErrorBroadcast(OfflineDownload offlineDownload, String error, String message) {
     Intent intent = new Intent(OfflineDownload.ACTION_OFFLINE);
     intent.putExtra(OfflineDownload.KEY_STATE, OfflineDownload.STATE_ERROR);
-//    intent.putExtra(OfflineDownload.KEY_BUNDLE_OFFLINE_REGION, offlineDownload);
+    intent.putExtra(OfflineDownload.KEY_OBJECT, offlineDownload);
     intent.putExtra(OfflineDownload.KEY_BUNDLE_ERROR, error);
     intent.putExtra(OfflineDownload.KEY_BUNDLE_MESSAGE, message);
     LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
   }
 
-  private void dispatchCancelBroadcast() {
+  private void dispatchCancelBroadcast(OfflineDownload offlineDownload) {
     Intent intent = new Intent(OfflineDownload.ACTION_OFFLINE);
     intent.putExtra(OfflineDownload.KEY_STATE, OfflineDownload.STATE_CANCEL);
-//    intent.putExtra(OfflineDownload.KEY_BUNDLE_OFFLINE_REGION, offlineDownload);
+    intent.putExtra(OfflineDownload.KEY_OBJECT, offlineDownload);
     LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
   }
 
@@ -345,14 +313,22 @@ public class DownloadService extends Service implements ConnectivityListener {
     void onDownloadProgressChanged(long offlineRegionId, int percentage);
   }
 
-  public static class NotificationConstants {
-    public static final String ID = "com.mapbox.mapboxsdk.pluings.offline.bundle.notification.id";
-    public static final String OPTIONS = "com.mapbox.mapboxsdk.pluings.offline.bundle.notification.options";
+  private void stopService(int serviceId) {
+    printStartCommands(serviceId);
+    stopSelf(serviceId);
+    startCommands.remove(startCommands.indexOf(serviceId));
+  }
+
+  private void printStartCommands(int serviceId) {
+    StringBuilder builder = new StringBuilder();
+    for (Integer startCommand : startCommands) {
+      builder.append(" ").append(startCommand);
+    }
+    Timber.e("stofSelf for" + serviceId);
+    Timber.e("start commands " + builder.toString());
   }
 
   public static class RegionConstants {
-    public static final String REGION_DEFINTION = "com.mapbox.mapboxsdk.plugins.offline.bundle.defintion";
-    public static final String NAME = "com.mapbox.mapboxsdk.plugins.offline.bundle.name";
     public static final String ID = "com.mapbox.mapboxsdk.plugins.offline.bundle.id";
   }
 }

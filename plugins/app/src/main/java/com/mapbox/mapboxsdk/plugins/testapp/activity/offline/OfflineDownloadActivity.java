@@ -117,17 +117,16 @@ public class OfflineDownloadActivity extends AppCompatActivity {
       getResources().getDisplayMetrics().density
     );
 
-    OfflineDownload offlineDownload = new OfflineDownload.Builder()
-      .setDefinition(definition)
-      .setName(regionName)
-      .build();
-
     NotificationOptions notificationOptions = new NotificationOptions()
       .withSmallIconRes(R.drawable.mapbox_logo_icon)
       .withReturnActivity(OfflineRegionDetailActivity.class.getName());
 
-    new OfflinePlugin().downloadRegion(this,
-      offlineDownload, notificationOptions
-    );
+    OfflineDownload offlineDownload = new OfflineDownload.Builder()
+      .setDefinition(definition)
+      .setName(regionName)
+      .setNotificationsOptions(notificationOptions)
+      .build();
+
+    new OfflinePlugin().downloadRegion(this, offlineDownload);
   }
 }

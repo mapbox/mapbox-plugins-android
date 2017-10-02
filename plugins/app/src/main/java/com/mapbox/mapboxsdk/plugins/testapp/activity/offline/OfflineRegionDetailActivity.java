@@ -87,11 +87,22 @@ public class OfflineRegionDetailActivity extends AppCompatActivity {
 
     Bundle bundle = getIntent().getExtras();
     if (bundle != null) {
-      OfflineUtils.getRegion(
-        OfflineManager.getInstance(this),
-        getIntent().getExtras().getLong(DownloadService.RegionConstants.ID),
-        offlineRegionCallback
-      );
+      OfflineDownload offlineDownload = bundle.getParcelable(OfflineDownload.KEY_OBJECT);
+      if (offlineDownload != null) {
+        // coming from notification
+        OfflineUtils.getRegion(
+          OfflineManager.getInstance(this),
+          offlineDownload.getRegionId(),
+          offlineRegionCallback
+        );
+      } else {
+        // coming from list activity
+        OfflineUtils.getRegion(
+          OfflineManager.getInstance(this),
+          bundle.getLong(DownloadService.RegionConstants.ID),
+          offlineRegionCallback
+        );
+      }
     } else {
       Toast.makeText(this, "invalid bundle for Activity", Toast.LENGTH_SHORT).show();
     }
@@ -134,7 +145,7 @@ public class OfflineRegionDetailActivity extends AppCompatActivity {
       }
     } else {
       // cancel ongoing downloads
-      downloadServiceBinder.getService().cancelOngoingDownload(offlineRegion);
+      // downloadServiceBinder.getService().cancelOngoingDownload(offlineRegion);
       stateView.setText("CANCELED");
     }
   }
@@ -207,7 +218,7 @@ public class OfflineRegionDetailActivity extends AppCompatActivity {
     public void onReceive(Context context, Intent intent) {
       String actionName = intent.getStringExtra(OfflineDownload.KEY_STATE);
       if (actionName.equals(OfflineDownload.STATE_FINISHED)) {
-        //OfflineDownload offlineDownload = intent.getParcelableExtra(OfflineDownload.KEY_BUNDLE_OFFLINE_REGION);
+        OfflineDownload offlineDownload = intent.getParcelableExtra(OfflineDownload.KEY_OBJECT);
         stateView.setText("DOWNLOADED");
         progressBar.setVisibility(View.INVISIBLE);
       } else if (actionName.equals(OfflineDownload.STATE_CANCEL)) {
