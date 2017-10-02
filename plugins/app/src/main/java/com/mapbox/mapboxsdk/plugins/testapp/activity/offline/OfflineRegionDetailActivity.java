@@ -127,14 +127,14 @@ public class OfflineRegionDetailActivity extends AppCompatActivity {
 
   @OnClick(R.id.fab_delete)
   public void onFabClick(View view) {
-    if ((boolean) view.getTag()) {
+    if (view.getTag() == null || (boolean) view.getTag()) {
       if (offlineRegion != null) {
         deleteView.setEnabled(false);
         offlineRegion.delete(offlineRegionDeleteCallback);
       }
     } else {
       // cancel ongoing downloads
-      downloadServiceBinder.getService().cancelOngoingDownloads();
+      downloadServiceBinder.getService().cancelOngoingDownload(offlineRegion);
       stateView.setText("CANCELED");
     }
   }
@@ -247,11 +247,13 @@ public class OfflineRegionDetailActivity extends AppCompatActivity {
   private final DownloadService.DownloadServiceResponder downloadServiceResponder =
     new DownloadService.DownloadServiceResponder() {
       @Override
-      public void onDownloadProgressChanged(int percentage) {
-        if (progressBar.getVisibility() != View.VISIBLE) {
-          progressBar.setVisibility(View.VISIBLE);
+      public void onDownloadProgressChanged(long offlineRegionId, int percentage) {
+        if (offlineRegionId == offlineRegion.getID()) {
+          if (progressBar.getVisibility() != View.VISIBLE) {
+            progressBar.setVisibility(View.VISIBLE);
+          }
+          progressBar.setProgress(percentage);
         }
-        progressBar.setProgress(percentage);
       }
     };
 
@@ -264,7 +266,7 @@ public class OfflineRegionDetailActivity extends AppCompatActivity {
       public void onStatus(OfflineRegionStatus status) {
         int downloadState = status.getDownloadState();
         if (downloadState == OfflineRegion.STATE_ACTIVE) {
-          FloatingActionButton actionButton = (FloatingActionButton) findViewById(R.id.fab_delete);
+          FloatingActionButton actionButton = findViewById(R.id.fab_delete);
           if (!status.isComplete()) {
             // set fab to cancel
             actionButton.setImageResource(R.drawable.ic_cancel_black_24dp);
