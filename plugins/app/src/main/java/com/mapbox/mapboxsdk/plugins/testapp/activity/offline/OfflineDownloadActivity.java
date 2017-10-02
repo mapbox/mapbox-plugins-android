@@ -9,6 +9,7 @@ import android.widget.Spinner;
 
 import com.mapbox.mapboxsdk.constants.MapboxConstants;
 import com.mapbox.mapboxsdk.constants.Style;
+import com.mapbox.mapboxsdk.plugins.offline.NotificationOptions;
 import com.mapbox.mapboxsdk.plugins.offline.OfflineDownload;
 import com.mapbox.mapboxsdk.plugins.offline.OfflinePlugin;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
@@ -116,10 +117,12 @@ public class OfflineDownloadActivity extends AppCompatActivity {
       .setMaxZoom(maxZoom)
       .build();
 
+    NotificationOptions notificationOptions = new NotificationOptions()
+      .withSmallIconRes(R.drawable.mapbox_logo_icon)
+      .withReturnActivity(OfflineRegionDetailActivity.class.getName());
+
     new OfflinePlugin().downloadRegion(this,
-      offlineDownload,
-      OfflineRegionDetailActivity.class.getName(),
-      R.drawable.mapbox_logo_icon
+      offlineDownload, notificationOptions
     );
   }
 }

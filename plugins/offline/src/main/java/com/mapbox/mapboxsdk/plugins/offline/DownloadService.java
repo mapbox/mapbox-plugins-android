@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -33,13 +32,10 @@ import java.util.Map;
 
 import timber.log.Timber;
 
-// TODO check for connection status
-// TODO handle multiple requests
 public class DownloadService extends Service implements ConnectivityListener {
 
   private final IBinder myBinder = new DownloadServiceBinder();
 
-  static final String BUNDLE_KEY_NOTIFICATION_RETURN_ACTIVITY = "com.mapbox.mapboxsdk.plugins.offline.bundle.activity";
   static final String ACTION_START_DOWNLOAD = "com.mapbox.mapboxsdk.plugins.offline.download.start";
   static final String ACTION_CANCEL_DOWNLOAD = "com.mapbox.mapboxsdk.plugins.offline.download.cancel";
   static final int REQ_CANCEL_DOWNLOAD = 98;
@@ -86,6 +82,7 @@ public class DownloadService extends Service implements ConnectivityListener {
       final Bundle bundle = intent.getExtras();
       final String regionName = bundle.getString(RegionConstants.REGION_NAME);
       final OfflineTilePyramidRegionDefinition definition = createDefinition(bundle);
+      final NotificationOptions notificationOptions = bundle.getParcelable(NotificationConstants.OPTIONS);
 
       // Create region, if success start download
       OfflineManager.getInstance(getApplicationContext())
@@ -105,7 +102,7 @@ public class DownloadService extends Service implements ConnectivityListener {
                 definition,
                 offlineRegion.getID(),
                 startId,
-                bundle.getInt(NotificationConstants.ICON_RES)
+                notificationOptions
               );
             }
 
@@ -169,8 +166,8 @@ public class DownloadService extends Service implements ConnectivityListener {
   }
 
   private void showNotification(final Intent startIntent, OfflineTilePyramidRegionDefinition definition, long regionId,
-                                final int notificationId, @DrawableRes final int notificationIcon) {
-    Intent notificationIntent = new Intent(this, resolveActivityForIntent(startIntent));
+                                final int notificationId, final NotificationOptions notificationOptions) {
+    Intent notificationIntent = new Intent(this, notificationOptions.getReturnActivity());
     notificationIntent.putExtras(startIntent.getExtras());
     notificationIntent.putExtra(RegionConstants.ID, regionId);
     notificationIntent.putExtra(NotificationConstants.ID, notificationId);
@@ -186,21 +183,20 @@ public class DownloadService extends Service implements ConnectivityListener {
     );
 
     notificationBuilder = new NotificationCompat.Builder(this)
-      .setContentTitle("Offline Download")
-      .setContentText("Downloading..")
+      .setContentTitle(notificationOptions.getContentTitle())
+      .setContentText(notificationOptions.getContextText())
       .setCategory(NotificationCompat.CATEGORY_PROGRESS)
-      .setSmallIcon(notificationIcon)
+      .setSmallIcon(notificationOptions.getSmallIconRes())
       .setContentIntent(pendingIntent)
       .addAction(R.drawable.ic_cancel_black_24dp, "Cancel", PendingIntent.getService(this,
         REQ_CANCEL_DOWNLOAD, cancelIntent, PendingIntent.FLAG_CANCEL_CURRENT))
-      .setTicker("Downloading map for offline use");
+      .setTicker(notificationOptions.getTicker());
     startForeground(notificationId, notificationBuilder.build());
 
     // create map bitmap to show as notification icon
     createMapSnapshot(definition, new MapboxMap.SnapshotReadyCallback() {
       @Override
       public void onSnapshotReady(Bitmap snapshot) {
-        notificationBuilder.setSmallIcon(notificationIcon);
         notificationBuilder.setLargeIcon(snapshot);
         notificationManager.notify(notificationId, notificationBuilder.build());
       }
@@ -338,14 +334,6 @@ public class DownloadService extends Service implements ConnectivityListener {
     LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
   }
 
-  private Class resolveActivityForIntent(Intent intent) {
-    try {
-      return Class.forName(intent.getExtras().getString(BUNDLE_KEY_NOTIFICATION_RETURN_ACTIVITY));
-    } catch (ClassNotFoundException exception) {
-      throw new RuntimeException("Could not resolve class for Activity.");
-    }
-  }
-
   @Override
   public void onNetworkStateChanged(boolean connected) {
     Timber.e("OnNetworkStateChanged : " + connected);
@@ -370,8 +358,8 @@ public class DownloadService extends Service implements ConnectivityListener {
   }
 
   public static class NotificationConstants {
-    static final String ICON_RES = "com.mapbox.mapboxsdk.plugins.offline.bundle.iconres";
-    static final String ID = "com.mapbox.mapboxsdk.pluings.offline.bundle.notification.id";
+    public static final String ID = "com.mapbox.mapboxsdk.pluings.offline.bundle.notification.id";
+    public static final String OPTIONS = "com.mapbox.mapboxsdk.pluings.offline.bundle.notification.options";
   }
 
   public static class RegionConstants {
