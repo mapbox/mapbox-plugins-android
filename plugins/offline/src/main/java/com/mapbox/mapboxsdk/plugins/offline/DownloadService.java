@@ -80,8 +80,8 @@ public class DownloadService extends Service implements ConnectivityListener {
     String intentAction = intent.getAction();
     if (ACTION_START_DOWNLOAD.equals(intentAction)) {
       final Bundle bundle = intent.getExtras();
-      final String regionName = bundle.getString(RegionConstants.REGION_NAME);
-      final OfflineTilePyramidRegionDefinition definition = createDefinition(bundle);
+      final OfflineTilePyramidRegionDefinition definition = bundle.getParcelable(RegionConstants.REGION_DEFINTION);
+      final String regionName = bundle.getString(RegionConstants.NAME);
       final NotificationOptions notificationOptions = bundle.getParcelable(NotificationConstants.OPTIONS);
 
       // Create region, if success start download
@@ -95,7 +95,7 @@ public class DownloadService extends Service implements ConnectivityListener {
               Timber.e("offline region created with %s", offlineRegion.getID());
               offlineRegion.setDeliverInactiveMessages(false);
               regionMap.put(offlineRegion, startId);
-              launchDownload(offlineRegion, regionName, startId);
+              launchDownload(offlineRegion, startId);
 
               showNotification(
                 intent,
@@ -144,25 +144,7 @@ public class DownloadService extends Service implements ConnectivityListener {
     } else {
       stopSelf(startId);
     }
-    return START_NOT_STICKY;
-  }
-
-  private OfflineTilePyramidRegionDefinition createDefinition(Bundle bundle) {
-    // TODO replace below with Parceable OfflineRegion (OfflineDownload for now).
-    String styleUrl = bundle.getString(RegionConstants.STYLE);
-    float pixelRatio = getResources().getDisplayMetrics().density;
-    float minZoom = bundle.getFloat(RegionConstants.MIN_ZOOM);
-    float maxZoom = bundle.getFloat(RegionConstants.MAX_ZOOM);
-    double latitudeNorth = bundle.getDouble(RegionConstants.LAT_NORTH_BOUNDS);
-    double latitudeSouth = bundle.getDouble(RegionConstants.LAT_SOUTH_BOUNDS);
-    double longitudeEast = bundle.getDouble(RegionConstants.LON_EAST_BOUNDS);
-    double longitudeWest = bundle.getDouble(RegionConstants.LON_WEST_BOUNDS);
-    LatLngBounds bounds = new LatLngBounds.Builder()
-      .include(new LatLng(latitudeNorth, longitudeEast))
-      .include(new LatLng(latitudeSouth, longitudeWest))
-      .build();
-    return new OfflineTilePyramidRegionDefinition(
-      styleUrl, bounds, minZoom, maxZoom, pixelRatio);
+    return START_REDELIVER_INTENT;
   }
 
   private void showNotification(final Intent startIntent, OfflineTilePyramidRegionDefinition definition, long regionId,
@@ -173,6 +155,9 @@ public class DownloadService extends Service implements ConnectivityListener {
     notificationIntent.putExtra(NotificationConstants.ID, notificationId);
 
     Intent cancelIntent = new Intent(this, DownloadService.class);
+    cancelIntent.putExtras(startIntent.getExtras());
+    cancelIntent.putExtra(RegionConstants.ID, regionId);
+    cancelIntent.putExtra(NotificationConstants.ID, notificationId);
     cancelIntent.setAction(ACTION_CANCEL_DOWNLOAD);
 
     PendingIntent pendingIntent = PendingIntent.getActivity(
@@ -235,8 +220,9 @@ public class DownloadService extends Service implements ConnectivityListener {
         Timber.e("COULD NOT REMOVE OFFLINE REGION WHILE CANCELLING");
       }
     });
-    dispatchCancelBroadcast(OfflineDownload.fromRegion(offlineRegion));
+    dispatchCancelBroadcast();
     notificationManager.cancel(notificationId);
+    Timber.e("size %s"+regionMap.size());
     stopSelf(regionMap.get(offlineRegion));
   }
 
@@ -244,7 +230,7 @@ public class DownloadService extends Service implements ConnectivityListener {
     cancelOngoingDownload(offlineRegion, regionMap.get(offlineRegion));
   }
 
-  private void launchDownload(final OfflineRegion offlineRegion, final String regionName, final int notifcationId) {
+  private void launchDownload(final OfflineRegion offlineRegion, final int notifcationId) {
     progressDownloadCounter = 0;
 
     final long hashCode = offlineRegion.hashCode();
@@ -265,7 +251,7 @@ public class DownloadService extends Service implements ConnectivityListener {
           if (notificationBuilder != null) {
             notificationManager.cancel(notifcationId);
           }
-          dispatchSuccessBroadcast(OfflineDownload.fromRegion(offlineRegion));
+          dispatchSuccessBroadcast();
           offlineRegion.setDownloadState(OfflineRegion.STATE_INACTIVE);
           offlineRegion.setObserver(null);
           int startId = regionMap.get(offlineRegion);
@@ -297,7 +283,7 @@ public class DownloadService extends Service implements ConnectivityListener {
       @Override
       public void onError(OfflineRegionError error) {
         Timber.e("onError: %s, %s", error.getReason(), error.getMessage());
-        dispatchErrorBroadcast(OfflineDownload.fromRegion(offlineRegion), error.getReason(), error.getMessage());
+        dispatchErrorBroadcast(error.getReason(), error.getMessage());
         stopSelf(regionMap.get(offlineRegion));
       }
 
@@ -311,26 +297,26 @@ public class DownloadService extends Service implements ConnectivityListener {
     offlineRegion.setDownloadState(OfflineRegion.STATE_ACTIVE);
   }
 
-  private void dispatchSuccessBroadcast(OfflineDownload offlineDownload) {
+  private void dispatchSuccessBroadcast() {
     Intent intent = new Intent(OfflineDownload.ACTION_OFFLINE);
     intent.putExtra(OfflineDownload.KEY_STATE, OfflineDownload.STATE_FINISHED);
-    intent.putExtra(OfflineDownload.KEY_BUNDLE_OFFLINE_REGION, offlineDownload);
+//    intent.putExtra(OfflineDownload.KEY_BUNDLE_OFFLINE_REGION, offlineDownload);
     LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
   }
 
-  private void dispatchErrorBroadcast(OfflineDownload offlineDownload, String error, String message) {
+  private void dispatchErrorBroadcast(String error, String message) {
     Intent intent = new Intent(OfflineDownload.ACTION_OFFLINE);
     intent.putExtra(OfflineDownload.KEY_STATE, OfflineDownload.STATE_ERROR);
-    intent.putExtra(OfflineDownload.KEY_BUNDLE_OFFLINE_REGION, offlineDownload);
+//    intent.putExtra(OfflineDownload.KEY_BUNDLE_OFFLINE_REGION, offlineDownload);
     intent.putExtra(OfflineDownload.KEY_BUNDLE_ERROR, error);
     intent.putExtra(OfflineDownload.KEY_BUNDLE_MESSAGE, message);
     LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
   }
 
-  private void dispatchCancelBroadcast(OfflineDownload offlineDownload) {
+  private void dispatchCancelBroadcast() {
     Intent intent = new Intent(OfflineDownload.ACTION_OFFLINE);
     intent.putExtra(OfflineDownload.KEY_STATE, OfflineDownload.STATE_CANCEL);
-    intent.putExtra(OfflineDownload.KEY_BUNDLE_OFFLINE_REGION, offlineDownload);
+//    intent.putExtra(OfflineDownload.KEY_BUNDLE_OFFLINE_REGION, offlineDownload);
     LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
   }
 
@@ -343,7 +329,9 @@ public class DownloadService extends Service implements ConnectivityListener {
   public void onDestroy() {
     super.onDestroy();
     Timber.e("onDestroy");
-    mapSnapshotter.cancel();
+    if (mapSnapshotter != null) {
+      mapSnapshotter.cancel();
+    }
     ConnectivityReceiver.instance(this).removeListener(this);
   }
 
@@ -363,14 +351,8 @@ public class DownloadService extends Service implements ConnectivityListener {
   }
 
   public static class RegionConstants {
-    public static final String REGION_NAME = "com.mapbox.mapboxsdk.plugins.offline.bundle.name";
-    public static final String STYLE = "com.mapbox.mapboxsdk.plugins.offline.bundle.style";
-    public static final String MIN_ZOOM = "com.mapbox.mapboxsdk.plugins.offline.bundle.minzoom";
-    public static final String MAX_ZOOM = "com.mapbox.mapboxsdk.plugins.offline.bundle.maxzoom";
-    public static final String LAT_NORTH_BOUNDS = "com.mapbox.mapboxsdk.plugins.offline.bundle.north";
-    public static final String LON_EAST_BOUNDS = "com.mapbox.mapboxsdk.plugins.offline.bundle.east";
-    public static final String LAT_SOUTH_BOUNDS = "com.mapbox.mapboxsdk.plugins.offline.bundle.south";
-    public static final String LON_WEST_BOUNDS = "com.mapbox.mapboxsdk.plugins.offline.bundle.west";
+    public static final String REGION_DEFINTION = "com.mapbox.mapboxsdk.plugins.offline.bundle.defintion";
+    public static final String NAME = "com.mapbox.mapboxsdk.plugins.offline.bundle.name";
     public static final String ID = "com.mapbox.mapboxsdk.plugins.offline.bundle.id";
   }
 }
