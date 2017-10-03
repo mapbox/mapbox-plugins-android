@@ -111,7 +111,10 @@ public class OfflineDownloadActivity extends AppCompatActivity {
 
     OfflineTilePyramidRegionDefinition definition = new OfflineTilePyramidRegionDefinition(
       styleUrl,
-      new LatLngBounds.Builder().include(new LatLng(latitudeNorth, longitudeEast)).include(new LatLng(latitudeSouth, longitudeWest)).build(),
+      new LatLngBounds.Builder()
+        .include(new LatLng(latitudeNorth, longitudeEast))
+        .include(new LatLng(latitudeSouth, longitudeWest))
+        .build(),
       minZoom,
       maxZoom,
       getResources().getDisplayMetrics().density

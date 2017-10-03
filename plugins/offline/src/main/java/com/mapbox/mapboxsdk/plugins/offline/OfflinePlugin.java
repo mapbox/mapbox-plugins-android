@@ -2,7 +2,6 @@ package com.mapbox.mapboxsdk.plugins.offline;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 
 public class OfflinePlugin {
