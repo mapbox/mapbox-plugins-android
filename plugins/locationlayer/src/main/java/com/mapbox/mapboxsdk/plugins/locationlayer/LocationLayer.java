@@ -99,12 +99,16 @@ final class LocationLayer {
     // Create an empty feature collection
     FeatureCollection emptyFeature = FeatureCollection.fromFeatures(new Feature[] {});
 
-    GeoJsonSource locationSource = new GeoJsonSource(LocationLayerConstants.LOCATION_SOURCE, emptyFeature);
-    mapboxMap.addSource(locationSource);
+    if (mapboxMap.getSource(LocationLayerConstants.LOCATION_SOURCE) == null) {
+      GeoJsonSource locationSource = new GeoJsonSource(LocationLayerConstants.LOCATION_SOURCE, emptyFeature);
+      mapboxMap.addSource(locationSource);
+    }
 
-    GeoJsonSource locationAccuracySource
-      = new GeoJsonSource(LocationLayerConstants.LOCATION_ACCURACY_SOURCE, emptyFeature);
-    mapboxMap.addSource(locationAccuracySource);
+    if (mapboxMap.getSource(LocationLayerConstants.LOCATION_ACCURACY_SOURCE) == null) {
+      GeoJsonSource locationAccuracySource
+        = new GeoJsonSource(LocationLayerConstants.LOCATION_ACCURACY_SOURCE, emptyFeature);
+      mapboxMap.addSource(locationAccuracySource);
+    }
   }
 
   private void addLocationLayerToMap(Layer layer, @Nullable String idBelowLayer) {
