@@ -112,6 +112,11 @@ final class LocationLayer {
   }
 
   private void addLocationLayerToMap(Layer layer, @Nullable String idBelowLayer) {
+    if (mapboxMap.getLayer(layer.getId()) != null) {
+      // layer already added
+      return;
+    }
+
     if (idBelowLayer == null) {
       mapboxMap.addLayer(layer);
     } else {
