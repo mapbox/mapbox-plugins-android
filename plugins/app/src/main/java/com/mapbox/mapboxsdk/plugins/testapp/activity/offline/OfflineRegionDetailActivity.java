@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -28,12 +27,14 @@ import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
 import com.mapbox.mapboxsdk.plugins.offline.Callback;
 import com.mapbox.mapboxsdk.plugins.offline.DownloadService;
 import com.mapbox.mapboxsdk.plugins.offline.OfflineDownload;
+import com.mapbox.mapboxsdk.plugins.offline.OfflinePlugin;
 import com.mapbox.mapboxsdk.plugins.offline.OfflineUtils;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 /**
  * Activity showing the detail of an offline region.
@@ -46,6 +47,7 @@ import butterknife.OnClick;
  */
 public class OfflineRegionDetailActivity extends AppCompatActivity {
 
+  private OfflinePlugin offlinePlugin;
   private OfflineRegion offlineRegion;
   private OfflineDownloadResultReceiver resultReceiver;
   private DownloadService.DownloadServiceBinder downloadServiceBinder;
@@ -84,6 +86,8 @@ public class OfflineRegionDetailActivity extends AppCompatActivity {
     setContentView(R.layout.activity_offline_region_detail);
     ButterKnife.bind(this);
     mapView.onCreate(savedInstanceState);
+
+    offlinePlugin = OfflinePlugin.getInstance();
 
     Bundle bundle = getIntent().getExtras();
     if (bundle != null) {
@@ -144,9 +148,14 @@ public class OfflineRegionDetailActivity extends AppCompatActivity {
         offlineRegion.delete(offlineRegionDeleteCallback);
       }
     } else {
-      // cancel ongoing downloads
-      // downloadServiceBinder.getService().cancelOngoingDownload(offlineRegion);
-      stateView.setText("CANCELED");
+      // cancel ongoing downloads\
+      OfflineDownload offlineDownload = offlinePlugin.getDownloadForRegion(offlineRegion);
+      if (offlineDownload != null) {
+        downloadServiceBinder.getService().cancelOngoingDownload(offlineDownload);
+        stateView.setText("CANCELED");
+      } else {
+        Timber.e("couldn't cancel, is download already finished?");
+      }
     }
   }
 
@@ -156,7 +165,7 @@ public class OfflineRegionDetailActivity extends AppCompatActivity {
     mapView.onStart();
 
     // listen to download status change updates (Success, Cancel & Error)
-    LocalBroadcastManager.getInstance(this).registerReceiver(
+    registerReceiver(
       resultReceiver = new OfflineDownloadResultReceiver(),
       OfflineDownload.INTENT_FILTER
     );
@@ -184,7 +193,7 @@ public class OfflineRegionDetailActivity extends AppCompatActivity {
     mapView.onStop();
 
     // stop listening to download status change updates
-    LocalBroadcastManager.getInstance(this).unregisterReceiver(resultReceiver);
+    unregisterReceiver(resultReceiver);
 
     // unbind from service to stop receiving download states updates
     if (boundDownloadService) {
@@ -222,7 +231,6 @@ public class OfflineRegionDetailActivity extends AppCompatActivity {
         stateView.setText("DOWNLOADED");
         progressBar.setVisibility(View.INVISIBLE);
       } else if (actionName.equals(OfflineDownload.STATE_CANCEL)) {
-        stateView.setText("CANCELED");
         finish(); // nothing to do in this screen, cancel = delete
       } else if (actionName.equals(OfflineDownload.STATE_ERROR)) {
         stateView.setText("ERROR");

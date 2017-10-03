@@ -130,6 +130,6 @@ public class OfflineDownloadActivity extends AppCompatActivity {
       .setNotificationsOptions(notificationOptions)
       .build();
 
-    new OfflinePlugin().downloadRegion(this, offlineDownload);
+    OfflinePlugin.getInstance().downloadRegion(this, offlineDownload);
   }
 }

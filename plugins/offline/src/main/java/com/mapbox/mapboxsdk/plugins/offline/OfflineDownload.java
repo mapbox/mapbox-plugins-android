@@ -16,6 +16,7 @@ public class OfflineDownload implements Parcelable {
 
   public static final String KEY_OBJECT = "com.mapbox.mapboxsdk.plugins.offline.download.object";
   public static final String KEY_STATE = "com.mapbox.mapboxsdk.plugins.offline.state";
+  public static final String STATE_STARTED = "com.mapbox.mapboxsdk.plugins.offline.state.started";
   public static final String STATE_FINISHED = "com.mapbox.mapboxsdk.plugins.offline.state.complete";
   public static final String STATE_ERROR = "com.mapbox.mapboxsdk.plugins.offline.state.error";
   public static final String STATE_CANCEL = "com.mapbox.mapboxsdk.plugins.offline.state.cancel";
