@@ -1,6 +1,5 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.offline;
 
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +26,7 @@ import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
 import com.mapbox.mapboxsdk.plugins.offline.Callback;
 import com.mapbox.mapboxsdk.plugins.offline.DownloadService;
 import com.mapbox.mapboxsdk.plugins.offline.OfflineDownload;
+import com.mapbox.mapboxsdk.plugins.offline.OfflineDownloadStateChangeListener;
 import com.mapbox.mapboxsdk.plugins.offline.OfflinePlugin;
 import com.mapbox.mapboxsdk.plugins.offline.OfflineUtils;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
@@ -45,11 +45,10 @@ import timber.log.Timber;
  * This Activity listens to broadcast events related to successful, canceled and errored download.
  * </p>
  */
-public class OfflineRegionDetailActivity extends AppCompatActivity {
+public class OfflineRegionDetailActivity extends AppCompatActivity implements OfflineDownloadStateChangeListener {
 
   private OfflinePlugin offlinePlugin;
   private OfflineRegion offlineRegion;
-  private OfflineDownloadResultReceiver resultReceiver;
   private DownloadService.DownloadServiceBinder downloadServiceBinder;
   private boolean boundDownloadService = false;
 
@@ -88,27 +87,21 @@ public class OfflineRegionDetailActivity extends AppCompatActivity {
     mapView.onCreate(savedInstanceState);
 
     offlinePlugin = OfflinePlugin.getInstance();
-
-    Bundle bundle = getIntent().getExtras();
-    if (bundle != null) {
-      OfflineDownload offlineDownload = bundle.getParcelable(OfflineDownload.KEY_OBJECT);
-      if (offlineDownload != null) {
-        // coming from notification
-        OfflineUtils.getRegion(
-          OfflineManager.getInstance(this),
-          offlineDownload.getRegionId(),
-          offlineRegionCallback
-        );
-      } else {
-        // coming from list activity
-        OfflineUtils.getRegion(
-          OfflineManager.getInstance(this),
-          bundle.getLong(DownloadService.RegionConstants.ID),
-          offlineRegionCallback
-        );
-      }
-    } else {
-      Toast.makeText(this, "invalid bundle for Activity", Toast.LENGTH_SHORT).show();
+    OfflineDownload offlineDownload = OfflinePlugin.getDownloadFromIntent(getIntent());
+    if (offlineDownload != null) {
+      // coming from notification
+      OfflineUtils.getRegion(
+        OfflineManager.getInstance(this),
+        offlineDownload.getRegionId(),
+        offlineRegionCallback
+      );
+    }else{
+      // coming from a list of offline regions with a region id
+      OfflineUtils.getRegion(
+        OfflineManager.getInstance(this),
+        getIntent().getLongExtra(DownloadService.RegionConstants.ID, -1),
+        offlineRegionCallback
+      );
     }
   }
 
@@ -144,15 +137,16 @@ public class OfflineRegionDetailActivity extends AppCompatActivity {
   public void onFabClick(View view) {
     if (view.getTag() == null || (boolean) view.getTag()) {
       if (offlineRegion != null) {
-        deleteView.setEnabled(false);
         offlineRegion.delete(offlineRegionDeleteCallback);
+        view.setVisibility(View.GONE);
       }
     } else {
-      // cancel ongoing downloads\
-      OfflineDownload offlineDownload = offlinePlugin.getDownloadForRegion(offlineRegion);
+      // cancel ongoing download
+      OfflineDownload offlineDownload = offlinePlugin.getActiveDownloadForOfflineRegion(offlineRegion);
       if (offlineDownload != null) {
         downloadServiceBinder.getService().cancelOngoingDownload(offlineDownload);
         stateView.setText("CANCELED");
+        view.setVisibility(View.GONE);
       } else {
         Timber.e("couldn't cancel, is download already finished?");
       }
@@ -160,15 +154,29 @@ public class OfflineRegionDetailActivity extends AppCompatActivity {
   }
 
   @Override
+  public void onSuccess(OfflineDownload offlineDownload) {
+    stateView.setText("DOWNLOADED");
+    progressBar.setVisibility(View.INVISIBLE);
+  }
+
+  @Override
+  public void onCancel(OfflineDownload offlineDownload) {
+    finish(); // nothing to do in this screen, cancel = delete
+  }
+
+  @Override
+  public void onError(OfflineDownload offlineDownload, String error, String message) {
+    progressBar.setVisibility(View.INVISIBLE);
+    stateView.setText("ERROR");
+    Toast.makeText(this, "Offline Download error: " + error + " " + message, Toast.LENGTH_SHORT).show();
+  }
+
+  @Override
   protected void onStart() {
     super.onStart();
     mapView.onStart();
 
-    // listen to download status change updates (Success, Cancel & Error)
-    registerReceiver(
-      resultReceiver = new OfflineDownloadResultReceiver(),
-      OfflineDownload.INTENT_FILTER
-    );
+    offlinePlugin.addOfflineDownloadStateChangeListener(this);
 
     // bind Activity to Service to receive download status updates (percentage of downloaded offline region)
     Intent intent = new Intent(this, DownloadService.class);
@@ -193,7 +201,7 @@ public class OfflineRegionDetailActivity extends AppCompatActivity {
     mapView.onStop();
 
     // stop listening to download status change updates
-    unregisterReceiver(resultReceiver);
+    offlinePlugin.removeOfflineDownloadStateChangeListener(this);
 
     // unbind from service to stop receiving download states updates
     if (boundDownloadService) {
@@ -220,26 +228,6 @@ public class OfflineRegionDetailActivity extends AppCompatActivity {
     mapView.onLowMemory();
   }
 
-  //TODO make static inner class
-  private class OfflineDownloadResultReceiver extends BroadcastReceiver {
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-      String actionName = intent.getStringExtra(OfflineDownload.KEY_STATE);
-      if (actionName.equals(OfflineDownload.STATE_FINISHED)) {
-        OfflineDownload offlineDownload = intent.getParcelableExtra(OfflineDownload.KEY_OBJECT);
-        stateView.setText("DOWNLOADED");
-        progressBar.setVisibility(View.INVISIBLE);
-      } else if (actionName.equals(OfflineDownload.STATE_CANCEL)) {
-        finish(); // nothing to do in this screen, cancel = delete
-      } else if (actionName.equals(OfflineDownload.STATE_ERROR)) {
-        stateView.setText("ERROR");
-        String error = intent.getStringExtra(OfflineDownload.KEY_BUNDLE_OFFLINE_REGION);
-        String message = intent.getStringExtra(OfflineDownload.KEY_BUNDLE_ERROR);
-        Toast.makeText(context, "Offline Download error: " + error + " " + message, Toast.LENGTH_SHORT).show();
-      }
-    }
-  }
 
   /**
    * Connection to a the bound {@link DownloadService}. This connection is used to set a responder which is invoked
