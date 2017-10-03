@@ -131,12 +131,18 @@
         <activity
             android:name=".activity.offline.OfflineRegionDetailActivity"
             android:description="@string/description_offline_regions"
-            android:theme="@style/Translucent"
-            android:label="@string/title_offline_regions"/>
+            android:label="@string/title_offline_regions"
+            android:theme="@style/Translucent"/>
 
         <service
             android:name="com.mapbox.mapboxsdk.plugins.offline.DownloadService"
             android:exported="false"/>
+
+        <receiver android:name="com.mapbox.mapboxsdk.plugins.offline.OfflineStateReceiver">
+            <intent-filter>
+                <action android:name="com.mapbox.mapboxsdk.plugins.offline"/>
+            </intent-filter>
+        </receiver>
 
     </application>
 

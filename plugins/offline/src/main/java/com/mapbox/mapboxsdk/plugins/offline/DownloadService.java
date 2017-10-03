@@ -11,7 +11,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.util.LongSparseArray;
 import android.widget.Toast;
 
@@ -97,6 +96,10 @@ public class DownloadService extends Service implements ConnectivityListener {
             public void onCreate(OfflineRegion offlineRegion) {
               Timber.e("offline region created with %s", offlineRegion.getID());
               offlineDownload.setRegionId(offlineRegion.getID());
+
+              // dispatch start download broadcast
+              dispatchStartBroadcast(offlineDownload);
+
               offlineRegion.setDeliverInactiveMessages(false);
               regionLongSparseArray.put(offlineDownload.getServiceId(), offlineRegion);
               launchDownload(offlineDownload, offlineRegion);
@@ -265,11 +268,18 @@ public class DownloadService extends Service implements ConnectivityListener {
     offlineRegion.setDownloadState(OfflineRegion.STATE_ACTIVE);
   }
 
+  private void dispatchStartBroadcast(OfflineDownload offlineDownload) {
+    Intent intent = new Intent(OfflineDownload.ACTION_OFFLINE);
+    intent.putExtra(OfflineDownload.KEY_STATE, OfflineDownload.STATE_STARTED);
+    intent.putExtra(OfflineDownload.KEY_OBJECT, offlineDownload);
+    getApplicationContext().sendBroadcast(intent);
+  }
+
   private void dispatchSuccessBroadcast(OfflineDownload offlineDownload) {
     Intent intent = new Intent(OfflineDownload.ACTION_OFFLINE);
     intent.putExtra(OfflineDownload.KEY_STATE, OfflineDownload.STATE_FINISHED);
     intent.putExtra(OfflineDownload.KEY_OBJECT, offlineDownload);
-    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+    getApplicationContext().sendBroadcast(intent);
   }
 
   private void dispatchErrorBroadcast(OfflineDownload offlineDownload, String error, String message) {
@@ -278,14 +288,14 @@ public class DownloadService extends Service implements ConnectivityListener {
     intent.putExtra(OfflineDownload.KEY_OBJECT, offlineDownload);
     intent.putExtra(OfflineDownload.KEY_BUNDLE_ERROR, error);
     intent.putExtra(OfflineDownload.KEY_BUNDLE_MESSAGE, message);
-    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+    getApplicationContext().sendBroadcast(intent);
   }
 
   private void dispatchCancelBroadcast(OfflineDownload offlineDownload) {
     Intent intent = new Intent(OfflineDownload.ACTION_OFFLINE);
     intent.putExtra(OfflineDownload.KEY_STATE, OfflineDownload.STATE_CANCEL);
     intent.putExtra(OfflineDownload.KEY_OBJECT, offlineDownload);
-    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+    getApplicationContext().sendBroadcast(intent);
   }
 
   @Override
