@@ -31,7 +31,8 @@ public class OfflineDownload implements Parcelable {
   private String name;
   private NotificationOptions notificationOptions;
 
-  private OfflineDownload(OfflineTilePyramidRegionDefinition offlineTilePyramidRegionDefinition, String name, NotificationOptions notificationOptions) {
+  private OfflineDownload(OfflineTilePyramidRegionDefinition offlineTilePyramidRegionDefinition, String name,
+                          NotificationOptions notificationOptions) {
     this.definition = offlineTilePyramidRegionDefinition;
     this.name = name;
     this.notificationOptions = notificationOptions;
