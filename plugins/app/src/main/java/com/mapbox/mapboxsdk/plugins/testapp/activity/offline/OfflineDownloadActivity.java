@@ -100,6 +100,7 @@ public class OfflineDownloadActivity extends AppCompatActivity {
 
   @OnClick(R.id.fab)
   public void onDownloadRegion() {
+    // get data from UI
     String regionName = regionNameView.getText().toString();
     double latitudeNorth = Double.parseDouble(latNorthView.getText().toString());
     double longitudeEast = Double.parseDouble(lonEastView.getText().toString());
@@ -109,6 +110,7 @@ public class OfflineDownloadActivity extends AppCompatActivity {
     float maxZoom = maxZoomView.getProgress();
     float minZoom = minZoomView.getProgress();
 
+    // create offline definition from data
     OfflineTilePyramidRegionDefinition definition = new OfflineTilePyramidRegionDefinition(
       styleUrl,
       new LatLngBounds.Builder()
@@ -120,16 +122,17 @@ public class OfflineDownloadActivity extends AppCompatActivity {
       getResources().getDisplayMetrics().density
     );
 
+    // customise notification appearance
     NotificationOptions notificationOptions = new NotificationOptions()
       .withSmallIconRes(R.drawable.mapbox_logo_icon)
       .withReturnActivity(OfflineRegionDetailActivity.class.getName());
 
-    OfflineDownload offlineDownload = new OfflineDownload.Builder()
-      .setDefinition(definition)
-      .setName(regionName)
-      .setNotificationsOptions(notificationOptions)
-      .build();
-
-    OfflinePlugin.getInstance().downloadRegion(this, offlineDownload);
+    // start offline download
+    OfflinePlugin.getInstance().downloadRegion(this,
+      new OfflineDownload.Options()
+        .withDefinition(definition)
+        .withName(regionName)
+        .withNotificationOptions(notificationOptions)
+    );
   }
 }

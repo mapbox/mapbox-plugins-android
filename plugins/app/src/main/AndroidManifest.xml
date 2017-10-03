@@ -138,7 +138,7 @@
             android:name="com.mapbox.mapboxsdk.plugins.offline.DownloadService"
             android:exported="false"/>
 
-        <receiver android:name="com.mapbox.mapboxsdk.plugins.offline.OfflineStateReceiver">
+        <receiver android:name="com.mapbox.mapboxsdk.plugins.offline.OfflineDownloadStateReceiver">
             <intent-filter>
                 <action android:name="com.mapbox.mapboxsdk.plugins.offline"/>
             </intent-filter>

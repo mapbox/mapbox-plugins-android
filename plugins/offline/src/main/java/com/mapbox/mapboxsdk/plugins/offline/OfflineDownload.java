@@ -1,6 +1,5 @@
 package com.mapbox.mapboxsdk.plugins.offline;
 
-import android.content.IntentFilter;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -11,26 +10,28 @@ import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
  */
 public class OfflineDownload implements Parcelable {
 
-  public static final String ACTION_OFFLINE = "com.mapbox.mapboxsdk.plugins.offline";
-  public static final IntentFilter INTENT_FILTER = new IntentFilter(ACTION_OFFLINE);
-
+  static final String ACTION_OFFLINE = "com.mapbox.mapboxsdk.plugins.offline";
   public static final String KEY_OBJECT = "com.mapbox.mapboxsdk.plugins.offline.download.object";
-  public static final String KEY_STATE = "com.mapbox.mapboxsdk.plugins.offline.state";
-  public static final String STATE_STARTED = "com.mapbox.mapboxsdk.plugins.offline.state.started";
-  public static final String STATE_FINISHED = "com.mapbox.mapboxsdk.plugins.offline.state.complete";
-  public static final String STATE_ERROR = "com.mapbox.mapboxsdk.plugins.offline.state.error";
-  public static final String STATE_CANCEL = "com.mapbox.mapboxsdk.plugins.offline.state.cancel";
+  static final String KEY_STATE = "com.mapbox.mapboxsdk.plugins.offline.state";
+  static final String STATE_STARTED = "com.mapbox.mapboxsdk.plugins.offline.state.started";
+  static final String STATE_FINISHED = "com.mapbox.mapboxsdk.plugins.offline.state.complete";
+  static final String STATE_ERROR = "com.mapbox.mapboxsdk.plugins.offline.state.error";
+  static final String STATE_CANCEL = "com.mapbox.mapboxsdk.plugins.offline.state.cancel";
+  static final String KEY_BUNDLE_OFFLINE_REGION = "com.mapbox.mapboxsdk.plugins.offline.region";
+  static final String KEY_BUNDLE_ERROR = "com.mapbox.mapboxsdk.plugins.offline.error";
+  static final String KEY_BUNDLE_MESSAGE = "com.mapbox.mapboxsdk.plugins.offline.error";
 
-  public static final String KEY_BUNDLE_OFFLINE_REGION = "com.mapbox.mapboxsdk.plugins.offline.region";
-  public static final String KEY_BUNDLE_ERROR = "com.mapbox.mapboxsdk.plugins.offline.error";
-  public static final String KEY_BUNDLE_MESSAGE = "com.mapbox.mapboxsdk.plugins.offline.error";
+
+  private final OfflineTilePyramidRegionDefinition definition;
+  private final String name;
+  private final NotificationOptions notificationOptions;
 
   // unique identifier used by service + notifications
+  // will be created at service startup as part of onStartCommand
   private int serviceId = -1;
+  // unique identifier matching an offline region
+  // will be created during the start of a download after creating an offline region
   private long regionId = -1;
-  private OfflineTilePyramidRegionDefinition definition;
-  private String name;
-  private NotificationOptions notificationOptions;
 
   private OfflineDownload(OfflineTilePyramidRegionDefinition offlineTilePyramidRegionDefinition, String name,
                           NotificationOptions notificationOptions) {
@@ -51,11 +52,11 @@ public class OfflineDownload implements Parcelable {
     return definition;
   }
 
-  public String getName() {
+  String getName() {
     return name;
   }
 
-  public int getServiceId() {
+  int getServiceId() {
     return serviceId;
   }
 
@@ -71,7 +72,7 @@ public class OfflineDownload implements Parcelable {
     return regionId;
   }
 
-  public NotificationOptions getNotificationOptions() {
+  NotificationOptions getNotificationOptions() {
     return notificationOptions;
   }
 
@@ -99,28 +100,30 @@ public class OfflineDownload implements Parcelable {
     }
   };
 
-  public static class Builder {
+  public static class Options {
 
     private String name;
     private OfflineTilePyramidRegionDefinition definition;
     private NotificationOptions notificationOptions;
 
-    public Builder setDefinition(OfflineTilePyramidRegionDefinition definition) {
+    public Options withDefinition(OfflineTilePyramidRegionDefinition definition) {
       this.definition = definition;
       return this;
     }
 
-    public Builder setName(String name) {
+    public Options withName(String name) {
       this.name = name;
       return this;
     }
 
-    public Builder setNotificationsOptions(NotificationOptions notificationsOptions) {
+    public Options withNotificationOptions(NotificationOptions notificationsOptions) {
       this.notificationOptions = notificationsOptions;
       return this;
     }
 
-    public OfflineDownload build() {
+    // restrict visibility, only libs allowed to invoke building the OfflineDownload
+    OfflineDownload build() {
+      //TODO add validation
       return new OfflineDownload(definition, name, notificationOptions);
     }
   }
