@@ -17,10 +17,11 @@ public class OfflineDownload implements Parcelable {
   static final String STATE_FINISHED = "com.mapbox.mapboxsdk.plugins.offline.state.complete";
   static final String STATE_ERROR = "com.mapbox.mapboxsdk.plugins.offline.state.error";
   static final String STATE_CANCEL = "com.mapbox.mapboxsdk.plugins.offline.state.cancel";
+  static final String STATE_PROGRESS = "com.mapbox.mapboxsdk.plugins.offline.state.progress";
   static final String KEY_BUNDLE_OFFLINE_REGION = "com.mapbox.mapboxsdk.plugins.offline.region";
   static final String KEY_BUNDLE_ERROR = "com.mapbox.mapboxsdk.plugins.offline.error";
   static final String KEY_BUNDLE_MESSAGE = "com.mapbox.mapboxsdk.plugins.offline.error";
-
+  static final String KEY_PROGRESS = "com.mapbox.mapboxsdk.plugins.offline.progress";
 
   private final OfflineTilePyramidRegionDefinition definition;
   private final String name;
@@ -32,6 +33,8 @@ public class OfflineDownload implements Parcelable {
   // unique identifier matching an offline region
   // will be created during the start of a download after creating an offline region
   private long regionId = -1;
+  // download progress
+  private int progress;
 
   private OfflineDownload(OfflineTilePyramidRegionDefinition offlineTilePyramidRegionDefinition, String name,
                           NotificationOptions notificationOptions) {
@@ -46,6 +49,7 @@ public class OfflineDownload implements Parcelable {
     serviceId = in.readInt();
     regionId = in.readLong();
     notificationOptions = in.readParcelable(NotificationOptions.class.getClassLoader());
+    progress = in.readByte();
   }
 
   OfflineTilePyramidRegionDefinition getRegionDefinition() {
@@ -76,6 +80,14 @@ public class OfflineDownload implements Parcelable {
     return notificationOptions;
   }
 
+  int getProgress() {
+    return progress;
+  }
+
+  void setProgress(int progress) {
+    this.progress = progress;
+  }
+
   @Override
   public int describeContents() {
     return 0;
@@ -88,6 +100,7 @@ public class OfflineDownload implements Parcelable {
     dest.writeInt(serviceId);
     dest.writeLong(regionId);
     dest.writeParcelable(notificationOptions, flags);
+    dest.writeInt(progress);
   }
 
   public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {

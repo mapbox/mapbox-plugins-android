@@ -26,7 +26,12 @@ public class OfflineDownloadStateReceiver extends BroadcastReceiver {
         String message = intent.getStringExtra(OfflineDownload.KEY_BUNDLE_ERROR);
         offlinePlugin.errorDownload(offlineDownload, error, message);
         break;
+      case OfflineDownload.STATE_PROGRESS:
+        int progress = intent.getIntExtra(OfflineDownload.KEY_PROGRESS, 0);
+        offlinePlugin.onProgressChanged(offlineDownload, progress);
+        break;
       default:
+        // removes the offline download (cancel or finish)
         offlinePlugin.removeDownload(offlineDownload, actionName.equals(OfflineDownload.STATE_CANCEL));
         break;
     }

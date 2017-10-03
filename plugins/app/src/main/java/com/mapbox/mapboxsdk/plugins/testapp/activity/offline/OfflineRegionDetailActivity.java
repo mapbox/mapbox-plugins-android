@@ -1,11 +1,6 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.offline;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -23,10 +18,9 @@ import com.mapbox.mapboxsdk.offline.OfflineManager;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
 import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
-import com.mapbox.mapboxsdk.plugins.offline.Callback;
 import com.mapbox.mapboxsdk.plugins.offline.DownloadService;
 import com.mapbox.mapboxsdk.plugins.offline.OfflineDownload;
-import com.mapbox.mapboxsdk.plugins.offline.OfflineDownloadStateChangeListener;
+import com.mapbox.mapboxsdk.plugins.offline.OfflineDownloadChangeListener;
 import com.mapbox.mapboxsdk.plugins.offline.OfflinePlugin;
 import com.mapbox.mapboxsdk.plugins.offline.OfflineUtils;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
@@ -45,12 +39,10 @@ import timber.log.Timber;
  * This Activity listens to broadcast events related to successful, canceled and errored download.
  * </p>
  */
-public class OfflineRegionDetailActivity extends AppCompatActivity implements OfflineDownloadStateChangeListener {
+public class OfflineRegionDetailActivity extends AppCompatActivity implements OfflineDownloadChangeListener {
 
   private OfflinePlugin offlinePlugin;
   private OfflineRegion offlineRegion;
-  private DownloadService.DownloadServiceBinder downloadServiceBinder;
-  private boolean boundDownloadService = false;
 
   @BindView(R.id.mapView)
   MapView mapView;
@@ -87,23 +79,51 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
     mapView.onCreate(savedInstanceState);
 
     offlinePlugin = OfflinePlugin.getInstance();
-    OfflineDownload offlineDownload = OfflinePlugin.getDownloadFromIntent(getIntent());
-    if (offlineDownload != null) {
-      // coming from notification
-      OfflineUtils.getRegion(
-        OfflineManager.getInstance(this),
-        offlineDownload.getRegionId(),
-        offlineRegionCallback
-      );
-    }else{
-      // coming from a list of offline regions with a region id
-      OfflineUtils.getRegion(
-        OfflineManager.getInstance(this),
-        getIntent().getLongExtra(DownloadService.RegionConstants.ID, -1),
-        offlineRegionCallback
-      );
+
+    Bundle bundle = getIntent().getExtras();
+    if (bundle != null) {
+      long regionId;
+      OfflineDownload offlineDownload = bundle.getParcelable(OfflineDownload.KEY_OBJECT);
+      if (offlineDownload != null) {
+        // coming from notification
+        regionId = offlineDownload.getRegionId();
+      } else {
+        // coming from list
+        regionId = bundle.getLong(DownloadService.RegionConstants.ID, -1);
+      }
+
+      if (regionId != -1) {
+        loadOfflineRegion(regionId);
+      }
     }
   }
+
+  private void loadOfflineRegion(final long id) {
+    OfflineManager.getInstance(this)
+      .listOfflineRegions(new OfflineManager.ListOfflineRegionsCallback() {
+
+        @Override
+        public void onList(OfflineRegion[] offlineRegions) {
+          for (OfflineRegion region : offlineRegions) {
+            Timber.e("REGION ID %s", region.getID());
+            if (region.getID() == id) {
+              offlineRegion = region;
+              OfflineTilePyramidRegionDefinition definition =
+                (OfflineTilePyramidRegionDefinition) region.getDefinition();
+              setupUI(definition);
+              return;
+            }
+          }
+          throw new RuntimeException("OfflineRegion not found, id not found for: " + id);
+        }
+
+        @Override
+        public void onError(String error) {
+          throw new RuntimeException("Error while retrieving OfflineRegion: " + error);
+        }
+      });
+  }
+
 
   private void setupUI(final OfflineTilePyramidRegionDefinition definition) {
     // update map
@@ -144,13 +164,16 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
       // cancel ongoing download
       OfflineDownload offlineDownload = offlinePlugin.getActiveDownloadForOfflineRegion(offlineRegion);
       if (offlineDownload != null) {
-        downloadServiceBinder.getService().cancelOngoingDownload(offlineDownload);
+        offlinePlugin.cancelDownload(this, offlineDownload);
         stateView.setText("CANCELED");
         view.setVisibility(View.GONE);
-      } else {
-        Timber.e("couldn't cancel, is download already finished?");
       }
     }
+  }
+
+  @Override
+  public void onCreate(OfflineDownload offlineDownload) {
+    Timber.e("OfflineDownload created %s", offlineDownload.hashCode());
   }
 
   @Override
@@ -168,19 +191,27 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
   public void onError(OfflineDownload offlineDownload, String error, String message) {
     progressBar.setVisibility(View.INVISIBLE);
     stateView.setText("ERROR");
-    Toast.makeText(this, "Offline Download error: " + error + " " + message, Toast.LENGTH_SHORT).show();
+  }
+
+  @Override
+  public void onProgress(OfflineDownload offlineDownload, int progress) {
+    if (offlineRegion == null) {
+      return;
+    }
+
+    if (offlineDownload.getRegionId() == offlineRegion.getID()) {
+      if (progressBar.getVisibility() != View.VISIBLE) {
+        progressBar.setVisibility(View.VISIBLE);
+      }
+      progressBar.setProgress(progress);
+    }
   }
 
   @Override
   protected void onStart() {
     super.onStart();
     mapView.onStart();
-
     offlinePlugin.addOfflineDownloadStateChangeListener(this);
-
-    // bind Activity to Service to receive download status updates (percentage of downloaded offline region)
-    Intent intent = new Intent(this, DownloadService.class);
-    getApplicationContext().bindService(intent, connection, Context.BIND_AUTO_CREATE);
   }
 
   @Override
@@ -199,15 +230,7 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
   protected void onStop() {
     super.onStop();
     mapView.onStop();
-
-    // stop listening to download status change updates
     offlinePlugin.removeOfflineDownloadStateChangeListener(this);
-
-    // unbind from service to stop receiving download states updates
-    if (boundDownloadService) {
-      getApplicationContext().unbindService(connection);
-      boundDownloadService = false;
-    }
   }
 
   @Override
@@ -227,46 +250,6 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
     super.onLowMemory();
     mapView.onLowMemory();
   }
-
-
-  /**
-   * Connection to a the bound {@link DownloadService}. This connection is used to set a responder which is invoked
-   * when the progress of a downloading offline region changes.
-   */
-  private final ServiceConnection connection = new ServiceConnection() {
-    @Override
-    public void onServiceConnected(ComponentName name, IBinder service) {
-      downloadServiceBinder = (DownloadService.DownloadServiceBinder) service;
-      downloadServiceBinder.getService().setDownloadServiceResponder(downloadServiceResponder);
-      boundDownloadService = true;
-    }
-
-    @Override
-    public void onServiceDisconnected(ComponentName name) {
-      boundDownloadService = false;
-    }
-  };
-
-  /**
-   * Responder that is bound to the {@link DownloadService}. This responder is responsible for passing through the
-   * percentage of downloaded tiles when the progress of a downloading offline region changes.
-   */
-  private final DownloadService.DownloadServiceResponder downloadServiceResponder =
-    new DownloadService.DownloadServiceResponder() {
-      @Override
-      public void onDownloadProgressChanged(long offlineRegionId, int percentage) {
-        if (offlineRegion == null) {
-          return;
-        }
-
-        if (offlineRegionId == offlineRegion.getID()) {
-          if (progressBar.getVisibility() != View.VISIBLE) {
-            progressBar.setVisibility(View.VISIBLE);
-          }
-          progressBar.setProgress(percentage);
-        }
-      }
-    };
 
   /**
    * Callback invoked when the states of an offline region changes.
@@ -302,23 +285,6 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
           Toast.LENGTH_SHORT).show();
       }
     };
-
-  private final Callback<OfflineRegion> offlineRegionCallback = new Callback<OfflineRegion>() {
-    @Override
-    public void onResult(OfflineRegion region) {
-      offlineRegion = region;
-      OfflineTilePyramidRegionDefinition definition = (OfflineTilePyramidRegionDefinition) region.getDefinition();
-      setupUI(definition);
-    }
-
-    @Override
-    public void onError(String message) {
-      Toast.makeText(
-        OfflineRegionDetailActivity.this,
-        "Error getting offline region state: " + message,
-        Toast.LENGTH_SHORT).show();
-    }
-  };
 
   private final OfflineRegion.OfflineRegionDeleteCallback offlineRegionDeleteCallback =
     new OfflineRegion.OfflineRegionDeleteCallback() {

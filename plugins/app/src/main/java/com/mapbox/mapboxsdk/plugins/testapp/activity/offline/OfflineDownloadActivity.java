@@ -128,7 +128,7 @@ public class OfflineDownloadActivity extends AppCompatActivity {
       .withReturnActivity(OfflineRegionDetailActivity.class.getName());
 
     // start offline download
-    OfflinePlugin.getInstance().downloadRegion(this,
+    OfflinePlugin.getInstance().startDownload(this,
       new OfflineDownload.Options()
         .withDefinition(definition)
         .withName(regionName)

@@ -16,8 +16,6 @@ import android.widget.Toast;
 
 import com.mapbox.androidsdk.plugins.offline.R;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.net.ConnectivityListener;
-import com.mapbox.mapboxsdk.net.ConnectivityReceiver;
 import com.mapbox.mapboxsdk.offline.OfflineManager;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
 import com.mapbox.mapboxsdk.offline.OfflineRegionError;
@@ -25,12 +23,9 @@ import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
 import com.mapbox.mapboxsdk.snapshotter.MapSnapshotter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import timber.log.Timber;
 
-public class DownloadService extends Service implements ConnectivityListener {
+public class DownloadService extends Service {
 
   private final IBinder myBinder = new DownloadServiceBinder();
 
@@ -38,14 +33,10 @@ public class DownloadService extends Service implements ConnectivityListener {
   static final String ACTION_CANCEL_DOWNLOAD = "com.mapbox.mapboxsdk.plugins.offline.download.cancel";
   static final int REQ_CANCEL_DOWNLOAD = 98;
 
-  private DownloadServiceResponder downloadServiceResponder;
-
   private MapSnapshotter mapSnapshotter;
   private NotificationManagerCompat notificationManager;
   private NotificationCompat.Builder notificationBuilder;
   private int progressDownloadCounter;
-
-  private List<Integer> startCommands = new ArrayList<>();
 
   // map offline regions to requests, ids are received through onStartCommand
   private final LongSparseArray<OfflineRegion> regionLongSparseArray = new LongSparseArray<>();
@@ -53,8 +44,6 @@ public class DownloadService extends Service implements ConnectivityListener {
   @Override
   public void onCreate() {
     super.onCreate();
-    ConnectivityReceiver receiver = ConnectivityReceiver.instance(this);
-    receiver.addListener(this);
     notificationManager = NotificationManagerCompat.from(this);
   }
 
@@ -64,19 +53,9 @@ public class DownloadService extends Service implements ConnectivityListener {
     return myBinder;
   }
 
-  /**
-   * Set a callback that is invoked when the progress of a download changes.
-   *
-   * @param downloadServiceResponder the callback
-   */
-  public void setDownloadServiceResponder(DownloadServiceResponder downloadServiceResponder) {
-    this.downloadServiceResponder = downloadServiceResponder;
-  }
-
   @Override
   public int onStartCommand(final Intent intent, int flags, final int startId) {
-    Toast.makeText(this, "onStartCommnad with StartId " + startId, Toast.LENGTH_SHORT).show();
-    startCommands.add(startId);
+    Toast.makeText(this, "onStartCommand with StartId " + startId, Toast.LENGTH_SHORT).show();
 
     String intentAction = intent.getAction();
     if (ACTION_START_DOWNLOAD.equals(intentAction)) {
@@ -177,23 +156,19 @@ public class DownloadService extends Service implements ConnectivityListener {
     mapSnapshotter.start(callback);
   }
 
-  public void cancelOngoingDownload(OfflineDownload offlineDownload) {
+  public void cancelOngoingDownload(final OfflineDownload offlineDownload) {
     int serviceId = offlineDownload.getServiceId();
-    if (serviceId == -1) {
-      throw new RuntimeException();
-    }
     OfflineRegion offlineRegion = regionLongSparseArray.get(offlineDownload.getServiceId());
     offlineRegion.setDownloadState(OfflineRegion.STATE_INACTIVE);
     offlineRegion.setObserver(null);
     offlineRegion.delete(new OfflineRegion.OfflineRegionDeleteCallback() {
       @Override
       public void onDelete() {
-        Timber.e("OFFLINE REGION CANCELED AND DELETED");
       }
 
       @Override
       public void onError(String error) {
-        Timber.e("COULD NOT REMOVE OFFLINE REGION WHILE CANCELLING");
+        dispatchErrorBroadcast(offlineDownload, error, error);
       }
     });
     dispatchCancelBroadcast(offlineDownload);
@@ -202,24 +177,11 @@ public class DownloadService extends Service implements ConnectivityListener {
   }
 
   private void launchDownload(final OfflineDownload offlineDownload, final OfflineRegion offlineRegion) {
-    progressDownloadCounter = 0;
-
-    final long hashCode = offlineRegion.hashCode();
     final int serviceId = offlineDownload.getServiceId();
-    // Set an observer
     offlineRegion.setObserver(new OfflineRegion.OfflineRegionObserver() {
       @Override
       public void onStatusChanged(OfflineRegionStatus status) {
-
-        // Debug
-        Timber.d("%s/%s resources; %s bytes downloaded. for region %s",
-          String.valueOf(status.getCompletedResourceCount()),
-          String.valueOf(status.getRequiredResourceCount()),
-          String.valueOf(status.getCompletedResourceSize()),
-          hashCode);
-
         if (status.isComplete()) {
-          Timber.e("Download complete for %s with notification id %s", hashCode, serviceId);
           if (notificationBuilder != null) {
             notificationManager.cancel(serviceId);
           }
@@ -231,15 +193,13 @@ public class DownloadService extends Service implements ConnectivityListener {
           return;
         }
 
-        progressDownloadCounter++;
-        if (progressDownloadCounter % 10 == 0) {
-          int percentage = (int) (status.getRequiredResourceCount() >= 0
-            ? (100.0 * status.getCompletedResourceCount() / status.getRequiredResourceCount()) :
-            0.0);
+        int percentage = (int) (status.getRequiredResourceCount() >= 0
+          ? (100.0 * status.getCompletedResourceCount() / status.getRequiredResourceCount()) :
+          0.0);
 
-          if (downloadServiceResponder != null) {
-            downloadServiceResponder.onDownloadProgressChanged(offlineRegion.getID(), percentage);
-          }
+        offlineDownload.setProgress(percentage);
+        if (percentage % 5 == 0) {
+          dispatchProgressChanged(offlineDownload, percentage);
 
           if (notificationBuilder == null) {
             // map bitmap icon not ready yet
@@ -253,7 +213,6 @@ public class DownloadService extends Service implements ConnectivityListener {
 
       @Override
       public void onError(OfflineRegionError error) {
-        Timber.e("onError: %s, %s", error.getReason(), error.getMessage());
         dispatchErrorBroadcast(offlineDownload, error.getReason(), error.getMessage());
         stopService(offlineDownload.getServiceId());
       }
@@ -266,6 +225,14 @@ public class DownloadService extends Service implements ConnectivityListener {
 
     // Change the region state
     offlineRegion.setDownloadState(OfflineRegion.STATE_ACTIVE);
+  }
+
+  private void dispatchProgressChanged(OfflineDownload offlineDownload, int percentage) {
+    Intent intent = new Intent(OfflineDownload.ACTION_OFFLINE);
+    intent.putExtra(OfflineDownload.KEY_STATE, OfflineDownload.STATE_PROGRESS);
+    intent.putExtra(OfflineDownload.KEY_OBJECT, offlineDownload);
+    intent.putExtra(OfflineDownload.KEY_PROGRESS, percentage);
+    getApplicationContext().sendBroadcast(intent);
   }
 
   private void dispatchStartBroadcast(OfflineDownload offlineDownload) {
@@ -299,18 +266,12 @@ public class DownloadService extends Service implements ConnectivityListener {
   }
 
   @Override
-  public void onNetworkStateChanged(boolean connected) {
-    Timber.e("OnNetworkStateChanged : " + connected);
-  }
-
-  @Override
   public void onDestroy() {
     super.onDestroy();
     Timber.e("onDestroy");
     if (mapSnapshotter != null) {
       mapSnapshotter.cancel();
     }
-    ConnectivityReceiver.instance(this).removeListener(this);
   }
 
   public class DownloadServiceBinder extends Binder {
@@ -319,23 +280,8 @@ public class DownloadService extends Service implements ConnectivityListener {
     }
   }
 
-  public interface DownloadServiceResponder {
-    void onDownloadProgressChanged(long offlineRegionId, int percentage);
-  }
-
   private void stopService(int serviceId) {
-    printStartCommands(serviceId);
     stopSelf(serviceId);
-    startCommands.remove(startCommands.indexOf(serviceId));
-  }
-
-  private void printStartCommands(int serviceId) {
-    StringBuilder builder = new StringBuilder();
-    for (Integer startCommand : startCommands) {
-      builder.append(" ").append(startCommand);
-    }
-    Timber.e("stofSelf for" + serviceId);
-    Timber.e("start commands " + builder.toString());
   }
 
   public static class RegionConstants {

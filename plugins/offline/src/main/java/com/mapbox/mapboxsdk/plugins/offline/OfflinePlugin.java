@@ -15,14 +15,14 @@ import java.util.List;
 /**
  * OfflinePlugin is the main entry point for integrating the offline plugin into your app.
  * <p>
- * To start downloading a region call {@link #downloadRegion(Context, OfflineDownload.Options)}
+ * To start downloading a region call {@link #startDownload(Context, OfflineDownload.Options)}
  * </p>
  */
 public class OfflinePlugin {
 
   private static OfflinePlugin INSTANCE;
   private final List<OfflineDownload> offlineDownloads = new ArrayList<>();
-  private final OfflineDownloadStateChangeDispatcher stateChangeDispatcher = new OfflineDownloadStateChangeDispatcher();
+  private final OfflineDownloadChangeDispatcher stateChangeDispatcher = new OfflineDownloadChangeDispatcher();
 
   /**
    * Get a single instance of OfflinePlugin
@@ -46,17 +46,6 @@ public class OfflinePlugin {
   // public API
   //
 
-  @Nullable
-  public static OfflineDownload getDownloadFromIntent(Intent intent) {
-    OfflineDownload offlineDownload = null;
-    Bundle bundle = intent.getExtras();
-    if (bundle != null) {
-      offlineDownload = bundle.getParcelable(OfflineDownload.KEY_OBJECT);
-    }
-    return offlineDownload;
-  }
-
-
   /**
    * Get the active offline downloads
    *
@@ -73,11 +62,25 @@ public class OfflinePlugin {
    * @param context                the context to derive the application context of
    * @param offlineDownloadOptions the offline download builder
    */
-  public void downloadRegion(@NonNull Context context, OfflineDownload.Options offlineDownloadOptions) {
+  public void startDownload(@NonNull Context context, OfflineDownload.Options offlineDownloadOptions) {
     Context appContext = context.getApplicationContext();
     Intent intent = new Intent(appContext, DownloadService.class);
     intent.setAction(DownloadService.ACTION_START_DOWNLOAD);
     intent.putExtra(OfflineDownload.KEY_OBJECT, offlineDownloadOptions.build());
+    appContext.startService(intent);
+  }
+
+  /**
+   * Cancel an ongoing download.
+   *
+   * @param context         the context to derive the application context of
+   * @param offlineDownload the offline download
+   */
+  public void cancelDownload(@NonNull Context context, OfflineDownload offlineDownload) {
+    Context appContext = context.getApplicationContext();
+    Intent intent = new Intent(appContext, DownloadService.class);
+    intent.setAction(DownloadService.ACTION_CANCEL_DOWNLOAD);
+    intent.putExtra(OfflineDownload.KEY_OBJECT, offlineDownload);
     appContext.startService(intent);
   }
 
@@ -93,7 +96,8 @@ public class OfflinePlugin {
     if (!offlineDownloads.isEmpty()) {
       for (OfflineDownload download : offlineDownloads) {
         if (download.getRegionId() == -1) {
-          throw new RuntimeException("All downloads found in this class OfflinePlugin should be initialized (region id + service id)");
+          throw new RuntimeException("All downloads found in this class OfflinePlugin should "
+            + "be initialized (region id + service id)");
         }
         if (download.getRegionId() == offlineRegion.getID()) {
           offlineDownload = download;
@@ -111,7 +115,7 @@ public class OfflinePlugin {
    *
    * @param listener the callback that will be invoked
    */
-  public void addOfflineDownloadStateChangeListener(OfflineDownloadStateChangeListener listener) {
+  public void addOfflineDownloadStateChangeListener(OfflineDownloadChangeListener listener) {
     stateChangeDispatcher.addListener(listener);
   }
 
@@ -123,7 +127,7 @@ public class OfflinePlugin {
    *
    * @param listener the callback that will be removed
    */
-  public void removeOfflineDownloadStateChangeListener(OfflineDownloadStateChangeListener listener) {
+  public void removeOfflineDownloadStateChangeListener(OfflineDownloadChangeListener listener) {
     stateChangeDispatcher.removeListener(listener);
   }
 
@@ -142,6 +146,7 @@ public class OfflinePlugin {
       throw new RuntimeException();
     }
     offlineDownloads.add(offlineDownload);
+    stateChangeDispatcher.onCreate(offlineDownload);
   }
 
   /**
@@ -168,5 +173,9 @@ public class OfflinePlugin {
   void errorDownload(OfflineDownload offlineDownload, String error, String errorMessage) {
     stateChangeDispatcher.onError(offlineDownload, error, errorMessage);
     offlineDownloads.remove(offlineDownload);
+  }
+
+  void onProgressChanged(OfflineDownload offlineDownload, int progress) {
+    stateChangeDispatcher.onProgress(offlineDownload, progress);
   }
 }

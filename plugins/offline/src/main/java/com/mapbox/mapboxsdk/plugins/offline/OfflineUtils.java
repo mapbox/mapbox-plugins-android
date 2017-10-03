@@ -3,8 +3,6 @@ package com.mapbox.mapboxsdk.plugins.offline;
 import android.support.annotation.NonNull;
 
 import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.offline.OfflineManager;
-import com.mapbox.mapboxsdk.offline.OfflineRegion;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
 
 import org.json.JSONObject;
@@ -44,27 +42,5 @@ public class OfflineUtils {
       .target(definition.getBounds().getCenter())
       .zoom(definition.getMinZoom())
       .build();
-  }
-
-  public static void getRegion(OfflineManager offlineManager, final long id, final Callback<OfflineRegion> callback) {
-    offlineManager.listOfflineRegions(new OfflineManager.ListOfflineRegionsCallback() {
-      @Override
-      public void onList(OfflineRegion[] offlineRegions) {
-        for (OfflineRegion offlineRegion : offlineRegions) {
-          if (offlineRegion.getID() == id) {
-            if (callback != null) {
-              callback.onResult(offlineRegion);
-              return;
-            }
-          }
-        }
-        throw new RuntimeException("OfflineRegion not found, id not found for: " + id);
-      }
-
-      @Override
-      public void onError(String error) {
-        throw new RuntimeException("Error while retrieving OfflineRegion: " + error);
-      }
-    });
   }
 }
