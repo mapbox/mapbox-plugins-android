@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.mapbox.mapboxsdk.offline.OfflineManager;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
-import com.mapbox.mapboxsdk.plugins.offline.DownloadService;
 import com.mapbox.mapboxsdk.plugins.offline.OfflineUtils;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 
@@ -36,7 +35,7 @@ public class OfflineRegionListActivity extends AppCompatActivity implements Adap
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_offline_region_list);
 
-    ListView listView = (ListView) findViewById(R.id.listView);
+    ListView listView = findViewById(R.id.listView);
     listView.setAdapter(adapter = new OfflineRegionAdapter(this));
     listView.setEmptyView(findViewById(android.R.id.empty));
     listView.setOnItemClickListener(this);
@@ -46,31 +45,8 @@ public class OfflineRegionListActivity extends AppCompatActivity implements Adap
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     OfflineRegion region = adapter.getItem(position);
     Intent intent = new Intent(this, OfflineRegionDetailActivity.class);
-    intent.putExtra(DownloadService.RegionConstants.ID, region.getID());
+    intent.putExtra(OfflineRegionDetailActivity.KEY_REGION_ID_BUNDLE, region.getID());
     startActivity(intent);
-  }
-
-  private void delete(OfflineRegion region) {
-    region.delete(new OfflineRegion.OfflineRegionDeleteCallback() {
-      @Override
-      public void onDelete() {
-        Toast.makeText(
-          OfflineRegionListActivity.this,
-          "Region deleted",
-          Toast.LENGTH_SHORT
-        ).show();
-        loadOfflineRegions();
-      }
-
-      @Override
-      public void onError(String error) {
-        Toast.makeText(
-          OfflineRegionListActivity.this,
-          "Region deletion failed with " + error,
-          Toast.LENGTH_LONG
-        ).show();
-      }
-    });
   }
 
   @Override
@@ -83,7 +59,7 @@ public class OfflineRegionListActivity extends AppCompatActivity implements Adap
     OfflineManager.getInstance(this).listOfflineRegions(new OfflineManager.ListOfflineRegionsCallback() {
       @Override
       public void onList(OfflineRegion[] offlineRegions) {
-        if (offlineRegions != null && offlineRegions.length > 0) {
+        if (offlineRegions != null) {
           adapter.setOfflineRegions(Arrays.asList(offlineRegions));
         }
       }
@@ -133,8 +109,8 @@ public class OfflineRegionListActivity extends AppCompatActivity implements Adap
       if (convertView == null) {
         holder = new ViewHolder();
         convertView = LayoutInflater.from(context).inflate(R.layout.item_feature, parent, false);
-        holder.text = (TextView) convertView.findViewById(R.id.nameView);
-        holder.subText = (TextView) convertView.findViewById(R.id.descriptionView);
+        holder.text = convertView.findViewById(R.id.nameView);
+        holder.subText = convertView.findViewById(R.id.descriptionView);
         convertView.setTag(holder);
       } else {
         holder = (ViewHolder) convertView.getTag();

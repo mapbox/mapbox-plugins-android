@@ -19,7 +19,7 @@ class OfflineDownloadChangeDispatcher implements OfflineDownloadChangeListener {
 
   @Override
   public void onCreate(OfflineDownload offlineDownload) {
-    if(!changeListeners.isEmpty()){
+    if (!changeListeners.isEmpty()) {
       for (OfflineDownloadChangeListener changeListener : changeListeners) {
         changeListener.onCreate(offlineDownload);
       }

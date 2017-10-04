@@ -13,8 +13,9 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
 import com.mapbox.mapboxsdk.plugins.offline.NotificationOptions;
-import com.mapbox.mapboxsdk.plugins.offline.OfflineDownload;
+import com.mapbox.mapboxsdk.plugins.offline.OfflineDownloadOptions;
 import com.mapbox.mapboxsdk.plugins.offline.OfflinePlugin;
+import com.mapbox.mapboxsdk.plugins.offline.OfflineUtils;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 
 import java.util.ArrayList;
@@ -88,11 +89,7 @@ public class OfflineDownloadActivity extends AppCompatActivity {
     styles.add(Style.MAPBOX_STREETS);
     styles.add(Style.DARK);
     styles.add(Style.LIGHT);
-    styles.add(Style.SATELLITE);
-    styles.add(Style.SATELLITE_STREETS);
     styles.add(Style.OUTDOORS);
-    styles.add(Style.TRAFFIC_DAY);
-    styles.add(Style.TRAFFIC_NIGHT);
     ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, styles);
     spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     styleUrlView.setAdapter(spinnerArrayAdapter);
@@ -129,9 +126,9 @@ public class OfflineDownloadActivity extends AppCompatActivity {
 
     // start offline download
     OfflinePlugin.getInstance().startDownload(this,
-      new OfflineDownload.Options()
+      new OfflineDownloadOptions()
         .withDefinition(definition)
-        .withName(regionName)
+        .withMetadata(OfflineUtils.convertRegionName(regionName))
         .withNotificationOptions(notificationOptions)
     );
   }

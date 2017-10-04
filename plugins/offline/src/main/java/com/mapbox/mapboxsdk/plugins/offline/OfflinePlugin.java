@@ -3,7 +3,6 @@ package com.mapbox.mapboxsdk.plugins.offline;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -15,7 +14,7 @@ import java.util.List;
 /**
  * OfflinePlugin is the main entry point for integrating the offline plugin into your app.
  * <p>
- * To start downloading a region call {@link #startDownload(Context, OfflineDownload.Options)}
+ * To start downloading a region call {@link #startDownload(Context, OfflineDownloadOptions)}
  * </p>
  */
 public class OfflinePlugin {
@@ -57,16 +56,19 @@ public class OfflinePlugin {
   }
 
   /**
-   * Download a offline region based on an offline download.
+   * Start downloading an offline download by providing an options object.
+   * <p>
+   * You can listen to the actual creation of the download with {@link OfflineDownloadChangeListener}.
+   * </p>
    *
-   * @param context                the context to derive the application context of
-   * @param offlineDownloadOptions the offline download builder
+   * @param context the context to derive the application context of
+   * @param options the offline download builder
    */
-  public void startDownload(@NonNull Context context, OfflineDownload.Options offlineDownloadOptions) {
+  public void startDownload(@NonNull Context context, OfflineDownloadOptions options) {
     Context appContext = context.getApplicationContext();
-    Intent intent = new Intent(appContext, DownloadService.class);
-    intent.setAction(DownloadService.ACTION_START_DOWNLOAD);
-    intent.putExtra(OfflineDownload.KEY_OBJECT, offlineDownloadOptions.build());
+    Intent intent = new Intent(appContext, OfflineDownloadService.class);
+    intent.setAction(Constants.ACTION_START_DOWNLOAD);
+    intent.putExtra(OfflineDownload.KEY_BUNDLE, options.build());
     appContext.startService(intent);
   }
 
@@ -78,9 +80,9 @@ public class OfflinePlugin {
    */
   public void cancelDownload(@NonNull Context context, OfflineDownload offlineDownload) {
     Context appContext = context.getApplicationContext();
-    Intent intent = new Intent(appContext, DownloadService.class);
-    intent.setAction(DownloadService.ACTION_CANCEL_DOWNLOAD);
-    intent.putExtra(OfflineDownload.KEY_OBJECT, offlineDownload);
+    Intent intent = new Intent(appContext, OfflineDownloadService.class);
+    intent.setAction(Constants.ACTION_CANCEL_DOWNLOAD);
+    intent.putExtra(OfflineDownload.KEY_BUNDLE, offlineDownload);
     appContext.startService(intent);
   }
 
@@ -95,10 +97,6 @@ public class OfflinePlugin {
     OfflineDownload offlineDownload = null;
     if (!offlineDownloads.isEmpty()) {
       for (OfflineDownload download : offlineDownloads) {
-        if (download.getRegionId() == -1) {
-          throw new RuntimeException("All downloads found in this class OfflinePlugin should "
-            + "be initialized (region id + service id)");
-        }
         if (download.getRegionId() == offlineRegion.getID()) {
           offlineDownload = download;
         }
@@ -136,21 +134,18 @@ public class OfflinePlugin {
   //
 
   /**
-   * Called when the DownloadService has created an offline region for an offlineDownload and
+   * Called when the OfflineDownloadService has created an offline region for an offlineDownload and
    * has assigned a region and service id.
    *
    * @param offlineDownload the offline download to track
    */
   void addDownload(OfflineDownload offlineDownload) {
-    if (offlineDownload.getRegionId() == -1 || offlineDownload.getServiceId() == -1) {
-      throw new RuntimeException();
-    }
     offlineDownloads.add(offlineDownload);
     stateChangeDispatcher.onCreate(offlineDownload);
   }
 
   /**
-   * Called when the DownloadService has finished downloading.
+   * Called when the OfflineDownloadService has finished downloading.
    *
    * @param offlineDownload the offline download to stop tracking
    */
@@ -164,7 +159,7 @@ public class OfflinePlugin {
   }
 
   /**
-   * Called when the DownloadService produced an error while downloading
+   * Called when the OfflineDownloadService produced an error while downloading
    *
    * @param offlineDownload the offline download that produced an error
    * @param error           short description of the error
@@ -175,6 +170,12 @@ public class OfflinePlugin {
     offlineDownloads.remove(offlineDownload);
   }
 
+  /**
+   * Called when the offline download service has made progress downloading an offline download.
+   *
+   * @param offlineDownload the offline download for which progress was made
+   * @param progress        the amount of progress
+   */
   void onProgressChanged(OfflineDownload offlineDownload, int progress) {
     stateChangeDispatcher.onProgress(offlineDownload, progress);
   }

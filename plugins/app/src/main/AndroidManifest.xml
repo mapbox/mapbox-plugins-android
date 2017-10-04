@@ -135,7 +135,7 @@
             android:theme="@style/Translucent"/>
 
         <service
-            android:name="com.mapbox.mapboxsdk.plugins.offline.DownloadService"
+            android:name="com.mapbox.mapboxsdk.plugins.offline.OfflineDownloadService"
             android:exported="false"/>
 
         <receiver android:name="com.mapbox.mapboxsdk.plugins.offline.OfflineDownloadStateReceiver">

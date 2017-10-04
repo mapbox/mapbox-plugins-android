@@ -18,7 +18,6 @@ import com.mapbox.mapboxsdk.offline.OfflineManager;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
 import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
-import com.mapbox.mapboxsdk.plugins.offline.DownloadService;
 import com.mapbox.mapboxsdk.plugins.offline.OfflineDownload;
 import com.mapbox.mapboxsdk.plugins.offline.OfflineDownloadChangeListener;
 import com.mapbox.mapboxsdk.plugins.offline.OfflinePlugin;
@@ -33,7 +32,7 @@ import timber.log.Timber;
 /**
  * Activity showing the detail of an offline region.
  * <p>
- * This Activity can bind to the DownloadService and show progress.
+ * This Activity can bind to the OfflineDownloadService and show progress.
  * </p>
  * <p>
  * This Activity listens to broadcast events related to successful, canceled and errored download.
@@ -41,8 +40,7 @@ import timber.log.Timber;
  */
 public class OfflineRegionDetailActivity extends AppCompatActivity implements OfflineDownloadChangeListener {
 
-  private OfflinePlugin offlinePlugin;
-  private OfflineRegion offlineRegion;
+  public static final String KEY_REGION_ID_BUNDLE = "com.mapbox.mapboxsdk.plugins.offline.bundle.id";
 
   @BindView(R.id.mapView)
   MapView mapView;
@@ -71,30 +69,37 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
   @BindView(R.id.region_lat_lng_bounds)
   TextView latLngBoundsView;
 
+  private OfflinePlugin offlinePlugin;
+  private OfflineRegion offlineRegion;
+  private boolean isDownloading;
+
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_offline_region_detail);
     ButterKnife.bind(this);
     mapView.onCreate(savedInstanceState);
-
     offlinePlugin = OfflinePlugin.getInstance();
 
     Bundle bundle = getIntent().getExtras();
     if (bundle != null) {
-      long regionId;
-      OfflineDownload offlineDownload = bundle.getParcelable(OfflineDownload.KEY_OBJECT);
-      if (offlineDownload != null) {
-        // coming from notification
-        regionId = offlineDownload.getRegionId();
-      } else {
-        // coming from list
-        regionId = bundle.getLong(DownloadService.RegionConstants.ID, -1);
-      }
+      loadOfflineDownload(bundle);
+    }
+  }
 
-      if (regionId != -1) {
-        loadOfflineRegion(regionId);
-      }
+  private void loadOfflineDownload(Bundle bundle) {
+    long regionId;
+    OfflineDownload offlineDownload = bundle.getParcelable(OfflineDownload.KEY_BUNDLE);
+    if (offlineDownload != null) {
+      // coming from notification
+      regionId = offlineDownload.getRegionId();
+    } else {
+      // coming from list
+      regionId = bundle.getLong(KEY_REGION_ID_BUNDLE, -1);
+    }
+
+    if (regionId != -1) {
+      loadOfflineRegion(regionId);
     }
   }
 
@@ -105,7 +110,6 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
         @Override
         public void onList(OfflineRegion[] offlineRegions) {
           for (OfflineRegion region : offlineRegions) {
-            Timber.e("REGION ID %s", region.getID());
             if (region.getID() == id) {
               offlineRegion = region;
               OfflineTilePyramidRegionDefinition definition =
@@ -114,16 +118,25 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
               return;
             }
           }
-          throw new RuntimeException("OfflineRegion not found, id not found for: " + id);
         }
 
         @Override
         public void onError(String error) {
-          throw new RuntimeException("Error while retrieving OfflineRegion: " + error);
+          Timber.e(error);
         }
       });
   }
 
+  private void updateFab() {
+    FloatingActionButton fab = findViewById(R.id.fab_delete);
+    if (isDownloading) {
+      fab.setImageResource(R.drawable.ic_cancel);
+      stateView.setText("DOWNLOADING");
+    } else {
+      fab.setImageResource(R.drawable.ic_delete);
+      stateView.setText("DOWNLOADED");
+    }
+  }
 
   private void setupUI(final OfflineTilePyramidRegionDefinition definition) {
     // update map
@@ -153,21 +166,22 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
     offlineRegion.getStatus(offlineRegionStatusCallback);
   }
 
+
   @OnClick(R.id.fab_delete)
   public void onFabClick(View view) {
-    if (view.getTag() == null || (boolean) view.getTag()) {
-      if (offlineRegion != null) {
+    if (offlineRegion != null) {
+      if (!isDownloading) {
+        // delete download
         offlineRegion.delete(offlineRegionDeleteCallback);
-        view.setVisibility(View.GONE);
+      } else {
+        // cancel download
+        OfflineDownload offlineDownload = offlinePlugin.getActiveDownloadForOfflineRegion(offlineRegion);
+        if (offlineDownload != null) {
+          offlinePlugin.cancelDownload(this, offlineDownload);
+          isDownloading = false;
+        }
       }
-    } else {
-      // cancel ongoing download
-      OfflineDownload offlineDownload = offlinePlugin.getActiveDownloadForOfflineRegion(offlineRegion);
-      if (offlineDownload != null) {
-        offlinePlugin.cancelDownload(this, offlineDownload);
-        stateView.setText("CANCELED");
-        view.setVisibility(View.GONE);
-      }
+      view.setVisibility(View.GONE);
     }
   }
 
@@ -178,8 +192,9 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
 
   @Override
   public void onSuccess(OfflineDownload offlineDownload) {
-    stateView.setText("DOWNLOADED");
+    isDownloading = false;
     progressBar.setVisibility(View.INVISIBLE);
+    updateFab();
   }
 
   @Override
@@ -191,6 +206,7 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
   public void onError(OfflineDownload offlineDownload, String error, String message) {
     progressBar.setVisibility(View.INVISIBLE);
     stateView.setText("ERROR");
+    Toast.makeText(this, error + message, Toast.LENGTH_LONG).show();
   }
 
   @Override
@@ -203,6 +219,7 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
       if (progressBar.getVisibility() != View.VISIBLE) {
         progressBar.setVisibility(View.VISIBLE);
       }
+      isDownloading = true;
       progressBar.setProgress(progress);
     }
   }
@@ -258,23 +275,8 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
     new OfflineRegion.OfflineRegionStatusCallback() {
       @Override
       public void onStatus(OfflineRegionStatus status) {
-        int downloadState = status.getDownloadState();
-        if (downloadState == OfflineRegion.STATE_ACTIVE) {
-          FloatingActionButton actionButton = findViewById(R.id.fab_delete);
-          if (!status.isComplete()) {
-            // set fab to cancel
-            actionButton.setImageResource(R.drawable.ic_cancel_black_24dp);
-            findViewById(R.id.fab_delete).setTag(false);
-            stateView.setText("DOWNLOADING");
-          } else {
-            // set fab to delete
-            actionButton.setImageResource(R.drawable.ic_delete);
-            findViewById(R.id.fab_delete).setTag(true);
-            stateView.setText("DOWNLOADED");
-          }
-        } else {
-          stateView.setText("PAUSED");
-        }
+        isDownloading = !status.isComplete();
+        updateFab();
       }
 
       @Override

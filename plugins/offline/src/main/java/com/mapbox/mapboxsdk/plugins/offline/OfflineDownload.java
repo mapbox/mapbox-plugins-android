@@ -5,27 +5,19 @@ import android.os.Parcelable;
 
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
 
+import java.util.Arrays;
+
 /**
- * Wrapper around contents of a OfflineTilePyramidRegionDefinition
+ * OfflineDownload model wraps the offline region definition with notifications options and the offline region metadata,
+ * is a companion object to OfflineRegion with regionId and DownloadService with serviceId.
  */
 public class OfflineDownload implements Parcelable {
 
-  static final String ACTION_OFFLINE = "com.mapbox.mapboxsdk.plugins.offline";
-  public static final String KEY_OBJECT = "com.mapbox.mapboxsdk.plugins.offline.download.object";
-  static final String KEY_STATE = "com.mapbox.mapboxsdk.plugins.offline.state";
-  static final String STATE_STARTED = "com.mapbox.mapboxsdk.plugins.offline.state.started";
-  static final String STATE_FINISHED = "com.mapbox.mapboxsdk.plugins.offline.state.complete";
-  static final String STATE_ERROR = "com.mapbox.mapboxsdk.plugins.offline.state.error";
-  static final String STATE_CANCEL = "com.mapbox.mapboxsdk.plugins.offline.state.cancel";
-  static final String STATE_PROGRESS = "com.mapbox.mapboxsdk.plugins.offline.state.progress";
-  static final String KEY_BUNDLE_OFFLINE_REGION = "com.mapbox.mapboxsdk.plugins.offline.region";
-  static final String KEY_BUNDLE_ERROR = "com.mapbox.mapboxsdk.plugins.offline.error";
-  static final String KEY_BUNDLE_MESSAGE = "com.mapbox.mapboxsdk.plugins.offline.error";
-  static final String KEY_PROGRESS = "com.mapbox.mapboxsdk.plugins.offline.progress";
+  public static final String KEY_BUNDLE = "com.mapbox.mapboxsdk.plugins.offline.download.object";
 
   private final OfflineTilePyramidRegionDefinition definition;
-  private final String name;
   private final NotificationOptions notificationOptions;
+  private final byte[] metadata;
 
   // unique identifier used by service + notifications
   // will be created at service startup as part of onStartCommand
@@ -36,28 +28,29 @@ public class OfflineDownload implements Parcelable {
   // download progress
   private int progress;
 
-  private OfflineDownload(OfflineTilePyramidRegionDefinition offlineTilePyramidRegionDefinition, String name,
+  OfflineDownload(OfflineTilePyramidRegionDefinition offlineTilePyramidRegionDefinition, byte[] metadata,
                           NotificationOptions notificationOptions) {
     this.definition = offlineTilePyramidRegionDefinition;
-    this.name = name;
+    this.metadata = metadata;
     this.notificationOptions = notificationOptions;
   }
 
   private OfflineDownload(Parcel in) {
     definition = in.readParcelable(OfflineTilePyramidRegionDefinition.class.getClassLoader());
-    name = in.readString();
     serviceId = in.readInt();
     regionId = in.readLong();
     notificationOptions = in.readParcelable(NotificationOptions.class.getClassLoader());
-    progress = in.readByte();
+    progress = in.readInt();
+    metadata = new byte[in.readInt()];
+    in.readByteArray(metadata);
   }
 
   OfflineTilePyramidRegionDefinition getRegionDefinition() {
     return definition;
   }
 
-  String getName() {
-    return name;
+  byte[] getMetadata() {
+    return metadata;
   }
 
   int getServiceId() {
@@ -96,11 +89,12 @@ public class OfflineDownload implements Parcelable {
   @Override
   public void writeToParcel(Parcel dest, int flags) {
     dest.writeParcelable(definition, flags);
-    dest.writeString(name);
     dest.writeInt(serviceId);
     dest.writeLong(regionId);
     dest.writeParcelable(notificationOptions, flags);
     dest.writeInt(progress);
+    dest.writeInt(metadata.length);
+    dest.writeByteArray(metadata);
   }
 
   public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -113,34 +107,6 @@ public class OfflineDownload implements Parcelable {
     }
   };
 
-  public static class Options {
-
-    private String name;
-    private OfflineTilePyramidRegionDefinition definition;
-    private NotificationOptions notificationOptions;
-
-    public Options withDefinition(OfflineTilePyramidRegionDefinition definition) {
-      this.definition = definition;
-      return this;
-    }
-
-    public Options withName(String name) {
-      this.name = name;
-      return this;
-    }
-
-    public Options withNotificationOptions(NotificationOptions notificationsOptions) {
-      this.notificationOptions = notificationsOptions;
-      return this;
-    }
-
-    // restrict visibility, only libs allowed to invoke building the OfflineDownload
-    OfflineDownload build() {
-      //TODO add validation
-      return new OfflineDownload(definition, name, notificationOptions);
-    }
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -151,24 +117,14 @@ public class OfflineDownload implements Parcelable {
     }
 
     OfflineDownload that = (OfflineDownload) o;
-
-    if (serviceId != that.serviceId) {
-      return false;
-    }
-    if (regionId != that.regionId) {
-      return false;
-    }
-    if (name != null ? !name.equals(that.name) : that.name != null) {
-      return false;
-    }
-    return true;
+    return serviceId == that.serviceId && regionId == that.regionId && Arrays.equals(metadata, that.metadata);
   }
 
   @Override
   public int hashCode() {
     int result = serviceId;
     result = 31 * result + (int) (regionId ^ (regionId >>> 32));
-    result = 31 * result + (name != null ? name.hashCode() : 0);
+    result = 31 * result + (metadata != null ? Arrays.hashCode(metadata) : 0);
     result = 31 * result + (notificationOptions != null ? notificationOptions.hashCode() : 0);
     return result;
   }

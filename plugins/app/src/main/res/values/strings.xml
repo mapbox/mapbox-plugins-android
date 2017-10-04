@@ -18,8 +18,8 @@
     <string name="title_location_manual_update">Toggle Manual Location Updates</string>
     <string name="title_compass_listener">Compass Listener</string>
     <string name="title_geojson">GeoJson Plugin</string>
-    <string name="title_offline_plugin">Offline Plugin</string>
-    <string name="title_offline_regions">Offline regions</string>
+    <string name="title_offline_plugin">Create region</string>
+    <string name="title_offline_regions">List regions</string>
 
     <!-- Descriptions -->
     <string name="description_traffic">Add Traffic layers to any Mapbox basemap.</string>
@@ -29,7 +29,7 @@
     <string name="description_location_manual_update">Toggle the user location manual mode on and off.</string>
     <string name="description_compass_listener">Add a compass listener to know when heading changes or when the accuracy dropsx</string>
     <string name="description_geojson">Load GeoJson file from assets, path or url to the Mapbox.</string>
-    <string name="description_offline_plugin">High level API wrapper around offline using Service.</string>
+    <string name="description_offline_plugin">Use a form to create an offline region.</string>
     <string name="description_offline_regions">List all offline regions.</string>
 
     <!-- Buttons -->

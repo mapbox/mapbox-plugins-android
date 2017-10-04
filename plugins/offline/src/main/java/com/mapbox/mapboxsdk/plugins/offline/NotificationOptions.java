@@ -1,8 +1,16 @@
 package com.mapbox.mapboxsdk.plugins.offline;
 
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
+import android.support.v4.app.NotificationCompat;
+
+import com.mapbox.androidsdk.plugins.offline.R;
+
+import static android.support.v4.app.NotificationCompat.Builder;
 
 public class NotificationOptions implements Parcelable {
 
@@ -16,7 +24,7 @@ public class NotificationOptions implements Parcelable {
   public NotificationOptions() {
   }
 
-  public NotificationOptions(Parcel in) {
+  private NotificationOptions(Parcel in) {
     smallIconRes = in.readInt();
     returnActivity = in.readString();
     contentTitle = in.readString();
@@ -72,6 +80,18 @@ public class NotificationOptions implements Parcelable {
 
   public String getTicker() {
     return ticker;
+  }
+
+  Builder toNotificationBuilder(Context context, PendingIntent contentIntent, Intent cancelIntent) {
+    return new NotificationCompat.Builder(context /**, Constants.NOTIFICATION_CHANNEL**/)
+      .setContentTitle(contentTitle)
+      .setContentText(contextText)
+      .setCategory(NotificationCompat.CATEGORY_PROGRESS)
+      .setSmallIcon(smallIconRes)
+      .setContentIntent(contentIntent)
+      .addAction(R.drawable.ic_cancel, "Cancel", PendingIntent.getService(context,
+        Constants.REQ_CANCEL_DOWNLOAD, cancelIntent, PendingIntent.FLAG_CANCEL_CURRENT))
+      .setTicker(ticker);
   }
 
   @Override
