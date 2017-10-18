@@ -1,0 +1,14 @@
+apply plugin: 'org.sonarqube'
+
+sonarqube {
+  properties {
+    property "sonar.java.coveragePlugin", "jacoco"
+    property "sonar.host.url", "https://sonarcloud.io"
+    property "sonar.login", System.env.SONARQUBE_API_TOKEN
+    property "sonar.organization", "mapbox"
+    property "sonar.projectName", "mapbox-plugins"
+    property "sonar.projectKey", "mapbox-plugins"
+    property "sonar.jacoco.reportPaths", "${project.buildDir}/jacoco/test.exec"
+    property "sonar.links.homepage", "https://github.com/mapbox/mapbox-plugins-android"
+  }
+}

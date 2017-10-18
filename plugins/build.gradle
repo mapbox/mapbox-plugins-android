@@ -4,6 +4,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.5"
     }
 }
 
@@ -18,5 +19,6 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
+apply from: "${rootDir}/gradle/sonarqube.gradle"
 apply from: rootProject.file('dependencies.gradle')
 

@@ -72,5 +72,9 @@ dependencies {
     compile project(':geojson')
 }
 
+sonarqube {
+    skipProject = true
+}
+
 apply from: '../checkstyle.gradle'
 apply from: 'generate-token.gradle'
