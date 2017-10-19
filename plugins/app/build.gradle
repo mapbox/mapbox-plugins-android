@@ -70,6 +70,7 @@ dependencies {
     compile project(':locationlayer')
     compile project(':building')
     compile project(':geojson')
+    compile project(':markerlayer')
 }
 
 sonarqube {
