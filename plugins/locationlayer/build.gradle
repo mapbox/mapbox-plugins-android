@@ -28,8 +28,6 @@ dependencies {
   compile(rootProject.ext.dep.mapSdk + '@aar') {
     transitive = true
   }
-
-  javadocDeps rootProject.ext.dep.mapSdk
 }
 
 apply from: 'javadoc.gradle'
