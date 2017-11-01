@@ -153,4 +153,4 @@ app:
     INSTRUMENTATIONTEST_TASK: assembleAndroidTest
   - opts:
       is_expand: false
-    GRADLEW_PATH: gradlew
+    GRADLEW_PATH: "./gradlew"
