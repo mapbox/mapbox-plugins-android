@@ -1,14 +1,13 @@
 apply plugin: 'com.android.library'
 
 android {
-  compileSdkVersion rootProject.ext.compileSdkVersion
-  buildToolsVersion rootProject.ext.buildToolsVersion
+  compileSdkVersion androidVersions.compileSdkVersion
+  buildToolsVersion androidVersions.buildToolsVersion
 
   defaultConfig {
-    minSdkVersion rootProject.ext.minSdkVersion
-    targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 1
-    versionName "0.1"
+    minSdkVersion androidVersions.minSdkVersion
+    targetSdkVersion androidVersions.targetSdkVersion
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     vectorDrawables.useSupportLibrary = true
   }
 
@@ -18,18 +17,18 @@ android {
 }
 
 dependencies {
-  testCompile rootProject.ext.dep.junit
-  testCompile rootProject.ext.dep.mockito
 
-  compile rootProject.ext.dep.supportAppcompatV7
-
-  compile rootProject.ext.dep.mapboxServices
-
-  compile(rootProject.ext.dep.mapSdk + '@aar') {
+  implementation dependenciesList.supportAppcompatV7
+  api dependenciesList.mapboxServices
+  api (dependenciesList.mapboxMapSdk) {
     transitive = true
   }
 
-  javadocDeps rootProject.ext.dep.mapSdk
+  // Unit testing
+  testImplementation dependenciesList.junit
+  testImplementation dependenciesList.mockito
+
+  javadocDeps dependenciesList.mapboxMapSdk
 }
 
 apply from: 'javadoc.gradle'
