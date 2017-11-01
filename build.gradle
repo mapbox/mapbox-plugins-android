@@ -20,5 +20,5 @@ task clean(type: Delete) {
 }
 
 apply from: "${rootDir}/gradle/sonarqube.gradle"
-apply from: rootProject.file('dependencies.gradle')
+apply from: "${rootDir}/gradle/dependencies.gradle"
 

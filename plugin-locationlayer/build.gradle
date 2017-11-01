@@ -33,6 +33,6 @@ dependencies {
 }
 
 apply from: 'javadoc.gradle'
-apply from: '../mvn-push-android.gradle'
-apply from: '../checkstyle.gradle'
+apply from: "${rootDir}/gradle/mvn-push-android.gradle"
+apply from: "${rootDir}/gradle/checkstyle.gradle"
 apply from: "${rootDir}/gradle/jacoco.gradle"
