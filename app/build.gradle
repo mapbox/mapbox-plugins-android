@@ -66,11 +66,11 @@ dependencies {
     testCompile rootProject.ext.dep.leakCanaryTest
 
     // Plugin modules
-    compile project(':traffic')
-    compile project(':locationlayer')
-    compile project(':building')
-    compile project(':geojson')
-    compile project(':cluster')
+    compile project(':plugin-traffic')
+    compile project(':plugin-locationlayer')
+    compile project(':plugin-building')
+    compile project(':plugin-geojson')
+    compile project(':plugin-cluster')
 }
 
 sonarqube {
