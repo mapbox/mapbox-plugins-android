@@ -14,6 +14,7 @@ import com.mapbox.mapboxsdk.utils.OnMapReadyIdlingResource;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,6 +65,7 @@ public class LocationLayerPluginTest {
   }
 
   @Test
+  @Ignore
   public void locationSourceAdded() throws Exception {
     executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
       @Override
@@ -76,6 +78,7 @@ public class LocationLayerPluginTest {
   }
 
   @Test
+  @Ignore
   public void locationAccuracySourceAdded() throws Exception {
     executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
       @Override
@@ -88,6 +91,7 @@ public class LocationLayerPluginTest {
   }
 
   @Test
+  @Ignore
   public void locationTrackingLayersAdded() throws Exception {
     executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
       @Override
@@ -102,6 +106,7 @@ public class LocationLayerPluginTest {
   }
 
   @Test
+  @Ignore
   public void locationBearingLayersAdded() throws Exception {
     executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
       @Override
@@ -117,6 +122,7 @@ public class LocationLayerPluginTest {
   }
 
   @Test
+  @Ignore
   public void locationNavigationLayersAdded() throws Exception {
     executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
       @Override
@@ -129,6 +135,7 @@ public class LocationLayerPluginTest {
   }
 
   @Test
+  @Ignore
   public void locationLayerModeCorrectlySetToNone() throws Exception {
     executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
       @Override
@@ -144,6 +151,7 @@ public class LocationLayerPluginTest {
   }
 
   @Test
+  @Ignore
   public void onMapChangeLocationLayerRedrawn() throws Exception {
     executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
       @Override
