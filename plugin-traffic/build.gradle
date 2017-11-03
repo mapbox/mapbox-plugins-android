@@ -1,36 +1,35 @@
 apply plugin: 'com.android.library'
 
 android {
-  compileSdkVersion rootProject.ext.compileSdkVersion
-  buildToolsVersion rootProject.ext.buildToolsVersion
+  compileSdkVersion androidVersions.compileSdkVersion
+  buildToolsVersion androidVersions.buildToolsVersion
 
   defaultConfig {
-    minSdkVersion rootProject.ext.minSdkVersion
-    targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 1
-    versionName "0.1"
+    minSdkVersion androidVersions.minSdkVersion
+    targetSdkVersion androidVersions.targetSdkVersion
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 
   configurations {
     javadocDeps
   }
+
 }
 
 dependencies {
   // Unit testing
-  testCompile rootProject.ext.dep.junit
-  testCompile rootProject.ext.dep.mockito
+  testImplementation dependenciesList.junit
+  testImplementation dependenciesList.mockito
 
   // Mapbox dependencies
-  compile(rootProject.ext.dep.mapSdk + '@aar') {
+  api (dependenciesList.mapboxMapSdk) {
     transitive = true
   }
 
-  javadocDeps rootProject.ext.dep.mapSdk
+  javadocDeps dependenciesList.mapboxMapSdk
 }
 
 apply from: 'javadoc.gradle'
-apply from: '../mvn-push-android.gradle'
-apply from: '../checkstyle.gradle'
+apply from: "${rootDir}/gradle/mvn-push-android.gradle"
+apply from: "${rootDir}/gradle/checkstyle.gradle"
 apply from: "${rootDir}/gradle/jacoco.gradle"

@@ -1,24 +1,43 @@
+apply plugin: 'jacoco'
+
 buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.5"
-    }
+  apply from: "${rootDir}/gradle/dependencies.gradle"
+
+  repositories {
+    maven { url 'https://plugins.gradle.org/m2' }
+    jcenter()
+    google()
+  }
+
+  dependencies {
+    classpath 'com.android.tools.build:gradle:3.0.0'
+    classpath pluginDependencies.gradle
+    classpath pluginDependencies.sonarqube
+    classpath pluginDependencies.coveralls
+    classpath pluginDependencies.errorprone
+  }
 }
 
 allprojects {
-    repositories {
-        jcenter()
-        maven { url 'https://maven.google.com' }
-    }
+  repositories {
+    maven { url 'https://plugins.gradle.org/m2' }
+    jcenter()
+    google()
+  }
 }
 
 task clean(type: Delete) {
-    delete rootProject.buildDir
+  delete rootProject.buildDir
+}
+
+subprojects {
+  apply plugin: 'idea'
+  apply plugin: 'net.ltgt.errorprone'
+  apply from: "${rootDir}/gradle/dependencies.gradle"
+
+  dependencies {
+    errorprone dependenciesList.errorprone
+  }
 }
 
 apply from: "${rootDir}/gradle/sonarqube.gradle"
-apply from: rootProject.file('dependencies.gradle')
-
