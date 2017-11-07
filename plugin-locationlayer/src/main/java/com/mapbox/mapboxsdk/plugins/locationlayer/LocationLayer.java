@@ -8,7 +8,6 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 import android.support.v4.content.ContextCompat;
-
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.functions.Function;
@@ -19,6 +18,7 @@ import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
+import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.services.commons.geojson.Feature;
 import com.mapbox.services.commons.geojson.FeatureCollection;
@@ -100,14 +100,19 @@ final class LocationLayer {
     FeatureCollection emptyFeature = FeatureCollection.fromFeatures(new Feature[] {});
 
     if (mapboxMap.getSourceAs(LocationLayerConstants.LOCATION_SOURCE) == null) {
-      GeoJsonSource locationSource = new GeoJsonSource(LocationLayerConstants.LOCATION_SOURCE, emptyFeature);
-      mapboxMap.addSource(locationSource);
+      mapboxMap.addSource(new GeoJsonSource(
+          LocationLayerConstants.LOCATION_SOURCE,
+          emptyFeature,
+          new GeoJsonOptions().withMaxZoom(16))
+      );
     }
 
     if (mapboxMap.getSourceAs(LocationLayerConstants.LOCATION_ACCURACY_SOURCE) == null) {
-      GeoJsonSource locationAccuracySource
-        = new GeoJsonSource(LocationLayerConstants.LOCATION_ACCURACY_SOURCE, emptyFeature);
-      mapboxMap.addSource(locationAccuracySource);
+      mapboxMap.addSource(new GeoJsonSource(
+        LocationLayerConstants.LOCATION_ACCURACY_SOURCE,
+        emptyFeature,
+        new GeoJsonOptions().withMaxZoom(16))
+      );
     }
   }
 
