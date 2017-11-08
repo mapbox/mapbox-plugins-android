@@ -2,9 +2,9 @@ ext {
 
   androidVersions = [
       minSdkVersion    : 15,
-      targetSdkVersion : 26,
-      compileSdkVersion: 26,
-      buildToolsVersion: '26.0.2'
+      targetSdkVersion : 27,
+      compileSdkVersion: 27,
+      buildToolsVersion: '27.0.1'
   ]
 
   version = [
@@ -13,7 +13,7 @@ ext {
       autoValue          : '1.4.1',
       autoValueParcel    : '0.2.5',
       junit              : '4.12',
-      supportLibVersion  : '26.1.0',
+      supportLibVersion  : '27.0.0',
       constraintLayout   : '1.0.2',
       mockito            : '2.10.0',
       hamcrest           : '2.0.0.0',
