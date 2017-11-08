@@ -8,9 +8,8 @@ ext {
   ]
 
   version = [
-      mapboxMapSdk       : '5.2.0-beta.3',
-      mapboxServices     : '2.2.6',
-      locationLayerPlugin: '0.1.0',
+      mapboxMapSdk       : '5.2.0-beta.4',
+      mapboxServices     : '2.2.8',
       autoValue          : '1.4.1',
       autoValueParcel    : '0.2.5',
       junit              : '4.12',
@@ -28,7 +27,8 @@ ext {
       spoonRunner        : '1.6.2',
       commonsIO          : '2.5',
       robolectric        : '3.4.2',
-      lifecycle          : '1.0.0-alpha9-1'
+      lifecycleCompiler  : '1.0.0',
+      lifecycleRuntime   : '1.0.3'
   ]
 
   pluginVersion = [
@@ -46,7 +46,6 @@ ext {
       // mapbox
       mapboxMapSdk           : "com.mapbox.mapboxsdk:mapbox-android-sdk:${version.mapboxMapSdk}@aar",
       mapboxServices         : "com.mapbox.mapboxsdk:mapbox-android-services:${version.mapboxServices}",
-      locationLayerPlugin    : "com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:${version.locationLayerPlugin}",
 
       // AutoValue
       autoValue              : "com.google.auto.value:auto-value:${version.autoValue}",
@@ -67,8 +66,8 @@ ext {
       supportConstraintLayout: "com.android.support.constraint:constraint-layout:${version.constraintLayout}",
 
       // architecture
-      lifecycleExtensions    : "android.arch.lifecycle:extensions:${version.lifecycle}",
-      lifecycleCompiler      : "android.arch.lifecycle:compiler:${version.lifecycle}",
+      lifecycleExtensions    : "android.arch.lifecycle:extensions:${version.lifecycleRuntime}",
+      lifecycleCompiler      : "android.arch.lifecycle:compiler:${version.lifecycleCompiler}",
 
       // square crew
       timber                 : "com.jakewharton.timber:timber:${version.timber}",
