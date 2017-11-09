@@ -2,7 +2,7 @@
 
 # Mapbox Plugins for Android
 
-Plugins are single-purpose libraries built on top of the [Mapbox Android SDK](https://www.mapbox.com/android-docs/) that you can include in your apps like any other Android dependency. You'll [find documentation](https://www.mapbox.com/android-docs/overview/) for each plugin on our website. A full list of the current plugins is available below.
+Plugins are single-purpose libraries built on top of the [Mapbox Maps SDK for Android](https://www.mapbox.com/android-docs/) that you can include in your apps like any other Android dependency. You'll [find documentation](https://www.mapbox.com/android-docs/overview/) for each plugin on our website. A full list of the current plugins is available below.
 
 ## Available Plugins
 
@@ -18,7 +18,7 @@ Plugins are single-purpose libraries built on top of the [Mapbox Android SDK](ht
 
 This repository includes an app that shows how to use each plugins in this repository. [Check out its code](https://github.com/mapbox/mapbox-plugins-android/tree/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp) for ready-to-use snippets.
 
-Plugins are easy to use. A plugin is simply a library module built on top of the Mapbox Android SDK. Currently, we are not requiring plugins to register themselves or to implement any specific interfaces so that they're simple to consume.
+Plugins are easy to use. A plugin is simply a library module built on top of the Mapbox Maps SDK for Android. Currently, we are not requiring plugins to register themselves or to implement any specific interfaces so that they're simple to consume.
 
 This might change in the future as we build more plugins and learn how you use them. We'd love to [hear your feedback](https://github.com/mapbox/mapbox-plugins-android/issues).
 
