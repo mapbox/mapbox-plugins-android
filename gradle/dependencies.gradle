@@ -39,7 +39,7 @@ ext {
       coveralls : '2.8.1',
       spotbugs  : '1.3',
       sonarqube : '2.5',
-      gradle    : '2.3.3'
+      gradle    : '3.0.0'
   ]
 
   dependenciesList = [
