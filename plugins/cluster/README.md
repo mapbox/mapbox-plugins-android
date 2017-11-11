@@ -4,7 +4,7 @@
 
 The marker cluster plugin automatically handles the display of a large number of points. The plugin "clusters" markers and MarkerViews on a Mapbox map for a cleaner and more informative dipslay of information. 
 
-![marker-cluster-plugin](https://user-images.githubusercontent.com/4394910/32184545-c1e79e58-bd59-11e7-8e55-d9f21b57e7da.gif)
+![marker-cluster-plugin](https://user-images.githubusercontent.com/4394910/32691924-213993c0-c6c4-11e7-8f89-819c639f5ed4.gif)
 
 
 ## Getting Started
