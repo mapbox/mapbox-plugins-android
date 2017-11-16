@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+  <android.support.v7.widget.CardView
+      android:id="@+id/cardView4"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="8dp"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="8dp"
+      app:cardCornerRadius="8dp"
+      app:cardElevation="4dp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@color/cardview_light_background">
+
+      <ImageButton
+          android:id="@+id/imageButton3"
+          android:layout_width="24dp"
+          android:layout_height="24dp"
+          android:layout_marginBottom="8dp"
+          android:layout_marginLeft="8dp"
+          android:layout_marginStart="8dp"
+          android:layout_marginTop="8dp"
+          android:background="@android:color/transparent"
+          android:contentDescription="@string/cd_search_back_button"
+          android:focusable="true"
+          android:tint="@color/navy"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          app:srcCompat="@drawable/ic_arrow_back"/>
+
+      <EditText
+          android:id="@+id/editText2"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="8dp"
+          android:layout_marginEnd="8dp"
+          android:layout_marginStart="62dp"
+          android:layout_marginTop="8dp"
+          android:background="@android:color/transparent"
+          android:cursorVisible="true"
+          android:ems="10"
+          android:focusable="true"
+          android:focusableInTouchMode="true"
+          android:hint="@string/autocomplete_search_hint"
+          android:imeOptions="actionSearch|flagNoExtractUi"
+          android:inputType="text|textNoSuggestions"
+          android:singleLine="true"
+          android:textColor="@color/navy"
+          android:textColorHint="@color/lightNavy"
+          android:textColorLink="@color/navy"
+          android:textCursorDrawable="@drawable/color_text_cursor"
+          android:textSize="16dp"
+          android:typeface="sans"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
+  </android.support.v7.widget.CardView>
+</android.support.constraint.ConstraintLayout>

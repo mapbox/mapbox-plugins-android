@@ -37,6 +37,7 @@ dependencies {
   implementation dependenciesList.supportConstraintLayout
 
   // Unit testing
+  implementation 'com.android.support.constraint:constraint-layout:1.0.2'
   testImplementation dependenciesList.junit
   testImplementation dependenciesList.mockito
 
@@ -69,6 +70,7 @@ dependencies {
   implementation project(':plugin-building')
   implementation project(':plugin-geojson')
   implementation project(':plugin-cluster')
+  implementation project(':plugin-places')
 }
 
 sonarqube {

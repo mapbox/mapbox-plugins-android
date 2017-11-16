@@ -1,0 +1,5 @@
+<resources>
+  <string name="autocomplete_search_hint">Search here</string>
+
+  <string name="cd_search_back_button">Close Search</string>
+</resources>
