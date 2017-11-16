@@ -2,7 +2,7 @@
           package="com.mapbox.places">
 
   <application>
-    <!-- TODO WTF does all these config changes do -->
+    <!-- TODO WTF do all these config changes do -->
     <activity
         android:name="com.mapbox.plugins.places.autocomplete.PlacesCompleteActivity"
         android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"

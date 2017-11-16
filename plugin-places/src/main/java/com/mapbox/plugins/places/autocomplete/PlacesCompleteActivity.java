@@ -5,6 +5,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.mapbox.places.R;
 
@@ -21,18 +26,14 @@ public class PlacesCompleteActivity extends AppCompatActivity {
     } else {
       getWindow().getDecorView().setBackgroundColor(Color.parseColor("#263D57"));
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
   }
+
+
+
+
+
+
+
+
+
 }
