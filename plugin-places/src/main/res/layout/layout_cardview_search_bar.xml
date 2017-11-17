@@ -5,8 +5,10 @@
     android:id="@+id/cardview_search"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="4dp"
     android:layout_marginBottom="4dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginStart="4dp"
+    android:layout_marginTop="4dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="2dp"
     app:cardPreventCornerOverlap="true"
@@ -23,6 +25,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:background="@android:color/transparent"
@@ -32,8 +35,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_arrow_back"
-        android:layout_marginLeft="16dp"/>
+        app:srcCompat="@drawable/ic_arrow_back"/>
 
     <EditText
         android:id="@+id/edittext_search"
@@ -41,6 +43,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginLeft="62dp"
+        android:layout_marginRight="8dp"
         android:layout_marginStart="62dp"
         android:layout_marginTop="8dp"
         android:background="@null"
@@ -61,9 +65,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/button_search_clear"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="62dp"/>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageButton
         android:id="@+id/button_search_clear"

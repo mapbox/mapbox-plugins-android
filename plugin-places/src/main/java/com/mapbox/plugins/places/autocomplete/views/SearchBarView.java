@@ -1,4 +1,4 @@
-package com.mapbox.plugins.places.autocomplete;
+package com.mapbox.plugins.places.autocomplete.views;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -17,6 +17,7 @@ import com.mapbox.places.R;
 
 public class SearchBarView extends CardView implements ImageButton.OnClickListener, TextWatcher {
 
+  QueryListener queryListener;
   ImageButton backButton;
   ImageButton clearButton;
   EditText searchEditText;
@@ -32,6 +33,10 @@ public class SearchBarView extends CardView implements ImageButton.OnClickListen
   public SearchBarView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     initialize(context);
+  }
+
+  public void addQueryChangeListener(@NonNull QueryListener queryListener) {
+    this.queryListener = queryListener;
   }
 
   private void initialize(Context context) {
@@ -62,19 +67,17 @@ public class SearchBarView extends CardView implements ImageButton.OnClickListen
 
   @Override
   public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
   }
 
   @Override
   public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+    queryListener.onQueryChange(charSequence);
     clearButton.setVisibility(charSequence.length() > 0 ? View.VISIBLE : INVISIBLE);
   }
 
   @Override
   public void afterTextChanged(Editable editable) {
-
   }
-
 
   private void initBackground() {
     if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP) {
@@ -85,5 +88,7 @@ public class SearchBarView extends CardView implements ImageButton.OnClickListen
     }
   }
 
-
+  public interface QueryListener {
+    void onQueryChange(CharSequence charSequence);
+  }
 }

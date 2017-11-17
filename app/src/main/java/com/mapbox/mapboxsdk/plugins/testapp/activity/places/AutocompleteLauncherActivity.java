@@ -25,16 +25,9 @@ public class AutocompleteLauncherActivity extends AppCompatActivity {
 
   @OnClick(R.id.fabOverlay)
   public void onOverlayFabClick(View view) {
-    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.THEME_OVERLAY)
+    Intent intent = new PlaceAutocomplete.IntentBuilder()
+      .limit(10)
       .build(AutocompleteLauncherActivity.this);
     startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE);
   }
-
-  @OnClick(R.id.fabFullScreen)
-  public void onFullscreenFabClick(View view) {
-    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.THEME_FULLSCREEN)
-      .build(AutocompleteLauncherActivity.this);
-    startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE);
-  }
-
 }

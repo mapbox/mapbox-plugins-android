@@ -2,21 +2,17 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linearLayout3"
+    android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
 
-  <com.mapbox.plugins.places.autocomplete.SearchBarView
+  <com.mapbox.plugins.places.autocomplete.views.SearchBarView
       android:id="@+id/cardview_search"
       layout="@layout/layout_cardview_search_bar"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginEnd="4dp"
-      android:layout_marginStart="4dp"
       app:cardPreventCornerOverlap="true"
-      app:layout_constraintBottom_toTopOf="@+id/scroll_drop_shadow"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.0"
       app:layout_constraintLeft_toLeftOf="parent"
@@ -24,54 +20,17 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent">
 
-  </com.mapbox.plugins.places.autocomplete.SearchBarView>
+  </com.mapbox.plugins.places.autocomplete.views.SearchBarView>
 
-  <View
-      android:id="@+id/scroll_drop_shadow"
-      android:layout_width="match_parent"
-      android:layout_height="4dp"
-      android:background="@drawable/scroll_shadow"
-      android:visibility="visible"
-      android:elevation="1dp"
-      app:layout_constraintTop_toBottomOf="@+id/cardview_search"/>
-
-  <android.support.v4.widget.NestedScrollView
-      android:id="@+id/nestedScrollView"
+  <com.mapbox.plugins.places.autocomplete.views.SearchResultView
+      android:id="@+id/searchResultView"
       android:layout_width="0dp"
       android:layout_height="0dp"
-      android:clipToPadding="false"
-      android:fillViewport="true"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.0"
-      app:layout_constraintLeft_toLeftOf="parent"
-      app:layout_constraintRight_toRightOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="@+id/scroll_drop_shadow">
+      app:layout_constraintTop_toBottomOf="@+id/cardview_search">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-      <com.mapbox.plugins.places.autocomplete.SearchResultView
-          android:id="@+id/searchResultView"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginEnd="4dp"
-          android:layout_marginLeft="4dp"
-          android:layout_marginRight="4dp"
-          android:layout_marginStart="4dp"
-          app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintRight_toRightOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="parent">
-
-
-      </com.mapbox.plugins.places.autocomplete.SearchResultView>
-    </LinearLayout>
-  </android.support.v4.widget.NestedScrollView>
-
+  </com.mapbox.plugins.places.autocomplete.views.SearchResultView>
 
 </android.support.constraint.ConstraintLayout>

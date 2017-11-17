@@ -3,7 +3,7 @@ apply plugin: 'org.sonarqube'
 sonarqube {
   properties {
     property "sonar.java.coveragePlugin", "jacoco"
-    property "sonar.host.url", "https://sonarcloud.io"
+    property "sonar.host.url", "https://mb-sonarqube-staging.tilestream.net"
     property "sonar.login", System.env.SONARQUBE_API_TOKEN
     property "sonar.organization", "mapbox"
     property "sonar.projectName", "mapbox-plugins"
