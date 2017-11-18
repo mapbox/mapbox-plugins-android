@@ -101,7 +101,7 @@ workflows:
             NEXUS_PASSWORD=$PUBLISH_NEXUS_PASSWORD
             signing.keyId=$SIGNING_KEYID
             signing.password=$SIGNING_PASSWORD
-            signing.secretKeyRingFile=../../secring.gpg" >> gradle.properties
+            signing.secretKeyRingFile=../secring.gpg" >> gradle.properties
           opts:
             is_expand: true
         title: Inject Signing And Publishing Credentials
