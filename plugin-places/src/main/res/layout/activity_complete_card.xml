@@ -2,7 +2,6 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,14 +10,11 @@
   <android.support.v7.widget.CardView
       android:id="@+id/cardView"
       android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="8dp"
-      android:layout_marginEnd="8dp"
-      android:layout_marginStart="8dp"
-      android:layout_marginTop="8dp"
+      android:layout_height="56dp"
+      android:layout_margin="8dp"
       app:cardBackgroundColor="@color/cardview_light_background"
       app:cardCornerRadius="8dp"
-      app:cardElevation="3dp"
+      app:cardElevation="2dp"
       app:cardUseCompatPadding="true"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +23,7 @@
     <com.mapbox.plugins.places.autocomplete.views.SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="42dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,40 +31,41 @@
         app:layout_constraintTop_toTopOf="parent"/>
   </android.support.v7.widget.CardView>
 
-  <android.support.v7.widget.CardView
-      android:id="@+id/cardView2"
+  <View
+      android:id="@+id/scroll_drop_shadow"
+      android:layout_width="match_parent"
+      android:layout_height="3dp"
+      android:layout_marginTop="8dp"
+      android:background="@drawable/scroll_shadow"
+      android:paddingTop="8dp"
+      android:visibility="visible"
+      app:layout_constraintTop_toBottomOf="@+id/cardView"/>
+
+  <ScrollView
+      android:id="@+id/scroll_view_results"
       android:layout_width="0dp"
       android:layout_height="0dp"
-      android:layout_marginBottom="8dp"
-      android:layout_marginEnd="8dp"
-      android:layout_marginStart="8dp"
-      android:layout_marginTop="8dp"
-      app:cardBackgroundColor="@color/cardview_light_background"
-      app:cardCornerRadius="8dp"
-      app:cardElevation="3dp"
-      app:cardPreventCornerOverlap="true"
-      app:cardUseCompatPadding="true"
+      android:elevation="-1dp"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.0"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/cardView">
+      app:layout_constraintTop_toTopOf="@+id/scroll_drop_shadow">
 
     <com.mapbox.plugins.places.autocomplete.views.ResultView
         android:id="@+id/searchResultView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.087"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintTop_toTopOf="@+id/scroll_drop_shadow"/>
 
-    </com.mapbox.plugins.places.autocomplete.views.ResultView>
-  </android.support.v7.widget.CardView>
+
+
+  </ScrollView>
+
 
 </android.support.constraint.ConstraintLayout>

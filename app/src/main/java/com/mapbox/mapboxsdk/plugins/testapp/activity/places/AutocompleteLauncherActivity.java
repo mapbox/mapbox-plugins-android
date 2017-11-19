@@ -1,7 +1,10 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.places;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -31,6 +34,7 @@ public class AutocompleteLauncherActivity extends AppCompatActivity {
   public void onOverlayFabClick(View view) {
     Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_CARDS)
       .limit(10)
+      .backgroundColor(Color.parseColor("#EEEEEE"))
       .build(AutocompleteLauncherActivity.this);
     startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE);
   }
@@ -38,7 +42,8 @@ public class AutocompleteLauncherActivity extends AppCompatActivity {
   @OnClick(R.id.fabFullScreen)
   public void onFullScreenFabClick(View view) {
     Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-      .limit(10)
+      .limit(2)
+      .backgroundColor(Color.parseColor("#757575"))
       .build(AutocompleteLauncherActivity.this);
     startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE);
   }
