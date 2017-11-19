@@ -8,7 +8,7 @@
 
 To use the location layer plugin, you include it in your `build.gradle` file.
 
-```
+```gradle
 // In the root build.gradle file
 repositories {
     mavenCentral()
@@ -25,7 +25,7 @@ dependencies {
 
 The location layer plugin is published to Maven Central and nightly SNAPSHOTs are available on Sonatype:
 
-```
+```gradle
 // In the root build.gradle file
 repositories {
     mavenCentral()
