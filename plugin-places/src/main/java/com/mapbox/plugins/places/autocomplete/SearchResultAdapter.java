@@ -6,15 +6,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.mapbox.geocoding.v5.models.CarmenFeature;
 import com.mapbox.places.R;
 
 import java.util.List;
 
 public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.ViewHolder> {
 
-  private List<SearchResultModel> results;
+  private List<CarmenFeature> results;
 
-  public SearchResultAdapter(List<SearchResultModel> results) {
+  public SearchResultAdapter(List<CarmenFeature> results) {
     this.results = results;
   }
 
@@ -27,8 +28,13 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
 
   @Override
   public void onBindViewHolder(ViewHolder holder, int position) {
-    holder.placeNameView.setText(results.get(position).getTitle());
-    holder.addressView.setText(results.get(position).getDescription());
+    if (results.get(position).text() != null) {
+      holder.placeNameView.setText(results.get(position).text());
+    }
+
+    if (results.get(position).properties().has("address")) {
+      holder.addressView.setText(results.get(position).properties().getAsJsonPrimitive("address").getAsString());
+    }
   }
 
   @Override

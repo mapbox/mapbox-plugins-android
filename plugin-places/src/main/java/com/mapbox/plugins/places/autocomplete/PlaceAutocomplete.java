@@ -7,24 +7,25 @@ import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.mapbox.geocoding.v5.GeocodingCriteria;
 import com.mapbox.geocoding.v5.GeocodingCriteria.GeocodingTypeCriteria;
 import com.mapbox.geojson.Point;
 
-import java.util.Locale;
-
 public class PlaceAutocomplete {
 
-  private PlaceAutocomplete() {
+  public static final int MODE_FULLSCREEN = 1;
+  public static final int MODE_CARDS = 2;
 
+  private PlaceAutocomplete() {
   }
 
   public static class IntentBuilder {
 
+    final int mode;
     final Intent intent;
 
-    public IntentBuilder() {
+    public IntentBuilder(@IntRange(from = 1, to = 2) int mode) {
       intent = new Intent();
+      this.mode = mode;
     }
 
     public IntentBuilder boundingBoxBias(Point southwest, Point northeast) {
@@ -70,7 +71,11 @@ public class PlaceAutocomplete {
     }
 
     public Intent build(Activity activity) {
-      intent.setClass(activity, PlacesCompleteActivity.class);
+      if (mode == MODE_FULLSCREEN) {
+        intent.setClass(activity, PlaceCompleteFullActivity.class);
+      } else {
+        intent.setClass(activity, PlaceCompleteCardActivity.class);
+      }
       return intent;
     }
   }

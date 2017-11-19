@@ -3,14 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linearLayout6"
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:background="@color/cardview_light_background">
 
 
   <ImageView
-      android:id="@+id/imageView"
       android:layout_width="24dp"
       android:layout_height="wrap_content"
       android:layout_marginBottom="8dp"
@@ -31,7 +29,10 @@
       android:layout_height="wrap_content"
       android:layout_marginBottom="4dp"
       android:layout_marginEnd="16dp"
+      android:layout_marginLeft="64dp"
+      android:layout_marginRight="16dp"
       android:layout_marginStart="64dp"
+      android:maxLines="1"
       android:textColor="@color/lightNavy"
       android:textSize="12sp"
       app:layout_constraintBottom_toBottomOf="parent"
@@ -45,8 +46,11 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginEnd="16dp"
+      android:layout_marginLeft="64dp"
+      android:layout_marginRight="16dp"
       android:layout_marginStart="64dp"
       android:layout_marginTop="8dp"
+      android:maxLines="1"
       android:textColor="@color/navy"
       android:textSize="16sp"
       app:layout_constraintBottom_toTopOf="@+id/tv_address"

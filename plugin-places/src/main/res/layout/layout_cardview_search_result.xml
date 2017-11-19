@@ -9,8 +9,6 @@
       android:id="@+id/nested_scroll_view_search_results"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_marginEnd="4dp"
-      android:layout_marginStart="4dp"
       android:clipToPadding="false"
       android:fillViewport="true"
       app:layout_constraintBottom_toBottomOf="parent"
@@ -26,7 +24,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-      <include layout="@layout/view_search_results"/>
+      <include layout="@layout/view_results"/>
 
     </LinearLayout>
   </android.support.v4.widget.NestedScrollView>

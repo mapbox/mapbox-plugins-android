@@ -7,8 +7,16 @@
     android:layout_height="match_parent"
     tools:context="com.mapbox.mapboxsdk.plugins.testapp.activity.places.AutocompleteLauncherActivity">
 
+  <com.mapbox.mapboxsdk.maps.MapView
+      android:id="@+id/mapView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:mapbox_cameraTargetLat="40.73581"
+      app:mapbox_cameraTargetLng="-73.99155"
+      app:mapbox_cameraZoom="11"/>
+
   <android.support.design.widget.FloatingActionButton
-      android:id="@+id/fabOverlay"
+      android:id="@+id/fabCard"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="end|bottom"

@@ -4,48 +4,43 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageButton;
 
 import com.mapbox.geocoding.v5.MapboxGeocoding;
 import com.mapbox.geocoding.v5.models.GeocodingResponse;
 import com.mapbox.places.R;
-import com.mapbox.plugins.places.autocomplete.views.SearchBarView;
+import com.mapbox.plugins.places.autocomplete.views.SearchView;
+import com.mapbox.plugins.places.autocomplete.views.ResultView;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
-public class PlacesCompleteActivity extends AppCompatActivity implements
-  SearchBarView.QueryListener, Callback<GeocodingResponse> {
+public class PlaceCompleteCardActivity extends AppCompatActivity implements
+  SearchView.QueryListener,Callback<GeocodingResponse>, SearchView.BackButtonListener {
 
-  private MapboxGeocoding.Builder geocoderBuilder;
+    private MapboxGeocoding.Builder geocoderBuilder;
+    private ResultView searchResultView;
 
-  @Override
-  protected void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override
+    protected void onCreate (@Nullable Bundle savedInstanceState){
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_places_complete);
+    setContentView(R.layout.activity_complete_card);
 
     Intent intent = getIntent();
 
     View view = findViewById(R.id.root_layout);
-    view.setBackgroundColor(intent.getIntExtra("backgroundColor", Color.GRAY));
+    view.setBackgroundColor(intent.getIntExtra("backgroundColor", Color.TRANSPARENT));
 
     geocoderBuilder = geocoderBuilder();
-
     geocoderBuilder.limit(intent.getIntExtra("limit", 5));
+    searchResultView = findViewById(R.id.searchResultView);
 
-
-    SearchBarView searchBar = findViewById(R.id.cardview_search);
-    searchBar.addQueryChangeListener(this);
+    SearchView searchView = findViewById(R.id.searchView);
+    searchView.setBackButtonListener(this);
+      searchView.setQueryListener(this);
   }
-
 
   private MapboxGeocoding.Builder geocoderBuilder() {
     return MapboxGeocoding.builder()
@@ -53,11 +48,12 @@ public class PlacesCompleteActivity extends AppCompatActivity implements
       .autocomplete(true);
   }
 
-
   @Override
   public void onQueryChange(CharSequence charSequence) {
     String query = charSequence.toString();
     if (query.isEmpty()) {
+      searchResultView.getResultsList().clear();
+      searchResultView.notifyDataSetChanged();
       return;
     }
     geocoderBuilder.query(query)
@@ -66,11 +62,28 @@ public class PlacesCompleteActivity extends AppCompatActivity implements
 
   @Override
   public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
-    System.out.println(response.body().features().get(0).placeName());
+    if (response.isSuccessful()) {
+      searchResultView.getResultsList().clear();
+      searchResultView.getResultsList().addAll(response.body().features());
+      searchResultView.notifyDataSetChanged();
+    }
   }
 
   @Override
   public void onFailure(Call<GeocodingResponse> call, Throwable t) {
 
+  }
+
+
+  @Override
+  protected void onDestroy() {
+//    searchBar.removeBackButtonListener();
+//    searchBar.removeQueryListener();
+    super.onDestroy();
+  }
+
+  @Override
+  public void onBackButtonPress() {
+      finish();
   }
 }

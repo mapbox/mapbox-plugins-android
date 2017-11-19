@@ -6,10 +6,17 @@
 
     <!-- TODO WTF do all these config changes do -->
     <activity
-        android:name="com.mapbox.plugins.places.autocomplete.PlacesCompleteActivity"
+        android:name="com.mapbox.plugins.places.autocomplete.PlaceCompleteCardActivity"
         android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
         android:theme="@style/Theme.AppCompat.Translucent"
         android:windowSoftInputMode="stateVisible"/>
+
+    <activity
+        android:name="com.mapbox.plugins.places.autocomplete.PlaceCompleteFullActivity"
+        android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+        android:theme="@style/Theme.AppCompat.NoActionBar"
+        android:windowSoftInputMode="stateVisible"/>
+
     <activity android:name="com.mapbox.plugins.places.details.PlacesDetailsActivity">
     </activity>
   </application>

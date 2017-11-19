@@ -5,35 +5,39 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
 
+import com.mapbox.geocoding.v5.models.CarmenFeature;
 import com.mapbox.places.R;
 import com.mapbox.plugins.places.autocomplete.SearchResultAdapter;
-import com.mapbox.plugins.places.autocomplete.SearchResultModel;
+import com.mapbox.plugins.places.common.KeyboardUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchResultView extends CardView implements NestedScrollView.OnScrollChangeListener {
+public class ResultView extends LinearLayout implements NestedScrollView.OnScrollChangeListener {
 
   private NestedScrollView searchResultsScrollView;
+  private final List<CarmenFeature> results;
+  private SearchResultAdapter adapter;
   private View dropShadow;
 
-  public SearchResultView(@NonNull Context context) {
+  public ResultView(@NonNull Context context) {
     this(context, null);
   }
 
-  public SearchResultView(@NonNull Context context, @Nullable AttributeSet attrs) {
+  public ResultView(@NonNull Context context, @Nullable AttributeSet attrs) {
     this(context, attrs, -1);
   }
 
-  public SearchResultView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+  public ResultView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
+
+    results = new ArrayList<>();
     initialize(context);
   }
 
@@ -49,8 +53,7 @@ public class SearchResultView extends CardView implements NestedScrollView.OnScr
 
   @Override
   public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-    imm.hideSoftInputFromWindow(getWindowToken(), 0);
+    KeyboardUtils.hideKeyboard(searchResultsScrollView);
 
     if (v.canScrollVertically(-1)) {
       dropShadow.setVisibility(VISIBLE);
@@ -61,40 +64,23 @@ public class SearchResultView extends CardView implements NestedScrollView.OnScr
     }
   }
 
+  public List<CarmenFeature> getResultsList() {
+    return results;
+  }
+
+  public void notifyDataSetChanged() {
+    adapter.notifyDataSetChanged();
+  }
 
   private void initialize(Context context) {
     inflate(context, R.layout.layout_cardview_search_result, this);
+    adapter = new SearchResultAdapter(results);
   }
 
   private void initializeResultList() {
-    List<SearchResultModel> results = new ArrayList<>();
-    results.add(new SearchResultModel("hello", "world"));
-    results.add(new SearchResultModel("hello", "world"));
-    results.add(new SearchResultModel("hello", "world"));
-    results.add(new SearchResultModel("hello", "world"));
-    results.add(new SearchResultModel("hello", "world"));
-    results.add(new SearchResultModel("hello", "world"));
-    results.add(new SearchResultModel("hello", "world"));
-    results.add(new SearchResultModel("hello", "world"));
-    results.add(new SearchResultModel("hello", "world"));
-    results.add(new SearchResultModel("hello", "world"));
-    results.add(new SearchResultModel("hello", "world"));
-    results.add(new SearchResultModel("hello", "world"));
-    results.add(new SearchResultModel("hello", "world"));
-    results.add(new SearchResultModel("hello", "world"));
-    results.add(new SearchResultModel("hello", "world"));
-    results.add(new SearchResultModel("hello", "world"));
-    results.add(new SearchResultModel("hello", "world"));
-    results.add(new SearchResultModel("hello", "world"));
-    results.add(new SearchResultModel("hello", "world"));
-    results.add(new SearchResultModel("hello", "world"));
-    results.add(new SearchResultModel("hello", "world"));
-
     RecyclerView recyclerView = findViewById(R.id.rv_search_results);
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-    recyclerView.setAdapter(new SearchResultAdapter(results));
-
-
+    recyclerView.setAdapter(adapter);
   }
 
   private void initBackground() {
