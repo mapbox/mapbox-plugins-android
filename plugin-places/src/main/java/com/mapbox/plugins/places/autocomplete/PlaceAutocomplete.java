@@ -2,13 +2,17 @@ package com.mapbox.plugins.places.autocomplete;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.mapbox.geocoding.v5.GeocodingCriteria.GeocodingTypeCriteria;
+import com.mapbox.geocoding.v5.models.CarmenFeature;
 import com.mapbox.geojson.Point;
+
+import java.util.List;
 
 public class PlaceAutocomplete {
 
@@ -65,8 +69,11 @@ public class PlaceAutocomplete {
       return this;
     }
 
-    public IntentBuilder injectPlaces() {
-
+    public IntentBuilder injectPlaces(List<CarmenFeature> carmenFeatures) {
+      Bundle bundle = new Bundle();
+      // TODO https://github.com/mapbox/mapbox-java/pull/646 needs to be merged first
+//      bundle.putSerializable("injectPlaces", carmenFeatures);
+      intent.putExtras(bundle);
       return this;
     }
 

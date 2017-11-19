@@ -1,5 +1,6 @@
 package com.mapbox.plugins.places.autocomplete;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,10 +31,16 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
   public void onBindViewHolder(ViewHolder holder, int position) {
     if (results.get(position).text() != null) {
       holder.placeNameView.setText(results.get(position).text());
+      if (results.get(position).text().contains("Direction"))
+        holder.placeNameView.setTextColor(Color.parseColor("#4a90e2"));
     }
+
+
 
     if (results.get(position).properties().has("address")) {
       holder.addressView.setText(results.get(position).properties().getAsJsonPrimitive("address").getAsString());
+    } else {
+      holder.addressView.setText(results.get(position).placeName());
     }
   }
 

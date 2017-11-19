@@ -14,6 +14,12 @@ public class KeyboardUtils {
       = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
     inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
   }
+
+  public static void showKeyboard(View view) {
+    InputMethodManager inputMethodManager
+      = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+    inputMethodManager.showSoftInput(view, 0);
+  }
 }
 
 
