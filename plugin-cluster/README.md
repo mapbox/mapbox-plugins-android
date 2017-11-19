@@ -2,7 +2,8 @@
 
 # Mapbox marker cluster plugin
 
-The marker cluster plugin automatically handles the display of a large number of points. The plugin "clusters" markers and MarkerViews on a Mapbox map for a cleaner and more informative dipslay of information. 
+The marker cluster plugin automatically handles the display of a large number of markers so that your map doesn't have many markers overlapping one another. The plugin "clusters" markers on a Mapbox map for a cleaner and lighter display of data. The number within the cluster circle represents the number of markers that are in that area at a higher zoom level.
+
 
 ![marker-cluster-plugin](https://user-images.githubusercontent.com/4394910/32691924-213993c0-c6c4-11e7-8f89-819c639f5ed4.gif)
 
