@@ -24,8 +24,6 @@ Note that depending on the plugin you add, there might be required permissions a
 2. Open up your application's `build.gradle`
 3. Make sure that your project's `minSdkVersion` is at API 15 or higher
 4. Under dependencies, add a new build rule for the latest plugin version you are trying to use.
-5. Click the Sync Project with Gradle Files near the toolbar in Studio.
-
 ```gradle
 repositories {
   mavenCentral()
@@ -35,6 +33,9 @@ dependencies {
   compile 'com.mapbox.mapboxsdk:PLUGIN_NAME:PLUGIN_VERSION_NUMBER'
 }
 ```
+
+5. Click the Sync Project with Gradle Files near the toolbar in Studio.
+
 
 ## Help and Usage
 
