@@ -29,6 +29,10 @@ android {
 }
 
 dependencies {
+  // Mapbox
+  implementation dependenciesList.mapboxMapSdk
+  implementation dependenciesList.mapboxServices
+
   // Support libraries
   implementation dependenciesList.supportAnnotation
   implementation dependenciesList.supportAppcompatV7
