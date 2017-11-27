@@ -1,6 +1,5 @@
 package com.mapbox.plugins.places.autocomplete;
 
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,8 @@ import java.util.List;
 
 public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.ViewHolder> {
 
-  private List<CarmenFeature> results;
+  private final List<CarmenFeature> results;
+  private OnCardItemClickListener onItemClickListener;
 
   public SearchResultAdapter(List<CarmenFeature> results) {
     this.results = results;
@@ -23,24 +23,30 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
   @Override
   public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-    View view = inflater.inflate(R.layout.item_search_result, parent, false);
+    View view = inflater.inflate( R.layout.item_search_result, parent, false);
     return new ViewHolder(view);
+  }
+
+  public void setOnItemClickListener(OnCardItemClickListener onItemClickListener) {
+    this.onItemClickListener = onItemClickListener;
   }
 
   @Override
   public void onBindViewHolder(ViewHolder holder, int position) {
-    if (results.get(position).text() != null) {
-      holder.placeNameView.setText(results.get(position).text());
-      if (results.get(position).text().contains("Direction"))
-        holder.placeNameView.setTextColor(Color.parseColor("#4a90e2"));
+    if (onItemClickListener != null) {
+      holder.bind(results.get(position), onItemClickListener);
     }
 
-
+    if (results.get(position).text() != null) {
+      holder.placeNameView.setText(results.get(position).text());
+    }
 
     if (results.get(position).properties().has("address")) {
       holder.addressView.setText(results.get(position).properties().getAsJsonPrimitive("address").getAsString());
-    } else {
+    } else if (results.get(position).placeName() != null) {
       holder.addressView.setText(results.get(position).placeName());
+    } else {
+      holder.addressView.setHeight(0);
     }
   }
 
@@ -58,6 +64,15 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
       super(itemView);
       placeNameView = itemView.findViewById(R.id.tv_place_name);
       addressView = itemView.findViewById(R.id.tv_address);
+    }
+
+    public void bind(final CarmenFeature carmenFeature, final OnCardItemClickListener listener) {
+      itemView.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          listener.onItemClick(carmenFeature);
+        }
+      });
     }
   }
 }

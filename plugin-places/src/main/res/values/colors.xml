@@ -3,6 +3,7 @@
 
   <color name="navy">#263d57</color>
   <color name="lightNavy">#949fac</color>
-
   <color name="brightBlue">#4a90e2</color>
+
+  <color name="md_grey_200">#EEEEEE</color>
 </resources>

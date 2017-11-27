@@ -24,8 +24,6 @@
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="42dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
@@ -34,11 +32,9 @@
   <View
       android:id="@+id/scroll_drop_shadow"
       android:layout_width="match_parent"
-      android:layout_height="3dp"
-      android:layout_marginTop="8dp"
+      android:layout_height="2dp"
       android:background="@drawable/scroll_shadow"
-      android:paddingTop="8dp"
-      android:visibility="visible"
+      android:visibility="invisible"
       app:layout_constraintTop_toBottomOf="@+id/cardView"/>
 
   <ScrollView
@@ -59,30 +55,26 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingBottom="8dp"
-        android:paddingTop="8dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/scroll_drop_shadow">
 
-      <com.mapbox.plugins.places.autocomplete.views.ResultView
+      <com.mapbox.plugins.places.autocomplete.views.ResultCardView
           android:id="@+id/searchResultView"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:visibility="gone"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="@+id/scroll_drop_shadow"/>
+          android:visibility="gone"/>
 
-      <com.mapbox.plugins.places.autocomplete.views.ResultView
+      <com.mapbox.plugins.places.autocomplete.views.ResultCardView
           android:id="@+id/recentSearchResults"
           android:layout_width="match_parent"
-          android:layout_height="wrap_content"/>
+          android:layout_height="wrap_content"
+          android:visibility="gone"/>
 
-      <com.mapbox.plugins.places.autocomplete.views.ResultView
+      <com.mapbox.plugins.places.autocomplete.views.ResultCardView
           android:id="@+id/starredView"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"/>
-
     </LinearLayout>
-
   </ScrollView>
-
-
 </android.support.constraint.ConstraintLayout>

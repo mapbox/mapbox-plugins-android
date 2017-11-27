@@ -29,7 +29,8 @@ ext {
       commonsIO        : '2.5',
       robolectric      : '3.4.2',
       lifecycleCompiler: '1.0.0',
-      lifecycleRuntime : '1.0.3'
+      lifecycleRuntime : '1.0.3',
+      room             : '1.0.0'
   ]
 
   pluginVersion = [
@@ -70,6 +71,8 @@ ext {
       // architecture
       lifecycleExtensions    : "android.arch.lifecycle:extensions:${version.lifecycleRuntime}",
       lifecycleCompiler      : "android.arch.lifecycle:compiler:${version.lifecycleCompiler}",
+      roomRuntime            : "android.arch.persistence.room:runtime:${version.room}",
+      roomCompiler           : "android.arch.persistence.room:compiler:${version.room}",
 
       // square crew
       timber                 : "com.jakewharton.timber:timber:${version.timber}",

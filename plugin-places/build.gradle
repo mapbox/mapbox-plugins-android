@@ -29,16 +29,18 @@ dependencies {
 
   implementation dependenciesList.supportAppcompatV7
   implementation dependenciesList.supportConstraintLayout
+  implementation dependenciesList.supportCardView
+  implementation dependenciesList.supportRecyclerView
+  implementation dependenciesList.supportV4
+
+  implementation dependenciesList.roomRuntime
+  annotationProcessor dependenciesList.roomCompiler
 
   implementation dependenciesList.mapboxGeocoding
 
   // Unit testing
-  implementation 'com.android.support.constraint:constraint-layout:1.0.2'
   testImplementation dependenciesList.junit
   testImplementation dependenciesList.mockito
 
   javadocDeps dependenciesList.mapboxMapSdk
-  implementation 'com.android.support:cardview-v7:27.0.0'
-  implementation 'com.android.support:recyclerview-v7:27.0.0'
-  implementation 'com.android.support:support-v4:27.0.0'
 }
