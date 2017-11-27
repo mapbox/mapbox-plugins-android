@@ -13,11 +13,13 @@ import com.mapbox.places.R;
 
 import java.util.List;
 
-public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.ViewHolder> {
+public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.SearchViewHolder> {
 
+  private static final String ADDRESS = "address";
+
+  private OnCardItemClickListener onItemClickListener;
   private final List<CarmenFeature> results;
   private final Context context;
-  private OnCardItemClickListener onItemClickListener;
 
   public SearchResultAdapter(Context context, List<CarmenFeature> results) {
     this.results = results;
@@ -25,10 +27,10 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
   }
 
   @Override
-  public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+  public SearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     LayoutInflater inflater = LayoutInflater.from(parent.getContext());
     View view = inflater.inflate(R.layout.item_search_result, parent, false);
-    return new ViewHolder(view);
+    return new SearchViewHolder(view);
   }
 
   public void setOnItemClickListener(OnCardItemClickListener onItemClickListener) {
@@ -36,7 +38,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
   }
 
   @Override
-  public void onBindViewHolder(ViewHolder holder, int position) {
+  public void onBindViewHolder(SearchViewHolder holder, int position) {
     if (onItemClickListener != null) {
       holder.bind(results.get(position), onItemClickListener);
     }
@@ -49,8 +51,9 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
       holder.placeNameView.setText(results.get(position).text());
     }
 
-    if (results.get(position).properties().has("address")) {
-      holder.addressView.setText(results.get(position).properties().getAsJsonPrimitive("address").getAsString());
+    if (results.get(position).properties().has(ADDRESS)) {
+      holder.addressView.setText(results.get(position).properties()
+        .getAsJsonPrimitive(ADDRESS).getAsString());
     } else if (results.get(position).placeName() != null) {
       holder.addressView.setText(results.get(position).placeName());
     } else {
@@ -63,12 +66,12 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     return null != results ? results.size() : 0;
   }
 
-  static class ViewHolder extends RecyclerView.ViewHolder {
+  static class SearchViewHolder extends RecyclerView.ViewHolder {
 
     final TextView placeNameView;
     final TextView addressView;
 
-    ViewHolder(View itemView) {
+    SearchViewHolder(View itemView) {
       super(itemView);
       placeNameView = itemView.findViewById(R.id.tv_place_name);
       addressView = itemView.findViewById(R.id.tv_address);
