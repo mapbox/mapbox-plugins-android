@@ -29,4 +29,5 @@ final class PlaceConstants {
 
   static final String BACKGROUND = "mb-places-backgroundColor";
 
+  static final String SAVED_PLACE = "saved-carmen-feature";
 }

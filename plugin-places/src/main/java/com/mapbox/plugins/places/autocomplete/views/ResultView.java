@@ -54,7 +54,7 @@ public class ResultView extends LinearLayout {
 
   private void initialize(Context context) {
     inflateView(context);
-    adapter = new SearchResultAdapter(results);
+    adapter = new SearchResultAdapter(getContext(), results);
   }
 
   void inflateView(Context context) {

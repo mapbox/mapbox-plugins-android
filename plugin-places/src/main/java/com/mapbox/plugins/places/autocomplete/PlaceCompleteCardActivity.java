@@ -72,7 +72,7 @@ public class PlaceCompleteCardActivity extends AppCompatActivity implements
       return;
     }
     List<CarmenFeature> starredFeatures = new ArrayList<>();
-    for (String serializedCarmenFeature: serialized) {
+    for (String serializedCarmenFeature : serialized) {
       starredFeatures.add(CarmenFeature.fromJson(serializedCarmenFeature));
     }
     starredView.getResultsList().addAll(starredFeatures);
@@ -143,9 +143,10 @@ public class PlaceCompleteCardActivity extends AppCompatActivity implements
   @Override
   public void onItemClick(CarmenFeature carmenFeature) {
     String json = carmenFeature.toJson();
-    RecentSearch recentSearch = new RecentSearch(carmenFeature.id(), json);
-
-    new RecentSearchAsyncTask(database, recentSearch).execute();
+    if (!carmenFeature.properties().has(PlaceConstants.SAVED_PLACE)) {
+      RecentSearch recentSearch = new RecentSearch(carmenFeature.id(), json);
+      new RecentSearchAsyncTask(database, recentSearch).execute();
+    }
 
     Intent intent = new Intent();
     intent.putExtra(PlaceConstants.RETURNING_CARMEN_FEATURE, json);

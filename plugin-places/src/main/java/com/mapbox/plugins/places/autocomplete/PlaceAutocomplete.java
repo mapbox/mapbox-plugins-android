@@ -240,6 +240,7 @@ public class PlaceAutocomplete {
     public IntentBuilder injectPlaces(List<CarmenFeature> carmenFeatures) {
       ArrayList<String> serialized = new ArrayList<>(carmenFeatures.size());
       for (CarmenFeature carmenFeature : carmenFeatures) {
+        carmenFeature.properties().addProperty(PlaceConstants.SAVED_PLACE, true);
         serialized.add(carmenFeature.toJson());
       }
       intent.putStringArrayListExtra(PlaceConstants.INJECTED_PLACES, serialized);

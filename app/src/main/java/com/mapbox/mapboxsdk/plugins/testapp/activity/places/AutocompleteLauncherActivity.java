@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
+import com.mapbox.geocoding.v5.models.CarmenContext;
 import com.mapbox.geocoding.v5.models.CarmenFeature;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
@@ -41,13 +42,20 @@ public class AutocompleteLauncherActivity extends AppCompatActivity {
   }
 
   private void addUserLocations() {
+    CarmenContext context = CarmenContext.builder().text("300 Massachusetts Ave NW").build();
+    List<CarmenContext> contextList = new ArrayList<>();
+    contextList.add(context);
+
     carmenFeatures.add(CarmenFeature.builder().text("Directions to Home")
-      .address("300 Massachusetts Ave NW")
+      .placeName("300 Massachusetts Ave NW")
+      .id("directions-home")
+      .context(contextList)
       .properties(new JsonObject())
       .build());
 
     carmenFeatures.add(CarmenFeature.builder().text("Directions to Work")
-      .address("1509 16th St NW")
+      .placeName("1509 16th St NW")
+      .id("directions-work")
       .properties(new JsonObject())
       .build());
   }
