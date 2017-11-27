@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.mapbox.geocoding.v5.models.CarmenFeature;
-import com.mapbox.plugins.places.autocomplete.views.ResultView;
 
 import java.util.ArrayList;
 import java.util.List;

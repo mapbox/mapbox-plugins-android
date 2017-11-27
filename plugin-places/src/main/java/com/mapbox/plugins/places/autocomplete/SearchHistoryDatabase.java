@@ -7,8 +7,3 @@ import android.arch.persistence.room.RoomDatabase;
 public abstract class SearchHistoryDatabase extends RoomDatabase {
   public abstract RecentSearchesDao recentSearchesDao();
 }
-
-
-
-
-

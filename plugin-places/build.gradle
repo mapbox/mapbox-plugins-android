@@ -10,6 +10,13 @@ android {
     targetSdkVersion androidVersions.targetSdkVersion
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     vectorDrawables.useSupportLibrary = true
+
+    // Write out the current schema of Room
+    javaCompileOptions {
+      annotationProcessorOptions {
+        arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+      }
+    }
   }
 
   buildTypes {

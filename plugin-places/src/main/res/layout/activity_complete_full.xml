@@ -21,7 +21,7 @@
       local:popupTheme="@style/ThemeOverlay.AppCompat.Light"
       local:theme="@style/ThemeOverlay.AppCompat.Light">
 
-    <com.mapbox.plugins.places.autocomplete.views.SearchView
+    <com.mapbox.plugins.places.autocomplete.SearchView
         android:id="@+id/searchView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
-    <com.mapbox.plugins.places.autocomplete.views.ResultView
+    <com.mapbox.plugins.places.autocomplete.ResultView
         android:id="@+id/searchResultView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

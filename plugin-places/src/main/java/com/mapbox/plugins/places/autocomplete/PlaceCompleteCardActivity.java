@@ -15,8 +15,6 @@ import com.mapbox.geocoding.v5.MapboxGeocoding;
 import com.mapbox.geocoding.v5.models.CarmenFeature;
 import com.mapbox.geocoding.v5.models.GeocodingResponse;
 import com.mapbox.places.R;
-import com.mapbox.plugins.places.autocomplete.views.ResultView;
-import com.mapbox.plugins.places.autocomplete.views.SearchView;
 import com.mapbox.plugins.places.common.KeyboardUtils;
 
 import java.util.ArrayList;
