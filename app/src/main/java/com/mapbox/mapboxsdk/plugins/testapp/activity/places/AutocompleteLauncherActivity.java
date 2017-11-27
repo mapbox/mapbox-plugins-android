@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.google.gson.JsonObject;
 import com.mapbox.geocoding.v5.models.CarmenContext;
 import com.mapbox.geocoding.v5.models.CarmenFeature;
+import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.plugins.places.autocomplete.PlaceAutocomplete;
@@ -42,14 +43,9 @@ public class AutocompleteLauncherActivity extends AppCompatActivity {
   }
 
   private void addUserLocations() {
-    CarmenContext context = CarmenContext.builder().text("300 Massachusetts Ave NW").build();
-    List<CarmenContext> contextList = new ArrayList<>();
-    contextList.add(context);
-
     carmenFeatures.add(CarmenFeature.builder().text("Directions to Home")
       .placeName("300 Massachusetts Ave NW")
       .id("directions-home")
-      .context(contextList)
       .properties(new JsonObject())
       .build());
 
@@ -63,7 +59,7 @@ public class AutocompleteLauncherActivity extends AppCompatActivity {
   @OnClick(R.id.fabCard)
   public void onOverlayFabClick(View view) {
     Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_CARDS)
-      .accessToken("pk.eyJ1IjoiY2FtbWFjZSIsImEiOiI5OGQxZjRmZGQ2YjU3Mzk1YjJmZTQ5ZDY2MTg1NDJiOCJ9.hIFoCKGAGOwQkKyVPvrxvQ")
+      .accessToken(Mapbox.getAccessToken())
       .limit(10)
       .backgroundColor(Color.parseColor("#EEEEEE"))
       .injectPlaces(carmenFeatures)
