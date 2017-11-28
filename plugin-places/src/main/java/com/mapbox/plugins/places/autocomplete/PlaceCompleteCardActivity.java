@@ -27,6 +27,7 @@ import retrofit2.Response;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
+
 public class PlaceCompleteCardActivity extends AppCompatActivity implements
   SearchView.QueryListener, Callback<GeocodingResponse>, SearchView.BackButtonListener,
   ViewTreeObserver.OnScrollChangedListener, OnCardItemClickListener {
@@ -100,13 +101,9 @@ public class PlaceCompleteCardActivity extends AppCompatActivity implements
       if (resultScrollView.getScrollY() != 0) {
         KeyboardUtils.hideKeyboard(resultScrollView);
       }
-      if (resultScrollView.canScrollVertically(-1)) {
-        dropShadow.setVisibility(VISIBLE);
-        // Show elevation
-      } else {
-        dropShadow.setVisibility(INVISIBLE);
-        // Remove elevation
-      }
+      dropShadow.setVisibility(
+        resultScrollView.canScrollVertically(-1) ? VISIBLE : INVISIBLE
+      );
     }
   }
 

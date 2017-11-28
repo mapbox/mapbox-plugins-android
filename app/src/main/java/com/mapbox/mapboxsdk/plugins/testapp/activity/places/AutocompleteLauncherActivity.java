@@ -77,7 +77,8 @@ public class AutocompleteLauncherActivity extends AppCompatActivity {
   @OnClick(R.id.fabFullScreen)
   public void onFullScreenFabClick(View view) {
     Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-      .limit(2)
+      .accessToken(Mapbox.getAccessToken())
+      .injectPlaces(carmenFeatures)
       .backgroundColor(Color.WHITE)
       .build(AutocompleteLauncherActivity.this);
     startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE);

@@ -30,22 +30,14 @@ public class PlaceCompleteFullActivity extends AppCompatActivity implements
 
     Intent intent = getIntent();
 
-    // TODO Theming occurs here
-    rootView.setBackgroundColor(intent.getIntExtra("backgroundColor", Color.TRANSPARENT));
+    rootView.setBackgroundColor(intent.getIntExtra(PlaceConstants.BACKGROUND, Color.TRANSPARENT));
 
-    geocoderBuilder = geocoderBuilder();
-    geocoderBuilder.limit(intent.getIntExtra("limit", 5));
+    geocoderBuilder = Utils.initiateSearchQuery(intent);
     searchResultView = findViewById(R.id.searchResultView);
 
     SearchView searchView = findViewById(R.id.searchView);
     searchView.setBackButtonListener(this);
     searchView.setQueryListener(this);
-  }
-
-  private MapboxGeocoding.Builder geocoderBuilder() {
-    return MapboxGeocoding.builder()
-      .accessToken("pk.eyJ1IjoiY2FtbWFjZSIsImEiOiI5OGQxZjRmZGQ2YjU3Mzk1YjJmZTQ5ZDY2MTg1NDJiOCJ9.hIFoCKGAGOwQkKyVPvrxvQ")
-      .autocomplete(true);
   }
 
   @Override
@@ -63,12 +55,6 @@ public class PlaceCompleteFullActivity extends AppCompatActivity implements
   private void bindViews() {
     rootView = findViewById(R.id.root_layout);
     searchResultView = findViewById(R.id.searchResultView);
-
-
-//    resultScrollView = findViewById(R.id.scroll_view_results);
-//    recentSearchResults = findViewById(R.id.recentSearchResults);
-//    starredView = findViewById(R.id.starredView);
-//    searchView = findViewById(R.id.searchView);
   }
 
   @Override
