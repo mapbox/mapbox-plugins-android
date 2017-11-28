@@ -5,17 +5,19 @@ final class PlaceConstants {
   private PlaceConstants() {
   }
 
-  static final String RETURNING_CARMEN_FEATURE = "carmenFeature";
-  static final String SEARCH_HISTORY_DATABASE_NAME = "mb-places-search-history-db";
-  static final String ACCESS_TOKEN = "mb-places-accessToken";
-  static final String BBOX_SOUTHWEST_POINT = "mb-places-bbox-southwestPoint";
-  static final String BBOX_NORTHEAST_POINT = "mb-places-bbox-northeastPoint";
-  static final String COUNTRIES = "mb-places-countries";
-  static final String PROXIMITY = "mb-places-proximity";
-  static final String TYPE = "mb-places-types";
-  static final String LANGUAGE = "mb-places-language";
-  static final String LIMIT = "mb-places-limit";
-  static final String INJECTED_PLACES = "mb-places-injectPlaces";
-  static final String BACKGROUND = "mb-places-backgroundColor";
-  static final String SAVED_PLACE = "saved-carmen-feature";
+  static final String RETURNING_CARMEN_FEATURE = "com.mapbox.mapboxsdk.plugins.places.carmenfeat";
+  static final String SEARCH_HISTORY_DATABASE_NAME = "com.mapbox.mapboxsdk.plugins.places.database";
+  static final String ACCESS_TOKEN = "com.mapbox.mapboxsdk.plugins.places.accessToken";
+  static final String BBOX_SOUTHWEST_POINT
+    = "com.mapbox.mapboxsdk.plugins.places.bbox.southwestPoint";
+  static final String BBOX_NORTHEAST_POINT
+    = "com.mapbox.mapboxsdk.plugins.places.bbox.northeastPoint";
+  static final String COUNTRIES = "com.mapbox.mapboxsdk.plugins.places.countries";
+  static final String PROXIMITY = "com.mapbox.mapboxsdk.plugins.places.proximity";
+  static final String TYPE = "com.mapbox.mapboxsdk.plugins.places.types";
+  static final String LANGUAGE = "com.mapbox.mapboxsdk.plugins.places.language";
+  static final String LIMIT = "com.mapbox.mapboxsdk.plugins.places.limit";
+  static final String INJECTED_PLACES = "com.mapbox.mapboxsdk.plugins.places.injectPlaces";
+  static final String BACKGROUND = "com.mapbox.mapboxsdk.plugins.places.backgroundColor";
+  static final String SAVED_PLACE = "com.mapbox.mapboxsdk.plugins.places.savedcarmenfeat";
 }
