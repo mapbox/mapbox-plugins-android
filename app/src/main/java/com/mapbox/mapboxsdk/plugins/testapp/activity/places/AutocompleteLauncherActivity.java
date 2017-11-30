@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
-import com.mapbox.geocoding.v5.models.CarmenContext;
 import com.mapbox.geocoding.v5.models.CarmenFeature;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.maps.MapView;
