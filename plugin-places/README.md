@@ -1,8 +1,6 @@
-
 # Mapbox places plugin
 
-The places plugin is the easiest and most powerful way to take advantadge of [Mapbox's location search ("geocoding") capabilities](https://www.mapbox.com/geocoding/). The plugin automatically makes geocoding requests, has built-in saved locations, includes location picker functionality, and adds beautiful UI into your Android project.
-
+The places plugin is the easiest and most powerful way to take advantage of [Mapbox's location search ("geocoding") capabilities](https://www.mapbox.com/geocoding/). The plugin automatically makes geocoding requests, has built-in saved locations, includes location picker functionality, and adds beautiful UI into your Android project.
 
 ![ezgif com-crop](https://user-images.githubusercontent.com/5652865/32994007-045b6230-cd2f-11e7-8902-d7ee6da3ab47.gif)
 
@@ -45,7 +43,6 @@ dependencies {
 ## Places plugin examples
 
 - [In this repo's test app](https://github.com/mapbox/mapbox-plugins-android/blob/master/plugins/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/AutocompleteLauncherActivity.java)
-
 
 ## Help and Usage
 
