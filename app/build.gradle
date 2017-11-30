@@ -42,8 +42,6 @@ dependencies {
   implementation dependenciesList.supportRecyclerView
   implementation dependenciesList.supportConstraintLayout
 
-  implementation dependenciesList.mapboxGeocoding
-
   // Unit testing
   testImplementation dependenciesList.junit
   testImplementation dependenciesList.mockito
