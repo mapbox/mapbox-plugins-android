@@ -33,6 +33,8 @@ dependencies {
   implementation dependenciesList.mapboxMapSdk
   implementation dependenciesList.mapboxServices
 
+  implementation dependenciesList.lifecycleExtensions
+
   // Support libraries
   implementation dependenciesList.supportAnnotation
   implementation dependenciesList.supportAppcompatV7

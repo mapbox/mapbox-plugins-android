@@ -1,16 +1,18 @@
-package com.mapbox.plugins.places.autocomplete;
+package com.mapbox.plugins.places.autocomplete.utils;
 
 import android.content.Intent;
 
 import com.mapbox.geocoding.v5.MapboxGeocoding;
 import com.mapbox.geojson.Point;
+import com.mapbox.plugins.places.autocomplete.PlaceConstants;
 
 public class Utils {
 
   private Utils() {
   }
 
-  static MapboxGeocoding.Builder initiateSearchQuery(Intent intent) {
+  // TODO move to viewmodel and delete class
+  public static MapboxGeocoding.Builder initiateSearchQuery(Intent intent) {
     MapboxGeocoding.Builder geocoderBuilder = MapboxGeocoding.builder().autocomplete(true);
     geocoderBuilder.accessToken(intent.getStringExtra(PlaceConstants.ACCESS_TOKEN));
     geocoderBuilder.limit(intent.getIntExtra(PlaceConstants.LIMIT, 5));
