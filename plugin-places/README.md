@@ -4,7 +4,6 @@ The places plugin is the easiest and most powerful way to take advantage of [Map
 
 ![ezgif com-crop](https://user-images.githubusercontent.com/5652865/32994007-045b6230-cd2f-11e7-8902-d7ee6da3ab47.gif)
 
-
 ## Getting Started
 
 To use the places plugin, you include it in your `build.gradle` file.
