@@ -1,4 +1,4 @@
-package com.mapbox.plugins.places.autocomplete;
+package com.mapbox.plugins.places.autocomplete.ui;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -56,7 +56,7 @@ public class ResultView extends LinearLayout {
     inflate(context, R.layout.view_results, this);
   }
 
-  public void setOnItemClickListener(OnCardItemClickListener onItemClickListener) {
+  public void setOnItemClickListener(ResultClickCallback onItemClickListener) {
     if (adapter != null) {
       adapter.setOnItemClickListener(onItemClickListener);
     }

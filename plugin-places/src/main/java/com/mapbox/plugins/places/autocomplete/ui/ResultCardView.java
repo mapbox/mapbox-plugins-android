@@ -1,4 +1,4 @@
-package com.mapbox.plugins.places.autocomplete;
+package com.mapbox.plugins.places.autocomplete.ui;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

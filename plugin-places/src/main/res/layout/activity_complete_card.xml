@@ -19,7 +19,7 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">
 
-    <com.mapbox.plugins.places.autocomplete.SearchView
+    <com.mapbox.plugins.places.autocomplete.ui.SearchView
       android:id="@+id/searchView"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -60,20 +60,20 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="@+id/scroll_drop_shadow">
 
-      <com.mapbox.plugins.places.autocomplete.ResultCardView
+      <com.mapbox.plugins.places.autocomplete.ui.ResultCardView
         android:id="@+id/searchResultView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"/>
 
-      <com.mapbox.plugins.places.autocomplete.ResultCardView
-        android:id="@+id/recentSearchResults"
+      <com.mapbox.plugins.places.autocomplete.ui.ResultCardView
+        android:id="@+id/searchHistoryResultsView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"/>
 
-      <com.mapbox.plugins.places.autocomplete.ResultCardView
-        android:id="@+id/starredView"
+      <com.mapbox.plugins.places.autocomplete.ui.ResultCardView
+        android:id="@+id/favoriteResultView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     </LinearLayout>

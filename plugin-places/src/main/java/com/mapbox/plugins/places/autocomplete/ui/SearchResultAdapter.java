@@ -1,6 +1,7 @@
-package com.mapbox.plugins.places.autocomplete;
+package com.mapbox.plugins.places.autocomplete.ui;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,14 +11,19 @@ import android.widget.TextView;
 
 import com.mapbox.geocoding.v5.models.CarmenFeature;
 import com.mapbox.places.R;
+import com.mapbox.plugins.places.autocomplete.PlaceConstants;
 
 import java.util.List;
 
-public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.SearchViewHolder> {
+public class SearchResultAdapter
+  extends RecyclerView.Adapter<SearchResultAdapter.SearchViewHolder> {
 
   private static final String ADDRESS = "address";
 
-  private OnCardItemClickListener onItemClickListener;
+  @Nullable
+  private ResultClickCallback resultClickCallback;
+
+
   private final List<CarmenFeature> results;
   private final Context context;
 
@@ -33,14 +39,14 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     return new SearchViewHolder(view);
   }
 
-  public void setOnItemClickListener(OnCardItemClickListener onItemClickListener) {
-    this.onItemClickListener = onItemClickListener;
+  public void setOnItemClickListener(ResultClickCallback resultClickCallback) {
+    this.resultClickCallback = resultClickCallback;
   }
 
   @Override
   public void onBindViewHolder(SearchViewHolder holder, int position) {
-    if (onItemClickListener != null) {
-      holder.bind(results.get(position), onItemClickListener);
+    if (resultClickCallback != null) {
+      holder.bind(results.get(position), resultClickCallback);
     }
 
     if (results.get(position).properties().has(PlaceConstants.SAVED_PLACE)) {
@@ -68,8 +74,8 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
 
   static class SearchViewHolder extends RecyclerView.ViewHolder {
 
-    final TextView placeNameView;
-    final TextView addressView;
+    private final TextView placeNameView;
+    private final TextView addressView;
 
     SearchViewHolder(View itemView) {
       super(itemView);
@@ -77,11 +83,11 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
       addressView = itemView.findViewById(R.id.tv_address);
     }
 
-    public void bind(final CarmenFeature carmenFeature, final OnCardItemClickListener listener) {
+    public void bind(final CarmenFeature carmenFeature, final ResultClickCallback listener) {
       itemView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          listener.onItemClick(carmenFeature);
+          listener.onClick(carmenFeature);
         }
       });
     }

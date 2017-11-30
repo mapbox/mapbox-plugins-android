@@ -2,10 +2,10 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "8c7c23e0876029678043b33f10b9d681",
+    "identityHash": "6785f3a8f4d6195ea76771bea75e1fd5",
     "entities": [
       {
-        "tableName": "RecentSearch",
+        "tableName": "searchhistory",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`placeId` TEXT NOT NULL, `carmen_feature` TEXT, PRIMARY KEY(`placeId`))",
         "fields": [
           {
@@ -33,7 +33,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"8c7c23e0876029678043b33f10b9d681\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"6785f3a8f4d6195ea76771bea75e1fd5\")"
     ]
   }
 }

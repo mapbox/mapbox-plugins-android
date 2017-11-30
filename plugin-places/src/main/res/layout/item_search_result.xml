@@ -5,7 +5,9 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="60dp"
-  android:background="@color/cardview_light_background">
+  android:background="@color/cardview_light_background"
+  android:clickable="true"
+  android:focusable="true">
 
   <ImageView
     android:layout_width="24dp"

@@ -1,7 +1,6 @@
 package com.mapbox.plugins.places.autocomplete;
 
 import android.app.Activity;
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.ColorInt;
@@ -12,6 +11,8 @@ import android.text.TextUtils;
 import com.mapbox.geocoding.v5.GeocodingCriteria.GeocodingTypeCriteria;
 import com.mapbox.geocoding.v5.models.CarmenFeature;
 import com.mapbox.geojson.Point;
+import com.mapbox.plugins.places.autocomplete.data.SearchHistoryDatabase;
+import com.mapbox.plugins.places.autocomplete.ui.PlaceAutocompleteActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +29,7 @@ import java.util.Locale;
  *
  * @since 0.1.0
  */
-public class PlaceAutocomplete {
+public final class PlaceAutocomplete {
 
   /**
    * Mode for launching the autocomplete activity in fullscreen.
@@ -69,9 +70,8 @@ public class PlaceAutocomplete {
    * @since 0.1.0
    */
   public static void clearRecentHistory(Context context) {
-    SearchHistoryDatabase database = Room.databaseBuilder(context,
-      SearchHistoryDatabase.class, PlaceConstants.SEARCH_HISTORY_DATABASE_NAME).build();
-    new RecentSearchAsyncTask(database).execute();
+    SearchHistoryDatabase database = SearchHistoryDatabase.getInstance(context);
+    SearchHistoryDatabase.deleteAllData(database);
   }
 
   /**
@@ -268,12 +268,8 @@ public class PlaceAutocomplete {
      */
     public Intent build(Activity activity) {
       intent.putStringArrayListExtra(PlaceConstants.COUNTRIES, countries);
-
-      if (mode == MODE_FULLSCREEN) {
-        intent.setClass(activity, PlaceCompleteFullActivity.class);
-      } else {
-        intent.setClass(activity, PlaceCompleteCardActivity.class);
-      }
+      intent.putExtra(PlaceConstants.MODE, mode);
+      intent.setClass(activity, PlaceAutocompleteActivity.class);
       return intent;
     }
   }
