@@ -29,6 +29,13 @@ android {
 }
 
 dependencies {
+  // Mapbox
+  implementation dependenciesList.mapboxMapSdk
+  implementation dependenciesList.mapboxServices
+  implementation dependenciesList.mapboxGeocoding
+
+  implementation dependenciesList.lifecycleExtensions
+
   // Support libraries
   implementation dependenciesList.supportAnnotation
   implementation dependenciesList.supportAppcompatV7
@@ -37,7 +44,6 @@ dependencies {
   implementation dependenciesList.supportConstraintLayout
 
   // Unit testing
-  implementation 'com.android.support.constraint:constraint-layout:1.0.2'
   testImplementation dependenciesList.junit
   testImplementation dependenciesList.mockito
 

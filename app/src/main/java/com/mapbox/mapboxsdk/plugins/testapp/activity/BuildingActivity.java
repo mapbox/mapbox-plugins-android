@@ -112,6 +112,12 @@ public class BuildingActivity extends AppCompatActivity implements OnMapReadyCal
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
+    if (buildingPlugin == null || mapboxMap == null) {
+      // map not ready yet
+      return super.onOptionsItemSelected(item);
+    }
+
+
     switch (item.getItemId()) {
       case R.id.menu_building_min_zoom:
         buildingPlugin.setMinZoomLevel(14);

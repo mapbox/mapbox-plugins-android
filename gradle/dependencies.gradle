@@ -8,28 +8,31 @@ ext {
   ]
 
   version = [
-      mapboxMapSdk     : '5.2.0-beta.4',
-      mapboxServices   : '2.2.9',
-      mapboxGeocoding  : '3.0.0-SNAPSHOT',
-      autoValue        : '1.4.1',
-      autoValueParcel  : '0.2.5',
-      junit            : '4.12',
-      supportLibVersion: '27.0.1',
-      constraintLayout : '1.0.2',
-      mockito          : '2.10.0',
-      hamcrest         : '2.0.0.0',
-      errorprone       : '2.0.21',
-      butterknife      : '8.8.1',
-      leakCanaryVersion: '1.5.4',
-      timber           : '4.5.1',
-      awsPolly         : '2.3.8',
-      testRunnerVersion: '1.0.1',
-      espressoVersion  : '3.0.1',
-      spoonRunner      : '1.6.2',
-      commonsIO        : '2.5',
-      robolectric      : '3.4.2',
-      lifecycleCompiler: '1.0.0',
-      lifecycleRuntime : '1.0.3'
+      mapboxMapSdk       : '5.2.0',
+      mapboxServices     : '2.2.9',
+      mapboxGeocoding    : '3.0.0-SNAPSHOT',
+      autoValue          : '1.4.1',
+      autoValueParcel    : '0.2.5',
+      junit              : '4.12',
+      supportLibVersion  : '26.1.0',
+      constraintLayout   : '1.0.2',
+      mockito            : '2.12.0',
+      hamcrest           : '2.0.0.0',
+      errorprone         : '2.0.21',
+      butterknife        : '8.8.1',
+      leakCanaryVersion  : '1.5.4',
+      timber             : '4.5.1',
+      awsPolly           : '2.3.8',
+      testRunnerVersion  : '1.0.1',
+      espressoVersion    : '3.0.1',
+      spoonRunner        : '1.6.2',
+      commonsIO          : '2.5',
+      robolectric        : '3.4.2',
+      lifecycleCompiler  : '1.0.0',
+      lifecycleExtensions: '1.0.0',
+      room               : '1.0.0',
+      androidArchCore    : '1.0.0',
+      okhttp             : '3.9.0'
   ]
 
   pluginVersion = [
@@ -39,7 +42,7 @@ ext {
       errorprone: '0.0.10',
       coveralls : '2.8.1',
       spotbugs  : '1.3',
-      sonarqube : '2.5',
+      sonarqube : '2.6',
       gradle    : '3.0.0'
   ]
 
@@ -48,6 +51,7 @@ ext {
       mapboxMapSdk           : "com.mapbox.mapboxsdk:mapbox-android-sdk:${version.mapboxMapSdk}@aar",
       mapboxServices         : "com.mapbox.mapboxsdk:mapbox-android-services:${version.mapboxServices}",
       mapboxGeocoding        : "com.mapbox.mapboxsdk:mapbox-java-services-geocoding:${version.mapboxGeocoding}",
+      geojson                : "com.mapbox.mapboxsdk:mapbox-java-geojson:${version.mapboxServices}",
 
       // AutoValue
       autoValue              : "com.google.auto.value:auto-value:${version.autoValue}",
@@ -68,8 +72,10 @@ ext {
       supportConstraintLayout: "com.android.support.constraint:constraint-layout:${version.constraintLayout}",
 
       // architecture
-      lifecycleExtensions    : "android.arch.lifecycle:extensions:${version.lifecycleRuntime}",
+      lifecycleExtensions    : "android.arch.lifecycle:extensions:${version.lifecycleExtensions}",
       lifecycleCompiler      : "android.arch.lifecycle:compiler:${version.lifecycleCompiler}",
+      roomRuntime            : "android.arch.persistence.room:runtime:${version.room}",
+      roomCompiler           : "android.arch.persistence.room:compiler:${version.room}",
 
       // square crew
       timber                 : "com.jakewharton.timber:timber:${version.timber}",
@@ -86,16 +92,20 @@ ext {
 
       // unit test
       junit                  : "junit:junit:${version.junit}",
-      mockito                : "org.mockito:mockito-core:${version.mockito}",
+      mockito                : "org.mockito:mockito-inline:${version.mockito}",
       hamcrest               : "org.hamcrest:hamcrest-junit:${version.hamcrest}",
       commonsIO              : "commons-io:commons-io:${version.commonsIO}",
       robolectric            : "org.robolectric:robolectric:${version.robolectric}",
+      androidArchCore        : "android.arch.core:core-testing:${version.androidArchCore}",
+
+      // okhttp
+      okhttp                 : "com.squareup.okhttp3:okhttp:${version.okhttp}",
 
       // aws polly
       polly                  : "com.amazonaws:aws-android-sdk-polly:${version.awsPolly}",
 
+      // errorprone
       errorprone             : "com.google.errorprone:error_prone_core:${version.errorprone}"
-
   ]
 
   pluginDependencies = [

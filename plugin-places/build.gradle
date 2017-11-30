@@ -10,6 +10,13 @@ android {
     targetSdkVersion androidVersions.targetSdkVersion
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     vectorDrawables.useSupportLibrary = true
+
+    // Write out the current schema of Room
+    javaCompileOptions {
+      annotationProcessorOptions {
+        arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+      }
+    }
   }
 
   buildTypes {
@@ -29,16 +36,20 @@ dependencies {
 
   implementation dependenciesList.supportAppcompatV7
   implementation dependenciesList.supportConstraintLayout
+  implementation dependenciesList.supportCardView
+  implementation dependenciesList.supportRecyclerView
+  implementation dependenciesList.supportV4
+
+  implementation dependenciesList.lifecycleExtensions
+  implementation dependenciesList.roomRuntime
+  annotationProcessor dependenciesList.roomCompiler
 
   implementation dependenciesList.mapboxGeocoding
 
   // Unit testing
-  implementation 'com.android.support.constraint:constraint-layout:1.0.2'
   testImplementation dependenciesList.junit
   testImplementation dependenciesList.mockito
+  testImplementation dependenciesList.androidArchCore
 
   javadocDeps dependenciesList.mapboxMapSdk
-  implementation 'com.android.support:cardview-v7:27.0.0'
-  implementation 'com.android.support:recyclerview-v7:27.0.0'
-  implementation 'com.android.support:support-v4:27.0.0'
 }

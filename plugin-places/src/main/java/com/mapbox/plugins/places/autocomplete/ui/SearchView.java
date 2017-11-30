@@ -1,5 +1,9 @@
-package com.mapbox.plugins.places.autocomplete.views;
+package com.mapbox.plugins.places.autocomplete.ui;
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,7 +17,8 @@ import android.widget.LinearLayout;
 
 import com.mapbox.places.R;
 
-public class SearchView extends LinearLayout implements ImageButton.OnClickListener, TextWatcher {
+public class SearchView extends LinearLayout implements ImageButton.OnClickListener, TextWatcher,
+  LifecycleObserver {
 
   @Nullable
   private BackButtonListener backButtonListener;
@@ -45,6 +50,7 @@ public class SearchView extends LinearLayout implements ImageButton.OnClickListe
     backButton.setOnClickListener(this);
     clearButton.setOnClickListener(this);
     searchEditText.addTextChangedListener(this);
+    ((LifecycleOwner) getContext()).getLifecycle().addObserver(this);
   }
 
   @Override
@@ -56,6 +62,12 @@ public class SearchView extends LinearLayout implements ImageButton.OnClickListe
     } else {
       searchEditText.getText().clear();
     }
+  }
+
+  @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+  public void onDestroy() {
+    backButtonListener = null;
+    queryListener = null;
   }
 
   @Override
@@ -80,23 +92,15 @@ public class SearchView extends LinearLayout implements ImageButton.OnClickListe
     this.backButtonListener = backButtonListener;
   }
 
-  public void removeBackButtonListener() {
-    backButtonListener = null;
-  }
-
   public void setQueryListener(@Nullable QueryListener queryListener) {
     this.queryListener = queryListener;
   }
 
-  public void removeQueryListener() {
-    queryListener = null;
-  }
-
-  public interface QueryListener {
+  interface QueryListener {
     void onQueryChange(CharSequence charSequence);
   }
 
-  public interface BackButtonListener {
+  interface BackButtonListener {
     void onBackButtonPress();
   }
 }
