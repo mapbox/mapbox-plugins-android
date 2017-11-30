@@ -24,21 +24,6 @@ public final class DataRepository {
   private final SearchHistoryDatabase database;
   private MediatorLiveData<List<SearchHistoryEntity>> observableSearchHistory;
 
-  public static DataRepository getInstance(final SearchHistoryDatabase database) {
-    if (instance == null) {
-      instance = new DataRepository(database);
-    }
-    return instance;
-  }
-
-  public LiveData<List<SearchHistoryEntity>> getSearchHistory() {
-    return observableSearchHistory;
-  }
-
-  public void addSearchHistoryEntity(SearchHistoryEntity searchHistory) {
-    SearchHistoryDatabase.insertData(database, searchHistory);
-  }
-
   private DataRepository(final SearchHistoryDatabase database) {
     this.database = database;
     observableSearchHistory = new MediatorLiveData<>();
@@ -52,5 +37,20 @@ public final class DataRepository {
           }
         }
       });
+  }
+
+  public static DataRepository getInstance(final SearchHistoryDatabase database) {
+    if (instance == null) {
+      instance = new DataRepository(database);
+    }
+    return instance;
+  }
+
+  public LiveData<List<SearchHistoryEntity>> getSearchHistory() {
+    return observableSearchHistory;
+  }
+
+  public void addSearchHistoryEntity(SearchHistoryEntity searchHistory) {
+    SearchHistoryDatabase.insertData(database, searchHistory);
   }
 }
