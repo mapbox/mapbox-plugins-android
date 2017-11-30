@@ -17,6 +17,7 @@ import android.view.animation.LinearInterpolator;
 
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.style.layers.CircleLayer;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
@@ -24,12 +25,7 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.sources.Source;
 import com.mapbox.services.android.telemetry.location.LocationEngine;
 import com.mapbox.services.android.telemetry.location.LocationEngineListener;
-import com.mapbox.services.api.utils.turf.TurfConstants;
-import com.mapbox.services.commons.geojson.Feature;
-import com.mapbox.services.commons.geojson.FeatureCollection;
 import com.mapbox.services.commons.geojson.Point;
-import com.mapbox.services.commons.geojson.Polygon;
-import com.mapbox.services.commons.models.Position;
 
 import timber.log.Timber;
 
@@ -51,8 +47,6 @@ import timber.log.Timber;
  */
 public class LocationLayerPlugin implements LocationEngineListener, CompassListener, MapView.OnMapChangedListener,
   LifecycleObserver {
-
-  private static final int ACCURACY_CIRCLE_STEPS = 48;
 
   @StyleRes
   private int styleRes;
@@ -265,7 +259,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
       setLocationLayerEnabled(locationLayerMode);
     }
 
-    if (compassManager.getCompassListeners().size() > 0
+    if (!compassManager.getCompassListeners().isEmpty()
       || locationLayerMode == LocationLayerMode.COMPASS && compassManager.isSensorAvailable()) {
       compassManager.onStart();
     }
@@ -314,7 +308,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
    */
   public void removeCompassListener(@Nullable CompassListener compassListener) {
     compassManager.removeCompassListener(compassListener);
-    if (compassManager.getCompassListeners().size() < 1) {
+    if (compassManager.getCompassListeners().isEmpty()) {
       compassManager.onStop();
     }
   }
@@ -423,7 +417,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     if (bearingEnabled) {
       compassManager.onStart();
     } else {
-      if (compassManager != null && compassManager.getCompassListeners().size() < 1) {
+      if (compassManager != null && compassManager.getCompassListeners().isEmpty()) {
         compassManager.onStop();
       }
     }
@@ -477,21 +471,14 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
    * @since 0.1.0
    */
   private void setAccuracy(Location location) {
-    // TODO replace fill-layer with circle-layer once circle-pitch-alignment is supported in Runtime Styling
-    // https://github.com/mapbox/mapbox-gl-js/issues/4120
-    Position userPosition = Position.fromLngLat(location.getLongitude(), location.getLatitude());
-    Polygon accuracyCircle = TurfTransformation.circle(
-      userPosition, location.getAccuracy(), ACCURACY_CIRCLE_STEPS, TurfConstants.UNIT_METERS);
+    double metersPerPixel = mapboxMap.getProjection().getMetersPerPixelAtLatitude(location.getLatitude());
+    float radius = (float) (location.getAccuracy() * (1 / metersPerPixel));
 
-    // Create new GeoJson object using the new accuracy circle created.
-    FeatureCollection featureCollection = FeatureCollection.fromFeatures(
-      new Feature[] {Feature.fromGeometry(accuracyCircle)}
-    );
-
-    // Update the location accuracy source with new GeoJson object
-    GeoJsonSource locationGeoJsonSource = mapboxMap.getSourceAs(LocationLayerConstants.LOCATION_ACCURACY_SOURCE);
-    if (locationGeoJsonSource != null) {
-      locationGeoJsonSource.setGeoJson(featureCollection);
+    CircleLayer accuracyLayer = (CircleLayer) mapboxMap.getLayer(LocationLayerConstants.LOCATION_ACCURACY_LAYER);
+    if (accuracyLayer != null) {
+      accuracyLayer.setProperties(
+        PropertyFactory.circleRadius(radius)
+      );
     }
   }
 
@@ -582,12 +569,12 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     bearingChangeAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
       @Override
       public void onAnimationUpdate(ValueAnimator valueAnimator) {
-        Layer locationLayer = (getLocationLayerMode() == LocationLayerMode.NAVIGATION)
+        Layer localLocationLayer = (getLocationLayerMode() == LocationLayerMode.NAVIGATION)
           ? mapboxMap.getLayer(LocationLayerConstants.LOCATION_NAVIGATION_LAYER)
           : mapboxMap.getLayer(LocationLayerConstants.LOCATION_BEARING_LAYER);
 
-        if (locationLayer != null) {
-          locationLayer.setProperties(
+        if (localLocationLayer != null) {
+          localLocationLayer.setProperties(
             PropertyFactory.iconRotate((float) valueAnimator.getAnimatedValue())
           );
         }

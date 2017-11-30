@@ -8,12 +8,13 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 import android.support.v4.content.ContextCompat;
+
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.functions.Function;
 import com.mapbox.mapboxsdk.style.functions.stops.Stop;
 import com.mapbox.mapboxsdk.style.functions.stops.Stops;
-import com.mapbox.mapboxsdk.style.layers.FillLayer;
+import com.mapbox.mapboxsdk.style.layers.CircleLayer;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
@@ -61,7 +62,9 @@ final class LocationLayer {
     addNavigationLayer(ContextCompat.getDrawable(context, drawableResId));
     float accuracyAlpha = typedArray.getFloat(R.styleable.LocationLayer_accuracyAlpha, 0.15f);
     if (accuracyAlpha < 0 || accuracyAlpha > 1) {
-      throw new RuntimeException("Location layer accuracy alpha value must be between 0.0 and 1.0.");
+      throw new UnsupportedOperationException(
+        "Location layer accuracy alpha value must be between 0.0 and 1.0."
+      );
     }
     int accuracyColor = typedArray.getColor(R.styleable.LocationLayer_accuracyColor,
       ContextCompat.getColor(context, R.color.mapbox_plugin_location_layer_blue));
@@ -160,7 +163,8 @@ final class LocationLayer {
     Bitmap bitmap = getBitmapFromDrawable(navigationDrawable);
     mapboxMap.addImage(LocationLayerConstants.USER_LOCATION_PUCK_ICON, bitmap);
     SymbolLayer navigationLayer = new SymbolLayer(
-      LocationLayerConstants.LOCATION_NAVIGATION_LAYER, LocationLayerConstants.LOCATION_SOURCE).withProperties(
+      LocationLayerConstants.LOCATION_NAVIGATION_LAYER, LocationLayerConstants.LOCATION_SOURCE)
+      .withProperties(
       PropertyFactory.iconImage(LocationLayerConstants.USER_LOCATION_PUCK_ICON),
       PropertyFactory.iconAllowOverlap(true),
       PropertyFactory.iconIgnorePlacement(true),
@@ -178,11 +182,14 @@ final class LocationLayer {
   }
 
   private void addAccuracyLayer(float accuracyAlpha, @ColorInt int accuracyColor) {
-    FillLayer locationAccuracyLayer = new FillLayer(
-      LocationLayerConstants.LOCATION_ACCURACY_LAYER, LocationLayerConstants.LOCATION_ACCURACY_SOURCE
+    CircleLayer locationAccuracyLayer = new CircleLayer(
+      LocationLayerConstants.LOCATION_ACCURACY_LAYER, LocationLayerConstants.LOCATION_SOURCE
     ).withProperties(
-      PropertyFactory.fillColor(accuracyColor),
-      PropertyFactory.fillOpacity(accuracyAlpha)
+      PropertyFactory.circleColor(accuracyColor),
+      PropertyFactory.circleOpacity(accuracyAlpha),
+      PropertyFactory.circlePitchAlignment(Property.CIRCLE_PITCH_ALIGNMENT_MAP),
+      PropertyFactory.circleStrokeWidth(0.5f),
+      PropertyFactory.circleStrokeColor(accuracyColor)
     );
     addLocationLayerToMap(locationAccuracyLayer, LocationLayerConstants.LOCATION_BACKGROUND_LAYER);
   }

@@ -7,6 +7,10 @@ package com.mapbox.mapboxsdk.plugins.locationlayer;
  */
 class LocationLayerConstants {
 
+  private LocationLayerConstants() {
+    // Class should not be initialized
+  }
+
   // Controls the compass update rate in milliseconds
   static final int COMPASS_UPDATE_RATE_MS = 500;
 
@@ -16,7 +20,6 @@ class LocationLayerConstants {
 
   // Sources
   static final String LOCATION_SOURCE = "mapbox-location-source";
-  static final String LOCATION_ACCURACY_SOURCE = "mapbox-location-accuracy-source";
 
   // Layers
   static final String LOCATION_LAYER = "mapbox-location-layer";
