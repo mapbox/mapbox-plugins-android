@@ -18,8 +18,14 @@ android {
 
 dependencies {
   implementation dependenciesList.supportAppcompatV7
-  implementation dependenciesList.mapboxServices
-  implementation dependenciesList.mapboxMapSdk
+
+  implementation(dependenciesList.mapboxMapSdk) {
+    transitive = true
+  }
+  implementation dependenciesList.mapboxGeoJson
+
+  // Timber
+  implementation dependenciesList.timber
 
   // Unit testing
   testImplementation dependenciesList.junit

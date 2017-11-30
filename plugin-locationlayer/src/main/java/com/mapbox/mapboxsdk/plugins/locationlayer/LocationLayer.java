@@ -109,14 +109,6 @@ final class LocationLayer {
           new GeoJsonOptions().withMaxZoom(16))
       );
     }
-
-    if (mapboxMap.getSourceAs(LocationLayerConstants.LOCATION_ACCURACY_SOURCE) == null) {
-      mapboxMap.addSource(new GeoJsonSource(
-        LocationLayerConstants.LOCATION_ACCURACY_SOURCE,
-        emptyFeature,
-        new GeoJsonOptions().withMaxZoom(16))
-      );
-    }
   }
 
   private void addLocationLayerToMap(Layer layer, @Nullable String idBelowLayer) {
