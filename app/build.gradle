@@ -32,6 +32,7 @@ dependencies {
   // Mapbox
   implementation dependenciesList.mapboxMapSdk
   implementation dependenciesList.mapboxServices
+  implementation dependenciesList.mapboxGeocoding
 
   implementation dependenciesList.lifecycleExtensions
 

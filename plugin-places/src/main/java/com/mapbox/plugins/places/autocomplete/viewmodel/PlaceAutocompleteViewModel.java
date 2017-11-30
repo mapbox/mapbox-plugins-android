@@ -12,11 +12,11 @@ import android.support.annotation.Nullable;
 import com.mapbox.geocoding.v5.MapboxGeocoding;
 import com.mapbox.geocoding.v5.models.CarmenFeature;
 import com.mapbox.geocoding.v5.models.GeocodingResponse;
+import com.mapbox.geojson.Point;
 import com.mapbox.plugins.places.autocomplete.DataRepository;
 import com.mapbox.plugins.places.autocomplete.PlaceConstants;
 import com.mapbox.plugins.places.autocomplete.data.SearchHistoryDatabase;
 import com.mapbox.plugins.places.autocomplete.data.entity.SearchHistoryEntity;
-import com.mapbox.plugins.places.autocomplete.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,42 @@ public class PlaceAutocompleteViewModel extends AndroidViewModel
   }
 
   public void buildGeocodingRequest() {
-    geocoderBuilder = Utils.initiateSearchQuery(intent);
+    geocoderBuilder = MapboxGeocoding.builder().autocomplete(true);
+    geocoderBuilder.accessToken(intent.getStringExtra(PlaceConstants.ACCESS_TOKEN));
+    geocoderBuilder.limit(intent.getIntExtra(PlaceConstants.LIMIT, 5));
+
+    // Proximity
+    String proximityPointJson = intent.getStringExtra(PlaceConstants.PROXIMITY);
+    if (proximityPointJson != null) {
+      geocoderBuilder.proximity(Point.fromJson(proximityPointJson));
+    }
+
+    // Language
+    String languageJson = intent.getStringExtra(PlaceConstants.LANGUAGE);
+    if (languageJson != null) {
+      geocoderBuilder.languages(languageJson);
+    }
+
+    // Type
+    String typeJson = intent.getStringExtra(PlaceConstants.TYPE);
+    if (typeJson != null) {
+      geocoderBuilder.geocodingTypes(typeJson);
+    }
+
+    // Countries
+    String countriesJson = intent.getStringExtra(PlaceConstants.COUNTRIES);
+    if (countriesJson != null) {
+      geocoderBuilder.geocodingTypes(countriesJson);
+    }
+
+    // Bounding box
+    String southwest = intent.getStringExtra(PlaceConstants.BBOX_SOUTHWEST_POINT);
+    String northeast = intent.getStringExtra(PlaceConstants.BBOX_NORTHEAST_POINT);
+    if (southwest != null && northeast != null) {
+      Point southwestPoint = Point.fromJson(southwest);
+      Point northeastPoint = Point.fromJson(northeast);
+      geocoderBuilder.bbox(southwestPoint, northeastPoint);
+    }
   }
 
   public void onQueryChange(CharSequence sequence) {
@@ -81,7 +116,7 @@ public class PlaceAutocompleteViewModel extends AndroidViewModel
   @Override
   public void onFailure(@NonNull Call<GeocodingResponse> call,
                         @NonNull Throwable throwable) {
-
+    throw new RuntimeException("Request failed with following message: ", throwable);
   }
 
   public SearchHistoryDatabase getDatabase() {

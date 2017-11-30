@@ -15,7 +15,7 @@ import com.mapbox.plugins.places.autocomplete.data.converter.CarmenFeatureConver
 import com.mapbox.plugins.places.autocomplete.data.dao.SearchHistoryDao;
 import com.mapbox.plugins.places.autocomplete.data.entity.SearchHistoryEntity;
 
-@Database(entities = {SearchHistoryEntity.class}, version = 2)
+@Database(entities = {SearchHistoryEntity.class}, version = 1)
 @TypeConverters(CarmenFeatureConverter.class)
 public abstract class SearchHistoryDatabase extends RoomDatabase {
 
