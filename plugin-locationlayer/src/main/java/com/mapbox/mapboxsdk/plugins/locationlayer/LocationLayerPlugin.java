@@ -20,7 +20,6 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.CircleLayer;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.Property;
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.sources.Source;
 import com.mapbox.services.android.telemetry.location.LocationEngine;
@@ -28,6 +27,10 @@ import com.mapbox.services.android.telemetry.location.LocationEngineListener;
 import com.mapbox.services.commons.geojson.Point;
 
 import timber.log.Timber;
+
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleRadius;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotate;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
 
 /**
  * The Location layer plugin provides location awareness to your mobile application. Enabling this plugin provides a
@@ -430,7 +433,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     Layer layer = mapboxMap.getLayer(LocationLayerConstants.LOCATION_BEARING_LAYER);
     if (layer != null) {
       layer.setProperties(
-        PropertyFactory.visibility(bearingEnabled ? Property.VISIBLE : Property.NONE)
+        visibility(bearingEnabled ? Property.VISIBLE : Property.NONE)
       );
     }
   }
@@ -451,7 +454,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     Layer accuracyLayer = mapboxMap.getLayer(LocationLayerConstants.LOCATION_ACCURACY_LAYER);
     if (accuracyLayer != null) {
       accuracyLayer.setProperties(
-        PropertyFactory.visibility(navigationEnabled ? Property.NONE : Property.VISIBLE)
+        visibility(navigationEnabled ? Property.NONE : Property.VISIBLE)
       );
     }
   }
@@ -459,7 +462,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   private void setNavigationLayerVisibility(boolean visible) {
     Layer layer = mapboxMap.getLayer(LocationLayerConstants.LOCATION_NAVIGATION_LAYER);
     if (layer != null) {
-      layer.setProperties(PropertyFactory.visibility(visible ? Property.VISIBLE : Property.NONE));
+      layer.setProperties(visibility(visible ? Property.VISIBLE : Property.NONE));
     }
   }
 
@@ -477,7 +480,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     CircleLayer accuracyLayer = (CircleLayer) mapboxMap.getLayer(LocationLayerConstants.LOCATION_ACCURACY_LAYER);
     if (accuracyLayer != null) {
       accuracyLayer.setProperties(
-        PropertyFactory.circleRadius(radius)
+        circleRadius(radius)
       );
     }
   }
@@ -575,7 +578,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
 
         if (localLocationLayer != null) {
           localLocationLayer.setProperties(
-            PropertyFactory.iconRotate((float) valueAnimator.getAnimatedValue())
+            iconRotate((float) valueAnimator.getAnimatedValue())
           );
         }
       }

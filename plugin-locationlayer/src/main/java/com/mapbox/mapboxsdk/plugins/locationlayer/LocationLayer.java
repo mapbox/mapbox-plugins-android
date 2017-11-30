@@ -17,7 +17,6 @@ import com.mapbox.mapboxsdk.style.functions.stops.Stops;
 import com.mapbox.mapboxsdk.style.layers.CircleLayer;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.Property;
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
@@ -28,6 +27,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.getBitmapFromDrawable;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleColor;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleOpacity;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circlePitchAlignment;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeColor;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeWidth;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotate;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotationAlignment;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
 
 final class LocationLayer {
@@ -94,7 +104,7 @@ final class LocationLayer {
   void setCompassBearing(float compassBearing) {
     Layer bearingLayer = mapboxMap.getLayer(LocationLayerConstants.LOCATION_BEARING_LAYER);
     if (bearingLayer != null) {
-      bearingLayer.setProperties(PropertyFactory.iconRotate(compassBearing));
+      bearingLayer.setProperties(iconRotate(compassBearing));
     }
   }
 
@@ -157,18 +167,18 @@ final class LocationLayer {
     SymbolLayer navigationLayer = new SymbolLayer(
       LocationLayerConstants.LOCATION_NAVIGATION_LAYER, LocationLayerConstants.LOCATION_SOURCE)
       .withProperties(
-      PropertyFactory.iconImage(LocationLayerConstants.USER_LOCATION_PUCK_ICON),
-      PropertyFactory.iconAllowOverlap(true),
-      PropertyFactory.iconIgnorePlacement(true),
-      PropertyFactory.iconSize(Function.zoom(
+      iconImage(LocationLayerConstants.USER_LOCATION_PUCK_ICON),
+      iconAllowOverlap(true),
+      iconIgnorePlacement(true),
+      iconSize(Function.zoom(
         Stops.exponential(
-          Stop.stop(22f, PropertyFactory.iconSize(1f)),
-          Stop.stop(12f, PropertyFactory.iconSize(1f)),
-          Stop.stop(10f, PropertyFactory.iconSize(0.6f)),
-          Stop.stop(0f, PropertyFactory.iconSize(0.6f))
+          Stop.stop(22f, iconSize(1f)),
+          Stop.stop(12f, iconSize(1f)),
+          Stop.stop(10f, iconSize(0.6f)),
+          Stop.stop(0f, iconSize(0.6f))
         ).withBase(1f)
       )),
-      PropertyFactory.iconRotationAlignment(Property.ICON_ROTATION_ALIGNMENT_MAP));
+      iconRotationAlignment(Property.ICON_ROTATION_ALIGNMENT_MAP));
 
     addLocationLayerToMap(navigationLayer, null);
   }
@@ -177,11 +187,11 @@ final class LocationLayer {
     CircleLayer locationAccuracyLayer = new CircleLayer(
       LocationLayerConstants.LOCATION_ACCURACY_LAYER, LocationLayerConstants.LOCATION_SOURCE
     ).withProperties(
-      PropertyFactory.circleColor(accuracyColor),
-      PropertyFactory.circleOpacity(accuracyAlpha),
-      PropertyFactory.circlePitchAlignment(Property.CIRCLE_PITCH_ALIGNMENT_MAP),
-      PropertyFactory.circleStrokeWidth(0.5f),
-      PropertyFactory.circleStrokeColor(accuracyColor)
+      circleColor(accuracyColor),
+      circleOpacity(accuracyAlpha),
+      circlePitchAlignment(Property.CIRCLE_PITCH_ALIGNMENT_MAP),
+      circleStrokeWidth(0.5f),
+      circleStrokeColor(accuracyColor)
     );
     addLocationLayerToMap(locationAccuracyLayer, LocationLayerConstants.LOCATION_BACKGROUND_LAYER);
   }
@@ -191,9 +201,9 @@ final class LocationLayer {
     mapboxMap.addImage(image, bitmap);
     return new SymbolLayer(
       layerId, LocationLayerConstants.LOCATION_SOURCE).withProperties(
-      PropertyFactory.iconImage(image),
-      PropertyFactory.iconAllowOverlap(true),
-      PropertyFactory.iconIgnorePlacement(true),
-      PropertyFactory.iconRotationAlignment(Property.ICON_ROTATION_ALIGNMENT_MAP));
+      iconImage(image),
+      iconAllowOverlap(true),
+      iconIgnorePlacement(true),
+      iconRotationAlignment(Property.ICON_ROTATION_ALIGNMENT_MAP));
   }
 }
