@@ -7,6 +7,10 @@ import com.mapbox.geocoding.v5.models.CarmenFeature;
 
 public class CarmenFeatureConverter {
 
+  private CarmenFeatureConverter() {
+    // class shouldn't be initialized
+  }
+
   @TypeConverter
   public static CarmenFeature toCarmenFeature(String serializedCarmenFeature) {
     return serializedCarmenFeature == null ? null : CarmenFeature.fromJson(serializedCarmenFeature);

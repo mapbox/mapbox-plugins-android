@@ -68,7 +68,7 @@ public abstract class SearchHistoryDatabase extends RoomDatabase {
     new DatabaseTask(database, true).execute();
   }
 
-  public LiveData<Boolean> getDatabaseCreated() {
+  public final LiveData<Boolean> getDatabaseCreated() {
     return isDatabaseCreated;
   }
 
@@ -92,9 +92,9 @@ public abstract class SearchHistoryDatabase extends RoomDatabase {
     protected Void doInBackground(Void... voids) {
       if (delete) {
         database.searchHistoryDao().deleteAllEntries();
-        return null;
+      } else {
+        database.searchHistoryDao().insert(searchHistory);
       }
-      database.searchHistoryDao().insert(searchHistory);
       return null;
     }
   }

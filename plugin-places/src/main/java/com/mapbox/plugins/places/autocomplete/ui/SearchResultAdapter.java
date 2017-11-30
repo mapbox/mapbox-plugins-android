@@ -15,7 +15,8 @@ import com.mapbox.plugins.places.autocomplete.PlaceConstants;
 
 import java.util.List;
 
-public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.SearchViewHolder> {
+public class SearchResultAdapter
+  extends RecyclerView.Adapter<SearchResultAdapter.SearchViewHolder> {
 
   private static final String ADDRESS = "address";
 
@@ -73,8 +74,8 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
 
   static class SearchViewHolder extends RecyclerView.ViewHolder {
 
-    final TextView placeNameView;
-    final TextView addressView;
+    private final TextView placeNameView;
+    private final TextView addressView;
 
     SearchViewHolder(View itemView) {
       super(itemView);

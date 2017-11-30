@@ -11,6 +11,11 @@ import com.mapbox.plugins.places.autocomplete.data.entity.SearchHistoryEntity;
 
 import java.util.List;
 
+/**
+ * The Data Access Objects specifically for the search history database
+ *
+ * @since 0.1.0
+ */
 @Dao
 public interface SearchHistoryDao {
 

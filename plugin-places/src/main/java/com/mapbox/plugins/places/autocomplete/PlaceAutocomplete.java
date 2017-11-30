@@ -29,7 +29,7 @@ import java.util.Locale;
  *
  * @since 0.1.0
  */
-public class PlaceAutocomplete {
+public final class PlaceAutocomplete {
 
   /**
    * Mode for launching the autocomplete activity in fullscreen.

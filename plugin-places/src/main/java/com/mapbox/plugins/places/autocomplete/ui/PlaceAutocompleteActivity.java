@@ -22,10 +22,6 @@ import com.mapbox.plugins.places.common.KeyboardUtils;
 
 import java.util.List;
 
-import static android.view.View.GONE;
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
-
 public class PlaceAutocompleteActivity extends AppCompatActivity implements ResultClickCallback,
   SearchView.QueryListener, SearchView.BackButtonListener,
   ViewTreeObserver.OnScrollChangedListener {
@@ -68,7 +64,7 @@ public class PlaceAutocompleteActivity extends AppCompatActivity implements Resu
         KeyboardUtils.hideKeyboard(resultScrollView);
       }
       dropShadowView.setVisibility(
-        resultScrollView.canScrollVertically(-1) ? VISIBLE : INVISIBLE
+        resultScrollView.canScrollVertically(-1) ? View.VISIBLE : View.INVISIBLE
       );
     }
   }
@@ -78,7 +74,9 @@ public class PlaceAutocompleteActivity extends AppCompatActivity implements Resu
     viewModel.onQueryChange(charSequence);
     if (charSequence.length() <= 0) {
       searchResultView.getResultsList().clear();
-      searchResultView.setVisibility(searchResultView.getResultsList().isEmpty() ? GONE : VISIBLE);
+      searchResultView.setVisibility(
+        searchResultView.getResultsList().isEmpty() ? View.GONE : View.VISIBLE
+      );
       searchResultView.notifyDataSetChanged();
     }
   }
@@ -139,14 +137,16 @@ public class PlaceAutocompleteActivity extends AppCompatActivity implements Resu
     }
     searchHistoryView.notifyDataSetChanged();
     searchHistoryView.setVisibility(
-      searchHistoryView.getResultsList().isEmpty() ? GONE : VISIBLE
+      searchHistoryView.getResultsList().isEmpty() ? View.GONE : View.VISIBLE
     );
   }
 
   private void updateSearchResultView(@Nullable GeocodingResponse response) {
     searchResultView.getResultsList().clear();
     searchResultView.getResultsList().addAll(response.features());
-    searchResultView.setVisibility(searchResultView.getResultsList().isEmpty() ? GONE : VISIBLE);
+    searchResultView.setVisibility(
+      searchResultView.getResultsList().isEmpty() ? View.GONE : View.VISIBLE
+    );
     searchResultView.notifyDataSetChanged();
   }
 
