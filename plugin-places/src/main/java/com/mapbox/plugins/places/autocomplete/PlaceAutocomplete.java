@@ -1,7 +1,6 @@
 package com.mapbox.plugins.places.autocomplete;
 
 import android.app.Activity;
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.ColorInt;
@@ -71,9 +70,8 @@ public class PlaceAutocomplete {
    * @since 0.1.0
    */
   public static void clearRecentHistory(Context context) {
-//    SearchHistoryDatabase database = Room.databaseBuilder(context,
-//      SearchHistoryDatabase.class, PlaceConstants.SEARCH_HISTORY_DATABASE_NAME).build();
-//    new RecentSearchAsyncTask(database).execute();
+    SearchHistoryDatabase database = SearchHistoryDatabase.getInstance(context);
+    SearchHistoryDatabase.deleteAllData(database);
   }
 
   /**

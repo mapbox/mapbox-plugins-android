@@ -1,3 +1,6 @@
+sonarqube:
+	./gradlew sonarqube
+
 checkstyle:
 	./gradlew checkstyle
 

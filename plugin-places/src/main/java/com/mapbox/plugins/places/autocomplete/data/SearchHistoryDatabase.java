@@ -43,8 +43,7 @@ public abstract class SearchHistoryDatabase extends RoomDatabase {
         SearchHistoryDatabase database = SearchHistoryDatabase.getInstance(appContext);
         database.setDatabaseCreated();
       }
-    }).fallbackToDestructiveMigration().build();
-    // TODO remove fallbackToDestructiveMigration
+    }).build();
   }
 
   /**
@@ -62,26 +61,39 @@ public abstract class SearchHistoryDatabase extends RoomDatabase {
 
   public static void insertData(final SearchHistoryDatabase database,
                                 final SearchHistoryEntity searchHistory) {
-    new InsertSearchEntity(database, searchHistory).execute();
+    new DatabaseTask(database, searchHistory).execute();
+  }
+
+  public static void deleteAllData(final SearchHistoryDatabase database) {
+    new DatabaseTask(database, true).execute();
   }
 
   public LiveData<Boolean> getDatabaseCreated() {
     return isDatabaseCreated;
   }
 
-
-  private static class InsertSearchEntity extends AsyncTask<Void, Void, Void> {
+  private static class DatabaseTask extends AsyncTask<Void, Void, Void> {
 
     private final SearchHistoryDatabase database;
-    private final SearchHistoryEntity searchHistory;
+    private SearchHistoryEntity searchHistory;
+    private boolean delete;
 
-    InsertSearchEntity(SearchHistoryDatabase database, SearchHistoryEntity searchHistory) {
+    DatabaseTask(SearchHistoryDatabase database, boolean delete) {
+      this.delete = delete;
+      this.database = database;
+    }
+
+    DatabaseTask(SearchHistoryDatabase database, SearchHistoryEntity searchHistory) {
       this.searchHistory = searchHistory;
       this.database = database;
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
+      if (delete) {
+        database.searchHistoryDao().deleteAllEntries();
+        return null;
+      }
       database.searchHistoryDao().insert(searchHistory);
       return null;
     }
