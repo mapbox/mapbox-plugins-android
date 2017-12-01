@@ -1,35 +1,48 @@
+sonarqube:
+	./gradlew sonarqube
+
 checkstyle:
-	cd plugins; ./gradlew checkstyle
+	./gradlew checkstyle
 
 test:
-	cd plugins; ./gradlew :geojson:test
-	cd plugins; ./gradlew :traffic:test
-	cd plugins; ./gradlew :locationlayer:test
-	cd plugins; ./gradlew :building:test
+	./gradlew :plugin-geojson:test
+	./gradlew :plugin-traffic:test
+	./gradlew :plugin-locationlayer:test
+	./gradlew :plugin-building:test
+	./gradlew :plugin-cluster:test
+	./gradlew :plugin-offline:test
 
 build-release:
-	cd plugins; ./gradlew :geojson:assembleRelease
-	cd plugins; ./gradlew :traffic:assembleRelease
-	cd plugins; ./gradlew :locationlayer:assembleRelease
-	cd plugins; ./gradlew :building:assembleRelease
+	./gradlew :plugin-geojson:assembleRelease
+	./gradlew :plugin-traffic:assembleRelease
+	./gradlew :plugin-locationlayer:assembleRelease
+	./gradlew :plugin-building:assembleRelease
+	./gradlew :plugin-cluster:assembleRelease
+	./gradlew :plugin-offline:assembleRelease
 
 javadoc:
 	# Android modules
 	# Output is ./mapbox/*/build/docs/javadoc/release
-	cd plugins; ./gradlew :geojson:javadocrelease
-	cd plugins; ./gradlew :traffic:javadocrelease
-	cd plugins; ./gradlew :locationlayer:javadocrelease
-	cd plugins; ./gradlew :building:javadocrelease
+	./gradlew :plugin-geojson:javadocrelease
+	./gradlew :plugin-traffic:javadocrelease
+	./gradlew :plugin-locationlayer:javadocrelease
+	./gradlew :plugin-building:javadocrelease
+	./gradlew :plugin-cluster:javadocrelease
+	./gradlew :plugin-offline:javadocrelease
 
 publish:
-	cd plugins; export IS_LOCAL_DEVELOPMENT=false; ./gradlew :geojson:uploadArchives
-	cd plugins; export IS_LOCAL_DEVELOPMENT=false; ./gradlew :traffic:uploadArchives
-	cd plugins; export IS_LOCAL_DEVELOPMENT=false; ./gradlew :locationlayer:uploadArchives
-	cd plugins; export IS_LOCAL_DEVELOPMENT=false; ./gradlew :building:uploadArchives
+	export IS_LOCAL_DEVELOPMENT=false; ./gradlew :plugin-geojson:uploadArchives
+	export IS_LOCAL_DEVELOPMENT=false; ./gradlew :plugin-traffic:uploadArchives
+	export IS_LOCAL_DEVELOPMENT=false; ./gradlew :plugin-locationlayer:uploadArchives
+	export IS_LOCAL_DEVELOPMENT=false; ./gradlew :plugin-building:uploadArchives
+	export IS_LOCAL_DEVELOPMENT=false; ./gradlew :plugin-cluster:uploadArchives
+	export IS_LOCAL_DEVELOPMENT=false; ./gradlew :plugin-offline:uploadArchives
 
 publish-local:
 	# This publishes to ~/.m2/repository/com/mapbox/mapboxsdk
-	cd plugins; export IS_LOCAL_DEVELOPMENT=true; ./gradlew :geojson:uploadArchives
-	cd plugins; export IS_LOCAL_DEVELOPMENT=true; ./gradlew :traffic:uploadArchives
-	cd plugins; export IS_LOCAL_DEVELOPMENT=true; ./gradlew :locationlayer:uploadArchives
-	cd plugins; export IS_LOCAL_DEVELOPMENT=true; ./gradlew :building:uploadArchives
+	export IS_LOCAL_DEVELOPMENT=true; ./gradlew :plugin-geojson:uploadArchives
+	export IS_LOCAL_DEVELOPMENT=true; ./gradlew :plugin-traffic:uploadArchives
+	export IS_LOCAL_DEVELOPMENT=true; ./gradlew :plugin-locationlayer:uploadArchives
+	export IS_LOCAL_DEVELOPMENT=true; ./gradlew :plugin-building:uploadArchives
+	export IS_LOCAL_DEVELOPMENT=true; ./gradlew :plugin-cluster:uploadArchives
+	export IS_LOCAL_DEVELOPMENT=true; ./gradlew :plugin-offline:uploadArchives

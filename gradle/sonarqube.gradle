@@ -1,0 +1,25 @@
+apply plugin: 'org.sonarqube'
+
+sonarqube {
+  properties {
+    // Project Configuration
+    property "sonar.projectKey", "mapbox-plugins-android:master"
+    property "sonar.host.url", "https://mb-sonarqube-staging.tilestream.net"
+
+    // Project identity
+    property "sonar.projectName", "Mapbox Plugins Android"
+
+    // Test reports
+    property "sonar.java.coveragePlugin", "jacoco"
+    property "sonar.jacoco.reportPaths", "${project.buildDir}/jacoco/test.exec"
+
+    // Authentication
+    property "sonar.login", System.env.SONARQUBE_API_TOKEN
+
+    // Project information
+    property "sonar.projectDescription", ""
+    property "sonar.links.homepage", "https://github.com/mapbox/mapbox-plugins-android"
+    property "sonar.links.ci", "https://circleci.com/gh/mapbox/mapbox-plugins-android"
+    property "sonar.links.issue", "https://github.com/mapbox/mapbox-plugins-android/issues"
+  }
+}

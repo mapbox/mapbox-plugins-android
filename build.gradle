@@ -1,0 +1,40 @@
+buildscript {
+  apply from: "${rootDir}/gradle/dependencies.gradle"
+
+  repositories {
+    maven { url 'https://plugins.gradle.org/m2' }
+    jcenter()
+    google()
+  }
+
+  dependencies {
+    classpath pluginDependencies.gradle
+    classpath pluginDependencies.sonarqube
+    classpath pluginDependencies.coveralls
+    classpath pluginDependencies.errorprone
+  }
+}
+
+allprojects {
+  repositories {
+    maven { url 'https://plugins.gradle.org/m2' }
+    jcenter()
+    google()
+  }
+}
+
+task clean(type: Delete) {
+  delete rootProject.buildDir
+}
+
+subprojects {
+  apply plugin: 'idea'
+  apply plugin: 'net.ltgt.errorprone'
+  apply from: "${rootDir}/gradle/dependencies.gradle"
+
+  dependencies {
+    errorprone dependenciesList.errorprone
+  }
+}
+
+apply from: "${rootDir}/gradle/sonarqube.gradle"
