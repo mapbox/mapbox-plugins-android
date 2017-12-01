@@ -6,6 +6,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.constants.MapboxConstants;
 import com.mapbox.mapboxsdk.constants.Style;
@@ -107,6 +108,11 @@ public class OfflineDownloadActivity extends AppCompatActivity {
     float maxZoom = maxZoomView.getProgress();
     float minZoom = minZoomView.getProgress();
 
+    if (!validCoordinates(latitudeNorth, longitudeEast, latitudeSouth,longitudeWest)) {
+      Toast.makeText(this, "coordinates need to be in valid range", Toast.LENGTH_LONG).show();
+      return;
+    }
+
     // create offline definition from data
     OfflineTilePyramidRegionDefinition definition = new OfflineTilePyramidRegionDefinition(
       styleUrl,
@@ -131,5 +137,19 @@ public class OfflineDownloadActivity extends AppCompatActivity {
         .withMetadata(OfflineUtils.convertRegionName(regionName))
         .withNotificationOptions(notificationOptions)
     );
+  }
+
+  private boolean validCoordinates(double latitudeNorth, double longitudeEast, double latitudeSouth,
+                                   double longitudeWest) {
+    if (latitudeNorth < -90 || latitudeNorth > 90) {
+      return false;
+    } else if (longitudeEast < -180 || longitudeEast > 180) {
+      return false;
+    } else if (latitudeSouth < -90 || latitudeSouth > 90) {
+      return false;
+    } else if (longitudeWest < -180 || longitudeWest > 180) {
+      return false;
+    }
+    return true;
   }
 }
