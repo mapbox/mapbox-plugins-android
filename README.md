@@ -31,6 +31,8 @@ Plugins are single-purpose libraries built on top of the [Mapbox Maps SDK for An
 
 * [**GeoJSON:** Load GeoJSON data from a URL, an asset file, or path.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-geojson)
 
+* [**Marker cluster:** Add marker/markerview clusters to display a large number of points on a map.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-cluster)
+
 ## Installing a plugin
 
 By using a plugin, you also include the Android Map SDK which means that you'll need to setup your project to use the Map SDK if you haven't already. Head over to the [overview page for the Mapbox Maps SDK](https://www.mapbox.com/android-docs/map-sdk/overview/) to learn more.
