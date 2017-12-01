@@ -49,7 +49,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
  * @since 0.1.0
  */
 public class LocationLayerPlugin implements LocationEngineListener, CompassListener, MapView.OnMapChangedListener,
-  LifecycleObserver {
+  LifecycleObserver, MapboxMap.OnCameraMoveListener {
 
   @StyleRes
   private int styleRes;
@@ -57,8 +57,8 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   private LocationLayer locationLayer;
   private CompassManager compassManager;
   private LocationEngine locationEngine;
-  private MapboxMap mapboxMap;
-  private MapView mapView;
+  private final MapboxMap mapboxMap;
+  private final MapView mapView;
 
   // Enabled booleans
   @LocationLayerMode.Mode
@@ -74,6 +74,8 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
 
   private long locationUpdateTimestamp;
   private boolean linearAnimation;
+
+  private Location location;
 
   /**
    * Construct a {@code LocationLayerPlugin}
@@ -140,6 +142,8 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
         setLastLocation();
         locationEngine.addLocationEngineListener(this);
       }
+
+      mapboxMap.addOnCameraMoveListener(this);
 
       if (locationLayerMode == LocationLayerMode.COMPASS) {
         setLinearAnimation(false);
@@ -246,7 +250,9 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     if (locationEngine != null) {
       locationEngine.removeLocationEngineListener(this);
     }
-
+    if (mapboxMap != null) {
+      mapboxMap.removeOnCameraMoveListener(this);
+    }
   }
 
   /**
@@ -265,6 +271,9 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     if (!compassManager.getCompassListeners().isEmpty()
       || locationLayerMode == LocationLayerMode.COMPASS && compassManager.isSensorAvailable()) {
       compassManager.onStart();
+    }
+    if (mapboxMap != null) {
+      mapboxMap.addOnCameraMoveListener(this);
     }
   }
 
@@ -474,15 +483,28 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
    * @since 0.1.0
    */
   private void setAccuracy(Location location) {
-    double metersPerPixel = mapboxMap.getProjection().getMetersPerPixelAtLatitude(location.getLatitude());
-    float radius = (float) (location.getAccuracy() * (1 / metersPerPixel));
-
+    this.location = location;
     CircleLayer accuracyLayer = (CircleLayer) mapboxMap.getLayer(LocationLayerConstants.LOCATION_ACCURACY_LAYER);
     if (accuracyLayer != null) {
       accuracyLayer.setProperties(
-        circleRadius(radius)
+        circleRadius(calculateZoomLevelRadius(location))
       );
     }
+  }
+
+  @Override
+  public void onCameraMove() {
+    CircleLayer accuracyLayer = (CircleLayer) mapboxMap.getLayer(LocationLayerConstants.LOCATION_ACCURACY_LAYER);
+    if (accuracyLayer != null && accuracyLayer.getVisibility().isValue()) {
+      accuracyLayer.setProperties(
+        circleRadius(calculateZoomLevelRadius(location))
+      );
+    }
+  }
+
+  private float calculateZoomLevelRadius(Location location) {
+    double metersPerPixel = mapboxMap.getProjection().getMetersPerPixelAtLatitude(location.getLatitude());
+    return (float) (location.getAccuracy() * (1 / metersPerPixel));
   }
 
   /**
