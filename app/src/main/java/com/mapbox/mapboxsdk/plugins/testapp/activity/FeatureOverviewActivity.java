@@ -165,7 +165,9 @@ public class FeatureOverviewActivity extends AppCompatActivity implements Permis
           String label = getString(info.labelRes);
           String description = resolveString(info.descriptionRes);
           String category = resolveMetaData(info.metaData, metaDataKey);
-          features.add(new Feature(info.name, label, description, category));
+          if (category != null) {
+            features.add(new Feature(info.name, label, description, category));
+          }
         }
       }
 
