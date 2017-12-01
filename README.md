@@ -16,6 +16,27 @@ Plugins are single-purpose libraries built on top of the [Mapbox Maps SDK for An
 
 * [**Marker cluster:** Add marker/markerview clusters to display a large number of points on a map.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-cluster)
 
+## Installing a plugin
+
+By using a plugin, you also include the Android Map SDK which means that you'll need to setup your project to use the Map SDK if you haven't already. Head over to the [overview page for the Mapbox Maps SDK](https://www.mapbox.com/android-docs/map-sdk/overview/) to learn more.
+
+Note that depending on the plugin you add, there might be required permissions and additional setup steps. You'll find more information on whether or not more configuration steps are involved when looking at the specific plugin documentation.
+
+1. Start Android Studio
+2. Open up your application's `build.gradle`
+3. Make sure that your project's `minSdkVersion` is at API 14 or higher
+4. Under dependencies, add a new build rule for the latest plugin version you are trying to use.
+```gradle
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile 'com.mapbox.mapboxsdk:PLUGIN_NAME:PLUGIN_VERSION_NUMBER'
+}
+```
+5. Click the Sync Project with Gradle Files near the toolbar in Studio.
+
 
 ## Help and Usage
 

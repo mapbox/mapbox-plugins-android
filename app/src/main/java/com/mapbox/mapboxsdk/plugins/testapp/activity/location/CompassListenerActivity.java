@@ -74,7 +74,9 @@ public class CompassListenerActivity extends AppCompatActivity implements OnMapR
   protected void onStop() {
     super.onStop();
     mapView.onStop();
-    locationLayerPlugin.onStop();
+    if (locationLayerPlugin != null) {
+      locationLayerPlugin.onStop();
+    }
   }
 
   @Override

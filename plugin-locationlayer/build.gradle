@@ -17,12 +17,9 @@ android {
 }
 
 dependencies {
-
   implementation dependenciesList.supportAppcompatV7
-  api dependenciesList.mapboxServices
-  api (dependenciesList.mapboxMapSdk) {
-    transitive = true
-  }
+  implementation dependenciesList.mapboxServices
+  implementation dependenciesList.mapboxMapSdk
 
   // Unit testing
   testImplementation dependenciesList.junit

@@ -16,9 +16,8 @@ android {
 }
 
 dependencies {
-  api (dependenciesList.mapboxMapSdk) {
-    transitive = true
-  }
+  implementation dependenciesList.mapboxMapSdk
+  implementation dependenciesList.supportAnnotation
 
   // Unit testing
   testImplementation dependenciesList.junit
