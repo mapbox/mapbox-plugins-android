@@ -22,7 +22,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillExtrusionOpa
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
 
 /**
- * The building plugin allows to add 3d buildings FillExtrusionLayer to the Mapbox Android SDK v5.1.0.
+ * The building plugin allows to add 3d buildings FillExtrusionLayer to the Mapbox Maps SDK for Android v5.1.0.
  * <p>
  * Initialise this plugin in the {@link com.mapbox.mapboxsdk.maps.OnMapReadyCallback#onMapReady(MapboxMap)} and provide
  * a valid instance of {@link MapView} and {@link MapboxMap}.
