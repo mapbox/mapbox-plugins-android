@@ -1,11 +1,8 @@
-[![Build Status](https://www.bitrise.io/app/a3a5f64a6d4a78c3.svg?token=RJY5I160EZSKZr1e0KgLrw&branch=master)](https://www.bitrise.io/app/a3a5f64a6d4a78c3)
-
 # Mapbox GeoJSON plugin
 
 The GeoJSON plugin makes it simple to load GeoJSON data from a URL, an asset file, or path. It also has a `OnLoadingGeoJsonListener` for handling GeoJSON preload, loaded GeoJSON, and failed GeoJSON load events.
 
 ![geojson-plugin](https://user-images.githubusercontent.com/4394910/30302839-b66253a0-9718-11e7-8c8e-e61825e237d2.gif)
-
 
 ## Getting Started
 
@@ -61,7 +58,6 @@ Splitting specific functionality into plugins makes our Map SDK lighter and nimb
 
 The Mapbox Android team creates plugins but this plugins repository is an open-source project similar to the various Mapbox SDKs for Android.
 Plugins' lightweight nature makes them much easier for you and anyone else to contribute rather than trying to add the same feature to the more robust Map SDK. The Mapbox team can also more easily accept contributed plugins and keep the plugin list growing.
-
 
 ## Contributing
 

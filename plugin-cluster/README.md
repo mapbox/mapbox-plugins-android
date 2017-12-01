@@ -1,13 +1,8 @@
-[![Build Status](https://www.bitrise.io/app/a3a5f64a6d4a78c3.svg?token=RJY5I160EZSKZr1e0KgLrw&branch=master)](https://www.bitrise.io/app/a3a5f64a6d4a78c3)
-
 # Mapbox marker cluster plugin
 
 The marker cluster plugin automatically handles the display of a large number of markers so that your map doesn't have many markers overlapping one another. The plugin "clusters" markers on a Mapbox map for a cleaner and lighter display of data. The number within the cluster circle represents the number of markers that are in that area at a higher zoom level.
 
-
 ![marker-cluster-plugin](https://user-images.githubusercontent.com/4394910/32691924-213993c0-c6c4-11e7-8f89-819c639f5ed4.gif)
-
-
 
 ## Getting Started
 
@@ -51,7 +46,6 @@ https://github.com/mapbox/mapbox-plugins-android/blob/master/plugins/app/src/mai
 
 - [In the Mapbox Android demo app](https://github.com/mapbox/mapbox-android-demo/blob/master/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/plugins/MarkerClustersPluginActivity.java) – (Don't have the app? [Download it on Google Play](https://play.google.com/store/apps/details?id=com.mapbox.mapboxandroiddemo).)
 
-
 ## Help and Usage
 
 This repository includes an app that shows how to use each plugins in this repository. [Check out its code](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugins/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp) for ready-to-use snippets.
@@ -64,7 +58,6 @@ Splitting specific functionality into plugins makes our Map SDK lighter and nimb
 
 The Mapbox Android team creates plugins but this plugins repository is an open-source project similar to the various Mapbox Android SDKs.
 Plugins' lightweight nature makes them much easier for you and anyone else to contribute rather than trying to add the same feature to the more robust Map SDK. The Mapbox team can also more easily accept contributed plugins and keep the plugin list growing.
-
 
 ## Contributing
 
