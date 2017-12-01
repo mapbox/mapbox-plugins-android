@@ -1,1 +1,1 @@
-include ':app', ':plugin-traffic', ':plugin-locationlayer', ':plugin-building', ':plugin-cluster', ':plugin-geojson'
+include ':app', ':plugin-traffic', ':plugin-locationlayer', ':plugin-building', ':plugin-cluster', ':plugin-geojson', 'plugin-offline'
