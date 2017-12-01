@@ -1,59 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/coordinator_layout"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/coordinator_layout"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <com.mapbox.mapboxsdk.maps.MapView
+    android:id="@+id/mapView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_above="@+id/seekbar_wrapper"
+    app:mapbox_cameraTargetLat="51.505300"
+    app:mapbox_cameraTargetLng="-0.075073"
+    app:mapbox_cameraTilt="60"
+    app:mapbox_cameraZoom="16"
+    app:mapbox_styleUrl="@string/mapbox_style_mapbox_streets"
+    app:mapbox_uiAttribution="false"/>
 
-    <com.mapbox.mapboxsdk.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/seekbar_wrapper"
-        app:mapbox_cameraTargetLat="51.505300"
-        app:mapbox_cameraTargetLng="-0.075073"
-        app:mapbox_cameraTilt="60"
-        app:mapbox_cameraZoom="16"
-        app:mapbox_styleUrl="@string/mapbox_style_mapbox_streets"/>
+  <android.support.design.widget.FloatingActionButton
+    android:id="@+id/fabBuilding"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_above="@id/seekbar_wrapper"
+    android:layout_alignParentRight="true"
+    android:layout_gravity="end|bottom"
+    android:layout_margin="16dp"
+    android:src="@drawable/ic_business"
+    android:tint="@android:color/white"
+    app:backgroundTint="@color/colorPrimary"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabBuilding"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/seekbar_wrapper"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_business"
-        android:tint="@android:color/white"
-        app:backgroundTint="@color/colorPrimary"/>
+  <LinearLayout
+    android:id="@id/seekbar_wrapper"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    android:padding="4dp">
 
-    <LinearLayout
-        android:id="@id/seekbar_wrapper"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary"
-        android:orientation="vertical"
-        android:padding="4dp">
+    <SeekBar
+      android:id="@+id/seekbarLightRadialCoordinate"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"/>
 
-        <SeekBar
-            android:id="@+id/seekbarLightRadialCoordinate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+    <SeekBar
+      android:id="@+id/seekbarLightAzimuthalAngle"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"/>
 
-        <SeekBar
-            android:id="@+id/seekbarLightAzimuthalAngle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+    <SeekBar
+      android:id="@+id/seekbarLightPolarAngle"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"/>
 
-        <SeekBar
-            android:id="@+id/seekbarLightPolarAngle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-    </LinearLayout>
+  </LinearLayout>
 
 </RelativeLayout>
