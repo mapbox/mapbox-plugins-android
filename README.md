@@ -1,5 +1,22 @@
-[![Build Status](https://www.bitrise.io/app/a3a5f64a6d4a78c3.svg?token=RJY5I160EZSKZr1e0KgLrw&branch=master)](https://www.bitrise.io/app/a3a5f64a6d4a78c3)
+<!--<!--<h1 align="center">
+  <br>
+  <a href="https://www.mapbox.com/android-docs/mapbox-services/overview/"><img src="https://github.com/mapbox/mapbox-java/blob/master/.github/mbxservice-logo.png" alt="Mapbox Service" width="400"></a>
+</h1>-->
 
+<h4 align="center">Plugins are single-purpose libraries built on top of the <a href="https://www.mapbox.com/android-docs/">Mapbox Maps SDK for Android</a> that you can include in your apps like any other Android dependency</h4>
+
+<p align="center">
+  <a href="https://circleci.com/gh/mapbox/mapbox-plugins-android">
+    <img src="https://circleci.com/gh/mapbox/mapbox-plugins-android.svg?style=shield&circle-token=:circle-token">
+  </a>
+  <!--<a href="https://sonarcloud.io/dashboard?id=mapbox-java-services"><img src="https://sonarcloud.io/api/badges/gate?key=mapbox-java-services"/></a>-->
+</p>
+<br>
+
+## Documentation
+
+You'll [find documentation](https://www.mapbox.com/android-docs/overview/) for each plugin on our website. A full list of the current plugins is available below.
+-->
 # Mapbox Plugins for Android
 
 Plugins are single-purpose libraries built on top of the [Mapbox Maps SDK for Android](https://www.mapbox.com/android-docs/) that you can include in your apps like any other Android dependency. You'll [find documentation](https://www.mapbox.com/android-docs/overview/) for each plugin on our website. A full list of the current plugins is available below.

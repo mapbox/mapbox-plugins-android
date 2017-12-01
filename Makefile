@@ -11,6 +11,7 @@ test:
 	./gradlew :plugin-building:test
 	./gradlew :plugin-cluster:test
 	./gradlew :plugin-places:test
+	./gradlew :plugin-offline:test
 
 build-release:
 	./gradlew :plugin-geojson:assembleRelease
@@ -19,6 +20,7 @@ build-release:
 	./gradlew :plugin-building:assembleRelease
 	./gradlew :plugin-cluster:assembleRelease
 	./gradlew :plugin-places:assembleRelease
+	./gradlew :plugin-offline:assembleRelease
 
 javadoc:
 	# Android modules
@@ -29,6 +31,7 @@ javadoc:
 	./gradlew :plugin-building:javadocrelease
 	./gradlew :plugin-cluster:javadocrelease
 	./gradlew :plugin-places:javadocrelease
+	./gradlew :plugin-offline:javadocrelease
 
 publish:
 	export IS_LOCAL_DEVELOPMENT=false; ./gradlew :plugin-geojson:uploadArchives
@@ -37,6 +40,7 @@ publish:
 	export IS_LOCAL_DEVELOPMENT=false; ./gradlew :plugin-building:uploadArchives
 	export IS_LOCAL_DEVELOPMENT=false; ./gradlew :plugin-cluster:uploadArchives
 	export IS_LOCAL_DEVELOPMENT=false; ./gradlew :plugin-places:uploadArchives
+	export IS_LOCAL_DEVELOPMENT=false; ./gradlew :plugin-offline:uploadArchives
 
 publish-local:
 	# This publishes to ~/.m2/repository/com/mapbox/mapboxsdk
@@ -46,3 +50,4 @@ publish-local:
 	export IS_LOCAL_DEVELOPMENT=true; ./gradlew :plugin-building:uploadArchives
 	export IS_LOCAL_DEVELOPMENT=true; ./gradlew :plugin-cluster:uploadArchives
 	export IS_LOCAL_DEVELOPMENT=true; ./gradlew :plugin-places:uploadArchives
+	export IS_LOCAL_DEVELOPMENT=true; ./gradlew :plugin-offline:uploadArchives
