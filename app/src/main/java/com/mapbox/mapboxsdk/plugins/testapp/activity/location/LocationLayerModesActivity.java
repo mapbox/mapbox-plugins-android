@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -16,6 +17,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
+import com.mapbox.mapboxsdk.plugins.locationlayer.OnLocationLayerClickListener;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.services.android.location.LostLocationEngine;
 import com.mapbox.services.android.telemetry.location.LocationEngine;
@@ -27,7 +29,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LocationLayerModesActivity extends AppCompatActivity implements OnMapReadyCallback,
-  LifecycleRegistryOwner, LocationEngineListener {
+  LifecycleRegistryOwner, LocationEngineListener, OnLocationLayerClickListener {
 
   @BindView(R.id.mapView)
   MapView mapView;
@@ -93,6 +95,7 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     locationEngine.addLocationEngineListener(this);
     locationEngine.activate();
     locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine);
+    locationLayerPlugin.setOnLocationClickListener(this);
     getLifecycle().addObserver(locationLayerPlugin);
   }
 
@@ -190,5 +193,10 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
   public void onLocationChanged(Location location) {
     mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
       new LatLng(location.getLatitude(), location.getLongitude()), 16));
+  }
+
+  @Override
+  public void onLocationLayerClick() {
+    Toast.makeText(this, "OnLocationLayerClick", Toast.LENGTH_LONG).show();
   }
 }
