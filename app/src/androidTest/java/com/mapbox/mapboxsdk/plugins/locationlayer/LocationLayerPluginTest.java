@@ -136,7 +136,7 @@ public class LocationLayerPluginTest {
       public void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap,
                                         UiController uiController) {
         locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.COMPASS);
-        assertTrue(mapboxMap.getLayer(ßNAVIGATION_LAYER) != null);
+        assertTrue(mapboxMap.getLayer(NAVIGATION_LAYER) != null);
       }
     });
   }

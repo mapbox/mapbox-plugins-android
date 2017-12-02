@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatDelegate;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.services.android.telemetry.location.LocationEngine;
@@ -48,7 +49,7 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.
  * @since 0.1.0
  */
 public class LocationLayerPlugin implements LocationEngineListener, CompassListener, MapView.OnMapChangedListener,
-  LifecycleObserver {
+  LifecycleObserver, MapboxMap.OnMapClickListener {
 
   private static final int ACCURACY_CIRCLE_STEPS = 48;
 
@@ -72,6 +73,8 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
 
   private long locationUpdateTimestamp;
   private boolean linearAnimation;
+
+  private OnLocationLayerClickListener onLocationLayerClickListener;
 
   @StyleRes
   private int styleRes;
@@ -313,6 +316,25 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     compassManager.removeCompassListener(compassListener);
     if (compassManager.getCompassListeners().size() < 1) {
       compassManager.onStop();
+    }
+  }
+
+  /**
+   * Adds a listener that gets invoked when the user clicks the location layer.
+   *
+   * @param locationClickListener The location layer click listener that is invoked when the location layer is clicked.
+   */
+  public void setOnLocationClickListener(@Nullable OnLocationLayerClickListener locationClickListener) {
+    this.onLocationLayerClickListener = locationClickListener;
+    if (onLocationLayerClickListener != null) {
+      mapboxMap.setOnMapClickListener(this);
+    }
+  }
+
+  @Override
+  public void onMapClick(@NonNull LatLng point) {
+    if (onLocationLayerClickListener != null && locationLayer.onMapClick(point)) {
+      onLocationLayerClickListener.onLocationLayerClick();
     }
   }
 
