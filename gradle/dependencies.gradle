@@ -10,6 +10,7 @@ ext {
   version = [
       mapboxMapSdk       : '5.2.0',
       mapboxServices     : '2.2.9',
+      mapboxGeocoding    : '3.0.0-SNAPSHOT',
       autoValue          : '1.4.1',
       autoValueParcel    : '0.2.5',
       junit              : '4.12',
@@ -28,7 +29,9 @@ ext {
       commonsIO          : '2.5',
       robolectric        : '3.4.2',
       lifecycleCompiler  : '1.0.0',
-      lifecycleRuntime   : '1.0.3',
+      lifecycleExtensions: '1.0.0',
+      room               : '1.0.0',
+      androidArchCore    : '1.0.0',
       okhttp             : '3.9.0'
   ]
 
@@ -47,6 +50,7 @@ ext {
       // mapbox
       mapboxMapSdk           : "com.mapbox.mapboxsdk:mapbox-android-sdk:${version.mapboxMapSdk}@aar",
       mapboxServices         : "com.mapbox.mapboxsdk:mapbox-android-services:${version.mapboxServices}",
+      mapboxGeocoding        : "com.mapbox.mapboxsdk:mapbox-java-services-geocoding:${version.mapboxGeocoding}",
       geojson                : "com.mapbox.mapboxsdk:mapbox-java-geojson:${version.mapboxServices}",
 
       // AutoValue
@@ -68,8 +72,10 @@ ext {
       supportConstraintLayout: "com.android.support.constraint:constraint-layout:${version.constraintLayout}",
 
       // architecture
-      lifecycleExtensions    : "android.arch.lifecycle:extensions:${version.lifecycleRuntime}",
+      lifecycleExtensions    : "android.arch.lifecycle:extensions:${version.lifecycleExtensions}",
       lifecycleCompiler      : "android.arch.lifecycle:compiler:${version.lifecycleCompiler}",
+      roomRuntime            : "android.arch.persistence.room:runtime:${version.room}",
+      roomCompiler           : "android.arch.persistence.room:compiler:${version.room}",
 
       // square crew
       timber                 : "com.jakewharton.timber:timber:${version.timber}",
@@ -90,6 +96,7 @@ ext {
       hamcrest               : "org.hamcrest:hamcrest-junit:${version.hamcrest}",
       commonsIO              : "commons-io:commons-io:${version.commonsIO}",
       robolectric            : "org.robolectric:robolectric:${version.robolectric}",
+      androidArchCore        : "android.arch.core:core-testing:${version.androidArchCore}",
 
       // okhttp
       okhttp                 : "com.squareup.okhttp3:okhttp:${version.okhttp}",

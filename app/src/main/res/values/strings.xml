@@ -1,43 +1,45 @@
 <resources>
-    <string name="app_name">Mapbox Android Plugins</string>
+  <string name="app_name">Mapbox Android Plugins</string>
 
-    <!-- Categories -->
-    <string name="category">category</string>
-    <string name="category_extrusions">Extrusions</string>
-    <string name="category_navigation">Navigation</string>
-    <string name="category_location">Location</string>
-    <string name="category_runtime_loading">Navigation</string>
-    <string name="category_annotations">Annotations</string>
-    <string name="category_offline">Offline</string>
+  <!-- Categories -->
+  <string name="category">category</string>
+  <string name="category_extrusions">Extrusions</string>
+  <string name="category_navigation">Navigation</string>
+  <string name="category_location">Location</string>
+  <string name="category_runtime_loading">Navigation</string>
+  <string name="category_annotations">Annotations</string>
+  <string name="category_places">Places</string>
+  <string name="category_offline">Offline</string>
 
-    <!-- Titles -->
-    <string name="title_traffic">Traffic Plugin</string>
-    <string name="title_building">Building Plugin</string>
-    <string name="title_location_modes">Location Modes</string>
-    <string name="title_location_map_change">Location Layer Map Change</string>
-    <string name="title_location_manual_update">Toggle Manual Location Updates</string>
-    <string name="title_compass_listener">Compass Listener</string>
-    <string name="title_geojson">GeoJson Plugin</string>
-    <string name="title_cluster">Cluster Plugin</string>
-    <string name="title_offline_plugin">Create region</string>
-    <string name="title_offline_regions">List regions</string>
+  <!-- Titles -->
+  <string name="title_traffic">Traffic Plugin</string>
+  <string name="title_building">Building Plugin</string>
+  <string name="title_location_modes">Location Modes</string>
+  <string name="title_location_map_change">Location Layer Map Change</string>
+  <string name="title_location_manual_update">Toggle Manual Location Updates</string>
+  <string name="title_compass_listener">Compass Listener</string>
+  <string name="title_geojson">GeoJson Plugin</string>
+  <string name="title_cluster">Cluster Plugin</string>
+  <string name="title_places_autocomplete">Places Autocomplete</string>
+  <string name="title_offline_plugin">Create region</string>
+  <string name="title_offline_regions">List regions</string>
 
-    <!-- Descriptions -->
-    <string name="description_traffic">Add Traffic layers to any Mapbox basemap.</string>
-    <string name="description_building">Add 3D Building layer to a Mapbox map.</string>
-    <string name="description_location_modes">Switch between the different location modes.</string>
-    <string name="description_location_map_change">Change map styles while the location layers on the map.</string>
-    <string name="description_location_manual_update">Toggle the user location manual mode on and off.</string>
-    <string name="description_compass_listener">Add a compass listener to know when heading changes or when the accuracy dropsx</string>
-    <string name="description_geojson">Load GeoJson file from assets, path or url to the Mapbox.</string>
-    <string name="description_cluster">Add marker clustering to a Mapbox map.</string>
-    <string name="description_offline_plugin">Use a form to create an offline region.</string>
-    <string name="description_offline_regions">List all offline regions.</string>
+  <!-- Descriptions -->
+  <string name="description_traffic">Add Traffic layers to any Mapbox basemap.</string>
+  <string name="description_building">Add 3D Building layer to a Mapbox map.</string>
+  <string name="description_location_modes">Switch between the different location modes.</string>
+  <string name="description_location_map_change">Change map styles while the location layers on the map.</string>
+  <string name="description_location_manual_update">Toggle the user location manual mode on and off.</string>
+  <string name="description_compass_listener">Add a compass listener to know when heading changes or when the accuracy dropsx</string>
+  <string name="description_geojson">Load GeoJson file from assets, path or url to the Mapbox.</string>
+  <string name="description_cluster">Add marker clustering to a Mapbox map.</string>
+  <string name="description_autocomplete">Launch the autocomplete activity.</string>
+  <string name="description_offline_plugin">Use a form to create an offline region.</string>
+  <string name="description_offline_regions">List all offline regions.</string>
 
-    <!-- Buttons -->
-    <string name="button_location_mode_none">None</string>
-    <string name="button_location_mode_tracking">Tracking</string>
-    <string name="button_location_mode_compass">Compass</string>
-    <string name="button_location_mode_navigation">Nav</string>
-
+  <!-- Buttons -->
+  <string name="button_location_mode_none">None</string>
+  <string name="button_location_mode_tracking">Tracking</string>
+  <string name="button_location_mode_compass">Compass</string>
+  <string name="button_location_mode_navigation">Nav</string>
 </resources>

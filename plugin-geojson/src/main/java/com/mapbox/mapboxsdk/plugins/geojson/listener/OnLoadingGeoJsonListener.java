@@ -12,7 +12,7 @@ public interface OnLoadingGeoJsonListener {
   void onLoaded();
 
   /**
-   * @param e the Exception occur during load & parse GeoJson file
+   * @param e the Exception occur during load and parse GeoJson file
    */
   void onLoadFailed(Exception e);
 }
