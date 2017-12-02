@@ -5,6 +5,8 @@ import android.arch.lifecycle.LifecycleRegistryOwner;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -34,6 +36,7 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
   private LifecycleRegistry lifecycleRegistry;
   private LocationEngine locationEngine;
   private MapboxMap mapboxMap;
+  private boolean customStyle;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +94,27 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     locationEngine.activate();
     locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine);
     getLifecycle().addObserver(locationLayerPlugin);
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_location, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (locationLayerPlugin == null) {
+      return super.onOptionsItemSelected(item);
+    }
+
+    if (item.getItemId() == R.id.action_style_change) {
+      customStyle = !customStyle;
+      locationLayerPlugin.applyStyle(customStyle ? R.style.CustomLocationLayer : R.style.LocationLayer);
+      return true;
+    }
+
+    return super.onOptionsItemSelected(item);
   }
 
   public LocationLayerPlugin getLocationLayerPlugin() {
