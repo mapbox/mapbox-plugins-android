@@ -23,7 +23,7 @@ Plugins are single-purpose libraries built on top of the [Mapbox Maps SDK for An
 
 ## Available Plugins
 
-* [**Traffic plugin:** Adds a real-time traffic layer to any Mapbox base map.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-traffic)
+* [**Traffic:** Adds a real-time traffic layer to any Mapbox base map.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-traffic)
 
 * [**Location layer:** Add a location marker on your map indicating the user's location.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-locationlayer)
 
@@ -31,9 +31,11 @@ Plugins are single-purpose libraries built on top of the [Mapbox Maps SDK for An
 
 * [**GeoJSON:** Load GeoJSON data from a URL, an asset file, or path.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-geojson)
 
-* [**Marker cluster:** Add marker/markerview clusters to display a large number of points on a map.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-cluster)
+* [**Marker cluster:** Add marker/markerview clusters to display a large number of points on a map.](https://github.com/mapbox/mapbox-plugins-android/tree/maste
 
-* [**Places:** Add location search to your app with beautiful UI.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-places)
+* [**Offline:** Download maps tiles and manage downloaded regions for situations when a user's device doesn't have an internet connection.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-offline)
+
+* [**Places:** Add location search to your app with beautiful UI.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-place
 
 ## Installing a plugin
 
