@@ -2,12 +2,14 @@ package com.mapbox.mapboxsdk.plugins.locationlayer;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 import android.support.v4.content.ContextCompat;
 
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.functions.Function;
@@ -21,6 +23,7 @@ import com.mapbox.services.commons.geojson.FeatureCollection;
 import com.mapbox.services.commons.geojson.Point;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.ACCURACY_LAYER;
@@ -219,5 +222,20 @@ final class LocationLayer {
       fillColor(accuracyColor),
       fillOpacity(accuracyAlpha)
     );
+  }
+
+  //
+  // Map click event
+  //
+
+  boolean onMapClick(LatLng point) {
+    PointF screenLoc = mapboxMap.getProjection().toScreenLocation(point);
+    List<Feature> features = mapboxMap.queryRenderedFeatures(screenLoc,
+      BACKGROUND_LAYER,
+      FOREGROUND_LAYER,
+      BEARING_LAYER,
+      NAVIGATION_LAYER
+    );
+    return !features.isEmpty();
   }
 }
