@@ -1,8 +1,6 @@
 # Mapbox offline plugin
 
-The marker cluster plugin automatically handles the display of a large number of markers so that your map doesn't have many markers overlapping one another. The plugin "clusters" markers on a Mapbox map for a cleaner and lighter display of data. The number within the cluster circle represents the number of markers that are in that area at a higher zoom level.
-
-![marker-cluster-plugin](https://user-images.githubusercontent.com/4394910/32691924-213993c0-c6c4-11e7-8f89-819c639f5ed4.gif)
+The offline plugin automatically does the downloading and managment of map tiles for offline Android device use. _Especially_ if you're building a project for outdoors use, a user's device won't always have a strong enough internet connection to download and view map tiles. Once given the desired coordinates, zoom levels, and map style, this plugin handles the rest of the work that's required for fetching and storing map tiles for any region of the world that you want.
 
 ## Getting Started
 
@@ -45,8 +43,6 @@ dependencies {
  -[Offline download](https://github.com/mapbox/mapbox-plugins-android/blob/396df90fb121402406928405634b9c56a2faa4ae/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/offline/OfflineDownloadActivity.java)
  -[Downloaded region overview](https://github.com/mapbox/mapbox-plugins-android/blob/396df90fb121402406928405634b9c56a2faa4ae/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/offline/OfflineRegionDetailActivity.java)
  -[List downloaded regions](https://github.com/mapbox/mapbox-plugins-android/blob/396df90fb121402406928405634b9c56a2faa4ae/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/offline/OfflineRegionListActivity.java)
-
-- [In the Mapbox Android demo app](https://github.com/mapbox/mapbox-android-demo/blob/master/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/plugins/MarkerClustersPluginActivity.java) – (Don't have the app? [Download it on Google Play](https://play.google.com/store/apps/details?id=com.mapbox.mapboxandroiddemo).)
 
 ## Help and Usage
 
