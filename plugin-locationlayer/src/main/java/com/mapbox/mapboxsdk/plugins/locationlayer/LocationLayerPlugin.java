@@ -64,6 +64,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   private int locationLayerMode;
 
   // Previous compass and location values
+  private Location lastLocation;
   private float previousMagneticHeading;
   private Point previousPoint;
 
@@ -397,6 +398,16 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   }
 
   /**
+   * Get the last know location of the location layer plugin.
+   *
+   * @return the last known location
+   */
+  @Nullable
+  public Location getLastKnownLocation() {
+    return lastLocation;
+  }
+
+  /**
    * Convenience method for stopping all animations
    */
   private void stopAllAnimations() {
@@ -492,6 +503,8 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
    * @since 0.1.0
    */
   private void setLocation(final Location location) {
+    lastLocation = location;
+
     // Convert the new location to a Point object.
     Point newPoint = Point.fromCoordinates(new double[] {location.getLongitude(), location.getLatitude()});
 
