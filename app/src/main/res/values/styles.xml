@@ -13,6 +13,12 @@
   <style name="CustomLocationLayer" parent="LocationLayer">
     <item name="backgroundDrawable">@drawable/custom_user_stroke_icon</item>
     <item name="foregroundDrawable">@drawable/custom_user_icon</item>
+
+    <item name="bearingDrawable">@drawable/custom_user_arrow</item>
+    <item name="navigationDrawable">@drawable/custom_user_puck_icon</item>
+
+    <item name="accuracyAlpha">0.15</item>
+    <item name="accuracyColor">#FF82C6</item>
   </style>
 
   <style name="AppTheme.NoActionBar">
@@ -23,5 +29,5 @@
   <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
   <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
-
+    
 </resources>
