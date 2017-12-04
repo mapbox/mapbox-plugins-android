@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white_alpha">#F2FFFFFF</color>
+    <color name="soft_grey">#ECEEEF</color>
+    <color name="mid_grey">#9199A1</color>
+    <color name="strong_grey">#50545A</color>
+</resources>

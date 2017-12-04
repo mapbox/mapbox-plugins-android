@@ -1,0 +1,358 @@
+package com.mapbox.mapboxsdk.plugins.locationpicker;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.ContentLoadingProgressBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
+import android.util.Log;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.annotations.Marker;
+import com.mapbox.mapboxsdk.annotations.MarkerOptions;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.constants.Style;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.services.api.ServicesException;
+import com.mapbox.services.api.geocoding.v5.GeocodingCriteria;
+import com.mapbox.services.api.geocoding.v5.MapboxGeocoding;
+import com.mapbox.services.api.geocoding.v5.models.CarmenFeature;
+import com.mapbox.services.api.geocoding.v5.models.GeocodingResponse;
+import com.mapbox.services.commons.models.Position;
+
+import java.util.List;
+import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class LocationPickerActivity extends AppCompatActivity implements OnMapReadyCallback {
+  public static final String MAPBOX_TOKEN = "mapbox_token";
+  public static final String LATITUDE = "latitude";
+  public static final String LONGITUDE = "longitude";
+  public static final String ADDRESS = "address";
+  public static final String BACK_PRESSED_RETURN = "back_pressed_return";
+  public static final String ENABLE_SATELLITE_VIEW = "enable_satellite_view";
+  private MapView mapView;
+  private MapboxMap mMap;
+  private TextView address;
+  private TextView coordinates;
+  private FrameLayout locationInfoLayout;
+  private ContentLoadingProgressBar progressBar;
+  private boolean enableSatelliteView;
+  private boolean enableBackPressedReturn;
+  private Marker currentMarker;
+  private LatLng location;
+  private String currentAddress;
+  private LatLng currentPosition;
+  private String mapboxToken;
+
+  static {
+    AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+  }
+
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    getValuesFromBundle();
+    Mapbox.getInstance(this, mapboxToken);
+    setContentView(R.layout.activity_location_picker);
+    setUpMap(savedInstanceState);
+    setUpMainVariables();
+    setUpFloatingButtons();
+  }
+
+  private void setUpMap(Bundle savedInstanceState) {
+    mapView = findViewById(R.id.mapView);
+    mapView.setStyleUrl(Style.MAPBOX_STREETS);
+    mapView.onCreate(savedInstanceState);
+    mapView.getMapAsync(this);
+  }
+
+  private void setUpMainVariables() {
+    progressBar = findViewById(R.id.loading_progress_bar);
+    progressBar.setVisibility(View.GONE);
+    locationInfoLayout = findViewById(R.id.location_info);
+    address = findViewById(R.id.address);
+    coordinates = findViewById(R.id.coordinates);
+  }
+
+  private void setUpFloatingButtons() {
+    FloatingActionButton buttonCurrentLocation = findViewById(R.id.button_current_location);
+    buttonCurrentLocation.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        //TODO get current location from gps and move marker and map to it.
+      }
+    });
+    FloatingActionButton buttonAccept = findViewById(R.id.button_accept);
+    buttonAccept.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        returnCurrentPosition();
+      }
+    });
+    final FloatingActionButton buttonSatellite = findViewById(R.id.button_satellite);
+    buttonSatellite.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        mapView.setStyleUrl(Style.MAPBOX_STREETS.equals(mMap.getStyleUrl()) ? Style.SATELLITE : Style.MAPBOX_STREETS);
+        buttonSatellite.setImageResource(
+          !Style.MAPBOX_STREETS.equals(mMap.getStyleUrl()) ? R.drawable.ic_satellite_on : R.drawable.ic_satellite_off);
+      }
+    });
+    buttonSatellite.setVisibility(enableSatelliteView ? View.VISIBLE : View.GONE);
+  }
+
+  private void getValuesFromBundle() {
+    Bundle bundle = getIntent().getExtras();
+    if (bundle != null) {
+      if (location == null) {
+        location = new LatLng();
+      }
+      location.setLatitude(bundle.getDouble(LATITUDE));
+      location.setLongitude(bundle.getDouble(LONGITUDE));
+      mapboxToken = (bundle.getString(MAPBOX_TOKEN));
+      enableBackPressedReturn = bundle.getBoolean(BACK_PRESSED_RETURN);
+      enableSatelliteView = bundle.getBoolean(ENABLE_SATELLITE_VIEW);
+    }
+  }
+
+  private void returnCurrentPosition() {
+    if (currentPosition != null) {
+      Intent returnIntent = new Intent();
+      returnIntent.putExtra(LATITUDE, currentPosition.getLatitude());
+      returnIntent.putExtra(LONGITUDE, currentPosition.getLongitude());
+      if (currentAddress != null) {
+        returnIntent.putExtra(ADDRESS, currentAddress);
+      }
+      setResult(RESULT_OK, returnIntent);
+    } else {
+      setResult(RESULT_CANCELED);
+    }
+    finish();
+  }
+
+  @Override
+  public void onMapReady(MapboxMap mapboxMap) {
+    mMap = mapboxMap;
+    setCurrentPositionLocation();
+    setMapClickListener();
+  }
+
+  private void setCurrentPositionLocation() {
+    if (location != null) {
+      setNewMapMarker(location);
+      reverseGeocode(location);
+    }
+  }
+
+  private void setNewMapMarker(LatLng latLng) {
+    if (mMap != null) {
+      if (currentMarker != null) {
+        currentMarker.setPosition(latLng);
+      } else {
+        currentMarker = addMarker(latLng);
+      }
+      CameraPosition cameraPosition =
+        new CameraPosition.Builder().target(latLng)
+          .zoom(15)
+          .build();
+      mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 200);
+    }
+  }
+
+  private Marker addMarker(LatLng latLng) {
+    return mMap.addMarker(new MarkerOptions().position(latLng));
+  }
+
+  private void reverseGeocode(final LatLng point) {
+    hideAddressLayout();
+    try {
+      MapboxGeocoding client = new MapboxGeocoding.Builder()
+        .setAccessToken(mapboxToken)
+        .setCoordinates(Position.fromCoordinates(point.getLongitude(), point.getLatitude()))
+        .setGeocodingType(GeocodingCriteria.TYPE_ADDRESS)
+        .build();
+
+      client.enqueueCall(new Callback<GeocodingResponse>() {
+        @Override
+        public void onResponse(@NonNull Call<GeocodingResponse> call, @NonNull Response<GeocodingResponse> response) {
+          List<CarmenFeature> results = response.body().getFeatures();
+          if (results.size() > 0) {
+            CarmenFeature feature = results.get(0);
+            currentPosition = point;
+            currentAddress = feature.getPlaceName();
+            setCoordinatesInfo(currentPosition);
+            setLocationAddress(currentAddress);
+            showAddressLayout();
+          } else {
+            Toast.makeText(LocationPickerActivity.this, "Address not found!", Toast.LENGTH_SHORT).show();
+          }
+          progressBar.hide();
+        }
+
+        @Override
+        public void onFailure(@NonNull Call<GeocodingResponse> call, @NonNull Throwable throwable) {
+          Log.e("", "Geocoding Failure: " + throwable.getMessage());
+          progressBar.hide();
+        }
+      });
+    } catch (ServicesException servicesException) {
+      Log.e("", "Error geocoding: " + servicesException.toString());
+      servicesException.printStackTrace();
+      progressBar.hide();
+    }
+  }
+
+  private void hideAddressLayout() {
+    locationInfoLayout.setVisibility(View.GONE);
+    progressBar.setVisibility(View.VISIBLE);
+    progressBar.show();
+  }
+
+  private void setCoordinatesInfo(LatLng latLng) {
+    String lat = String.format(Locale.US, "%2.5f", latLng.getLatitude()) + "° N";
+    String lng = String.format(Locale.US, "%2.5f", latLng.getLongitude()) + "° E";
+    coordinates.setText(String.format("%s , %s", lat, lng));
+  }
+
+  private void setLocationAddress(String address) {
+    this.address.setText(address);
+  }
+
+  private void showAddressLayout() {
+    locationInfoLayout.setVisibility(View.VISIBLE);
+  }
+
+  private void setMapClickListener() {
+    mMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() {
+      @Override
+      public void onMapClick(@NonNull LatLng point) {
+        setNewMapMarker(point);
+        reverseGeocode(point);
+      }
+    });
+  }
+
+  @Override
+  public void onBackPressed() {
+    if (enableBackPressedReturn) {
+      returnCurrentPosition();
+    } else {
+      setResult(RESULT_CANCELED);
+      finish();
+    }
+  }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    mapView.onStart();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mapView.onResume();
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mapView.onPause();
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+    mapView.onStop();
+  }
+
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    mapView.onSaveInstanceState(outState);
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mapView.onDestroy();
+  }
+
+  @Override
+  public void onLowMemory() {
+    super.onLowMemory();
+    mapView.onLowMemory();
+  }
+
+  public static class Builder {
+    private Double locationLatitude;
+    private Double locationLongitude;
+    private boolean enableSatelliteView = true;
+    private boolean returnOnBackPressed = false;
+    private String mapboxToken = null;
+
+    public Builder() {
+    }
+
+    public Builder withLocation(double latitude, double longitude) {
+      this.locationLatitude = latitude;
+      this.locationLongitude = longitude;
+      return this;
+    }
+
+    public Builder withLocation(LatLng latLng) {
+      if (latLng != null) {
+        this.locationLatitude = latLng.getLatitude();
+        this.locationLongitude = latLng.getLongitude();
+      }
+      return this;
+    }
+
+    public Builder withSatelliteView(boolean enableSatelliteView) {
+      this.enableSatelliteView = enableSatelliteView;
+      return this;
+    }
+
+    public Builder withReturnOnBackPressed(boolean returnOnBackPressed) {
+      this.returnOnBackPressed = returnOnBackPressed;
+      return this;
+    }
+
+    public Builder withMapboxToken(String token) {
+      this.mapboxToken = token;
+      return this;
+    }
+
+    public Intent build(Context context) {
+      Intent intent = new Intent(context, LocationPickerActivity.class);
+      if (locationLatitude != null) {
+        intent.putExtra(LATITUDE, locationLatitude);
+      }
+      if (locationLongitude != null) {
+        intent.putExtra(LONGITUDE, locationLongitude);
+      }
+      intent.putExtra(BACK_PRESSED_RETURN, returnOnBackPressed);
+      intent.putExtra(ENABLE_SATELLITE_VIEW, enableSatelliteView);
+      if (mapboxToken != null) {
+        intent.putExtra(MAPBOX_TOKEN, mapboxToken);
+      }
+      return intent;
+    }
+  }
+}
