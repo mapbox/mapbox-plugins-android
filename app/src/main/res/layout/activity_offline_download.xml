@@ -150,10 +150,10 @@
                 android:layout_marginBottom="8dp"/>
 
             <TextView
+                android:id="@+id/min_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:text="Min zoom:"/>
+                android:layout_marginBottom="4dp"/>
 
             <SeekBar
                 android:id="@+id/seekbar_min_zoom"
@@ -162,10 +162,10 @@
                 android:layout_marginBottom="12dp"/>
 
             <TextView
+                android:id="@+id/max_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:text="Max zoom:"/>
+                android:layout_marginBottom="4dp"/>
 
             <SeekBar
                 android:id="@+id/seekbar_max_zoom"

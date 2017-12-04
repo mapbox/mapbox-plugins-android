@@ -1,11 +1,13 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.offline;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.constants.MapboxConstants;
@@ -46,6 +48,12 @@ public class OfflineDownloadActivity extends AppCompatActivity {
   @BindView(R.id.edittext_lon_west)
   EditText lonWestView;
 
+  @BindView(R.id.min_text_view)
+  TextView minTextView;
+
+  @BindView(R.id.max_text_view)
+  TextView maxTextView;
+
   @BindView(R.id.spinner_style_url)
   Spinner styleUrlView;
 
@@ -61,12 +69,14 @@ public class OfflineDownloadActivity extends AppCompatActivity {
     setContentView(R.layout.activity_offline_download);
     ButterKnife.bind(this);
     initUi();
+    initSeekbarListening();
   }
 
   private void initUi() {
     initEditTexts();
     initSeekbars();
     initSpinner();
+    initTextviews();
   }
 
   private void initEditTexts() {
@@ -96,6 +106,47 @@ public class OfflineDownloadActivity extends AppCompatActivity {
     styleUrlView.setAdapter(spinnerArrayAdapter);
   }
 
+  private void initTextviews() {
+    maxTextView.setText(getString(R.string.max_zoom_textview, maxZoomView.getProgress()));
+    minTextView.setText(getString(R.string.min_zoom_textview, minZoomView.getProgress()));
+  }
+
+  private void initSeekbarListening() {
+    maxZoomView.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+      @Override
+      public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        maxTextView.setText(getString(R.string.max_zoom_textview, progress));
+      }
+
+      @Override
+      public void onStartTrackingTouch(SeekBar seekBar) {
+
+      }
+
+      @Override
+      public void onStopTrackingTouch(SeekBar seekBar) {
+
+      }
+    });
+
+    minZoomView.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+      @Override
+      public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        minTextView.setText(getString(R.string.min_zoom_textview, progress));
+      }
+
+      @Override
+      public void onStartTrackingTouch(SeekBar seekBar) {
+
+      }
+
+      @Override
+      public void onStopTrackingTouch(SeekBar seekBar) {
+
+      }
+    });
+  }
+
   @OnClick(R.id.fab)
   public void onDownloadRegion() {
     // get data from UI
@@ -108,7 +159,7 @@ public class OfflineDownloadActivity extends AppCompatActivity {
     float maxZoom = maxZoomView.getProgress();
     float minZoom = minZoomView.getProgress();
 
-    if (!validCoordinates(latitudeNorth, longitudeEast, latitudeSouth,longitudeWest)) {
+    if (!validCoordinates(latitudeNorth, longitudeEast, latitudeSouth, longitudeWest)) {
       Toast.makeText(this, "coordinates need to be in valid range", Toast.LENGTH_LONG).show();
       return;
     }
