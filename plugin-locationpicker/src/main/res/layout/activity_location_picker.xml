@@ -50,7 +50,7 @@
             tools:background="@android:color/white" />
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/button_current_location"
+            android:id="@+id/button_my_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"

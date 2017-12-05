@@ -38,13 +38,13 @@
             <android.support.v7.widget.SwitchCompat
                 android:id="@+id/switch_return_on_back_press"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checked="true" />
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal">
 
             <android.support.v7.widget.AppCompatTextView
@@ -60,6 +60,26 @@
                 android:layout_gravity="end"
                 android:checked="true" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/textview_mylocation_label"
+                android:textSize="14sp" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/switch_show_mylocation_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:checked="true" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout

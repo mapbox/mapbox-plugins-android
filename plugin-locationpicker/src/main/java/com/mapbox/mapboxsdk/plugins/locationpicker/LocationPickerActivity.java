@@ -52,6 +52,7 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
   public static final String ADDRESS = "address";
   public static final String BACK_PRESSED_RETURN = "back_pressed_return";
   public static final String ENABLE_SATELLITE_VIEW = "enable_satellite_view";
+  public static final String ENABLE_MYLOCATION_VIEW = "enable_mylocation_view";
   private MapView mapView;
   private MapboxMap mMap;
   private TextView address;
@@ -59,6 +60,7 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
   private FrameLayout locationInfoLayout;
   private ContentLoadingProgressBar progressBar;
   private boolean enableSatelliteView;
+  private boolean enableMyLocationView;
   private boolean enableBackPressedReturn;
   private Marker currentMarker;
   private LatLng postedLocation;
@@ -97,6 +99,7 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
       mapboxToken = (bundle.getString(MAPBOX_TOKEN));
       enableBackPressedReturn = bundle.getBoolean(BACK_PRESSED_RETURN);
       enableSatelliteView = bundle.getBoolean(ENABLE_SATELLITE_VIEW);
+      enableMyLocationView = bundle.getBoolean(ENABLE_MYLOCATION_VIEW);
     }
   }
 
@@ -127,8 +130,9 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
    * setup Floating buttons and set onClick listener of them
    */
   private void setUpFloatingButtons() {
-    FloatingActionButton buttonCurrentLocation = findViewById(R.id.button_current_location);
-    buttonCurrentLocation.setOnClickListener(new View.OnClickListener() {
+    FloatingActionButton buttonMyLocation = findViewById(R.id.button_my_location);
+    buttonMyLocation.setVisibility(enableMyLocationView ? View.VISIBLE : View.GONE);
+    buttonMyLocation.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         if (lastLocation != null) {
@@ -136,7 +140,7 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
           setNewMapMarker(latLng);
           reverseGeocode(latLng);
         } else {
-          Toast.makeText(LocationPickerActivity.this, "location not found, please wait.", Toast.LENGTH_SHORT).show();
+          Toast.makeText(LocationPickerActivity.this, "location not found.", Toast.LENGTH_SHORT).show();
         }
       }
     });
@@ -182,9 +186,11 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
     mMap = mapboxMap;
-    mMap.setMyLocationEnabled(true);
-    Mapbox.getLocationEngine().addLocationEngineListener(this);
-    Mapbox.getLocationEngine().requestLocationUpdates();
+    if (enableMyLocationView) {
+      mMap.setMyLocationEnabled(true);
+      Mapbox.getLocationEngine().addLocationEngineListener(this);
+      Mapbox.getLocationEngine().requestLocationUpdates();
+    }
     setCurrentPositionLocation();
     setMapClickListener();
   }
@@ -397,6 +403,7 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
     private Double locationLatitude;
     private Double locationLongitude;
     private boolean enableSatelliteView = true;
+    private boolean enableMyLocationView = true;
     private boolean returnOnBackPressed = false;
     private String mapboxToken = null;
 
@@ -442,6 +449,18 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
     }
 
     /**
+     * enable showing MyLocation button and request location from
+     * {@link com.mapbox.services.android.telemetry.location.LocationEngine}
+     *
+     * @param enableMyLocationView if true, show MyLocation button and request location.
+     * @return instance of {@link Builder} class.
+     */
+    public Builder withMyLocationView(boolean enableMyLocationView) {
+      this.enableMyLocationView = enableMyLocationView;
+      return this;
+    }
+
+    /**
      * enable return result from activity when press back button/
      *
      * @param returnOnBackPressed if false, return RESULT_CANCELED to requester activity.
@@ -480,6 +499,7 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
       }
       intent.putExtra(BACK_PRESSED_RETURN, returnOnBackPressed);
       intent.putExtra(ENABLE_SATELLITE_VIEW, enableSatelliteView);
+      intent.putExtra(ENABLE_MYLOCATION_VIEW, enableMyLocationView);
       if (mapboxToken != null) {
         intent.putExtra(MAPBOX_TOKEN, mapboxToken);
       }

@@ -27,6 +27,8 @@ public class RequestLocationActivity extends AppCompatActivity {
   SwitchCompat switchReturnOnBackPress;
   @BindView(R.id.switch_show_satellite_button)
   SwitchCompat switchShowSatelliteButton;
+  @BindView(R.id.switch_show_mylocation_button)
+  SwitchCompat switchShowMylocationButton;
   @BindView(R.id.text_coordinates)
   AppCompatTextView textCoordinates;
   @BindView(R.id.text_address)
@@ -49,6 +51,7 @@ public class RequestLocationActivity extends AppCompatActivity {
       .withMapboxToken(getString(R.string.mapbox_access_token))
       .withReturnOnBackPressed(switchReturnOnBackPress.isChecked())
       .withSatelliteView(switchShowSatelliteButton.isChecked())
+      .withMyLocationView(switchShowMylocationButton.isChecked())
       .build(getApplicationContext());
     startActivityForResult(locationPickerIntent, MAP_BUTTON_REQUEST_CODE);
   }
