@@ -23,6 +23,7 @@
   <string name="title_places_autocomplete">Places Autocomplete</string>
   <string name="title_offline_plugin">Create region</string>
   <string name="title_offline_regions">List regions</string>
+  <string name="title_location_picker">Location Picker Plugin</string>
 
   <!-- Descriptions -->
   <string name="description_traffic">Add Traffic layers to any Mapbox basemap.</string>
@@ -36,10 +37,20 @@
   <string name="description_autocomplete">Launch the autocomplete activity.</string>
   <string name="description_offline_plugin">Use a form to create an offline region.</string>
   <string name="description_offline_regions">List all offline regions.</string>
+  <string name="description_location_picker">Get location coordinates and address of it.</string>
 
   <!-- Buttons -->
   <string name="button_location_mode_none">None</string>
   <string name="button_location_mode_tracking">Tracking</string>
   <string name="button_location_mode_compass">Compass</string>
   <string name="button_location_mode_navigation">Nav</string>
+  <string name="button_request_location">Pick The Location</string>
+
+  <!-- TextViews -->
+  <string name="textview_coordinates">Coordinates</string>
+  <string name="textview_address">Address</string>
+  <string name="textview_dash">-</string>
+  <string name="textview_return_location_label">Return location after press back button</string>
+  <string name="textview_satellite_mode_label">Show switch to satellite mode button</string>
+    <string name="textview_mylocation_label">Show my location button</string>
 </resources>

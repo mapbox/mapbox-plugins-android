@@ -1,0 +1,30 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion androidVersions.compileSdkVersion
+    buildToolsVersion androidVersions.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion androidVersions.minSdkVersion
+        targetSdkVersion androidVersions.targetSdkVersion
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    configurations {
+        javadocDeps
+    }
+}
+
+dependencies {
+    implementation dependenciesList.supportAppcompatV7
+    implementation dependenciesList.supportDesign
+    implementation dependenciesList.mapboxMapSdk
+    implementation dependenciesList.mapboxServices
+    implementation dependenciesList.timber
+    javadocDeps dependenciesList.mapboxMapSdk
+}
+apply from: 'javadoc.gradle'
+apply from: "${rootDir}/gradle/mvn-push-android.gradle"
+apply from: "${rootDir}/gradle/checkstyle.gradle"
+apply from: "${rootDir}/gradle/jacoco.gradle"
