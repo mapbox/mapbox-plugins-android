@@ -16,8 +16,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * Requester activity for get location from Mapbox map.
+ */
 public class RequestLocationActivity extends AppCompatActivity {
   public static final int MAP_BUTTON_REQUEST_CODE = 1001;
+  private static final double latitude = 37.769145;
+  private static final double longitude = -122.447244;
   @BindView(R.id.switch_return_on_back_press)
   SwitchCompat switchReturnOnBackPress;
   @BindView(R.id.switch_show_satellite_button)
@@ -34,10 +39,13 @@ public class RequestLocationActivity extends AppCompatActivity {
     ButterKnife.bind(this);
   }
 
+  /**
+   * create intent with posted parameters and start {@link LocationPickerActivity}
+   */
   @OnClick(R.id.button_request_location)
   public void requestLocation() {
     Intent locationPickerIntent = new LocationPickerActivity.Builder()
-      .withLocation(37.769145, -122.447244)
+      .withLocation(latitude, longitude)
       .withMapboxToken(getString(R.string.mapbox_access_token))
       .withReturnOnBackPressed(switchReturnOnBackPress.isChecked())
       .withSatelliteView(switchShowSatelliteButton.isChecked())
@@ -59,7 +67,7 @@ public class RequestLocationActivity extends AppCompatActivity {
       } else {
         textCoordinates.setText("-");
         textAddress.setText("-");
-        Toast.makeText(this, "Returned address is empty", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Request pick the location canceled.", Toast.LENGTH_SHORT).show();
       }
     }
   }

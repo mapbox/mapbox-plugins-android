@@ -38,6 +38,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * The Location Picker activity enables you to easily select one location from Mapbox map.
+ * return coordinates of selected location with address of it to the requester activity.
+ */
 public class LocationPickerActivity extends AppCompatActivity implements OnMapReadyCallback {
   public static final String MAPBOX_TOKEN = "mapbox_token";
   public static final String LATITUDE = "latitude";
@@ -75,6 +79,28 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
     setUpFloatingButtons();
   }
 
+  /**
+   * get posted value from requester activity and set in local variables.
+   */
+  private void getValuesFromBundle() {
+    Bundle bundle = getIntent().getExtras();
+    if (bundle != null) {
+      if (location == null) {
+        location = new LatLng();
+      }
+      location.setLatitude(bundle.getDouble(LATITUDE));
+      location.setLongitude(bundle.getDouble(LONGITUDE));
+      mapboxToken = (bundle.getString(MAPBOX_TOKEN));
+      enableBackPressedReturn = bundle.getBoolean(BACK_PRESSED_RETURN);
+      enableSatelliteView = bundle.getBoolean(ENABLE_SATELLITE_VIEW);
+    }
+  }
+
+  /**
+   * setup Mapbox
+   *
+   * @param savedInstanceState get from onCreate function.
+   */
   private void setUpMap(Bundle savedInstanceState) {
     mapView = findViewById(R.id.mapView);
     mapView.setStyleUrl(Style.MAPBOX_STREETS);
@@ -82,6 +108,9 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
     mapView.getMapAsync(this);
   }
 
+  /**
+   * setup UI declaration
+   */
   private void setUpMainVariables() {
     progressBar = findViewById(R.id.loading_progress_bar);
     progressBar.setVisibility(View.GONE);
@@ -90,6 +119,9 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
     coordinates = findViewById(R.id.coordinates);
   }
 
+  /**
+   * setup Floating buttons and set onClick listener of them
+   */
   private void setUpFloatingButtons() {
     FloatingActionButton buttonCurrentLocation = findViewById(R.id.button_current_location);
     buttonCurrentLocation.setOnClickListener(new View.OnClickListener() {
@@ -117,20 +149,10 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
     buttonSatellite.setVisibility(enableSatelliteView ? View.VISIBLE : View.GONE);
   }
 
-  private void getValuesFromBundle() {
-    Bundle bundle = getIntent().getExtras();
-    if (bundle != null) {
-      if (location == null) {
-        location = new LatLng();
-      }
-      location.setLatitude(bundle.getDouble(LATITUDE));
-      location.setLongitude(bundle.getDouble(LONGITUDE));
-      mapboxToken = (bundle.getString(MAPBOX_TOKEN));
-      enableBackPressedReturn = bundle.getBoolean(BACK_PRESSED_RETURN);
-      enableSatelliteView = bundle.getBoolean(ENABLE_SATELLITE_VIEW);
-    }
-  }
-
+  /**
+   * return coordinates of current position as latitude & longitude with address of it if provided.
+   * return RESULT_CANCELED if current position is null.
+   */
   private void returnCurrentPosition() {
     if (currentPosition != null) {
       Intent returnIntent = new Intent();
@@ -153,6 +175,9 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
     setMapClickListener();
   }
 
+  /**
+   * if location from requester is'nt null, add marker of it to map and get address of it from reverseGeocode service.
+   */
   private void setCurrentPositionLocation() {
     if (location != null) {
       setNewMapMarker(location);
@@ -160,6 +185,12 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
     }
   }
 
+  /**
+   * if currentMarker is null add new marker to Map with position of param. otherwise move currentMarker
+   * position to new value.
+   *
+   * @param latLng coordinates of marker.
+   */
   private void setNewMapMarker(LatLng latLng) {
     if (mMap != null) {
       if (currentMarker != null) {
@@ -175,10 +206,21 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
     }
   }
 
+  /**
+   * add one marker to Map and return marker instance.
+   *
+   * @param latLng coordinates of marker.
+   * @return Marker
+   */
   private Marker addMarker(LatLng latLng) {
     return mMap.addMarker(new MarkerOptions().position(latLng));
   }
 
+  /**
+   * get address of point with reverse geocode service of mapbox and set result in UI.
+   *
+   * @param point the coordinates that use in reverse geocode for getting address.
+   */
   private void reverseGeocode(final LatLng point) {
     hideAddressLayout();
     try {
@@ -218,26 +260,45 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
     }
   }
 
+  /**
+   * before getting result from reverse geocode service the UI will be hidden.
+   */
   private void hideAddressLayout() {
     locationInfoLayout.setVisibility(View.GONE);
     progressBar.setVisibility(View.VISIBLE);
     progressBar.show();
   }
 
+  /**
+   * show value of latitude & longitude in the UI.
+   *
+   * @param latLng current position
+   */
   private void setCoordinatesInfo(LatLng latLng) {
     String lat = String.format(Locale.US, "%2.5f", latLng.getLatitude()) + "° N";
     String lng = String.format(Locale.US, "%2.5f", latLng.getLongitude()) + "° E";
     coordinates.setText(String.format("%s , %s", lat, lng));
   }
 
+  /**
+   * set address of current position in the UI.
+   *
+   * @param address the address of current position
+   */
   private void setLocationAddress(String address) {
     this.address.setText(address);
   }
 
+  /**
+   * after get result from reverse geocode service the UI of it will be show.
+   */
   private void showAddressLayout() {
     locationInfoLayout.setVisibility(View.VISIBLE);
   }
 
+  /**
+   * setup map click listener for get coordinates of tabbed position and send it to reverse geocode service.
+   */
   private void setMapClickListener() {
     mMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() {
       @Override
@@ -248,6 +309,10 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
     });
   }
 
+  /**
+   * if enableBackPressedReturn is true return current position to requester activity.
+   * else return RESULT_CANCELED
+   */
   @Override
   public void onBackPressed() {
     if (enableBackPressedReturn) {
@@ -310,12 +375,25 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
     public Builder() {
     }
 
+    /**
+     * set first position of requester
+     *
+     * @param latitude  the latitude of position.
+     * @param longitude the longitude of position.
+     * @return instance of {@link Builder} class.
+     */
     public Builder withLocation(double latitude, double longitude) {
       this.locationLatitude = latitude;
       this.locationLongitude = longitude;
       return this;
     }
 
+    /**
+     * set first position of requester
+     *
+     * @param latLng coordinates of position.
+     * @return instance of {@link Builder} class.
+     */
     public Builder withLocation(LatLng latLng) {
       if (latLng != null) {
         this.locationLatitude = latLng.getLatitude();
@@ -324,20 +402,45 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
       return this;
     }
 
+    /**
+     * enable showing satellite switcher mode.
+     *
+     * @param enableSatelliteView if true, show satellite switcher button.
+     * @return instance of {@link Builder} class.
+     */
     public Builder withSatelliteView(boolean enableSatelliteView) {
       this.enableSatelliteView = enableSatelliteView;
       return this;
     }
 
+    /**
+     * enable return result from activity when press back button/
+     *
+     * @param returnOnBackPressed if false, return RESULT_CANCELED to requester activity.
+     * @return instance of {@link Builder} class.
+     */
     public Builder withReturnOnBackPressed(boolean returnOnBackPressed) {
       this.returnOnBackPressed = returnOnBackPressed;
       return this;
     }
 
+    /**
+     * set Mapbox token.
+     *
+     * @param token the token of Mapbox.
+     * @return instance of {@link Builder} class.
+     */
     public Builder withMapboxToken(String token) {
       this.mapboxToken = token;
       return this;
     }
+
+    /**
+     * build intent with set parameter on it.
+     *
+     * @param context the instance of {@link Context}
+     * @return instance of intent with parameters.
+     */
 
     public Intent build(Context context) {
       Intent intent = new Intent(context, LocationPickerActivity.class);
