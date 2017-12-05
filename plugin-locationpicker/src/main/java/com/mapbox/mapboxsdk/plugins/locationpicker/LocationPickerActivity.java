@@ -360,6 +360,8 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
   @Override
   protected void onStop() {
     super.onStop();
+    Mapbox.getLocationEngine().removeLocationEngineListener(this);
+    Mapbox.getLocationEngine().removeLocationUpdates();
     mapView.onStop();
   }
 
