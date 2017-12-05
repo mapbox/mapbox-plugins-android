@@ -1,7 +1,9 @@
 package com.mapbox.mapboxsdk.plugins.locationpicker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -24,6 +26,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.services.android.telemetry.location.LocationEngineListener;
 import com.mapbox.services.api.ServicesException;
 import com.mapbox.services.api.geocoding.v5.GeocodingCriteria;
 import com.mapbox.services.api.geocoding.v5.MapboxGeocoding;
@@ -42,7 +45,7 @@ import retrofit2.Response;
  * The Location Picker activity enables you to easily select one location from Mapbox map.
  * return coordinates of selected location with address of it to the requester activity.
  */
-public class LocationPickerActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class LocationPickerActivity extends AppCompatActivity implements OnMapReadyCallback, LocationEngineListener {
   public static final String MAPBOX_TOKEN = "mapbox_token";
   public static final String LATITUDE = "latitude";
   public static final String LONGITUDE = "longitude";
@@ -58,9 +61,10 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
   private boolean enableSatelliteView;
   private boolean enableBackPressedReturn;
   private Marker currentMarker;
-  private LatLng location;
+  private LatLng postedLocation;
   private String currentAddress;
   private LatLng currentPosition;
+  private Location lastLocation;
   private String mapboxToken;
 
   static {
@@ -85,11 +89,11 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
   private void getValuesFromBundle() {
     Bundle bundle = getIntent().getExtras();
     if (bundle != null) {
-      if (location == null) {
-        location = new LatLng();
+      if (postedLocation == null) {
+        postedLocation = new LatLng();
       }
-      location.setLatitude(bundle.getDouble(LATITUDE));
-      location.setLongitude(bundle.getDouble(LONGITUDE));
+      postedLocation.setLatitude(bundle.getDouble(LATITUDE));
+      postedLocation.setLongitude(bundle.getDouble(LONGITUDE));
       mapboxToken = (bundle.getString(MAPBOX_TOKEN));
       enableBackPressedReturn = bundle.getBoolean(BACK_PRESSED_RETURN);
       enableSatelliteView = bundle.getBoolean(ENABLE_SATELLITE_VIEW);
@@ -127,7 +131,13 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
     buttonCurrentLocation.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        //TODO get current location from gps and move marker and map to it.
+        if (lastLocation != null) {
+          LatLng latLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+          setNewMapMarker(latLng);
+          reverseGeocode(latLng);
+        } else {
+          Toast.makeText(LocationPickerActivity.this, "location not found, please wait.", Toast.LENGTH_SHORT).show();
+        }
       }
     });
     FloatingActionButton buttonAccept = findViewById(R.id.button_accept);
@@ -168,9 +178,13 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
     finish();
   }
 
+  @SuppressLint("MissingPermission")
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
     mMap = mapboxMap;
+    mMap.setMyLocationEnabled(true);
+    Mapbox.getLocationEngine().addLocationEngineListener(this);
+    Mapbox.getLocationEngine().requestLocationUpdates();
     setCurrentPositionLocation();
     setMapClickListener();
   }
@@ -179,9 +193,9 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
    * if location from requester is'nt null, add marker of it to map and get address of it from reverseGeocode service.
    */
   private void setCurrentPositionLocation() {
-    if (location != null) {
-      setNewMapMarker(location);
-      reverseGeocode(location);
+    if (postedLocation != null) {
+      setNewMapMarker(postedLocation);
+      reverseGeocode(postedLocation);
     }
   }
 
@@ -242,6 +256,8 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
             setLocationAddress(currentAddress);
             showAddressLayout();
           } else {
+            currentPosition = null;
+            currentAddress = null;
             Toast.makeText(LocationPickerActivity.this, "Address not found!", Toast.LENGTH_SHORT).show();
           }
           progressBar.hide();
@@ -363,6 +379,16 @@ public class LocationPickerActivity extends AppCompatActivity implements OnMapRe
   public void onLowMemory() {
     super.onLowMemory();
     mapView.onLowMemory();
+  }
+
+  @Override
+  public void onConnected() {
+
+  }
+
+  @Override
+  public void onLocationChanged(Location location) {
+    lastLocation = location;
   }
 
   public static class Builder {

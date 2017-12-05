@@ -165,7 +165,8 @@
          android:name="android.support.PARENT_ACTIVITY"
          android:value=".activity.FeatureOverviewActivity"/>
     </activity>
-    <activity android:name="com.mapbox.mapboxsdk.plugins.locationpicker.LocationPickerActivity"/>
+    <activity android:name="com.mapbox.mapboxsdk.plugins.locationpicker.LocationPickerActivity"
+        android:label="@string/title_location_picker"/>
 
     <service
       android:name="com.mapbox.mapboxsdk.plugins.offline.OfflineDownloadService"
