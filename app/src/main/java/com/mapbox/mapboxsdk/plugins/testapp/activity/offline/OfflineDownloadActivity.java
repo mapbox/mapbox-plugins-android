@@ -1,7 +1,6 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.offline;
 
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -69,14 +68,14 @@ public class OfflineDownloadActivity extends AppCompatActivity {
     setContentView(R.layout.activity_offline_download);
     ButterKnife.bind(this);
     initUi();
-    initSeekbarListening();
+    initSeekbarListeners();
   }
 
   private void initUi() {
     initEditTexts();
     initSeekbars();
     initSpinner();
-    initTextviews();
+    initZoomLevelTextviews();
   }
 
   private void initEditTexts() {
@@ -106,12 +105,12 @@ public class OfflineDownloadActivity extends AppCompatActivity {
     styleUrlView.setAdapter(spinnerArrayAdapter);
   }
 
-  private void initTextviews() {
+  private void initZoomLevelTextviews() {
     maxTextView.setText(getString(R.string.max_zoom_textview, maxZoomView.getProgress()));
     minTextView.setText(getString(R.string.min_zoom_textview, minZoomView.getProgress()));
   }
 
-  private void initSeekbarListening() {
+  private void initSeekbarListeners() {
     maxZoomView.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override
       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
