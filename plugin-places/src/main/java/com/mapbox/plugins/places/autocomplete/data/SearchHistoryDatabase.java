@@ -35,8 +35,7 @@ public abstract class SearchHistoryDatabase extends RoomDatabase {
   }
 
   private static SearchHistoryDatabase buildDatabase(final Context appContext) {
-    return Room.databaseBuilder(appContext,
-      SearchHistoryDatabase.class, DATABASE_NAME).addCallback(
+    return Room.databaseBuilder(appContext, SearchHistoryDatabase.class, DATABASE_NAME).addCallback(
       new Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
