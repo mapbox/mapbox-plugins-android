@@ -39,6 +39,11 @@ dependencies {
   implementation dependenciesList.supportRecyclerView
   implementation dependenciesList.supportV4
 
+  // AutoValues
+  annotationProcessor dependenciesList.autoValuesParcel
+  annotationProcessor dependenciesList.autoValue
+  compileOnly dependenciesList.autoValue
+
   implementation dependenciesList.lifecycleExtensions
   implementation dependenciesList.roomRuntime
   annotationProcessor dependenciesList.roomCompiler

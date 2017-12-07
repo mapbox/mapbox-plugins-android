@@ -1,75 +1,141 @@
 package com.mapbox.plugins.places.autocomplete.model;
 
 import android.graphics.Color;
-import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.ColorInt;
+import android.support.annotation.FloatRange;
+import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-public class PlaceOptions implements Parcelable {
+import com.google.auto.value.AutoValue;
+import com.mapbox.geocoding.v5.GeocodingCriteria.GeocodingTypeCriteria;
+import com.mapbox.geocoding.v5.models.CarmenFeature;
+import com.mapbox.geojson.Point;
+import com.mapbox.plugins.places.autocomplete.PlaceConstants;
+import com.mapbox.services.utils.TextUtils;
 
-  private String hint;
-  private int backgroundColor;
-  private int toolbarColor;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
-  public PlaceOptions() {
-    backgroundColor = Color.TRANSPARENT;
-    toolbarColor = Color.WHITE;
+@AutoValue
+public abstract class PlaceOptions implements Parcelable {
+
+  // Geocoding options
+  @Nullable
+  public abstract Point proximity();
+
+  @Nullable
+  public abstract String language();
+
+  public abstract int limit();
+
+  @Nullable
+  public abstract String bbox();
+
+  @Nullable
+  public abstract String geocodingTypes();
+
+  @Nullable
+  public abstract String country();
+
+  @Nullable
+  public abstract List<String> injectedPlaces();
+
+  // View options
+  public abstract int backgroundColor();
+
+  public abstract int toolbarColor();
+
+  @Nullable
+  public abstract String hint();
+
+  public static Builder builder() {
+    return new AutoValue_PlaceOptions.Builder()
+      .backgroundColor(Color.TRANSPARENT)
+      .toolbarColor(Color.WHITE)
+      .limit(10);
   }
 
-  private PlaceOptions(Parcel in) {
-    hint = in.readString();
-    backgroundColor = in.readInt();
-    toolbarColor = in.readInt();
-  }
+  @AutoValue.Builder
+  public abstract static class Builder {
 
-  public static final Creator<PlaceOptions> CREATOR = new Creator<PlaceOptions>() {
-    @Override
-    public PlaceOptions createFromParcel(Parcel in) {
-      return new PlaceOptions(in);
+    private List<String> countries = new ArrayList<>();
+    private List<String> injectedPlaces = new ArrayList<>();
+
+    public abstract Builder proximity(@Nullable Point proximity);
+
+    public abstract Builder language(@Nullable String language);
+
+    public Builder geocodingTypes(@NonNull @GeocodingTypeCriteria String... geocodingTypes) {
+      geocodingTypes(TextUtils.join(",", geocodingTypes));
+      return this;
     }
 
-    @Override
-    public PlaceOptions[] newArray(int size) {
-      return new PlaceOptions[size];
+    abstract Builder geocodingTypes(String geocodingTypes);
+
+    public abstract Builder limit(@IntRange(from = 1, to = 10) int limit);
+
+    public Builder bbox(Point southwest, Point northeast) {
+      bbox(southwest.longitude(), southwest.latitude(),
+        northeast.longitude(), northeast.latitude());
+      return this;
     }
-  };
 
-  public PlaceOptions withSearchViewHint(String hint) {
-    this.hint = hint;
-    return this;
-  }
+    public Builder bbox(@FloatRange(from = -180, to = 180) double minX,
+                        @FloatRange(from = -90, to = 90) double minY,
+                        @FloatRange(from = -180, to = 180) double maxX,
+                        @FloatRange(from = -90, to = 90) double maxY) {
+      bbox(String.format(Locale.US, "%s,%s,%s,%s",
+        TextUtils.formatCoordinate(minX),
+        TextUtils.formatCoordinate(minY),
+        TextUtils.formatCoordinate(maxX),
+        TextUtils.formatCoordinate(maxY))
+      );
+      return this;
+    }
 
-  public String getSearchViewHint() {
-    return hint;
-  }
+    public Builder country(Locale country) {
+      countries.add(country.getCountry());
+      return this;
+    }
 
-  public PlaceOptions withBackgroundColor(@ColorInt int color) {
-    this.backgroundColor = color;
-    return this;
-  }
+    public Builder country(String... country) {
+      countries.addAll(Arrays.asList(country));
+      return this;
+    }
 
-  public int getBackgroundColor() {
-    return backgroundColor;
-  }
+    public abstract Builder country(String country);
 
-  public PlaceOptions withToolbarColor(@ColorInt int color) {
-    this.toolbarColor = color;
-    return this;
-  }
+    public abstract Builder bbox(@NonNull String bbox);
 
-  public int getToolbarColor() {
-    return toolbarColor;
-  }
+    public Builder addInjectedFeature(CarmenFeature carmenFeature) {
+      carmenFeature.properties().addProperty(PlaceConstants.SAVED_PLACE, true);
+      injectedPlaces.add(carmenFeature.toJson());
+      return this;
+    }
 
-  @Override
-  public int describeContents() {
-    return 0;
-  }
+    abstract Builder injectedPlaces(List<String> injectedPlaces);
 
-  @Override
-  public void writeToParcel(Parcel parcel, int i) {
-    parcel.writeString(hint);
-    parcel.writeInt(backgroundColor);
-    parcel.writeInt(toolbarColor);
+    public abstract Builder backgroundColor(@ColorInt int backgroundColor);
+
+    public abstract Builder toolbarColor(@ColorInt int toolbarColor);
+
+    public abstract Builder hint(@Nullable String hint);
+
+    public abstract PlaceOptions autoBuild();
+
+    public PlaceOptions build() {
+
+      if (!countries.isEmpty()) {
+        country(TextUtils.join(",", countries.toArray()));
+      }
+
+      injectedPlaces(injectedPlaces);
+
+      return autoBuild();
+    }
   }
 }

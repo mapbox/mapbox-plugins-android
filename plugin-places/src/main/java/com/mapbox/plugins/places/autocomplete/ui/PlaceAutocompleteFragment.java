@@ -2,15 +2,10 @@ package com.mapbox.plugins.places.autocomplete.ui;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,13 +40,42 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
   private ResultView starredView;
   private SearchView searchView;
   private View dropShadowView;
+  private String accessToken;
   private View rootView;
+  private int mode;
+
+  public static PlaceAutocompleteFragment newInstance(@NonNull String accessToken) {
+    PlaceAutocompleteFragment fragment = new PlaceAutocompleteFragment();
+    Bundle bundle = new Bundle();
+    bundle.putString(PlaceConstants.ACCESS_TOKEN, accessToken);
+    fragment.setArguments(bundle);
+    return fragment;
+  }
+
+  public static PlaceAutocompleteFragment newInstance(@NonNull String accessToken,
+                                                      @Nullable PlaceOptions placeOptions) {
+    PlaceAutocompleteFragment fragment = new PlaceAutocompleteFragment();
+    Bundle bundle = new Bundle();
+    bundle.putString(PlaceConstants.ACCESS_TOKEN, accessToken);
+    bundle.putParcelable(PlaceConstants.PLACE_OPTIONS, placeOptions);
+    fragment.setArguments(bundle);
+    return fragment;
+  }
 
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
-    int mode = getActivity().getIntent().getIntExtra(PlaceConstants.MODE, 1);
+    Bundle bundle = getArguments();
+    accessToken = bundle.getString(PlaceConstants.ACCESS_TOKEN);
+    placeOptions = bundle.getParcelable(PlaceConstants.PLACE_OPTIONS);
+    if (placeOptions == null) {
+      // Increase geocoding limit
+      placeOptions = PlaceOptions.builder().limit(10).build();
+    }
+
+    mode = getActivity().getIntent().getIntExtra(PlaceConstants.MODE,
+      PlaceAutocomplete.MODE_FULLSCREEN);
     rootView = inflater.inflate(
       mode == PlaceAutocomplete.MODE_CARDS ? R.layout.fragment_autocomplete_card
         : R.layout.fragment_autocomplete_full,
@@ -62,39 +86,40 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
     return rootView;
   }
 
-  public void setPlaceOptions(@NonNull PlaceOptions placeOptions) {
-    this.placeOptions = placeOptions;
-  }
-
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     resultScrollView.getViewTreeObserver().addOnScrollChangedListener(this);
-
-    rootView.setBackgroundColor(placeOptions.getBackgroundColor());
+    styleView();
   }
 
-  @Override
-  public void onInflate(Context context, AttributeSet attrs, Bundle savedInstanceState) {
-    super.onInflate(context, attrs, savedInstanceState);
+  private void styleView() {
+    if (placeOptions != null && rootView != null) {
+      rootView.setBackgroundColor(placeOptions.backgroundColor());
 
-    TypedArray typedArray = getActivity().obtainStyledAttributes(attrs, R.styleable.PlaceAutocomplete);
-    String accessToken = typedArray.getString(R.styleable.PlaceAutocomplete_accessToken);
-    getActivity().getIntent().putExtra(PlaceConstants.ACCESS_TOKEN, accessToken);
-    typedArray.recycle();
+      View toolbar = rootView.findViewById(R.id.toolbar);
+      if (toolbar != null) {
+        toolbar.setBackgroundColor(placeOptions.toolbarColor());
+      }
+
+      searchView = rootView.findViewById(R.id.searchView);
+      searchView.setHint(placeOptions.hint() == null
+        ? getString(R.string.autocomplete_search_hint) : placeOptions.hint());
+    }
   }
 
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
 
-    Intent intent = getActivity().getIntent();
-
     // View model
     PlaceAutocompleteViewModel.Factory factory = new PlaceAutocompleteViewModel.Factory(
-      getActivity().getApplication(), intent);
+      getActivity().getApplication(), placeOptions
+      );
     viewModel = ViewModelProviders.of(this, factory).get(PlaceAutocompleteViewModel.class);
-    viewModel.buildGeocodingRequest();
+    if (accessToken != null) {
+      viewModel.buildGeocodingRequest(accessToken);
+    }
 
     updateFavoritePlacesView();
     subscribe();
@@ -105,6 +130,9 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
     if (resultScrollView != null) {
       if (resultScrollView.getScrollY() != 0) {
         KeyboardUtils.hideKeyboard(resultScrollView);
+      }
+      if (mode == PlaceAutocomplete.MODE_FULLSCREEN) {
+        return;
       }
       dropShadowView.setVisibility(
         resultScrollView.canScrollVertically(-1) ? View.VISIBLE : View.INVISIBLE

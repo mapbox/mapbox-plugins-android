@@ -70,6 +70,10 @@ public class SearchView extends LinearLayout implements ImageButton.OnClickListe
     queryListener = null;
   }
 
+  public void setHint(String hint) {
+    searchEditText.setHint(hint);
+  }
+
   @Override
   public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
     if (queryListener != null) {

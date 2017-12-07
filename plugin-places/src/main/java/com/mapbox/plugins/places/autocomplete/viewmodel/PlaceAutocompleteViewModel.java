@@ -5,7 +5,6 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -17,6 +16,7 @@ import com.mapbox.plugins.places.autocomplete.DataRepository;
 import com.mapbox.plugins.places.autocomplete.PlaceConstants;
 import com.mapbox.plugins.places.autocomplete.data.SearchHistoryDatabase;
 import com.mapbox.plugins.places.autocomplete.data.entity.SearchHistoryEntity;
+import com.mapbox.plugins.places.autocomplete.model.PlaceOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,49 +30,46 @@ public class PlaceAutocompleteViewModel extends AndroidViewModel
 
   public final MutableLiveData<GeocodingResponse> geocodingLiveData = new MutableLiveData<>();
   private MapboxGeocoding.Builder geocoderBuilder;
-  private final Intent intent;
+  private PlaceOptions placeOptions;
 
-  PlaceAutocompleteViewModel(@NonNull Application application, @NonNull Intent intent) {
+  PlaceAutocompleteViewModel(@NonNull Application application, @NonNull PlaceOptions placeOptions) {
     super(application);
-    this.intent = intent;
+    this.placeOptions = placeOptions;
   }
 
-  public void buildGeocodingRequest() {
+  public void buildGeocodingRequest(String accessToken) {
     geocoderBuilder = MapboxGeocoding.builder().autocomplete(true);
-    geocoderBuilder.accessToken(intent.getStringExtra(PlaceConstants.ACCESS_TOKEN));
-    geocoderBuilder.limit(intent.getIntExtra(PlaceConstants.LIMIT, 5));
+    geocoderBuilder.accessToken(accessToken);
+    geocoderBuilder.limit(placeOptions.limit());
 
     // Proximity
-    String proximityPointJson = intent.getStringExtra(PlaceConstants.PROXIMITY);
-    if (proximityPointJson != null) {
-      geocoderBuilder.proximity(Point.fromJson(proximityPointJson));
+    Point proximityPoint = placeOptions.proximity();
+    if (proximityPoint != null) {
+      geocoderBuilder.proximity(proximityPoint);
     }
 
     // Language
-    String languageJson = intent.getStringExtra(PlaceConstants.LANGUAGE);
+    String languageJson = placeOptions.language();
     if (languageJson != null) {
       geocoderBuilder.languages(languageJson);
     }
 
     // Type
-    String typeJson = intent.getStringExtra(PlaceConstants.TYPE);
+    String typeJson = placeOptions.geocodingTypes();
     if (typeJson != null) {
       geocoderBuilder.geocodingTypes(typeJson);
     }
 
     // Countries
-    String countriesJson = intent.getStringExtra(PlaceConstants.COUNTRIES);
+    String countriesJson = placeOptions.country();
     if (countriesJson != null) {
       geocoderBuilder.geocodingTypes(countriesJson);
     }
 
     // Bounding box
-    String southwest = intent.getStringExtra(PlaceConstants.BBOX_SOUTHWEST_POINT);
-    String northeast = intent.getStringExtra(PlaceConstants.BBOX_NORTHEAST_POINT);
-    if (southwest != null && northeast != null) {
-      Point southwestPoint = Point.fromJson(southwest);
-      Point northeastPoint = Point.fromJson(northeast);
-      geocoderBuilder.bbox(southwestPoint, northeastPoint);
+    String bbox = placeOptions.bbox();
+    if (bbox != null) {
+      geocoderBuilder.bbox(bbox);
     }
   }
 
@@ -81,11 +78,16 @@ public class PlaceAutocompleteViewModel extends AndroidViewModel
     if (query.isEmpty()) {
       return;
     }
-    geocoderBuilder.query(query).build().enqueueCall(this);
+    if (geocoderBuilder != null) {
+      geocoderBuilder.query(query).build().enqueueCall(this);
+    } else {
+      throw new NullPointerException("An access token must be set before a geocoding query can be "
+        + "made.");
+    }
   }
 
   public List<CarmenFeature> getFavoritePlaces() {
-    List<String> serialized = intent.getStringArrayListExtra(PlaceConstants.INJECTED_PLACES);
+    List<String> serialized = placeOptions.injectedPlaces();
     List<CarmenFeature> favoriteFeatures = new ArrayList<>();
     if (serialized == null || serialized.isEmpty()) {
       return favoriteFeatures;
@@ -126,18 +128,18 @@ public class PlaceAutocompleteViewModel extends AndroidViewModel
   public static class Factory extends ViewModelProvider.NewInstanceFactory {
 
     private final Application application;
-    private final Intent intent;
+    private final PlaceOptions placeOptions;
 
-    public Factory(@NonNull Application application, @NonNull Intent intent) {
+    public Factory(@NonNull Application application, @NonNull PlaceOptions placeOptions) {
       this.application = application;
-      this.intent = intent;
+      this.placeOptions = placeOptions;
     }
 
     @Override
     @NonNull
     public <T extends ViewModel> T create(@Nullable Class<T> modelClass) {
       //noinspection unchecked
-      return (T) new PlaceAutocompleteViewModel(application, intent);
+      return (T) new PlaceAutocompleteViewModel(application, placeOptions);
     }
   }
 }

@@ -2,11 +2,13 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity.places;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.mapbox.geocoding.v5.models.CarmenFeature;
+import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.plugins.places.autocomplete.model.PlaceOptions;
 import com.mapbox.plugins.places.autocomplete.ui.PlaceAutocompleteFragment;
@@ -22,12 +24,25 @@ public class AutocompleteFragmentActivity extends AppCompatActivity {
     setContentView(R.layout.activity_places_fragment);
     ButterKnife.bind(this);
 
-    PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
-      getSupportFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+    PlaceAutocompleteFragment autocompleteFragment;
 
-    autocompleteFragment.setPlaceOptions(new PlaceOptions()
-      .withBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
-    );
+    if (savedInstanceState == null) {
+
+      PlaceOptions placeOptions = PlaceOptions.builder()
+        .toolbarColor(ContextCompat.getColor(this, R.color.colorPrimary))
+        .hint("Begin searching...")
+        .build();
+
+      autocompleteFragment = PlaceAutocompleteFragment.newInstance(
+        Mapbox.getAccessToken(), placeOptions);
+
+      final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+      transaction.add(R.id.fragment_container, autocompleteFragment, PlaceAutocompleteFragment.TAG);
+      transaction.commit();
+    } else {
+      autocompleteFragment = (PlaceAutocompleteFragment)
+        getSupportFragmentManager().findFragmentByTag(PlaceAutocompleteFragment.TAG);
+    }
 
     autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
       @Override

@@ -19,17 +19,21 @@ public class PlaceAutocompleteActivity extends AppCompatActivity implements Plac
 
     // Add product list fragment if this is first creation
     if (savedInstanceState == null) {
-      PlaceAutocompleteFragment fragment = new PlaceAutocompleteFragment();
+      String accessToken = getIntent().getStringExtra(PlaceConstants.ACCESS_TOKEN);
+
+      PlaceAutocompleteFragment fragment;
+
+      PlaceOptions placeOptions = getIntent().getParcelableExtra(PlaceConstants.PLACE_OPTIONS);
+      if (placeOptions != null) {
+        fragment = PlaceAutocompleteFragment.newInstance(accessToken, placeOptions);
+      } else {
+        fragment = PlaceAutocompleteFragment.newInstance(accessToken);
+      }
 
       getSupportFragmentManager().beginTransaction()
         .add(R.id.fragment_container, fragment, PlaceAutocompleteFragment.TAG).commit();
 
       fragment.setOnPlaceSelectedListener(this);
-
-      PlaceOptions placeOptions = getIntent().getParcelableExtra(PlaceConstants.PLACE_OPTIONS);
-      if (placeOptions != null) {
-        fragment.setPlaceOptions(placeOptions);
-      }
     }
   }
 

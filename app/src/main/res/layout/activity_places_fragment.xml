@@ -5,12 +5,10 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
-  <fragment
-    android:id="@+id/place_autocomplete_fragment"
-    android:name="com.mapbox.plugins.places.autocomplete.ui.PlaceAutocompleteFragment"
+  <FrameLayout
+    android:id="@+id/fragment_container"
     android:layout_width="0dp"
     android:layout_height="0dp"
-    app:accessToken="pk.eyJ1IjoiY2FtbWFjZSIsImEiOiI5OGQxZjRmZGQ2YjU3Mzk1YjJmZTQ5ZDY2MTg1NDJiOCJ9.hIFoCKGAGOwQkKyVPvrxvQ"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"

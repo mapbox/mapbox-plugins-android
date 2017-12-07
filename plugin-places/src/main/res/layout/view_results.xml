@@ -10,7 +10,6 @@
     android:id="@+id/rv_search_results"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/cardview_light_background"
     android:clipChildren="true"
     android:clipToPadding="true"
     android:overScrollMode="never"

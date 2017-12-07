@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.mapbox.geocoding.v5.GeocodingCriteria.GeocodingTypeCriteria;
+import com.mapbox.geocoding.v5.MapboxGeocoding;
 import com.mapbox.geocoding.v5.models.CarmenFeature;
 import com.mapbox.geojson.Point;
 import com.mapbox.plugins.places.autocomplete.data.SearchHistoryDatabase;
@@ -113,137 +114,6 @@ public final class PlaceAutocomplete {
      */
     public IntentBuilder accessToken(@NonNull String accessToken) {
       intent.putExtra(PlaceConstants.ACCESS_TOKEN, accessToken);
-      return this;
-    }
-
-    /**
-     * Limit the results to a defined bounding box. Unlike {@link #proximity(Point)}, this will
-     * strictly limit results to within the bounding box only. If simple biasing is desired rather
-     * than a strict region, use proximity instead.
-     *
-     * @param northeast the northeast corner of the bounding box as a {@link Point}
-     * @param southwest the southwest corner of the bounding box as a {@link Point}
-     * @return this builder for chaining options together
-     * @since 0.1.0
-     */
-    public IntentBuilder boundingBoxBias(@NonNull Point northeast, @NonNull Point southwest) {
-      intent.putExtra(PlaceConstants.BBOX_SOUTHWEST_POINT, southwest.toJson());
-      intent.putExtra(PlaceConstants.BBOX_NORTHEAST_POINT, northeast.toJson());
-      return this;
-    }
-
-    /**
-     * Add a single country locale to restrict the results. This method can be called as many times
-     * as needed inorder to add multiple countries.
-     *
-     * @param country limit geocoding results to one
-     * @return this builder for chaining options together
-     * @since 0.1.0
-     */
-    public IntentBuilder country(Locale country) {
-      countries.add(country.getCountry());
-      return this;
-    }
-
-    /**
-     * Limit results to one or more countries. Options are ISO 3166 alpha 2 country codes separated
-     * by commas.
-     *
-     * @param country limit geocoding results to one
-     * @return this builder for chaining options together
-     * @since 0.1.0
-     */
-    public IntentBuilder country(String... country) {
-      countries.addAll(Arrays.asList(country));
-      return this;
-    }
-
-    /**
-     * Bias local results based on a provided {@link Point}. This oftentimes increases accuracy in
-     * the returned results.
-     *
-     * @param proximity a point defining the proximity you'd like to bias the results around
-     * @return this builder for chaining options together
-     * @since 0.1.0
-     */
-    public IntentBuilder proximity(@NonNull Point proximity) {
-      intent.putExtra(PlaceConstants.PROXIMITY, proximity.toJson());
-      return this;
-    }
-
-    /**
-     * This optionally can be set to filter the results returned back after making the geocoding
-     * request. A null value can't be passed in and only values defined in
-     * {@link GeocodingTypeCriteria} are allowed.
-     * <p>
-     * Note that {@link GeocodingTypeCriteria#TYPE_POI_LANDMARK} returns a subset of the results
-     * returned by {@link GeocodingTypeCriteria#TYPE_POI}. More than one type can be specified.
-     * </p>
-     *
-     * @param geocodingTypes optionally filter the result types by one or more defined types inside
-     *                       the {@link GeocodingTypeCriteria}
-     * @return this builder for chaining options together
-     * @since 0.1.0
-     */
-    public IntentBuilder types(@NonNull @GeocodingTypeCriteria String... geocodingTypes) {
-      String types = TextUtils.join(",", geocodingTypes);
-      intent.putExtra(PlaceConstants.TYPE, types);
-      return this;
-    }
-
-    /**
-     * This optionally specifies the desired response language for user queries. Results that match
-     * the requested language are favored over results in other languages. If more than one language
-     * tag is supplied separating them by a comma, text in all requested languages will be returned.
-     * <p>
-     * Any valid IETF language tag can be submitted, and a best effort will be made to return
-     * results in the requested language or languages, falling back first to similar and then to
-     * common languages in the event that text is not available in the requested language. In the
-     * event a fallback language is used, the language field will have a different value than the
-     * one requested.
-     * <p>
-     * Translation availability varies by language and region, for a full list of supported regions,
-     * see the link provided below.
-     *
-     * @param languages a String specifying the language or languages you'd like results to support
-     * @return this builder for chaining options together
-     * @see <a href="https://www.mapbox.com/api-documentation/#request-format">Supported languages</a>
-     * @since 0.1.0
-     */
-    public IntentBuilder language(String languages) {
-      intent.putExtra(PlaceConstants.LANGUAGE, languages);
-      return this;
-    }
-
-    /**
-     * This optionally specifies the maximum number of results to return. the default is 5 and the
-     * maximum is 10.
-     *
-     * @param limit the number of returned results
-     * @return this builder for chaining options together
-     * @since 0.1.0
-     */
-    public IntentBuilder limit(@IntRange(from = 1, to = 10) int limit) {
-      intent.putExtra(PlaceConstants.LIMIT, limit);
-      return this;
-    }
-
-    /**
-     * Insert a list of {@link CarmenFeature}s which you'd like to highlight without the user
-     * performing a query. These will show up in a different list view.
-     *
-     * @param carmenFeatures a list of {@link CarmenFeature}s which you'd like to highlight in the
-     *                       results view
-     * @return this builder for chaining options together
-     * @since 0.1.0
-     */
-    public IntentBuilder injectPlaces(List<CarmenFeature> carmenFeatures) {
-      ArrayList<String> serialized = new ArrayList<>(carmenFeatures.size());
-      for (CarmenFeature carmenFeature : carmenFeatures) {
-        carmenFeature.properties().addProperty(PlaceConstants.SAVED_PLACE, true);
-        serialized.add(carmenFeature.toJson());
-      }
-      intent.putStringArrayListExtra(PlaceConstants.INJECTED_PLACES, serialized);
       return this;
     }
 
