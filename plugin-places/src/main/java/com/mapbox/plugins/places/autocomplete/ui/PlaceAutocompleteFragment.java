@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
@@ -23,6 +24,7 @@ import com.mapbox.plugins.places.autocomplete.DataRepository;
 import com.mapbox.plugins.places.autocomplete.PlaceAutocomplete;
 import com.mapbox.plugins.places.autocomplete.PlaceConstants;
 import com.mapbox.plugins.places.autocomplete.data.entity.SearchHistoryEntity;
+import com.mapbox.plugins.places.autocomplete.model.PlaceOptions;
 import com.mapbox.plugins.places.autocomplete.viewmodel.PlaceAutocompleteViewModel;
 import com.mapbox.plugins.places.common.KeyboardUtils;
 
@@ -39,6 +41,7 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
   private ResultView searchHistoryView;
   private ResultView searchResultView;
   private ScrollView resultScrollView;
+  private PlaceOptions placeOptions;
   private ResultView starredView;
   private SearchView searchView;
   private View dropShadowView;
@@ -54,19 +57,21 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
         : R.layout.fragment_autocomplete_full,
       container, false);
 
-    int backgroundColor
-      = getActivity().getIntent().getIntExtra(PlaceConstants.BACKGROUND, Color.TRANSPARENT);
-    rootView.setBackgroundColor(backgroundColor);
-
     bindViews();
     bindClickListeners();
     return rootView;
+  }
+
+  public void setPlaceOptions(@NonNull PlaceOptions placeOptions) {
+    this.placeOptions = placeOptions;
   }
 
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     resultScrollView.getViewTreeObserver().addOnScrollChangedListener(this);
+
+    rootView.setBackgroundColor(placeOptions.getBackgroundColor());
   }
 
   @Override
@@ -132,6 +137,7 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
     if (resultScrollView != null) {
       resultScrollView.getViewTreeObserver().removeOnScrollChangedListener(this);
     }
+    placeSelectionListener = null;
     super.onDestroyView();
   }
 

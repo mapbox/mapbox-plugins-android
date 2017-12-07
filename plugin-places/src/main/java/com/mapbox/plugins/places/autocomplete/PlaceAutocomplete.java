@@ -3,7 +3,6 @@ package com.mapbox.plugins.places.autocomplete;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.ColorInt;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -12,6 +11,7 @@ import com.mapbox.geocoding.v5.GeocodingCriteria.GeocodingTypeCriteria;
 import com.mapbox.geocoding.v5.models.CarmenFeature;
 import com.mapbox.geojson.Point;
 import com.mapbox.plugins.places.autocomplete.data.SearchHistoryDatabase;
+import com.mapbox.plugins.places.autocomplete.model.PlaceOptions;
 import com.mapbox.plugins.places.autocomplete.ui.PlaceAutocompleteActivity;
 
 import java.util.ArrayList;
@@ -247,15 +247,8 @@ public final class PlaceAutocomplete {
       return this;
     }
 
-    /**
-     * Set the background color of the activity.
-     *
-     * @param backgroundColor the color you'd like the background to show as
-     * @return this builder for chaining options together
-     * @since 0.1.0
-     */
-    public IntentBuilder backgroundColor(@ColorInt int backgroundColor) {
-      intent.putExtra(PlaceConstants.BACKGROUND, backgroundColor);
+    public IntentBuilder placeOptions(PlaceOptions placeOptions) {
+      intent.putExtra(PlaceConstants.PLACE_OPTIONS, placeOptions);
       return this;
     }
 

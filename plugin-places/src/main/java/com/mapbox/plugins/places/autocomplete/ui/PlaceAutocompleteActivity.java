@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.mapbox.geocoding.v5.models.CarmenFeature;
 import com.mapbox.places.R;
 import com.mapbox.plugins.places.autocomplete.PlaceConstants;
+import com.mapbox.plugins.places.autocomplete.model.PlaceOptions;
 
 public class PlaceAutocompleteActivity extends AppCompatActivity implements PlaceSelectionListener {
 
@@ -24,6 +25,11 @@ public class PlaceAutocompleteActivity extends AppCompatActivity implements Plac
         .add(R.id.fragment_container, fragment, PlaceAutocompleteFragment.TAG).commit();
 
       fragment.setOnPlaceSelectedListener(this);
+
+      PlaceOptions placeOptions = getIntent().getParcelableExtra(PlaceConstants.PLACE_OPTIONS);
+      if (placeOptions != null) {
+        fragment.setPlaceOptions(placeOptions);
+      }
     }
   }
 

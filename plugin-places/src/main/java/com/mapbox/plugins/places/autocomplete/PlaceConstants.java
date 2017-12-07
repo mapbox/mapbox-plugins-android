@@ -18,6 +18,7 @@ public final class PlaceConstants {
   public static final String BACKGROUND = "com.mapbox.mapboxsdk.plugins.places.backgroundColor";
   public static final String SAVED_PLACE = "com.mapbox.mapboxsdk.plugins.places.savedcarmenfeat";
   public static final String MODE = "com.mapbox.mapboxsdk.plugins.places.mode";
+  public static final String PLACE_OPTIONS = "com.mapbox.mapboxsdk.plugins.places.placeOptions";
 
   private PlaceConstants() {
   }

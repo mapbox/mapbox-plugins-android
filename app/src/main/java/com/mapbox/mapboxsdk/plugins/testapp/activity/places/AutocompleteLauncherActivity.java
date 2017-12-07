@@ -14,6 +14,7 @@ import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.plugins.places.autocomplete.PlaceAutocomplete;
+import com.mapbox.plugins.places.autocomplete.model.PlaceOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +61,7 @@ public class AutocompleteLauncherActivity extends AppCompatActivity {
     Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_CARDS)
       .accessToken(Mapbox.getAccessToken())
       .limit(10)
-      .backgroundColor(Color.parseColor("#EEEEEE"))
+      .placeOptions(new PlaceOptions().withBackgroundColor(Color.parseColor("#EEEEEE")))
       .injectPlaces(carmenFeatures)
       .build(AutocompleteLauncherActivity.this);
     startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE);
@@ -78,7 +79,7 @@ public class AutocompleteLauncherActivity extends AppCompatActivity {
     Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
       .accessToken(Mapbox.getAccessToken())
       .injectPlaces(carmenFeatures)
-      .backgroundColor(Color.WHITE)
+      .placeOptions(new PlaceOptions().withBackgroundColor(Color.WHITE))
       .build(AutocompleteLauncherActivity.this);
     startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE);
   }
