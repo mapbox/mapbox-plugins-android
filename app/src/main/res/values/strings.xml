@@ -21,6 +21,7 @@
     <string name="title_geojson">GeoJson Plugin</string>
     <string name="title_cluster">Cluster Plugin</string>
     <string name="title_places_autocomplete">Places Autocomplete</string>
+    <string name="title_places_autocomplete_fragment">Places Autocomplete Fragment</string>
     <string name="title_offline_plugin">Create region</string>
     <string name="title_offline_regions">List regions</string>
 
@@ -34,6 +35,7 @@
     <string name="description_geojson">Load GeoJson file from assets, path or url to the Mapbox.</string>
     <string name="description_cluster">Add marker clustering to a Mapbox map.</string>
     <string name="description_autocomplete">Launch the autocomplete activity.</string>
+    <string name="description_autocomplete_fragment">Launch the autocomplete fragment inside an activity</string>
     <string name="description_offline_plugin">Use a form to create an offline region.</string>
     <string name="description_offline_regions">List all offline regions.</string>
 
