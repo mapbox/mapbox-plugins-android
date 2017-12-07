@@ -84,15 +84,6 @@ public class PlaceAutocompleteViewModel extends AndroidViewModel
     geocoderBuilder.query(query).build().enqueueCall(this);
   }
 
-  public Intent onItemClicked(CarmenFeature carmenFeature) {
-    saveCarmenFeatureToDatabase(carmenFeature);
-
-    String json = carmenFeature.toJson();
-    Intent returningIntent = new Intent();
-    returningIntent.putExtra(PlaceConstants.RETURNING_CARMEN_FEATURE, json);
-    return returningIntent;
-  }
-
   public List<CarmenFeature> getFavoritePlaces() {
     List<String> serialized = intent.getStringArrayListExtra(PlaceConstants.INJECTED_PLACES);
     List<CarmenFeature> favoriteFeatures = new ArrayList<>();
@@ -123,7 +114,7 @@ public class PlaceAutocompleteViewModel extends AndroidViewModel
     return SearchHistoryDatabase.getInstance(this.getApplication().getApplicationContext());
   }
 
-  private void saveCarmenFeatureToDatabase(CarmenFeature carmenFeature) {
+  public void saveCarmenFeatureToDatabase(CarmenFeature carmenFeature) {
     // Check that the carmenFeature hasn't already been added
     if (carmenFeature.properties().has(PlaceConstants.SAVED_PLACE)) {
       return;

@@ -5,10 +5,10 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +20,7 @@ import com.mapbox.geocoding.v5.models.CarmenFeature;
 import com.mapbox.geocoding.v5.models.GeocodingResponse;
 import com.mapbox.places.R;
 import com.mapbox.plugins.places.autocomplete.DataRepository;
+import com.mapbox.plugins.places.autocomplete.PlaceAutocomplete;
 import com.mapbox.plugins.places.autocomplete.PlaceConstants;
 import com.mapbox.plugins.places.autocomplete.data.entity.SearchHistoryEntity;
 import com.mapbox.plugins.places.autocomplete.viewmodel.PlaceAutocompleteViewModel;
@@ -31,6 +32,9 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
   SearchView.QueryListener, SearchView.BackButtonListener,
   ViewTreeObserver.OnScrollChangedListener {
 
+  public static final String TAG = "PlaceAutocompleteFragment";
+
+  private PlaceSelectionListener placeSelectionListener;
   private PlaceAutocompleteViewModel viewModel;
   private ResultView searchHistoryView;
   private ResultView searchResultView;
@@ -44,10 +48,25 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
-    rootView = inflater.inflate(R.layout.autocomplete_fragment, container, false);
+    int mode = getActivity().getIntent().getIntExtra(PlaceConstants.MODE, 1);
+    rootView = inflater.inflate(
+      mode == PlaceAutocomplete.MODE_CARDS ? R.layout.fragment_autocomplete_card
+        : R.layout.fragment_autocomplete_full,
+      container, false);
+
+    int backgroundColor
+      = getActivity().getIntent().getIntExtra(PlaceConstants.BACKGROUND, Color.TRANSPARENT);
+    rootView.setBackgroundColor(backgroundColor);
+
     bindViews();
     bindClickListeners();
     return rootView;
+  }
+
+  @Override
+  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    resultScrollView.getViewTreeObserver().addOnScrollChangedListener(this);
   }
 
   @Override
@@ -102,10 +121,10 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
 
   @Override
   public void onClick(CarmenFeature carmenFeature) {
-    Intent intent = viewModel.onItemClicked(carmenFeature);
-    // TODO use a callback
-    getActivity().setResult(AppCompatActivity.RESULT_OK, intent);
-    getActivity().finish();
+    viewModel.saveCarmenFeatureToDatabase(carmenFeature);
+    if (placeSelectionListener != null) {
+      placeSelectionListener.onPlaceSelected(carmenFeature);
+    }
   }
 
   @Override
@@ -118,8 +137,13 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
 
   @Override
   public void onBackButtonPress() {
-    getActivity().setResult(AppCompatActivity.RESULT_CANCELED);
-    getActivity().finish();
+    if (placeSelectionListener != null) {
+      placeSelectionListener.onCancel();
+    }
+  }
+
+  public void setOnPlaceSelectedListener(PlaceSelectionListener listener) {
+    placeSelectionListener = listener;
   }
 
   private void bindClickListeners() {
