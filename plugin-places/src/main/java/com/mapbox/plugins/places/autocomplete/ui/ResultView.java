@@ -66,6 +66,7 @@ public class ResultView extends LinearLayout {
     RecyclerView recyclerView = findViewById(R.id.rv_search_results);
     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
     layoutManager.setAutoMeasureEnabled(true);
+    recyclerView.addItemDecoration(new ResultItemDecoration(getContext()));
     recyclerView.setLayoutManager(layoutManager);
     recyclerView.setNestedScrollingEnabled(false);
     recyclerView.setAdapter(adapter);

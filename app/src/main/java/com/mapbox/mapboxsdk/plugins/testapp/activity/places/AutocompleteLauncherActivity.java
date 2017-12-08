@@ -16,9 +16,6 @@ import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.plugins.places.autocomplete.PlaceAutocomplete;
 import com.mapbox.plugins.places.autocomplete.model.PlaceOptions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
