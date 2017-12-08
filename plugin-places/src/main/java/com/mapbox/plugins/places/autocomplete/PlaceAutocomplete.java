@@ -5,20 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
-import com.mapbox.geocoding.v5.GeocodingCriteria.GeocodingTypeCriteria;
-import com.mapbox.geocoding.v5.MapboxGeocoding;
 import com.mapbox.geocoding.v5.models.CarmenFeature;
-import com.mapbox.geojson.Point;
 import com.mapbox.plugins.places.autocomplete.data.SearchHistoryDatabase;
 import com.mapbox.plugins.places.autocomplete.model.PlaceOptions;
 import com.mapbox.plugins.places.autocomplete.ui.PlaceAutocompleteActivity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
 
 /**
  * PlaceAutocomplete provides an activity that allows a user to start typing a place name or an
