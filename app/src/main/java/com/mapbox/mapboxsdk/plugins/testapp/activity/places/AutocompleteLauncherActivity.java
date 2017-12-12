@@ -14,9 +14,7 @@ import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.plugins.places.autocomplete.PlaceAutocomplete;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.mapbox.plugins.places.autocomplete.model.PlaceOptions;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,38 +28,41 @@ public class AutocompleteLauncherActivity extends AppCompatActivity {
   @BindView(R.id.mapView)
   MapView mapView;
 
-  private List<CarmenFeature> carmenFeatures;
+  private CarmenFeature home;
+  private CarmenFeature work;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_places_launcher);
     ButterKnife.bind(this);
-    carmenFeatures = new ArrayList<>();
     addUserLocations();
   }
 
   private void addUserLocations() {
-    carmenFeatures.add(CarmenFeature.builder().text("Directions to Home")
+    home = CarmenFeature.builder().text("Directions to Home")
       .placeName("300 Massachusetts Ave NW")
       .id("directions-home")
       .properties(new JsonObject())
-      .build());
+      .build();
 
-    carmenFeatures.add(CarmenFeature.builder().text("Directions to Work")
+    work = CarmenFeature.builder().text("Directions to Work")
       .placeName("1509 16th St NW")
       .id("directions-work")
       .properties(new JsonObject())
-      .build());
+      .build();
   }
 
   @OnClick(R.id.fabCard)
   public void onOverlayFabClick(View view) {
-    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_CARDS)
+    Intent intent = new PlaceAutocomplete.IntentBuilder()
       .accessToken(Mapbox.getAccessToken())
-      .limit(10)
-      .backgroundColor(Color.parseColor("#EEEEEE"))
-      .injectPlaces(carmenFeatures)
+      .placeOptions(PlaceOptions.builder()
+        .backgroundColor(Color.parseColor("#EEEEEE"))
+        .addInjectedFeature(home)
+        .addInjectedFeature(work)
+        .limit(10)
+        .build(PlaceOptions.MODE_CARDS))
       .build(AutocompleteLauncherActivity.this);
     startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE);
   }
@@ -75,10 +76,13 @@ public class AutocompleteLauncherActivity extends AppCompatActivity {
 
   @OnClick(R.id.fabFullScreen)
   public void onFullScreenFabClick(View view) {
-    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+    Intent intent = new PlaceAutocomplete.IntentBuilder()
       .accessToken(Mapbox.getAccessToken())
-      .injectPlaces(carmenFeatures)
-      .backgroundColor(Color.WHITE)
+      .placeOptions(PlaceOptions.builder()
+        .backgroundColor(Color.WHITE)
+        .addInjectedFeature(home)
+        .addInjectedFeature(work)
+        .build())
       .build(AutocompleteLauncherActivity.this);
     startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE);
   }

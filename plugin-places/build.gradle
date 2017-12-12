@@ -4,7 +4,6 @@ android {
   compileSdkVersion androidVersions.compileSdkVersion
   buildToolsVersion androidVersions.buildToolsVersion
 
-
   defaultConfig {
     minSdkVersion androidVersions.minSdkVersion
     targetSdkVersion androidVersions.targetSdkVersion
@@ -39,6 +38,11 @@ dependencies {
   implementation dependenciesList.supportCardView
   implementation dependenciesList.supportRecyclerView
   implementation dependenciesList.supportV4
+
+  // AutoValues
+  annotationProcessor dependenciesList.autoValuesParcel
+  annotationProcessor dependenciesList.autoValue
+  compileOnly dependenciesList.autoValue
 
   implementation dependenciesList.lifecycleExtensions
   implementation dependenciesList.roomRuntime

@@ -34,6 +34,18 @@
         android:value=".activity.FeatureOverviewActivity"/>
     </activity>
     <activity
+      android:name=".activity.places.AutocompleteFragmentActivity"
+      android:description="@string/description_autocomplete_fragment"
+      android:label="@string/title_places_autocomplete_fragment"
+      android:theme="@style/AppTheme.NoActionBar">
+    <meta-data
+      android:name="@string/category"
+      android:value="@string/category_places"/>
+    <meta-data
+      android:name="android.support.PARENT_ACTIVITY"
+      android:value=".activity.FeatureOverviewActivity"/>
+    </activity>
+    <activity
       android:name=".activity.TrafficActivity"
       android:description="@string/description_traffic"
       android:label="@string/title_traffic">
