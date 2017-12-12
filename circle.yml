@@ -88,7 +88,7 @@ jobs:
       - deploy:
           name: Publish Plugins SDK To Maven Central
           command: |
-            if [ "${CIRCLE_BRANCH}" == "places-autocomplete-fragment" ]; then
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
             make publish ;
             fi
       - store_artifacts:
