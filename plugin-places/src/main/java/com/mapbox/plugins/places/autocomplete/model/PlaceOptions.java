@@ -23,6 +23,20 @@ import java.util.Locale;
 @AutoValue
 public abstract class PlaceOptions implements Parcelable {
 
+  /**
+   * Mode for launching the autocomplete view in fullscreen.
+   *
+   * @since 0.1.0
+   */
+  public static final int MODE_FULLSCREEN = 1;
+
+  /**
+   * Mode for launching the autocomplete view using Android cards for the layouts.
+   *
+   * @since 0.1.0
+   */
+  public static final int MODE_CARDS = 2;
+
   // Geocoding options
   @Nullable
   public abstract Point proximity();
@@ -45,6 +59,8 @@ public abstract class PlaceOptions implements Parcelable {
   public abstract List<String> injectedPlaces();
 
   // View options
+  public abstract int viewMode();
+
   public abstract int backgroundColor();
 
   public abstract int toolbarColor();
@@ -117,6 +133,8 @@ public abstract class PlaceOptions implements Parcelable {
       return this;
     }
 
+    abstract Builder viewMode(int mode);
+
     abstract Builder injectedPlaces(List<String> injectedPlaces);
 
     public abstract Builder backgroundColor(@ColorInt int backgroundColor);
@@ -128,12 +146,17 @@ public abstract class PlaceOptions implements Parcelable {
     public abstract PlaceOptions autoBuild();
 
     public PlaceOptions build() {
+      return build(PlaceOptions.MODE_FULLSCREEN);
+    }
+
+    public PlaceOptions build(@IntRange(from = 1, to = 2) int mode) {
 
       if (!countries.isEmpty()) {
         country(TextUtils.join(",", countries.toArray()));
       }
 
       injectedPlaces(injectedPlaces);
+      viewMode(mode);
 
       return autoBuild();
     }

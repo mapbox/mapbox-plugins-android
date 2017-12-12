@@ -3,7 +3,6 @@ package com.mapbox.plugins.places.autocomplete;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 
 import com.mapbox.geocoding.v5.models.CarmenFeature;
@@ -25,22 +24,8 @@ import java.util.ArrayList;
  */
 public final class PlaceAutocomplete {
 
-  /**
-   * Mode for launching the autocomplete activity in fullscreen.
-   *
-   * @since 0.1.0
-   */
-  public static final int MODE_FULLSCREEN = 1;
-
-  /**
-   * Mode for launching the autocomplete activity using Android card views for the layouts.
-   *
-   * @since 0.1.0
-   */
-  public static final int MODE_CARDS = 2;
-
   private PlaceAutocomplete() {
-    // Class should never be initialized.
+    throw new AssertionError("No Instances.");
   }
 
   /**
@@ -81,19 +66,15 @@ public final class PlaceAutocomplete {
 
     private final ArrayList<String> countries;
     private final Intent intent;
-    private final int mode;
 
     /**
      * Creates a new builder that creates an intent to launch the autocomplete activity.
      *
-     * @param mode Either {@link PlaceAutocomplete#MODE_FULLSCREEN} or
-     *             {@link PlaceAutocomplete#MODE_CARDS}
      * @since 0.1.0
      */
-    public IntentBuilder(@IntRange(from = 1, to = 2) int mode) {
+    public IntentBuilder() {
       countries = new ArrayList<>();
       intent = new Intent();
-      this.mode = mode;
     }
 
     /**
@@ -124,7 +105,6 @@ public final class PlaceAutocomplete {
      */
     public Intent build(Activity activity) {
       intent.putStringArrayListExtra(PlaceConstants.COUNTRIES, countries);
-      intent.putExtra(PlaceConstants.MODE, mode);
       intent.setClass(activity, PlaceAutocompleteActivity.class);
       return intent;
     }

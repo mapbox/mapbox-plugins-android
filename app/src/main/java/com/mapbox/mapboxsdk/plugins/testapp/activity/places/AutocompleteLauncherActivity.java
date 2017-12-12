@@ -55,14 +55,14 @@ public class AutocompleteLauncherActivity extends AppCompatActivity {
 
   @OnClick(R.id.fabCard)
   public void onOverlayFabClick(View view) {
-    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_CARDS)
+    Intent intent = new PlaceAutocomplete.IntentBuilder()
       .accessToken(Mapbox.getAccessToken())
       .placeOptions(PlaceOptions.builder()
         .backgroundColor(Color.parseColor("#EEEEEE"))
         .addInjectedFeature(home)
         .addInjectedFeature(work)
         .limit(10)
-        .build())
+        .build(PlaceOptions.MODE_CARDS))
       .build(AutocompleteLauncherActivity.this);
     startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE);
   }
@@ -76,7 +76,7 @@ public class AutocompleteLauncherActivity extends AppCompatActivity {
 
   @OnClick(R.id.fabFullScreen)
   public void onFullScreenFabClick(View view) {
-    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+    Intent intent = new PlaceAutocomplete.IntentBuilder()
       .accessToken(Mapbox.getAccessToken())
       .placeOptions(PlaceOptions.builder()
         .backgroundColor(Color.WHITE)

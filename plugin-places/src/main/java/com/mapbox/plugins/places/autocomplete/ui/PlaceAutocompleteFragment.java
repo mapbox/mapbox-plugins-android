@@ -16,7 +16,6 @@ import com.mapbox.geocoding.v5.models.CarmenFeature;
 import com.mapbox.geocoding.v5.models.GeocodingResponse;
 import com.mapbox.places.R;
 import com.mapbox.plugins.places.autocomplete.DataRepository;
-import com.mapbox.plugins.places.autocomplete.PlaceAutocomplete;
 import com.mapbox.plugins.places.autocomplete.PlaceConstants;
 import com.mapbox.plugins.places.autocomplete.data.entity.SearchHistoryEntity;
 import com.mapbox.plugins.places.autocomplete.model.PlaceOptions;
@@ -74,10 +73,9 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
       placeOptions = PlaceOptions.builder().limit(10).build();
     }
 
-    mode = getActivity().getIntent().getIntExtra(PlaceConstants.MODE,
-      PlaceAutocomplete.MODE_FULLSCREEN);
+    mode = placeOptions.viewMode();
     rootView = inflater.inflate(
-      mode == PlaceAutocomplete.MODE_CARDS ? R.layout.fragment_autocomplete_card
+      mode == PlaceOptions.MODE_CARDS ? R.layout.fragment_autocomplete_card
         : R.layout.fragment_autocomplete_full,
       container, false);
 
@@ -131,7 +129,7 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
       if (resultScrollView.getScrollY() != 0) {
         KeyboardUtils.hideKeyboard(resultScrollView);
       }
-      if (mode == PlaceAutocomplete.MODE_FULLSCREEN) {
+      if (mode == PlaceOptions.MODE_FULLSCREEN) {
         return;
       }
       dropShadowView.setVisibility(
