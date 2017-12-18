@@ -1,7 +1,7 @@
-<!--<!--<h1 align="center">
+<h1 align="center">
   <br>
-  <a href="https://www.mapbox.com/android-docs/mapbox-services/overview/"><img src="https://github.com/mapbox/mapbox-java/blob/master/.github/mbxservice-logo.png" alt="Mapbox Service" width="400"></a>
-</h1>-->
+  <a href="https://www.mapbox.com/android-docs/mapbox-services/overview/"><img src="https://github.com/mapbox/mapbox-plugins-android/blob/master/.github/mbx-plugins-logo.png" alt="Mapbox Plugins" width="500"></a>
+</h1>
 
 <h4 align="center">Plugins are single-purpose libraries built on top of the <a href="https://www.mapbox.com/android-docs/">Mapbox Maps SDK for Android</a> that you can include in your apps like any other Android dependency</h4>
 
