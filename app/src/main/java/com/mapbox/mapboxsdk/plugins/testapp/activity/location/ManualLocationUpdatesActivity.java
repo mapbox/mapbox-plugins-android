@@ -52,7 +52,11 @@ public class ManualLocationUpdatesActivity extends AppCompatActivity implements 
 
   @OnClick(R.id.fabToggleManualLocation)
   public void toggleManualLocationFabClick(View view) {
-    toggleManualLocation();
+    if (locationLayerPlugin != null) {
+      locationLayerPlugin.setLocationEngine(locationLayerPlugin.getLocationEngine() == null ? locationEngine : null);
+      fabToggleManualLocation.setImageResource(locationLayerPlugin.getLocationEngine() == null
+        ? R.drawable.ic_location : R.drawable.ic_location_disabled);
+    }
   }
 
   @OnClick(R.id.fabManualLocationChange)
@@ -61,12 +65,6 @@ public class ManualLocationUpdatesActivity extends AppCompatActivity implements 
       locationLayerPlugin.forceLocationUpdate(
         Utils.getRandomLocation(new double[] {-77.1825, 38.7825, -76.9790, 39.0157}));
     }
-  }
-
-  private void toggleManualLocation() {
-    locationLayerPlugin.setLocationEngine(locationLayerPlugin.getLocationEngine() == null ? locationEngine : null);
-    fabToggleManualLocation.setImageResource(locationLayerPlugin.getLocationEngine() == null
-      ? R.drawable.ic_location : R.drawable.ic_location_disabled);
   }
 
   @Override

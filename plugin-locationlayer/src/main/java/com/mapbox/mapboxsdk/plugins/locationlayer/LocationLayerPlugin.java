@@ -15,22 +15,17 @@ import android.support.v7.app.AppCompatDelegate;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.style.layers.CircleLayer;
-import com.mapbox.mapboxsdk.style.layers.Layer;
-import com.mapbox.mapboxsdk.style.layers.Property;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
-import com.mapbox.mapboxsdk.style.sources.Source;
 import com.mapbox.services.android.telemetry.location.LocationEngine;
 import com.mapbox.services.android.telemetry.location.LocationEngineListener;
 import com.mapbox.services.commons.geojson.Point;
 
-import timber.log.Timber;
-
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleRadius;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotate;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.ACCURACY_LAYER;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.BEARING_LAYER;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.COMPASS_UPDATE_RATE_MS;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.NAVIGATION_LAYER;
 
 /**
  * The Location layer plugin provides location awareness to your mobile application. Enabling this plugin provides a
@@ -49,10 +44,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
  * @since 0.1.0
  */
 public class LocationLayerPlugin implements LocationEngineListener, CompassListener, MapView.OnMapChangedListener,
-  LifecycleObserver, MapboxMap.OnCameraMoveListener {
-
-  @StyleRes
-  private int styleRes;
+  LifecycleObserver, MapboxMap.OnCameraMoveListener, MapboxMap.OnMapClickListener {
 
   private LocationLayer locationLayer;
   private CompassManager compassManager;
@@ -65,6 +57,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   private int locationLayerMode;
 
   // Previous compass and location values
+  private Location lastLocation;
   private float previousMagneticHeading;
   private Point previousPoint;
 
@@ -75,7 +68,14 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   private long locationUpdateTimestamp;
   private boolean linearAnimation;
 
+
   private Location location;
+
+  private OnLocationLayerClickListener onLocationLayerClickListener;
+
+  @StyleRes
+  private int styleRes;
+
 
   /**
    * Construct a {@code LocationLayerPlugin}
@@ -103,8 +103,8 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
                              @Nullable LocationEngine locationEngine, @StyleRes int styleRes) {
     this.locationEngine = locationEngine;
     this.mapboxMap = mapboxMap;
-    this.styleRes = styleRes;
     this.mapView = mapView;
+    this.styleRes = styleRes;
     mapView.addOnMapChangedListener(this);
     initialize();
   }
@@ -135,7 +135,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   @RequiresPermission(anyOf = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
   public void setLocationLayerEnabled(@LocationLayerMode.Mode int locationLayerMode) {
     if (locationLayerMode != LocationLayerMode.NONE) {
-      locationLayer.setLayerVisibility(true);
+      locationLayer.setLayersVisibility(true);
 
       // Set an initial location if one is available and the locationEngines not null
       if (locationEngine != null) {
@@ -180,8 +180,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   public void onMapChanged(int change) {
     if (change == MapView.WILL_START_LOADING_MAP) {
       stopAllAnimations();
-    }
-    if (change == MapView.DID_FINISH_LOADING_STYLE) {
+    } else if (change == MapView.DID_FINISH_LOADING_STYLE) {
       mapStyleFinishedLoading();
     }
   }
@@ -194,7 +193,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
    */
   public void applyStyle(@StyleRes int styleRes) {
     this.styleRes = styleRes;
-    locationLayer = new LocationLayer(mapView, mapboxMap, styleRes);
+    locationLayer.applyStyle(styleRes);
   }
 
   /**
@@ -269,7 +268,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     }
 
     if (!compassManager.getCompassListeners().isEmpty()
-      || locationLayerMode == LocationLayerMode.COMPASS && compassManager.isSensorAvailable()) {
+      || (locationLayerMode == LocationLayerMode.COMPASS && compassManager.isSensorAvailable())) {
       compassManager.onStart();
     }
     if (mapboxMap != null) {
@@ -325,6 +324,25 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     }
   }
 
+  /**
+   * Adds a listener that gets invoked when the user clicks the location layer.
+   *
+   * @param locationClickListener The location layer click listener that is invoked when the location layer is clicked.
+   */
+  public void setOnLocationClickListener(@Nullable OnLocationLayerClickListener locationClickListener) {
+    this.onLocationLayerClickListener = locationClickListener;
+    if (onLocationLayerClickListener != null) {
+      mapboxMap.setOnMapClickListener(this);
+    }
+  }
+
+  @Override
+  public void onMapClick(@NonNull LatLng point) {
+    if (onLocationLayerClickListener != null && locationLayer.onMapClick(point)) {
+      onLocationLayerClickListener.onLocationLayerClick();
+    }
+  }
+
   @Override
   @SuppressWarnings( {"MissingPermission"})
   public void onConnected() {
@@ -356,7 +374,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     if (locationLayerMode == LocationLayerMode.NAVIGATION && location.hasBearing()) {
       bearingChangeAnimate(location.getBearing());
     } else if (locationLayerMode != LocationLayerMode.NAVIGATION) {
-      setAccuracy(location);
+      locationLayer.setAccuracy(location);
     }
     setLocation(location);
   }
@@ -368,7 +386,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     if (locationEngine != null) {
       locationEngine.removeLocationEngineListener(this);
     }
-    locationLayer.setLayerVisibility(false);
+    locationLayer.setLayersVisibility(false);
   }
 
   /**
@@ -379,8 +397,18 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     Location lastLocation = locationEngine.getLastLocation();
     if (lastLocation != null) {
       setLocation(lastLocation);
-      setAccuracy(lastLocation);
+      locationLayer.setAccuracy(lastLocation);
     }
+  }
+
+  /**
+   * Get the last know location of the location layer plugin.
+   *
+   * @return the last known location
+   */
+  @Nullable
+  public Location getLastKnownLocation() {
+    return lastLocation;
   }
 
   /**
@@ -402,17 +430,13 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
    */
   @SuppressWarnings( {"MissingPermission"})
   private void mapStyleFinishedLoading() {
-    Source source = mapboxMap.getSource(LocationLayerConstants.LOCATION_SOURCE);
-    if (source == null) {
-      locationLayer = new LocationLayer(mapView, mapboxMap, styleRes);
-      setLocationLayerEnabled(getLocationLayerMode());
-      locationLayer.setCompassBearing(previousMagneticHeading);
-    } else {
-      locationLayer.setLayerVisibility(locationLayerMode != LocationLayerMode.NONE);
-    }
-    GeoJsonSource locationGeoJsonSource = mapboxMap.getSourceAs(LocationLayerConstants.LOCATION_SOURCE);
-    if (locationGeoJsonSource != null) {
-      locationGeoJsonSource.setGeoJson(previousPoint);
+    // recreate runtime style components
+    locationLayer = new LocationLayer(mapView, mapboxMap, styleRes);
+    // reset state
+    setLocationLayerEnabled(locationLayerMode);
+    setBearing(previousMagneticHeading);
+    if (previousPoint != null) {
+      locationLayer.setLocationPoint(previousPoint);
     }
   }
 
@@ -425,25 +449,13 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
    * @since 0.1.0
    */
   private void setMyBearingEnabled(boolean bearingEnabled) {
-    toggleBearingLayerVisibility(bearingEnabled);
+    locationLayer.setLayerVisibility(BEARING_LAYER, bearingEnabled);
     if (bearingEnabled) {
       compassManager.onStart();
     } else {
       if (compassManager != null && compassManager.getCompassListeners().isEmpty()) {
         compassManager.onStop();
       }
-    }
-  }
-
-  /**
-   * Toggle the visibility of the bearing
-   */
-  private void toggleBearingLayerVisibility(boolean bearingEnabled) {
-    Layer layer = mapboxMap.getLayer(LocationLayerConstants.LOCATION_BEARING_LAYER);
-    if (layer != null) {
-      layer.setProperties(
-        visibility(bearingEnabled ? Property.VISIBLE : Property.NONE)
-      );
     }
   }
 
@@ -459,52 +471,16 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   private void setNavigationEnabled(boolean navigationEnabled) {
     setNavigationLayerVisibility(navigationEnabled);
     setLinearAnimation(navigationEnabled);
-
-    Layer accuracyLayer = mapboxMap.getLayer(LocationLayerConstants.LOCATION_ACCURACY_LAYER);
-    if (accuracyLayer != null) {
-      accuracyLayer.setProperties(
-        visibility(navigationEnabled ? Property.NONE : Property.VISIBLE)
-      );
-    }
+    locationLayer.setLayerVisibility(ACCURACY_LAYER, !navigationEnabled);
   }
 
   private void setNavigationLayerVisibility(boolean visible) {
-    Layer layer = mapboxMap.getLayer(LocationLayerConstants.LOCATION_NAVIGATION_LAYER);
-    if (layer != null) {
-      layer.setProperties(visibility(visible ? Property.VISIBLE : Property.NONE));
-    }
-  }
-
-  /**
-   * Using the {@link Location#getAccuracy()} provided when a new location comes in, the source is updated to reflect
-   * the new value
-   *
-   * @param location the latest user location
-   * @since 0.1.0
-   */
-  private void setAccuracy(Location location) {
-    this.location = location;
-    CircleLayer accuracyLayer = (CircleLayer) mapboxMap.getLayer(LocationLayerConstants.LOCATION_ACCURACY_LAYER);
-    if (accuracyLayer != null) {
-      accuracyLayer.setProperties(
-        circleRadius(calculateZoomLevelRadius(location))
-      );
-    }
+    locationLayer.setLayerVisibility(NAVIGATION_LAYER, visible);
   }
 
   @Override
   public void onCameraMove() {
-    CircleLayer accuracyLayer = (CircleLayer) mapboxMap.getLayer(LocationLayerConstants.LOCATION_ACCURACY_LAYER);
-    if (accuracyLayer != null && accuracyLayer.getVisibility().isValue()) {
-      accuracyLayer.setProperties(
-        circleRadius(calculateZoomLevelRadius(location))
-      );
-    }
-  }
-
-  private float calculateZoomLevelRadius(Location location) {
-    double metersPerPixel = mapboxMap.getProjection().getMetersPerPixelAtLatitude(location.getLatitude());
-    return (float) (location.getAccuracy() * (1 / metersPerPixel));
+    locationLayer.updateAccuracyRadius(location);
   }
 
   /**
@@ -514,18 +490,14 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
    * @since 0.1.0
    */
   private void setLocation(final Location location) {
-    GeoJsonSource locationGeoJsonSource = mapboxMap.getSourceAs(LocationLayerConstants.LOCATION_SOURCE);
-    if (locationGeoJsonSource == null) {
-      Timber.e("Location GeoJSON source missing from map style, this should never occur.");
-      return;
-    }
+    lastLocation = location;
 
     // Convert the new location to a Point object.
     Point newPoint = Point.fromCoordinates(new double[] {location.getLongitude(), location.getLatitude()});
 
     // If the source doesn't have geometry, a Point gets added.
     if (previousPoint == null) {
-      locationGeoJsonSource.setGeoJson(newPoint);
+      locationLayer.setLocationPoint(newPoint);
       previousPoint = newPoint;
       return;
     }
@@ -534,7 +506,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     if (previousPoint.getCoordinates().equals(newPoint.getCoordinates())) {
       return;
     }
-    locationChangeAnimate(locationGeoJsonSource, previousPoint, newPoint);
+    locationChangeAnimate(previousPoint, newPoint);
   }
 
   /*
@@ -544,8 +516,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   /**
    * Handles the animation from currentSourcePoint to the new user location point.
    */
-  private void locationChangeAnimate(@NonNull final GeoJsonSource locationGeoJsonSource,
-                                     @NonNull Point currentSourcePoint, @NonNull Point newPoint) {
+  private void locationChangeAnimate(@NonNull Point currentSourcePoint, @NonNull Point newPoint) {
     if (locationChangeAnimator != null) {
       locationChangeAnimator.end();
     }
@@ -562,7 +533,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
       @Override
       public void onAnimationUpdate(ValueAnimator animation) {
         previousPoint = (Point) animation.getAnimatedValue();
-        locationGeoJsonSource.setGeoJson(previousPoint);
+        locationLayer.setLocationPoint(previousPoint);
       }
     });
     locationChangeAnimator.start();
@@ -590,23 +561,22 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     }
 
     bearingChangeAnimator = ValueAnimator.ofFloat(previousMagneticHeading, magneticHeading);
-    bearingChangeAnimator.setDuration(LocationLayerConstants.COMPASS_UPDATE_RATE_MS);
+    bearingChangeAnimator.setDuration(COMPASS_UPDATE_RATE_MS);
     bearingChangeAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
       @Override
       public void onAnimationUpdate(ValueAnimator valueAnimator) {
-        Layer localLocationLayer = (getLocationLayerMode() == LocationLayerMode.NAVIGATION)
-          ? mapboxMap.getLayer(LocationLayerConstants.LOCATION_NAVIGATION_LAYER)
-          : mapboxMap.getLayer(LocationLayerConstants.LOCATION_BEARING_LAYER);
-
-        if (localLocationLayer != null) {
-          localLocationLayer.setProperties(
-            iconRotate((float) valueAnimator.getAnimatedValue())
-          );
-        }
+        setBearing((float) valueAnimator.getAnimatedValue());
       }
     });
     bearingChangeAnimator.start();
     previousMagneticHeading = magneticHeading;
+  }
+
+  private void setBearing(float bearing) {
+    locationLayer.setLayerBearing(
+      locationLayerMode == LocationLayerMode.NAVIGATION
+        ? NAVIGATION_LAYER : BEARING_LAYER, bearing
+    );
   }
 
   private float shortestRotation(float magneticHeading) {

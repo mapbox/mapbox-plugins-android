@@ -32,6 +32,9 @@ dependencies {
   // Mapbox
   implementation dependenciesList.mapboxMapSdk
   implementation dependenciesList.mapboxServices
+  implementation dependenciesList.mapboxGeocoding
+
+  implementation dependenciesList.lifecycleExtensions
 
   // Support libraries
   implementation dependenciesList.supportAnnotation
@@ -73,6 +76,7 @@ dependencies {
   implementation project(':plugin-building')
   implementation project(':plugin-geojson')
   implementation project(':plugin-cluster')
+  implementation project(':plugin-places')
   implementation project(':plugin-offline')
 }
 

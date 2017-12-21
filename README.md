@@ -1,7 +1,7 @@
-<!--<!--<h1 align="center">
+<h1 align="center">
   <br>
-  <a href="https://www.mapbox.com/android-docs/mapbox-services/overview/"><img src="https://github.com/mapbox/mapbox-java/blob/master/.github/mbxservice-logo.png" alt="Mapbox Service" width="400"></a>
-</h1>-->
+  <a href="https://www.mapbox.com/android-docs/mapbox-services/overview/"><img src="https://github.com/mapbox/mapbox-plugins-android/blob/master/.github/mbx-plugins-logo.png" alt="Mapbox Plugins" width="500"></a>
+</h1>
 
 <h4 align="center">Plugins are single-purpose libraries built on top of the <a href="https://www.mapbox.com/android-docs/">Mapbox Maps SDK for Android</a> that you can include in your apps like any other Android dependency</h4>
 
@@ -23,13 +23,19 @@ Plugins are single-purpose libraries built on top of the [Mapbox Maps SDK for An
 
 ## Available Plugins
 
-* [**Traffic plugin:** Adds a real-time traffic layer to any Mapbox base map.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-traffic)
+* [**Traffic:** Adds a real-time traffic layer to any Mapbox base map.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-traffic)
 
 * [**Location layer:** Add a location marker on your map indicating the user's location.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-locationlayer)
 
 * [**Building:** Add extruded buildings in your map style.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-building)
 
 * [**GeoJSON:** Load GeoJSON data from a URL, an asset file, or path.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-geojson)
+
+* [**Marker cluster:** Add marker/markerview clusters to display a large number of points on a map.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-cluster)
+
+* [**Offline:** Download maps tiles and manage downloaded regions for situations when a user's device doesn't have an internet connection.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-offline)
+
+* [**Places:** Add location search to your app with beautiful UI.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-places)
 
 ## Installing a plugin
 
@@ -51,7 +57,6 @@ dependencies {
 }
 ```
 5. Click the Sync Project with Gradle Files near the toolbar in Studio.
-
 
 ## Help and Usage
 
