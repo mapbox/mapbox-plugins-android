@@ -1,7 +1,5 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.location;
 
-import android.arch.lifecycle.LifecycleRegistry;
-import android.arch.lifecycle.LifecycleRegistryOwner;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -29,13 +27,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LocationLayerModesActivity extends AppCompatActivity implements OnMapReadyCallback,
-  LifecycleRegistryOwner, LocationEngineListener, OnLocationLayerClickListener {
+  LocationEngineListener, OnLocationLayerClickListener {
 
   @BindView(R.id.mapView)
   MapView mapView;
 
   private LocationLayerPlugin locationLayerPlugin;
-  private LifecycleRegistry lifecycleRegistry;
   private LocationEngine locationEngine;
   private MapboxMap mapboxMap;
   private boolean customStyle;
@@ -45,7 +42,6 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_location_layer_mode);
     ButterKnife.bind(this);
-    lifecycleRegistry = new LifecycleRegistry(this);
 
     mapView.onCreate(savedInstanceState);
     mapView.getMapAsync(this);
@@ -122,11 +118,6 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
 
   public LocationLayerPlugin getLocationLayerPlugin() {
     return locationLayerPlugin;
-  }
-
-  @Override
-  public LifecycleRegistry getLifecycle() {
-    return lifecycleRegistry;
   }
 
   @Override

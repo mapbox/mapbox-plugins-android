@@ -1,9 +1,8 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.location;
 
-import android.arch.lifecycle.LifecycleRegistry;
-import android.arch.lifecycle.LifecycleRegistryOwner;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -28,7 +27,7 @@ import butterknife.OnClick;
 import timber.log.Timber;
 
 public class ManualLocationUpdatesActivity extends AppCompatActivity implements OnMapReadyCallback,
-  LocationEngineListener, LifecycleRegistryOwner {
+  LocationEngineListener {
 
   @BindView(R.id.mapView)
   MapView mapView;
@@ -36,7 +35,6 @@ public class ManualLocationUpdatesActivity extends AppCompatActivity implements 
   FloatingActionButton fabToggleManualLocation;
 
   private LocationLayerPlugin locationLayerPlugin;
-  private LifecycleRegistry lifecycleRegistry;
   private LocationEngine locationEngine;
   private MapboxMap mapboxMap;
 
@@ -45,7 +43,6 @@ public class ManualLocationUpdatesActivity extends AppCompatActivity implements 
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_location_manual_update);
     ButterKnife.bind(this);
-    lifecycleRegistry = new LifecycleRegistry(this);
     mapView.onCreate(savedInstanceState);
     mapView.getMapAsync(this);
   }
@@ -80,13 +77,9 @@ public class ManualLocationUpdatesActivity extends AppCompatActivity implements 
     getLifecycle().addObserver(locationLayerPlugin);
   }
 
+  @VisibleForTesting
   public LocationLayerPlugin getLocationLayerPlugin() {
     return locationLayerPlugin;
-  }
-
-  @Override
-  public LifecycleRegistry getLifecycle() {
-    return lifecycleRegistry;
   }
 
   @Override
