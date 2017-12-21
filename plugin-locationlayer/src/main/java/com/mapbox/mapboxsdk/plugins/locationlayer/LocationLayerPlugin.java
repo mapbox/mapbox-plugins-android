@@ -20,12 +20,7 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.services.android.telemetry.location.LocationEngine;
 import com.mapbox.services.android.telemetry.location.LocationEngineListener;
-import com.mapbox.services.api.utils.turf.TurfConstants;
-import com.mapbox.services.commons.geojson.Feature;
-import com.mapbox.services.commons.geojson.FeatureCollection;
 import com.mapbox.services.commons.geojson.Point;
-import com.mapbox.services.commons.geojson.Polygon;
-import com.mapbox.services.commons.models.Position;
 
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.ACCURACY_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.BEARING_LAYER;
@@ -49,15 +44,13 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.
  * @since 0.1.0
  */
 public class LocationLayerPlugin implements LocationEngineListener, CompassListener, MapView.OnMapChangedListener,
-  LifecycleObserver, MapboxMap.OnMapClickListener {
-
-  private static final int ACCURACY_CIRCLE_STEPS = 48;
+  LifecycleObserver, MapboxMap.OnCameraMoveListener, MapboxMap.OnMapClickListener {
 
   private LocationLayer locationLayer;
   private CompassManager compassManager;
   private LocationEngine locationEngine;
-  private MapboxMap mapboxMap;
-  private MapView mapView;
+  private final MapboxMap mapboxMap;
+  private final MapView mapView;
 
   // Enabled booleans
   @LocationLayerMode.Mode
@@ -75,10 +68,14 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   private long locationUpdateTimestamp;
   private boolean linearAnimation;
 
+
+  private Location location;
+
   private OnLocationLayerClickListener onLocationLayerClickListener;
 
   @StyleRes
   private int styleRes;
+
 
   /**
    * Construct a {@code LocationLayerPlugin}
@@ -145,6 +142,8 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
         setLastLocation();
         locationEngine.addLocationEngineListener(this);
       }
+
+      mapboxMap.addOnCameraMoveListener(this);
 
       if (locationLayerMode == LocationLayerMode.COMPASS) {
         setLinearAnimation(false);
@@ -250,7 +249,9 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     if (locationEngine != null) {
       locationEngine.removeLocationEngineListener(this);
     }
-
+    if (mapboxMap != null) {
+      mapboxMap.removeOnCameraMoveListener(this);
+    }
   }
 
   /**
@@ -266,9 +267,12 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
       setLocationLayerEnabled(locationLayerMode);
     }
 
-    if (compassManager.getCompassListeners().size() > 0
-      || locationLayerMode == LocationLayerMode.COMPASS && compassManager.isSensorAvailable()) {
+    if (!compassManager.getCompassListeners().isEmpty()
+      || (locationLayerMode == LocationLayerMode.COMPASS && compassManager.isSensorAvailable())) {
       compassManager.onStart();
+    }
+    if (mapboxMap != null) {
+      mapboxMap.addOnCameraMoveListener(this);
     }
   }
 
@@ -315,7 +319,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
    */
   public void removeCompassListener(@Nullable CompassListener compassListener) {
     compassManager.removeCompassListener(compassListener);
-    if (compassManager.getCompassListeners().size() < 1) {
+    if (compassManager.getCompassListeners().isEmpty()) {
       compassManager.onStop();
     }
   }
@@ -370,7 +374,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     if (locationLayerMode == LocationLayerMode.NAVIGATION && location.hasBearing()) {
       bearingChangeAnimate(location.getBearing());
     } else if (locationLayerMode != LocationLayerMode.NAVIGATION) {
-      setAccuracy(location);
+      locationLayer.setAccuracy(location);
     }
     setLocation(location);
   }
@@ -393,7 +397,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     Location lastLocation = locationEngine.getLastLocation();
     if (lastLocation != null) {
       setLocation(lastLocation);
-      setAccuracy(lastLocation);
+      locationLayer.setAccuracy(lastLocation);
     }
   }
 
@@ -449,7 +453,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     if (bearingEnabled) {
       compassManager.onStart();
     } else {
-      if (compassManager != null && compassManager.getCompassListeners().size() < 1) {
+      if (compassManager != null && compassManager.getCompassListeners().isEmpty()) {
         compassManager.onStop();
       }
     }
@@ -474,26 +478,9 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     locationLayer.setLayerVisibility(NAVIGATION_LAYER, visible);
   }
 
-  /**
-   * Using the {@link Location#getAccuracy()} provided when a new location comes in, the source is updated to reflect
-   * the new value
-   *
-   * @param location the latest user location
-   * @since 0.1.0
-   */
-  private void setAccuracy(Location location) {
-    // TODO replace fill-layer with circle-layer once circle-pitch-alignment is supported in Runtime Styling
-    // https://github.com/mapbox/mapbox-gl-js/issues/4120
-    Position userPosition = Position.fromLngLat(location.getLongitude(), location.getLatitude());
-    Polygon accuracyCircle = TurfTransformation.circle(
-      userPosition, location.getAccuracy(), ACCURACY_CIRCLE_STEPS, TurfConstants.UNIT_METERS);
-
-    // Create new GeoJson object using the new accuracy circle created.
-    FeatureCollection featureCollection = FeatureCollection.fromFeatures(
-      new Feature[] {Feature.fromGeometry(accuracyCircle)}
-    );
-
-    locationLayer.setAccuracy(featureCollection);
+  @Override
+  public void onCameraMove() {
+    locationLayer.updateAccuracyRadius(location);
   }
 
   /**

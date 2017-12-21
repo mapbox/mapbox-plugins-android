@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
@@ -13,8 +14,9 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.functions.Function;
-import com.mapbox.mapboxsdk.style.layers.FillLayer;
+import com.mapbox.mapboxsdk.style.layers.CircleLayer;
 import com.mapbox.mapboxsdk.style.layers.Layer;
+import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
@@ -27,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.ACCURACY_LAYER;
-import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.ACCURACY_SOURCE;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.BACKGROUND_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.BACKGROUND_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.BEARING_ICON;
@@ -43,8 +44,12 @@ import static com.mapbox.mapboxsdk.style.functions.stops.Stops.exponential;
 import static com.mapbox.mapboxsdk.style.layers.Property.ICON_ROTATION_ALIGNMENT_MAP;
 import static com.mapbox.mapboxsdk.style.layers.Property.NONE;
 import static com.mapbox.mapboxsdk.style.layers.Property.VISIBLE;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillOpacity;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleColor;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleOpacity;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circlePitchAlignment;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleRadius;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeColor;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeWidth;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
@@ -79,7 +84,6 @@ final class LocationLayer {
 
   private void addSources() {
     addSource(LOCATION_SOURCE);
-    addSource(ACCURACY_SOURCE);
   }
 
   void applyStyle(int styleRes) {
@@ -100,7 +104,9 @@ final class LocationLayer {
 
       float accuracyAlpha = typedArray.getFloat(R.styleable.LocationLayer_accuracyAlpha, 0.15f);
       if (accuracyAlpha < 0 || accuracyAlpha > 1) {
-        throw new RuntimeException("Location layer accuracy alpha value must be between 0.0 and 1.0.");
+        throw new UnsupportedOperationException(
+          "Location layer accuracy alpha value must be between 0.0 and 1.0."
+        );
       }
       int accuracyColor = typedArray.getColor(R.styleable.LocationLayer_accuracyColor,
         ContextCompat.getColor(context, R.color.mapbox_plugin_location_layer_blue));
@@ -157,8 +163,32 @@ final class LocationLayer {
   }
 
   private void addAccuracyLayer() {
-    FillLayer accuracyLayer = new FillLayer(ACCURACY_LAYER, ACCURACY_SOURCE);
-    addLayerToMap(accuracyLayer, BACKGROUND_LAYER);
+    CircleLayer locationAccuracyLayer = new CircleLayer(
+      LocationLayerConstants.ACCURACY_LAYER, LocationLayerConstants.LOCATION_SOURCE);
+    addLayerToMap(locationAccuracyLayer, LocationLayerConstants.BACKGROUND_LAYER);
+  }
+
+  void setAccuracy(Location location) {
+    CircleLayer accuracyLayer = (CircleLayer) mapboxMap.getLayer(LocationLayerConstants.ACCURACY_LAYER);
+    if (accuracyLayer != null) {
+      accuracyLayer.setProperties(
+        circleRadius(calculateZoomLevelRadius(location))
+      );
+    }
+  }
+
+  void updateAccuracyRadius(Location location) {
+    CircleLayer accuracyLayer = (CircleLayer) mapboxMap.getLayer(LocationLayerConstants.ACCURACY_LAYER);
+    if (accuracyLayer != null && accuracyLayer.getVisibility().isValue()) {
+      accuracyLayer.setProperties(
+        circleRadius(calculateZoomLevelRadius(location))
+      );
+    }
+  }
+
+  private float calculateZoomLevelRadius(Location location) {
+    double metersPerPixel = mapboxMap.getProjection().getMetersPerPixelAtLatitude(location.getLatitude());
+    return (float) (location.getAccuracy() * (1 / metersPerPixel));
   }
 
   //
@@ -167,10 +197,6 @@ final class LocationLayer {
 
   void setLocationPoint(Point locationPoint) {
     sourceMap.get(LOCATION_SOURCE).setGeoJson(locationPoint);
-  }
-
-  void setAccuracy(FeatureCollection accuracy) {
-    sourceMap.get(ACCURACY_SOURCE).setGeoJson(accuracy);
   }
 
   private void addSource(String sourceId) {
@@ -219,8 +245,11 @@ final class LocationLayer {
 
   private void styleAccuracy(float accuracyAlpha, @ColorInt int accuracyColor) {
     layerMap.get(ACCURACY_LAYER).setProperties(
-      fillColor(accuracyColor),
-      fillOpacity(accuracyAlpha)
+      circleColor(accuracyColor),
+      circleOpacity(accuracyAlpha),
+      circlePitchAlignment(Property.CIRCLE_PITCH_ALIGNMENT_MAP),
+      circleStrokeWidth(0.5f),
+      circleStrokeColor(accuracyColor)
     );
   }
 
