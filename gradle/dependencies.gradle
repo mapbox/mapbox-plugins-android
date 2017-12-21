@@ -48,6 +48,7 @@ ext {
       // mapbox
       mapboxMapSdk           : "com.mapbox.mapboxsdk:mapbox-android-sdk:${version.mapboxMapSdk}@aar",
       mapboxServices         : "com.mapbox.mapboxsdk:mapbox-android-services:${version.mapboxServices}",
+      mapboxGeoJson          : "com.mapbox.mapboxsdk:mapbox-java-geojson:${version.mapboxServices}",
       mapboxGeocoding        : "com.mapbox.mapboxsdk:mapbox-java-services-geocoding:${version.mapboxGeocoding}",
       geojson                : "com.mapbox.mapboxsdk:mapbox-java-geojson:${version.mapboxServices}",
 
