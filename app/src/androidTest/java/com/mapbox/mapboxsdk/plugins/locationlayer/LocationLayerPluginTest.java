@@ -26,7 +26,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.ACCURACY_LAYER;
-import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.ACCURACY_SOURCE;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.BACKGROUND_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.BEARING_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.FOREGROUND_LAYER;
@@ -80,19 +79,6 @@ public class LocationLayerPluginTest {
                                         UiController uiController) {
         locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.TRACKING);
         assertTrue(mapboxMap.getSource(LOCATION_SOURCE) != null);
-      }
-    });
-  }
-
-  @Test
-  @Ignore
-  public void locationAccuracySourceAdded() throws Exception {
-    executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
-      @Override
-      public void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap,
-                                        UiController uiController) {
-        locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.TRACKING);
-        assertTrue(mapboxMap.getSource(ACCURACY_SOURCE) != null);
       }
     });
   }

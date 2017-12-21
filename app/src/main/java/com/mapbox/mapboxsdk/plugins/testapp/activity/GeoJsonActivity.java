@@ -124,7 +124,7 @@ public class GeoJsonActivity extends AppCompatActivity implements OnMapReadyCall
     new FileChooserDialog.Builder(this)
       .extensionsFilter(".geojson", ".json", ".js", ".txt")
       .goUpLabel("Up")
-      .show();
+      .show(getSupportFragmentManager());
   }
 
   /**
