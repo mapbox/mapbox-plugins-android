@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  tools:context="com.mapbox.mapboxsdk.plugins.testapp.activity.places.DetailsActivity">
+
+  <com.mapbox.mapboxsdk.maps.MapView
+    android:id="@+id/mapView"
+    app:mapbox_uiAttribution="false"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
+
+  <com.mapbox.plugins.places.details.PlaceDetailsBottomSheet
+    android:id="@+id/placeDetails"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
+
+</android.support.design.widget.CoordinatorLayout>

@@ -20,6 +20,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Use this model class to both bias the geocoding results which are returns along with customize
+ * the look and feel of the places view itself.
+ * <p>
+ * If you are using the {@link com.mapbox.plugins.places.autocomplete.ui.PlaceAutocompleteFragment},
+ * you can pass a build PlaceOptions class in through the constructor. Otherwise, if you are using
+ * the intent builder inside {@link com.mapbox.plugins.places.autocomplete.PlaceAutocomplete}, you
+ * will pass in this options class as one of the builder parameters.
+ * </p>
+ *
+ * @since 0.1.0
+ */
 @AutoValue
 public abstract class PlaceOptions implements Parcelable {
 
@@ -38,6 +50,7 @@ public abstract class PlaceOptions implements Parcelable {
   public static final int MODE_CARDS = 2;
 
   // Geocoding options
+
   @Nullable
   public abstract Point proximity();
 
