@@ -14,7 +14,7 @@ public class LocationLayerMode {
    *
    * @since 0.1.0
    */
-  @IntDef( {NONE, COMPASS, NAVIGATION, TRACKING})
+  @IntDef( {NONE, COMPASS, NAVIGATION, NAVIGATION_TRACKING, TRACKING})
   @Retention(RetentionPolicy.SOURCE)
   public @interface Mode {
   }
@@ -39,6 +39,13 @@ public class LocationLayerMode {
    * @since 0.1.0
    */
   public static final int NAVIGATION = 0x00000008;
+
+  /**
+   * Tracking the user location in navigation mode.
+   *
+   * @since 0.3.0
+   */
+  public static final int NAVIGATION_TRACKING = 0x00000016;
 
   /**
    * Basic tracking is enabled.

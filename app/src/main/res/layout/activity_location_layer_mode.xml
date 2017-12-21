@@ -24,7 +24,7 @@
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary"
     android:orientation="horizontal"
-    android:weightSum="4"
+    android:weightSum="5"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
@@ -66,6 +66,15 @@
       android:layout_height="wrap_content"
       android:layout_weight="1"
       android:text="@string/button_location_mode_navigation"
+      android:textColor="@android:color/white"/>
+
+    <Button
+      android:id="@+id/button_location_mode_navigation_tracking"
+      style="?android:attr/buttonBarButtonStyle"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:text="@string/button_location_mode_navigation_tracking"
       android:textColor="@android:color/white"/>
 
   </LinearLayout>

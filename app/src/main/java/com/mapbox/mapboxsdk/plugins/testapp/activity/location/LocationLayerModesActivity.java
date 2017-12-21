@@ -39,6 +39,7 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
   private LocationEngine locationEngine;
   private MapboxMap mapboxMap;
   private boolean customStyle;
+  private boolean navigationTrackingState;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,7 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     if (locationLayerPlugin == null) {
       return;
     }
+    navigationTrackingState = false;
     locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.NONE);
   }
 
@@ -66,6 +68,7 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     if (locationLayerPlugin == null) {
       return;
     }
+    navigationTrackingState = false;
     locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.COMPASS);
   }
 
@@ -75,6 +78,7 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     if (locationLayerPlugin == null) {
       return;
     }
+    navigationTrackingState =false;
     locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.TRACKING);
   }
 
@@ -84,7 +88,18 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     if (locationLayerPlugin == null) {
       return;
     }
+    navigationTrackingState = false;
     locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.NAVIGATION);
+  }
+
+  @SuppressWarnings( {"MissingPermission"})
+  @OnClick(R.id.button_location_mode_navigation_tracking)
+  public void locationModeNavigationTracking(View view) {
+    if (locationLayerPlugin == null) {
+      return;
+    }
+    navigationTrackingState = true;
+    locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.NAVIGATION_TRACKING);
   }
 
   @Override
@@ -191,8 +206,10 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
 
   @Override
   public void onLocationChanged(Location location) {
-    mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-      new LatLng(location.getLatitude(), location.getLongitude()), 16));
+    if(!navigationTrackingState) {
+      mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+        new LatLng(location.getLatitude(), location.getLongitude()), 16));
+    }
   }
 
   @Override

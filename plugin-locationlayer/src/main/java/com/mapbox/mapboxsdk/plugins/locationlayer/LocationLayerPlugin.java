@@ -63,6 +63,8 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   @LocationLayerMode.Mode
   private int locationLayerMode;
 
+  private final NavigationMode navigationMode;
+
   // Previous compass and location values
   private Location lastLocation;
   private float previousMagneticHeading;
@@ -108,6 +110,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     this.mapboxMap = mapboxMap;
     this.mapView = mapView;
     this.styleRes = styleRes;
+    this.navigationMode = new NavigationMode(mapboxMap, mapView);
     mapView.addOnMapChangedListener(this);
     initialize();
   }
@@ -153,6 +156,9 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
       } else if (locationLayerMode == LocationLayerMode.NAVIGATION) {
         setMyBearingEnabled(false);
         setNavigationEnabled(true);
+      } else if (locationLayerMode == LocationLayerMode.NAVIGATION_TRACKING) {
+        locationLayer.setLayersVisibility(false);
+        navigationMode.startTracking();
       } else if (locationLayerMode == LocationLayerMode.TRACKING) {
         setLinearAnimation(false);
         setMyBearingEnabled(false);
@@ -251,6 +257,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
       locationEngine.removeLocationEngineListener(this);
     }
 
+    navigationMode.stopTracking();
   }
 
   /**
@@ -349,6 +356,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
 
   @Override
   public void onLocationChanged(Location location) {
+    navigationMode.onLocationChanged(location);
     updateLocation(location);
   }
 
@@ -444,7 +452,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
    * @param bearingEnabled boolean true if you'd like to enable the user location bearing, otherwise, false will disable
    * @since 0.1.0
    */
-  private void setMyBearingEnabled(boolean bearingEnabled) {
+  void setMyBearingEnabled(boolean bearingEnabled) {
     locationLayer.setLayerVisibility(BEARING_LAYER, bearingEnabled);
     if (bearingEnabled) {
       compassManager.onStart();
@@ -464,7 +472,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
    *                          disable
    * @since 0.1.0
    */
-  private void setNavigationEnabled(boolean navigationEnabled) {
+  void setNavigationEnabled(boolean navigationEnabled) {
     setNavigationLayerVisibility(navigationEnabled);
     setLinearAnimation(navigationEnabled);
     locationLayer.setLayerVisibility(ACCURACY_LAYER, !navigationEnabled);
