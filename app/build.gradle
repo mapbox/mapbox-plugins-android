@@ -84,9 +84,9 @@ dependencies {
   implementation project(':plugin-offline')
 }
 
-//sonarqube {
-//  skipProject = true
-//}
+sonarqube {
+  skipProject = true
+}
 
 apply from: "${rootDir}/gradle/checkstyle.gradle"
 apply from: "${rootDir}/gradle/generate-token.gradle"
