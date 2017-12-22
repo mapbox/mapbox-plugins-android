@@ -17,7 +17,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.2.0'
+    compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.3.0'
 }
 ```
 
@@ -35,7 +35,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.3.0-SNAPSHOT'
+    compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.4.0-SNAPSHOT'
 }
 ```
 
