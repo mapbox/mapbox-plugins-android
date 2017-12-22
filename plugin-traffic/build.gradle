@@ -23,7 +23,7 @@ dependencies {
   implementation dependenciesList.mapboxMapSdk
   implementation dependenciesList.supportAnnotation
   implementation dependenciesList.timber
-  implementation dependenciesList.mapboxServices
+  implementation dependenciesList.mapboxGeoJson
 
     // Unit testing
   testImplementation dependenciesList.junit

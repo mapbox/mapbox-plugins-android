@@ -9,8 +9,8 @@ ext {
 
   version = [
       mapboxMapSdk       : '5.3.0',
-      mapboxServices     : '2.2.9', // TODO what is using this still?
-      mapboxGeocoding    : '3.0.0-SNAPSHOT',
+      mapboxGeocoding    : '3.0.0-SNAPSHOT', // TODO SNAPSHOT used since several fixes have been made since last beta release
+      mapboxGeoJson      : '3.0.0-beta.1',
       autoValue          : '1.5.3',
       autoValueParcel    : '0.2.6',
       junit              : '4.12',
@@ -47,10 +47,8 @@ ext {
   dependenciesList = [
       // mapbox
       mapboxMapSdk           : "com.mapbox.mapboxsdk:mapbox-android-sdk:${version.mapboxMapSdk}@aar",
-      mapboxServices         : "com.mapbox.mapboxsdk:mapbox-android-services:${version.mapboxServices}",
-      mapboxGeoJson          : "com.mapbox.mapboxsdk:mapbox-java-geojson:${version.mapboxServices}",
+      mapboxGeoJson          : "com.mapbox.mapboxsdk:mapbox-sdk-geojson:${version.mapboxGeoJson}",
       mapboxGeocoding        : "com.mapbox.mapboxsdk:mapbox-java-services-geocoding:${version.mapboxGeocoding}",
-      geojson                : "com.mapbox.mapboxsdk:mapbox-java-geojson:${version.mapboxServices}",
 
       // AutoValue
       autoValue              : "com.google.auto.value:auto-value:${version.autoValue}",
@@ -94,7 +92,7 @@ ext {
       testRoom               : "android.arch.persistence.room:testing:${version.room}",
       testArchCore           : "android.arch.core:core-testing:${version.androidArchCore}",
       mockitoCore            : "org.mockito:mockito-core:${version.mockito}",
-      mockitoAndroid          : "org.mockito:mockito-android:${version.mockito}",
+      mockitoAndroid         : "org.mockito:mockito-android:${version.mockito}",
 
       // unit test
       junit                  : "junit:junit:${version.junit}",
