@@ -14,17 +14,20 @@ android {
     javadocDeps
   }
 
+  lintOptions {
+    abortOnError false
+  }
 }
 
 dependencies {
+  implementation dependenciesList.mapboxMapSdk
+  implementation dependenciesList.supportAnnotation
+  implementation dependenciesList.timber
+  implementation dependenciesList.mapboxServices
+
   // Unit testing
   testImplementation dependenciesList.junit
   testImplementation dependenciesList.mockito
-
-  // Mapbox dependencies
-  api (dependenciesList.mapboxMapSdk) {
-    transitive = true
-  }
 
   javadocDeps dependenciesList.mapboxMapSdk
 }

@@ -1,9 +1,8 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.location;
 
-import android.arch.lifecycle.LifecycleRegistry;
-import android.arch.lifecycle.LifecycleRegistryOwner;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -15,12 +14,10 @@ import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.Utils;
-import com.mapbox.services.android.location.LostLocationEngine;
 import com.mapbox.services.android.telemetry.location.LocationEngine;
 import com.mapbox.services.android.telemetry.location.LocationEngineListener;
 import com.mapbox.services.android.telemetry.location.LocationEnginePriority;
-
-import java.util.Locale;
+import com.mapbox.services.android.telemetry.location.LostLocationEngine;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,7 +25,7 @@ import butterknife.OnClick;
 import timber.log.Timber;
 
 public class ManualLocationUpdatesActivity extends AppCompatActivity implements OnMapReadyCallback,
-  LocationEngineListener, LifecycleRegistryOwner {
+  LocationEngineListener {
 
   @BindView(R.id.mapView)
   MapView mapView;
@@ -36,7 +33,6 @@ public class ManualLocationUpdatesActivity extends AppCompatActivity implements 
   FloatingActionButton fabToggleManualLocation;
 
   private LocationLayerPlugin locationLayerPlugin;
-  private LifecycleRegistry lifecycleRegistry;
   private LocationEngine locationEngine;
   private MapboxMap mapboxMap;
 
@@ -45,14 +41,17 @@ public class ManualLocationUpdatesActivity extends AppCompatActivity implements 
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_location_manual_update);
     ButterKnife.bind(this);
-    lifecycleRegistry = new LifecycleRegistry(this);
     mapView.onCreate(savedInstanceState);
     mapView.getMapAsync(this);
   }
 
   @OnClick(R.id.fabToggleManualLocation)
   public void toggleManualLocationFabClick(View view) {
-    toggleManualLocation();
+    if (locationLayerPlugin != null) {
+      locationLayerPlugin.setLocationEngine(locationLayerPlugin.getLocationEngine() == null ? locationEngine : null);
+      fabToggleManualLocation.setImageResource(locationLayerPlugin.getLocationEngine() == null
+        ? R.drawable.ic_location : R.drawable.ic_location_disabled);
+    }
   }
 
   @OnClick(R.id.fabManualLocationChange)
@@ -61,12 +60,6 @@ public class ManualLocationUpdatesActivity extends AppCompatActivity implements 
       locationLayerPlugin.forceLocationUpdate(
         Utils.getRandomLocation(new double[] {-77.1825, 38.7825, -76.9790, 39.0157}));
     }
-  }
-
-  private void toggleManualLocation() {
-    locationLayerPlugin.setLocationEngine(locationLayerPlugin.getLocationEngine() == null ? locationEngine : null);
-    fabToggleManualLocation.setImageResource(locationLayerPlugin.getLocationEngine() == null
-      ? R.drawable.ic_location : R.drawable.ic_location_disabled);
   }
 
   @Override
@@ -82,13 +75,9 @@ public class ManualLocationUpdatesActivity extends AppCompatActivity implements 
     getLifecycle().addObserver(locationLayerPlugin);
   }
 
+  @VisibleForTesting
   public LocationLayerPlugin getLocationLayerPlugin() {
     return locationLayerPlugin;
-  }
-
-  @Override
-  public LifecycleRegistry getLifecycle() {
-    return lifecycleRegistry;
   }
 
   @Override
@@ -99,7 +88,7 @@ public class ManualLocationUpdatesActivity extends AppCompatActivity implements 
 
   @Override
   public void onLocationChanged(Location location) {
-    Timber.d(String.format(Locale.US, "Location change occurred: %s", location.toString()));
+    Timber.d("Location change occurred: %s", location.toString());
   }
 
   @Override
@@ -136,6 +125,9 @@ public class ManualLocationUpdatesActivity extends AppCompatActivity implements 
   protected void onDestroy() {
     super.onDestroy();
     mapView.onDestroy();
+    if (locationEngine != null) {
+      locationEngine.deactivate();
+    }
   }
 
   @Override

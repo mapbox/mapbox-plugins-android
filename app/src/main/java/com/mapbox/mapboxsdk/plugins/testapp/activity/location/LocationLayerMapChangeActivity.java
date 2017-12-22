@@ -3,6 +3,8 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity.location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -30,6 +32,8 @@ public class LocationLayerMapChangeActivity extends AppCompatActivity implements
   private LocationEngine locationEngine;
   private MapboxMap mapboxMap;
 
+  private boolean customStyle;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -55,7 +59,6 @@ public class LocationLayerMapChangeActivity extends AppCompatActivity implements
   public void onStyleFabClick() {
     if (mapboxMap != null) {
       mapboxMap.setStyleUrl(Utils.getNextStyle());
-      locationPlugin.applyStyle(R.style.CustomLocationLayer);
     }
   }
 
@@ -96,6 +99,27 @@ public class LocationLayerMapChangeActivity extends AppCompatActivity implements
   protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     mapView.onSaveInstanceState(outState);
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_location, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (locationPlugin == null) {
+      return super.onOptionsItemSelected(item);
+    }
+
+    if (item.getItemId() == R.id.action_style_change) {
+      customStyle = !customStyle;
+      locationPlugin.applyStyle(customStyle ? R.style.CustomLocationLayer : R.style.LocationLayer);
+      return true;
+    }
+
+    return super.onOptionsItemSelected(item);
   }
 
   @Override

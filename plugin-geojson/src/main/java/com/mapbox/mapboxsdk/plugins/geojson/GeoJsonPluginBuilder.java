@@ -120,7 +120,7 @@ public class GeoJsonPluginBuilder {
   }
 
   /**
-   * @param stockColor the stock color of polyline & polygon. default value is Color.argb(80, 250, 0, 0);
+   * @param stockColor the stock color of polyline and polygon. default value is Color.argb(80, 250, 0, 0);
    * @return instance of GeoJsonPluginBuilder class
    */
 
@@ -130,7 +130,7 @@ public class GeoJsonPluginBuilder {
   }
 
   /**
-   * @param width the stock width of polyline & polygon. default value is 3
+   * @param width the stock width of polyline and polygon. default value is 3
    * @return instance of GeoJsonPluginBuilder class
    */
 

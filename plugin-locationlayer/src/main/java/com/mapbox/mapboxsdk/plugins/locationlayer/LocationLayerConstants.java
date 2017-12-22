@@ -7,6 +7,10 @@ package com.mapbox.mapboxsdk.plugins.locationlayer;
  */
 class LocationLayerConstants {
 
+  private LocationLayerConstants() {
+    // Class should not be initialized
+  }
+
   // Controls the compass update rate in milliseconds
   static final int COMPASS_UPDATE_RATE_MS = 500;
 
@@ -16,18 +20,17 @@ class LocationLayerConstants {
 
   // Sources
   static final String LOCATION_SOURCE = "mapbox-location-source";
-  static final String LOCATION_ACCURACY_SOURCE = "mapbox-location-accuracy-source";
 
   // Layers
-  static final String LOCATION_LAYER = "mapbox-location-layer";
-  static final String LOCATION_BACKGROUND_LAYER = "mapbox-location-stroke-layer";
-  static final String LOCATION_ACCURACY_LAYER = "mapbox-location-accuracy-layer";
-  static final String LOCATION_BEARING_LAYER = "mapbox-location-bearing-layer";
-  static final String LOCATION_NAVIGATION_LAYER = "mapbox-location-navigation-layer";
+  static final String FOREGROUND_LAYER = "mapbox-location-layer";
+  static final String BACKGROUND_LAYER = "mapbox-location-stroke-layer";
+  static final String ACCURACY_LAYER = "mapbox-location-accuracy-layer";
+  static final String BEARING_LAYER = "mapbox-location-bearing-layer";
+  static final String NAVIGATION_LAYER = "mapbox-location-navigation-layer";
 
   // Icons
-  static final String USER_LOCATION_ICON = "mapbox-location-icon";
-  static final String USER_LOCATION_BEARING_ICON = "mapbox-location-bearing-icon";
-  static final String USER_LOCATION_BACKGROUND_ICON = "mapbox-location-stroke-icon";
-  static final String USER_LOCATION_PUCK_ICON = "mapbox-location-puck-icon";
+  static final String LOCATION_ICON = "mapbox-location-icon";
+  static final String BEARING_ICON = "mapbox-location-bearing-icon";
+  static final String BACKGROUND_ICON = "mapbox-location-stroke-icon";
+  static final String PUCK_ICON = "mapbox-location-puck-icon";
 }

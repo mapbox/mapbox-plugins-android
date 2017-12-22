@@ -20,13 +20,16 @@ android {
   configurations {
     javadocDeps
   }
+
+  lintOptions {
+    abortOnError false
+  }
 }
 
 dependencies {
   implementation dependenciesList.supportAppcompatV7
-  api (dependenciesList.mapboxMapSdk) {
-    transitive = true
-  }
+  implementation dependenciesList.mapboxMapSdk
+  implementation dependenciesList.timber
 
   // Unit testing
   testImplementation dependenciesList.junit

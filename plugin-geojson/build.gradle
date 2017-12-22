@@ -13,14 +13,18 @@ android {
   configurations {
     javadocDeps
   }
+
+  lintOptions {
+    abortOnError false
+  }
 }
 
 dependencies {
   implementation dependenciesList.supportAppcompatV7
-  api (dependenciesList.mapboxMapSdk) {
-    transitive = true
-  }
-
+  implementation dependenciesList.mapboxMapSdk
+  implementation dependenciesList.mapboxServices
+  implementation dependenciesList.okhttp
+  implementation dependenciesList.timber
   javadocDeps dependenciesList.mapboxMapSdk
 }
 

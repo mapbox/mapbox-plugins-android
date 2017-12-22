@@ -3,6 +3,14 @@ MBGL_ANDROID_PLUGINS += traffic;plugin-traffic
 MBGL_ANDROID_PLUGINS += locationlayer;plugin-locationlayer
 MBGL_ANDROID_PLUGINS += building;plugin-building
 MBGL_ANDROID_PLUGINS += cluster;plugin-cluster
+MBGL_ANDROID_PLUGINS += offline;plugin-offline
+MBGL_ANDROID_PLUGINS += places;plugin-places
+
+sonarqube:
+	./gradlew test
+	./gradlew lint
+	./gradlew jacocoTestReport
+	./gradlew sonarqube
 
 checkstyle:
 	./gradlew checkstyle

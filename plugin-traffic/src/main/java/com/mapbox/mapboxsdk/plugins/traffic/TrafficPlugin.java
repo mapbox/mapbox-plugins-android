@@ -38,7 +38,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
 
 /**
- * The Traffic Plugin allows you to add Mapbox Traffic v1 to the Mapbox Android SDK.
+ * The Traffic Plugin allows you to add Mapbox Traffic v1 to the Mapbox Maps SDK for Android.
  * <p>
  * Initialise this plugin in the {@link com.mapbox.mapboxsdk.maps.OnMapReadyCallback#onMapReady(MapboxMap)} and provide
  * a valid instance of {@link MapView} and {@link MapboxMap}.
