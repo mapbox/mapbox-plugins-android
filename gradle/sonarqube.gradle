@@ -5,13 +5,18 @@ sonarqube {
     // Project Configuration
     property "sonar.projectKey", "mapbox-plugins-android:master"
     property "sonar.host.url", "https://mb-sonarqube-staging.tilestream.net"
+    property "sonar.scm.provider", "git"
 
     // Project identity
     property "sonar.projectName", "Mapbox Plugins Android"
 
     // Test reports
     property "sonar.java.coveragePlugin", "jacoco"
+    property "sonar.coverage.exclusions", ["${rootDir}/app/*"]
     property "sonar.jacoco.reportPaths", "${project.buildDir}/jacoco/test.exec"
+
+    property "sonar.import_unknown_files", true
+    property "sonar.android.lint.report", "./build/outputs/lint-results.xml"
 
     // Authentication
     property "sonar.login", System.env.SONARQUBE_API_TOKEN

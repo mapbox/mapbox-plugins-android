@@ -14,6 +14,10 @@ android {
   configurations {
     javadocDeps
   }
+
+  lintOptions {
+    abortOnError false
+  }
 }
 
 dependencies {
@@ -22,7 +26,6 @@ dependencies {
   implementation(dependenciesList.mapboxMapSdk) {
     transitive = true
   }
-  implementation dependenciesList.mapboxGeoJson
 
   // Timber
   implementation dependenciesList.timber

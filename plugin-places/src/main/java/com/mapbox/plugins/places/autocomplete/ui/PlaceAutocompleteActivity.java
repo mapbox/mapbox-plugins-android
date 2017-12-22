@@ -17,7 +17,7 @@ public class PlaceAutocompleteActivity extends AppCompatActivity implements Plac
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_autocomplete);
 
-    // Add product list fragment if this is first creation
+    // Add autocomplete fragment if this is first creation
     if (savedInstanceState == null) {
       String accessToken = getIntent().getStringExtra(PlaceConstants.ACCESS_TOKEN);
 

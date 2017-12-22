@@ -1,4 +1,7 @@
 sonarqube:
+	./gradlew test
+	./gradlew lint
+	./gradlew jacocoTestReport
 	./gradlew sonarqube
 
 checkstyle:

@@ -166,6 +166,8 @@
       android:label="@string/title_offline_regions"
       android:theme="@style/Translucent"/>
 
+    <activity android:name="com.mapbox.maboxsdk.plugins.SingleFragmentActivity"/>
+
     <service
       android:name="com.mapbox.mapboxsdk.plugins.offline.OfflineDownloadService"
       android:exported="false"/>

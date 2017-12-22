@@ -21,6 +21,10 @@ android {
     }
   }
 
+  lintOptions {
+    abortOnError false
+  }
+
   dexOptions {
     maxProcessCount 8
     javaMaxHeapSize "2g"
@@ -35,6 +39,8 @@ dependencies {
   implementation dependenciesList.mapboxGeocoding
 
   implementation dependenciesList.lifecycleExtensions
+  implementation dependenciesList.roomRuntime
+  annotationProcessor dependenciesList.roomCompiler
 
   // Support libraries
   implementation dependenciesList.supportAnnotation
@@ -48,17 +54,17 @@ dependencies {
   testImplementation dependenciesList.mockito
 
   // Instrumentation testing
-  androidTestImplementation(dependenciesList.testRunner, {
-    exclude group: 'com.android.support', module: 'support-annotations'
-  })
-  androidTestImplementation(dependenciesList.testRules, {
-    exclude group: 'com.android.support', module: 'support-annotations'
-  })
-  androidTestImplementation(dependenciesList.testEspressoCore, {
-    exclude group: 'com.android.support', module: 'support-annotations'
-  })
+  androidTestImplementation dependenciesList.mockitoAndroid
+  androidTestImplementation dependenciesList.supportAppcompatV7
+  androidTestImplementation dependenciesList.testRunner
+  androidTestImplementation dependenciesList.testRules
+  androidTestImplementation dependenciesList.testEspressoCore
+  androidTestImplementation dependenciesList.testRoom
+  androidTestImplementation dependenciesList.testArchCore
+  androidTestImplementation( dependenciesList.mockitoCore, {
+    exclude group: 'net.bytebuddy'})
 
-  implementation 'com.afollestad.material-dialogs:commons:0.9.4.5'
+  implementation dependenciesList.materialDialogs
 
   // Square crew
   implementation dependenciesList.timber
