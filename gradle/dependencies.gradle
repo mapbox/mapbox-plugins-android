@@ -11,6 +11,7 @@ ext {
       mapboxMapSdk       : '5.3.0',
       mapboxGeocoding    : '3.0.0-SNAPSHOT', // TODO SNAPSHOT used since several fixes have been made since last beta release
       mapboxGeoJson      : '3.0.0-beta.1',
+      mapboxServices     : '2.2.9',
       autoValue          : '1.5.3',
       autoValueParcel    : '0.2.6',
       junit              : '4.12',
@@ -34,19 +35,10 @@ ext {
       okhttp             : '3.9.1',
       materialDialogs    : '0.9.6.0'
   ]
-
-  pluginVersion = [
-      checkstyle: '8.5',
-      pmd       : '6.0.0',
-      jacoco    : '0.7.9',
-      errorprone: '0.0.13',
-      sonarqube : '2.6.1',
-      gradle    : '3.0.1'
-  ]
-
   dependenciesList = [
       // mapbox
-      mapboxMapSdk           : "com.mapbox.mapboxsdk:mapbox-android-sdk:${version.mapboxMapSdk}@aar",
+      mapboxMapSdk           : "com.mapbox.mapboxsdk:mapbox-android-sdk:${version.mapboxMapSdk}",
+      mapboxServices         : "com.mapbox.mapboxsdk:mapbox-android-services:${version.mapboxServices}",
       mapboxGeoJson          : "com.mapbox.mapboxsdk:mapbox-sdk-geojson:${version.mapboxGeoJson}",
       mapboxGeocoding        : "com.mapbox.mapboxsdk:mapbox-java-services-geocoding:${version.mapboxGeocoding}",
 
@@ -111,6 +103,16 @@ ext {
       // errorprone
       errorprone             : "com.google.errorprone:error_prone_core:${version.errorprone}"
   ]
+
+  pluginVersion = [
+      checkstyle: '8.5',
+      pmd       : '6.0.0',
+      jacoco    : '0.7.9',
+      errorprone: '0.0.13',
+      sonarqube : '2.6.1',
+      gradle    : '3.0.1'
+  ]
+
 
   pluginDependencies = [
       gradle    : "com.android.tools.build:gradle:${pluginVersion.gradle}",

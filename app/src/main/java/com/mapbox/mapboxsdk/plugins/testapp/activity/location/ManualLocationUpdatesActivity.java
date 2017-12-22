@@ -14,12 +14,10 @@ import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.Utils;
-import com.mapbox.services.android.location.LostLocationEngine;
 import com.mapbox.services.android.telemetry.location.LocationEngine;
 import com.mapbox.services.android.telemetry.location.LocationEngineListener;
 import com.mapbox.services.android.telemetry.location.LocationEnginePriority;
-
-import java.util.Locale;
+import com.mapbox.services.android.telemetry.location.LostLocationEngine;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -90,7 +88,7 @@ public class ManualLocationUpdatesActivity extends AppCompatActivity implements 
 
   @Override
   public void onLocationChanged(Location location) {
-    Timber.d(String.format(Locale.US, "Location change occurred: %s", location.toString()));
+    Timber.d("Location change occurred: %s", location.toString());
   }
 
   @Override
@@ -127,6 +125,9 @@ public class ManualLocationUpdatesActivity extends AppCompatActivity implements 
   protected void onDestroy() {
     super.onDestroy();
     mapView.onDestroy();
+    if (locationEngine != null) {
+      locationEngine.deactivate();
+    }
   }
 
   @Override

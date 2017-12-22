@@ -23,9 +23,9 @@ dependencies {
   implementation dependenciesList.mapboxMapSdk
   implementation dependenciesList.supportAnnotation
   implementation dependenciesList.timber
-  implementation dependenciesList.mapboxGeoJson
+  implementation dependenciesList.mapboxServices
 
-    // Unit testing
+  // Unit testing
   testImplementation dependenciesList.junit
   testImplementation dependenciesList.mockito
 

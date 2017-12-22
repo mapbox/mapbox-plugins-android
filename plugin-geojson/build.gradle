@@ -22,7 +22,7 @@ android {
 dependencies {
   implementation dependenciesList.supportAppcompatV7
   implementation dependenciesList.mapboxMapSdk
-  implementation dependenciesList.mapboxGeoJson
+  implementation dependenciesList.mapboxServices
   implementation dependenciesList.okhttp
   implementation dependenciesList.timber
   javadocDeps dependenciesList.mapboxMapSdk
