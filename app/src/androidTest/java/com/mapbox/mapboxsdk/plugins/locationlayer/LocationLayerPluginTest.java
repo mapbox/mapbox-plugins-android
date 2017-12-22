@@ -14,7 +14,6 @@ import com.mapbox.mapboxsdk.utils.OnMapReadyIdlingResource;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,8 +36,6 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 @SuppressWarnings( {"MissingPermission"})
 public class LocationLayerPluginTest {
-
-  private static final double DELTA = 1E-10;
 
   @Rule
   public ActivityTestRule<LocationLayerModesActivity> rule = new ActivityTestRule<>(LocationLayerModesActivity.class);
@@ -71,7 +68,6 @@ public class LocationLayerPluginTest {
   }
 
   @Test
-  @Ignore
   public void locationSourceAdded() throws Exception {
     executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
       @Override
@@ -84,7 +80,6 @@ public class LocationLayerPluginTest {
   }
 
   @Test
-  @Ignore
   public void locationTrackingLayersAdded() throws Exception {
     executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
       @Override
@@ -99,7 +94,6 @@ public class LocationLayerPluginTest {
   }
 
   @Test
-  @Ignore
   public void locationBearingLayersAdded() throws Exception {
     executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
       @Override
@@ -115,7 +109,6 @@ public class LocationLayerPluginTest {
   }
 
   @Test
-  @Ignore
   public void locationNavigationLayersAdded() throws Exception {
     executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
       @Override
@@ -128,7 +121,6 @@ public class LocationLayerPluginTest {
   }
 
   @Test
-  @Ignore
   public void locationLayerModeCorrectlySetToNone() throws Exception {
     executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
       @Override
@@ -144,7 +136,6 @@ public class LocationLayerPluginTest {
   }
 
   @Test
-  @Ignore
   public void onMapChangeLocationLayerRedrawn() throws Exception {
     executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
       @Override

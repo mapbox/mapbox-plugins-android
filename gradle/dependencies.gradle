@@ -91,6 +91,10 @@ ext {
       testRules              : "com.android.support.test:rules:${version.testRunnerVersion}",
       testEspressoCore       : "com.android.support.test.espresso:espresso-core:${version.espressoVersion}",
       testEspressoIntents    : "com.android.support.test.espresso:espresso-intents:${version.espressoVersion}",
+      testRoom               : "android.arch.persistence.room:testing:${version.room}",
+      testArchCore           : "android.arch.core:core-testing:${version.androidArchCore}",
+      mockitoCore            : "org.mockito:mockito-core:${version.mockito}",
+      mockitoAndroid          : "org.mockito:mockito-android:${version.mockito}",
 
       // unit test
       junit                  : "junit:junit:${version.junit}",

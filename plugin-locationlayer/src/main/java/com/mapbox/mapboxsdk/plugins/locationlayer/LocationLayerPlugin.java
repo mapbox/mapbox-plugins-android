@@ -374,7 +374,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     if (locationLayerMode == LocationLayerMode.NAVIGATION && location.hasBearing()) {
       bearingChangeAnimate(location.getBearing());
     } else if (locationLayerMode != LocationLayerMode.NAVIGATION) {
-      locationLayer.setAccuracy(location);
+      locationLayer.updateAccuracyRadius(location);
     }
     setLocation(location);
   }
@@ -397,7 +397,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     Location lastLocation = locationEngine.getLastLocation();
     if (lastLocation != null) {
       setLocation(lastLocation);
-      locationLayer.setAccuracy(lastLocation);
+      locationLayer.updateAccuracyRadius(lastLocation);
     }
   }
 

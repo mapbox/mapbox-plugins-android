@@ -2,7 +2,7 @@ sonarqube:
 	./gradlew test
 	./gradlew lint
 	./gradlew jacocoTestReport
-	./gradlew --info sonarqube
+	./gradlew sonarqube
 
 checkstyle:
 	./gradlew checkstyle
