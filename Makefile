@@ -15,6 +15,28 @@ sonarqube:
 checkstyle:
 	./gradlew checkstyle
 
+test:
+	./gradlew test
+
+build-release:
+	./gradlew assembleRelease
+
+javadoc:
+	# Android modules
+	# Output is ./mapbox/*/build/docs/javadoc/release
+	./gradlew javadocrelease
+
+publish:
+	export IS_LOCAL_DEVELOPMENT=false; ./gradlew uploadArchives
+
+publish-local:
+	# This publishes to ~/.m2/repository/com/mapbox/mapboxsdk
+	export IS_LOCAL_DEVELOPMENT=true; ./gradlew uploadArchives
+
+#
+# individual Make commands
+#
+
 define ANDROID_RULES
 
 test-$1:
