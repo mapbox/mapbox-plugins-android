@@ -163,13 +163,12 @@ final class LocationLayer {
   }
 
   private void addAccuracyLayer() {
-    CircleLayer locationAccuracyLayer = new CircleLayer(
-      LocationLayerConstants.ACCURACY_LAYER, LocationLayerConstants.LOCATION_SOURCE);
-    addLayerToMap(locationAccuracyLayer, LocationLayerConstants.BACKGROUND_LAYER);
+    CircleLayer locationAccuracyLayer = new CircleLayer(ACCURACY_LAYER, LOCATION_SOURCE);
+    addLayerToMap(locationAccuracyLayer, BACKGROUND_LAYER);
   }
 
   void updateAccuracyRadius(Location location) {
-    CircleLayer accuracyLayer = (CircleLayer) mapboxMap.getLayer(LocationLayerConstants.ACCURACY_LAYER);
+    CircleLayer accuracyLayer = (CircleLayer) mapboxMap.getLayer(ACCURACY_LAYER);
     if (accuracyLayer != null && accuracyLayer.getVisibility().isValue()) {
       accuracyLayer.setProperties(
         circleRadius(calculateZoomLevelRadius(location))
@@ -181,7 +180,8 @@ final class LocationLayer {
     if (location == null) {
       return 0;
     }
-    double metersPerPixel = mapboxMap.getProjection().getMetersPerPixelAtLatitude(location.getLatitude());
+    double metersPerPixel = mapboxMap.getProjection().getMetersPerPixelAtLatitude(
+      location.getLatitude());
     return (float) (location.getAccuracy() * (1 / metersPerPixel));
   }
 

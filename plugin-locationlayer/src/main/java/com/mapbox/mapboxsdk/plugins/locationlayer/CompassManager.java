@@ -17,19 +17,19 @@ import java.util.List;
 import timber.log.Timber;
 
 /**
- * This manager class handles compass events such as starting the tracking of device bearing, or when a new compass
- * update occurs.
+ * This manager class handles compass events such as starting the tracking of device bearing, or
+ * when a new compass update occurs.
  *
  * @since 0.1.0
  */
 class CompassManager implements SensorEventListener {
 
-  // The rate sensor events will be delivered at. As the Android documentation states,
-  // this is only a hint to the system and the events might actually be received faster
-  // or slower then this specified rate. Since the minimum Android API levels about 9,
-  // we are able to set this value ourselves rather than using one of the provided
-  // constants which deliver updates too quickly for our use case.
-  private static final int SENSOR_DELAY_MICROS = 100 * 1000; // 100ms
+  // The rate sensor events will be delivered at. As the Android documentation states, this is only
+  // a hint to the system and the events might actually be received faster or slower then this
+  // specified rate. Since the minimum Android API levels about 9, we are able to set this value
+  // ourselves rather than using one of the provided constants which deliver updates too quickly for
+  // our use case. The default is set to 100ms
+  private static final int SENSOR_DELAY_MICROS = 100 * 1000;
 
   private final WindowManager windowManager;
   private final SensorManager sensorManager;
@@ -43,13 +43,13 @@ class CompassManager implements SensorEventListener {
   private int lastAccuracy;
 
   // CompassManager data
-  private long compassUpdateNextTimestamp = 0;
+  private long compassUpdateNextTimestamp;
 
   /**
    * Construct a new instance of the this class. A internal compass listeners needed to separate it
    * from the cleared list of public listeners.
    */
-  CompassManager(Context context, CompassListener internalCompassListener) {
+  CompassManager(@NonNull Context context, @NonNull CompassListener internalCompassListener) {
     this.internalCompassListener = internalCompassListener;
     compassListeners = new ArrayList<>();
 
@@ -58,7 +58,8 @@ class CompassManager implements SensorEventListener {
 
     compassSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
     if (compassSensor == null) {
-      Timber.d("Rotation vector sensor not supported on device, falling back to orientation.");
+      Timber.d(
+        "Rotation vector sensor not supported on device, falling back to orientation.");
       compassSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
     }
   }
@@ -141,11 +142,6 @@ class CompassManager implements SensorEventListener {
     // Remap the axes as if the device screen was the instrument panel,
     // and adjust the rotation matrix for the device orientation.
     switch (windowManager.getDefaultDisplay().getRotation()) {
-      case Surface.ROTATION_0:
-      default:
-        worldAxisForDeviceAxisX = SensorManager.AXIS_X;
-        worldAxisForDeviceAxisY = SensorManager.AXIS_Z;
-        break;
       case Surface.ROTATION_90:
         worldAxisForDeviceAxisX = SensorManager.AXIS_Z;
         worldAxisForDeviceAxisY = SensorManager.AXIS_MINUS_X;
@@ -157,6 +153,11 @@ class CompassManager implements SensorEventListener {
       case Surface.ROTATION_270:
         worldAxisForDeviceAxisX = SensorManager.AXIS_MINUS_Z;
         worldAxisForDeviceAxisY = SensorManager.AXIS_X;
+        break;
+      case Surface.ROTATION_0:
+      default:
+        worldAxisForDeviceAxisX = SensorManager.AXIS_X;
+        worldAxisForDeviceAxisY = SensorManager.AXIS_Z;
         break;
     }
 

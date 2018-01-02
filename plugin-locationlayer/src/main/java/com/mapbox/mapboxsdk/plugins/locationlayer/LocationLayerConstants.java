@@ -1,21 +1,17 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer;
 
 /**
- * Contains all the constants being used for the My Location layer.
+ * Contains all the constants being used for the Location layer.
  *
  * @since 0.1.0
  */
-class LocationLayerConstants {
-
-  private LocationLayerConstants() {
-    // Class should not be initialized
-  }
+final class LocationLayerConstants {
 
   // Controls the compass update rate in milliseconds
   static final int COMPASS_UPDATE_RATE_MS = 500;
 
-  // Sets the animation time when moving the user location icon from the previous location to the updated. If
-  // LinearAnimator's enabled, this values ignored.
+  // Sets the animation time when moving the user location icon from the previous location to the
+  // updated. If LinearAnimator's enabled, this values ignored.
   static final int LOCATION_UPDATE_DELAY_MS = 500;
 
   // Sources
@@ -33,4 +29,8 @@ class LocationLayerConstants {
   static final String BEARING_ICON = "mapbox-location-bearing-icon";
   static final String BACKGROUND_ICON = "mapbox-location-stroke-icon";
   static final String PUCK_ICON = "mapbox-location-puck-icon";
+
+  private LocationLayerConstants() {
+    // Class should not be initialized
+  }
 }
