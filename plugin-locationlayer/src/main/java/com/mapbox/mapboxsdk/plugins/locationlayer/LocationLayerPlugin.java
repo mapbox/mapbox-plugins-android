@@ -537,9 +537,9 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
 
     locationChangeAnimator = ValueAnimator.ofObject(new Utils.PointEvaluator(), currentSourcePoint,
       newPoint);
-    locationChangeAnimator.setDuration(linearAnimation ? getLocationUpdateDuration()
-      : LocationLayerConstants.LOCATION_UPDATE_DELAY_MS);
-    if (linearAnimation) {
+    locationChangeAnimator.setDuration(linearAnimation || (location.getSpeed() > 0)
+      ? getLocationUpdateDuration() : LocationLayerConstants.LOCATION_UPDATE_DELAY_MS);
+    if (linearAnimation || location.getSpeed() > 0) {
       locationChangeAnimator.setInterpolator(new LinearInterpolator());
     } else {
       locationChangeAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
