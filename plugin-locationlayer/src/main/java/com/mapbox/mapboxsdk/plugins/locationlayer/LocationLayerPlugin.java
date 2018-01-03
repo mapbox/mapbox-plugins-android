@@ -31,6 +31,7 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.COMPASS_UPDATE_RATE_MS;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.MAX_ANIMATION_DURATION_MS;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.NAVIGATION_LAYER;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.shortestRotation;
 
 /**
  * The Location layer plugin provides location awareness to your mobile application. Enabling this
@@ -569,7 +570,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     }
 
     // Always rotate the bearing shortest distance
-    magneticHeading = shortestRotation(magneticHeading);
+    magneticHeading = shortestRotation(magneticHeading, previousMagneticHeading);
 
     // No visible change occurred
     if (Math.abs(magneticHeading - previousMagneticHeading) < 1) {
@@ -593,16 +594,6 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
       locationLayerMode == LocationLayerMode.NAVIGATION
         ? NAVIGATION_LAYER : BEARING_LAYER, bearing
     );
-  }
-
-  private float shortestRotation(float magneticHeading) {
-    double diff = previousMagneticHeading - magneticHeading;
-    if (diff > 180.0f) {
-      magneticHeading += 360.0f;
-    } else if (diff < -180.0f) {
-      magneticHeading -= 360.f;
-    }
-    return magneticHeading;
   }
 
   /**

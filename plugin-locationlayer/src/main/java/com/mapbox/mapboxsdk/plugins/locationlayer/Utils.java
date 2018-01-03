@@ -8,7 +8,29 @@ import android.graphics.drawable.Drawable;
 
 import com.mapbox.services.commons.geojson.Point;
 
-class Utils {
+final class Utils {
+
+  private Utils() {
+    // Class should not be initialized
+  }
+
+  /**
+   * Util for finding the shortest path from the current icon rotated degree to the new degree.
+   *
+   * @param magneticHeading         the new position of the rotation
+   * @param previousMagneticHeading the current position of the rotation
+   * @return the shortest degree of rotation possible
+   * @since 0.4.0
+   */
+  static float shortestRotation(float magneticHeading, float previousMagneticHeading) {
+    double diff = previousMagneticHeading - magneticHeading;
+    if (diff > 180.0f) {
+      magneticHeading += 360.0f;
+    } else if (diff < -180.0f) {
+      magneticHeading -= 360.f;
+    }
+    return magneticHeading;
+  }
 
   static Bitmap getBitmapFromDrawable(Drawable drawable) {
     if (drawable instanceof BitmapDrawable) {
