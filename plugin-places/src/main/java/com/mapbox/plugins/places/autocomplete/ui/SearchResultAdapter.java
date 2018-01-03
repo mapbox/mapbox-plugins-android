@@ -50,7 +50,7 @@ public class SearchResultAdapter
     }
 
     if (results.get(position).properties().has(PlaceConstants.SAVED_PLACE)) {
-      holder.placeNameView.setTextColor(ContextCompat.getColor(context, R.color.brightBlue));
+      holder.placeNameView.setTextColor(ContextCompat.getColor(context, R.color.mapbox_bright_blue));
     }
 
     if (results.get(position).text() != null) {

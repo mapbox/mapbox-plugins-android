@@ -33,11 +33,11 @@ android {
   }
 }
 
-
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
 
   implementation dependenciesList.supportAppcompatV7
+  implementation dependenciesList.supportDesign
   implementation dependenciesList.supportConstraintLayout
   implementation dependenciesList.supportCardView
   implementation dependenciesList.supportRecyclerView

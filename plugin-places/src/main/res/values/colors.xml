@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-  <color name="navy">#263d57</color>
-  <color name="lightNavy">#949fac</color>
-  <color name="brightBlue">#4a90e2</color>
-
-  <color name="md_grey_200">#EEEEEE</color>
+  <color name="mapbox_navy">#263d57</color>
+  <color name="mapbox_light_navy">#949fac</color>
+  <color name="mapbox_bright_blue">#4a90e2</color>
+  <color name="mapbox_white">#ffffff</color>
+  <color name="mapbox_gray_faint">#f4f7fb</color>
 </resources>
