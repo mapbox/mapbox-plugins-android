@@ -1,7 +1,4 @@
-[![Build Status](https://www.bitrise.io/app/a3a5f64a6d4a78c3.svg?token=RJY5I160EZSKZr1e0KgLrw&branch=master)](https://www.bitrise.io/app/a3a5f64a6d4a78c3)
-
 # Mapbox building plugin
-
 
 ![buildings-plugin](https://user-images.githubusercontent.com/4394910/28844435-71442d04-76b9-11e7-8866-ee6a94306353.gif)
 
@@ -42,10 +39,9 @@ dependencies {
 
 ## Building plugin examples
 
-- [In this repo's test app](https://github.com/mapbox/mapbox-plugins-android/blob/master/plugins/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/BuildingActivity.java)
+- [In this repo's test app](https://github.com/mapbox/mapbox-plugins-android/blob/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/BuildingActivity.java)
 
 - [In the Mapbox Android demo app](https://github.com/mapbox/mapbox-android-demo/blob/a411fa95cd71c1b90a30895060b319310444aebb/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/plugins/BuildingPluginActivity.java) – (Don't have the app? [Download it on Google Play](https://play.google.com/store/apps/details?id=com.mapbox.mapboxandroiddemo).)
-
 
 ## Help and Usage
 
@@ -59,7 +55,6 @@ Splitting specific functionality into plugins makes our Map SDK lighter and nimb
 
 The Mapbox Android team creates plugins but this plugins repository is an open-source project similar to the various Mapbox SDKs for Android.
 Plugins' lightweight nature makes them much easier for you and anyone else to contribute rather than trying to add the same feature to the more robust Map SDK. The Mapbox team can also more easily accept contributed plugins and keep the plugin list growing.
-
 
 ## Contributing
 

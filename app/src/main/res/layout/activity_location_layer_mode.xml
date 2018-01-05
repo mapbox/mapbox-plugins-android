@@ -1,72 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <com.mapbox.mapboxsdk.maps.MapView
+    android:id="@+id/mapView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginBottom="0dp"
+    app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:mapbox_uiAttribution="false"/>
 
-    <com.mapbox.mapboxsdk.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+  <LinearLayout
+    android:id="@+id/linearLayout"
+    style="?android:attr/buttonBarStyle"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    android:orientation="horizontal"
+    android:weightSum="4"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    tools:layout_constraintBottom_creator="1"
+    tools:layout_constraintLeft_creator="1"
+    tools:layout_constraintRight_creator="1">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        style="?android:attr/buttonBarStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:orientation="horizontal"
-        android:weightSum="4"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1">
+    <Button
+      android:id="@+id/button_location_mode_none"
+      style="?android:attr/buttonBarButtonStyle"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:text="@string/button_location_mode_none"
+      android:textColor="@android:color/white"/>
 
-        <Button
-            android:id="@+id/button_location_mode_none"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/button_location_mode_none"
-            android:textColor="@android:color/white"/>
+    <Button
+      android:id="@+id/button_location_mode_tracking"
+      style="?android:attr/buttonBarButtonStyle"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:text="@string/button_location_mode_tracking"
+      android:textColor="@android:color/white"/>
 
-        <Button
-            android:id="@+id/button_location_mode_tracking"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/button_location_mode_tracking"
-            android:textColor="@android:color/white"/>
+    <Button
+      android:id="@+id/button_location_mode_compass"
+      style="?android:attr/buttonBarButtonStyle"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:text="@string/button_location_mode_compass"
+      android:textColor="@android:color/white"/>
 
-        <Button
-            android:id="@+id/button_location_mode_compass"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/button_location_mode_compass"
-            android:textColor="@android:color/white"/>
+    <Button
+      android:id="@+id/button_location_mode_navigation"
+      style="?android:attr/buttonBarButtonStyle"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:text="@string/button_location_mode_navigation"
+      android:textColor="@android:color/white"/>
 
-        <Button
-            android:id="@+id/button_location_mode_navigation"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/button_location_mode_navigation"
-            android:textColor="@android:color/white"/>
-
-    </LinearLayout>
+  </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

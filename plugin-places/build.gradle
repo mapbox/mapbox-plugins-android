@@ -1,0 +1,68 @@
+apply plugin: 'com.android.library'
+
+android {
+  compileSdkVersion androidVersions.compileSdkVersion
+  buildToolsVersion androidVersions.buildToolsVersion
+
+  defaultConfig {
+    minSdkVersion androidVersions.minSdkVersion
+    targetSdkVersion androidVersions.targetSdkVersion
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    vectorDrawables.useSupportLibrary = true
+
+    // Write out the current schema of Room
+    javaCompileOptions {
+      annotationProcessorOptions {
+        arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+      }
+    }
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+  configurations {
+    javadocDeps
+  }
+
+  lintOptions {
+    abortOnError false
+  }
+}
+
+
+dependencies {
+  implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+  implementation dependenciesList.supportAppcompatV7
+  implementation dependenciesList.supportConstraintLayout
+  implementation dependenciesList.supportCardView
+  implementation dependenciesList.supportRecyclerView
+  implementation dependenciesList.supportV4
+
+  // AutoValues
+  annotationProcessor dependenciesList.autoValuesParcel
+  annotationProcessor dependenciesList.autoValue
+  compileOnly dependenciesList.autoValue
+
+  implementation dependenciesList.lifecycleExtensions
+  implementation dependenciesList.roomRuntime
+  annotationProcessor dependenciesList.roomCompiler
+
+  implementation dependenciesList.mapboxGeocoding
+
+  // Unit testing
+  testImplementation dependenciesList.junit
+  testImplementation dependenciesList.mockito
+  testImplementation dependenciesList.androidArchCore
+
+  javadocDeps dependenciesList.mapboxMapSdk
+}
+
+apply from: 'javadoc.gradle'
+apply from: "${rootDir}/gradle/mvn-push-android.gradle"
+apply from: "${rootDir}/gradle/checkstyle.gradle"
+apply from: "${rootDir}/gradle/jacoco.gradle"

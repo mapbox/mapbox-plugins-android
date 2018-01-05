@@ -13,6 +13,10 @@ android {
   configurations {
     javadocDeps
   }
+
+  lintOptions {
+    abortOnError false
+  }
 }
 
 dependencies {
@@ -21,7 +25,7 @@ dependencies {
   implementation dependenciesList.timber
   implementation dependenciesList.mapboxServices
 
-    // Unit testing
+  // Unit testing
   testImplementation dependenciesList.junit
   testImplementation dependenciesList.mockito
 

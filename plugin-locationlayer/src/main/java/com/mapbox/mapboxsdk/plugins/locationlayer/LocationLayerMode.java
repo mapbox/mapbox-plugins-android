@@ -5,12 +5,18 @@ import android.support.annotation.IntDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/**
+ * Contains the variety of Location Layer modes which shape the behavior of the plugin.
+ *
+ * @since 0.1.0
+ */
 public class LocationLayerMode {
 
   /**
-   * One of these constants should be used when {@link LocationLayerPlugin#setLocationLayerEnabled(int)}'s called. The
-   * mode can be switched at anytime by calling the {@code setLocationLayerEnabled} method passing in the new mode you'd
-   * like the location layer to be in.
+   * One of these constants should be used when
+   * {@link LocationLayerPlugin#setLocationLayerEnabled(int)}'s called. The
+   * mode can be switched at anytime by calling the {@code setLocationLayerEnabled} method passing
+   * in the new mode you'd like the location layer to be in.
    *
    * @since 0.1.0
    */

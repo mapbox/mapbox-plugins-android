@@ -1,5 +1,3 @@
-[![Build Status](https://www.bitrise.io/app/a3a5f64a6d4a78c3.svg?token=RJY5I160EZSKZr1e0KgLrw&branch=master)](https://www.bitrise.io/app/a3a5f64a6d4a78c3)
-
 # Mapbox location layer plugin
 
 ![location-plugin](https://user-images.githubusercontent.com/4394910/28844322-1c52a672-76b9-11e7-904a-fcf6f51c1481.gif)
@@ -19,7 +17,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.2.0'
+    compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.3.0'
 }
 ```
 
@@ -37,16 +35,15 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.3.0-SNAPSHOT'
+    compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.4.0-SNAPSHOT'
 }
 ```
 
 ## Location layer examples
 
-- [In this repo's test app](https://github.com/mapbox/mapbox-plugins-android/blob/master/plugins/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/location/LocationLayerModesActivity.java)
+- [In this repo's test app](https://github.com/mapbox/mapbox-plugins-android/blob/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/location/LocationLayerModesActivity.java)
 
 - [In the Mapbox Android demo app](https://github.com/mapbox/mapbox-android-demo/blob/a411fa95cd71c1b90a30895060b319310444aebb/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/plugins/LocationPluginActivity.java) – (Don't have the app? [Download it on Google Play](https://play.google.com/store/apps/details?id=com.mapbox.mapboxandroiddemo).)
-
 
 ## Help and Usage
 

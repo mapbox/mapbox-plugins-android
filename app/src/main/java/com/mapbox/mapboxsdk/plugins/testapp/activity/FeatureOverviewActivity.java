@@ -253,10 +253,12 @@ public class FeatureOverviewActivity extends AppCompatActivity implements Permis
       return category;
     }
 
+    @Override
     public int describeContents() {
       return 0;
     }
 
+    @Override
     public void writeToParcel(Parcel out, int flags) {
       out.writeString(name);
       out.writeString(label);
@@ -265,10 +267,12 @@ public class FeatureOverviewActivity extends AppCompatActivity implements Permis
     }
 
     public static final Parcelable.Creator<Feature> CREATOR = new Parcelable.Creator<Feature>() {
+      @Override
       public Feature createFromParcel(Parcel in) {
         return new Feature(in);
       }
 
+      @Override
       public Feature[] newArray(int size) {
         return new Feature[size];
       }
