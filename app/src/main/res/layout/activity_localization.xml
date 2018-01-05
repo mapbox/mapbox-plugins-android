@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             xmlns:app="http://schemas.android.com/apk/res-auto"
-                                             xmlns:tools="http://schemas.android.com/tools"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="match_parent"
-                                             android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"
@@ -14,13 +13,14 @@
         app:mapbox_cameraTargetLng="-0.075073"
         app:mapbox_cameraTilt="20"
         app:mapbox_cameraZoom="2.5"
-        app:mapbox_styleUrl="@string/mapbox_style_light"/>
+        app:mapbox_styleUrl="@string/mapbox_style_mapbox_streets"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/localize_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginEnd="16dp"
         android:src="@drawable/ic_translate_white_24dp"
         app:backgroundTint="@color/colorPrimary"

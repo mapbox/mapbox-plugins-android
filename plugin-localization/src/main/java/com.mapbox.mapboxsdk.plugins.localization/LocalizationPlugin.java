@@ -5,11 +5,12 @@ import android.support.annotation.NonNull;
 
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.Layer;
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 
 import java.util.List;
 import java.util.Locale;
+
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
 
 /**
  * The localization plugin enables localization of map labels into the user’s preferred language
@@ -21,6 +22,7 @@ import java.util.Locale;
 public final class LocalizationPlugin {
 
   private List<Layer> listOfMapLayers;
+  private String TAG = "LocalizationPlugin";
 
   /**
    * Create a {@link LocalizationPlugin}.
@@ -32,7 +34,14 @@ public final class LocalizationPlugin {
     listOfMapLayers = mapboxMap.getLayers();
     for (Layer layer : listOfMapLayers) {
       if (layer instanceof SymbolLayer) {
-        layer.setProperties(PropertyFactory.textField(String.format("{name_%s}", getDeviceLanguage())));
+        if (((SymbolLayer) layer).getTextField() != null) {
+          if (((SymbolLayer) layer).getTextField().getValue() != null &&
+            !((SymbolLayer) layer).getTextField().getValue().isEmpty()) {
+            if (((SymbolLayer) layer).getTextField().getValue().contains("name")) {
+              layer.setProperties(textField(String.format("{name_%s}", getDeviceLanguage())));
+            }
+          }
+        }
       }
     }
   }
@@ -83,11 +92,9 @@ public final class LocalizationPlugin {
    * @param languageToSetMapTo The language that you'd like to set the map text to.
    * @since 0.1.0
    */
-
   public void setMapTextLanguage(String languageToSetMapTo) {
-
     for (Layer layer : listOfMapLayers) {
-      layer.setProperties(PropertyFactory.textField(String.format("{name_%s}", languageToSetMapTo)));
+      layer.setProperties(textField(String.format("{name_%s}", languageToSetMapTo)));
     }
   }
 
