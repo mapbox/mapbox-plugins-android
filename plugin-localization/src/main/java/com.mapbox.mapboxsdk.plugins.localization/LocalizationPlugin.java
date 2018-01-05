@@ -29,11 +29,41 @@ public final class LocalizationPlugin {
    */
   public LocalizationPlugin(@NonNull final MapboxMap mapboxMap) {
     listOfMapLayers = mapboxMap.getLayers();
-    String deviceLanguage = Locale.getDefault().getLanguage();
     for (Layer layer : listOfMapLayers) {
       if (layer instanceof SymbolLayer) {
-        layer.setProperties(PropertyFactory.textField(String.format("{name_%s}", deviceLanguage)));
+        layer.setProperties(PropertyFactory.textField(String.format("{name_%s}", getDeviceLanguage())));
       }
+    }
+  }
+
+  /**
+   * This method helps getting the right language ISO code, which suppose to be
+   * according to ISO-639-1, BUT, on some devices it still returns the deprecated ISO-639.
+   * <BR>
+   * Languages codes that are translated in this method:
+   * <ul>
+   * <li>Hebrew:  IW -> he
+   * <li>Indonesian: IN -> id
+   * <li>Yiddish: JI -> yi
+   * <li>Javanese: JW -> jv
+   * </ul>
+   *
+   * @return The right code according to ISO-639-1
+   */
+  private String getDeviceLanguage() {
+
+    String deviceLanguage = Locale.getDefault().getLanguage();
+
+    if (deviceLanguage.equalsIgnoreCase("IW")) {
+      return "he";
+    } else if (deviceLanguage.equalsIgnoreCase("IN")) {
+      return "id";
+    } else if (deviceLanguage.equalsIgnoreCase("JI")) {
+      return "yi";
+    } else if (deviceLanguage.equalsIgnoreCase("JW")) {
+      return "jv";
+    } else {
+      return deviceLanguage;
     }
   }
 
