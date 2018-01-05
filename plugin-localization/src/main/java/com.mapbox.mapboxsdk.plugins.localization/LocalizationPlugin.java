@@ -1,5 +1,6 @@
 package com.mapbox.mapboxsdk.plugins.localization;
 
+import android.annotation.TargetApi;
 import android.support.annotation.NonNull;
 
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -62,9 +63,18 @@ public final class LocalizationPlugin {
       return "yi";
     } else if (deviceLanguage.equalsIgnoreCase("JW")) {
       return "jv";
+    } else if (getLanguageTag().contains("zh-Hans") || Locale.getDefault().getDisplayName().contains("简体")) {
+      return "zh-Hans";
+    } else if (getLanguageTag().contains("zh-Hant") || Locale.getDefault().getDisplayName().contains("繁體")) {
+      return "zh";
     } else {
       return deviceLanguage;
     }
+  }
+
+  @TargetApi(21)
+  private String getLanguageTag() {
+    return Locale.getDefault().toLanguageTag();
   }
 
   /**
@@ -73,7 +83,9 @@ public final class LocalizationPlugin {
    * @param languageToSetMapTo The language that you'd like to set the map text to.
    * @since 0.1.0
    */
+
   public void setMapTextLanguage(String languageToSetMapTo) {
+
     for (Layer layer : listOfMapLayers) {
       layer.setProperties(PropertyFactory.textField(String.format("{name_%s}", languageToSetMapTo)));
     }
