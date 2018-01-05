@@ -40,6 +40,10 @@ public final class LocalizationPlugin {
             if (((SymbolLayer) layer).getTextField().getValue().contains("name")) {
               layer.setProperties(textField(String.format("{name_%s}", getDeviceLanguage())));
             }
+            if (((SymbolLayer) layer).getTextField().getValue().contains("abbr") &&
+              !getDeviceLanguage().equals("en")) {
+              layer.setProperties(textField(String.format("{name_%s}", getDeviceLanguage())));
+            }
           }
         }
       }
