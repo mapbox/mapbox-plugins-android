@@ -12,8 +12,6 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.plugins.localization.LocalizationPlugin;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 
-import java.util.Locale;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
