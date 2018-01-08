@@ -20,7 +20,7 @@
     <string name="title_location_manual_update">Toggle Manual Location Updates</string>
     <string name="title_localization">Localization Plugin</string>
     <string name="title_compass_listener">Compass Listener</string>
-    <string name="title_geojson">GeoJson Plugin</string>
+    <string name="title_geojson">GeoJSON Plugin</string>
     <string name="title_cluster">Cluster Plugin</string>
     <string name="title_places_autocomplete">Places Autocomplete</string>
     <string name="title_places_autocomplete_fragment">Places Autocomplete Fragment</string>
@@ -28,17 +28,17 @@
     <string name="title_offline_regions">List regions</string>
 
     <!-- Descriptions -->
-    <string name="description_traffic">Add Traffic layers to any Mapbox basemap.</string>
-    <string name="description_building">Add 3D Building layer to a Mapbox map.</string>
+    <string name="description_traffic">Add traffic layers to any Mapbox base map.</string>
+    <string name="description_building">Add 3D building layer to a Mapbox map.</string>
     <string name="description_location_modes">Switch between the different location modes.</string>
     <string name="description_location_map_change">Change map styles while the location layers on the map.</string>
     <string name="description_location_manual_update">Toggle the user location manual mode on and off.</string>
-    <string name="description_localization">Automatically localize the map labels into the device\'s set language.</string>
-    <string name="description_compass_listener">Add a compass listener to know when heading changes or when the accuracy dropsx</string>
-    <string name="description_geojson">Load GeoJson file from assets, path or url to the Mapbox.</string>
+    <string name="description_localization">Change map text to the device\'s set language.</string>
+    <string name="description_compass_listener">Add a compass listener to know when heading changes or when the accuracy drops.</string>
+    <string name="description_geojson">Load GeoJSON file from assets, path or url to the Mapbox.</string>
     <string name="description_cluster">Add marker clustering to a Mapbox map.</string>
     <string name="description_autocomplete">Launch the autocomplete activity.</string>
-    <string name="description_autocomplete_fragment">Launch the autocomplete fragment inside an activity</string>
+    <string name="description_autocomplete_fragment">Launch the autocomplete fragment inside an activity.</string>
     <string name="description_offline_plugin">Use a form to create an offline region.</string>
     <string name="description_offline_regions">List all offline regions.</string>
 

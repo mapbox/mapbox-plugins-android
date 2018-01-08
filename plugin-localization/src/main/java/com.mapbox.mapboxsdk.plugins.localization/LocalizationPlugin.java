@@ -7,7 +7,6 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 
-import java.util.List;
 import java.util.Locale;
 
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
@@ -22,7 +21,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
  */
 public final class LocalizationPlugin {
 
-  private List<Layer> listOfMapLayers;
+  private MapboxMap mapboxMap;
 
   /**
    * Create a {@link LocalizationPlugin}.
@@ -31,11 +30,14 @@ public final class LocalizationPlugin {
    * @since 0.1.0
    */
   public LocalizationPlugin(@NonNull MapboxMap mapboxMap) {
-    this.listOfMapLayers = mapboxMap.getLayers();
+    this.mapboxMap = mapboxMap;
     setMapTextLanguage(getDeviceLanguage());
   }
 
   /**
+   *
+   * Retrieve the language that the device is currently set to.
+   *
    * @return The correct code according to ISO-639-1
    */
   public String getDeviceLanguage() {
@@ -72,11 +74,11 @@ public final class LocalizationPlugin {
   /**
    * Sets map text to the specified language
    *
-   * @param languageToSetMapTo The language that you'd like to set the map text to.
+   * @param languageToSetMapTo The language that to set the map text to.
    * @since 0.1.0
    */
   public void setMapTextLanguage(String languageToSetMapTo) {
-    for (Layer layer : listOfMapLayers) {
+    for (Layer layer : mapboxMap.getLayers()) {
       if (layer instanceof SymbolLayer) {
         if (((SymbolLayer) layer).getTextField() != null) {
           if (((SymbolLayer) layer).getTextField().getValue() != null
@@ -130,7 +132,7 @@ public final class LocalizationPlugin {
   }
 
   /**
-   * Sets map text to Chinese.
+   * Sets map text to Traditional Chinese characters.
    * <p>
    * This method uses simplified Chinese characters for custom label layers: #country_label, #state_label,
    * and #marine_label. All other label layers are sourced from OpenStreetMap and may contain one of several dialects
@@ -141,7 +143,7 @@ public final class LocalizationPlugin {
   }
 
   /**
-   * Sets map text to Simplified Chinese.
+   * Sets map text to Simplified Chinese characters.
    * <p>
    * Using this method is similar to setMapTextToChinese(), except any Traditional Chinese
    * characters are automatically transformed to Simplified Chinese.
