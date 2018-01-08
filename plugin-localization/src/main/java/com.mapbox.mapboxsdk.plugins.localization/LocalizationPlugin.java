@@ -36,12 +36,9 @@ public final class LocalizationPlugin {
   }
 
   /**
-   *
-   *
-   *
    * @return The correct code according to ISO-639-1
    */
-  private String getDeviceLanguage() {
+  public String getDeviceLanguage() {
     if (Build.VERSION.SDK_INT >= 21) {
       String languageTag = Locale.getDefault().toLanguageTag();
       if (languageTag.contains("Hans")) {
@@ -60,9 +57,11 @@ public final class LocalizationPlugin {
         return "yi";
       } else if (Locale.getDefault().getLanguage().equalsIgnoreCase("JW")) {
         return "jv";
-      } else if (Locale.getDefault().getLanguage().contains("zh-Hans") || Locale.getDefault().getDisplayName().contains("简体")) {
+      } else if (Locale.getDefault().getLanguage().contains("zh-Hans") ||
+          Locale.getDefault().getDisplayName().contains("简体")) {
         return "zh-Hans";
-      } else if (Locale.getDefault().getLanguage().contains("zh-Hant") || Locale.getDefault().getDisplayName().contains("繁體")) {
+      } else if (Locale.getDefault().getLanguage().contains("zh-Hant") ||
+          Locale.getDefault().getDisplayName().contains("繁體")) {
         return "zh";
       } else {
         return Locale.getDefault().getLanguage();
@@ -80,13 +79,13 @@ public final class LocalizationPlugin {
     for (Layer layer : listOfMapLayers) {
       if (layer instanceof SymbolLayer) {
         if (((SymbolLayer) layer).getTextField() != null) {
-          if (((SymbolLayer) layer).getTextField().getValue() != null &&
-              !((SymbolLayer) layer).getTextField().getValue().isEmpty()) {
+          if (((SymbolLayer) layer).getTextField().getValue() != null
+              && !((SymbolLayer) layer).getTextField().getValue().isEmpty()) {
             if (((SymbolLayer) layer).getTextField().getValue().contains("name")) {
               layer.setProperties(textField(String.format("{name_%s}", languageToSetMapTo)));
             }
-            if (((SymbolLayer) layer).getTextField().getValue().contains("abbr") &&
-                !getDeviceLanguage().equals("en")) {
+            if (((SymbolLayer) layer).getTextField().getValue().contains("abbr")
+                && !getDeviceLanguage().equals("en")) {
               layer.setProperties(textField(String.format("{name_%s}", languageToSetMapTo)));
             }
           }

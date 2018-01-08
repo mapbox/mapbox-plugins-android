@@ -50,7 +50,7 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
       Toast.makeText(this, R.string.map_not_localized, Toast.LENGTH_SHORT).show();
       mapIsLocalized = false;
     } else {
-      localizationPlugin.setMapTextLanguage(Locale.getDefault().getLanguage());
+      localizationPlugin.setMapTextLanguage(localizationPlugin.getDeviceLanguage());
       Toast.makeText(this, R.string.map_localized, Toast.LENGTH_SHORT).show();
       mapIsLocalized = true;
     }
