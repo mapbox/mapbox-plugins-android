@@ -1,6 +1,6 @@
 package com.mapbox.mapboxsdk.plugins.localization;
 
-import android.annotation.TargetApi;
+import android.os.Build;
 import android.support.annotation.NonNull;
 
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -13,7 +13,8 @@ import java.util.Locale;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
 
 /**
- * The localization plugin enables localization of map labels into the user’s preferred language
+ * The localization plugin enables localization of map labels into the user’s preferred language.
+ * Preferred language is determined by the language that the device is set to.
  * <p>
  * Initialise this plugin in the {@link com.mapbox.mapboxsdk.maps.OnMapReadyCallback#onMapReady(MapboxMap)} and provide
  * a valid instance of a {@link MapboxMap}.
@@ -22,7 +23,6 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
 public final class LocalizationPlugin {
 
   private List<Layer> listOfMapLayers;
-  private String TAG = "LocalizationPlugin";
 
   /**
    * Create a {@link LocalizationPlugin}.
@@ -30,64 +30,44 @@ public final class LocalizationPlugin {
    * @param mapboxMap the MapboxMap to apply the localization plugin to
    * @since 0.1.0
    */
-  public LocalizationPlugin(@NonNull final MapboxMap mapboxMap) {
-    listOfMapLayers = mapboxMap.getLayers();
-    for (Layer layer : listOfMapLayers) {
-      if (layer instanceof SymbolLayer) {
-        if (((SymbolLayer) layer).getTextField() != null) {
-          if (((SymbolLayer) layer).getTextField().getValue() != null &&
-            !((SymbolLayer) layer).getTextField().getValue().isEmpty()) {
-            if (((SymbolLayer) layer).getTextField().getValue().contains("name")) {
-              layer.setProperties(textField(String.format("{name_%s}", getDeviceLanguage())));
-            }
-            if (((SymbolLayer) layer).getTextField().getValue().contains("abbr") &&
-              !getDeviceLanguage().equals("en")) {
-              layer.setProperties(textField(String.format("{name_%s}", getDeviceLanguage())));
-            }
-          }
-        }
-      }
-    }
+  public LocalizationPlugin(@NonNull MapboxMap mapboxMap) {
+    this.listOfMapLayers = mapboxMap.getLayers();
+    setMapTextLanguage(getDeviceLanguage());
   }
 
   /**
-   * This method helps getting the right language ISO code, which suppose to be
-   * according to ISO-639-1, BUT, on some devices it still returns the deprecated ISO-639.
-   * <BR>
-   * Languages codes that are translated in this method:
-   * <ul>
-   * <li>Hebrew:  IW -> he
-   * <li>Indonesian: IN -> id
-   * <li>Yiddish: JI -> yi
-   * <li>Javanese: JW -> jv
-   * </ul>
    *
-   * @return The right code according to ISO-639-1
+   *
+   *
+   * @return The correct code according to ISO-639-1
    */
   private String getDeviceLanguage() {
-
-    String deviceLanguage = Locale.getDefault().getLanguage();
-
-    if (deviceLanguage.equalsIgnoreCase("IW")) {
-      return "he";
-    } else if (deviceLanguage.equalsIgnoreCase("IN")) {
-      return "id";
-    } else if (deviceLanguage.equalsIgnoreCase("JI")) {
-      return "yi";
-    } else if (deviceLanguage.equalsIgnoreCase("JW")) {
-      return "jv";
-    } else if (getLanguageTag().contains("zh-Hans") || Locale.getDefault().getDisplayName().contains("简体")) {
-      return "zh-Hans";
-    } else if (getLanguageTag().contains("zh-Hant") || Locale.getDefault().getDisplayName().contains("繁體")) {
-      return "zh";
+    if (Build.VERSION.SDK_INT >= 21) {
+      String languageTag = Locale.getDefault().toLanguageTag();
+      if (languageTag.contains("Hans")) {
+        return "zh-Hans";
+      } else if (languageTag.contains("Hant")) {
+        return "zh";
+      } else {
+        return Locale.getDefault().toLanguageTag().substring(0, 2);
+      }
     } else {
-      return deviceLanguage;
+      if (Locale.getDefault().getLanguage().equalsIgnoreCase("IW")) {
+        return "he";
+      } else if (Locale.getDefault().getLanguage().equalsIgnoreCase("IN")) {
+        return "id";
+      } else if (Locale.getDefault().getLanguage().equalsIgnoreCase("JI")) {
+        return "yi";
+      } else if (Locale.getDefault().getLanguage().equalsIgnoreCase("JW")) {
+        return "jv";
+      } else if (Locale.getDefault().getLanguage().contains("zh-Hans") || Locale.getDefault().getDisplayName().contains("简体")) {
+        return "zh-Hans";
+      } else if (Locale.getDefault().getLanguage().contains("zh-Hant") || Locale.getDefault().getDisplayName().contains("繁體")) {
+        return "zh";
+      } else {
+        return Locale.getDefault().getLanguage();
+      }
     }
-  }
-
-  @TargetApi(21)
-  private String getLanguageTag() {
-    return Locale.getDefault().toLanguageTag();
   }
 
   /**
@@ -98,7 +78,20 @@ public final class LocalizationPlugin {
    */
   public void setMapTextLanguage(String languageToSetMapTo) {
     for (Layer layer : listOfMapLayers) {
-      layer.setProperties(textField(String.format("{name_%s}", languageToSetMapTo)));
+      if (layer instanceof SymbolLayer) {
+        if (((SymbolLayer) layer).getTextField() != null) {
+          if (((SymbolLayer) layer).getTextField().getValue() != null &&
+              !((SymbolLayer) layer).getTextField().getValue().isEmpty()) {
+            if (((SymbolLayer) layer).getTextField().getValue().contains("name")) {
+              layer.setProperties(textField(String.format("{name_%s}", languageToSetMapTo)));
+            }
+            if (((SymbolLayer) layer).getTextField().getValue().contains("abbr") &&
+                !getDeviceLanguage().equals("en")) {
+              layer.setProperties(textField(String.format("{name_%s}", languageToSetMapTo)));
+            }
+          }
+        }
+      }
     }
   }
 
