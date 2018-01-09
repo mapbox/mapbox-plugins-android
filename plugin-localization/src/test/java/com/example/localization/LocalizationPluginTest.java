@@ -2,6 +2,7 @@ package com.example.localization;
 
 
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.plugins.localization.LocalizationPlugin;
 
 import org.junit.Rule;
 import org.junit.Test;
