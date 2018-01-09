@@ -60,11 +60,11 @@ public final class LocalizationPlugin {
         return "yi";
       } else if (Locale.getDefault().getLanguage().equalsIgnoreCase("JW")) {
         return "jv";
-      } else if (Locale.getDefault().getLanguage().contains("zh-Hans") ||
-        Locale.getDefault().getDisplayName().contains("简体")) {
+      } else if (Locale.getDefault().getLanguage().contains("zh-Hans")
+        || Locale.getDefault().getDisplayName().contains("简体")) {
         return "zh-Hans";
-      } else if (Locale.getDefault().getLanguage().contains("zh-Hant") ||
-        Locale.getDefault().getDisplayName().contains("繁體")) {
+      } else if (Locale.getDefault().getLanguage().contains("zh-Hant")
+        || Locale.getDefault().getDisplayName().contains("繁體")) {
         return "zh";
       } else {
         return Locale.getDefault().getLanguage();
@@ -100,7 +100,8 @@ public final class LocalizationPlugin {
    * Checks whether the map's source is a source provided by Mapbox, rather than a custom source.
    *
    * @param singleSource an individual source object from the map
-   * @return true if the source is from a Mapbox vector source, false if it's a custom Studio data set or from elsewhere.
+   * @return true if the source is from a Mapbox vector source, false if it's a
+   * custom Studio data set or from elsewhere.
    */
   private boolean sourceIsFromMapbox(Source singleSource) {
     return singleSource instanceof VectorSource
