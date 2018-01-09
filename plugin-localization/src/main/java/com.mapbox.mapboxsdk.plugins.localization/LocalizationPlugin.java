@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
+import com.mapbox.mapboxsdk.style.sources.Source;
+import com.mapbox.mapboxsdk.style.sources.VectorSource;
 
 import java.util.Locale;
 
@@ -35,7 +37,6 @@ public final class LocalizationPlugin {
   }
 
   /**
-   *
    * Retrieve the language that the device is currently set to.
    *
    * @return The correct code according to ISO-639-1
@@ -60,10 +61,10 @@ public final class LocalizationPlugin {
       } else if (Locale.getDefault().getLanguage().equalsIgnoreCase("JW")) {
         return "jv";
       } else if (Locale.getDefault().getLanguage().contains("zh-Hans") ||
-          Locale.getDefault().getDisplayName().contains("简体")) {
+        Locale.getDefault().getDisplayName().contains("简体")) {
         return "zh-Hans";
       } else if (Locale.getDefault().getLanguage().contains("zh-Hant") ||
-          Locale.getDefault().getDisplayName().contains("繁體")) {
+        Locale.getDefault().getDisplayName().contains("繁體")) {
         return "zh";
       } else {
         return Locale.getDefault().getLanguage();
@@ -78,22 +79,45 @@ public final class LocalizationPlugin {
    * @since 0.1.0
    */
   public void setMapTextLanguage(String languageToSetMapTo) {
-    for (Layer layer : mapboxMap.getLayers()) {
-      if (layer instanceof SymbolLayer) {
-        if (((SymbolLayer) layer).getTextField() != null) {
-          if (((SymbolLayer) layer).getTextField().getValue() != null
-              && !((SymbolLayer) layer).getTextField().getValue().isEmpty()) {
+    for (Source source : mapboxMap.getSources()) {
+      if (sourceIsFromMapbox(source)) {
+        for (Layer layer : mapboxMap.getLayers()) {
+          if (layerHasAdjustableTextField(layer)) {
             if (((SymbolLayer) layer).getTextField().getValue().contains("name")) {
               layer.setProperties(textField(String.format("{name_%s}", languageToSetMapTo)));
             }
             if (((SymbolLayer) layer).getTextField().getValue().contains("abbr")
-                && !getDeviceLanguage().equals("en")) {
+              && !getDeviceLanguage().equals("en")) {
               layer.setProperties(textField(String.format("{name_%s}", languageToSetMapTo)));
             }
           }
         }
       }
     }
+  }
+
+  /**
+   * Checks whether the map's source is a source provided by Mapbox, rather than a custom source.
+   *
+   * @param singleSource an individual source object from the map
+   * @return true if the source is from a Mapbox vector source, false if it's a custom Studio data set or from elsewhere.
+   */
+  private boolean sourceIsFromMapbox(Source singleSource) {
+    return singleSource instanceof VectorSource
+      && ((VectorSource) singleSource).getUrl().contains("mapbox://mapbox.mapbox");
+  }
+
+  /**
+   * Checks whether a single map layer has a textField that could potentially be localized to the device's language.
+   *
+   * @param singleLayer an individual layer from the map
+   * @return true if the layer has a textField elegible for translation, false if not.
+   */
+
+  private boolean layerHasAdjustableTextField(Layer singleLayer) {
+    return singleLayer instanceof SymbolLayer && (((SymbolLayer) singleLayer).getTextField() != null
+      && (((SymbolLayer) singleLayer).getTextField().getValue() != null
+      && !(((SymbolLayer) singleLayer).getTextField().getValue().isEmpty())));
   }
 
   /**
