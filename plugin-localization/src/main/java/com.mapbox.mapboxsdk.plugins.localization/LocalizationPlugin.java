@@ -24,6 +24,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
 public final class LocalizationPlugin {
 
   private MapboxMap mapboxMap;
+  private String TAG = "LocalizationPlugin";
 
   /**
    * Create a {@link LocalizationPlugin}.
@@ -105,14 +106,16 @@ public final class LocalizationPlugin {
    */
   private boolean sourceIsFromMapbox(Source singleSource) {
     return singleSource instanceof VectorSource
-      && ((VectorSource) singleSource).getUrl().contains("mapbox://mapbox.mapbox");
+      && ((VectorSource) singleSource).getUrl().substring(0, 9).equals("mapbox://")
+      && (((VectorSource) singleSource).getUrl().contains("mapbox.mapbox-streets-v7")
+      || ((VectorSource) singleSource).getUrl().contains("mapbox.mapbox-streets-v6"));
   }
 
   /**
    * Checks whether a single map layer has a textField that could potentially be localized to the device's language.
    *
    * @param singleLayer an individual layer from the map
-   * @return true if the layer has a textField elegible for translation, false if not.
+   * @return true if the layer has a textField eligible for translation, false if not.
    */
 
   private boolean layerHasAdjustableTextField(Layer singleLayer) {
