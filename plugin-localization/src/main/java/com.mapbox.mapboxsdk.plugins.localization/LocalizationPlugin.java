@@ -15,7 +15,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
 
 /**
  * The localization plugin enables localization of map labels into the user’s preferred language.
- * Preferred language is determined by the language that the device is set to.
+ * Preferred language is determined by the language that the device is set to in the device's settings.
  * <p>
  * Initialise this plugin in the {@link com.mapbox.mapboxsdk.maps.OnMapReadyCallback#onMapReady(MapboxMap)} and provide
  * a valid instance of a {@link MapboxMap}.
@@ -24,7 +24,6 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
 public final class LocalizationPlugin {
 
   private MapboxMap mapboxMap;
-  private String TAG = "LocalizationPlugin";
 
   /**
    * Create a {@link LocalizationPlugin}.
