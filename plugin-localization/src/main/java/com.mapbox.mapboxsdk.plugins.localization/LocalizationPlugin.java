@@ -37,7 +37,7 @@ public final class LocalizationPlugin {
   }
 
   /**
-   * Retrieve the language that the device is currently set to.
+   * Retrieve the code for the language that the device is currently set to.
    *
    * @return The correct code according to ISO-639-1
    */
@@ -100,8 +100,7 @@ public final class LocalizationPlugin {
    * Checks whether the map's source is a source provided by Mapbox, rather than a custom source.
    *
    * @param singleSource an individual source object from the map
-   * @return true if the source is from a Mapbox vector source, false if it's a
-   * custom Studio data set or from elsewhere.
+   * @return true if the source is from the Mapbox Streets vector source, false if it's not.
    */
   private boolean sourceIsFromMapbox(Source singleSource) {
     return singleSource instanceof VectorSource
@@ -116,7 +115,6 @@ public final class LocalizationPlugin {
    * @param singleLayer an individual layer from the map
    * @return true if the layer has a textField eligible for translation, false if not.
    */
-
   private boolean layerHasAdjustableTextField(Layer singleLayer) {
     return singleLayer instanceof SymbolLayer && (((SymbolLayer) singleLayer).getTextField() != null
       && (((SymbolLayer) singleLayer).getTextField().getValue() != null
