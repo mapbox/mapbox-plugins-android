@@ -1,6 +1,5 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer;
 
-import android.Manifest;
 import android.animation.ValueAnimator;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
@@ -17,34 +16,43 @@ import android.view.animation.LinearInterpolator;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.maps.MapView.OnMapChangedListener;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.MapboxMap.OnCameraMoveListener;
+import com.mapbox.mapboxsdk.maps.MapboxMap.OnMapClickListener;
 import com.mapbox.services.android.telemetry.location.LocationEngine;
 import com.mapbox.services.android.telemetry.location.LocationEngineListener;
 import com.mapbox.services.commons.geojson.Point;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.ACCURACY_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.BEARING_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.COMPASS_UPDATE_RATE_MS;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.MAX_ANIMATION_DURATION_MS;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.NAVIGATION_LAYER;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.shortestRotation;
 
 /**
- * The Location layer plugin provides location awareness to your mobile application. Enabling this plugin provides a
- * contextual experience to your users by showing an icon representing the users current location. A few different modes
- * are offered to provide the right context to your users at the correct time. {@link LocationLayerMode#TRACKING}
- * simply shows the users location on the map represented as a dot. {@link LocationLayerMode#COMPASS} mode allows you
- * to display an arrow icon (by default) that points in the direction the device is pointing in.
- * {@link LocationLayerMode#NAVIGATION} can be used in conjunction with our Navigation SDK to display a larger icon we
- * call the user puck. Lastly, {@link LocationLayerMode#NONE} can be used to disable the Location Layer but keep the
- * instance around till the activity is destroyed.
+ * The Location layer plugin provides location awareness to your mobile application. Enabling this
+ * plugin provides a contextual experience to your users by showing an icon representing the users
+ * current location. A few different modes are offered to provide the right context to your users at
+ * the correct time. {@link LocationLayerMode#TRACKING} simply shows the users location on the map
+ * represented as a dot. {@link LocationLayerMode#COMPASS} mode allows you to display an arrow icon
+ * (by default) that points in the direction the device is pointing in.
+ * {@link LocationLayerMode#NAVIGATION} can be used in conjunction with our Navigation SDK to
+ * display a larger icon we call the user puck. Lastly, {@link LocationLayerMode#NONE} can be used
+ * to disable the Location Layer but keep the instance around till the activity is destroyed.
  * <p>
  * Using this plugin requires you to request permission beforehand manually or using
- * {@link com.mapbox.services.android.telemetry.permissions.PermissionsManager}. Either {@code ACCESS_COARSE_LOCATION}
- * or {@code ACCESS_FINE_LOCATION} permissions can be requested and this plugin work as expected.
+ * {@link com.mapbox.services.android.telemetry.permissions.PermissionsManager}. Either
+ * {@code ACCESS_COARSE_LOCATION} or {@code ACCESS_FINE_LOCATION} permissions can be requested and
+ * this plugin work as expected.
  *
  * @since 0.1.0
  */
-public class LocationLayerPlugin implements LocationEngineListener, CompassListener, MapView.OnMapChangedListener,
-  LifecycleObserver, MapboxMap.OnCameraMoveListener, MapboxMap.OnMapClickListener {
+public final class LocationLayerPlugin implements LocationEngineListener, CompassListener,
+  OnMapChangedListener, LifecycleObserver, OnCameraMoveListener, OnMapClickListener {
 
   private LocationLayer locationLayer;
   private CompassManager compassManager;
@@ -66,16 +74,13 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   private ValueAnimator bearingChangeAnimator;
 
   private long locationUpdateTimestamp;
-  private boolean linearAnimation;
-
-
   private Location location;
+  private boolean linearAnimation;
 
   private OnLocationLayerClickListener onLocationLayerClickListener;
 
   @StyleRes
   private int styleRes;
-
 
   /**
    * Construct a {@code LocationLayerPlugin}
@@ -117,10 +122,10 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   }
 
   /**
-   * After creating an instance of this plugin, you can use this API to enable the location mode of your choice. These
-   * modes can be found in the {@link LocationLayerMode} class and the parameter only accepts one of those modes. Note
-   * that before enabling the My Location layer, you will need to ensure that you have the requested the required user
-   * location permissions.
+   * After creating an instance of this plugin, you can use this API to enable the location mode of
+   * your choice. These modes can be found in the {@link LocationLayerMode} class and the parameter
+   * only accepts one of those modes. Note that before enabling the My Location layer, you will need
+   * to ensure that you have the requested the required user location permissions.
    * <p>
    * <ul>
    * <li>{@link LocationLayerMode#TRACKING}: Display the user location on the map as a small dot</li>
@@ -132,7 +137,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
    * @param locationLayerMode one of the modes found in {@link LocationLayerMode}
    * @since 0.1.0
    */
-  @RequiresPermission(anyOf = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+  @RequiresPermission(anyOf = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION})
   public void setLocationLayerEnabled(@LocationLayerMode.Mode int locationLayerMode) {
     if (locationLayerMode != LocationLayerMode.NONE) {
       locationLayer.setLayersVisibility(true);
@@ -197,7 +202,8 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   }
 
   /**
-   * Use to either force a location update or to manually control when the user location gets updated.
+   * Use to either force a location update or to manually control when the user location gets
+   * updated.
    *
    * @param location where you'd like the location icon to be placed on the map
    * @since 0.1.0
@@ -207,8 +213,9 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   }
 
   /**
-   * The {@link LocationEngine} the plugin will use to update it's position. If {@code null} is passed in, all updates
-   * will occur through the {@link LocationLayerPlugin#forceLocationUpdate(Location)} method.
+   * The {@link LocationEngine} the plugin will use to update it's position. If {@code null} is
+   * passed in, all updates will occur through the
+   * {@link LocationLayerPlugin#forceLocationUpdate(Location)} method.
    *
    * @param locationEngine a {@link LocationEngine} this plugin should use to handle updates
    * @since 0.1.0
@@ -255,12 +262,12 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   }
 
   /**
-   * Required to place inside your activities {@code onStart} method. You'll also most likely want to check that this
-   * Location Layer plugin instance inside your activity is null or not.
+   * Required to place inside your activities {@code onStart} method. You'll also most likely want
+   * to check that this Location Layer plugin instance inside your activity is null or not.
    *
    * @since 0.1.0
    */
-  @RequiresPermission(anyOf = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+  @RequiresPermission(anyOf = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION})
   @OnLifecycleEvent(Lifecycle.Event.ON_START)
   public void onStart() {
     if (locationLayerMode != LocationLayerMode.NONE) {
@@ -277,8 +284,8 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   }
 
   /**
-   * Check whether the location update animator is using a linear or an accelerate/decelerate interpolator. When the
-   * navigation mode is being used, the animator automatically become linear.
+   * Check whether the location update animator is using a linear or an accelerate/decelerate
+   * interpolator. When the navigation mode is being used, the animator automatically become linear.
    *
    * @return boolean true if the location update animator is set to linear, otherwise false
    * @since 0.1.0
@@ -288,10 +295,12 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   }
 
   /**
-   * Set whether the location update animator is using linear (true) or an accelerate/decelerate (false) interpolator.
-   * When the navigation mode is being used, the animator automatically become linear.
+   * Set whether the location update animator is using linear (true) or an accelerate/decelerate
+   * (false) interpolator. When the navigation mode is being used, the animator automatically become
+   * linear.
    *
-   * @param linearAnimation boolean true if you'd like to set the location update animator to linear, otherwise false
+   * @param linearAnimation boolean true if you'd like to set the location update animator to
+   *                        linear, otherwise false
    * @since 0.1.0
    */
   public void setLinearAnimation(boolean linearAnimation) {
@@ -302,8 +311,8 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
    * Add a compass listener to get heading updates every second. Once the first listener gets added,
    * the sensor gets initiated and starts returning values.
    *
-   * @param compassListener a {@link CompassListener} for listening into compass heading and accuracy
-   *                        changes
+   * @param compassListener a {@link CompassListener} for listening into compass heading and
+   *                        accuracy changes
    * @since 0.2.0
    */
   public void addCompassListener(@NonNull CompassListener compassListener) {
@@ -327,12 +336,14 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   /**
    * Adds a listener that gets invoked when the user clicks the location layer.
    *
-   * @param locationClickListener The location layer click listener that is invoked when the location layer is clicked.
+   * @param locationClickListener The location layer click listener that is invoked when the
+   *                              location layer is clicked.
    */
-  public void setOnLocationClickListener(@Nullable OnLocationLayerClickListener locationClickListener) {
+  public void setOnLocationClickListener(
+    @Nullable OnLocationLayerClickListener locationClickListener) {
     this.onLocationLayerClickListener = locationClickListener;
     if (onLocationLayerClickListener != null) {
-      mapboxMap.setOnMapClickListener(this);
+      mapboxMap.addOnMapClickListener(this);
     }
   }
 
@@ -367,6 +378,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   }
 
   private void updateLocation(Location location) {
+    this.location = location;
     if (location == null) {
       locationUpdateTimestamp = SystemClock.elapsedRealtime();
       return;
@@ -390,7 +402,8 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   }
 
   /**
-   * If the locationEngine contains a last location value, we use it for the initial location layer position.
+   * If the locationEngine contains a last location value, we use it for the initial location layer
+   * position.
    */
   @SuppressWarnings( {"MissingPermission"})
   private void setLastLocation() {
@@ -426,7 +439,8 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   }
 
   /**
-   * If the location layer was being displayed before the style change, it will need to be displayed in the new style.
+   * If the location layer was being displayed before the style change, it will need to be displayed
+   * in the new style.
    */
   @SuppressWarnings( {"MissingPermission"})
   private void mapStyleFinishedLoading() {
@@ -441,11 +455,12 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   }
 
   /**
-   * Enable or disable the My Location bearing by passing in a boolean here. Once enabled, The users location and
-   * bearing's indicated on the map by default as a small blue dot with a chevron pointing in the direction of the
-   * devices compass bearing.
+   * Enable or disable the My Location bearing by passing in a boolean here. Once enabled, The users
+   * location and bearing's indicated on the map by default as a small blue dot with a chevron
+   * pointing in the direction of the devices compass bearing.
    *
-   * @param bearingEnabled boolean true if you'd like to enable the user location bearing, otherwise, false will disable
+   * @param bearingEnabled boolean true if you'd like to enable the user location bearing,
+   *                       otherwise, false will disable
    * @since 0.1.0
    */
   private void setMyBearingEnabled(boolean bearingEnabled) {
@@ -460,12 +475,12 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
   }
 
   /**
-   * Enable or disable the My Location navigation by passing in a boolean here. Once enabled, The users location
-   * indicated on the map will show (by default) as a large navigation puck with a cheveron/arrow showing the users GPS
-   * location bearing.
+   * Enable or disable the My Location navigation by passing in a boolean here. Once enabled, The
+   * users location indicated on the map will show (by default) as a large navigation puck with a
+   * cheveron/arrow showing the users GPS location bearing.
    *
-   * @param navigationEnabled boolean true if you'd like to enable the user location navigation, otherwise, false will
-   *                          disable
+   * @param navigationEnabled boolean true if you'd like to enable the user location navigation,
+   *                          disable otherwise, false will
    * @since 0.1.0
    */
   private void setNavigationEnabled(boolean navigationEnabled) {
@@ -493,7 +508,8 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     lastLocation = location;
 
     // Convert the new location to a Point object.
-    Point newPoint = Point.fromCoordinates(new double[] {location.getLongitude(), location.getLatitude()});
+    Point newPoint = Point.fromCoordinates(new double[] {location.getLongitude(),
+      location.getLatitude()});
 
     // If the source doesn't have geometry, a Point gets added.
     if (previousPoint == null) {
@@ -521,10 +537,11 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
       locationChangeAnimator.end();
     }
 
-    locationChangeAnimator = ValueAnimator.ofObject(new Utils.PointEvaluator(), currentSourcePoint, newPoint);
-    locationChangeAnimator.setDuration(linearAnimation ? getLocationUpdateDuration()
-      : LocationLayerConstants.LOCATION_UPDATE_DELAY_MS);
-    if (linearAnimation) {
+    locationChangeAnimator = ValueAnimator.ofObject(new Utils.PointEvaluator(), currentSourcePoint,
+      newPoint);
+    locationChangeAnimator.setDuration(linearAnimation || (location.getSpeed() > 0)
+      ? getLocationUpdateDuration() : LocationLayerConstants.LOCATION_UPDATE_DELAY_MS);
+    if (linearAnimation || location.getSpeed() > 0) {
       locationChangeAnimator.setInterpolator(new LinearInterpolator());
     } else {
       locationChangeAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -553,7 +570,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     }
 
     // Always rotate the bearing shortest distance
-    magneticHeading = shortestRotation(magneticHeading);
+    magneticHeading = shortestRotation(magneticHeading, previousMagneticHeading);
 
     // No visible change occurred
     if (Math.abs(magneticHeading - previousMagneticHeading) < 1) {
@@ -579,16 +596,6 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     );
   }
 
-  private float shortestRotation(float magneticHeading) {
-    double diff = previousMagneticHeading - magneticHeading;
-    if (diff > 180.0f) {
-      magneticHeading += 360.0f;
-    } else if (diff < -180.0f) {
-      magneticHeading -= 360.f;
-    }
-    return magneticHeading;
-  }
-
   /**
    * Internal method being used to calculate the time duration for the location change animator.
    *
@@ -599,6 +606,7 @@ public class LocationLayerPlugin implements LocationEngineListener, CompassListe
     // calculate updateLatLng time + add some extra offset to improve animation
     long previousUpdateTimeStamp = locationUpdateTimestamp;
     locationUpdateTimestamp = SystemClock.elapsedRealtime();
-    return (locationUpdateTimestamp - previousUpdateTimeStamp);
+    long duration = locationUpdateTimestamp - previousUpdateTimeStamp;
+    return duration < MAX_ANIMATION_DURATION_MS ? duration : MAX_ANIMATION_DURATION_MS;
   }
 }
