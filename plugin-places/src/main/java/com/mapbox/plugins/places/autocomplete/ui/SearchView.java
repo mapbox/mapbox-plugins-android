@@ -13,6 +13,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.mapbox.places.R;
@@ -25,8 +26,8 @@ public class SearchView extends LinearLayout implements ImageButton.OnClickListe
   @Nullable
   private QueryListener queryListener;
 
-  private final ImageButton backButton;
-  private final ImageButton clearButton;
+  private final ImageView backButton;
+  private final ImageView clearButton;
   private final EditText searchEditText;
 
   public SearchView(@NonNull Context context) {
