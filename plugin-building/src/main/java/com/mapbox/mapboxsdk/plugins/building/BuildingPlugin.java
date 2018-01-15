@@ -1,4 +1,4 @@
-package com.mapbox.androidsdk.plugins.building;
+package com.mapbox.mapboxsdk.plugins.building;
 
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
@@ -6,26 +6,29 @@ import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.mapbox.mapboxsdk.constants.MapboxConstants;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.functions.Function;
-import com.mapbox.mapboxsdk.style.functions.stops.Stop;
-import com.mapbox.mapboxsdk.style.functions.stops.Stops;
 import com.mapbox.mapboxsdk.style.layers.FillExtrusionLayer;
-import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.light.Light;
 
+import static com.mapbox.mapboxsdk.constants.MapboxConstants.MAXIMUM_ZOOM;
+import static com.mapbox.mapboxsdk.constants.MapboxConstants.MINIMUM_ZOOM;
+import static com.mapbox.mapboxsdk.style.functions.stops.Stop.stop;
+import static com.mapbox.mapboxsdk.style.functions.stops.Stops.exponential;
+import static com.mapbox.mapboxsdk.style.layers.Property.NONE;
+import static com.mapbox.mapboxsdk.style.layers.Property.VISIBLE;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillExtrusionColor;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillExtrusionHeight;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillExtrusionOpacity;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
 
 /**
- * The building plugin allows to add 3d buildings FillExtrusionLayer to the Mapbox Maps SDK for Android v5.1.0.
+ * The building plugin allows you to add 3d buildings FillExtrusionLayer to the Mapbox Maps SDK for
+ * Android v5.1.0.
  * <p>
- * Initialise this plugin in the {@link com.mapbox.mapboxsdk.maps.OnMapReadyCallback#onMapReady(MapboxMap)} and provide
- * a valid instance of {@link MapView} and {@link MapboxMap}.
+ * Initialise this plugin in the {@link com.mapbox.mapboxsdk.maps.OnMapReadyCallback#onMapReady(MapboxMap)}
+ * and provide a valid instance of {@link MapView} and {@link MapboxMap}.
  * </p>
  * <ul>
  * <li>Use {@link #setVisibility(boolean)}} to show buildings from this plugin.</li>
@@ -38,7 +41,7 @@ public final class BuildingPlugin {
   private static final String LAYER_ID = "mapbox-android-plugin-3d-buildings";
 
   private FillExtrusionLayer fillExtrusionLayer;
-  private boolean visible = false;
+  private boolean visible;
   private int color = Color.LTGRAY;
   private float opacity = 0.6f;
   private float minZoomLevel = 15.0f;
@@ -88,14 +91,14 @@ public final class BuildingPlugin {
     fillExtrusionLayer.setSourceLayer("building");
     fillExtrusionLayer.setMinZoom(minZoomLevel);
     fillExtrusionLayer.setProperties(
-      visibility(visible ? Property.VISIBLE : Property.NONE),
+      visibility(visible ? VISIBLE : NONE),
       fillExtrusionColor(color),
       fillExtrusionHeight(Function.composite(
         "height",
-        Stops.exponential(
-          Stop.stop(15f, 0f, fillExtrusionHeight(0f)),
-          Stop.stop(16f, 0f, fillExtrusionHeight(0f)),
-          Stop.stop(16f, 1000f, fillExtrusionHeight(1000f))
+        exponential(
+          stop(15f, 0f, fillExtrusionHeight(0f)),
+          stop(16f, 0f, fillExtrusionHeight(0f)),
+          stop(16f, 1000f, fillExtrusionHeight(1000f))
         ))),
       fillExtrusionOpacity(opacity)
     );
@@ -118,7 +121,7 @@ public final class BuildingPlugin {
    */
   public void setVisibility(boolean visible) {
     this.visible = visible;
-    fillExtrusionLayer.setProperties(visibility(visible ? Property.VISIBLE : Property.NONE));
+    fillExtrusionLayer.setProperties(visibility(visible ? VISIBLE : NONE));
   }
 
   /**
@@ -144,14 +147,14 @@ public final class BuildingPlugin {
   }
 
   /**
-   * Change the building min zoom level. This is the minimum zoom level where buildings will start to show. useful to
-   * limit showing buildings at higher zoom levels.
+   * Change the building min zoom level. This is the minimum zoom level where buildings will start
+   * to show. useful to limit showing buildings at higher zoom levels.
    *
-   * @param minZoomLevel a {@code float} value between the maps minimum and maximum zoom level which defines at which
-   *                     level the buildings should show up
+   * @param minZoomLevel a {@code float} value between the maps minimum and maximum zoom level which
+   *                     defines at which level the buildings should show up
    * @since 0.1.0
    */
-  public void setMinZoomLevel(@FloatRange(from = MapboxConstants.MINIMUM_ZOOM, to = MapboxConstants.MAXIMUM_ZOOM)
+  public void setMinZoomLevel(@FloatRange(from = MINIMUM_ZOOM, to = MAXIMUM_ZOOM)
                                 float minZoomLevel) {
     this.minZoomLevel = minZoomLevel;
     fillExtrusionLayer.setMinZoom(minZoomLevel);
