@@ -44,6 +44,7 @@ import static com.mapbox.mapboxsdk.style.functions.Function.zoom;
 import static com.mapbox.mapboxsdk.style.functions.stops.Stop.stop;
 import static com.mapbox.mapboxsdk.style.functions.stops.Stops.exponential;
 import static com.mapbox.mapboxsdk.style.layers.Property.ICON_ROTATION_ALIGNMENT_MAP;
+import static com.mapbox.mapboxsdk.style.layers.Property.ICON_ROTATION_ALIGNMENT_VIEWPORT;
 import static com.mapbox.mapboxsdk.style.layers.Property.NONE;
 import static com.mapbox.mapboxsdk.style.layers.Property.VISIBLE;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleColor;
@@ -54,6 +55,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeColo
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconKeepUpright;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotate;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotationAlignment;
@@ -244,7 +246,8 @@ final class LocationLayer {
   private void styleForeground(Drawable foregroundDrawable) {
     mapboxMap.addImage(LOCATION_ICON, getBitmapFromDrawable(foregroundDrawable));
     layerMap.get(FOREGROUND_LAYER).setProperties(
-      iconImage(LOCATION_ICON));
+      iconImage(LOCATION_ICON),
+      iconRotate(90f));
   }
 
   private void styleNavigation(Drawable navigationDrawable) {
@@ -272,6 +275,11 @@ final class LocationLayer {
       iconOffset(new Float[] {0f, (float) (-0.05 * tilt)}));
     layerMap.get(SHADOW_LAYER).setProperties(
       iconOffset(new Float[] {0f, (float) (0.05 * tilt)}));
+  }
+
+  void updateForegroundBearing(float bearing) {
+    layerMap.get(FOREGROUND_LAYER).setProperties(iconRotate(bearing));
+    layerMap.get(SHADOW_LAYER).setProperties(iconRotate(bearing));
   }
 
   //

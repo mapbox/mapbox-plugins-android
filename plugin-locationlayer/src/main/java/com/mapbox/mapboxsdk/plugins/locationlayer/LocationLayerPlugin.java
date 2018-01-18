@@ -29,13 +29,9 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.ACCURACY_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.BEARING_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.COMPASS_UPDATE_RATE_MS;
-import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.FOREGROUND_LAYER;
-import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.LOCATION_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.MAX_ANIMATION_DURATION_MS;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.NAVIGATION_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.shortestRotation;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 
 /**
  * The Location layer plugin provides location awareness to your mobile application. Enabling this
@@ -501,6 +497,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   public void onCameraMove() {
     locationLayer.updateAccuracyRadius(location);
     locationLayer.updateForegroundOffset(mapboxMap.getCameraPosition().tilt);
+    locationLayer.updateForegroundBearing((float) mapboxMap.getCameraPosition().bearing);
   }
 
   /**
