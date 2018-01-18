@@ -65,16 +65,15 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   private int locationLayerMode;
 
   // Previous compass and location values
-  private Location lastLocation;
   private float previousMagneticHeading;
   private Point previousPoint;
+  private Location location;
 
   // Animators
   private ValueAnimator locationChangeAnimator;
   private ValueAnimator bearingChangeAnimator;
 
   private long locationUpdateTimestamp;
-  private Location location;
   private boolean linearAnimation;
 
   private OnLocationLayerClickListener onLocationLayerClickListener;
@@ -421,7 +420,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   @Nullable
   public Location getLastKnownLocation() {
-    return lastLocation;
+    return location;
   }
 
   /**
@@ -495,6 +494,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
 
   @Override
   public void onCameraMove() {
+    System.out.println(location != null ? location.getAccuracy() : 0);
     locationLayer.updateAccuracyRadius(location);
     locationLayer.updateForegroundOffset(mapboxMap.getCameraPosition().tilt);
     locationLayer.updateForegroundBearing((float) mapboxMap.getCameraPosition().bearing);
@@ -507,7 +507,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    * @since 0.1.0
    */
   private void setLocation(final Location location) {
-    lastLocation = location;
+    this.location = location;
 
     // Convert the new location to a Point object.
     Point newPoint = Point.fromCoordinates(new double[] {location.getLongitude(),

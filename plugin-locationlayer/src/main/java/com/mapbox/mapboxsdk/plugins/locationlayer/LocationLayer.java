@@ -44,7 +44,6 @@ import static com.mapbox.mapboxsdk.style.functions.Function.zoom;
 import static com.mapbox.mapboxsdk.style.functions.stops.Stop.stop;
 import static com.mapbox.mapboxsdk.style.functions.stops.Stops.exponential;
 import static com.mapbox.mapboxsdk.style.layers.Property.ICON_ROTATION_ALIGNMENT_MAP;
-import static com.mapbox.mapboxsdk.style.layers.Property.ICON_ROTATION_ALIGNMENT_VIEWPORT;
 import static com.mapbox.mapboxsdk.style.layers.Property.NONE;
 import static com.mapbox.mapboxsdk.style.layers.Property.VISIBLE;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleColor;
@@ -55,7 +54,6 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeColo
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconKeepUpright;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotate;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotationAlignment;
