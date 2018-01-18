@@ -429,11 +429,13 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   private void stopAllAnimations() {
     if (locationChangeAnimator != null) {
-      locationChangeAnimator.removeAllUpdateListeners();
+      locationChangeAnimator.removeAllListeners();
+      locationChangeAnimator.cancel();
       locationChangeAnimator = null;
     }
     if (bearingChangeAnimator != null) {
-      bearingChangeAnimator.removeAllUpdateListeners();
+      bearingChangeAnimator.removeAllListeners();
+      bearingChangeAnimator.cancel();
       bearingChangeAnimator = null;
     }
   }
