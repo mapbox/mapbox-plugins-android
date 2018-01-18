@@ -147,7 +147,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
         locationEngine.addLocationEngineListener(this);
       }
 
-      mapboxMap.addOnCameraMoveListener(this);
+      addCameraListener();
 
       if (locationLayerMode == LocationLayerMode.COMPASS) {
         setLinearAnimation(false);
@@ -376,6 +376,14 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     // Currently don't handle this inside SDK
   }
 
+  private void addCameraListener() {
+    if (locationLayerMode == LocationLayerMode.NAVIGATION) {
+      mapboxMap.removeOnCameraMoveListener(this);
+      return;
+    }
+    mapboxMap.addOnCameraMoveListener(this);
+  }
+
   private void updateLocation(Location location) {
     this.location = location;
     if (location == null) {
@@ -494,7 +502,6 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
 
   @Override
   public void onCameraMove() {
-    System.out.println(location != null ? location.getAccuracy() : 0);
     locationLayer.updateAccuracyRadius(location);
     locationLayer.updateForegroundOffset(mapboxMap.getCameraPosition().tilt);
     locationLayer.updateForegroundBearing((float) mapboxMap.getCameraPosition().bearing);
