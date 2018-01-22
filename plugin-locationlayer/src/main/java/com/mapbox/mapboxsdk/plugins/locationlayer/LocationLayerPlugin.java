@@ -138,6 +138,10 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   @RequiresPermission(anyOf = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION})
   public void setLocationLayerEnabled(@LocationLayerMode.Mode int locationLayerMode) {
+    // Don't run through enabling layer if the mode is the same as current
+    if (this.locationLayerMode == locationLayerMode) {
+      return;
+    }
     if (locationLayerMode != LocationLayerMode.NONE) {
       locationLayer.setLayersVisibility(true);
 
@@ -162,10 +166,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
         setNavigationEnabled(false);
       }
     } else {
-      // Check that the mode isn't already none
-      if (this.locationLayerMode != LocationLayerMode.NONE) {
-        disableLocationLayerPlugin();
-      }
+      disableLocationLayerPlugin();
     }
     this.locationLayerMode = locationLayerMode;
   }
