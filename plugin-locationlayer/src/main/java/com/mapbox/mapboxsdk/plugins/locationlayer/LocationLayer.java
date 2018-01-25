@@ -13,7 +13,6 @@ import android.support.v4.content.ContextCompat;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.style.functions.Function;
 import com.mapbox.mapboxsdk.style.layers.CircleLayer;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.Property;
@@ -38,7 +37,10 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.LOCATION_SOURCE;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.NAVIGATION_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.PUCK_ICON;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.SHADOW_ICON;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.SHADOW_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.getBitmapFromDrawable;
+import static com.mapbox.mapboxsdk.style.functions.Function.zoom;
 import static com.mapbox.mapboxsdk.style.functions.stops.Stop.stop;
 import static com.mapbox.mapboxsdk.style.functions.stops.Stops.exponential;
 import static com.mapbox.mapboxsdk.style.layers.Property.ICON_ROTATION_ALIGNMENT_MAP;
@@ -49,10 +51,10 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleOpacity;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circlePitchAlignment;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleRadius;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeWidth;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotate;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotationAlignment;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
@@ -75,6 +77,7 @@ final class LocationLayer {
   }
 
   private void addLayers() {
+    addSymbolLayerToMap(SHADOW_LAYER, BACKGROUND_LAYER);
     addSymbolLayerToMap(BACKGROUND_LAYER, FOREGROUND_LAYER);
     addSymbolLayerToMap(FOREGROUND_LAYER, null);
     addSymbolLayerToMap(LocationLayerConstants.BEARING_LAYER, null);
@@ -90,6 +93,8 @@ final class LocationLayer {
     TypedArray typedArray = context.obtainStyledAttributes(styleRes, R.styleable.LocationLayer);
 
     try {
+      styleShadow(ContextCompat.getDrawable(context, R.drawable.mapbox_user_icon_shadow));
+
       int drawableResId = typedArray.getResourceId(R.styleable.LocationLayer_foregroundDrawable, -1);
       styleForeground(ContextCompat.getDrawable(context, drawableResId));
 
@@ -121,6 +126,7 @@ final class LocationLayer {
   //
 
   void setLayersVisibility(boolean visible) {
+    layerMap.get(SHADOW_LAYER).setProperties(visibility(visible ? VISIBLE : NONE));
     layerMap.get(FOREGROUND_LAYER).setProperties(visibility(visible ? VISIBLE : NONE));
     layerMap.get(BACKGROUND_LAYER).setProperties(visibility(visible ? VISIBLE : NONE));
     layerMap.get(BEARING_LAYER).setProperties(visibility(visible ? VISIBLE : NONE));
@@ -149,7 +155,7 @@ final class LocationLayer {
     SymbolLayer navigationLayer = new SymbolLayer(NAVIGATION_LAYER, LOCATION_SOURCE).withProperties(
       iconAllowOverlap(true),
       iconIgnorePlacement(true),
-      iconSize(Function.zoom(
+      iconSize(zoom(
         exponential(
           stop(22f, iconSize(1f)),
           stop(12f, iconSize(1f)),
@@ -163,7 +169,8 @@ final class LocationLayer {
   }
 
   private void addAccuracyLayer() {
-    CircleLayer locationAccuracyLayer = new CircleLayer(ACCURACY_LAYER, LOCATION_SOURCE);
+    CircleLayer locationAccuracyLayer = new CircleLayer(ACCURACY_LAYER, LOCATION_SOURCE)
+      .withProperties(circleRadius(0f));
     addLayerToMap(locationAccuracyLayer, BACKGROUND_LAYER);
   }
 
@@ -208,7 +215,13 @@ final class LocationLayer {
     layer.setProperties(
       iconAllowOverlap(true),
       iconIgnorePlacement(true),
-      iconRotationAlignment(ICON_ROTATION_ALIGNMENT_MAP)
+      iconRotationAlignment(ICON_ROTATION_ALIGNMENT_MAP),
+      iconSize(zoom(
+        exponential(
+          stop(16f, iconSize(1.2f)),
+          stop(0f, iconSize(1f))
+        )
+      ))
     );
     addLayerToMap(layer, beforeLayerId);
   }
@@ -219,12 +232,21 @@ final class LocationLayer {
 
   private void styleBackground(Drawable backgroundDrawable) {
     mapboxMap.addImage(BACKGROUND_ICON, getBitmapFromDrawable(backgroundDrawable));
-    layerMap.get(BACKGROUND_LAYER).setProperties(iconImage(BACKGROUND_ICON));
+    layerMap.get(BACKGROUND_LAYER).setProperties(
+      iconImage(BACKGROUND_ICON));
+  }
+
+  private void styleShadow(Drawable shadowDrawable) {
+    mapboxMap.addImage(SHADOW_ICON, getBitmapFromDrawable(shadowDrawable));
+    layerMap.get(SHADOW_LAYER).setProperties(
+      iconImage(SHADOW_ICON));
   }
 
   private void styleForeground(Drawable foregroundDrawable) {
     mapboxMap.addImage(LOCATION_ICON, getBitmapFromDrawable(foregroundDrawable));
-    layerMap.get(FOREGROUND_LAYER).setProperties(iconImage(LOCATION_ICON));
+    layerMap.get(FOREGROUND_LAYER).setProperties(
+      iconImage(LOCATION_ICON),
+      iconRotate(90f));
   }
 
   private void styleNavigation(Drawable navigationDrawable) {
@@ -234,7 +256,8 @@ final class LocationLayer {
 
   private void styleBearing(Drawable bearingDrawable) {
     mapboxMap.addImage(BEARING_ICON, getBitmapFromDrawable(bearingDrawable));
-    layerMap.get(BEARING_LAYER).setProperties(iconImage(BEARING_ICON));
+    layerMap.get(BEARING_LAYER).setProperties(
+      iconImage(BEARING_ICON));
   }
 
   private void styleAccuracy(float accuracyAlpha, @ColorInt int accuracyColor) {
@@ -242,9 +265,20 @@ final class LocationLayer {
       circleColor(accuracyColor),
       circleOpacity(accuracyAlpha),
       circlePitchAlignment(Property.CIRCLE_PITCH_ALIGNMENT_MAP),
-      circleStrokeWidth(0.5f),
       circleStrokeColor(accuracyColor)
     );
+  }
+
+  void updateForegroundOffset(double tilt) {
+    layerMap.get(FOREGROUND_LAYER).setProperties(
+      iconOffset(new Float[] {0f, (float) (-0.05 * tilt)}));
+    layerMap.get(SHADOW_LAYER).setProperties(
+      iconOffset(new Float[] {0f, (float) (0.05 * tilt)}));
+  }
+
+  void updateForegroundBearing(float bearing) {
+    layerMap.get(FOREGROUND_LAYER).setProperties(iconRotate(bearing));
+    layerMap.get(SHADOW_LAYER).setProperties(iconRotate(bearing));
   }
 
   //

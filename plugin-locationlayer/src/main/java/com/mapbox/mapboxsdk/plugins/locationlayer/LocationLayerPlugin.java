@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatDelegate;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
+import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapView.OnMapChangedListener;
@@ -65,16 +66,15 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   private int locationLayerMode;
 
   // Previous compass and location values
-  private Location lastLocation;
   private float previousMagneticHeading;
   private Point previousPoint;
+  private Location location;
 
   // Animators
   private ValueAnimator locationChangeAnimator;
   private ValueAnimator bearingChangeAnimator;
 
   private long locationUpdateTimestamp;
-  private Location location;
   private boolean linearAnimation;
 
   private OnLocationLayerClickListener onLocationLayerClickListener;
@@ -139,6 +139,10 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   @RequiresPermission(anyOf = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION})
   public void setLocationLayerEnabled(@LocationLayerMode.Mode int locationLayerMode) {
+    // Don't run through enabling layer if the mode is the same as current
+    if (this.locationLayerMode == locationLayerMode) {
+      return;
+    }
     if (locationLayerMode != LocationLayerMode.NONE) {
       locationLayer.setLayersVisibility(true);
 
@@ -148,7 +152,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
         locationEngine.addLocationEngineListener(this);
       }
 
-      mapboxMap.addOnCameraMoveListener(this);
+      toggleCameraListener();
 
       if (locationLayerMode == LocationLayerMode.COMPASS) {
         setLinearAnimation(false);
@@ -163,10 +167,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
         setNavigationEnabled(false);
       }
     } else {
-      // Check that the mode isn't already none
-      if (this.locationLayerMode != LocationLayerMode.NONE) {
-        disableLocationLayerPlugin();
-      }
+      disableLocationLayerPlugin();
     }
     this.locationLayerMode = locationLayerMode;
   }
@@ -377,6 +378,14 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     // Currently don't handle this inside SDK
   }
 
+  private void toggleCameraListener() {
+    if (locationLayerMode == LocationLayerMode.NAVIGATION) {
+      mapboxMap.removeOnCameraMoveListener(this);
+      return;
+    }
+    mapboxMap.addOnCameraMoveListener(this);
+  }
+
   private void updateLocation(Location location) {
     this.location = location;
     if (location == null) {
@@ -421,7 +430,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   @Nullable
   public Location getLastKnownLocation() {
-    return lastLocation;
+    return location;
   }
 
   /**
@@ -497,7 +506,10 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
 
   @Override
   public void onCameraMove() {
+    CameraPosition position = mapboxMap.getCameraPosition();
     locationLayer.updateAccuracyRadius(location);
+    locationLayer.updateForegroundOffset(position.tilt);
+    locationLayer.updateForegroundBearing((float) position.bearing);
   }
 
   /**
@@ -507,7 +519,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    * @since 0.1.0
    */
   private void setLocation(final Location location) {
-    lastLocation = location;
+    this.location = location;
 
     // Convert the new location to a Point object.
     Point newPoint = Point.fromCoordinates(new double[] {location.getLongitude(),
@@ -541,9 +553,12 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
 
     locationChangeAnimator = ValueAnimator.ofObject(new Utils.PointEvaluator(), currentSourcePoint,
       newPoint);
-    locationChangeAnimator.setDuration(linearAnimation || (location.getSpeed() > 0)
+
+    float speed = location == null ? 0 : location.getSpeed();
+
+    locationChangeAnimator.setDuration(linearAnimation || speed > 0
       ? getLocationUpdateDuration() : LocationLayerConstants.LOCATION_UPDATE_DELAY_MS);
-    if (linearAnimation || location.getSpeed() > 0) {
+    if (linearAnimation || speed > 0) {
       locationChangeAnimator.setInterpolator(new LinearInterpolator());
     } else {
       locationChangeAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
