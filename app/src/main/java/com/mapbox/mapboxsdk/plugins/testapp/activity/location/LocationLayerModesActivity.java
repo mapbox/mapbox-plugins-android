@@ -30,7 +30,7 @@ import butterknife.OnClick;
 public class LocationLayerModesActivity extends AppCompatActivity implements OnMapReadyCallback,
   LocationEngineListener, OnLocationLayerClickListener {
 
-  @BindView(R.id.mapView)
+  @BindView(R.id.map_view)
   MapView mapView;
 
   private LocationLayerPlugin locationLayerPlugin;

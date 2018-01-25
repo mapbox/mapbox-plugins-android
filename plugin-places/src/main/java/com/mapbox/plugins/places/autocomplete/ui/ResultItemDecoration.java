@@ -14,7 +14,7 @@ public class ResultItemDecoration extends RecyclerView.ItemDecoration {
   private Drawable divider;
 
   public ResultItemDecoration(Context context) {
-    divider = ContextCompat.getDrawable(context, R.drawable.list_line_divider);
+    divider = ContextCompat.getDrawable(context, R.drawable.mapbox_plugins_list_line_divider);
   }
 
   @Override

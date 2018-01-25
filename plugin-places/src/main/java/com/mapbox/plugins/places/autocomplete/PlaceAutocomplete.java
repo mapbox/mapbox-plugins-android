@@ -9,6 +9,7 @@ import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.plugins.places.autocomplete.data.SearchHistoryDatabase;
 import com.mapbox.plugins.places.autocomplete.model.PlaceOptions;
 import com.mapbox.plugins.places.autocomplete.ui.PlaceAutocompleteActivity;
+import com.mapbox.plugins.places.common.PlaceConstants;
 
 import java.util.ArrayList;
 
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 public final class PlaceAutocomplete {
 
   private PlaceAutocomplete() {
-    throw new AssertionError("No Instances.");
+    // No instances
   }
 
   /**

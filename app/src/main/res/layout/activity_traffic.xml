@@ -4,11 +4,10 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:id="@+id/coordinator_layout"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:orientation="vertical">
+  android:layout_height="match_parent">
 
   <com.mapbox.mapboxsdk.maps.MapView
-    android:id="@id/mapView"
+    android:id="@id/map_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:mapbox_cameraTargetLat="37.769145"
@@ -24,7 +23,7 @@
     android:layout_marginBottom="82dp"
     android:layout_marginEnd="16dp"
     android:layout_marginRight="16dp"
-    android:src="@drawable/ic_layers"
+    app:srcCompat="@drawable/ic_layers"
     android:tint="@android:color/white"
     app:backgroundTint="@color/colorAccent"
     app:layout_anchorGravity="top"/>
@@ -35,7 +34,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="end|bottom"
     android:layout_margin="16dp"
-    android:src="@drawable/ic_car"
+    app:srcCompat="@drawable/ic_car"
     android:tint="@android:color/white"
     app:backgroundTint="@color/colorPrimary"/>
 

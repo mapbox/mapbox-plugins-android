@@ -9,11 +9,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
-import com.mapbox.api.geocoding.v5.GeocodingCriteria.GeocodingTypeCriteria;
-import com.mapbox.api.geocoding.v5.models.CarmenFeature;
-import com.mapbox.core.utils.TextUtils;
+import com.mapbox.geocoding.v5.GeocodingCriteria.GeocodingTypeCriteria;
+import com.mapbox.geocoding.v5.models.CarmenFeature;
 import com.mapbox.geojson.Point;
-import com.mapbox.plugins.places.autocomplete.PlaceConstants;
+import com.mapbox.plugins.places.common.PlaceConstants;
+import com.mapbox.services.utils.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

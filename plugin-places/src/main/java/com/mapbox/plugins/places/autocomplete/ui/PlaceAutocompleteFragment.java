@@ -16,11 +16,11 @@ import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.api.geocoding.v5.models.GeocodingResponse;
 import com.mapbox.places.R;
 import com.mapbox.plugins.places.autocomplete.DataRepository;
-import com.mapbox.plugins.places.autocomplete.PlaceConstants;
+import com.mapbox.plugins.places.common.PlaceConstants;
 import com.mapbox.plugins.places.autocomplete.data.entity.SearchHistoryEntity;
 import com.mapbox.plugins.places.autocomplete.model.PlaceOptions;
 import com.mapbox.plugins.places.autocomplete.viewmodel.PlaceAutocompleteViewModel;
-import com.mapbox.plugins.places.common.KeyboardUtils;
+import com.mapbox.plugins.places.common.utils.KeyboardUtils;
 
 import java.util.List;
 
@@ -75,8 +75,8 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
 
     mode = placeOptions.viewMode();
     rootView = inflater.inflate(
-      mode == PlaceOptions.MODE_CARDS ? R.layout.fragment_autocomplete_card
-        : R.layout.fragment_autocomplete_full,
+      mode == PlaceOptions.MODE_CARDS ? R.layout.mapbox_plugins_fragment_autocomplete_card
+        : R.layout.mapbox_plugins_fragment_autocomplete_full,
       container, false);
 
     bindViews();
@@ -102,7 +102,7 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
 
       searchView = rootView.findViewById(R.id.searchView);
       searchView.setHint(placeOptions.hint() == null
-        ? getString(R.string.autocomplete_search_hint) : placeOptions.hint());
+        ? getString(R.string.mapbox_plugins_autocomplete_search_hint) : placeOptions.hint());
     }
   }
 

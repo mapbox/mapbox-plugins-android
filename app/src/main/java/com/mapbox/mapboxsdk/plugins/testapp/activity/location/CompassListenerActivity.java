@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 
 public class CompassListenerActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-  @BindView(R.id.mapView)
+  @BindView(R.id.map_view)
   MapView mapView;
 
   private LocationLayerPlugin locationLayerPlugin;
@@ -31,7 +31,7 @@ public class CompassListenerActivity extends AppCompatActivity implements OnMapR
     setContentView(R.layout.activity_compass_listener);
     ButterKnife.bind(this);
 
-    mapView = (MapView) findViewById(R.id.mapView);
+    mapView = (MapView) findViewById(R.id.map_view);
     mapView.onCreate(savedInstanceState);
     mapView.getMapAsync(this);
   }

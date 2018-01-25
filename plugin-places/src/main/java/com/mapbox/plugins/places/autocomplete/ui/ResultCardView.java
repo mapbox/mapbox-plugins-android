@@ -23,6 +23,6 @@ public class ResultCardView extends ResultView {
 
   @Override
   void inflateView(Context context) {
-    inflate(context, R.layout.view_card_results, this);
+    inflate(context, R.layout.mapbox_plugins_view_card_results, this);
   }
 }

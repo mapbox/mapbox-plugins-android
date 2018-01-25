@@ -28,7 +28,7 @@
     tools:layout_conversion_absoluteWidth="108dp">
 
     <include
-      layout="@layout/view_results"
+      layout="@layout/mapbox_plugins_view_results"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       tools:layout_conversion_absoluteHeight="540dp"

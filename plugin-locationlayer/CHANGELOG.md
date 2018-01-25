@@ -2,7 +2,12 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-### 0.3.0 - December 1, 2017
+### 0.4.0 - TBD
+- Assets have be updated and added a 3D effect []()
+- Fixed issue with accuracy ring being initialized with value greater than zero []()
+- `lastLocation()` now returns the location variable directly []()
+
+### 0.3.0 - December 22, 2017
 - Change accuracy ring from fill layer to a circle layer [#186](https://github.com/mapbox/mapbox-plugins-android/pull/186)
 - Adds last known location API [#199](https://github.com/mapbox/mapbox-plugins-android/pull/199)
 - Adds location layer icon click listener [#198](https://github.com/mapbox/mapbox-plugins-android/pull/198)
@@ -15,4 +20,3 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### 0.1.0 - July 17, 2017
 - Initial release as a standalone package.
-

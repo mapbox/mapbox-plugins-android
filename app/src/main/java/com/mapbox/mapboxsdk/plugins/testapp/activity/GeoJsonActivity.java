@@ -40,7 +40,7 @@ import timber.log.Timber;
  */
 public class GeoJsonActivity extends AppCompatActivity implements OnMapReadyCallback, FileChooserDialog.FileCallback,
   OnLoadingGeoJsonListener, OnMarkerEventListener {
-  @BindView(R.id.mapView)
+  @BindView(R.id.map_view)
   MapView mapView;
   @BindView(R.id.fabURL)
   FloatingActionButton urlFab;

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <dimen name="mapbox_plugins_text_left_margin">72dp</dimen>
+  <dimen name="mapbox_plugins_toolbar_primary_text">20sp</dimen>
+  <dimen name="mapbox_plugins_toolbar_secondary_text">14sp</dimen>
+  <dimen name="mapbox_plugins_image_view_left_margin">16dp</dimen>
+  <dimen name="mapbox_plugins_extended_toolbar_height">78dp</dimen>
+</resources>

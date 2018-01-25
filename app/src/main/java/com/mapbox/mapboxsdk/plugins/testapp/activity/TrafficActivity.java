@@ -21,7 +21,7 @@ import timber.log.Timber;
  */
 public class TrafficActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-  @BindView(R.id.mapView)
+  @BindView(R.id.map_view)
   MapView mapView;
 
   @BindView(R.id.fabStyles)

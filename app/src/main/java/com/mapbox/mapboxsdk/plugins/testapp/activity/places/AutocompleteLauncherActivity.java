@@ -26,7 +26,7 @@ public class AutocompleteLauncherActivity extends AppCompatActivity {
 
   private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
 
-  @BindView(R.id.mapView)
+  @BindView(R.id.map_view)
   MapView mapView;
 
   private CarmenFeature home;

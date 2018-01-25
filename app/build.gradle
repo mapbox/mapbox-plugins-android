@@ -9,6 +9,7 @@ android {
     targetSdkVersion androidVersions.targetSdkVersion
     applicationId "com.mapbox.mapboxsdk.plugins.testapp"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    vectorDrawables.useSupportLibrary = true
   }
 
   buildTypes {

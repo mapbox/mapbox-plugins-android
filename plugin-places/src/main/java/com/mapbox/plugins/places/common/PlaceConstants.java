@@ -1,4 +1,4 @@
-package com.mapbox.plugins.places.autocomplete;
+package com.mapbox.plugins.places.common;
 
 public final class PlaceConstants {
 

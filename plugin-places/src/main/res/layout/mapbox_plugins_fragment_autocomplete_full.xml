@@ -45,7 +45,7 @@
       android:id="@+id/scroll_drop_shadow"
       android:layout_width="match_parent"
       android:layout_height="0dp"
-      android:background="@drawable/scroll_shadow"
+      android:background="@drawable/mapbox_plugins_scroll_shadow"
       android:visibility="invisible"/>
 
     <ScrollView

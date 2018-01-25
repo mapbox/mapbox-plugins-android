@@ -23,7 +23,7 @@ import butterknife.OnClick;
 
 public class LocationLayerMapChangeActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-  @BindView(R.id.mapView)
+  @BindView(R.id.map_view)
   MapView mapView;
   @BindView(R.id.fabStyles)
   FloatingActionButton stylesFab;
