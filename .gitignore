@@ -6,3 +6,4 @@
 build/
 /captures
 .externalNativeBuild
+/app/src/main/res/values/developer-config.xml

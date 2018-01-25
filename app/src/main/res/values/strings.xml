@@ -1,5 +1,5 @@
-<resources>
-    <string name="app_name">Mapbox Android Plugins</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" tools:ignore="PrivateResource">Map Plugins</string>
 
     <!-- Categories -->
     <string name="category">category</string>
