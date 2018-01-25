@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatDelegate;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
+import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapView.OnMapChangedListener;
@@ -151,7 +152,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
         locationEngine.addLocationEngineListener(this);
       }
 
-      addCameraListener();
+      toggleCameraListener();
 
       if (locationLayerMode == LocationLayerMode.COMPASS) {
         setLinearAnimation(false);
@@ -377,7 +378,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     // Currently don't handle this inside SDK
   }
 
-  private void addCameraListener() {
+  private void toggleCameraListener() {
     if (locationLayerMode == LocationLayerMode.NAVIGATION) {
       mapboxMap.removeOnCameraMoveListener(this);
       return;
@@ -503,9 +504,10 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
 
   @Override
   public void onCameraMove() {
+    CameraPosition position = mapboxMap.getCameraPosition();
     locationLayer.updateAccuracyRadius(location);
-    locationLayer.updateForegroundOffset(mapboxMap.getCameraPosition().tilt);
-    locationLayer.updateForegroundBearing((float) mapboxMap.getCameraPosition().bearing);
+    locationLayer.updateForegroundOffset(position.tilt);
+    locationLayer.updateForegroundBearing((float) position.bearing);
   }
 
   /**
