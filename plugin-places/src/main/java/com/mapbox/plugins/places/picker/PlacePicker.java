@@ -3,6 +3,7 @@ package com.mapbox.plugins.places.picker;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.mapbox.geocoding.v5.models.CarmenFeature;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -15,9 +16,20 @@ public class PlacePicker {
     // No instances
   }
 
-  public static CarmenFeature getPlace() {
-
-    return null;
+  /**
+   * Returns the {@link CarmenFeature} selected by the user.
+   *
+   * @param data the result Intent that was provided in
+   *             {@link Activity#onActivityResult(int, int, Intent)}
+   * @return the users selected {@link CarmenFeature}
+   */
+  @Nullable
+  public static CarmenFeature getPlace(Intent data) {
+    String json = data.getStringExtra(PlaceConstants.RETURNING_CARMEN_FEATURE);
+    if (json == null) {
+      return null;
+    }
+    return CarmenFeature.fromJson(json);
   }
 
   public static CameraPosition getLastCameraPosition() {

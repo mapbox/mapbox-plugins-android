@@ -24,6 +24,8 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.places.R;
 import com.mapbox.plugins.places.common.PlaceConstants;
 import com.mapbox.plugins.places.common.utils.ColorUtils;
+import com.mapbox.plugins.places.picker.PlacePicker;
+import com.mapbox.plugins.places.picker.PlacePicker.IntentBuilder;
 import com.mapbox.plugins.places.picker.viewmodel.PlacePickerViewModel;
 
 import java.util.Locale;
@@ -32,16 +34,22 @@ import timber.log.Timber;
 
 import static android.support.design.widget.Snackbar.LENGTH_LONG;
 
+/**
+ * Do not use this class directly, instead create an intent using the {@link IntentBuilder} inside
+ * the {@link PlacePicker} class.
+ *
+ * @since 0.2.0
+ */
 public class PlacePickerActivity extends AppCompatActivity implements OnMapReadyCallback,
   MapboxMap.OnCameraMoveStartedListener, MapboxMap.OnCameraIdleListener, Observer<CarmenFeature> {
 
-  private MapboxMap mapboxMap;
-  private MapView mapView;
   private CurrentPlaceSelectionBottomSheet bottomSheet;
-  private String accessToken;
   private PlacePickerViewModel viewModel;
-  private ImageView markerImage;
   private CarmenFeature carmenFeature;
+  private ImageView markerImage;
+  private MapboxMap mapboxMap;
+  private String accessToken;
+  private MapView mapView;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
