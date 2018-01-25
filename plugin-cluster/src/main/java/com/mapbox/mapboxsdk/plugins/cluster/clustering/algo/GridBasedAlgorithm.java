@@ -78,14 +78,12 @@ public class GridBasedAlgorithm<T extends ClusterItem> implements Algorithm<T> {
   }
 
   @Override
-  public void setMaxDistanceBetweenClusteredItems(int maxDistance)
-  {
+  public void setMaxDistanceBetweenClusteredItems(int maxDistance) {
     mGridSize = maxDistance;
   }
 
   @Override
-  public int getMaxDistanceBetweenClusteredItems()
-  {
+  public int getMaxDistanceBetweenClusteredItems() {
     return mGridSize;
   }
 

@@ -149,14 +149,12 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
   }
 
   @Override
-  public void setMaxDistanceBetweenClusteredItems(int maxDistance)
-  {
+  public void setMaxDistanceBetweenClusteredItems(int maxDistance) {
     mMaxDistance = maxDistance;
   }
 
   @Override
-  public int getMaxDistanceBetweenClusteredItems()
-  {
+  public int getMaxDistanceBetweenClusteredItems() {
     return mMaxDistance;
   }
 
