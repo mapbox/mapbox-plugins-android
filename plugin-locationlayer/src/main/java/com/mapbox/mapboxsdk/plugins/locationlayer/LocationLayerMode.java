@@ -10,7 +10,11 @@ import java.lang.annotation.RetentionPolicy;
  *
  * @since 0.1.0
  */
-public class LocationLayerMode {
+public final class LocationLayerMode {
+
+  private LocationLayerMode() {
+    // Class should not be initialized
+  }
 
   /**
    * One of these constants should be used when
@@ -22,7 +26,7 @@ public class LocationLayerMode {
    */
   @IntDef( {NONE, COMPASS, NAVIGATION, TRACKING})
   @Retention(RetentionPolicy.SOURCE)
-  public @interface Mode {
+  @interface Mode {
   }
 
   /**

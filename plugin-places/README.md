@@ -41,7 +41,7 @@ dependencies {
 
 ## Places plugin examples
 
-- [In this repo's test app](https://github.com/mapbox/mapbox-plugins-android/blob/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/AutocompleteLauncherActivity.java)
+- [In this repo's test app](https://github.com/mapbox/mapbox-plugins-android/tree/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/places)
 
 ## Help and Usage
 
