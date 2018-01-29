@@ -25,6 +25,8 @@ import com.mapbox.services.android.telemetry.location.LocationEngine;
 import com.mapbox.services.android.telemetry.location.LocationEngineListener;
 import com.mapbox.services.commons.geojson.Point;
 
+import timber.log.Timber;
+
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.ACCURACY_LAYER;
@@ -53,7 +55,8 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.shortestRotation;
  * @since 0.1.0
  */
 public final class LocationLayerPlugin implements LocationEngineListener, CompassListener,
-  OnMapChangedListener, LifecycleObserver, OnCameraMoveListener, OnMapClickListener {
+  OnMapChangedListener, LifecycleObserver, OnCameraMoveListener, OnMapClickListener,
+  OnLocationStaleListener {
 
   private LocationLayer locationLayer;
   private CompassManager compassManager;
@@ -119,6 +122,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     locationLayerMode = LocationLayerMode.NONE;
     locationLayer = new LocationLayer(mapView, mapboxMap, styleRes);
     compassManager = new CompassManager(mapView.getContext(), this);
+    StaleStateRunnable.getInstance().addOnLocationStaleListener(this);
   }
 
   /**
@@ -191,6 +195,12 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     }
   }
 
+  @Override
+  public void isLocationStale(boolean stale) {
+    Timber.v("isLocationStale: %b", stale);
+    locationLayer.locationsStale(stale);
+  }
+
   /**
    * Apply a new Location Layer style after the {@link LocationLayerPlugin} has been constructed.
    *
@@ -250,6 +260,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
   public void onStop() {
+    StaleStateRunnable.getInstance().onStop();
     stopAllAnimations();
     if (compassManager != null && compassManager.isSensorAvailable()) {
       compassManager.onStop();
@@ -338,7 +349,8 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    * Adds a listener that gets invoked when the user clicks the location layer.
    *
    * @param locationClickListener The location layer click listener that is invoked when the
-   *                              location layer is clicked.
+   *                              location layer is clicked
+   * @since 0.3.0
    */
   public void setOnLocationClickListener(
     @Nullable OnLocationLayerClickListener locationClickListener) {
@@ -346,6 +358,10 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     if (onLocationLayerClickListener != null) {
       mapboxMap.addOnMapClickListener(this);
     }
+  }
+
+  public void setDelayTillStaleLocation(long timeInMilliseconds) {
+    StaleStateRunnable.getInstance().setDelayTime(timeInMilliseconds);
   }
 
   @Override
@@ -520,6 +536,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   private void setLocation(final Location location) {
     this.location = location;
+    StaleStateRunnable.getInstance().updateLatestLocationTime();
 
     // Convert the new location to a Point object.
     Point newPoint = Point.fromCoordinates(new double[] {location.getLongitude(),

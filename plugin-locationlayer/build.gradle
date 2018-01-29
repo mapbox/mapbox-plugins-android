@@ -23,9 +23,7 @@ android {
 dependencies {
   implementation dependenciesList.supportAppcompatV7
 
-  implementation(dependenciesList.mapboxMapSdk) {
-    transitive = true
-  }
+  implementation dependenciesList.mapboxMapSdk
 
   // Timber
   implementation dependenciesList.timber
