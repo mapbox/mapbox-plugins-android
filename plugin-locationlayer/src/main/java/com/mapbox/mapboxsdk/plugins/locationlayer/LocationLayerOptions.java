@@ -62,56 +62,56 @@ public abstract class LocationLayerOptions implements Parcelable {
                                                           @StyleRes int styleRes) {
 
     final TypedArray typedArray = context.obtainStyledAttributes(
-      styleRes, R.styleable.LocationLayer);
+      styleRes, R.styleable.mapbox_LocationLayer);
 
     LocationLayerOptions.Builder builder = builder();
 
     builder.foregroundDrawable(typedArray.getResourceId(
-      R.styleable.LocationLayer_foregroundDrawable, -1));
-    if (typedArray.hasValue(R.styleable.LocationLayer_foregroundTintColor)) {
+      R.styleable.mapbox_LocationLayer_mapbox_foregroundDrawable, -1));
+    if (typedArray.hasValue(R.styleable.mapbox_LocationLayer_mapbox_foregroundTintColor)) {
       builder.foregroundTintColor(typedArray.getColor(
-        R.styleable.LocationLayer_foregroundTintColor, -1));
+        R.styleable.mapbox_LocationLayer_mapbox_foregroundTintColor, -1));
     }
     builder.backgroundDrawable(typedArray.getResourceId(
-      R.styleable.LocationLayer_backgroundDrawable, -1));
-    if (typedArray.hasValue(R.styleable.LocationLayer_backgroundTintColor)) {
+      R.styleable.mapbox_LocationLayer_mapbox_backgroundDrawable, -1));
+    if (typedArray.hasValue(R.styleable.mapbox_LocationLayer_mapbox_backgroundTintColor)) {
       builder.backgroundTintColor(typedArray.getColor(
-        R.styleable.LocationLayer_backgroundTintColor, -1));
+        R.styleable.mapbox_LocationLayer_mapbox_backgroundTintColor, -1));
     }
     builder.foregroundDrawableStale(typedArray.getResourceId(
-      R.styleable.LocationLayer_foregroundDrawableStale, -1));
-    if (typedArray.hasValue(R.styleable.LocationLayer_foregroundStaleTintColor)) {
+      R.styleable.mapbox_LocationLayer_mapbox_foregroundDrawableStale, -1));
+    if (typedArray.hasValue(R.styleable.mapbox_LocationLayer_mapbox_foregroundStaleTintColor)) {
       builder.foregroundStaleTintColor(typedArray.getColor(
-        R.styleable.LocationLayer_foregroundStaleTintColor, -1));
+        R.styleable.mapbox_LocationLayer_mapbox_foregroundStaleTintColor, -1));
     }
     builder.backgroundDrawableStale(typedArray.getResourceId(
-      R.styleable.LocationLayer_backgroundDrawableStale, -1));
-    if (typedArray.hasValue(R.styleable.LocationLayer_backgroundStaleTintColor)) {
+      R.styleable.mapbox_LocationLayer_mapbox_backgroundDrawableStale, -1));
+    if (typedArray.hasValue(R.styleable.mapbox_LocationLayer_mapbox_backgroundStaleTintColor)) {
       builder.backgroundStaleTintColor(typedArray.getColor(
-        R.styleable.LocationLayer_backgroundStaleTintColor, -1));
+        R.styleable.mapbox_LocationLayer_mapbox_backgroundStaleTintColor, -1));
     }
     builder.bearingDrawable(typedArray.getResourceId(
-      R.styleable.LocationLayer_bearingDrawable, -1));
-    if (typedArray.hasValue(R.styleable.LocationLayer_bearingTintColor)) {
+      R.styleable.mapbox_LocationLayer_mapbox_bearingDrawable, -1));
+    if (typedArray.hasValue(R.styleable.mapbox_LocationLayer_mapbox_bearingTintColor)) {
       builder.bearingTintColor(typedArray.getColor(
-        R.styleable.LocationLayer_bearingTintColor, -1));
+        R.styleable.mapbox_LocationLayer_mapbox_bearingTintColor, -1));
     }
-    if (typedArray.hasValue(R.styleable.LocationLayer_enableStaleState)) {
+    if (typedArray.hasValue(R.styleable.mapbox_LocationLayer_mapbox_enableStaleState)) {
       builder.enableStaleState(typedArray.getBoolean(
-        R.styleable.LocationLayer_enableStaleState, true));
+        R.styleable.mapbox_LocationLayer_mapbox_enableStaleState, true));
     }
-    if (typedArray.hasValue(R.styleable.LocationLayer_staleStateDelay)) {
+    if (typedArray.hasValue(R.styleable.mapbox_LocationLayer_mapbox_staleStateDelay)) {
       builder.staleStateDelay(typedArray.getInteger(
-        R.styleable.LocationLayer_staleStateDelay, (int) STALE_STATE_DELAY_MS));
+        R.styleable.mapbox_LocationLayer_mapbox_staleStateDelay, (int) STALE_STATE_DELAY_MS));
     }
     builder.navigationDrawable(typedArray.getResourceId(
-      R.styleable.LocationLayer_navigationDrawable, -1));
+      R.styleable.mapbox_LocationLayer_mapbox_navigationDrawable, -1));
     float elevation = typedArray.getDimension(
-      R.styleable.LocationLayer_elevation, 0);
+      R.styleable.mapbox_LocationLayer_mapbox_elevation, 0);
     builder.accuracyColor(typedArray.getColor(
-      R.styleable.LocationLayer_accuracyColor, -1));
+      R.styleable.mapbox_LocationLayer_mapbox_accuracyColor, -1));
     builder.accuracyAlpha(typedArray.getFloat(
-      R.styleable.LocationLayer_accuracyAlpha, ACCURACY_ALPHA_DEFAULT));
+      R.styleable.mapbox_LocationLayer_mapbox_accuracyAlpha, ACCURACY_ALPHA_DEFAULT));
     builder.elevation(elevation);
 
     typedArray.recycle();
@@ -141,7 +141,8 @@ public abstract class LocationLayerOptions implements Parcelable {
    * @since 0.4.0
    */
   public static Builder builder(Context context) {
-    return LocationLayerOptions.createFromAttributes(context, R.style.LocationLayer).toBuilder();
+    return LocationLayerOptions.createFromAttributes(context,
+      R.style.mapbox_LocationLayer).toBuilder();
   }
 
   // Internal builder

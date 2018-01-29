@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <public name="mapbox_foregroundDrawable" format="reference" type="attr"/>
+  <public name="mapbox_foregroundTintColor" format="color" type="attr"/>
+  <public name="mapbox_backgroundDrawable" format="reference" type="attr"/>
+  <public name="mapbox_backgroundTintColor" format="color" type="attr"/>
+  <public name="mapbox_bearingDrawable" format="reference" type="attr"/>
+  <public name="mapbox_bearingTintColor" format="color" type="attr"/>
+  <public name="mapbox_navigationDrawable" format="reference" type="attr"/>
+
+  <public name="mapbox_foregroundDrawableStale" format="reference" type="attr"/>
+  <public name="mapbox_foregroundStaleTintColor" format="color" type="attr"/>
+  <public name="mapbox_backgroundDrawableStale" format="reference" type="attr"/>
+  <public name="mapbox_backgroundStaleTintColor" format="color" type="attr"/>
+
+  <public name="mapbox_accuracyAlpha" format="float" type="attr"/>
+  <public name="mapbox_accuracyColor" format="color" type="attr"/>
+
+  <public name="mapbox_elevation" format="dimension" type="attr"/>
+
+  <public name="mapbox_enableStaleState" format="boolean" type="attr"/>
+  <public name="mapbox_staleStateDelay" format="integer" min="0" type="attr"/>
+</resources>

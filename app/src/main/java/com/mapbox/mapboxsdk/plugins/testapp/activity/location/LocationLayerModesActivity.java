@@ -119,7 +119,8 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
   @VisibleForTesting
   public void toggleStyle() {
     customStyle = !customStyle;
-    locationLayerPlugin.applyStyle(customStyle ? R.style.CustomLocationLayer : R.style.LocationLayer);
+    locationLayerPlugin.applyStyle(customStyle ? R.style.CustomLocationLayer
+      : R.style.mapbox_LocationLayer);
   }
 
   @VisibleForTesting
