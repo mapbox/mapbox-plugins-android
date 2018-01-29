@@ -10,6 +10,9 @@ public final class PlaceConstants {
   public static final String MODE = "com.mapbox.mapboxsdk.plugins.places.mode";
   public static final String PLACE_OPTIONS = "com.mapbox.mapboxsdk.plugins.places.placeOptions";
 
+  public static final String MAP_CAMERA_POSITION
+    = "com.mapbox.mapboxsdk.plugins.places.cameraPosition";
+
   private PlaceConstants() {
     throw new AssertionError("No Instances.");
   }

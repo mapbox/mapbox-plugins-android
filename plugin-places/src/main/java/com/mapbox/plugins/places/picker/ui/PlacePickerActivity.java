@@ -156,13 +156,18 @@ public class PlacePickerActivity extends AppCompatActivity implements OnMapReady
             LENGTH_LONG).show();
           return;
         }
-        String json = carmenFeature.toJson();
-        Intent returningIntent = new Intent();
-        returningIntent.putExtra(PlaceConstants.RETURNING_CARMEN_FEATURE, json);
-        setResult(AppCompatActivity.RESULT_OK, returningIntent);
-        finish();
+        placeSelected();
       }
     });
+  }
+
+  private void placeSelected() {
+    String json = carmenFeature.toJson();
+    Intent returningIntent = new Intent();
+    returningIntent.putExtra(PlaceConstants.RETURNING_CARMEN_FEATURE, json);
+    returningIntent.putExtra(PlaceConstants.MAP_CAMERA_POSITION, mapboxMap.getCameraPosition());
+    setResult(AppCompatActivity.RESULT_OK, returningIntent);
+    finish();
   }
 
   @Override

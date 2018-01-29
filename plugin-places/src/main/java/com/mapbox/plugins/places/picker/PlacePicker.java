@@ -32,9 +32,8 @@ public class PlacePicker {
     return CarmenFeature.fromJson(json);
   }
 
-  public static CameraPosition getLastCameraPosition() {
-
-    return null;
+  public static CameraPosition getLastCameraPosition(Intent data) {
+    return data.getParcelableExtra(PlaceConstants.MAP_CAMERA_POSITION);
   }
 
   public static class IntentBuilder {
