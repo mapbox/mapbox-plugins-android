@@ -21,6 +21,7 @@ final class LocationLayerConstants {
   static final String LOCATION_SOURCE = "mapbox-location-source";
 
   // Layers
+  static final String SHADOW_LAYER = "mapbox-location-shadow";
   static final String FOREGROUND_LAYER = "mapbox-location-layer";
   static final String BACKGROUND_LAYER = "mapbox-location-stroke-layer";
   static final String ACCURACY_LAYER = "mapbox-location-accuracy-layer";
@@ -28,6 +29,7 @@ final class LocationLayerConstants {
   static final String NAVIGATION_LAYER = "mapbox-location-navigation-layer";
 
   // Icons
+  static final String SHADOW_ICON = "mapbox-location-shadow-icon";
   static final String LOCATION_ICON = "mapbox-location-icon";
   static final String BEARING_ICON = "mapbox-location-bearing-icon";
   static final String BACKGROUND_ICON = "mapbox-location-stroke-icon";
