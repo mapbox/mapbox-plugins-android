@@ -9,8 +9,8 @@ ext {
 
   version = [
       mapboxMapSdk       : '5.3.2',
-      mapboxGeocoding    : '3.0.0-SNAPSHOT', // TODO SNAPSHOT used since several fixes have been made since last beta release
-      mapboxGeoJson      : '3.0.0-beta.1',
+      mapboxGeocoding    : '3.0.0-beta.2',
+      mapboxGeoJson      : '3.0.0-beta.2',
       mapboxServices     : '2.2.9',
       autoValue          : '1.5.3',
       autoValueParcel    : '0.2.6',
@@ -40,7 +40,7 @@ ext {
       mapboxMapSdk           : "com.mapbox.mapboxsdk:mapbox-android-sdk:${version.mapboxMapSdk}",
       mapboxServices         : "com.mapbox.mapboxsdk:mapbox-android-services:${version.mapboxServices}",
       mapboxGeoJson          : "com.mapbox.mapboxsdk:mapbox-sdk-geojson:${version.mapboxGeoJson}",
-      mapboxGeocoding        : "com.mapbox.mapboxsdk:mapbox-java-services-geocoding:${version.mapboxGeocoding}",
+      mapboxGeocoding        : "com.mapbox.mapboxsdk:mapbox-sdk-services:${version.mapboxGeocoding}",
 
       // AutoValue
       autoValue              : "com.google.auto.value:auto-value:${version.autoValue}",

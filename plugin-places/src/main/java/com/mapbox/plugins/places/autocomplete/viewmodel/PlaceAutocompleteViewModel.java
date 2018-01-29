@@ -8,9 +8,9 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.mapbox.geocoding.v5.MapboxGeocoding;
-import com.mapbox.geocoding.v5.models.CarmenFeature;
-import com.mapbox.geocoding.v5.models.GeocodingResponse;
+import com.mapbox.api.geocoding.v5.MapboxGeocoding;
+import com.mapbox.api.geocoding.v5.models.CarmenFeature;
+import com.mapbox.api.geocoding.v5.models.GeocodingResponse;
 import com.mapbox.geojson.Point;
 import com.mapbox.plugins.places.autocomplete.DataRepository;
 import com.mapbox.plugins.places.autocomplete.PlaceConstants;
