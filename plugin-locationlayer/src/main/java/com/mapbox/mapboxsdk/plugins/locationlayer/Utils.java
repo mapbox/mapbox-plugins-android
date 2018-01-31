@@ -1,10 +1,17 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer;
 
 import android.animation.TypeEvaluator;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 
 import com.mapbox.services.commons.geojson.Point;
 
@@ -49,6 +56,21 @@ final class Utils {
       drawable.draw(canvas);
       return bitmap;
     }
+  }
+
+  static Drawable getDrawable(@NonNull Context context, @DrawableRes int drawableRes,
+                              @ColorInt Integer tintColor) {
+    Drawable drawable = ContextCompat.getDrawable(context, drawableRes);
+    if (tintColor == null) {
+      return drawable;
+    }
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      drawable.setTint(tintColor);
+    } else {
+      drawable.mutate().setColorFilter(tintColor, PorterDuff.Mode.SRC_IN);
+    }
+    return drawable;
   }
 
   /**

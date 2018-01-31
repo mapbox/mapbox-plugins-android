@@ -1,13 +1,12 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
 import android.support.v4.content.ContextCompat;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -42,6 +41,7 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.SHADOW_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.STALE_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.getBitmapFromDrawable;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.getDrawable;
 import static com.mapbox.mapboxsdk.style.functions.Function.zoom;
 import static com.mapbox.mapboxsdk.style.functions.stops.Stop.stop;
 import static com.mapbox.mapboxsdk.style.functions.stops.Stops.exponential;
@@ -70,12 +70,12 @@ final class LocationLayer {
   private final Map<String, Layer> layerMap = new HashMap<>();
   private final Map<String, GeoJsonSource> sourceMap = new HashMap<>();
 
-  LocationLayer(MapView mapView, MapboxMap mapboxMap, @StyleRes int styleRes) {
-    this.mapboxMap = mapboxMap;
+  LocationLayer(MapView mapView, MapboxMap mapboxMap, LocationLayerOptions options) {
     this.context = mapView.getContext();
+    this.mapboxMap = mapboxMap;
     addSources();
     addLayers();
-    applyStyle(styleRes);
+    applyStyle(options);
   }
 
   private void addLayers() {
@@ -91,42 +91,23 @@ final class LocationLayer {
     addSource(LOCATION_SOURCE);
   }
 
-  void applyStyle(int styleRes) {
-    TypedArray typedArray = context.obtainStyledAttributes(styleRes, R.styleable.LocationLayer);
+  void applyStyle(@NonNull LocationLayerOptions options) {
 
-    try {
-      styleShadow(ContextCompat.getDrawable(context, R.drawable.mapbox_user_icon_shadow));
+    styleShadow(ContextCompat.getDrawable(context, R.drawable.mapbox_user_icon_shadow));
 
-      int drawableResId = typedArray.getResourceId(R.styleable.LocationLayer_foregroundDrawable, -1);
-      styleForeground(ContextCompat.getDrawable(context, drawableResId));
-
-      drawableResId = typedArray.getResourceId(R.styleable.LocationLayer_backgroundDrawable, -1);
-      styleBackground(ContextCompat.getDrawable(context, drawableResId));
-
-      drawableResId = typedArray.getResourceId(R.styleable.LocationLayer_foregroundDrawableStale, -1);
-      styleForegroundStale(ContextCompat.getDrawable(context, drawableResId));
-
-      drawableResId = typedArray.getResourceId(R.styleable.LocationLayer_backgroundDrawableStale, -1);
-      styleBackgroundStale(ContextCompat.getDrawable(context, drawableResId));
-
-      drawableResId = typedArray.getResourceId(R.styleable.LocationLayer_bearingDrawable, -1);
-      styleBearing(ContextCompat.getDrawable(context, drawableResId));
-
-      drawableResId = typedArray.getResourceId(R.styleable.LocationLayer_navigationDrawable, -1);
-      styleNavigation(ContextCompat.getDrawable(context, drawableResId));
-
-      float accuracyAlpha = typedArray.getFloat(R.styleable.LocationLayer_accuracyAlpha, 0.15f);
-      if (accuracyAlpha < 0 || accuracyAlpha > 1) {
-        throw new UnsupportedOperationException(
-          "Location layer accuracy alpha value must be between 0.0 and 1.0."
-        );
-      }
-      int accuracyColor = typedArray.getColor(R.styleable.LocationLayer_accuracyColor,
-        ContextCompat.getColor(context, R.color.mapbox_plugin_location_layer_blue));
-      styleAccuracy(accuracyAlpha, accuracyColor);
-    } finally {
-      typedArray.recycle();
-    }
+    styleForeground(
+      getDrawable(context, options.foregroundDrawable(), options.foregroundTintColor()));
+    styleBackground(
+      getDrawable(context, options.backgroundDrawable(), options.backgroundTintColor()));
+    styleForegroundStale(
+      getDrawable(context, options.foregroundDrawableStale(), options.foregroundStaleTintColor()));
+    styleBackgroundStale(
+      getDrawable(context, options.backgroundDrawableStale(), options.backgroundStaleTintColor()));
+    styleBearing(
+      getDrawable(context, options.bearingDrawable(), options.bearingTintColor()));
+    styleNavigation(
+      ContextCompat.getDrawable(context, options.navigationDrawable()));
+    styleAccuracy(options.accuracyAlpha(), options.accuracyColor());
   }
 
   //

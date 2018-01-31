@@ -81,9 +81,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   private boolean linearAnimation;
 
   private OnLocationLayerClickListener onLocationLayerClickListener;
-
-  @StyleRes
-  private int styleRes;
+  private LocationLayerOptions options;
 
   /**
    * Construct a {@code LocationLayerPlugin}
@@ -95,7 +93,8 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   public LocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap,
                              @Nullable LocationEngine locationEngine) {
-    this(mapView, mapboxMap, locationEngine, R.style.LocationLayer);
+    this(mapView, mapboxMap, locationEngine,
+      LocationLayerOptions.createFromAttributes(mapView.getContext(), R.style.LocationLayer));
   }
 
   /**
@@ -109,10 +108,18 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   public LocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap,
                              @Nullable LocationEngine locationEngine, @StyleRes int styleRes) {
+    this(mapView, mapboxMap, locationEngine,
+      LocationLayerOptions.createFromAttributes(mapView.getContext(), styleRes));
+
+  }
+
+  public LocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap,
+                             @Nullable LocationEngine locationEngine,
+                             LocationLayerOptions options) {
     this.locationEngine = locationEngine;
     this.mapboxMap = mapboxMap;
     this.mapView = mapView;
-    this.styleRes = styleRes;
+    this.options = options;
     mapView.addOnMapChangedListener(this);
     initialize();
   }
@@ -120,7 +127,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   private void initialize() {
     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     locationLayerMode = LocationLayerMode.NONE;
-    locationLayer = new LocationLayer(mapView, mapboxMap, styleRes);
+    locationLayer = new LocationLayer(mapView, mapboxMap, options);
     compassManager = new CompassManager(mapView.getContext(), this);
     StaleStateRunnable.getInstance().addOnLocationStaleListener(this);
   }
@@ -208,8 +215,11 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    * @since 0.1.0
    */
   public void applyStyle(@StyleRes int styleRes) {
-    this.styleRes = styleRes;
-    locationLayer.applyStyle(styleRes);
+    applyStyle(LocationLayerOptions.createFromAttributes(mapView.getContext(), styleRes));
+  }
+
+  public void applyStyle(LocationLayerOptions options) {
+    locationLayer.applyStyle(options);
   }
 
   /**
@@ -472,7 +482,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   @SuppressWarnings( {"MissingPermission"})
   private void mapStyleFinishedLoading() {
     // recreate runtime style components
-    locationLayer = new LocationLayer(mapView, mapboxMap, styleRes);
+    locationLayer = new LocationLayer(mapView, mapboxMap, options);
     // reset state
     setLocationLayerEnabled(locationLayerMode);
     setBearing(previousMagneticHeading);
