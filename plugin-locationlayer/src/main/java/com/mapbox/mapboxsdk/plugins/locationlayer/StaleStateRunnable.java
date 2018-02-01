@@ -1,6 +1,8 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer;
 
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +29,16 @@ class StaleStateRunnable implements Runnable {
     handler = new Handler();
   }
 
-  void addOnLocationStaleListener(OnLocationStaleListener onLocationStaleListener) {
+  void addOnLocationStaleListener(@NonNull OnLocationStaleListener onLocationStaleListener) {
     onLocationStaleListeners.add(onLocationStaleListener);
+  }
+
+  void removeOnLocationStaleListener(@Nullable OnLocationStaleListener onLocationStaleListener) {
+    if (onLocationStaleListener == null) {
+      onLocationStaleListeners.clear();
+      return;
+    }
+    onLocationStaleListeners.remove(onLocationStaleListener);
   }
 
   @Override

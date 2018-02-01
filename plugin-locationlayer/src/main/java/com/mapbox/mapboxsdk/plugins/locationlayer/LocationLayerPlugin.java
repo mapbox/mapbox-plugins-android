@@ -150,10 +150,6 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   @RequiresPermission(anyOf = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION})
   public void setLocationLayerEnabled(@LocationLayerMode.Mode int locationLayerMode) {
-    // Don't run through enabling layer if the mode is the same as current
-    if (this.locationLayerMode == locationLayerMode) {
-      return;
-    }
     if (locationLayerMode != LocationLayerMode.NONE) {
       locationLayer.setLayersVisibility(true);
 
@@ -270,6 +266,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
   public void onStop() {
+    StaleStateRunnable.getInstance().removeOnLocationStaleListener(null);
     StaleStateRunnable.getInstance().onStop();
     stopAllAnimations();
     if (compassManager != null && compassManager.isSensorAvailable()) {
@@ -303,6 +300,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     if (mapboxMap != null) {
       mapboxMap.addOnCameraMoveListener(this);
     }
+    StaleStateRunnable.getInstance().addOnLocationStaleListener(this);
   }
 
   /**
