@@ -95,7 +95,6 @@ public class AutocompleteLauncherActivity extends AppCompatActivity {
     super.onActivityResult(requestCode, resultCode, data);
     if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_AUTOCOMPLETE) {
       CarmenFeature feature = PlaceAutocomplete.getPlace(data);
-      System.out.println(feature.toJson());
       Toast.makeText(this, feature.text(), Toast.LENGTH_LONG).show();
     }
   }
