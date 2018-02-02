@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ScrollView;
 
-import com.mapbox.geocoding.v5.models.CarmenFeature;
-import com.mapbox.geocoding.v5.models.GeocodingResponse;
+import com.mapbox.api.geocoding.v5.models.CarmenFeature;
+import com.mapbox.api.geocoding.v5.models.GeocodingResponse;
 import com.mapbox.places.R;
 import com.mapbox.plugins.places.autocomplete.DataRepository;
 import com.mapbox.plugins.places.autocomplete.PlaceConstants;

@@ -3,7 +3,7 @@ package com.mapbox.plugins.places.autocomplete.data.converter;
 import android.arch.persistence.room.TypeConverter;
 import android.support.annotation.NonNull;
 
-import com.mapbox.geocoding.v5.models.CarmenFeature;
+import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 
 public class CarmenFeatureConverter {
 

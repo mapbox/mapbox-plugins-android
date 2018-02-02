@@ -5,7 +5,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-import com.mapbox.geocoding.v5.models.CarmenFeature;
+import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.plugins.places.autocomplete.model.SearchHistory;
 
 @Entity(tableName = "searchhistory")
