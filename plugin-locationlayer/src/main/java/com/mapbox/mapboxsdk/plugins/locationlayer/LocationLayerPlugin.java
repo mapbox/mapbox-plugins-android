@@ -155,11 +155,11 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
 
       // Set an initial location if one is available and the locationEngines not null
       if (locationEngine != null) {
-        setLastLocation();
+        setLastLocation(locationLayerMode);
         locationEngine.addLocationEngineListener(this);
       }
 
-      toggleCameraListener();
+      toggleCameraListener(locationLayerMode);
 
       if (locationLayerMode == LocationLayerMode.COMPASS) {
         setLinearAnimation(false);
@@ -402,7 +402,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     // Currently don't handle this inside SDK
   }
 
-  private void toggleCameraListener() {
+  private void toggleCameraListener(int locationLayerMode) {
     if (locationLayerMode == LocationLayerMode.NAVIGATION) {
       mapboxMap.removeOnCameraMoveListener(this);
       return;
@@ -439,11 +439,13 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    * position.
    */
   @SuppressWarnings( {"MissingPermission"})
-  private void setLastLocation() {
+  private void setLastLocation(int locationLayerMode) {
     Location lastLocation = locationEngine.getLastLocation();
     if (lastLocation != null) {
       setLocation(lastLocation);
-      locationLayer.updateAccuracyRadius(lastLocation);
+      if (locationLayerMode != LocationLayerMode.NAVIGATION) {
+        locationLayer.updateAccuracyRadius(lastLocation);
+      }
     }
   }
 
