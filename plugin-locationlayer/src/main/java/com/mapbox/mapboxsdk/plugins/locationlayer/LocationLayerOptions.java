@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Parcelable;
 import android.support.annotation.ColorInt;
+import android.support.annotation.Dimension;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
-import android.support.v4.content.ContextCompat;
 
 import com.google.auto.value.AutoValue;
 
@@ -21,7 +21,8 @@ public abstract class LocationLayerOptions implements Parcelable {
    */
   private static final float ACCURACY_ALPHA_DEFAULT = 0.15f;
 
-  public static LocationLayerOptions createFromAttributes(@NonNull Context context, @StyleRes int styleRes) {
+  public static LocationLayerOptions createFromAttributes(@NonNull Context context,
+                                                          @StyleRes int styleRes) {
 
     final TypedArray typedArray = context.obtainStyledAttributes(
       styleRes, R.styleable.LocationLayer);
@@ -60,20 +61,23 @@ public abstract class LocationLayerOptions implements Parcelable {
     }
     builder.navigationDrawable(typedArray.getResourceId(
       R.styleable.LocationLayer_navigationDrawable, -1));
-    builder.elevation(typedArray.getResourceId(
-      R.styleable.LocationLayer_elevation, -1));
+    float elevation = typedArray.getDimension(
+      R.styleable.LocationLayer_elevation, 0);
     builder.accuracyColor(typedArray.getColor(
       R.styleable.LocationLayer_accuracyColor, -1));
 
     float accuracyAlpha = typedArray.getFloat(
       R.styleable.LocationLayer_accuracyAlpha, ACCURACY_ALPHA_DEFAULT);
     if (accuracyAlpha < 0 || accuracyAlpha > 1) {
-      throw new UnsupportedOperationException(
+      throw new IllegalArgumentException(
         "Location layer accuracy alpha value must be between 0.0 and 1.0.");
     }
     builder.accuracyAlpha(accuracyAlpha);
 
-    ContextCompat.getDrawable(context, R.drawable.mapbox_user_icon_shadow);
+    if (elevation < 0f) {
+      throw new IllegalArgumentException("Invalid shadow size " + elevation + ". Must be >= 0");
+    }
+    builder.elevation(elevation);
 
     typedArray.recycle();
 
@@ -137,6 +141,7 @@ public abstract class LocationLayerOptions implements Parcelable {
   @Nullable
   public abstract Integer backgroundTintColor();
 
+  @Dimension
   public abstract float elevation();
 
   @ColorInt
@@ -197,7 +202,7 @@ public abstract class LocationLayerOptions implements Parcelable {
 
     public abstract Builder backgroundTintColor(@ColorInt Integer backgroundTintColor);
 
-    public abstract Builder elevation(float elevation);
+    public abstract Builder elevation(@Dimension float elevation);
 
     public abstract LocationLayerOptions build();
   }

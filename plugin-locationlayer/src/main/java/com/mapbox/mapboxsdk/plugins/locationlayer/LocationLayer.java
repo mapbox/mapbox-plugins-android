@@ -42,6 +42,7 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.STALE_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.getBitmapFromDrawable;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.getDrawable;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.setShadow;
 import static com.mapbox.mapboxsdk.style.functions.Function.zoom;
 import static com.mapbox.mapboxsdk.style.functions.stops.Stop.stop;
 import static com.mapbox.mapboxsdk.style.functions.stops.Stops.exponential;
@@ -66,6 +67,7 @@ final class LocationLayer {
 
   private MapboxMap mapboxMap;
   private Context context;
+  private float elevation;
 
   private final Map<String, Layer> layerMap = new HashMap<>();
   private final Map<String, GeoJsonSource> sourceMap = new HashMap<>();
@@ -93,6 +95,7 @@ final class LocationLayer {
 
   void applyStyle(@NonNull LocationLayerOptions options) {
 
+    elevation = options.elevation();
     styleShadow(ContextCompat.getDrawable(context, R.drawable.mapbox_user_icon_shadow));
 
     styleForeground(
@@ -226,7 +229,7 @@ final class LocationLayer {
   }
 
   private void styleShadow(Drawable shadowDrawable) {
-    mapboxMap.addImage(SHADOW_ICON, getBitmapFromDrawable(shadowDrawable));
+    mapboxMap.addImage(SHADOW_ICON, setShadow(shadowDrawable, elevation));
     layerMap.get(SHADOW_LAYER).setProperties(
       iconImage(SHADOW_ICON));
   }
@@ -254,7 +257,8 @@ final class LocationLayer {
   }
 
   private void styleBackgroundStale(Drawable backgroundDrawableStale) {
-    mapboxMap.addImage(BACKGROUND_STALE_ICON, getBitmapFromDrawable(backgroundDrawableStale));
+    mapboxMap.addImage(BACKGROUND_STALE_ICON,
+      getBitmapFromDrawable(backgroundDrawableStale));
   }
 
   private void styleAccuracy(float accuracyAlpha, @ColorInt int accuracyColor) {
