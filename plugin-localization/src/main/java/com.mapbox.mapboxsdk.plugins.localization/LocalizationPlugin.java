@@ -82,7 +82,8 @@ public final class LocalizationPlugin {
    * Checks whether a certain language is supported by OpenStreetMap.
    *
    * @param languageTag the language tag to check against OpenStreetMap-supported languages
-   * @return
+   * @return whether a certain language (tag) matches one of the tags associated with a
+   * OSM-supported language
    */
   private boolean openStreetMapSupportsLanguage(String languageTag) {
     return languageTag.equals("ar")
@@ -106,10 +107,8 @@ public final class LocalizationPlugin {
       if (sourceIsFromMapbox(source)) {
         for (Layer layer : mapboxMap.getLayers()) {
           if (layerHasAdjustableTextField(layer)) {
-            if (((SymbolLayer) layer).getTextField().getValue().contains("name")) {
-              layer.setProperties(textField(String.format("{name_%s}", languageToSetMapTo)));
-            }
-            if (((SymbolLayer) layer).getTextField().getValue().contains("abbr") && !getDeviceLanguage().equals("en")) {
+            if (((SymbolLayer) layer).getTextField().getValue().contains("name")
+              || ((SymbolLayer) layer).getTextField().getValue().equals("abbr")) {
               layer.setProperties(textField(String.format("{name_%s}", languageToSetMapTo)));
             }
           }
@@ -128,7 +127,7 @@ public final class LocalizationPlugin {
    * @since 0.1.0
    */
   public void setMapTextLanguage(String language) {
-    if (openStreetMapSupportsLanguage(getDeviceLanguage())) {
+    if (openStreetMapSupportsLanguage(language)) {
       adjustMapTextLayers(language);
     } else if (openStreetMapSupportsLanguage(selectedBackupLanguage)) {
       adjustMapTextLayers(selectedBackupLanguage);
