@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
-import com.mapbox.geocoding.v5.models.CarmenFeature;
+import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.places.R;
 
 import java.util.ArrayList;

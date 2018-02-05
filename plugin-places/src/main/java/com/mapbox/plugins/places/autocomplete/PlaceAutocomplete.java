@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 
-import com.mapbox.geocoding.v5.models.CarmenFeature;
+import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.plugins.places.autocomplete.data.SearchHistoryDatabase;
 import com.mapbox.plugins.places.autocomplete.model.PlaceOptions;
 import com.mapbox.plugins.places.autocomplete.ui.PlaceAutocompleteActivity;
@@ -79,7 +79,7 @@ public final class PlaceAutocomplete {
 
     /**
      * Required to call when this is being built. If no access token provided,
-     * {@link com.mapbox.services.exceptions.ServicesException} will be thrown.
+     * {@link com.mapbox.core.exceptions.ServicesException} will be thrown.
      *
      * @param accessToken Mapbox access token, You must have a Mapbox account inorder to use the
      *                    Geocoding API

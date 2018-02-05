@@ -9,7 +9,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
-import com.mapbox.geocoding.v5.models.CarmenFeature;
+import com.mapbox.api.geocoding.v5.models.CarmenFeature;
+import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
@@ -41,6 +42,7 @@ public class AutocompleteLauncherActivity extends AppCompatActivity {
 
   private void addUserLocations() {
     home = CarmenFeature.builder().text("Directions to Home")
+      .geometry(Point.fromLngLat(1.0, 2.0))
       .placeName("300 Massachusetts Ave NW")
       .id("directions-home")
       .properties(new JsonObject())
@@ -48,6 +50,7 @@ public class AutocompleteLauncherActivity extends AppCompatActivity {
 
     work = CarmenFeature.builder().text("Directions to Work")
       .placeName("1509 16th St NW")
+      .geometry(Point.fromLngLat(1.0, 2.0))
       .id("directions-work")
       .properties(new JsonObject())
       .build();
