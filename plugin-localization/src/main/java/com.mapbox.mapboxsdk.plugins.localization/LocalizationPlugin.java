@@ -24,15 +24,21 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
 public final class LocalizationPlugin {
 
   private MapboxMap mapboxMap;
+  private String selectedBackupLanguage;
 
   /**
    * Create a {@link LocalizationPlugin}.
    *
-   * @param mapboxMap the MapboxMap to apply the localization plugin to
+   * @param mapboxMap      the MapboxMap to apply the localization plugin to
+   * @param backupLanguage the default language for the map to fall back to if the device language is not
+   *                       supported by Open Street Maps.
+   *                       See https://www.mapbox.com/vector-tiles/mapbox-streets-v7/#overview for a list of
+   *                       supported languages.
    * @since 0.1.0
    */
-  public LocalizationPlugin(@NonNull MapboxMap mapboxMap) {
+  public LocalizationPlugin(@NonNull MapboxMap mapboxMap, @NonNull String backupLanguage) {
     this.mapboxMap = mapboxMap;
+    this.selectedBackupLanguage = backupLanguage;
     setMapTextLanguage(getDeviceLanguage());
   }
 
@@ -73,12 +79,29 @@ public final class LocalizationPlugin {
   }
 
   /**
-   * Sets map text to the specified language
+   * Checks whether a certain language is supported by OpenStreetMap.
    *
-   * @param languageToSetMapTo The language that to set the map text to.
-   * @since 0.1.0
+   * @param languageTag the language tag to check against OpenStreetMap-supported languages
+   * @return
    */
-  public void setMapTextLanguage(String languageToSetMapTo) {
+  private boolean openStreetMapSupportsLanguage(String languageTag) {
+    return languageTag.equals("ar")
+      || languageTag.equals("en")
+      || languageTag.equals("es")
+      || languageTag.equals("fr")
+      || languageTag.equals("de")
+      || languageTag.equals("pt")
+      || languageTag.equals("ru")
+      || languageTag.equals("zh")
+      || languageTag.equals("zh-Hans");
+  }
+
+  /**
+   * Retrieves and adjusts the individual map layers that need to be adjusted
+   *
+   * @param languageToSetMapTo the language that the map is being adjusted to
+   */
+  private void adjustMapTextLayers(String languageToSetMapTo) {
     for (Source source : mapboxMap.getSources()) {
       if (sourceIsFromMapbox(source)) {
         for (Layer layer : mapboxMap.getLayers()) {
@@ -86,13 +109,31 @@ public final class LocalizationPlugin {
             if (((SymbolLayer) layer).getTextField().getValue().contains("name")) {
               layer.setProperties(textField(String.format("{name_%s}", languageToSetMapTo)));
             }
-            if (((SymbolLayer) layer).getTextField().getValue().contains("abbr")
-              && !getDeviceLanguage().equals("en")) {
+            if (((SymbolLayer) layer).getTextField().getValue().contains("abbr") && !getDeviceLanguage().equals("en")) {
               layer.setProperties(textField(String.format("{name_%s}", languageToSetMapTo)));
             }
           }
         }
       }
+    }
+  }
+
+  /**
+   * Sets map text to a specified language. If the language is not supported by OpenStreetMap, then the
+   * default language (specified during the instantiation of the plugin) is checked for OSM support. If
+   * it is supported by OSM, then the map will be changed to the default language. English is the last-resort
+   * language used in case the default language isn't supported by OSM neither.
+   *
+   * @param language The language that to set the map text to.
+   * @since 0.1.0
+   */
+  public void setMapTextLanguage(String language) {
+    if (openStreetMapSupportsLanguage(getDeviceLanguage())) {
+      adjustMapTextLayers(language);
+    } else if (openStreetMapSupportsLanguage(selectedBackupLanguage)) {
+      adjustMapTextLayers(selectedBackupLanguage);
+    } else {
+      adjustMapTextLayers("en");
     }
   }
 

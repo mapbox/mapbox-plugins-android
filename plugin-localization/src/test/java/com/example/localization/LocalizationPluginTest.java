@@ -19,11 +19,11 @@ public class LocalizationPluginTest {
 
   @Test(expected = NullPointerException.class)
   public void testNonNullAnnotatedArgs() {
-    new LocalizationPlugin(null);
+    new LocalizationPlugin(null,"en");
   }
 
   @Test
   public void testSanity() {
-    new LocalizationPlugin(mapboxMap);
+    new LocalizationPlugin(mapboxMap, "en");
   }
 }
