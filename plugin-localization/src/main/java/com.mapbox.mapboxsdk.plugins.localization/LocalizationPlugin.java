@@ -31,7 +31,7 @@ public final class LocalizationPlugin {
    *
    * @param mapboxMap      the MapboxMap to apply the localization plugin to
    * @param backupLanguage the default language for the map to fall back to if the device language is not
-   *                       supported by Open Street Maps.
+   *                       supported by the Mapbox Streets style source.
    *                       See https://www.mapbox.com/vector-tiles/mapbox-streets-v7/#overview for a list of
    *                       supported languages.
    * @since 0.1.0
@@ -79,13 +79,13 @@ public final class LocalizationPlugin {
   }
 
   /**
-   * Checks whether a certain language is supported by OpenStreetMap.
+   * Checks whether a certain language is supported by Mapbox Streets style source.
    *
-   * @param languageTag the language tag to check against OpenStreetMap-supported languages
+   * @param languageTag the language tag to check against Mapbox-supported languages
    * @return whether a certain language (tag) matches one of the tags associated with a
    * OSM-supported language
    */
-  private boolean openStreetMapSupportsLanguage(String languageTag) {
+  private boolean mapboxSourceSupportsLanguage(String languageTag) {
     return languageTag.equals("ar")
       || languageTag.equals("en")
       || languageTag.equals("es")
@@ -127,9 +127,9 @@ public final class LocalizationPlugin {
    * @since 0.1.0
    */
   public void setMapTextLanguage(String language) {
-    if (openStreetMapSupportsLanguage(language)) {
+    if (mapboxSourceSupportsLanguage(language)) {
       adjustMapTextLayers(language);
-    } else if (openStreetMapSupportsLanguage(selectedBackupLanguage)) {
+    } else if (mapboxSourceSupportsLanguage(selectedBackupLanguage)) {
       adjustMapTextLayers(selectedBackupLanguage);
     } else {
       adjustMapTextLayers("en");
