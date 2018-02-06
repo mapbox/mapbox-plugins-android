@@ -107,8 +107,9 @@ public final class LocalizationPlugin {
       if (sourceIsFromMapbox(source)) {
         for (Layer layer : mapboxMap.getLayers()) {
           if (layerHasAdjustableTextField(layer)) {
-            if (((SymbolLayer) layer).getTextField().getValue().contains("name")
-              || ((SymbolLayer) layer).getTextField().getValue().equals("abbr")) {
+            if (((SymbolLayer) layer).getTextField().getValue().contains("{name")
+              || !getDeviceLanguage().equals("en") && ((SymbolLayer) layer).getTextField().getValue().contains("{abbr}")
+              ) {
               layer.setProperties(textField(String.format("{name_%s}", languageToSetMapTo)));
             }
           }
