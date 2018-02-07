@@ -110,18 +110,8 @@ public abstract class LocationLayerOptions implements Parcelable {
       R.styleable.LocationLayer_elevation, 0);
     builder.accuracyColor(typedArray.getColor(
       R.styleable.LocationLayer_accuracyColor, -1));
-
-    float accuracyAlpha = typedArray.getFloat(
-      R.styleable.LocationLayer_accuracyAlpha, ACCURACY_ALPHA_DEFAULT);
-    if (accuracyAlpha < 0 || accuracyAlpha > 1) {
-      throw new IllegalArgumentException(
-        "Location layer accuracy alpha value must be between 0.0 and 1.0.");
-    }
-    builder.accuracyAlpha(accuracyAlpha);
-
-    if (elevation < 0f) {
-      throw new IllegalArgumentException("Invalid shadow size " + elevation + ". Must be >= 0");
-    }
+    builder.accuracyAlpha(typedArray.getFloat(
+      R.styleable.LocationLayer_accuracyAlpha, ACCURACY_ALPHA_DEFAULT));
     builder.elevation(elevation);
 
     typedArray.recycle();
@@ -156,7 +146,9 @@ public abstract class LocationLayerOptions implements Parcelable {
 
   // Internal builder
   private static Builder builder() {
-    return new AutoValue_LocationLayerOptions.Builder();
+    return new AutoValue_LocationLayerOptions.Builder()
+      .enableStaleState(true)
+      .staleStateDelay(STALE_STATE_DELAY_MS);
   }
 
   /**
@@ -501,12 +493,28 @@ public abstract class LocationLayerOptions implements Parcelable {
      */
     public abstract Builder staleStateDelay(long delay);
 
+
+    abstract LocationLayerOptions autoBuild();
+
     /**
      * Build a new instance of this {@link LocationLayerOptions} class.
      *
      * @return a new instance of {@link LocationLayerOptions}
      * @since 0.4.0
      */
-    public abstract LocationLayerOptions build();
+    public LocationLayerOptions build() {
+      LocationLayerOptions locationLayerOptions = autoBuild();
+      if (locationLayerOptions.accuracyAlpha() < 0 || locationLayerOptions.accuracyAlpha() > 1) {
+        throw new IllegalArgumentException(
+          "Location layer accuracy alpha value must be between 0.0 and 1.0.");
+      }
+
+      if (locationLayerOptions.elevation() < 0f) {
+        throw new IllegalArgumentException("Invalid shadow size "
+          + locationLayerOptions.elevation() + ". Must be >= 0");
+      }
+
+      return locationLayerOptions;
+    }
   }
 }
