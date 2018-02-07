@@ -42,7 +42,7 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.STALE_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.getBitmapFromDrawable;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.getDrawable;
-import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.setShadow;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.generateShadow;
 import static com.mapbox.mapboxsdk.style.functions.Function.zoom;
 import static com.mapbox.mapboxsdk.style.functions.stops.Stop.stop;
 import static com.mapbox.mapboxsdk.style.functions.stops.Stops.exponential;
@@ -229,7 +229,7 @@ final class LocationLayer {
   }
 
   private void styleShadow(Drawable shadowDrawable) {
-    mapboxMap.addImage(SHADOW_ICON, setShadow(shadowDrawable, elevation));
+    mapboxMap.addImage(SHADOW_ICON, generateShadow(shadowDrawable, elevation));
     layerMap.get(SHADOW_LAYER).setProperties(
       iconImage(SHADOW_ICON));
   }

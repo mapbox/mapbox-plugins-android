@@ -14,5 +14,8 @@
     <item name="accuracyColor">@color/mapbox_plugin_location_layer_blue</item>
 
     <item name="elevation">12dp</item>
+
+    <item name="enableStaleState">true</item>
+    <item name="staleStateDelay">10000</item>
   </style>
 </resources>

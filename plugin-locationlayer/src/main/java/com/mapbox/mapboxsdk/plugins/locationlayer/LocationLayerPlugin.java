@@ -129,7 +129,9 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     locationLayerMode = LocationLayerMode.NONE;
     locationLayer = new LocationLayer(mapView, mapboxMap, options);
     compassManager = new CompassManager(mapView.getContext(), this);
-    StaleStateRunnable.getInstance().addOnLocationStaleListener(this);
+    if (options.enableStaleState()) {
+      StaleStateRunnable.getInstance().addOnLocationStaleListener(this);
+    }
   }
 
   /**
@@ -189,6 +191,10 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     return locationLayerMode;
   }
 
+  public LocationLayerOptions getLocationLayerOptions() {
+    return options;
+  }
+
   @Override
   public void onMapChanged(int change) {
     if (change == MapView.WILL_START_LOADING_MAP) {
@@ -216,6 +222,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
 
   public void applyStyle(LocationLayerOptions options) {
     locationLayer.applyStyle(options);
+    StaleStateRunnable.getInstance().setDelayTime(options.staleStateDelay());
   }
 
   /**
@@ -266,7 +273,6 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
   public void onStop() {
-    StaleStateRunnable.getInstance().removeOnLocationStaleListener(null);
     StaleStateRunnable.getInstance().onStop();
     stopAllAnimations();
     if (compassManager != null && compassManager.isSensorAvailable()) {
@@ -366,10 +372,6 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     if (onLocationLayerClickListener != null) {
       mapboxMap.addOnMapClickListener(this);
     }
-  }
-
-  public void setDelayTillStaleLocation(long timeInMilliseconds) {
-    StaleStateRunnable.getInstance().setDelayTime(timeInMilliseconds);
   }
 
   @Override

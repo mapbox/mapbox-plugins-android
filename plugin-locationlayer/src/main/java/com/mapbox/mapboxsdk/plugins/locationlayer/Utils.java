@@ -53,7 +53,7 @@ final class Utils {
     }
   }
 
-  static Bitmap setShadow(Drawable drawable, float elevation) {
+  static Bitmap generateShadow(Drawable drawable, float elevation) {
     int widthHeight = toEven(10 * (elevation == 0 ? 1 : elevation));
     Bitmap bitmap = Bitmap.createBitmap(widthHeight, widthHeight,
       Bitmap.Config.ARGB_8888);

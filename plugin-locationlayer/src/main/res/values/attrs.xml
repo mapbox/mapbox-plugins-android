@@ -19,5 +19,8 @@
 
     <attr name="elevation" format="dimension"/>
 
+    <attr name="enableStaleState" format="boolean"/>
+    <attr name="staleStateDelay" format="integer" min="0"/>
+
   </declare-styleable>
 </resources>
