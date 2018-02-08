@@ -13,6 +13,7 @@ class StaleStateRunnable implements Runnable {
   private List<OnLocationStaleListener> onLocationStaleListeners;
   private Handler handler;
   private long delayTime;
+  private boolean isStale;
 
   static StaleStateRunnable getInstance() {
     if (instance == null) {
@@ -43,12 +44,18 @@ class StaleStateRunnable implements Runnable {
     for (OnLocationStaleListener listener : onLocationStaleListeners) {
       listener.isLocationStale(true);
     }
+    isStale = true;
+  }
+
+  boolean isStale() {
+    return isStale;
   }
 
   void updateLatestLocationTime() {
     for (OnLocationStaleListener listener : onLocationStaleListeners) {
       listener.isLocationStale(false);
     }
+    isStale = false;
     handler.removeCallbacks(this);
     handler.postDelayed(this, delayTime);
   }

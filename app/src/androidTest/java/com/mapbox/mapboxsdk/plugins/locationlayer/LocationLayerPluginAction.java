@@ -37,11 +37,13 @@ class LocationLayerPluginAction implements ViewAction {
   @Override
   public void perform(UiController uiController, View view) {
     if (onPerformLocationLayerAction != null) {
-      onPerformLocationLayerAction.onLocationLayerAction(locationLayerPlugin, mapboxMap, uiController, view.getContext());
+      onPerformLocationLayerAction.onLocationLayerAction(locationLayerPlugin, mapboxMap,
+        uiController, view.getContext());
     }
   }
 
   interface onPerformLocationLayerAction {
-    void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap, UiController uiController, Context context);
+    void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap,
+                               UiController uiController, Context context);
   }
 }

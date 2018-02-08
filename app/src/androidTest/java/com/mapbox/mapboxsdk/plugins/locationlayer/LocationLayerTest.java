@@ -16,7 +16,6 @@ import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.utils.OnMapReadyIdlingResource;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,13 +30,15 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.ACCURACY_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.BACKGROUND_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.BEARING_LAYER;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.FOREGROUND_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.FOREGROUND_LAYER;
-import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.LOCATION_ICON;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.FOREGROUND_STALE_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.LOCATION_SOURCE;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.NAVIGATION_LAYER;
-import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.STALE_ICON;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -177,23 +178,30 @@ public class LocationLayerTest {
         locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.TRACKING);
         SymbolLayer symbolLayer = mapboxMap.getLayerAs(FOREGROUND_LAYER);
         assert symbolLayer != null;
-        Assert.assertThat(symbolLayer.getIconImage().getValue(), equalTo(LOCATION_ICON));
+        assertThat(symbolLayer.getIconImage().getValue(), equalTo(FOREGROUND_ICON));
         locationLayerPlugin.applyStyle(LocationLayerOptions.builder(context).staleStateDelay(400).build());
         locationLayerPlugin.forceLocationUpdate(location);
         uiController.loopMainThreadForAtLeast(500);
-        Assert.assertThat(symbolLayer.getIconImage().getValue(), equalTo(STALE_ICON));
+        assertThat(symbolLayer.getIconImage().getValue(), equalTo(FOREGROUND_STALE_ICON));
       }
     });
   }
 
   @Test
   public void whenDrawableChanged_continuesUsingStaleIcons() throws Exception {
-
-  }
-
-  @Test
-  public void whenModeChanged_remainsUsingStaleIcons() throws Exception {
-
+    executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
+      @Override
+      public void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap,
+                                        UiController uiController, Context context) {
+        locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.TRACKING);
+        locationLayerPlugin.applyStyle(LocationLayerOptions.builder(context).staleStateDelay(100).build());
+        locationLayerPlugin.forceLocationUpdate(location);
+        uiController.loopMainThreadForAtLeast(200);
+        rule.getActivity().toggleStyle();
+        SymbolLayer symbolLayer = mapboxMap.getLayerAs(FOREGROUND_LAYER);
+        assert symbolLayer != null;
+        assertThat(symbolLayer.getIconImage().getValue(), not(FOREGROUND_ICON));
+      }});
   }
 
   @After
