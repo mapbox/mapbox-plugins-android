@@ -72,7 +72,8 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
    * @param mapboxMap  the MapboxMap to apply traffic plugin with
    * @param belowLayer the layer id where you'd like the traffic to display below
    */
-  public TrafficPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @Nullable String belowLayer) {
+  public TrafficPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap,
+                       @Nullable String belowLayer) {
     this.mapboxMap = mapboxMap;
     this.belowLayer = belowLayer;
     mapView.addOnMapChangedListener(this);
@@ -140,9 +141,9 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
       addTrafficSource();
       addTrafficLayers();
     } catch (Exception exception) {
-      Timber.e("Unable to attach Traffic to current style: ", exception);
+      Timber.e(exception, "Unable to attach Traffic to current style: ");
     } catch (UnsatisfiedLinkError error) {
-      Timber.e("Unable to load native libraries: ", error);
+      Timber.e(error, "Unable to load native libraries: ");
     }
   }
 
@@ -335,14 +336,14 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
 
   private static class TrafficLayer {
 
-    private static LineLayer getLineLayer(String lineLayerId, float minZoom, Filter.Statement statement,
-                                          Function lineColor, CameraFunction lineWidth, Function lineOffset) {
+    static LineLayer getLineLayer(String lineLayerId, float minZoom, Filter.Statement statement,
+                                  Function lineColor, CameraFunction lineWidth, Function lineOffset) {
       return getLineLayer(lineLayerId, minZoom, statement, lineColor, lineWidth, lineOffset, null);
     }
 
-    private static LineLayer getLineLayer(String lineLayerId, float minZoom, Filter.Statement statement,
-                                          Function lineColor, CameraFunction lineWidth, Function lineOffset,
-                                          Function lineOpacity) {
+    static LineLayer getLineLayer(String lineLayerId, float minZoom, Filter.Statement statement,
+                                  Function lineColor, CameraFunction lineWidth, Function lineOffset,
+                                  Function lineOpacity) {
       LineLayer lineLayer = new LineLayer(lineLayerId, TrafficData.SOURCE_ID);
       lineLayer.setSourceLayer(TrafficData.SOURCE_LAYER);
       lineLayer.setProperties(
@@ -363,8 +364,8 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
   }
 
   private static class TrafficFunction {
-    private static Function getLineColorFunction(@ColorInt int low, @ColorInt int moderate, @ColorInt int heavy,
-                                                 @ColorInt int severe) {
+    static Function getLineColorFunction(@ColorInt int low, @ColorInt int moderate, @ColorInt int heavy,
+                                         @ColorInt int severe) {
       return Function.property(
         "congestion",
         categorical(
@@ -376,26 +377,26 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
       ).withDefaultValue(fillColor(Color.TRANSPARENT));
     }
 
-    private static CameraFunction getOffsetFunction(Stop... stops) {
+    static CameraFunction getOffsetFunction(Stop... stops) {
       return zoom(exponential(stops).withBase(1.5f));
     }
 
-    private static CameraFunction getWidthFunction(Stop... stops) {
+    static CameraFunction getWidthFunction(Stop... stops) {
       return zoom(exponential(stops).withBase(1.5f));
     }
 
-    private static Function getOpacityFunction(Stop... stops) {
+    static Function getOpacityFunction(Stop... stops) {
       return zoom(exponential(stops));
     }
   }
 
-  static class TrafficData {
+  private static class TrafficData {
     static final String SOURCE_ID = "traffic";
     static final String SOURCE_LAYER = "traffic";
     static final String SOURCE_URL = "mapbox://mapbox.mapbox-traffic-v1";
   }
 
-  static class TrafficType {
+  private static class TrafficType {
     static final Function FUNCTION_LINE_COLOR = TrafficFunction.getLineColorFunction(TrafficColor.BASE_GREEN,
       TrafficColor.BASE_YELLOW, TrafficColor.BASE_ORANGE, TrafficColor.BASE_RED);
     static final Function FUNCTION_LINE_COLOR_CASE = TrafficFunction.getLineColorFunction(
@@ -480,7 +481,7 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
       stop(15, lineOpacity(0.0f)), stop(16, lineOpacity(1.0f)));
   }
 
-  static class TrafficColor {
+  private static class TrafficColor {
     static final int BASE_GREEN = Color.parseColor("#39c66d");
     static final int CASE_GREEN = Color.parseColor("#059441");
     static final int BASE_YELLOW = Color.parseColor("#ff8c1a");
