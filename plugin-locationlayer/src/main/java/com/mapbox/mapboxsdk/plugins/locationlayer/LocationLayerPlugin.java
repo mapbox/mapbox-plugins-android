@@ -152,12 +152,13 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   @RequiresPermission(anyOf = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION})
   public void setLocationLayerEnabled(@LocationLayerMode.Mode int locationLayerMode) {
+    this.locationLayerMode = locationLayerMode;
     if (locationLayerMode != LocationLayerMode.NONE) {
       locationLayer.setLayersVisibility(true);
 
       // Set an initial location if one is available and the locationEngines not null
       if (locationEngine != null) {
-        setLastLocation(locationLayerMode);
+        setLastLocation();
         locationEngine.addLocationEngineListener(this);
       }
 
@@ -178,7 +179,6 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     } else {
       disableLocationLayerPlugin();
     }
-    this.locationLayerMode = locationLayerMode;
   }
 
   /**
@@ -441,7 +441,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    * position.
    */
   @SuppressWarnings( {"MissingPermission"})
-  private void setLastLocation(int locationLayerMode) {
+  private void setLastLocation() {
     Location lastLocation = locationEngine.getLastLocation();
     if (lastLocation != null) {
       setLocation(lastLocation);
