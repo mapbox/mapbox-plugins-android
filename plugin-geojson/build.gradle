@@ -20,9 +20,9 @@ android {
 }
 
 dependencies {
-  implementation dependenciesList.supportAppcompatV7
   implementation dependenciesList.mapboxMapSdk
-  implementation dependenciesList.mapboxServices
+  implementation dependenciesList.supportAppcompatV7
+  implementation dependenciesList.mapboxGeoJson
   implementation dependenciesList.okhttp
   implementation dependenciesList.timber
   javadocDeps dependenciesList.mapboxMapSdk

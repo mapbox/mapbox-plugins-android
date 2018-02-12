@@ -12,8 +12,8 @@ import com.mapbox.mapboxsdk.plugins.locationlayer.CompassListener;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
-import com.mapbox.services.android.location.LostLocationEngine;
 import com.mapbox.services.android.telemetry.location.LocationEngine;
+import com.mapbox.services.android.telemetry.location.LostLocationEngine;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
