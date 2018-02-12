@@ -162,7 +162,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
         locationEngine.addLocationEngineListener(this);
       }
 
-      toggleCameraListener(locationLayerMode);
+      toggleCameraListener();
 
       if (locationLayerMode == LocationLayerMode.COMPASS) {
         setLinearAnimation(false);
@@ -404,7 +404,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     // Currently don't handle this inside SDK
   }
 
-  private void toggleCameraListener(int locationLayerMode) {
+  private void toggleCameraListener() {
     if (locationLayerMode == LocationLayerMode.NAVIGATION) {
       mapboxMap.removeOnCameraMoveListener(this);
       return;
