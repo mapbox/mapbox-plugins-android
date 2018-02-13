@@ -30,10 +30,12 @@ final class LocationLayerConstants {
 
   // Icons
   static final String SHADOW_ICON = "mapbox-location-shadow-icon";
-  static final String LOCATION_ICON = "mapbox-location-icon";
+  static final String FOREGROUND_ICON = "mapbox-location-icon";
   static final String BEARING_ICON = "mapbox-location-bearing-icon";
   static final String BACKGROUND_ICON = "mapbox-location-stroke-icon";
   static final String PUCK_ICON = "mapbox-location-puck-icon";
+  static final String FOREGROUND_STALE_ICON = "mapbox-location-stale-icon";
+  static final String BACKGROUND_STALE_ICON = "mapbox-location-background-stale-icon";
 
   private LocationLayerConstants() {
     // Class should not be initialized

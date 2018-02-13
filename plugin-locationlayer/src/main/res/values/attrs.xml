@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="LocationLayer">
-        <attr name="backgroundDrawable" format="reference"/>
-        <attr name="foregroundDrawable" format="reference"/>
-        <attr name="bearingDrawable" format="reference"/>
-        <attr name="navigationDrawable" format="reference"/>
+  <declare-styleable name="LocationLayer">
+    <attr name="foregroundDrawable" format="reference"/>
+    <attr name="foregroundTintColor" format="color"/>
+    <attr name="backgroundDrawable" format="reference"/>
+    <attr name="backgroundTintColor" format="color"/>
+    <attr name="bearingDrawable" format="reference"/>
+    <attr name="bearingTintColor" format="color"/>
+    <attr name="navigationDrawable" format="reference"/>
 
-        <attr name="accuracyAlpha" format="float"/>
-        <attr name="accuracyColor" format="color"/>
+    <attr name="foregroundDrawableStale" format="reference"/>
+    <attr name="foregroundStaleTintColor" format="color"/>
+    <attr name="backgroundDrawableStale" format="reference"/>
+    <attr name="backgroundStaleTintColor" format="color"/>
 
-    </declare-styleable>
+    <attr name="accuracyAlpha" format="float"/>
+    <attr name="accuracyColor" format="color"/>
+
+    <attr name="elevation" format="dimension"/>
+
+    <attr name="enableStaleState" format="boolean"/>
+    <attr name="staleStateDelay" format="integer" min="0"/>
+
+  </declare-styleable>
 </resources>

@@ -1,5 +1,7 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer;
 
+import android.content.Context;
+import android.location.Location;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.IdlingResourceTimeoutException;
 import android.support.test.espresso.UiController;
@@ -10,6 +12,7 @@ import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.location.LocationLayerModesActivity;
 import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.utils.OnMapReadyIdlingResource;
 
 import org.junit.After;
@@ -27,22 +30,28 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.ACCURACY_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.BACKGROUND_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.BEARING_LAYER;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.FOREGROUND_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.FOREGROUND_LAYER;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.FOREGROUND_STALE_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.LOCATION_SOURCE;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.NAVIGATION_LAYER;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 @SuppressWarnings( {"MissingPermission"})
-public class LocationLayerPluginTest {
+public class LocationLayerTest {
 
   @Rule
   public ActivityTestRule<LocationLayerModesActivity> rule = new ActivityTestRule<>(LocationLayerModesActivity.class);
 
   private OnMapReadyIdlingResource idlingResource;
-  private MapboxMap mapboxMap;
   private LocationLayerPlugin locationLayerPlugin;
+  private MapboxMap mapboxMap;
+  private Location location;
 
   @Before
   public void beforeTest() {
@@ -59,6 +68,9 @@ public class LocationLayerPluginTest {
         + this.getClass().getSimpleName() + ".\n The ViewHierarchy doesn't contain a view with resource id ="
         + "R.id.mapView or \n the Activity doesn't contain an instance variable with a name equal to mapboxMap.\n");
     }
+    location = new Location("test");
+    location.setLatitude(1.0);
+    location.setLongitude(2.0);
   }
 
   @Test
@@ -72,7 +84,7 @@ public class LocationLayerPluginTest {
     executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
       @Override
       public void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap,
-                                        UiController uiController) {
+                                        UiController uiController, Context context) {
         locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.TRACKING);
         assertTrue(mapboxMap.getSource(LOCATION_SOURCE) != null);
       }
@@ -84,7 +96,7 @@ public class LocationLayerPluginTest {
     executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
       @Override
       public void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap,
-                                        UiController uiController) {
+                                        UiController uiController, Context context) {
         locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.TRACKING);
         assertTrue(mapboxMap.getLayer(ACCURACY_LAYER) != null);
         assertTrue(mapboxMap.getLayer(BACKGROUND_LAYER) != null);
@@ -98,7 +110,7 @@ public class LocationLayerPluginTest {
     executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
       @Override
       public void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap,
-                                        UiController uiController) {
+                                        UiController uiController, Context context) {
         locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.COMPASS);
         assertTrue(mapboxMap.getLayer(ACCURACY_LAYER) != null);
         assertTrue(mapboxMap.getLayer(BACKGROUND_LAYER) != null);
@@ -113,7 +125,7 @@ public class LocationLayerPluginTest {
     executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
       @Override
       public void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap,
-                                        UiController uiController) {
+                                        UiController uiController, Context context) {
         locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.COMPASS);
         assertTrue(mapboxMap.getLayer(NAVIGATION_LAYER) != null);
       }
@@ -125,7 +137,7 @@ public class LocationLayerPluginTest {
     executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
       @Override
       public void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap,
-                                        UiController uiController) {
+                                        UiController uiController, Context context) {
         locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.TRACKING);
         assertTrue(mapboxMap.getLayer(FOREGROUND_LAYER) != null);
         locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.NONE);
@@ -140,7 +152,7 @@ public class LocationLayerPluginTest {
     executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
       @Override
       public void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap,
-                                        UiController uiController) {
+                                        UiController uiController, Context context) {
         locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.TRACKING);
         assertTrue(mapboxMap.getLayer(FOREGROUND_LAYER) != null);
         mapboxMap.setStyleUrl(Style.SATELLITE);
@@ -151,6 +163,45 @@ public class LocationLayerPluginTest {
           .equals(Property.VISIBLE));
       }
     });
+  }
+
+  //
+  // Stale state test
+  //
+
+  @Test
+  public void whenStaleTimeSet_iconsDoChangeAtAppropriateTime() throws Exception {
+    executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
+      @Override
+      public void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap,
+                                        UiController uiController, Context context) {
+        locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.TRACKING);
+        SymbolLayer symbolLayer = mapboxMap.getLayerAs(FOREGROUND_LAYER);
+        assert symbolLayer != null;
+        assertThat(symbolLayer.getIconImage().getValue(), equalTo(FOREGROUND_ICON));
+        locationLayerPlugin.applyStyle(LocationLayerOptions.builder(context).staleStateDelay(400).build());
+        locationLayerPlugin.forceLocationUpdate(location);
+        uiController.loopMainThreadForAtLeast(500);
+        assertThat(symbolLayer.getIconImage().getValue(), equalTo(FOREGROUND_STALE_ICON));
+      }
+    });
+  }
+
+  @Test
+  public void whenDrawableChanged_continuesUsingStaleIcons() throws Exception {
+    executeLocationLayerTest(new LocationLayerPluginAction.onPerformLocationLayerAction() {
+      @Override
+      public void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap,
+                                        UiController uiController, Context context) {
+        locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.TRACKING);
+        locationLayerPlugin.applyStyle(LocationLayerOptions.builder(context).staleStateDelay(100).build());
+        locationLayerPlugin.forceLocationUpdate(location);
+        uiController.loopMainThreadForAtLeast(200);
+        rule.getActivity().toggleStyle();
+        SymbolLayer symbolLayer = mapboxMap.getLayerAs(FOREGROUND_LAYER);
+        assert symbolLayer != null;
+        assertThat(symbolLayer.getIconImage().getValue(), not(FOREGROUND_ICON));
+      }});
   }
 
   @After

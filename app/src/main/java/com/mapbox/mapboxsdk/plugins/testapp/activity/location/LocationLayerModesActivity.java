@@ -2,6 +2,7 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity.location;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -108,14 +109,20 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     }
 
     if (item.getItemId() == R.id.action_style_change) {
-      customStyle = !customStyle;
-      locationLayerPlugin.applyStyle(customStyle ? R.style.CustomLocationLayer : R.style.LocationLayer);
+      toggleStyle();
       return true;
     }
 
     return super.onOptionsItemSelected(item);
   }
 
+  @VisibleForTesting
+  public void toggleStyle() {
+    customStyle = !customStyle;
+    locationLayerPlugin.applyStyle(customStyle ? R.style.CustomLocationLayer : R.style.LocationLayer);
+  }
+
+  @VisibleForTesting
   public LocationLayerPlugin getLocationLayerPlugin() {
     return locationLayerPlugin;
   }

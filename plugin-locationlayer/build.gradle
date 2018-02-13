@@ -18,14 +18,21 @@ android {
   lintOptions {
     abortOnError false
   }
+
+  testOptions {
+    unitTests.returnDefaultValues = true
+  }
 }
 
 dependencies {
   implementation dependenciesList.supportAppcompatV7
 
-  implementation(dependenciesList.mapboxMapSdk) {
-    transitive = true
-  }
+  implementation dependenciesList.mapboxMapSdk
+
+  // AutoValues
+  annotationProcessor dependenciesList.autoValuesParcel
+  annotationProcessor dependenciesList.autoValue
+  compileOnly dependenciesList.autoValue
 
   // Timber
   implementation dependenciesList.timber

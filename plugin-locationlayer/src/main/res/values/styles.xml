@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="LocationLayer">
-        <item name="backgroundDrawable">@drawable/mapbox_user_stroke_icon</item>
-        <item name="foregroundDrawable">@drawable/mapbox_user_icon</item>
-        <item name="bearingDrawable">@drawable/mapbox_user_bearing_icon</item>
-        <item name="navigationDrawable">@drawable/mapbox_user_puck_icon</item>
 
-        <item name="accuracyAlpha">0.15</item>
-        <item name="accuracyColor">@color/mapbox_plugin_location_layer_blue</item>
-    </style>
+  <style name="LocationLayer">
+    <item name="foregroundDrawable">@drawable/mapbox_user_icon</item>
+    <item name="backgroundDrawable">@drawable/mapbox_user_stroke_icon</item>
+    <item name="bearingDrawable">@drawable/mapbox_user_bearing_icon</item>
+    <item name="navigationDrawable">@drawable/mapbox_user_puck_icon</item>
+
+    <item name="foregroundDrawableStale">@drawable/mapbox_user_icon_stale</item>
+    <item name="backgroundDrawableStale">@drawable/mapbox_user_stroke_icon</item>
+
+    <item name="accuracyAlpha">0.15</item>
+    <item name="accuracyColor">@color/mapbox_plugin_location_layer_blue</item>
+
+    <item name="elevation">12dp</item>
+
+    <item name="enableStaleState">true</item>
+    <item name="staleStateDelay">10000</item>
+  </style>
 </resources>

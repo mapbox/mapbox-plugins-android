@@ -25,6 +25,8 @@ import com.mapbox.services.android.telemetry.location.LocationEngine;
 import com.mapbox.services.android.telemetry.location.LocationEngineListener;
 import com.mapbox.services.commons.geojson.Point;
 
+import timber.log.Timber;
+
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.ACCURACY_LAYER;
@@ -53,7 +55,8 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.shortestRotation;
  * @since 0.1.0
  */
 public final class LocationLayerPlugin implements LocationEngineListener, CompassListener,
-  OnMapChangedListener, LifecycleObserver, OnCameraMoveListener, OnMapClickListener {
+  OnMapChangedListener, LifecycleObserver, OnCameraMoveListener, OnMapClickListener,
+  OnLocationStaleListener {
 
   private LocationLayer locationLayer;
   private CompassManager compassManager;
@@ -78,9 +81,8 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   private boolean linearAnimation;
 
   private OnLocationLayerClickListener onLocationLayerClickListener;
-
-  @StyleRes
-  private int styleRes;
+  private StaleStateRunnable staleStateRunnable;
+  private LocationLayerOptions options;
 
   /**
    * Construct a {@code LocationLayerPlugin}
@@ -92,7 +94,8 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   public LocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap,
                              @Nullable LocationEngine locationEngine) {
-    this(mapView, mapboxMap, locationEngine, R.style.LocationLayer);
+    this(mapView, mapboxMap, locationEngine,
+      LocationLayerOptions.createFromAttributes(mapView.getContext(), R.style.LocationLayer));
   }
 
   /**
@@ -106,18 +109,27 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   public LocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap,
                              @Nullable LocationEngine locationEngine, @StyleRes int styleRes) {
+    this(mapView, mapboxMap, locationEngine,
+      LocationLayerOptions.createFromAttributes(mapView.getContext(), styleRes));
+
+  }
+
+  public LocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap,
+                             @Nullable LocationEngine locationEngine,
+                             LocationLayerOptions options) {
     this.locationEngine = locationEngine;
     this.mapboxMap = mapboxMap;
     this.mapView = mapView;
-    this.styleRes = styleRes;
+    this.options = options;
     mapView.addOnMapChangedListener(this);
     initialize();
   }
 
   private void initialize() {
     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    staleStateRunnable = new StaleStateRunnable(options.staleStateDelay());
     locationLayerMode = LocationLayerMode.NONE;
-    locationLayer = new LocationLayer(mapView, mapboxMap, styleRes);
+    locationLayer = new LocationLayer(mapView, mapboxMap, options, staleStateRunnable);
     compassManager = new CompassManager(mapView.getContext(), this);
   }
 
@@ -139,10 +151,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   @RequiresPermission(anyOf = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION})
   public void setLocationLayerEnabled(@LocationLayerMode.Mode int locationLayerMode) {
-    // Don't run through enabling layer if the mode is the same as current
-    if (this.locationLayerMode == locationLayerMode) {
-      return;
-    }
+    this.locationLayerMode = locationLayerMode;
     if (locationLayerMode != LocationLayerMode.NONE) {
       locationLayer.setLayersVisibility(true);
 
@@ -169,7 +178,6 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     } else {
       disableLocationLayerPlugin();
     }
-    this.locationLayerMode = locationLayerMode;
   }
 
   /**
@@ -182,6 +190,10 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     return locationLayerMode;
   }
 
+  public LocationLayerOptions getLocationLayerOptions() {
+    return options;
+  }
+
   @Override
   public void onMapChanged(int change) {
     if (change == MapView.WILL_START_LOADING_MAP) {
@@ -191,6 +203,12 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     }
   }
 
+  @Override
+  public void isLocationStale(boolean stale) {
+    Timber.v("isLocationStale: %b", stale);
+    locationLayer.locationsStale(stale);
+  }
+
   /**
    * Apply a new Location Layer style after the {@link LocationLayerPlugin} has been constructed.
    *
@@ -198,8 +216,15 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    * @since 0.1.0
    */
   public void applyStyle(@StyleRes int styleRes) {
-    this.styleRes = styleRes;
-    locationLayer.applyStyle(styleRes);
+    applyStyle(LocationLayerOptions.createFromAttributes(mapView.getContext(), styleRes));
+  }
+
+  public void applyStyle(LocationLayerOptions options) {
+    locationLayer.applyStyle(options);
+    if (!options.enableStaleState()) {
+      staleStateRunnable.reset();
+    }
+    staleStateRunnable.setDelayTime(options.staleStateDelay());
   }
 
   /**
@@ -250,6 +275,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
   public void onStop() {
+    staleStateRunnable.onStop();
     stopAllAnimations();
     if (compassManager != null && compassManager.isSensorAvailable()) {
       compassManager.onStop();
@@ -282,6 +308,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     if (mapboxMap != null) {
       mapboxMap.addOnCameraMoveListener(this);
     }
+    staleStateRunnable.addOnLocationStaleListener(this);
   }
 
   /**
@@ -338,7 +365,8 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    * Adds a listener that gets invoked when the user clicks the location layer.
    *
    * @param locationClickListener The location layer click listener that is invoked when the
-   *                              location layer is clicked.
+   *                              location layer is clicked
+   * @since 0.3.0
    */
   public void setOnLocationClickListener(
     @Nullable OnLocationLayerClickListener locationClickListener) {
@@ -419,7 +447,9 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     Location lastLocation = locationEngine.getLastLocation();
     if (lastLocation != null) {
       setLocation(lastLocation);
-      locationLayer.updateAccuracyRadius(lastLocation);
+      if (locationLayerMode != LocationLayerMode.NAVIGATION) {
+        locationLayer.updateAccuracyRadius(lastLocation);
+      }
     }
   }
 
@@ -456,7 +486,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   @SuppressWarnings( {"MissingPermission"})
   private void mapStyleFinishedLoading() {
     // recreate runtime style components
-    locationLayer = new LocationLayer(mapView, mapboxMap, styleRes);
+    locationLayer = new LocationLayer(mapView, mapboxMap, options, staleStateRunnable);
     // reset state
     setLocationLayerEnabled(locationLayerMode);
     setBearing(previousMagneticHeading);
@@ -520,6 +550,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   private void setLocation(final Location location) {
     this.location = location;
+    staleStateRunnable.updateLatestLocationTime();
 
     // Convert the new location to a Point object.
     Point newPoint = Point.fromCoordinates(new double[] {location.getLongitude(),

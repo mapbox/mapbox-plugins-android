@@ -1,13 +1,12 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
 import android.support.v4.content.ContextCompat;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -30,16 +29,20 @@ import java.util.Map;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.ACCURACY_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.BACKGROUND_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.BACKGROUND_LAYER;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.BACKGROUND_STALE_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.BEARING_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.BEARING_LAYER;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.FOREGROUND_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.FOREGROUND_LAYER;
-import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.LOCATION_ICON;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.FOREGROUND_STALE_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.LOCATION_SOURCE;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.NAVIGATION_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.PUCK_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.SHADOW_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.SHADOW_LAYER;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.generateShadow;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.getBitmapFromDrawable;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.getDrawable;
 import static com.mapbox.mapboxsdk.style.functions.Function.zoom;
 import static com.mapbox.mapboxsdk.style.functions.stops.Stop.stop;
 import static com.mapbox.mapboxsdk.style.functions.stops.Stops.exponential;
@@ -62,18 +65,22 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
 
 final class LocationLayer {
 
-  private MapboxMap mapboxMap;
-  private Context context;
+  private final StaleStateRunnable staleStateRunnable;
+  private final MapboxMap mapboxMap;
+  private final Context context;
+  private float elevation;
 
   private final Map<String, Layer> layerMap = new HashMap<>();
   private final Map<String, GeoJsonSource> sourceMap = new HashMap<>();
 
-  LocationLayer(MapView mapView, MapboxMap mapboxMap, @StyleRes int styleRes) {
-    this.mapboxMap = mapboxMap;
+  LocationLayer(MapView mapView, MapboxMap mapboxMap, LocationLayerOptions options,
+                StaleStateRunnable staleStateRunnable) {
+    this.staleStateRunnable = staleStateRunnable;
     this.context = mapView.getContext();
+    this.mapboxMap = mapboxMap;
     addSources();
     addLayers();
-    applyStyle(styleRes);
+    applyStyle(options);
   }
 
   private void addLayers() {
@@ -89,36 +96,22 @@ final class LocationLayer {
     addSource(LOCATION_SOURCE);
   }
 
-  void applyStyle(int styleRes) {
-    TypedArray typedArray = context.obtainStyledAttributes(styleRes, R.styleable.LocationLayer);
+  void applyStyle(@NonNull LocationLayerOptions options) {
 
-    try {
-      styleShadow(ContextCompat.getDrawable(context, R.drawable.mapbox_user_icon_shadow));
+    elevation = options.elevation();
+    styleShadow(ContextCompat.getDrawable(context, R.drawable.mapbox_user_icon_shadow));
 
-      int drawableResId = typedArray.getResourceId(R.styleable.LocationLayer_foregroundDrawable, -1);
-      styleForeground(ContextCompat.getDrawable(context, drawableResId));
-
-      drawableResId = typedArray.getResourceId(R.styleable.LocationLayer_backgroundDrawable, -1);
-      styleBackground(ContextCompat.getDrawable(context, drawableResId));
-
-      drawableResId = typedArray.getResourceId(R.styleable.LocationLayer_bearingDrawable, -1);
-      styleBearing(ContextCompat.getDrawable(context, drawableResId));
-
-      drawableResId = typedArray.getResourceId(R.styleable.LocationLayer_navigationDrawable, -1);
-      styleNavigation(ContextCompat.getDrawable(context, drawableResId));
-
-      float accuracyAlpha = typedArray.getFloat(R.styleable.LocationLayer_accuracyAlpha, 0.15f);
-      if (accuracyAlpha < 0 || accuracyAlpha > 1) {
-        throw new UnsupportedOperationException(
-          "Location layer accuracy alpha value must be between 0.0 and 1.0."
-        );
-      }
-      int accuracyColor = typedArray.getColor(R.styleable.LocationLayer_accuracyColor,
-        ContextCompat.getColor(context, R.color.mapbox_plugin_location_layer_blue));
-      styleAccuracy(accuracyAlpha, accuracyColor);
-    } finally {
-      typedArray.recycle();
-    }
+    styleForeground(
+      getDrawable(context, options.foregroundDrawable(), options.foregroundTintColor()),
+      getDrawable(context, options.foregroundDrawableStale(), options.foregroundStaleTintColor()));
+    styleBackground(
+      getDrawable(context, options.backgroundDrawable(), options.backgroundTintColor()),
+      getDrawable(context, options.backgroundDrawableStale(), options.backgroundStaleTintColor()));
+    styleBearing(
+      getDrawable(context, options.bearingDrawable(), options.bearingTintColor()));
+    styleNavigation(
+      ContextCompat.getDrawable(context, options.navigationDrawable()));
+    styleAccuracy(options.accuracyAlpha(), options.accuracyColor());
   }
 
   //
@@ -230,22 +223,27 @@ final class LocationLayer {
   // Styling
   //
 
-  private void styleBackground(Drawable backgroundDrawable) {
+  private void styleBackground(Drawable backgroundDrawable, Drawable backgroundDrawableStale) {
     mapboxMap.addImage(BACKGROUND_ICON, getBitmapFromDrawable(backgroundDrawable));
+    mapboxMap.addImage(BACKGROUND_STALE_ICON, getBitmapFromDrawable(backgroundDrawableStale));
     layerMap.get(BACKGROUND_LAYER).setProperties(
-      iconImage(BACKGROUND_ICON));
+      iconImage(staleStateRunnable.isStale()
+        ? BACKGROUND_STALE_ICON : BACKGROUND_ICON));
   }
 
   private void styleShadow(Drawable shadowDrawable) {
-    mapboxMap.addImage(SHADOW_ICON, getBitmapFromDrawable(shadowDrawable));
+    mapboxMap.addImage(SHADOW_ICON, generateShadow(shadowDrawable, elevation));
     layerMap.get(SHADOW_LAYER).setProperties(
       iconImage(SHADOW_ICON));
   }
 
-  private void styleForeground(Drawable foregroundDrawable) {
-    mapboxMap.addImage(LOCATION_ICON, getBitmapFromDrawable(foregroundDrawable));
+  private void styleForeground(Drawable foregroundDrawable, Drawable foregroundDrawableStale) {
+    mapboxMap.addImage(FOREGROUND_ICON, getBitmapFromDrawable(foregroundDrawable));
+    mapboxMap.addImage(FOREGROUND_STALE_ICON, getBitmapFromDrawable(foregroundDrawableStale));
+
     layerMap.get(FOREGROUND_LAYER).setProperties(
-      iconImage(LOCATION_ICON),
+      iconImage(staleStateRunnable.isStale()
+        ? FOREGROUND_STALE_ICON : FOREGROUND_ICON),
       iconRotate(90f));
   }
 
@@ -279,6 +277,12 @@ final class LocationLayer {
   void updateForegroundBearing(float bearing) {
     layerMap.get(FOREGROUND_LAYER).setProperties(iconRotate(bearing));
     layerMap.get(SHADOW_LAYER).setProperties(iconRotate(bearing));
+  }
+
+  void locationsStale(boolean stale) {
+    layerMap.get(FOREGROUND_LAYER).setProperties(iconImage(stale ? FOREGROUND_STALE_ICON : FOREGROUND_ICON));
+    layerMap.get(BACKGROUND_LAYER).setProperties(iconImage(stale ? BACKGROUND_STALE_ICON : BACKGROUND_ICON));
+    layerMap.get(ACCURACY_LAYER).setProperties(visibility(stale ? NONE : VISIBLE));
   }
 
   //
