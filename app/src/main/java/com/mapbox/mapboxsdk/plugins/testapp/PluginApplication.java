@@ -13,19 +13,12 @@ public class PluginApplication extends Application {
   public void onCreate() {
     super.onCreate();
     if (LeakCanary.isInAnalyzerProcess(this)) {
-      // This process is dedicated to LeakCanary for heap analysis.
-      // You should not init your app in this process.
       return;
-    }
-
-    if (BuildConfig.DEBUG) {
-      Timber.plant(new Timber.DebugTree());
     }
 
     LeakCanary.install(this);
     initializeLogger();
     Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
-    Timber.plant(new Timber.DebugTree());
   }
 
   private void initializeLogger() {
