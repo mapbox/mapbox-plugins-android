@@ -1,6 +1,7 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer;
 
 import android.os.Handler;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,11 +10,10 @@ class StaleStateRunnable implements Runnable {
 
   private static StaleStateRunnable instance;
 
-  private static final int DEFAULT_DELAY_TIME_TILL_STALE = 10000;
-
   private List<OnLocationStaleListener> onLocationStaleListeners;
   private Handler handler;
-  private long delayTime = DEFAULT_DELAY_TIME_TILL_STALE;
+  private long delayTime;
+  private boolean isStale;
 
   static StaleStateRunnable getInstance() {
     if (instance == null) {
@@ -27,8 +27,16 @@ class StaleStateRunnable implements Runnable {
     handler = new Handler();
   }
 
-  void addOnLocationStaleListener(OnLocationStaleListener onLocationStaleListener) {
+  void addOnLocationStaleListener(@NonNull OnLocationStaleListener onLocationStaleListener) {
     onLocationStaleListeners.add(onLocationStaleListener);
+  }
+
+  void removeOnLocationStaleListener(@NonNull OnLocationStaleListener onLocationStaleListener) {
+    onLocationStaleListeners.remove(onLocationStaleListener);
+  }
+
+  void removeAllListeners() {
+    onLocationStaleListeners.clear();
   }
 
   @Override
@@ -36,12 +44,18 @@ class StaleStateRunnable implements Runnable {
     for (OnLocationStaleListener listener : onLocationStaleListeners) {
       listener.isLocationStale(true);
     }
+    isStale = true;
+  }
+
+  boolean isStale() {
+    return isStale;
   }
 
   void updateLatestLocationTime() {
     for (OnLocationStaleListener listener : onLocationStaleListeners) {
       listener.isLocationStale(false);
     }
+    isStale = false;
     handler.removeCallbacks(this);
     handler.postDelayed(this, delayTime);
   }
@@ -51,6 +65,7 @@ class StaleStateRunnable implements Runnable {
   }
 
   void onStop() {
+    removeAllListeners();
     handler.removeCallbacks(this);
   }
 }

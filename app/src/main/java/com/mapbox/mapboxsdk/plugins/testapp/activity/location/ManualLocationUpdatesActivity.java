@@ -95,6 +95,10 @@ public class ManualLocationUpdatesActivity extends AppCompatActivity implements 
   protected void onStart() {
     super.onStart();
     mapView.onStart();
+    if (locationEngine != null) {
+      locationEngine.requestLocationUpdates();
+      locationEngine.addLocationEngineListener(this);
+    }
   }
 
   @Override
@@ -113,6 +117,10 @@ public class ManualLocationUpdatesActivity extends AppCompatActivity implements 
   protected void onStop() {
     super.onStop();
     mapView.onStop();
+    if (locationEngine != null) {
+      locationEngine.removeLocationEngineListener(this);
+      locationEngine.removeLocationUpdates();
+    }
   }
 
   @Override

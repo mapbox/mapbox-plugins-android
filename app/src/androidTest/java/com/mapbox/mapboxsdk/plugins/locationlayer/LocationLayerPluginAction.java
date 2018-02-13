@@ -1,5 +1,6 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer;
 
+import android.content.Context;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.view.View;
@@ -36,11 +37,13 @@ class LocationLayerPluginAction implements ViewAction {
   @Override
   public void perform(UiController uiController, View view) {
     if (onPerformLocationLayerAction != null) {
-      onPerformLocationLayerAction.onLocationLayerAction(locationLayerPlugin, mapboxMap, uiController);
+      onPerformLocationLayerAction.onLocationLayerAction(locationLayerPlugin, mapboxMap,
+        uiController, view.getContext());
     }
   }
 
   interface onPerformLocationLayerAction {
-    void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap, UiController uiController);
+    void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap,
+                               UiController uiController, Context context);
   }
 }
