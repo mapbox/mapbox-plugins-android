@@ -81,6 +81,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   private boolean linearAnimation;
 
   private OnLocationLayerClickListener onLocationLayerClickListener;
+  private StaleStateRunnable staleStateRunnable;
   private LocationLayerOptions options;
 
   /**
@@ -126,12 +127,10 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
 
   private void initialize() {
     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    staleStateRunnable = new StaleStateRunnable(options.staleStateDelay());
     locationLayerMode = LocationLayerMode.NONE;
-    locationLayer = new LocationLayer(mapView, mapboxMap, options);
+    locationLayer = new LocationLayer(mapView, mapboxMap, options, staleStateRunnable);
     compassManager = new CompassManager(mapView.getContext(), this);
-    if (options.enableStaleState()) {
-      StaleStateRunnable.getInstance().addOnLocationStaleListener(this);
-    }
   }
 
   /**
@@ -222,7 +221,10 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
 
   public void applyStyle(LocationLayerOptions options) {
     locationLayer.applyStyle(options);
-    StaleStateRunnable.getInstance().setDelayTime(options.staleStateDelay());
+    if (!options.enableStaleState()) {
+      staleStateRunnable.reset();
+    }
+    staleStateRunnable.setDelayTime(options.staleStateDelay());
   }
 
   /**
@@ -273,7 +275,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
   public void onStop() {
-    StaleStateRunnable.getInstance().onStop();
+    staleStateRunnable.onStop();
     stopAllAnimations();
     if (compassManager != null && compassManager.isSensorAvailable()) {
       compassManager.onStop();
@@ -306,7 +308,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     if (mapboxMap != null) {
       mapboxMap.addOnCameraMoveListener(this);
     }
-    StaleStateRunnable.getInstance().addOnLocationStaleListener(this);
+    staleStateRunnable.addOnLocationStaleListener(this);
   }
 
   /**
@@ -484,7 +486,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   @SuppressWarnings( {"MissingPermission"})
   private void mapStyleFinishedLoading() {
     // recreate runtime style components
-    locationLayer = new LocationLayer(mapView, mapboxMap, options);
+    locationLayer = new LocationLayer(mapView, mapboxMap, options, staleStateRunnable);
     // reset state
     setLocationLayerEnabled(locationLayerMode);
     setBearing(previousMagneticHeading);
@@ -548,7 +550,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   private void setLocation(final Location location) {
     this.location = location;
-    StaleStateRunnable.getInstance().updateLatestLocationTime();
+    staleStateRunnable.updateLatestLocationTime();
 
     // Convert the new location to a Point object.
     Point newPoint = Point.fromCoordinates(new double[] {location.getLongitude(),

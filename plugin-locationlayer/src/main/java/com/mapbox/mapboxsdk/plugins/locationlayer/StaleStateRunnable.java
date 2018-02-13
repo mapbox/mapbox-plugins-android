@@ -6,23 +6,23 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class controls the location layer stale state when the {@link android.location.Location} hasn't
+ * been updated in 'x' amount of time. {@link LocationLayerOptions#staleStateDelay()} can be used to
+ * control the amount of time before the locations considered stale.
+ * {@link LocationLayerOptions#enableStaleState()} is avaliable for disabling this behaviour.
+ *
+ * @since 0.4.0
+ */
 class StaleStateRunnable implements Runnable {
 
-  private static StaleStateRunnable instance;
-
-  private List<OnLocationStaleListener> onLocationStaleListeners;
-  private Handler handler;
-  private long delayTime;
+  private final List<OnLocationStaleListener> onLocationStaleListeners;
+  private final Handler handler;
   private boolean isStale;
+  private long delayTime;
 
-  static StaleStateRunnable getInstance() {
-    if (instance == null) {
-      instance = new StaleStateRunnable();
-    }
-    return instance;
-  }
-
-  private StaleStateRunnable() {
+  StaleStateRunnable(long delayTime) {
+    this.delayTime = delayTime;
     onLocationStaleListeners = new ArrayList<>();
     handler = new Handler();
   }
@@ -58,6 +58,19 @@ class StaleStateRunnable implements Runnable {
     isStale = false;
     handler.removeCallbacks(this);
     handler.postDelayed(this, delayTime);
+  }
+
+  /**
+   * Reset the stale state when {@link LocationLayerOptions#enableStaleState()} is set to false.
+   *
+   * @since 0.4.0
+   */
+  void reset() {
+    for (OnLocationStaleListener listener : onLocationStaleListeners) {
+      listener.isLocationStale(false);
+    }
+    isStale = false;
+    handler.removeCallbacks(this);
   }
 
   void setDelayTime(long delayTime) {

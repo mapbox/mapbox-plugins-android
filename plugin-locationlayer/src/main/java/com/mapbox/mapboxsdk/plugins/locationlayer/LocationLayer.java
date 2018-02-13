@@ -65,14 +65,17 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
 
 final class LocationLayer {
 
-  private MapboxMap mapboxMap;
-  private Context context;
+  private final StaleStateRunnable staleStateRunnable;
+  private final MapboxMap mapboxMap;
+  private final Context context;
   private float elevation;
 
   private final Map<String, Layer> layerMap = new HashMap<>();
   private final Map<String, GeoJsonSource> sourceMap = new HashMap<>();
 
-  LocationLayer(MapView mapView, MapboxMap mapboxMap, LocationLayerOptions options) {
+  LocationLayer(MapView mapView, MapboxMap mapboxMap, LocationLayerOptions options,
+                StaleStateRunnable staleStateRunnable) {
+    this.staleStateRunnable = staleStateRunnable;
     this.context = mapView.getContext();
     this.mapboxMap = mapboxMap;
     addSources();
@@ -224,7 +227,7 @@ final class LocationLayer {
     mapboxMap.addImage(BACKGROUND_ICON, getBitmapFromDrawable(backgroundDrawable));
     mapboxMap.addImage(BACKGROUND_STALE_ICON, getBitmapFromDrawable(backgroundDrawableStale));
     layerMap.get(BACKGROUND_LAYER).setProperties(
-      iconImage(StaleStateRunnable.getInstance().isStale()
+      iconImage(staleStateRunnable.isStale()
         ? BACKGROUND_STALE_ICON : BACKGROUND_ICON));
   }
 
@@ -239,7 +242,7 @@ final class LocationLayer {
     mapboxMap.addImage(FOREGROUND_STALE_ICON, getBitmapFromDrawable(foregroundDrawableStale));
 
     layerMap.get(FOREGROUND_LAYER).setProperties(
-      iconImage(StaleStateRunnable.getInstance().isStale()
+      iconImage(staleStateRunnable.isStale()
         ? FOREGROUND_STALE_ICON : FOREGROUND_ICON),
       iconRotate(90f));
   }
