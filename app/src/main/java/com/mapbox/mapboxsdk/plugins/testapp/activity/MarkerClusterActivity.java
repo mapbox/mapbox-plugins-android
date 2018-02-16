@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  */
 public class MarkerClusterActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-  @BindView(R.id.mapView)
+  @BindView(R.id.map_view)
   MapView mapView;
 
   private MapboxMap mapboxMap;

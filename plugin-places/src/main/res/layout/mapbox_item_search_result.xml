@@ -16,12 +16,12 @@
     android:layout_marginLeft="16dp"
     android:layout_marginStart="16dp"
     android:layout_marginTop="8dp"
-    android:tint="@color/lightNavy"
+    android:tint="@color/mapbox_plugins_light_navy"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    app:srcCompat="@drawable/ic_place"/>
+    app:srcCompat="@drawable/mapbox_ic_place"/>
 
   <TextView
     android:id="@+id/tv_address"
@@ -33,7 +33,7 @@
     android:layout_marginRight="16dp"
     android:layout_marginStart="64dp"
     android:maxLines="1"
-    android:textColor="@color/lightNavy"
+    android:textColor="@color/mapbox_plugins_light_navy"
     android:textSize="12sp"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
@@ -51,7 +51,7 @@
     android:layout_marginStart="64dp"
     android:layout_marginTop="8dp"
     android:maxLines="1"
-    android:textColor="@color/navy"
+    android:textColor="@color/mapbox_plugins_navy"
     android:textSize="16sp"
     app:layout_constraintBottom_toTopOf="@+id/tv_address"
     app:layout_constraintEnd_toEndOf="parent"

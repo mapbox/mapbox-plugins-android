@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.places.R;
-import com.mapbox.plugins.places.autocomplete.PlaceConstants;
+import com.mapbox.plugins.places.common.PlaceConstants;
 import com.mapbox.plugins.places.autocomplete.model.PlaceOptions;
 
 public class PlaceAutocompleteActivity extends AppCompatActivity implements PlaceSelectionListener {
@@ -15,7 +15,7 @@ public class PlaceAutocompleteActivity extends AppCompatActivity implements Plac
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_autocomplete);
+    setContentView(R.layout.mapbox_activity_autocomplete);
 
     // Add autocomplete fragment if this is first creation
     if (savedInstanceState == null) {

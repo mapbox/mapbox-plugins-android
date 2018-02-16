@@ -19,7 +19,7 @@
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    tools:listitem="@layout/item_search_result">
+    tools:listitem="@layout/mapbox_item_search_result">
 
   </android.support.v7.widget.RecyclerView>
 </android.support.constraint.ConstraintLayout>

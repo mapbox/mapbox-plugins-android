@@ -9,6 +9,7 @@ android {
     targetSdkVersion androidVersions.targetSdkVersion
     applicationId "com.mapbox.mapboxsdk.plugins.testapp"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    vectorDrawables.useSupportLibrary = true
   }
 
   buildTypes {
@@ -30,6 +31,11 @@ android {
     javaMaxHeapSize "2g"
     preDexLibraries true
   }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 }
 
 dependencies {
@@ -38,9 +44,13 @@ dependencies {
   implementation dependenciesList.mapboxServices
   implementation dependenciesList.mapboxGeocoding
 
+  // Architecture
   implementation dependenciesList.lifecycleExtensions
   implementation dependenciesList.roomRuntime
   annotationProcessor dependenciesList.roomCompiler
+
+  // LOST
+  implementation dependenciesList.lost
 
   // Support libraries
   implementation dependenciesList.supportAnnotation

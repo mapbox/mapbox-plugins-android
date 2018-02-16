@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.places.R;
-import com.mapbox.plugins.places.autocomplete.PlaceConstants;
+import com.mapbox.plugins.places.common.PlaceConstants;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class SearchResultAdapter
   @Override
   public SearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-    View view = inflater.inflate(R.layout.item_search_result, parent, false);
+    View view = inflater.inflate(R.layout.mapbox_item_search_result, parent, false);
     return new SearchViewHolder(view);
   }
 
@@ -50,7 +50,7 @@ public class SearchResultAdapter
     }
 
     if (results.get(position).properties().has(PlaceConstants.SAVED_PLACE)) {
-      holder.placeNameView.setTextColor(ContextCompat.getColor(context, R.color.brightBlue));
+      holder.placeNameView.setTextColor(ContextCompat.getColor(context, R.color.mapbox_plugins_bright_blue));
     }
 
     if (results.get(position).text() != null) {

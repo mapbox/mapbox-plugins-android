@@ -13,7 +13,7 @@
         android:height="1dp"/>
 
       <solid
-        android:color="@color/md_grey_200"/>
+        android:color="@color/mapbox_plugins_material_grey_200"/>
 
     </shape>
   </item>

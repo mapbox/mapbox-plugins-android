@@ -27,7 +27,7 @@ import timber.log.Timber;
 public class ManualLocationUpdatesActivity extends AppCompatActivity implements OnMapReadyCallback,
   LocationEngineListener {
 
-  @BindView(R.id.mapView)
+  @BindView(R.id.map_view)
   MapView mapView;
   @BindView(R.id.fabToggleManualLocation)
   FloatingActionButton fabToggleManualLocation;

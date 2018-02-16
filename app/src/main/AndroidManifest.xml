@@ -13,14 +13,12 @@
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
-
     <activity android:name=".activity.FeatureOverviewActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
-
     <activity
       android:name=".activity.places.AutocompleteLauncherActivity"
       android:description="@string/description_autocomplete"
@@ -38,12 +36,12 @@
       android:description="@string/description_autocomplete_fragment"
       android:label="@string/title_places_autocomplete_fragment"
       android:theme="@style/AppTheme.NoActionBar">
-    <meta-data
-      android:name="@string/category"
-      android:value="@string/category_places"/>
-    <meta-data
-      android:name="android.support.PARENT_ACTIVITY"
-      android:value=".activity.FeatureOverviewActivity"/>
+      <meta-data
+        android:name="@string/category"
+        android:value="@string/category_places"/>
+      <meta-data
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value=".activity.FeatureOverviewActivity"/>
     </activity>
     <activity
       android:name=".activity.TrafficActivity"
@@ -56,7 +54,6 @@
         android:name="android.support.PARENT_ACTIVITY"
         android:value=".activity.FeatureOverviewActivity"/>
     </activity>
-
     <activity
       android:name=".activity.BuildingActivity"
       android:description="@string/description_building"
@@ -123,7 +120,6 @@
         android:name="android.support.PARENT_ACTIVITY"
         android:value=".activity.FeatureOverviewActivity"/>
     </activity>
-
     <activity
       android:name=".activity.MarkerClusterActivity"
       android:description="@string/description_cluster"
@@ -135,7 +131,6 @@
         android:name="android.support.PARENT_ACTIVITY"
         android:value=".activity.FeatureOverviewActivity"/>
     </activity>
-
     <activity
       android:name=".activity.offline.OfflineDownloadActivity"
       android:description="@string/description_offline_plugin"
@@ -147,7 +142,6 @@
         android:name="android.support.PARENT_ACTIVITY"
         android:value=".activity.FeatureOverviewActivity"/>
     </activity>
-
     <activity
       android:name=".activity.offline.OfflineRegionListActivity"
       android:description="@string/description_offline_regions"
@@ -159,12 +153,23 @@
         android:name="android.support.PARENT_ACTIVITY"
         android:value=".activity.FeatureOverviewActivity"/>
     </activity>
-
     <activity
       android:name=".activity.offline.OfflineRegionDetailActivity"
       android:description="@string/description_offline_regions"
       android:label="@string/title_offline_regions"
       android:theme="@style/Translucent"/>
+
+    <activity
+      android:name=".activity.places.PickerLauncherActivity"
+      android:description="@string/description_place_picker"
+      android:label="@string/title_place_picker">
+      <meta-data
+        android:name="@string/category"
+        android:value="@string/category_places"/>
+      <meta-data
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value=".activity.FeatureOverviewActivity"/>
+    </activity>
 
     <activity android:name="com.mapbox.maboxsdk.plugins.SingleFragmentActivity"/>
 
@@ -177,6 +182,5 @@
         <action android:name="com.mapbox.mapboxsdk.plugins.offline"/>
       </intent-filter>
     </receiver>
-
   </application>
 </manifest>

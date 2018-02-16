@@ -42,7 +42,7 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
 
   public static final String KEY_REGION_ID_BUNDLE = "com.mapbox.mapboxsdk.plugins.offline.bundle.id";
 
-  @BindView(R.id.mapView)
+  @BindView(R.id.map_view)
   MapView mapView;
 
   @BindView(R.id.fab_delete)

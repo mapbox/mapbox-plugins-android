@@ -1,4 +1,4 @@
-package com.mapbox.plugins.places.common;
+package com.mapbox.plugins.places.common.utils;
 
 import android.content.Context;
 import android.view.View;
@@ -21,6 +21,3 @@ public final class KeyboardUtils {
     inputMethodManager.showSoftInput(view, 0);
   }
 }
-
-
-

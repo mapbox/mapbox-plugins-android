@@ -12,7 +12,7 @@
         android:orientation="vertical">
 
         <com.mapbox.mapboxsdk.maps.MapView
-            android:id="@+id/mapView"
+            android:id="@+id/map_view"
             android:layout_width="match_parent"
             android:layout_height="224dp"
             app:mapbox_uiAttribution="false"

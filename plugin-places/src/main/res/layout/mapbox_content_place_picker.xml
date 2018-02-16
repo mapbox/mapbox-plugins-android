@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+  <ImageView
+    android:id="@+id/mapbox_plugins_image_view_marker"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:elevation="2dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@drawable/map_default_map_marker"/>
+
+  <ImageView
+    android:id="@+id/mapbox_plugins_image_view_shadow"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:elevation="1dp"
+    app:layout_constraintBottom_toBottomOf="@+id/map_view"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="@+id/mapbox_plugins_image_view_marker"
+    app:layout_constraintVertical_bias="0.0"
+    app:srcCompat="@drawable/map_default_map_marker_shadow"/>
+
+  <com.mapbox.mapboxsdk.maps.MapView
+    android:id="@+id/map_view"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    app:mapbox_uiLogo="false"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+  </com.mapbox.mapboxsdk.maps.MapView>
+
+  <com.mapbox.plugins.places.picker.ui.CurrentPlaceSelectionBottomSheet
+    android:id="@+id/mapbox_plugins_picker_bottom_sheet"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>

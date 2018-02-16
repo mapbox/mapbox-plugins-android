@@ -1,6 +1,17 @@
 <resources>
-  <string name="autocomplete_search_hint">Search here</string>
 
-  <string name="cd_search_back_button">Close Search</string>
-  <string name="cd_search_clear_button">Clear Search Query</string>
+  <!-- Autocomplete -->
+  <string name="mapbox_plugins_autocomplete_search_hint">Search here</string>
+
+  <!-- Place picker -->
+  <string name="mapbox_plugins_place_picker_toolbar_primiary_text">Choose location on map</string>
+  <string name="mapbox_plugins_place_picker_toolbar_secondary_text">Pan and zoom to adjust</string>
+
+  <string name="mapbox_plugins_place_picker_not_valid_selection">The selected location isn\'t valid</string>
+
+  <!-- Content Descriptions -->
+  <string name="mapbox_plugins_cd_exit_place_picker">Exit place picker</string>
+  <string name="mapbox_plugins_cd_search_back_button">Close Search</string>
+  <string name="mapbox_plugins_cd_search_clear_button">Clear Search Query</string>
+
 </resources>

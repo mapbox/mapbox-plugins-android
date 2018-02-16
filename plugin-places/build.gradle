@@ -31,8 +31,10 @@ android {
   lintOptions {
     abortOnError false
   }
-}
 
+  // Avoid naming conflicts
+  resourcePrefix 'mapbox_plugins_'
+}
 
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -53,6 +55,8 @@ dependencies {
   annotationProcessor dependenciesList.roomCompiler
 
   implementation dependenciesList.mapboxGeocoding
+  implementation project(':plugin-locationlayer')
+  api dependenciesList.mapboxMapSdk
 
   // Unit testing
   testImplementation dependenciesList.junit
@@ -60,6 +64,7 @@ dependencies {
   testImplementation dependenciesList.androidArchCore
 
   javadocDeps dependenciesList.mapboxMapSdk
+  implementation 'com.android.support:design:27.0.2'
 }
 
 apply from: 'javadoc.gradle'

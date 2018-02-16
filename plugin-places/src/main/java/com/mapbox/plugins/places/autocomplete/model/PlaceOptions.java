@@ -13,7 +13,7 @@ import com.mapbox.api.geocoding.v5.GeocodingCriteria.GeocodingTypeCriteria;
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.core.utils.TextUtils;
 import com.mapbox.geojson.Point;
-import com.mapbox.plugins.places.autocomplete.PlaceConstants;
+import com.mapbox.plugins.places.common.PlaceConstants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
