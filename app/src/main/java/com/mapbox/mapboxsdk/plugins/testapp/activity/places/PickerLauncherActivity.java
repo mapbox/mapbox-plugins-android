@@ -9,8 +9,11 @@ import android.widget.Toast;
 
 import com.mapbox.geocoding.v5.models.CarmenFeature;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.plugins.places.picker.PlacePicker;
+import com.mapbox.plugins.places.picker.model.PlacePickerOptions;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -28,25 +31,23 @@ public class PickerLauncherActivity extends AppCompatActivity {
 
   @OnClick(R.id.launch_location_picker)
   public void onClick(FloatingActionButton view) {
-    startActivityForResult(new PlacePicker.IntentBuilder().accessToken(Mapbox.getAccessToken()).build(this), REQUEST_CODE);
+    startActivityForResult(
+      new PlacePicker.IntentBuilder()
+        .accessToken(Mapbox.getAccessToken())
+        .placeOptions(PlacePickerOptions.builder()
+          .statingCameraPosition(new CameraPosition.Builder()
+            .target(new LatLng(40.7544, -73.9862)).zoom(16).build())
+          .build())
+        .build(this), REQUEST_CODE);
   }
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    if (requestCode == REQUEST_CODE) {
-      if (resultCode == RESULT_OK) {
-        CarmenFeature carmenFeature = PlacePicker.getPlace(data);
-        String toastMsg = String.format("Place: %s", carmenFeature.placeName());
-        Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
-      }
+    if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+      CarmenFeature carmenFeature = PlacePicker.getPlace(data);
+      String toastMsg = String.format("Place: %s", carmenFeature.placeName());
+      Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
     }
-
-
-
-
-
-
-
   }
 }

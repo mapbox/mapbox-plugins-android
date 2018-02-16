@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import com.google.gson.JsonObject;
 import com.mapbox.geocoding.v5.models.CarmenFeature;
 import com.mapbox.geojson.Point;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -26,6 +27,7 @@ import com.mapbox.plugins.places.common.PlaceConstants;
 import com.mapbox.plugins.places.common.utils.ColorUtils;
 import com.mapbox.plugins.places.picker.PlacePicker;
 import com.mapbox.plugins.places.picker.PlacePicker.IntentBuilder;
+import com.mapbox.plugins.places.picker.model.PlacePickerOptions;
 import com.mapbox.plugins.places.picker.viewmodel.PlacePickerViewModel;
 
 import java.util.Locale;
@@ -43,9 +45,10 @@ import static android.support.design.widget.Snackbar.LENGTH_LONG;
 public class PlacePickerActivity extends AppCompatActivity implements OnMapReadyCallback,
   MapboxMap.OnCameraMoveStartedListener, MapboxMap.OnCameraIdleListener, Observer<CarmenFeature> {
 
-  private CurrentPlaceSelectionBottomSheet bottomSheet;
+  CurrentPlaceSelectionBottomSheet bottomSheet;
+  CarmenFeature carmenFeature;
   private PlacePickerViewModel viewModel;
-  private CarmenFeature carmenFeature;
+  private PlacePickerOptions options;
   private ImageView markerImage;
   private MapboxMap mapboxMap;
   private String accessToken;
@@ -64,11 +67,12 @@ public class PlacePickerActivity extends AppCompatActivity implements OnMapReady
 
     if (savedInstanceState == null) {
       accessToken = getIntent().getStringExtra(PlaceConstants.ACCESS_TOKEN);
+      options = getIntent().getParcelableExtra(PlaceConstants.PLACE_OPTIONS);
     }
 
     // Initialize the view model.
     viewModel = ViewModelProviders.of(this).get(PlacePickerViewModel.class);
-    viewModel.results.observe(this, this);
+    viewModel.getResults().observe(this, this);
 
     bindViews();
     addChosenLocationButton();
@@ -86,13 +90,25 @@ public class PlacePickerActivity extends AppCompatActivity implements OnMapReady
 
   private void customizeViews() {
     ConstraintLayout toolbar = findViewById(R.id.place_picker_toolbar);
-    int color = ColorUtils.getMaterialColor(this, R.attr.colorPrimary);
-    toolbar.setBackgroundColor(color);
+    if (options != null && options.toolbarColor() != null) {
+      toolbar.setBackgroundColor(options.toolbarColor());
+    } else {
+      int color = ColorUtils.getMaterialColor(this, R.attr.colorPrimary);
+      toolbar.setBackgroundColor(color);
+    }
   }
 
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
+
+    if (options != null) {
+      if (options.startingBounds() != null) {
+        mapboxMap.moveCamera(CameraUpdateFactory.newLatLngBounds(options.startingBounds(), 0));
+      } else if (options.statingCameraPosition() != null) {
+        mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(options.statingCameraPosition()));
+      }
+    }
 
     // Initialize with the markers current location information.
     makeReverseGeocodingSearch();
@@ -116,12 +132,10 @@ public class PlacePickerActivity extends AppCompatActivity implements OnMapReady
   @Override
   public void onCameraIdle() {
     Timber.v("Map camera is now idling.");
-    if (markerImage.getTranslationY() <= -75) {
-      markerImage.animate().yBy(Math.abs(markerImage.getTranslationY()))
-        .setInterpolator(new OvershootInterpolator()).setDuration(250).start();
-      bottomSheet.setPlaceDetails(null);
-      makeReverseGeocodingSearch();
-    }
+    markerImage.animate().yBy(Math.abs(markerImage.getTranslationY()))
+      .setInterpolator(new OvershootInterpolator()).setDuration(250).start();
+    bottomSheet.setPlaceDetails(null);
+    makeReverseGeocodingSearch();
   }
 
   @Override
@@ -141,7 +155,7 @@ public class PlacePickerActivity extends AppCompatActivity implements OnMapReady
     LatLng latLng = mapboxMap.getCameraPosition().target;
     viewModel.reverseGeocode(
       Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude()),
-      accessToken
+      accessToken, options
     );
   }
 
@@ -161,7 +175,7 @@ public class PlacePickerActivity extends AppCompatActivity implements OnMapReady
     });
   }
 
-  private void placeSelected() {
+  void placeSelected() {
     String json = carmenFeature.toJson();
     Intent returningIntent = new Intent();
     returningIntent.putExtra(PlaceConstants.RETURNING_CARMEN_FEATURE, json);

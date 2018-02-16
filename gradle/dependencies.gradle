@@ -12,6 +12,7 @@ ext {
       mapboxGeocoding    : '3.0.0-beta.2',
       mapboxGeoJson      : '3.0.0-beta.2',
       mapboxServices     : '2.2.9',
+      lost               : '3.0.4',
       autoValue          : '1.5.3',
       autoValueParcel    : '0.2.6',
       junit              : '4.12',
@@ -41,6 +42,9 @@ ext {
       mapboxServices         : "com.mapbox.mapboxsdk:mapbox-android-services:${version.mapboxServices}",
       mapboxGeoJson          : "com.mapbox.mapboxsdk:mapbox-sdk-geojson:${version.mapboxGeoJson}",
       mapboxGeocoding        : "com.mapbox.mapboxsdk:mapbox-sdk-services:${version.mapboxGeocoding}",
+
+      // Lost
+      lost                   : "com.mapzen.android:lost:${version.lost}",
 
       // AutoValue
       autoValue              : "com.google.auto.value:auto-value:${version.autoValue}",

@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import com.mapbox.geocoding.v5.models.CarmenFeature;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.plugins.places.common.PlaceConstants;
+import com.mapbox.plugins.places.picker.model.PlacePickerOptions;
 import com.mapbox.plugins.places.picker.ui.PlacePickerActivity;
 
 public class PlacePicker {
@@ -54,10 +55,10 @@ public class PlacePicker {
       return this;
     }
 
-//    public IntentBuilder placeOptions(PlaceOptions placeOptions) {
-//      intent.putExtra(PlaceConstants.PLACE_OPTIONS, placeOptions);
-//      return this;
-//    }
+    public IntentBuilder placeOptions(PlacePickerOptions placeOptions) {
+      intent.putExtra(PlaceConstants.PLACE_OPTIONS, placeOptions);
+      return this;
+    }
 
     public Intent build(Activity activity) {
       intent.setClass(activity, PlacePickerActivity.class);
