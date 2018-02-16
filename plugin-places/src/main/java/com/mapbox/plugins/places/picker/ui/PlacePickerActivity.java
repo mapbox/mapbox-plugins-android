@@ -15,7 +15,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 
 import com.google.gson.JsonObject;
-import com.mapbox.geocoding.v5.models.CarmenFeature;
+import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;

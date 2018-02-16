@@ -4,8 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-import com.mapbox.geocoding.v5.models.CarmenFeature;
+import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.plugins.places.common.PlaceConstants;
 import com.mapbox.plugins.places.picker.model.PlacePickerOptions;

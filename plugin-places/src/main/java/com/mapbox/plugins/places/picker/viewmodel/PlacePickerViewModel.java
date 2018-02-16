@@ -4,10 +4,9 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
-
-import com.mapbox.geocoding.v5.MapboxGeocoding;
-import com.mapbox.geocoding.v5.models.CarmenFeature;
-import com.mapbox.geocoding.v5.models.GeocodingResponse;
+import com.mapbox.api.geocoding.v5.MapboxGeocoding;
+import com.mapbox.api.geocoding.v5.models.CarmenFeature;
+import com.mapbox.api.geocoding.v5.models.GeocodingResponse;
 import com.mapbox.geojson.Point;
 import com.mapbox.plugins.places.picker.model.PlacePickerOptions;
 

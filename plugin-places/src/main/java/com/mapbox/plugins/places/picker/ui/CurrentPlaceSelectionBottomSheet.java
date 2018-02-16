@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.mapbox.geocoding.v5.models.CarmenFeature;
+import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.places.R;
 
 import static android.support.design.widget.BottomSheetBehavior.STATE_COLLAPSED;

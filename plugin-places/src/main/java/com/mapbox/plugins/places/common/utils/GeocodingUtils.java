@@ -1,6 +1,6 @@
 package com.mapbox.plugins.places.common.utils;
 
-import com.mapbox.geocoding.v5.models.CarmenFeature;
+import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 
 public class GeocodingUtils {
 
