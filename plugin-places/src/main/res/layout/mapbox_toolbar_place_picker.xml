@@ -48,6 +48,6 @@
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    app:srcCompat="@drawable/mapbox_plugins_ic_arrow_back"/>
+    app:srcCompat="@drawable/mapbox_ic_arrow_back"/>
 
 </android.support.constraint.ConstraintLayout>

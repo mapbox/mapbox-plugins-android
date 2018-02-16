@@ -30,7 +30,7 @@
     app:elevation="3dp"
     app:layout_anchor="@id/root_bottom_sheet"
     app:layout_anchorGravity="top|end"
-    app:srcCompat="@drawable/mapbox_plugins_ic_check"/>
+    app:srcCompat="@drawable/mapbox_ic_check"/>
 
   <ImageView
     android:layout_width="wrap_content"
@@ -54,12 +54,12 @@
       android:layout_width="match_parent"
       android:layout_height="4dp"
       android:layout_gravity="top"
-      android:background="@drawable/mapbox_plugins_gradient_shadow_up"
+      android:background="@drawable/mapbox_gradient_shadow_up"
       app:layout_anchor="@+id/root_bottom_sheet"
       app:layout_anchorGravity="top"/>
 
     <include
-      layout="@layout/mapbox_plugins_view_details_bottom_header"/>
+      layout="@layout/mapbox_view_details_bottom_header"/>
 
   </LinearLayout>
 

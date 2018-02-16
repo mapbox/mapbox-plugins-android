@@ -37,7 +37,7 @@ public class CurrentPlaceSelectionBottomSheet extends CoordinatorLayout {
   }
 
   private void initialize(Context context) {
-    rootView = (CoordinatorLayout) inflate(context, R.layout.mapbox_plugins_view_bottom_sheet_container, this);
+    rootView = (CoordinatorLayout) inflate(context, R.layout.mapbox_view_bottom_sheet_container, this);
     bottomSheetBehavior = BottomSheetBehavior.from(rootView.findViewById(R.id.root_bottom_sheet));
     bottomSheetBehavior.setHideable(true);
     bottomSheetBehavior.setState(STATE_HIDDEN);

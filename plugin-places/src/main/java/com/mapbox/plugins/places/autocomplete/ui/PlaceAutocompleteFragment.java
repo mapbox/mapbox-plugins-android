@@ -75,8 +75,8 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
 
     mode = placeOptions.viewMode();
     rootView = inflater.inflate(
-      mode == PlaceOptions.MODE_CARDS ? R.layout.mapbox_plugins_fragment_autocomplete_card
-        : R.layout.mapbox_plugins_fragment_autocomplete_full,
+      mode == PlaceOptions.MODE_CARDS ? R.layout.mapbox_fragment_autocomplete_card
+        : R.layout.mapbox_fragment_autocomplete_full,
       container, false);
 
     bindViews();

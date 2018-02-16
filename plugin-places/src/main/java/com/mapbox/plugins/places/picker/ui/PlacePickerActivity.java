@@ -63,7 +63,7 @@ public class PlacePickerActivity extends AppCompatActivity implements OnMapReady
     // application colorPrimary color.
     getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
     getSupportActionBar().hide();
-    setContentView(R.layout.mapbox_plugins_activity_place_picker);
+    setContentView(R.layout.mapbox_activity_place_picker);
 
     if (savedInstanceState == null) {
       accessToken = getIntent().getStringExtra(PlaceConstants.ACCESS_TOKEN);

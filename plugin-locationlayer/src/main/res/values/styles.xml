@@ -11,7 +11,7 @@
     <item name="backgroundDrawableStale">@drawable/mapbox_user_stroke_icon</item>
 
     <item name="accuracyAlpha">0.15</item>
-    <item name="accuracyColor">@color/mapbox_plugin_location_layer_blue</item>
+    <item name="accuracyColor">@color/mapbox_location_layer_blue</item>
 
     <item name="elevation">12dp</item>
 

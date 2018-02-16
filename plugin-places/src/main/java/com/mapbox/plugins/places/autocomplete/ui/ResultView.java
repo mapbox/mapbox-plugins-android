@@ -53,7 +53,7 @@ public class ResultView extends LinearLayout {
   }
 
   void inflateView(Context context) {
-    inflate(context, R.layout.mapbox_plugins_view_results, this);
+    inflate(context, R.layout.mapbox_view_results, this);
   }
 
   public void setOnItemClickListener(ResultClickCallback onItemClickListener) {

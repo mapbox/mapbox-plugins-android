@@ -39,7 +39,7 @@
     android:layout_height="2dp"
     android:layout_marginBottom="4dp"
     android:layout_marginTop="4dp"
-    android:background="@drawable/mapbox_plugins_scroll_shadow"
+    android:background="@drawable/mapbox_scroll_shadow"
     android:visibility="invisible"
     app:layout_constraintTop_toBottomOf="@+id/cardView"/>
 

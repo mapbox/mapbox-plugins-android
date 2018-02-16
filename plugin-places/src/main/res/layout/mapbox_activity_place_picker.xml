@@ -11,10 +11,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <include layout="@layout/mapbox_plugins_toolbar_place_picker"/>
+    <include layout="@layout/mapbox_toolbar_place_picker"/>
 
   </android.support.design.widget.AppBarLayout>
 
-  <include layout="@layout/mapbox_plugins_content_place_picker"/>
+  <include layout="@layout/mapbox_content_place_picker"/>
 
 </android.support.design.widget.CoordinatorLayout>

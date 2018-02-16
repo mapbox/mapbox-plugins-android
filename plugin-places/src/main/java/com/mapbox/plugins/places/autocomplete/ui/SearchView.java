@@ -40,7 +40,7 @@ public class SearchView extends LinearLayout implements ImageButton.OnClickListe
 
   public SearchView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    inflate(context, R.layout.mapbox_plugins_view_search, this);
+    inflate(context, R.layout.mapbox_view_search, this);
     backButton = findViewById(R.id.button_search_back);
     clearButton = findViewById(R.id.button_search_clear);
     searchEditText = findViewById(R.id.edittext_search);

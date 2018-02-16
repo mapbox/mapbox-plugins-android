@@ -15,7 +15,7 @@ public class PlaceAutocompleteActivity extends AppCompatActivity implements Plac
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.mapbox_plugins_activity_autocomplete);
+    setContentView(R.layout.mapbox_activity_autocomplete);
 
     // Add autocomplete fragment if this is first creation
     if (savedInstanceState == null) {

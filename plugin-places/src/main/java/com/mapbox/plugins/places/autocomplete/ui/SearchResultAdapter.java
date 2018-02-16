@@ -35,7 +35,7 @@ public class SearchResultAdapter
   @Override
   public SearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-    View view = inflater.inflate(R.layout.mapbox_plugins_item_search_result, parent, false);
+    View view = inflater.inflate(R.layout.mapbox_item_search_result, parent, false);
     return new SearchViewHolder(view);
   }
 

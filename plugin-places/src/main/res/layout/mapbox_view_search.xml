@@ -23,7 +23,7 @@
     android:textColor="@color/mapbox_plugins_navy"
     android:textColorHint="@color/mapbox_plugins_light_navy"
     android:textColorLink="@color/mapbox_plugins_navy"
-    android:textCursorDrawable="@drawable/mapbox_plugins_color_text_cursor"
+    android:textCursorDrawable="@drawable/mapbox_color_text_cursor"
     android:textSize="16sp"
     android:typeface="sans"
     app:layout_constraintBottom_toBottomOf="parent"
@@ -47,7 +47,7 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintVertical_bias="0.0"
-    app:srcCompat="@drawable/mapbox_plugins_ic_clear"/>
+    app:srcCompat="@drawable/mapbox_ic_clear"/>
 
   <ImageView
     android:id="@+id/button_search_back"
@@ -67,5 +67,5 @@
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    app:srcCompat="@drawable/mapbox_plugins_ic_arrow_back"/>
+    app:srcCompat="@drawable/mapbox_ic_arrow_back"/>
 </android.support.constraint.ConstraintLayout>
