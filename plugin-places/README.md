@@ -43,6 +43,10 @@ dependencies {
 
 - [In this repo's test app](https://github.com/mapbox/mapbox-plugins-android/tree/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/places)
 
+- [In the Mapbox Android demo app](https://github.com/mapbox/mapbox-android-demo/blob/d5d0b55be007cde8cd75986dc1246eb672f5f93e/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/plugins/PlacesPluginActivity.java) – (Don't have the app? [Download it on Google Play](https://play.google.com/store/apps/details?id=com.mapbox.mapboxandroiddemo).)
+
+
+
 ## Help and Usage
 
 This repository includes an app that shows how to use each plugins in this repository. [Check out its code](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugins/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp) for ready-to-use snippets.
