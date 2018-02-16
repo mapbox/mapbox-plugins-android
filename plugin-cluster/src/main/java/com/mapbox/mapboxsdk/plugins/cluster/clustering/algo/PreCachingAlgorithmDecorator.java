@@ -70,6 +70,17 @@ public class PreCachingAlgorithmDecorator<T extends ClusterItem> implements Algo
     return mAlgorithm.getItems();
   }
 
+  @Override
+  public void setMaxDistanceBetweenClusteredItems(int maxDistance) {
+    mAlgorithm.setMaxDistanceBetweenClusteredItems(maxDistance);
+    clearCache();
+  }
+
+  @Override
+  public int getMaxDistanceBetweenClusteredItems() {
+    return mAlgorithm.getMaxDistanceBetweenClusteredItems();
+  }
+
   private Set<? extends Cluster<T>> getClustersInternal(int discreteZoom) {
     Set<? extends Cluster<T>> results;
     mCacheLock.readLock().lock();

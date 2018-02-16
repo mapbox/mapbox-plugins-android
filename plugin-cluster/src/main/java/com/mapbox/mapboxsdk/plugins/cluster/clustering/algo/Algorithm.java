@@ -24,4 +24,17 @@ public interface Algorithm<T extends ClusterItem> {
   Set<? extends Cluster<T>> getClusters(double zoom);
 
   Collection<T> getItems();
+
+  /**
+   * Sets the biggest distance allowed between two markers before they get clustered.
+   * By default this value is 100.
+   *
+   * @param maxDistance the max distance between markers before they get clustered
+   */
+  void setMaxDistanceBetweenClusteredItems(int maxDistance);
+
+  /**
+   * @return the max distance between markers before they get clustered
+   */
+  int getMaxDistanceBetweenClusteredItems();
 }
