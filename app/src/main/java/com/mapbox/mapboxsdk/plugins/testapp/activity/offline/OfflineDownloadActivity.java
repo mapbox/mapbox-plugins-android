@@ -89,9 +89,9 @@ public class OfflineDownloadActivity extends AppCompatActivity {
   private void initSeekbars() {
     int maxZoom = (int) MapboxConstants.MAXIMUM_ZOOM;
     minZoomView.setMax(maxZoom);
-    minZoomView.setProgress(14);
+    minZoomView.setProgress(16);
     maxZoomView.setMax(maxZoom);
-    maxZoomView.setProgress(maxZoom);
+    maxZoomView.setProgress(19);
   }
 
   private void initSpinner() {
