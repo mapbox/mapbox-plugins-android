@@ -17,6 +17,9 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
 import com.mapbox.mapboxsdk.plugins.locationlayer.OnLocationLayerClickListener;
+import com.mapbox.mapboxsdk.plugins.locationlayer.camera.BearingAnimator;
+import com.mapbox.mapboxsdk.plugins.locationlayer.camera.LatLngAnimator;
+import com.mapbox.mapboxsdk.plugins.locationlayer.camera.MapAnimator;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.services.android.location.LostLocationEngine;
 import com.mapbox.services.android.telemetry.location.LocationEngine;
@@ -189,8 +192,12 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
 
   @Override
   public void onLocationChanged(Location location) {
-    mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-      new LatLng(location.getLatitude(), location.getLongitude()), 16));
+    MapAnimator mapAnimator = MapAnimator.builder(mapboxMap)
+      .addBearingAnimator(new BearingAnimator(location.getBearing(), 1000))
+      .addLatLngAnimator(new LatLngAnimator(new LatLng(location), 1000))
+      .build();
+
+    mapAnimator.playTogether();
   }
 
   @Override
