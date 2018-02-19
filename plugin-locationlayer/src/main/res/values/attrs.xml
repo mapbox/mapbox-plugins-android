@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <declare-styleable name="LocationLayer">
-    <attr name="foregroundDrawable" format="reference"/>
-    <attr name="foregroundTintColor" format="color"/>
-    <attr name="backgroundDrawable" format="reference"/>
-    <attr name="backgroundTintColor" format="color"/>
-    <attr name="bearingDrawable" format="reference"/>
-    <attr name="bearingTintColor" format="color"/>
-    <attr name="navigationDrawable" format="reference"/>
+  <!-- these are public -->
+  <declare-styleable name="mapbox_LocationLayer">
+    <attr name="mapbox_foregroundDrawable" format="reference"/>
+    <attr name="mapbox_foregroundTintColor" format="color"/>
+    <attr name="mapbox_backgroundDrawable" format="reference"/>
+    <attr name="mapbox_backgroundTintColor" format="color"/>
+    <attr name="mapbox_bearingDrawable" format="reference"/>
+    <attr name="mapbox_bearingTintColor" format="color"/>
+    <attr name="mapbox_navigationDrawable" format="reference"/>
 
-    <attr name="foregroundDrawableStale" format="reference"/>
-    <attr name="foregroundStaleTintColor" format="color"/>
-    <attr name="backgroundDrawableStale" format="reference"/>
-    <attr name="backgroundStaleTintColor" format="color"/>
+    <attr name="mapbox_foregroundDrawableStale" format="reference"/>
+    <attr name="mapbox_foregroundStaleTintColor" format="color"/>
+    <attr name="mapbox_backgroundDrawableStale" format="reference"/>
+    <attr name="mapbox_backgroundStaleTintColor" format="color"/>
 
-    <attr name="accuracyAlpha" format="float"/>
-    <attr name="accuracyColor" format="color"/>
+    <attr name="mapbox_accuracyAlpha" format="float"/>
+    <attr name="mapbox_accuracyColor" format="color"/>
 
-    <attr name="elevation" format="dimension"/>
+    <attr name="mapbox_elevation" format="dimension"/>
 
-    <attr name="enableStaleState" format="boolean"/>
-    <attr name="staleStateDelay" format="integer" min="0"/>
+    <attr name="mapbox_enableStaleState" format="boolean"/>
+    <attr name="mapbox_staleStateDelay" format="integer" min="0"/>
 
   </declare-styleable>
 </resources>

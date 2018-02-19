@@ -10,17 +10,16 @@
 
   <style name="Translucent" parent="Theme.AppCompat.Light.NoActionBar"/>
 
-  <style name="CustomLocationLayer" parent="LocationLayer">
-    <item name="backgroundDrawable">@drawable/custom_user_stroke_icon</item>
-    <item name="foregroundDrawable">@drawable/custom_user_icon</item>
+  <style name="CustomLocationLayer" parent="mapbox_LocationLayer">
+    <item name="mapbox_foregroundDrawable">@drawable/custom_user_icon</item>
 
-    <item name="bearingDrawable">@drawable/custom_user_arrow</item>
-    <item name="navigationDrawable">@drawable/custom_user_puck_icon</item>
+    <item name="mapbox_bearingDrawable">@drawable/custom_user_arrow</item>
+    <item name="mapbox_navigationDrawable">@drawable/custom_user_puck_icon</item>
 
-    <item name="accuracyAlpha">0.15</item>
-    <item name="accuracyColor">#FF82C6</item>
+    <item name="mapbox_accuracyAlpha">0.15</item>
+    <item name="mapbox_accuracyColor">#FF82C6</item>
 
-    <item name="elevation">0dp</item>
+    <item name="mapbox_elevation">0dp</item>
   </style>
 
   <style name="AppTheme.NoActionBar">

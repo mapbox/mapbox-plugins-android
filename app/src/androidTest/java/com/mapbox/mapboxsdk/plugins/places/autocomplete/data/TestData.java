@@ -1,7 +1,7 @@
 package com.mapbox.mapboxsdk.plugins.places.autocomplete.data;
 
 import com.google.gson.JsonObject;
-import com.mapbox.geocoding.v5.models.CarmenFeature;
+import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.plugins.places.autocomplete.data.entity.SearchHistoryEntity;
 
 final class TestData {

@@ -115,7 +115,7 @@ public class LocationLayerMapChangeActivity extends AppCompatActivity implements
 
     if (item.getItemId() == R.id.action_style_change) {
       customStyle = !customStyle;
-      locationPlugin.applyStyle(customStyle ? R.style.CustomLocationLayer : R.style.LocationLayer);
+      locationPlugin.applyStyle(customStyle ? R.style.CustomLocationLayer : R.style.mapbox_LocationLayer);
       return true;
     }
 
