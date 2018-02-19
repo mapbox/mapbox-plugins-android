@@ -248,12 +248,14 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   @SuppressWarnings( {"MissingPermission"})
   public void setLocationEngine(@Nullable LocationEngine locationEngine) {
+    if (this.locationEngine != null) {
+      this.locationEngine.removeLocationEngineListener(this);
+      this.locationEngine = null;
+    }
+    
     if (locationEngine != null) {
       this.locationEngine = locationEngine;
       setLocationLayerEnabled(locationLayerMode);
-    } else if (this.locationEngine != null) {
-      this.locationEngine.removeLocationEngineListener(this);
-      this.locationEngine = null;
     }
   }
 
