@@ -94,6 +94,7 @@ dependencies {
   implementation project(':plugin-cluster')
   implementation project(':plugin-places')
   implementation project(':plugin-offline')
+  implementation project(':plugin-localization')
 }
 
 sonarqube {
