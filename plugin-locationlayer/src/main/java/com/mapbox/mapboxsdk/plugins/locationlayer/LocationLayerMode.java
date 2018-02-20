@@ -10,23 +10,23 @@ import java.lang.annotation.RetentionPolicy;
  *
  * @since 0.1.0
  */
-public final class LocationLayerStyle {
+public final class LocationLayerMode {
 
-  private LocationLayerStyle() {
+  private LocationLayerMode() {
     // Class should not be initialized
   }
 
   /**
    * One of these constants should be used when
-   * {@link LocationLayerPlugin#setLocationLayerStyle(int)}'s called. The
-   * mode can be switched at anytime by calling the {@code setLocationLayerStyle} method passing
+   * {@link LocationLayerPlugin#setLocationLayerMode(int)}'s called. The
+   * mode can be switched at anytime by calling the {@code setLocationLayerMode} method passing
    * in the new mode you'd like the location layer to be in.
    *
    * @since 0.1.0
    */
   @IntDef( {COMPASS, NAVIGATION, NORMAL})
   @Retention(RetentionPolicy.SOURCE)
-  @interface Style {
+  @interface Mode {
   }
 
   /**

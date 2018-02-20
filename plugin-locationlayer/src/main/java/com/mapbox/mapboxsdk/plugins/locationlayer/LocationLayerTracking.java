@@ -24,7 +24,7 @@ public final class LocationLayerTracking {
    */
   @IntDef( {NONE, TRACKING, TRACKING_COMPASS, TRACKING_GPS, TRACKING_GPS_NORTH})
   @Retention(RetentionPolicy.SOURCE)
-  public @interface Mode {
+  public @interface Type {
   }
 
   /**

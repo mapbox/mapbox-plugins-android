@@ -18,7 +18,7 @@ public class LocationLayerCamera {
     this.mapboxMap = mapboxMap;
   }
 
-  public void setTrackingMode(@LocationLayerTracking.Mode int trackingMode) {
+  public void setTrackingMode(@LocationLayerTracking.Type int trackingMode) {
     this.trackingMode = trackingMode;
   }
 

@@ -85,7 +85,7 @@ public class LocationLayerTest {
       @Override
       public void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap,
                                         UiController uiController, Context context) {
-        locationLayerPlugin.setLocationLayerStyle(LocationLayerStyle.NORMAL);
+        locationLayerPlugin.setLocationLayerMode(LocationLayerMode.NORMAL);
         assertTrue(mapboxMap.getSource(LOCATION_SOURCE) != null);
       }
     });
@@ -97,7 +97,7 @@ public class LocationLayerTest {
       @Override
       public void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap,
                                         UiController uiController, Context context) {
-        locationLayerPlugin.setLocationLayerStyle(LocationLayerStyle.NORMAL);
+        locationLayerPlugin.setLocationLayerMode(LocationLayerMode.NORMAL);
         assertTrue(mapboxMap.getLayer(ACCURACY_LAYER) != null);
         assertTrue(mapboxMap.getLayer(BACKGROUND_LAYER) != null);
         assertTrue(mapboxMap.getLayer(FOREGROUND_LAYER) != null);
@@ -111,7 +111,7 @@ public class LocationLayerTest {
       @Override
       public void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap,
                                         UiController uiController, Context context) {
-        locationLayerPlugin.setLocationLayerStyle(LocationLayerStyle.COMPASS);
+        locationLayerPlugin.setLocationLayerMode(LocationLayerMode.COMPASS);
         assertTrue(mapboxMap.getLayer(ACCURACY_LAYER) != null);
         assertTrue(mapboxMap.getLayer(BACKGROUND_LAYER) != null);
         assertTrue(mapboxMap.getLayer(FOREGROUND_LAYER) != null);
@@ -126,7 +126,7 @@ public class LocationLayerTest {
       @Override
       public void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap,
                                         UiController uiController, Context context) {
-        locationLayerPlugin.setLocationLayerStyle(LocationLayerStyle.COMPASS);
+        locationLayerPlugin.setLocationLayerMode(LocationLayerMode.COMPASS);
         assertTrue(mapboxMap.getLayer(NAVIGATION_LAYER) != null);
       }
     });
@@ -138,7 +138,7 @@ public class LocationLayerTest {
       @Override
       public void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap,
                                         UiController uiController, Context context) {
-        locationLayerPlugin.setLocationLayerStyle(LocationLayerStyle.NORMAL);
+        locationLayerPlugin.setLocationLayerMode(LocationLayerMode.NORMAL);
         assertTrue(mapboxMap.getLayer(FOREGROUND_LAYER) != null);
         locationLayerPlugin.setLocationLayerEnabled(false);
         assertTrue(mapboxMap.getLayer(FOREGROUND_LAYER).getVisibility().getValue()
@@ -153,11 +153,11 @@ public class LocationLayerTest {
       @Override
       public void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap,
                                         UiController uiController, Context context) {
-        locationLayerPlugin.setLocationLayerStyle(LocationLayerStyle.NORMAL);
+        locationLayerPlugin.setLocationLayerMode(LocationLayerMode.NORMAL);
         assertTrue(mapboxMap.getLayer(FOREGROUND_LAYER) != null);
         mapboxMap.setStyleUrl(Style.SATELLITE);
         uiController.loopMainThreadForAtLeast(500);
-        assertEquals(locationLayerPlugin.getLocationLayerStyle(), LocationLayerStyle.NORMAL);
+        assertEquals(locationLayerPlugin.getLocationLayerMode(), LocationLayerMode.NORMAL);
         assertTrue(mapboxMap.getLayer(FOREGROUND_LAYER) != null);
         assertTrue(mapboxMap.getLayer(FOREGROUND_LAYER).getVisibility().getValue()
           .equals(Property.VISIBLE));
@@ -175,7 +175,7 @@ public class LocationLayerTest {
       @Override
       public void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap,
                                         UiController uiController, Context context) {
-        locationLayerPlugin.setLocationLayerStyle(LocationLayerStyle.NORMAL);
+        locationLayerPlugin.setLocationLayerMode(LocationLayerMode.NORMAL);
         SymbolLayer symbolLayer = mapboxMap.getLayerAs(FOREGROUND_LAYER);
         assert symbolLayer != null;
         assertThat(symbolLayer.getIconImage().getValue(), equalTo(FOREGROUND_ICON));
@@ -193,7 +193,7 @@ public class LocationLayerTest {
       @Override
       public void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap,
                                         UiController uiController, Context context) {
-        locationLayerPlugin.setLocationLayerStyle(LocationLayerStyle.NORMAL);
+        locationLayerPlugin.setLocationLayerMode(LocationLayerMode.NORMAL);
         locationLayerPlugin.applyStyle(LocationLayerOptions.builder(context).staleStateDelay(100).build());
         locationLayerPlugin.forceLocationUpdate(location);
         uiController.loopMainThreadForAtLeast(200);

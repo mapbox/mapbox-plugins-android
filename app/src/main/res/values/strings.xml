@@ -53,4 +53,6 @@
 
   <!-- Place picker -->
   <string name="detailed_description_place_picker">Example shows how to launch the Place Picker using the Floating action button and receiving a result in onActivityResult.</string>
+    <string name="mode">Mode:</string>
+  <string name="tracking">Tracking:</string>
 </resources>
