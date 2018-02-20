@@ -10,6 +10,7 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.plugins.localization.LocalizationPlugin;
+import com.mapbox.mapboxsdk.plugins.localization.MapLocale;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 
 import butterknife.BindView;
@@ -23,7 +24,6 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
 
   private LocalizationPlugin localizationPlugin;
   private boolean mapIsLocalized;
-  private String ENGLISH_LANGUAGE_CODE = "en";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -38,17 +38,18 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
 
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
-    localizationPlugin = new LocalizationPlugin(mapboxMap, ENGLISH_LANGUAGE_CODE);
+    localizationPlugin = new LocalizationPlugin(mapboxMap);
+    localizationPlugin.setMapLanguage();
   }
 
   @OnClick(R.id.localize_fab)
   public void localizeToggleFab() {
     if (mapIsLocalized) {
-      localizationPlugin.setMapTextLanguage(ENGLISH_LANGUAGE_CODE);
+      localizationPlugin.setMapLanguage(new MapLocale(MapLocale.FRENCH));
       Toast.makeText(this, R.string.map_not_localized, Toast.LENGTH_SHORT).show();
       mapIsLocalized = false;
     } else {
-      localizationPlugin.setMapTextLanguage(localizationPlugin.getDeviceLanguage());
+      localizationPlugin.setMapLanguage();
       Toast.makeText(this, R.string.map_localized, Toast.LENGTH_SHORT).show();
       mapIsLocalized = true;
     }
@@ -106,31 +107,31 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.english:
-        localizationPlugin.setMapTextToEnglish();
+        localizationPlugin.setMapLangauge(MapLocale.ENGLISH);
         return true;
       case R.id.spanish:
-        localizationPlugin.setMapTextToSpanish();
+        localizationPlugin.setMapLangauge(MapLocale.SPANISH);
         return true;
       case R.id.french:
-        localizationPlugin.setMapTextToFrench();
+        localizationPlugin.setMapLangauge(MapLocale.FRENCH);
         return true;
       case R.id.german:
-        localizationPlugin.setMapTextToGerman();
+        localizationPlugin.setMapLangauge(MapLocale.GERMAN);
         return true;
       case R.id.russian:
-        localizationPlugin.setMapTextToRussian();
+        localizationPlugin.setMapLangauge(MapLocale.RUSSIAN);
         return true;
       case R.id.chinese:
-        localizationPlugin.setMapTextToChinese();
+        localizationPlugin.setMapLangauge(MapLocale.CHINESE);
         return true;
       case R.id.simplified_chinese:
-        localizationPlugin.setMapTextToSimplifiedChinese();
+        localizationPlugin.setMapLangauge(MapLocale.SIMPLIFIED_CHINESE);
         return true;
       case R.id.portuguese:
-        localizationPlugin.setMapTextToPortuguese();
+        localizationPlugin.setMapLangauge(MapLocale.PORTUGUESE);
         return true;
       case R.id.arabic:
-        localizationPlugin.setMapTextToArabic();
+        localizationPlugin.setMapLangauge(MapLocale.ARABIC);
         return true;
       case android.R.id.home:
         finish();
