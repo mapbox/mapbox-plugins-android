@@ -1,5 +1,6 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.location;
 
+import android.annotation.SuppressLint;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
@@ -14,8 +15,9 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerMode;
+import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerStyle;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
+import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerTracking;
 import com.mapbox.mapboxsdk.plugins.locationlayer.OnLocationLayerClickListener;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.services.android.location.LostLocationEngine;
@@ -54,36 +56,37 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     if (locationLayerPlugin == null) {
       return;
     }
-    locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.NONE);
+    locationLayerPlugin.setLocationLayerEnabled(false);
   }
 
-  @SuppressWarnings( {"MissingPermission"})
   @OnClick(R.id.button_location_mode_compass)
   public void locationModeCompass(View view) {
     if (locationLayerPlugin == null) {
       return;
     }
-    locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.COMPASS);
+    locationLayerPlugin.setLocationLayerStyle(LocationLayerStyle.COMPASS);
+    locationLayerPlugin.setLocationLayerTracking(LocationLayerTracking.TRACKING_COMPASS);
   }
 
-  @SuppressWarnings( {"MissingPermission"})
   @OnClick(R.id.button_location_mode_tracking)
   public void locationModeTracking(View view) {
     if (locationLayerPlugin == null) {
       return;
     }
-    locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.TRACKING);
+    locationLayerPlugin.setLocationLayerStyle(LocationLayerStyle.NORMAL);
+    locationLayerPlugin.setLocationLayerTracking(LocationLayerTracking.TRACKING);
   }
 
-  @SuppressWarnings( {"MissingPermission"})
   @OnClick(R.id.button_location_mode_navigation)
   public void locationModeNavigation(View view) {
     if (locationLayerPlugin == null) {
       return;
     }
-    locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.NAVIGATION);
+    locationLayerPlugin.setLocationLayerStyle(LocationLayerStyle.NAVIGATION);
+    locationLayerPlugin.setLocationLayerTracking(LocationLayerTracking.TRACKING_GPS_NORTH);
   }
 
+  @SuppressLint("MissingPermission")
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
@@ -93,6 +96,7 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     locationEngine.activate();
     locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine);
     locationLayerPlugin.setOnLocationClickListener(this);
+    locationLayerPlugin.setLocationLayerEnabled(true);
     getLifecycle().addObserver(locationLayerPlugin);
   }
 

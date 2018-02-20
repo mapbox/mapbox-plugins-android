@@ -10,31 +10,24 @@ import java.lang.annotation.RetentionPolicy;
  *
  * @since 0.1.0
  */
-public final class LocationLayerMode {
+public final class LocationLayerStyle {
 
-  private LocationLayerMode() {
+  private LocationLayerStyle() {
     // Class should not be initialized
   }
 
   /**
    * One of these constants should be used when
-   * {@link LocationLayerPlugin#setLocationLayerEnabled(int)}'s called. The
-   * mode can be switched at anytime by calling the {@code setLocationLayerEnabled} method passing
+   * {@link LocationLayerPlugin#setLocationLayerStyle(int)}'s called. The
+   * mode can be switched at anytime by calling the {@code setLocationLayerStyle} method passing
    * in the new mode you'd like the location layer to be in.
    *
    * @since 0.1.0
    */
-  @IntDef( {NONE, COMPASS, NAVIGATION, TRACKING})
+  @IntDef( {COMPASS, NAVIGATION, NORMAL})
   @Retention(RetentionPolicy.SOURCE)
-  @interface Mode {
+  @interface Style {
   }
-
-  /**
-   * All Tracking, bearing, and location are disabled.
-   *
-   * @since 0.1.0
-   */
-  public static final int NONE = 0x00000000;
 
   /**
    * Tracking the bearing of the user based on sensor data.
@@ -55,5 +48,5 @@ public final class LocationLayerMode {
    *
    * @since 0.1.0
    */
-  public static final int TRACKING = 0x00000012;
+  public static final int NORMAL = 0x00000012;
 }

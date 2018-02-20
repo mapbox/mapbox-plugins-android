@@ -21,6 +21,7 @@ import com.mapbox.mapboxsdk.maps.MapView.OnMapChangedListener;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.MapboxMap.OnCameraMoveListener;
 import com.mapbox.mapboxsdk.maps.MapboxMap.OnMapClickListener;
+import com.mapbox.mapboxsdk.plugins.locationlayer.camera.LocationLayerCamera;
 import com.mapbox.services.android.telemetry.location.LocationEngine;
 import com.mapbox.services.android.telemetry.location.LocationEngineListener;
 import com.mapbox.services.commons.geojson.Point;
@@ -40,11 +41,13 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.shortestRotation;
  * The Location layer plugin provides location awareness to your mobile application. Enabling this
  * plugin provides a contextual experience to your users by showing an icon representing the users
  * current location. A few different modes are offered to provide the right context to your users at
- * the correct time. {@link LocationLayerMode#TRACKING} simply shows the users location on the map
- * represented as a dot. {@link LocationLayerMode#COMPASS} mode allows you to display an arrow icon
+ * the correct time. {@link LocationLayerStyle#NORMAL} simply shows the users location on the map
+ * represented as a dot. {@link LocationLayerStyle#COMPASS} mode allows you to display an arrow icon
  * (by default) that points in the direction the device is pointing in.
- * {@link LocationLayerMode#NAVIGATION} can be used in conjunction with our Navigation SDK to
- * display a larger icon we call the user puck. Lastly, {@link LocationLayerMode#NONE} can be used
+ * {@link LocationLayerStyle#NAVIGATION} can be used in conjunction with our Navigation SDK to
+ * display a larger icon we call the user puck.
+ * <p>
+ * Lastly, {@link LocationLayerPlugin#setLocationLayerEnabled(boolean)} can be used
  * to disable the Location Layer but keep the instance around till the activity is destroyed.
  * <p>
  * Using this plugin requires you to request permission beforehand manually or using
@@ -61,12 +64,14 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   private LocationLayer locationLayer;
   private CompassManager compassManager;
   private LocationEngine locationEngine;
+  private LocationLayerCamera camera;
   private final MapboxMap mapboxMap;
   private final MapView mapView;
 
   // Enabled booleans
-  @LocationLayerMode.Mode
-  private int locationLayerMode;
+  @LocationLayerStyle.Style
+  private int locationLayerStyle;
+  private boolean isEnabled;
 
   // Previous compass and location values
   private float previousMagneticHeading;
@@ -128,66 +133,79 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   private void initialize() {
     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     staleStateRunnable = new StaleStateRunnable(options.staleStateDelay());
-    locationLayerMode = LocationLayerMode.NONE;
+    locationLayerStyle = LocationLayerStyle.NORMAL;
     locationLayer = new LocationLayer(mapView, mapboxMap, options, staleStateRunnable);
     compassManager = new CompassManager(mapView.getContext(), this);
+    camera = new LocationLayerCamera(mapboxMap);
+  }
+
+  @RequiresPermission(anyOf = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION})
+  public void setLocationLayerEnabled(boolean isEnabled) {
+    this.isEnabled = isEnabled;
+    if (isEnabled) {
+      enableLocationLayerPlugin();
+    } else {
+      disableLocationLayerPlugin();
+    }
+  }
+
+  private void enableLocationLayerPlugin() {
+    // Set an initial location if one is available and the locationEngines not null
+    if (locationEngine != null) {
+      setLastLocation();
+      locationEngine.addLocationEngineListener(this);
+    }
+
+    toggleCameraListener();
+    locationLayer.setLayersVisibility(true);
   }
 
   /**
    * After creating an instance of this plugin, you can use this API to enable the location mode of
-   * your choice. These modes can be found in the {@link LocationLayerMode} class and the parameter
+   * your choice. These modes can be found in the {@link LocationLayerStyle} class and the parameter
    * only accepts one of those modes. Note that before enabling the My Location layer, you will need
    * to ensure that you have the requested the required user location permissions.
    * <p>
    * <ul>
-   * <li>{@link LocationLayerMode#TRACKING}: Display the user location on the map as a small dot</li>
-   * <li>{@link LocationLayerMode#COMPASS}: Display the user location and current heading/bearing</li>
-   * <li>{@link LocationLayerMode#NAVIGATION}: Display the user location on the map using a navigation icon</li>
-   * <li>{@link LocationLayerMode#NONE}: Disable user location showing on the map</li>
+   * <li>{@link LocationLayerStyle#NORMAL}: Display the user location on the map as a small dot</li>
+   * <li>{@link LocationLayerStyle#COMPASS}: Display the user location and current heading/bearing</li>
+   * <li>{@link LocationLayerStyle#NAVIGATION}: Display the user location on the map using a navigation icon</li>
    * </ul>
    *
-   * @param locationLayerMode one of the modes found in {@link LocationLayerMode}
+   * @param locationLayerStyle one of the modes found in {@link LocationLayerStyle}
    * @since 0.1.0
    */
-  @RequiresPermission(anyOf = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION})
-  public void setLocationLayerEnabled(@LocationLayerMode.Mode int locationLayerMode) {
-    this.locationLayerMode = locationLayerMode;
-    if (locationLayerMode != LocationLayerMode.NONE) {
-      locationLayer.setLayersVisibility(true);
+  public void setLocationLayerStyle(@LocationLayerStyle.Style int locationLayerStyle) {
+    this.locationLayerStyle = locationLayerStyle;
 
-      // Set an initial location if one is available and the locationEngines not null
-      if (locationEngine != null) {
-        setLastLocation();
-        locationEngine.addLocationEngineListener(this);
-      }
+    if (locationLayerStyle == LocationLayerStyle.COMPASS) {
+      setLinearAnimation(false);
+      setNavigationEnabled(false);
+      setMyBearingEnabled(true);
+    } else if (locationLayerStyle == LocationLayerStyle.NAVIGATION) {
+      setMyBearingEnabled(false);
+      setNavigationEnabled(true);
+    } else if (locationLayerStyle == LocationLayerStyle.NORMAL) {
+      setLinearAnimation(false);
+      setMyBearingEnabled(false);
+      setNavigationEnabled(false);
+    }
+  }
 
-      toggleCameraListener();
-
-      if (locationLayerMode == LocationLayerMode.COMPASS) {
-        setLinearAnimation(false);
-        setNavigationEnabled(false);
-        setMyBearingEnabled(true);
-      } else if (locationLayerMode == LocationLayerMode.NAVIGATION) {
-        setMyBearingEnabled(false);
-        setNavigationEnabled(true);
-      } else if (locationLayerMode == LocationLayerMode.TRACKING) {
-        setLinearAnimation(false);
-        setMyBearingEnabled(false);
-        setNavigationEnabled(false);
-      }
-    } else {
-      disableLocationLayerPlugin();
+  public void setLocationLayerTracking(@LocationLayerTracking.Mode int trackingMode) {
+    if (camera != null) {
+      camera.setTrackingMode(trackingMode);
     }
   }
 
   /**
    * Returns the current location mode being used with this plugin.
    *
-   * @return on of the {@link LocationLayerMode} values
+   * @return on of the {@link LocationLayerStyle} values
    * @since 0.1.0
    */
-  public int getLocationLayerMode() {
-    return locationLayerMode;
+  public int getLocationLayerStyle() {
+    return locationLayerStyle;
   }
 
   public LocationLayerOptions getLocationLayerOptions() {
@@ -236,6 +254,13 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   public void forceLocationUpdate(@Nullable Location location) {
     updateLocation(location);
+    updateCameraLocation(location);
+  }
+
+  private void updateCameraLocation(Location location) {
+    if (camera != null) {
+      camera.moveToLocation(location);
+    }
   }
 
   /**
@@ -250,7 +275,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   public void setLocationEngine(@Nullable LocationEngine locationEngine) {
     if (locationEngine != null) {
       this.locationEngine = locationEngine;
-      setLocationLayerEnabled(locationLayerMode);
+      setLocationLayerStyle(locationLayerStyle);
     } else if (this.locationEngine != null) {
       this.locationEngine.removeLocationEngineListener(this);
       this.locationEngine = null;
@@ -297,12 +322,12 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   @RequiresPermission(anyOf = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION})
   @OnLifecycleEvent(Lifecycle.Event.ON_START)
   public void onStart() {
-    if (locationLayerMode != LocationLayerMode.NONE) {
-      setLocationLayerEnabled(locationLayerMode);
+    if (isEnabled) {
+      setLocationLayerStyle(locationLayerStyle);
     }
 
     if (!compassManager.getCompassListeners().isEmpty()
-      || (locationLayerMode == LocationLayerMode.COMPASS && compassManager.isSensorAvailable())) {
+      || (locationLayerStyle == LocationLayerStyle.COMPASS && compassManager.isSensorAvailable())) {
       compassManager.onStart();
     }
     if (mapboxMap != null) {
@@ -394,6 +419,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   @Override
   public void onLocationChanged(Location location) {
     updateLocation(location);
+    updateCameraLocation(location);
   }
 
   @Override
@@ -407,7 +433,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   }
 
   private void toggleCameraListener() {
-    if (locationLayerMode == LocationLayerMode.NAVIGATION) {
+    if (locationLayerStyle == LocationLayerStyle.NAVIGATION) {
       mapboxMap.removeOnCameraMoveListener(this);
       return;
     }
@@ -420,16 +446,16 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
       locationUpdateTimestamp = SystemClock.elapsedRealtime();
       return;
     }
-    if (locationLayerMode == LocationLayerMode.NAVIGATION && location.hasBearing()) {
+    if (locationLayerStyle == LocationLayerStyle.NAVIGATION && location.hasBearing()) {
       bearingChangeAnimate(location.getBearing());
-    } else if (locationLayerMode != LocationLayerMode.NAVIGATION) {
+    } else if (locationLayerStyle != LocationLayerStyle.NAVIGATION) {
       locationLayer.updateAccuracyRadius(location);
     }
     setLocation(location);
   }
 
   /**
-   * disable the location layer plugin if the locationLayerMode is set to none.
+   * disable the location layer plugin if the locationLayerStyle is set to none.
    */
   private void disableLocationLayerPlugin() {
     if (locationEngine != null) {
@@ -447,7 +473,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     Location lastLocation = locationEngine.getLastLocation();
     if (lastLocation != null) {
       setLocation(lastLocation);
-      if (locationLayerMode != LocationLayerMode.NAVIGATION) {
+      if (locationLayerStyle != LocationLayerStyle.NAVIGATION) {
         locationLayer.updateAccuracyRadius(lastLocation);
       }
     }
@@ -488,8 +514,9 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     // recreate runtime style components
     locationLayer = new LocationLayer(mapView, mapboxMap, options, staleStateRunnable);
     // reset state
-    setLocationLayerEnabled(locationLayerMode);
+    setLocationLayerStyle(locationLayerStyle);
     setBearing(previousMagneticHeading);
+    updateCameraBearing(previousMagneticHeading);
     if (previousPoint != null) {
       locationLayer.setLocationPoint(previousPoint);
     }
@@ -630,16 +657,24 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     bearingChangeAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
       @Override
       public void onAnimationUpdate(ValueAnimator valueAnimator) {
-        setBearing((float) valueAnimator.getAnimatedValue());
+        float bearing = (float) valueAnimator.getAnimatedValue();
+        setBearing(bearing);
+        updateCameraBearing(bearing);
       }
     });
     bearingChangeAnimator.start();
     previousMagneticHeading = magneticHeading;
   }
 
+  private void updateCameraBearing(float bearing) {
+    if (camera != null) {
+      camera.updateBearing(bearing);
+    }
+  }
+
   private void setBearing(float bearing) {
     locationLayer.setLayerBearing(
-      locationLayerMode == LocationLayerMode.NAVIGATION
+      locationLayerStyle == LocationLayerStyle.NAVIGATION
         ? NAVIGATION_LAYER : BEARING_LAYER, bearing
     );
   }
