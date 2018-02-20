@@ -140,7 +140,7 @@ public class LocationLayerTest {
                                         UiController uiController, Context context) {
         locationLayerPlugin.setLocationLayerStyle(LocationLayerStyle.NORMAL);
         assertTrue(mapboxMap.getLayer(FOREGROUND_LAYER) != null);
-        locationLayerPlugin.setLocationLayerEnabled(LocationLayerStyle.NONE);
+        locationLayerPlugin.setLocationLayerEnabled(false);
         assertTrue(mapboxMap.getLayer(FOREGROUND_LAYER).getVisibility().getValue()
           .equals(Property.NONE));
       }
