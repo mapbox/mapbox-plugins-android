@@ -104,10 +104,14 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
     for (Source source : mapboxMap.getSources()) {
       if (sourceIsFromMapbox(source)) {
         for (Layer layer : layers) {
-          if (layerHasAdjustableTextField(layer)
-            && (((SymbolLayer) layer).getTextField().getValue().contains("{name")
-            || ((SymbolLayer) layer).getTextField().getValue().contains("{abbr}"))) {
-            layer.setProperties(textField(String.format("{%s}", mapLocale.getMapLanguage())));
+          if (layerHasAdjustableTextField(layer)) {
+            String textField = ((SymbolLayer) layer).getTextField().getValue();
+            if (textField != null
+              && (textField.contains("{name") || textField.contains("{abbr}"))) {
+              textField = textField.replaceAll("[{]((name).*?)[}]",
+                String.format("{%s}", mapLocale.getMapLanguage()));
+              layer.setProperties(textField(textField));
+            }
           }
         }
       }
