@@ -91,10 +91,9 @@ public final class LocalizationPlugin {
       if (sourceIsFromMapbox(source)) {
         for (Layer layer : layers) {
           if (layerHasAdjustableTextField(layer)
-            && ((SymbolLayer) layer).getTextField().getValue().contains("{name")
-            || ((SymbolLayer) layer).getTextField().getValue().contains("{abbr}")) {
+            && (((SymbolLayer) layer).getTextField().getValue().contains("{name")
+            || ((SymbolLayer) layer).getTextField().getValue().contains("{abbr}"))) {
             layer.setProperties(textField(String.format("{%s}", mapLocale.getMapLanguage())));
-            layers.remove(layer);
           }
         }
       }

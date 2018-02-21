@@ -12,6 +12,7 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.plugins.localization.LocalizationPlugin;
 import com.mapbox.mapboxsdk.plugins.localization.MapLocale;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
+import com.mapbox.mapboxsdk.plugins.testapp.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,7 +24,22 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
   MapView mapView;
 
   private LocalizationPlugin localizationPlugin;
+  private MapboxMap mapboxMap;
   private boolean mapIsLocalized;
+
+  private static final MapLocale[] LOCALES = new MapLocale[] {
+    MapLocale.CANADA,
+    MapLocale.GERMANY,
+    MapLocale.CHINA,
+    MapLocale.US,
+    MapLocale.CANADA_FRENCH,
+    MapLocale.ITALY,
+    MapLocale.JAPAN,
+    MapLocale.KOREA,
+    MapLocale.FRANCE
+  };
+
+  private static int index;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +54,9 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
 
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
+    this.mapboxMap = mapboxMap;
     localizationPlugin = new LocalizationPlugin(mapboxMap);
-    localizationPlugin.setMapLanguage();
+    localizationPlugin.matchMapLanguageWithDeviceDefault();
   }
 
   @OnClick(R.id.localize_fab)
@@ -49,9 +66,23 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
       Toast.makeText(this, R.string.map_not_localized, Toast.LENGTH_SHORT).show();
       mapIsLocalized = false;
     } else {
-      localizationPlugin.setMapLanguage();
+      localizationPlugin.matchMapLanguageWithDeviceDefault();
       Toast.makeText(this, R.string.map_localized, Toast.LENGTH_SHORT).show();
       mapIsLocalized = true;
+    }
+  }
+
+  @OnClick(R.id.camera_localization)
+  public void localizeCameraFab() {
+    MapLocale locale = getNextMapLocale();
+    localizationPlugin.setMapLanguage(locale);
+    localizationPlugin.setCameraToLocaleCountry(locale);
+  }
+
+  @OnClick(R.id.change_map_style)
+  public void changeMapStyleFab() {
+    if (mapboxMap != null) {
+      mapboxMap.setStyleUrl(Utils.getNextStyle());
     }
   }
 
@@ -138,6 +169,14 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
         return true;
     }
     return super.onOptionsItemSelected(item);
+  }
+
+  public static MapLocale getNextMapLocale() {
+    index++;
+    if (index == LOCALES.length) {
+      index = 0;
+    }
+    return LOCALES[index];
   }
 }
 

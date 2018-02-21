@@ -1,31 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.constraint.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <com.mapbox.mapboxsdk.maps.MapView
+    android:id="@+id/mapView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    app:mapbox_cameraTargetLat="51.505300"
+    app:mapbox_cameraTargetLng="-0.075073"
+    app:mapbox_cameraTilt="20"
+    app:mapbox_cameraZoom="2.5"
+    app:mapbox_styleUrl="@string/mapbox_style_mapbox_streets">
 
-    <com.mapbox.mapboxsdk.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:mapbox_cameraTargetLat="51.505300"
-        app:mapbox_cameraTargetLng="-0.075073"
-        app:mapbox_cameraTilt="20"
-        app:mapbox_cameraZoom="2.5"
-        app:mapbox_styleUrl="@string/mapbox_style_mapbox_streets"/>
+  </com.mapbox.mapboxsdk.maps.MapView>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/localize_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp"
-        android:src="@drawable/ic_translate_white_24dp"
-        app:backgroundTint="@color/colorPrimary"
-        app:fabSize="normal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+  <android.support.design.widget.FloatingActionButton
+    android:id="@+id/localize_fab"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginRight="16dp"
+    android:src="@drawable/ic_translate_white_24dp"
+    app:backgroundTint="@color/colorPrimary"
+    app:fabSize="normal"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"/>
+
+  <android.support.design.widget.FloatingActionButton
+    android:id="@+id/change_map_style"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginRight="16dp"
+    android:src="@drawable/ic_layers"
+    android:tint="@android:color/white"
+    app:backgroundTint="@color/colorAccent"
+    app:fabSize="normal"
+    app:layout_constraintBottom_toTopOf="@+id/camera_localization"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintRight_toRightOf="parent"/>
+
+  <android.support.design.widget.FloatingActionButton
+    android:id="@+id/camera_localization"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginRight="16dp"
+    android:src="@drawable/ic_camera"
+    android:tint="@android:color/white"
+    app:backgroundTint="@color/colorAccent"
+    app:fabSize="normal"
+    app:layout_constraintBottom_toTopOf="@+id/localize_fab"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintRight_toRightOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>
