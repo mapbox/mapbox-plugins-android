@@ -11,6 +11,7 @@ import java.lang.annotation.RetentionPolicy;
  *
  * @since 0.1.0
  */
+// TODO: 21/02/2018 refactor into different modes
 public final class LocationLayerTracking {
 
   private LocationLayerTracking() {
@@ -22,7 +23,7 @@ public final class LocationLayerTracking {
    *
    * @since 0.4.0
    */
-  @IntDef( {NONE, TRACKING, TRACKING_COMPASS, TRACKING_GPS, TRACKING_GPS_NORTH})
+  @IntDef( {NONE, NONE_COMPASS, NONE_GPS, TRACKING, TRACKING_COMPASS, TRACKING_GPS, TRACKING_GPS_NORTH})
   @Retention(RetentionPolicy.SOURCE)
   public @interface Type {
   }
@@ -33,6 +34,16 @@ public final class LocationLayerTracking {
    * @since 0.4.0
    */
   public static final int NONE = 0x00000000;
+
+  /**
+   * No camera tracking. show bearing provided by the compass
+   */
+  public static final int NONE_COMPASS = 0x0000022;
+
+  /**
+   * No camera tracking, show bearing provided by location updates
+   */
+  public static final int NONE_GPS = 0x0000026;
 
   /**
    * Tracks the user location.
@@ -65,4 +76,17 @@ public final class LocationLayerTracking {
    * @since 0.4.0
    */
   public static final int TRACKING_GPS_NORTH = 0x00000018;
+
+
+  static boolean isShowBearing(@LocationLayerTracking.Type int type){
+    return type == TRACKING_COMPASS || type ==  TRACKING_GPS || type == NONE_COMPASS || type == NONE_GPS;
+  }
+
+  static boolean isCompassBearing(@LocationLayerTracking.Type int type) {
+    return type == TRACKING_COMPASS || type == NONE_COMPASS;
+  }
+
+  static boolean isGpsBearing(@LocationLayerTracking.Type int type){
+    return type ==  TRACKING_GPS || type == NONE_GPS;
+  }
 }
