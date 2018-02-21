@@ -5,29 +5,35 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import java.util.Locale;
 
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.Mockito.mock;
 
 public class LocalizationPluginTest {
 
   @Rule
   public MockitoRule mockitoRule = MockitoJUnit.rule();
+  @Rule
+  public ExpectedException thrown = ExpectedException.none();
 
   @Test
   public void sanity() throws Exception {
-
+    LocalizationPlugin localizationPlugin = new LocalizationPlugin(mock(MapboxMap.class));
+    assertNotNull(localizationPlugin);
   }
 
   @Test
-  public void setMapLanguage_does() throws Exception {
-    Locale.setDefault(Locale.CANADA);
+  public void setMapLanguage_localePassedInNotValid() throws Exception {
+    thrown.expect(NullPointerException.class);
+    thrown.expectMessage(contains("has no matching MapLocale object. You need to create"));
     LocalizationPlugin localizationPlugin = new LocalizationPlugin(mock(MapboxMap.class));
-    localizationPlugin.setMapLanguage();
-
+    localizationPlugin.setMapLanguage(new Locale("foo", "bar"));
   }
 
   @Test(expected = NullPointerException.class)
@@ -35,28 +41,4 @@ public class LocalizationPluginTest {
     LocalizationPlugin localizationPlugin = new LocalizationPlugin(mock(MapboxMap.class));
     localizationPlugin.setMapLanguage(new Locale("foo", "bar"));
   }
-
-  //  @Test
-//  public void getDefault_doesNotMatchMapLocale() throws Exception {
-//    Locale.setDefault(new Locale("foo", "bar"));
-//    LocalizationPlugin.setDefaultMapLocale(MapLocale.FRANCE);
-//    MapLocale defaultLocale = LocalizationPlugin.getDefault();
-//    assertThat(defaultLocale.getMapLanguage(), equalTo(MapLocale.FRENCH));
-//    assertThat(defaultLocale.getCountryBounds(), equalTo(MapLocale.FRANCE_BBOX));
-//  }
-//
-//  @Test
-//  public void getDefault_doesMatchToCorrectMapLocale() throws Exception {
-//    Locale.setDefault(Locale.FRANCE);
-//    assertThat(LocalizationPlugin.getDefault().getMapLanguage(), equalTo(MapLocale.FRENCH));
-//  }
-//
-//  @Test
-//  public void getMapLocale_doesReturnCustomLocale() throws Exception {
-//    Locale locale = new Locale("foo", "bar");
-//    MapLocale mapLocale = new MapLocale("name_foo");
-//    LocalizationPlugin.addMapLocale(locale, mapLocale);
-//    MapLocale finalLocale = LocalizationPlugin.getMapLocale(locale);
-//    assertThat(finalLocale.getMapLanguage(), equalTo("name_foo"));
-//  }
 }

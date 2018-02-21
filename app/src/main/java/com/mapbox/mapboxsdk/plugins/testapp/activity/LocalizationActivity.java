@@ -107,31 +107,31 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.english:
-        localizationPlugin.setMapLangauge(MapLocale.ENGLISH);
+        localizationPlugin.setMapLanguage(MapLocale.ENGLISH);
         return true;
       case R.id.spanish:
-        localizationPlugin.setMapLangauge(MapLocale.SPANISH);
+        localizationPlugin.setMapLanguage(MapLocale.SPANISH);
         return true;
       case R.id.french:
-        localizationPlugin.setMapLangauge(MapLocale.FRENCH);
+        localizationPlugin.setMapLanguage(MapLocale.FRENCH);
         return true;
       case R.id.german:
-        localizationPlugin.setMapLangauge(MapLocale.GERMAN);
+        localizationPlugin.setMapLanguage(MapLocale.GERMAN);
         return true;
       case R.id.russian:
-        localizationPlugin.setMapLangauge(MapLocale.RUSSIAN);
+        localizationPlugin.setMapLanguage(MapLocale.RUSSIAN);
         return true;
       case R.id.chinese:
-        localizationPlugin.setMapLangauge(MapLocale.CHINESE);
+        localizationPlugin.setMapLanguage(MapLocale.CHINESE);
         return true;
       case R.id.simplified_chinese:
-        localizationPlugin.setMapLangauge(MapLocale.SIMPLIFIED_CHINESE);
+        localizationPlugin.setMapLanguage(MapLocale.SIMPLIFIED_CHINESE);
         return true;
       case R.id.portuguese:
-        localizationPlugin.setMapLangauge(MapLocale.PORTUGUESE);
+        localizationPlugin.setMapLanguage(MapLocale.PORTUGUESE);
         return true;
       case R.id.arabic:
-        localizationPlugin.setMapLangauge(MapLocale.ARABIC);
+        localizationPlugin.setMapLanguage(MapLocale.ARABIC);
         return true;
       case android.R.id.home:
         finish();

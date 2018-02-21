@@ -16,10 +16,24 @@ import java.util.Locale;
 
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
 
+/**
+ * Useful class for quickly adjusting the maps language and the maps camera starting position.
+ * You can either use {@link #matchMapLanguageWithDeviceDefault()} to match the map language with
+ * the one being currently used on the device. Using {@link #setMapLanguage(Locale)} and it's
+ * variants, you can also change the maps langauge at anytime to any of the supported languages.
+ *
+ * @since 0.1.0
+ */
 public final class LocalizationPlugin {
 
   private final MapboxMap mapboxMap;
 
+  /**
+   * Public constructor for passing in the required {@link MapboxMap} object.
+   *
+   * @param mapboxMap the Mapbox map object which your current map view is using for control
+   * @since 0.1.0
+   */
   public LocalizationPlugin(@NonNull MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
   }
@@ -28,18 +42,49 @@ public final class LocalizationPlugin {
    * Map languages
    */
 
-  public void setMapLanguage() {
+  /**
+   * Initializing this class and then calling this method oftentimes will be the only thing you'll
+   * need to quickly adjust the map language to the devices specified language.
+   *
+   * @since 0.1.0
+   */
+  public void matchMapLanguageWithDeviceDefault() {
     setMapLanguage(Locale.getDefault());
   }
 
-  public void setMapLangauge(@Languages String language) {
+  /**
+   * Set the map language directly by using one of the supported map languages found in
+   * {@link Languages}.
+   *
+   * @param language one of the support languages Mapbox uses
+   * @since 0.1.0
+   */
+  public void setMapLanguage(@Languages String language) {
     setMapLanguage(new MapLocale(language));
   }
 
+  /**
+   * If you'd like to set the map language to a specific locale, you can pass it in as a parameter
+   * and MapLocale will try matching the information with one of the MapLocales found in it's map.
+   * If one isn't found, a null point exception will be thrown. To prevent this, ensure that the
+   * locale you are trying to use have a complementary {@link MapLocale} for it.
+   *
+   * @param locale a {@link Locale} which has a complementary {@link MapLocale} for it
+   * @throws NullPointerException thrown when the locale passed into the method doesn't have a
+   *                              matching {@link MapLocale}
+   * @since 0.1.0
+   */
   public void setMapLanguage(@NonNull Locale locale) {
     setMapLanguage(checkMapLocalNonNull(locale));
   }
 
+  /**
+   * You can pass in a {@link MapLocale} directly into this method which uses the language defined
+   * in it to represent the language found on the map.
+   *
+   * @param mapLocale the {@link MapLocale} object which contains the desired map language
+   * @since 0.1.0
+   */
   public void setMapLanguage(@NonNull MapLocale mapLocale) {
     List<Layer> layers = mapboxMap.getLayers();
     for (Source source : mapboxMap.getSources()) {
@@ -60,14 +105,39 @@ public final class LocalizationPlugin {
    * Camera bounding box
    */
 
+  /**
+   * Adjust the map's camera position so that the entire countries boarders are within the viewport.
+   * Specifically, this method gets the devices currently set locale and adjust the map camera to
+   * view that country if a {@link MapLocale]} matches.
+   *
+   * @since 0.1.0
+   */
   public void setCameraToLocaleCountry() {
     setCameraToLocaleCountry(Locale.getDefault());
   }
 
+  /**
+   * If you'd like to manually set the camera position to a specific map region or country, pass in
+   * the locale (which must have a paired }{@link MapLocale}) to work properly
+   *
+   * @param locale a {@link Locale} which has a complementary {@link MapLocale} for it
+   * @throws NullPointerException thrown when the locale passed into the method doesn't have a
+   *                              matching {@link MapLocale}
+   * @since 0.1.0
+   */
   public void setCameraToLocaleCountry(Locale locale) {
     setCameraToLocaleCountry(checkMapLocalNonNull(locale));
   }
 
+  /**
+   * You can pass in a {@link MapLocale} directly into this method which uses the country bounds
+   * defined in it to represent the language found on the map.
+   *
+   * @param mapLocale he {@link MapLocale} object which contains the desired map bounds
+   * @throws NullPointerException thrown when it was expecting a {@link LatLngBounds} but instead
+   *                              it was null
+   * @since 0.1.0
+   */
   public void setCameraToLocaleCountry(MapLocale mapLocale) {
     LatLngBounds bounds = mapLocale.getCountryBounds();
     if (bounds == null) {
