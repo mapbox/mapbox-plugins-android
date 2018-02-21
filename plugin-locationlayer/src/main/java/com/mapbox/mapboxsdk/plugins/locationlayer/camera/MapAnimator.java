@@ -44,6 +44,10 @@ public class MapAnimator {
     playSequentially();
   }
 
+  public boolean isRunning() {
+    return animatorSet.isRunning();
+  }
+
   public void cancel() {
     animatorSet.cancel();
   }
