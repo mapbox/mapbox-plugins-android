@@ -1,6 +1,5 @@
 package com.mapbox.mapboxsdk.plugins.localization;
 
-
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
@@ -13,9 +12,10 @@ import org.mockito.junit.MockitoRule;
 
 import java.util.Locale;
 
-import static org.junit.Assert.assertNotNull;
+import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.mockito.Mockito.mock;
+
 
 public class LocalizationPluginTest {
 

@@ -24,6 +24,10 @@ dependencies {
   implementation dependenciesList.mapboxMapSdk
   implementation dependenciesList.timber
   javadocDeps dependenciesList.mapboxMapSdk
+
+  // Unit testing
+  testImplementation dependenciesList.junit
+  testImplementation dependenciesList.mockito
 }
 
 apply from: 'javadoc.gradle'
