@@ -10,7 +10,7 @@ import android.view.View;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerMode;
+import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.Utils;
@@ -71,7 +71,7 @@ public class ManualLocationUpdatesActivity extends AppCompatActivity implements 
     locationEngine.setPriority(LocationEnginePriority.HIGH_ACCURACY);
     locationEngine.activate();
     locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap, null);
-    locationLayerPlugin.setLocationLayerMode(LocationLayerMode.NORMAL);
+    locationLayerPlugin.setLocationLayerMode(RenderMode.NORMAL);
     getLifecycle().addObserver(locationLayerPlugin);
   }
 

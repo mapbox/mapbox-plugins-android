@@ -5,54 +5,47 @@ import android.view.animation.LinearInterpolator;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerTracking;
 import com.mapbox.mapboxsdk.plugins.locationlayer.Utils;
+import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode;
 
 public class LocationLayerCamera {
 
   private MapboxMap mapboxMap;
-  private int trackingMode = LocationLayerTracking.NONE;
-  private float bearing = -1;
+  private CameraModeManager cameraModeManager;
+  private MapAnimator mapAnimator;
 
   public LocationLayerCamera(MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
+    cameraModeManager = new CameraModeManager(this);
   }
 
-  public void setTrackingMode(@LocationLayerTracking.Type int trackingMode) {
-    this.trackingMode = trackingMode;
+  public void setCameraMode(@CameraMode.Mode int cameraMode) {
+    cancelRunningAnimator();
+    cameraModeManager.setCameraMode(cameraMode);
   }
 
-  public void moveToLocation(Location location) {
-    if (trackingMode == LocationLayerTracking.NONE) {
-      return;
-    }
-    buildCameraUpdateFromLocation(location);
+  public void updateFromCompassBearing(float bearing) {
+    cameraModeManager.updateFromBearing(bearing);
   }
 
-  public void updateBearing(float bearing) {
-    if (trackingMode == LocationLayerTracking.TRACKING_COMPASS) {
-      mapboxMap.setBearing(bearing);
-    }
+  public void updateFromLocation(Location location) {
+    cameraModeManager.updateFromLocation(location);
   }
 
-  private void buildCameraUpdateFromLocation(Location location) {
-    switch (trackingMode) {
-      case LocationLayerTracking.TRACKING:
-      case LocationLayerTracking.TRACKING_COMPASS:
-        buildTrackingAnimation(location);
-        break;
-      case LocationLayerTracking.TRACKING_GPS:
-        buildTrackingGPSAnimation(location);
-        break;
-      case LocationLayerTracking.TRACKING_GPS_NORTH:
-        buildTrackingGPSNorthAnimation(location);
-        break;
-      default:
-        break;
+  void buildBearingAnimation(float bearing) {
+    MapAnimator.Builder mapAnimation = MapAnimator.builder(mapboxMap);
+    addBearingAnimator(mapAnimation, bearing);
+    mapAnimator = mapAnimation.build();
+    mapAnimator.playTogether();
+  }
+
+  void buildBearingGPSAnimation(Location location) {
+    if (location.hasBearing()) {
+      buildBearingAnimation(location.getBearing());
     }
   }
 
-  private void buildTrackingAnimation(Location location) {
+  void buildTrackingAnimation(Location location) {
     LatLng target = new LatLng(location);
 
     LatLngAnimator latLngAnimator = new LatLngAnimator(target, 1000);
@@ -64,7 +57,7 @@ public class LocationLayerCamera {
       .playTogether();
   }
 
-  private void buildTrackingGPSAnimation(Location location) {
+  void buildTrackingGPSAnimation(Location location) {
     MapAnimator.Builder mapAnimation = MapAnimator.builder(mapboxMap);
     addLatLngAnimator(location, mapAnimation);
 
@@ -73,12 +66,11 @@ public class LocationLayerCamera {
       return;
     }
 
-    float targetBearing = calculateBearing(location);
-    createBearingAnimator(mapAnimation, targetBearing);
+    addBearingAnimator(mapAnimation, location.getBearing());
     mapAnimation.build().playTogether();
   }
 
-  private void buildTrackingGPSNorthAnimation(Location location) {
+  void buildTrackingGPSNorthAnimation(Location location) {
     MapAnimator.Builder mapAnimation = MapAnimator.builder(mapboxMap);
     addLatLngAnimator(location, mapAnimation);
 
@@ -89,8 +81,14 @@ public class LocationLayerCamera {
     }
 
     float targetBearing = Utils.shortestRotation(0, (float) bearing);
-    createBearingAnimator(mapAnimation, targetBearing);
+    addBearingAnimator(mapAnimation, targetBearing);
     mapAnimation.build().playTogether();
+  }
+
+  private void cancelRunningAnimator() {
+    if (mapAnimator != null && mapAnimator.isRunning()) {
+      mapAnimator.cancel();
+    }
   }
 
   private void addLatLngAnimator(Location location, MapAnimator.Builder mapAnimation) {
@@ -100,20 +98,9 @@ public class LocationLayerCamera {
     mapAnimation.addLatLngAnimator(latLngAnimator);
   }
 
-  private void createBearingAnimator(MapAnimator.Builder mapAnimation, float targetBearing) {
+  private void addBearingAnimator(MapAnimator.Builder mapAnimation, float targetBearing) {
     BearingAnimator bearingAnimator = new BearingAnimator(targetBearing, 1000);
     bearingAnimator.setInterpolator(new LinearInterpolator());
     mapAnimation.addBearingAnimator(bearingAnimator);
-  }
-
-  private float calculateBearing(Location location) {
-    if (location.hasBearing() && bearing > 0) {
-      float bearing = Utils.shortestRotation(location.getBearing(), this.bearing);
-      this.bearing = bearing;
-      return bearing;
-    } else {
-      this.bearing = location.getBearing();
-      return this.bearing;
-    }
   }
 }

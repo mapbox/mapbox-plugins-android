@@ -19,9 +19,9 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerMode;
+import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
-import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerTracking;
+import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.OnLocationLayerClickListener;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.services.android.location.LostLocationEngine;
@@ -203,7 +203,7 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     List<String> modes = new ArrayList<>();
     modes.add("Normal");
     modes.add("Compass");
-    modes.add("Navigation");
+    modes.add("GPS");
     ArrayAdapter<String> profileAdapter = new ArrayAdapter<>(this,
       android.R.layout.simple_list_item_1, modes);
     ListPopupWindow listPopup = new ListPopupWindow(this);
@@ -213,11 +213,11 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
       String selectedMode = modes.get(position);
       locationModeBtn.setText(selectedMode);
       if (selectedMode.contentEquals("Normal")) {
-        locationLayerPlugin.setLocationLayerMode(LocationLayerMode.NORMAL);
+        locationLayerPlugin.setLocationLayerMode(RenderMode.NORMAL);
       } else if (selectedMode.contentEquals("Compass")) {
-        locationLayerPlugin.setLocationLayerMode(LocationLayerMode.COMPASS);
-      } else if (selectedMode.contentEquals("Navigation")) {
-        locationLayerPlugin.setLocationLayerMode(LocationLayerMode.NAVIGATION);
+        locationLayerPlugin.setLocationLayerMode(RenderMode.COMPASS);
+      } else if (selectedMode.contentEquals("GPS")) {
+        locationLayerPlugin.setLocationLayerMode(RenderMode.GPS);
       }
       listPopup.dismiss();
     });
@@ -240,15 +240,15 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
       String selectedTrackingType = trackingTypes.get(position);
       locationTrackingBtn.setText(selectedTrackingType);
       if (selectedTrackingType.contentEquals("None")) {
-        locationLayerPlugin.setLocationLayerTracking(LocationLayerTracking.NONE);
+        locationLayerPlugin.setLocationLayerTracking(CameraMode.NONE);
       } else if (selectedTrackingType.contentEquals("Tracking")) {
-        locationLayerPlugin.setLocationLayerTracking(LocationLayerTracking.TRACKING);
+        locationLayerPlugin.setLocationLayerTracking(CameraMode.TRACKING);
       } else if (selectedTrackingType.contentEquals("Tracking Compass")) {
-        locationLayerPlugin.setLocationLayerTracking(LocationLayerTracking.TRACKING_COMPASS);
+        locationLayerPlugin.setLocationLayerTracking(CameraMode.TRACKING_COMPASS);
       } else if (selectedTrackingType.contentEquals("Tracking GPS")) {
-        locationLayerPlugin.setLocationLayerTracking(LocationLayerTracking.TRACKING_GPS);
+        locationLayerPlugin.setLocationLayerTracking(CameraMode.TRACKING_GPS);
       } else if (selectedTrackingType.contentEquals("Tracking GPS North")) {
-        locationLayerPlugin.setLocationLayerTracking(LocationLayerTracking.TRACKING_GPS_NORTH);
+        locationLayerPlugin.setLocationLayerTracking(CameraMode.TRACKING_GPS_NORTH);
       }
       listPopup.dismiss();
     });

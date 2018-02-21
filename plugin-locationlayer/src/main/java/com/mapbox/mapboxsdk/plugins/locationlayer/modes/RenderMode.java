@@ -1,6 +1,8 @@
-package com.mapbox.mapboxsdk.plugins.locationlayer;
+package com.mapbox.mapboxsdk.plugins.locationlayer.modes;
 
 import android.support.annotation.IntDef;
+
+import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -10,9 +12,9 @@ import java.lang.annotation.RetentionPolicy;
  *
  * @since 0.1.0
  */
-public final class LocationLayerMode {
+public final class RenderMode {
 
-  private LocationLayerMode() {
+  private RenderMode() {
     // Class should not be initialized
   }
 
@@ -24,29 +26,30 @@ public final class LocationLayerMode {
    *
    * @since 0.1.0
    */
-  @IntDef( {COMPASS, NAVIGATION, NORMAL})
-  @Retention(RetentionPolicy.SOURCE)
+  @IntDef( {COMPASS, GPS, NORMAL})
+  public @Retention(RetentionPolicy.SOURCE)
   @interface Mode {
   }
 
   /**
-   * Tracking the bearing of the user based on sensor data.
+   * Basic tracking is enabled, bearing ignored.
+   *
+   * @since 0.1.0
+   */
+  public static final int NORMAL = 0x00000012;
+
+  /**
+   * Tracking the user location with bearing considered
+   * from a {@link com.mapbox.mapboxsdk.plugins.locationlayer.CompassManager}.
    *
    * @since 0.1.0
    */
   public static final int COMPASS = 0x00000004;
 
   /**
-   * Tracking the user location in navigation mode.
+   * Tracking the user location with bearing considered from {@link android.location.Location}.
    *
    * @since 0.1.0
    */
-  public static final int NAVIGATION = 0x00000008;
-
-  /**
-   * Basic tracking is enabled.
-   *
-   * @since 0.1.0
-   */
-  public static final int NORMAL = 0x00000012;
+  public static final int GPS = 0x00000008;
 }
