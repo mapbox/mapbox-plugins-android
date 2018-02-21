@@ -95,7 +95,7 @@ public class CompassListenerActivity extends AppCompatActivity implements OnMapR
   protected void onDestroy() {
     super.onDestroy();
     mapView.onDestroy();
-    locationLayerPlugin.removeCompassListener(null);
+    locationLayerPlugin.removeCompassListener();
   }
 
   @Override

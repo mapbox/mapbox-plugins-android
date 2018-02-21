@@ -33,14 +33,14 @@ class CompassManager implements SensorEventListener {
 
   private final WindowManager windowManager;
   private final SensorManager sensorManager;
-  private CompassListener internalCompassListener;
-  private List<CompassListener> compassListeners;
+  private final List<CompassListener> compassListeners = new ArrayList<>();
 
   // Not all devices have a compassSensor
   @Nullable
   private Sensor compassSensor;
 
   private int lastAccuracy;
+  private float lastHeading;
 
   // CompassManager data
   private long compassUpdateNextTimestamp;
@@ -49,10 +49,7 @@ class CompassManager implements SensorEventListener {
    * Construct a new instance of the this class. A internal compass listeners needed to separate it
    * from the cleared list of public listeners.
    */
-  CompassManager(@NonNull Context context, @NonNull CompassListener internalCompassListener) {
-    this.internalCompassListener = internalCompassListener;
-    compassListeners = new ArrayList<>();
-
+  CompassManager(@NonNull Context context) {
     windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
     sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
 
@@ -65,28 +62,30 @@ class CompassManager implements SensorEventListener {
   }
 
   void addCompassListener(@NonNull CompassListener compassListener) {
+    if (compassListeners.isEmpty()) {
+      onStart();
+    }
     compassListeners.add(compassListener);
   }
 
-  void removeCompassListener(@Nullable CompassListener compassListener) {
-    if (compassListener == null) {
-      compassListeners.clear();
-      return;
-    }
+  void removeCompassListener(@NonNull CompassListener compassListener) {
     compassListeners.remove(compassListener);
-  }
-
-  List<CompassListener> getCompassListeners() {
-    return compassListeners;
+    if (compassListeners.isEmpty()) {
+      onStop();
+    }
   }
 
   void onStart() {
-    // Does nothing if the sensors already registered.
-    sensorManager.registerListener(this, compassSensor, SENSOR_DELAY_MICROS);
+    if (isSensorAvailable()) {
+      // Does nothing if the sensors already registered.
+      sensorManager.registerListener(this, compassSensor, SENSOR_DELAY_MICROS);
+    }
   }
 
   void onStop() {
-    sensorManager.unregisterListener(this, compassSensor);
+    if (isSensorAvailable()) {
+      sensorManager.unregisterListener(this, compassSensor);
+    }
   }
 
   boolean isSensorAvailable() {
@@ -95,9 +94,6 @@ class CompassManager implements SensorEventListener {
 
   @Override
   public void onSensorChanged(SensorEvent event) {
-    if (internalCompassListener == null) {
-      return;
-    }
     // check when the last time the compass was updated, return if too soon.
     long currentTime = SystemClock.elapsedRealtime();
     if (currentTime < compassUpdateNextTimestamp) {
@@ -113,17 +109,13 @@ class CompassManager implements SensorEventListener {
       // Update the compassUpdateNextTimestamp
       compassUpdateNextTimestamp = currentTime + LocationLayerConstants.COMPASS_UPDATE_RATE_MS;
     } else if (event.sensor.getType() == Sensor.TYPE_ORIENTATION) {
-      internalCompassListener.onCompassChanged((event.values[0] + 360) % 360);
-      for (CompassListener compassListener : compassListeners) {
-        compassListener.onCompassChanged((event.values[0] + 360) % 360);
-      }
+      notifyCompassChangeListeners((event.values[0] + 360) % 360);
     }
   }
 
   @Override
   public void onAccuracyChanged(Sensor sensor, int accuracy) {
     if (lastAccuracy != accuracy) {
-      internalCompassListener.onCompassAccuracyChange(accuracy);
       for (CompassListener compassListener : compassListeners) {
         compassListener.onCompassAccuracyChange(accuracy);
       }
@@ -170,9 +162,21 @@ class CompassManager implements SensorEventListener {
     SensorManager.getOrientation(adjustedRotationMatrix, orientation);
 
     // The x-axis is all we care about here.
-    internalCompassListener.onCompassChanged((float) Math.toDegrees(orientation[0]));
+    notifyCompassChangeListeners((float) Math.toDegrees(orientation[0]));
+  }
+
+  private void notifyCompassChangeListeners(float heading) {
+    lastHeading = heading;
     for (CompassListener compassListener : compassListeners) {
-      compassListener.onCompassChanged((float) Math.toDegrees(orientation[0]));
+      compassListener.onCompassChanged(heading);
     }
+  }
+
+  int getLastAccuracy() {
+    return lastAccuracy;
+  }
+
+  float getLastHeading() {
+    return lastHeading;
   }
 }
