@@ -87,7 +87,7 @@ final class LocationLayer {
     addSymbolLayerToMap(SHADOW_LAYER, BACKGROUND_LAYER);
     addSymbolLayerToMap(BACKGROUND_LAYER, FOREGROUND_LAYER);
     addSymbolLayerToMap(FOREGROUND_LAYER, null);
-    addSymbolLayerToMap(LocationLayerConstants.BEARING_LAYER, null);
+    addSymbolLayerToMap(BEARING_LAYER, null);
     addNavigationLayer();
     addAccuracyLayer();
   }

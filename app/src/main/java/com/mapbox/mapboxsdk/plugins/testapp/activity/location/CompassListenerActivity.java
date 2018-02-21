@@ -11,6 +11,7 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.plugins.locationlayer.CompassListener;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
+import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerTracking;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.services.android.location.LostLocationEngine;
 import com.mapbox.services.android.telemetry.location.LocationEngine;
@@ -40,7 +41,7 @@ public class CompassListenerActivity extends AppCompatActivity implements OnMapR
   public void onMapReady(final MapboxMap mapboxMap) {
     LocationEngine locationEngine = new LostLocationEngine(this);
     locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine);
-    locationLayerPlugin.setLocationLayerMode(LocationLayerMode.COMPASS);
+    locationLayerPlugin.setLocationLayerTracking(LocationLayerTracking.NONE_COMPASS);
     locationLayerPlugin.addCompassListener(new CompassListener() {
       @Override
       public void onCompassChanged(float userHeading) {

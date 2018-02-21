@@ -39,14 +39,17 @@ import butterknife.OnClick;
 public class LocationLayerModesActivity extends AppCompatActivity implements OnMapReadyCallback,
   LocationEngineListener, OnLocationLayerClickListener {
 
+  public static final String NONE_TRACKING = "None tracking";
+  public static final String NONE_TRACKING_SHOW_COMPASS_BEARING = "None tracking, show compass bearing";
+  public static final String NONE_TRACKING_SHOW_GPS_BEARING = "None tracking, show GPS bearing";
+  public static final String TRACKING = "Tracking";
+  public static final String TRACKING_WITH_COMPASS_BEARING = "Tracking with compass bearing";
+  public static final String TRACKING_WITH_GPS_BEARING = "Tracking with GPS bearing";
+  public static final String TRACKING_WITH_BEARING_FACING_NORTH = "Tracking with bearing facing north";
   @BindView(R.id.map_view)
   MapView mapView;
-  @BindView(R.id.tv_mode)
-  TextView modeText;
   @BindView(R.id.tv_tracking)
   TextView trackingText;
-  @BindView(R.id.button_location_mode)
-  Button locationModeBtn;
   @BindView(R.id.button_location_tracking)
   Button locationTrackingBtn;
 
@@ -65,15 +68,6 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     mapView.getMapAsync(this);
   }
 
-  @SuppressWarnings( {"MissingPermission"})
-  @OnClick(R.id.button_location_mode)
-  public void locationMode(View view) {
-    if (locationLayerPlugin == null) {
-      return;
-    }
-    showModeListDialog();
-  }
-
   @OnClick(R.id.button_location_tracking)
   public void locationModeCompass(View view) {
     if (locationLayerPlugin == null) {
@@ -90,9 +84,11 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     locationEngine.setPriority(LocationEnginePriority.HIGH_ACCURACY);
     locationEngine.addLocationEngineListener(this);
     locationEngine.activate();
+
     locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine);
     locationLayerPlugin.setOnLocationClickListener(this);
     locationLayerPlugin.setLocationLayerEnabled(true);
+    locationLayerPlugin.setLocationLayerTracking(LocationLayerTracking.NONE);
     getLifecycle().addObserver(locationLayerPlugin);
   }
 
@@ -199,38 +195,15 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     Toast.makeText(this, "OnLocationLayerClick", Toast.LENGTH_LONG).show();
   }
 
-  private void showModeListDialog() {
-    List<String> modes = new ArrayList<>();
-    modes.add("Normal");
-    modes.add("Compass");
-    modes.add("Navigation");
-    ArrayAdapter<String> profileAdapter = new ArrayAdapter<>(this,
-      android.R.layout.simple_list_item_1, modes);
-    ListPopupWindow listPopup = new ListPopupWindow(this);
-    listPopup.setAdapter(profileAdapter);
-    listPopup.setAnchorView(locationModeBtn);
-    listPopup.setOnItemClickListener((parent, itemView, position, id) -> {
-      String selectedMode = modes.get(position);
-      locationModeBtn.setText(selectedMode);
-      if (selectedMode.contentEquals("Normal")) {
-        locationLayerPlugin.setLocationLayerMode(LocationLayerMode.NORMAL);
-      } else if (selectedMode.contentEquals("Compass")) {
-        locationLayerPlugin.setLocationLayerMode(LocationLayerMode.COMPASS);
-      } else if (selectedMode.contentEquals("Navigation")) {
-        locationLayerPlugin.setLocationLayerMode(LocationLayerMode.NAVIGATION);
-      }
-      listPopup.dismiss();
-    });
-    listPopup.show();
-  }
-
   private void showTrackingListDialog() {
     List<String> trackingTypes = new ArrayList<>();
-    trackingTypes.add("None");
-    trackingTypes.add("Tracking");
-    trackingTypes.add("Tracking Compass");
-    trackingTypes.add("Tracking GPS");
-    trackingTypes.add("Tracking GPS North");
+    trackingTypes.add(NONE_TRACKING);
+    trackingTypes.add(NONE_TRACKING_SHOW_COMPASS_BEARING);
+    trackingTypes.add(NONE_TRACKING_SHOW_GPS_BEARING);
+    trackingTypes.add(TRACKING);
+    trackingTypes.add(TRACKING_WITH_COMPASS_BEARING);
+    trackingTypes.add(TRACKING_WITH_GPS_BEARING);
+    trackingTypes.add(TRACKING_WITH_BEARING_FACING_NORTH);
     ArrayAdapter<String> profileAdapter = new ArrayAdapter<>(this,
       android.R.layout.simple_list_item_1, trackingTypes);
     ListPopupWindow listPopup = new ListPopupWindow(this);
@@ -239,15 +212,19 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     listPopup.setOnItemClickListener((parent, itemView, position, id) -> {
       String selectedTrackingType = trackingTypes.get(position);
       locationTrackingBtn.setText(selectedTrackingType);
-      if (selectedTrackingType.contentEquals("None")) {
+      if (selectedTrackingType.contentEquals(NONE_TRACKING)) {
         locationLayerPlugin.setLocationLayerTracking(LocationLayerTracking.NONE);
-      } else if (selectedTrackingType.contentEquals("Tracking")) {
+      } else if (selectedTrackingType.contentEquals(NONE_TRACKING_SHOW_COMPASS_BEARING)) {
+        locationLayerPlugin.setLocationLayerTracking(LocationLayerTracking.NONE_COMPASS);
+      } else if (selectedTrackingType.contentEquals(NONE_TRACKING_SHOW_GPS_BEARING)) {
+        locationLayerPlugin.setLocationLayerTracking(LocationLayerTracking.NONE_GPS);
+      } else if (selectedTrackingType.contentEquals(TRACKING)) {
         locationLayerPlugin.setLocationLayerTracking(LocationLayerTracking.TRACKING);
-      } else if (selectedTrackingType.contentEquals("Tracking Compass")) {
+      } else if (selectedTrackingType.contentEquals(TRACKING_WITH_COMPASS_BEARING)) {
         locationLayerPlugin.setLocationLayerTracking(LocationLayerTracking.TRACKING_COMPASS);
-      } else if (selectedTrackingType.contentEquals("Tracking GPS")) {
+      } else if (selectedTrackingType.contentEquals(TRACKING_WITH_GPS_BEARING)) {
         locationLayerPlugin.setLocationLayerTracking(LocationLayerTracking.TRACKING_GPS);
-      } else if (selectedTrackingType.contentEquals("Tracking GPS North")) {
+      } else if (selectedTrackingType.contentEquals(TRACKING_WITH_BEARING_FACING_NORTH)) {
         locationLayerPlugin.setLocationLayerTracking(LocationLayerTracking.TRACKING_GPS_NORTH);
       }
       listPopup.dismiss();

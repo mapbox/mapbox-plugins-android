@@ -1,5 +1,6 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.location;
 
+import android.annotation.SuppressLint;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
@@ -12,6 +13,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
+import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerTracking;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.Utils;
 import com.mapbox.services.android.telemetry.location.LocationEngine;
@@ -71,7 +73,7 @@ public class ManualLocationUpdatesActivity extends AppCompatActivity implements 
     locationEngine.setPriority(LocationEnginePriority.HIGH_ACCURACY);
     locationEngine.activate();
     locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap, null);
-    locationLayerPlugin.setLocationLayerMode(LocationLayerMode.NORMAL);
+    locationLayerPlugin.setLocationLayerTracking(LocationLayerTracking.NONE);
     getLifecycle().addObserver(locationLayerPlugin);
   }
 
@@ -91,6 +93,7 @@ public class ManualLocationUpdatesActivity extends AppCompatActivity implements 
     Timber.d("Location change occurred: %s", location.toString());
   }
 
+  @SuppressLint("MissingPermission")
   @Override
   protected void onStart() {
     super.onStart();

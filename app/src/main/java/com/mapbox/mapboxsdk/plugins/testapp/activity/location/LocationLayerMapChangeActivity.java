@@ -1,5 +1,6 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.location;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
+import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerTracking;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.Utils;
 import com.mapbox.services.android.location.LostLocationEngine;
@@ -52,7 +54,7 @@ public class LocationLayerMapChangeActivity extends AppCompatActivity implements
     locationEngine.setPriority(LocationEnginePriority.HIGH_ACCURACY);
     locationEngine.activate();
     locationPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine);
-    locationPlugin.setLocationLayerMode(LocationLayerMode.COMPASS);
+    locationPlugin.setLocationLayerTracking(LocationLayerTracking.NONE_COMPASS);
   }
 
   @OnClick(R.id.fabStyles)
@@ -62,6 +64,7 @@ public class LocationLayerMapChangeActivity extends AppCompatActivity implements
     }
   }
 
+  @SuppressLint("MissingPermission")
   @Override
   protected void onStart() {
     super.onStart();
