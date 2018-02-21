@@ -5,51 +5,54 @@ import android.view.animation.LinearInterpolator;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerTracking;
+import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.Utils;
 
 public class LocationLayerCamera {
 
   private MapboxMap mapboxMap;
-  private int trackingMode = LocationLayerTracking.NONE;
+  private int cameraMode = CameraMode.NONE;
   private float bearing = -1;
 
   public LocationLayerCamera(MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
   }
 
-  public void setTrackingMode(@LocationLayerTracking.Type int trackingMode) {
-    this.trackingMode = trackingMode;
+  public void setCameraMode(@CameraMode.Mode int cameraMode) {
+    this.cameraMode = cameraMode;
   }
 
-  public void moveToLocation(Location location) {
-    if (trackingMode == LocationLayerTracking.NONE) {
+  public void updateFromBearing(float bearing) {
+    if (cameraMode == CameraMode.NONE) {
       return;
     }
-    buildCameraUpdateFromLocation(location);
+    buildBearingAnimation(bearing);
   }
 
-  public void updateBearing(float bearing) {
-    if (trackingMode == LocationLayerTracking.TRACKING_COMPASS) {
-      mapboxMap.setBearing(bearing);
-    }
-  }
-
-  private void buildCameraUpdateFromLocation(Location location) {
-    switch (trackingMode) {
-      case LocationLayerTracking.TRACKING:
-      case LocationLayerTracking.TRACKING_COMPASS:
+  public void updateFromLocation(Location location) {
+    switch (cameraMode) {
+      case CameraMode.NONE:
+        return;
+      case CameraMode.NONE_GPS:
+        break;
+      case CameraMode.TRACKING:
         buildTrackingAnimation(location);
         break;
-      case LocationLayerTracking.TRACKING_GPS:
+      case CameraMode.TRACKING_GPS:
         buildTrackingGPSAnimation(location);
         break;
-      case LocationLayerTracking.TRACKING_GPS_NORTH:
+      case CameraMode.TRACKING_GPS_NORTH:
         buildTrackingGPSNorthAnimation(location);
         break;
       default:
         break;
     }
+  }
+
+  private void buildBearingAnimation(float bearing) {
+    MapAnimator.Builder mapAnimation = MapAnimator.builder(mapboxMap);
+    createBearingAnimator(mapAnimation, bearing);
+    mapAnimation.build().playTogether();
   }
 
   private void buildTrackingAnimation(Location location) {

@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.plugins.locationlayer.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +106,7 @@ public class MapAnimator {
     public Builder addBearingAnimator(@NonNull BearingAnimator bearingAnimator) {
 
       float currentBearing = (float) currentPosition.bearing;
-      float normalizedTargetBearing = normalizeBearing(currentBearing, bearingAnimator.getTargetBearing());
+      float normalizedTargetBearing = Utils.shortestRotation(currentBearing, bearingAnimator.getTargetBearing());
       if (currentBearing == normalizedTargetBearing) {
         return this;
       }
@@ -146,15 +147,5 @@ public class MapAnimator {
     public MapAnimator build() {
       return new MapAnimator(animators);
     }
-  }
-
-  private static float normalizeBearing(float currentBearing, float targetBearing) {
-    double diff = currentBearing - targetBearing;
-    if (diff > 180.0f) {
-      targetBearing += 360.0f;
-    } else if (diff < -180.0f) {
-      targetBearing -= 360.f;
-    }
-    return targetBearing;
   }
 }
