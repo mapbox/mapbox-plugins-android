@@ -170,13 +170,6 @@ public final class MapLocale {
     .include(new LatLng(53.56086, 73.557693))
     .include(new LatLng(15.775416, 134.773911)).build();
 
-  /**
-   * Taiwan Bounding Box extracted from Open Street Map
-   */
-  static final LatLngBounds TAIWAN_BBOX = new LatLngBounds.Builder()
-    .include(new LatLng(25.29825, 119.534691))
-    .include(new LatLng(21.901806, 122.000443)).build();
-
   /*
    * Some MapLocales already defined (these match with the predefined ones in the Locale class)
    */
@@ -214,12 +207,7 @@ public final class MapLocale {
   /**
    * Useful constant for country.
    */
-  public static final MapLocale PRC = new MapLocale(SIMPLIFIED_CHINESE, CHINA_BBOX);
-
-  /**
-   * Useful constant for country.
-   */
-  public static final MapLocale TAIWAN = new MapLocale(CHINESE, TAIWAN_BBOX);
+  public static final MapLocale PRC = new MapLocale(SIMPLIFIED_CHINESE, PRC_BBOX);
 
   /**
    * Useful constant for country.
@@ -253,7 +241,6 @@ public final class MapLocale {
     LOCALE_SET.put(Locale.CANADA_FRENCH, MapLocale.CANADA_FRENCH);
     LOCALE_SET.put(Locale.CANADA, MapLocale.CANADA);
     LOCALE_SET.put(Locale.CHINA, MapLocale.CHINA);
-    LOCALE_SET.put(Locale.TAIWAN, MapLocale.TAIWAN);
     LOCALE_SET.put(Locale.PRC, MapLocale.PRC);
     LOCALE_SET.put(Locale.ITALY, MapLocale.ITALY);
     LOCALE_SET.put(Locale.UK, MapLocale.UK);
