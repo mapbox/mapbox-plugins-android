@@ -55,7 +55,7 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
-    localizationPlugin = new LocalizationPlugin(mapboxMap);
+    localizationPlugin = new LocalizationPlugin(mapView, mapboxMap);
     localizationPlugin.matchMapLanguageWithDeviceDefault();
   }
 

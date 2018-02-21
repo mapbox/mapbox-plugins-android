@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
+import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.plugins.localization.MapLocale.Languages;
 import com.mapbox.mapboxsdk.style.layers.Layer;
@@ -24,9 +25,10 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
  *
  * @since 0.1.0
  */
-public final class LocalizationPlugin {
+public final class LocalizationPlugin implements MapView.OnMapChangedListener {
 
   private final MapboxMap mapboxMap;
+  private MapLocale mapLocale;
 
   /**
    * Public constructor for passing in the required {@link MapboxMap} object.
@@ -34,8 +36,19 @@ public final class LocalizationPlugin {
    * @param mapboxMap the Mapbox map object which your current map view is using for control
    * @since 0.1.0
    */
-  public LocalizationPlugin(@NonNull MapboxMap mapboxMap) {
+  public LocalizationPlugin(@NonNull MapView mapview, @NonNull MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
+    mapview.addOnMapChangedListener(this);
+  }
+
+  /**
+   * Handles resetting the map language when the map style changes.
+   */
+  @Override
+  public void onMapChanged(int change) {
+    if (change == MapView.DID_FINISH_LOADING_STYLE && mapLocale != null) {
+      setMapLanguage(mapLocale);
+    }
   }
 
   /*
@@ -86,6 +99,7 @@ public final class LocalizationPlugin {
    * @since 0.1.0
    */
   public void setMapLanguage(@NonNull MapLocale mapLocale) {
+    this.mapLocale = mapLocale;
     List<Layer> layers = mapboxMap.getLayers();
     for (Source source : mapboxMap.getSources()) {
       if (sourceIsFromMapbox(source)) {
@@ -153,9 +167,9 @@ public final class LocalizationPlugin {
   private MapLocale checkMapLocalNonNull(Locale locale) {
     MapLocale mapLocale = MapLocale.getMapLocale(locale);
     if (mapLocale == null) {
-      throw new NullPointerException("Locale " + locale.toString() + "has no matching MapLocale obj"
-        + "ect. You need to create an instance of MapLocale and add it to the MapLocale Cache using"
-        + " the addMapLocale method.");
+      throw new NullPointerException("Locale " + locale.toString() + " has no matching MapLocale ob"
+        + "ject. You need to create an instance of MapLocale and add it to the MapLocale Cache usin"
+        + "g the addMapLocale method.");
     }
     return mapLocale;
   }

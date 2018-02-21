@@ -12,7 +12,7 @@ public class MapLocaleTest {
 
   @Test
   public void sanity() throws Exception {
-    MapLocale locale = new MapLocale("foo", MapLocale.FRANCE_BBOX);
+    MapLocale locale = new MapLocale(MapLocale.FRENCH, MapLocale.FRANCE_BBOX);
     assertThat(locale.getMapLanguage(), equalTo(MapLocale.FRENCH));
     assertThat(locale.getCountryBounds(), equalTo(MapLocale.FRANCE_BBOX));
   }
