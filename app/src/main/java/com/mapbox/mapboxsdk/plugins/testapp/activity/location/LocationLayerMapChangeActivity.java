@@ -52,7 +52,7 @@ public class LocationLayerMapChangeActivity extends AppCompatActivity implements
     locationEngine.setPriority(LocationEnginePriority.HIGH_ACCURACY);
     locationEngine.activate();
     locationPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine);
-    locationPlugin.setLocationLayerEnabled(LocationLayerMode.COMPASS);
+    locationPlugin.setLocationLayerMode(LocationLayerMode.COMPASS);
   }
 
   @OnClick(R.id.fabStyles)

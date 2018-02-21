@@ -15,7 +15,7 @@ import android.support.v4.content.ContextCompat;
 
 import com.mapbox.services.commons.geojson.Point;
 
-final class Utils {
+public final class Utils {
 
   private Utils() {
     // Class should not be initialized
@@ -29,7 +29,7 @@ final class Utils {
    * @return the shortest degree of rotation possible
    * @since 0.4.0
    */
-  static float shortestRotation(float magneticHeading, float previousMagneticHeading) {
+  public static float shortestRotation(float magneticHeading, float previousMagneticHeading) {
     double diff = previousMagneticHeading - magneticHeading;
     if (diff > 180.0f) {
       magneticHeading += 360.0f;

@@ -32,40 +32,46 @@
     tools:layout_constraintLeft_creator="1"
     tools:layout_constraintRight_creator="1">
 
+    <TextView
+      android:id="@+id/tv_mode"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight=".75"
+      android:textSize="18sp"
+      android:textStyle="bold"
+      android:textColor="@color/mapboxWhite"
+      android:gravity="center"
+      android:text="@string/mode"/>
+
     <Button
-      android:id="@+id/button_location_mode_none"
+      android:id="@+id/button_location_mode"
       style="?android:attr/buttonBarButtonStyle"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_weight="1"
+      android:layout_weight="1.25"
+      android:gravity="center"
       android:text="@string/button_location_mode_none"
       android:textColor="@android:color/white"/>
 
+    <TextView
+      android:id="@+id/tv_tracking"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight=".85"
+      android:textSize="18sp"
+      android:textStyle="bold"
+      android:textColor="@color/mapboxWhite"
+      android:gravity="center"
+      android:text="@string/tracking"/>
+
     <Button
-      android:id="@+id/button_location_mode_tracking"
+      android:id="@+id/button_location_tracking"
       style="?android:attr/buttonBarButtonStyle"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_weight="1"
+      android:layout_weight="1.15"
+      android:gravity="center"
       android:text="@string/button_location_mode_tracking"
-      android:textColor="@android:color/white"/>
-
-    <Button
-      android:id="@+id/button_location_mode_compass"
-      style="?android:attr/buttonBarButtonStyle"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:text="@string/button_location_mode_compass"
-      android:textColor="@android:color/white"/>
-
-    <Button
-      android:id="@+id/button_location_mode_navigation"
-      style="?android:attr/buttonBarButtonStyle"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:text="@string/button_location_mode_navigation"
       android:textColor="@android:color/white"/>
 
   </LinearLayout>

@@ -41,7 +41,7 @@ public class CompassListenerActivity extends AppCompatActivity implements OnMapR
   public void onMapReady(final MapboxMap mapboxMap) {
     LocationEngine locationEngine = new LostLocationEngine(this);
     locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine);
-    locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.COMPASS);
+    locationLayerPlugin.setLocationLayerMode(LocationLayerMode.COMPASS);
     locationLayerPlugin.addCompassListener(new CompassListener() {
       @Override
       public void onCompassChanged(float userHeading) {
