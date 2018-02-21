@@ -24,7 +24,7 @@ public class LocationLayerCamera {
     cameraModeManager.setCameraMode(cameraMode);
   }
 
-  public void updateFromBearing(float bearing) {
+  public void updateFromCompassBearing(float bearing) {
     cameraModeManager.updateFromBearing(bearing);
   }
 
