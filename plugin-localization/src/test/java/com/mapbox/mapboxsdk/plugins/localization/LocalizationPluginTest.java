@@ -13,7 +13,6 @@ import org.mockito.junit.MockitoRule;
 import java.util.Locale;
 
 import static org.junit.Assert.assertNotNull;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.mockito.Mockito.mock;
 
 public class LocalizationPluginTest {
@@ -29,10 +28,8 @@ public class LocalizationPluginTest {
     assertNotNull(localizationPlugin);
   }
 
-  @Test
+  @Test(expected = NullPointerException.class)
   public void setMapLanguage_localePassedInNotValid() throws Exception {
-    thrown.expect(NullPointerException.class);
-    thrown.expectMessage(containsString("has no matching MapLocale object. You need to create"));
     LocalizationPlugin localizationPlugin = new LocalizationPlugin(mock(MapView.class), mock(MapboxMap.class));
     localizationPlugin.setMapLanguage(new Locale("foo", "bar"));
   }
