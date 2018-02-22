@@ -40,7 +40,7 @@ public class CompassListenerActivity extends AppCompatActivity implements OnMapR
   public void onMapReady(final MapboxMap mapboxMap) {
     LocationEngine locationEngine = new LostLocationEngine(this);
     locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine);
-    locationLayerPlugin.setLocationLayerMode(RenderMode.COMPASS);
+    locationLayerPlugin.setRenderMode(RenderMode.COMPASS);
     locationLayerPlugin.addCompassListener(new CompassListener() {
       @Override
       public void onCompassChanged(float userHeading) {
@@ -95,7 +95,7 @@ public class CompassListenerActivity extends AppCompatActivity implements OnMapR
   protected void onDestroy() {
     super.onDestroy();
     mapView.onDestroy();
-    locationLayerPlugin.removeCompassListener(null);
+    //locationLayerPlugin.removeCompassListener();
   }
 
   @Override

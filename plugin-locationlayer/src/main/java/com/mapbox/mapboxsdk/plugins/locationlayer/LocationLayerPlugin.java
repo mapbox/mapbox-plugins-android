@@ -1,19 +1,15 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer;
 
-import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
-import android.content.Context;
 import android.location.Location;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 import android.support.annotation.StyleRes;
 import android.support.v7.app.AppCompatDelegate;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.LinearInterpolator;
 
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -22,30 +18,26 @@ import com.mapbox.mapboxsdk.maps.MapView.OnMapChangedListener;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.MapboxMap.OnCameraMoveListener;
 import com.mapbox.mapboxsdk.maps.MapboxMap.OnMapClickListener;
-import com.mapbox.mapboxsdk.plugins.locationlayer.camera.LocationLayerCamera;
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode;
 import com.mapbox.services.android.telemetry.location.LocationEngine;
 import com.mapbox.services.android.telemetry.location.LocationEngineListener;
-import com.mapbox.services.commons.geojson.Point;
+
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import timber.log.Timber;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.ACCURACY_LAYER;
-import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.BEARING_LAYER;
-import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.COMPASS_UPDATE_RATE_MS;
-import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.MAX_ANIMATION_DURATION_MS;
-import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.NAVIGATION_LAYER;
-import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.shortestRotation;
 
 /**
  * The Location layer plugin provides location awareness to your mobile application. Enabling this
  * plugin provides a contextual experience to your users by showing an icon representing the users
  * current location. A few different modes are offered to provide the right context to your users at
- * the correct time. {@link RenderMode#NORMAL} simply shows the users location on the map
- * represented as a dot. {@link RenderMode#COMPASS} mode allows you to display an arrow icon
+ * the correct time. {@link LocationLayerMode#NORMAL} simply shows the users location on the map
+ * represented as a dot. {@link LocationLayerMode#COMPASS} mode allows you to display an arrow icon
  * (by default) that points in the direction the device is pointing in.
- * {@link RenderMode#GPS} can be used in conjunction with our Navigation SDK to
+ * {@link LocationLayerMode#NAVIGATION} can be used in conjunction with our Navigation SDK to
  * display a larger icon we call the user puck.
  * <p>
  * Lastly, {@link LocationLayerPlugin#setLocationLayerEnabled(boolean)} can be used
@@ -62,32 +54,24 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   OnMapChangedListener, LifecycleObserver, OnCameraMoveListener, OnMapClickListener,
   OnLocationStaleListener {
 
-  private LocationLayer locationLayer;
-  private CompassManager compassManager;
-  private LocationEngine locationEngine;
-  private LocationLayerCamera camera;
   private final MapboxMap mapboxMap;
   private final MapView mapView;
-
-  // Enabled booleans
-  @RenderMode.Mode
-  private int locationLayerMode;
-  private boolean isEnabled;
-
-  // Previous compass and location values
-  private float previousMagneticHeading;
-  private Point previousPoint;
-  private Location location;
-
-  // Animators
-  private ValueAnimator locationChangeAnimator;
-  private ValueAnimator bearingChangeAnimator;
-
-  private long locationUpdateTimestamp;
-  private boolean linearAnimation;
-
-  private OnLocationLayerClickListener onLocationLayerClickListener;
   private LocationLayerOptions options;
+  private LocationEngine locationEngine;
+  private CompassManager compassManager;
+
+  private LocationLayer locationLayer;
+  private LocationLayerCamera locationLayerCamera;
+
+  private LocationLayerAnimator locationLayerAnimator;
+  private Location lastLocation;
+
+  private boolean isEnabled;
+  private StaleStateRunnable staleStateRunnable;
+  private final CopyOnWriteArrayList<OnLocationStaleListener> onLocationStaleListeners
+    = new CopyOnWriteArrayList<>();
+  private final CopyOnWriteArrayList<OnLocationLayerClickListener> onLocationLayerClickListeners
+    = new CopyOnWriteArrayList<>();
 
   /**
    * Construct a {@code LocationLayerPlugin}
@@ -116,7 +100,6 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
                              @Nullable LocationEngine locationEngine, @StyleRes int styleRes) {
     this(mapView, mapboxMap, locationEngine,
       LocationLayerOptions.createFromAttributes(mapView.getContext(), styleRes));
-
   }
 
   public LocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap,
@@ -126,22 +109,30 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     this.mapboxMap = mapboxMap;
     this.mapView = mapView;
     this.options = options;
-    mapView.addOnMapChangedListener(this);
     initialize();
   }
 
   private void initialize() {
     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-    locationLayerMode = RenderMode.NORMAL;
+
+    mapView.addOnMapChangedListener(this);
+    mapboxMap.addOnMapClickListener(this);
+
+    compassManager = new CompassManager(mapView.getContext());
+    compassManager.addCompassListener(this);
+    staleStateRunnable = new StaleStateRunnable(this, options.staleStateDelay());
+
     locationLayer = new LocationLayer(mapView, mapboxMap, options);
-    compassManager = new CompassManager(mapView.getContext(), this);
-    camera = new LocationLayerCamera(mapboxMap);
+    locationLayerCamera = new LocationLayerCamera(mapboxMap);
+    locationLayerAnimator = new LocationLayerAnimator();
+    locationLayerAnimator.addListener(locationLayer);
+    locationLayerAnimator.addListener(locationLayerCamera);
+
     enableLocationLayerPlugin();
   }
 
   @RequiresPermission(anyOf = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION})
   public void setLocationLayerEnabled(boolean isEnabled) {
-    this.isEnabled = isEnabled;
     if (isEnabled) {
       enableLocationLayerPlugin();
     } else {
@@ -149,53 +140,65 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     }
   }
 
+  private void enableLocationLayerPlugin() {
+    isEnabled = true;
+
+    if (locationEngine != null) {
+      locationEngine.addLocationEngineListener(this);
+    }
+    setLastLocation();
+    setLastCompassHeading();
+    locationLayer.show();
+  }
+
+  private void disableLocationLayerPlugin() {
+    isEnabled = false;
+
+    if (locationEngine != null) {
+      locationEngine.removeLocationEngineListener(this);
+    }
+    locationLayer.hide();
+  }
+
   /**
    * After creating an instance of this plugin, you can use this API to enable the location mode of
-   * your choice. These modes can be found in the {@link RenderMode} class and the parameter
+   * your choice. These modes can be found in the {@link LocationLayerMode} class and the parameter
    * only accepts one of those modes. Note that before enabling the My Location layer, you will need
    * to ensure that you have the requested the required user location permissions.
    * <p>
    * <ul>
-   * <li>{@link RenderMode#NORMAL}: Display the user location on the map as a small dot</li>
-   * <li>{@link RenderMode#COMPASS}: Display the user location and current heading/bearing</li>
-   * <li>{@link RenderMode#GPS}: Display the user location on the map using a navigation icon</li>
+   * <li>{@link LocationLayerMode#NORMAL}: Display the user location on the map as a small dot</li>
+   * <li>{@link LocationLayerMode#COMPASS}: Display the user location and current heading/bearing</li>
+   * <li>{@link LocationLayerMode#NAVIGATION}: Display the user location on the map using a navigation icon</li>
    * </ul>
    *
-   * @param locationLayerMode one of the modes found in {@link RenderMode}
+   * @param locationLayerMode one of the modes found in {@link LocationLayerMode}
    * @since 0.1.0
    */
-  public void setLocationLayerMode(@RenderMode.Mode int locationLayerMode) {
-    this.locationLayerMode = locationLayerMode;
-    if (locationLayerMode == RenderMode.COMPASS) {
-      setLinearAnimation(false);
-      setNavigationEnabled(false);
-      setMyBearingEnabled(true);
-    } else if (locationLayerMode == RenderMode.GPS) {
-      setMyBearingEnabled(false);
-      setNavigationEnabled(true);
-    } else if (locationLayerMode == RenderMode.NORMAL) {
-      setLinearAnimation(false);
-      setMyBearingEnabled(false);
-      setNavigationEnabled(false);
-    }
+  public void setCameraMode(@CameraMode.Mode int cameraMode) {
+    locationLayerCamera.setCameraMode(cameraMode);
   }
 
-  public void setLocationLayerTracking(@CameraMode.Mode int trackingMode) {
-    if (camera != null) {
-      camera.setCameraMode(trackingMode);
-    }
+  @CameraMode.Mode
+  public int getCameraMode() {
+    return locationLayerCamera.getCameraMode();
+  }
+
+  public void setRenderMode(@RenderMode.Mode int renderMode) {
+    locationLayer.setRenderMode(renderMode);
+  }
+
+  @RenderMode.Mode
+  public int getRenderMode() {
+    return locationLayer.getRenderMode();
   }
 
   /**
    * Returns the current location mode being used with this plugin.
    *
-   * @return on of the {@link RenderMode} values
+   * @return on of the {@link LocationLayerMode} values
    * @since 0.1.0
    */
-  public int getLocationLayerMode() {
-    return locationLayerMode;
-  }
-
   public LocationLayerOptions getLocationLayerOptions() {
     return options;
   }
@@ -203,15 +206,19 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   @Override
   public void onMapChanged(int change) {
     if (change == MapView.WILL_START_LOADING_MAP) {
-      stopAllAnimations();
+      locationLayerAnimator.cancelAllAnimations();
     } else if (change == MapView.DID_FINISH_LOADING_STYLE) {
       mapStyleFinishedLoading();
     }
   }
 
   @Override
-  public void isLocationStale(boolean stale) {
-    locationLayer.locationsStale(stale);
+  public void onStaleStateChange(boolean isStale) {
+    locationLayer.setLocationsStale(isStale);
+
+    for (OnLocationStaleListener listener : onLocationStaleListeners) {
+      listener.onStaleStateChange(isStale);
+    }
   }
 
   /**
@@ -221,17 +228,15 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    * @since 0.1.0
    */
   public void applyStyle(@StyleRes int styleRes) {
-    Context context = mapView.getContext();
-    applyStyle(context, LocationLayerOptions.createFromAttributes(context, styleRes));
+    applyStyle(LocationLayerOptions.createFromAttributes(mapView.getContext(), styleRes));
   }
 
-  public void applyStyle(Context context, LocationLayerOptions options) {
-    // TODO get stale state from this class
-    locationLayer.applyStyle(context, options, false);
+  public void applyStyle(LocationLayerOptions options) {
+    locationLayer.applyStyle(options);
     if (!options.enableStaleState()) {
-//      staleStateRunnable.reset();
+      staleStateRunnable.onStop();
     }
-//    staleStateRunnable.setDelayTime(options.staleStateDelay());
+    staleStateRunnable.setDelayTime(options.staleStateDelay());
   }
 
   /**
@@ -243,7 +248,6 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   public void forceLocationUpdate(@Nullable Location location) {
     updateLocation(location);
-    updateCameraLocation(location);
   }
 
   /**
@@ -258,7 +262,6 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   public void setLocationEngine(@Nullable LocationEngine locationEngine) {
     if (locationEngine != null) {
       this.locationEngine = locationEngine;
-      setLocationLayerMode(locationLayerMode);
     } else if (this.locationEngine != null) {
       this.locationEngine.removeLocationEngineListener(this);
       this.locationEngine = null;
@@ -277,26 +280,6 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   }
 
   /**
-   * Required to place inside your activities {@code onStop} method.
-   *
-   * @since 0.1.0
-   */
-  @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-  public void onStop() {
-//    staleStateRunnable.onStop();
-    stopAllAnimations();
-    if (compassManager != null && compassManager.isSensorAvailable()) {
-      compassManager.onStop();
-    }
-    if (locationEngine != null) {
-      locationEngine.removeLocationEngineListener(this);
-    }
-    if (mapboxMap != null) {
-      mapboxMap.removeOnCameraMoveListener(this);
-    }
-  }
-
-  /**
    * Required to place inside your activities {@code onStart} method. You'll also most likely want
    * to check that this Location Layer plugin instance inside your activity is null or not.
    *
@@ -306,41 +289,37 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   @OnLifecycleEvent(Lifecycle.Event.ON_START)
   public void onStart() {
     if (isEnabled) {
-      setLocationLayerMode(locationLayerMode);
-    }
-
-    if (!compassManager.getCompassListeners().isEmpty()
-      || (locationLayerMode == RenderMode.COMPASS && compassManager.isSensorAvailable())) {
-      compassManager.onStart();
+      if (locationEngine != null) {
+        locationEngine.addLocationEngineListener(this);
+      }
+      setLastLocation();
+      setLastCompassHeading();
     }
     if (mapboxMap != null) {
       mapboxMap.addOnCameraMoveListener(this);
     }
-//    staleStateRunnable.addOnLocationStaleListener(this);
+    if (options.enableStaleState()) {
+      staleStateRunnable.onStart();
+    }
+    compassManager.onStart();
   }
 
   /**
-   * Check whether the location update animator is using a linear or an accelerate/decelerate
-   * interpolator. When the navigation mode is being used, the animator automatically become linear.
+   * Required to place inside your activities {@code onStop} method.
    *
-   * @return boolean true if the location update animator is set to linear, otherwise false
    * @since 0.1.0
    */
-  public boolean isLinearAnimation() {
-    return linearAnimation;
-  }
-
-  /**
-   * Set whether the location update animator is using linear (true) or an accelerate/decelerate
-   * (false) interpolator. When the navigation mode is being used, the animator automatically become
-   * linear.
-   *
-   * @param linearAnimation boolean true if you'd like to set the location update animator to
-   *                        linear, otherwise false
-   * @since 0.1.0
-   */
-  public void setLinearAnimation(boolean linearAnimation) {
-    this.linearAnimation = linearAnimation;
+  @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+  public void onStop() {
+    staleStateRunnable.onStop();
+    compassManager.onStop();
+    locationLayerAnimator.cancelAllAnimations();
+    if (locationEngine != null) {
+      locationEngine.removeLocationEngineListener(this);
+    }
+    if (mapboxMap != null) {
+      mapboxMap.removeOnCameraMoveListener(this);
+    }
   }
 
   /**
@@ -353,20 +332,16 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   public void addCompassListener(@NonNull CompassListener compassListener) {
     compassManager.addCompassListener(compassListener);
-    compassManager.onStart();
   }
 
   /**
-   * Remove either a single instance of compass listener or all the listeners using null.
+   * Remove a compass listener.
    *
    * @param compassListener the {@link CompassListener} which you'd like to remove from the listener
-   *                        list. You can optionally pass in null to remove all listeners
+   *                        list.
    */
-  public void removeCompassListener(@Nullable CompassListener compassListener) {
+  public void removeCompassListener(@NonNull CompassListener compassListener) {
     compassManager.removeCompassListener(compassListener);
-    if (compassManager.getCompassListeners().isEmpty()) {
-      compassManager.onStop();
-    }
   }
 
   /**
@@ -376,18 +351,28 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    *                              location layer is clicked
    * @since 0.3.0
    */
-  public void setOnLocationClickListener(
-    @Nullable OnLocationLayerClickListener locationClickListener) {
-    this.onLocationLayerClickListener = locationClickListener;
-    if (onLocationLayerClickListener != null) {
-      mapboxMap.addOnMapClickListener(this);
-    }
+  public void addOnLocationClickListener(@NonNull OnLocationLayerClickListener locationClickListener) {
+    onLocationLayerClickListeners.add(locationClickListener);
+  }
+
+  public void removeOnLocationClickListener(@NonNull OnLocationLayerClickListener locationClickListener) {
+    onLocationLayerClickListeners.remove(locationClickListener);
+  }
+
+  public void addOnLocationStaleListener(@NonNull OnLocationStaleListener listener) {
+    onLocationStaleListeners.add(listener);
+  }
+
+  public void removeOnLocationStaleListener(@NonNull OnLocationStaleListener listener) {
+    onLocationStaleListeners.remove(listener);
   }
 
   @Override
   public void onMapClick(@NonNull LatLng point) {
-    if (onLocationLayerClickListener != null && locationLayer.onMapClick(point)) {
-      onLocationLayerClickListener.onLocationLayerClick();
+    if (!onLocationLayerClickListeners.isEmpty() && locationLayer.onMapClick(point)) {
+      for (OnLocationLayerClickListener listener : onLocationLayerClickListeners) {
+        listener.onLocationLayerClick();
+      }
     }
   }
 
@@ -402,66 +387,16 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   @Override
   public void onLocationChanged(Location location) {
     updateLocation(location);
-    updateCameraLocation(location);
   }
 
   @Override
   public void onCompassChanged(float userHeading) {
-    bearingChangeAnimate(userHeading);
+    updateCompassHeading(userHeading);
   }
 
   @Override
   public void onCompassAccuracyChange(int compassStatus) {
     // Currently don't handle this inside SDK
-  }
-
-  private void toggleCameraListener() {
-    if (locationLayerMode == RenderMode.GPS) {
-      mapboxMap.removeOnCameraMoveListener(this);
-      return;
-    }
-    mapboxMap.addOnCameraMoveListener(this);
-  }
-
-  private void updateLocation(Location location) {
-    this.location = location;
-    if (location == null) {
-      locationUpdateTimestamp = SystemClock.elapsedRealtime();
-      return;
-    }
-    if (locationLayerMode == RenderMode.GPS && location.hasBearing()) {
-      bearingChangeAnimate(location.getBearing());
-    } else if (locationLayerMode != RenderMode.GPS) {
-      locationLayer.updateAccuracyRadius(location);
-    }
-    setLocation(location);
-  }
-
-  private void updateCameraLocation(Location location) {
-    if (camera != null) {
-      // TODO LocationLayerPlugin#
-    }
-  }
-
-  private void enableLocationLayerPlugin() {
-    // Set an initial location if one is available and the locationEngines not null
-    if (locationEngine != null) {
-      setLastLocation();
-      locationEngine.addLocationEngineListener(this);
-    }
-
-    toggleCameraListener();
-//    locationLayer.setLayersVisibility(true);
-  }
-
-  /**
-   * disable the location layer plugin if the locationLayerMode is set to none.
-   */
-  private void disableLocationLayerPlugin() {
-    if (locationEngine != null) {
-      locationEngine.removeLocationEngineListener(this);
-    }
-//    locationLayer.setLayersVisibility(false);
   }
 
   /**
@@ -470,13 +405,13 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   @SuppressWarnings( {"MissingPermission"})
   private void setLastLocation() {
-    Location lastLocation = locationEngine.getLastLocation();
-    if (lastLocation != null) {
-      setLocation(lastLocation);
-      if (locationLayerMode != RenderMode.GPS) {
-        locationLayer.updateAccuracyRadius(lastLocation);
-      }
+    if (locationEngine != null) {
+      updateLocation(locationEngine.getLastLocation());
     }
+  }
+
+  private void setLastCompassHeading() {
+    updateCompassHeading(compassManager.getLastHeading());
   }
 
   /**
@@ -484,25 +419,10 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    *
    * @return the last known location
    */
+  @SuppressLint("MissingPermission")
   @Nullable
   public Location getLastKnownLocation() {
-    return location;
-  }
-
-  /**
-   * Convenience method for stopping all animations
-   */
-  private void stopAllAnimations() {
-    if (locationChangeAnimator != null) {
-      locationChangeAnimator.removeAllListeners();
-      locationChangeAnimator.cancel();
-      locationChangeAnimator = null;
-    }
-    if (bearingChangeAnimator != null) {
-      bearingChangeAnimator.removeAllListeners();
-      bearingChangeAnimator.cancel();
-      bearingChangeAnimator = null;
-    }
+    return locationEngine != null ? locationEngine.getLastLocation() : null;
   }
 
   /**
@@ -513,60 +433,15 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   private void mapStyleFinishedLoading() {
     // recreate runtime style components
     locationLayer = new LocationLayer(mapView, mapboxMap, options);
-    // reset state
-    setLocationLayerMode(locationLayerMode);
-    setBearing(previousMagneticHeading);
-    updateCameraBearing(previousMagneticHeading);
-    if (previousPoint != null) {
-      locationLayer.setLocationPoint(previousPoint);
-    }
-  }
-
-  /**
-   * Enable or disable the My Location bearing by passing in a boolean here. Once enabled, The users
-   * location and bearing's indicated on the map by default as a small blue dot with a chevron
-   * pointing in the direction of the devices compass bearing.
-   *
-   * @param bearingEnabled boolean true if you'd like to enable the user location bearing,
-   *                       otherwise, false will disable
-   * @since 0.1.0
-   */
-  private void setMyBearingEnabled(boolean bearingEnabled) {
-    locationLayer.setLayerVisibility(BEARING_LAYER, bearingEnabled);
-    if (bearingEnabled) {
-      compassManager.onStart();
-    } else {
-      if (compassManager != null && compassManager.getCompassListeners().isEmpty()) {
-        compassManager.onStop();
-      }
-    }
-  }
-
-  /**
-   * Enable or disable the My Location navigation by passing in a boolean here. Once enabled, The
-   * users location indicated on the map will show (by default) as a large navigation puck with a
-   * cheveron/arrow showing the users GPS location bearing.
-   *
-   * @param navigationEnabled boolean true if you'd like to enable the user location navigation,
-   *                          disable otherwise, false will
-   * @since 0.1.0
-   */
-  private void setNavigationEnabled(boolean navigationEnabled) {
-    setNavigationLayerVisibility(navigationEnabled);
-    setLinearAnimation(navigationEnabled);
-    locationLayer.setLayerVisibility(ACCURACY_LAYER, !navigationEnabled);
-  }
-
-  private void setNavigationLayerVisibility(boolean visible) {
-    locationLayer.setLayerVisibility(NAVIGATION_LAYER, visible);
+    setLastLocation();
+    setLastCompassHeading();
   }
 
   @Override
   public void onCameraMove() {
     CameraPosition position = mapboxMap.getCameraPosition();
-    locationLayer.updateAccuracyRadius(location);
+    locationLayer.updateAccuracyRadius(getLastKnownLocation());
     locationLayer.updateForegroundOffset(position.tilt);
-    locationLayer.updateForegroundBearing((float) position.bearing);
   }
 
   /**
@@ -575,121 +450,20 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    * @param location the latest user location
    * @since 0.1.0
    */
-  private void setLocation(final Location location) {
-    this.location = location;
-//    staleStateRunnable.updateLatestLocationTime();
-
-    // Convert the new location to a Point object.
-    Point newPoint = Point.fromCoordinates(new double[] {location.getLongitude(),
-      location.getLatitude()});
-
-    // If the source doesn't have geometry, a Point gets added.
-    if (previousPoint == null) {
-      locationLayer.setLocationPoint(newPoint);
-      previousPoint = newPoint;
+  private void updateLocation(final Location location) {
+    if (location == null) {
       return;
     }
 
-    // Do nothing if the location source's current Point is identical to the new location Point.
-    if (previousPoint.getCoordinates().equals(newPoint.getCoordinates())) {
-      return;
+    staleStateRunnable.updateLatestLocationTime();
+    if (lastLocation != null) {
+      locationLayerAnimator.feedNewLocation(lastLocation, location);
     }
-    locationChangeAnimate(previousPoint, newPoint);
+
+    lastLocation = location;
   }
 
-  /*
-   * Animators
-   */
-
-  /**
-   * Handles the animation from currentSourcePoint to the new user location point.
-   */
-  private void locationChangeAnimate(@NonNull Point currentSourcePoint, @NonNull Point newPoint) {
-    if (locationChangeAnimator != null) {
-      locationChangeAnimator.end();
-    }
-
-    locationChangeAnimator = ValueAnimator.ofObject(new Utils.PointEvaluator(), currentSourcePoint,
-      newPoint);
-
-    float speed = location == null ? 0 : location.getSpeed();
-
-    locationChangeAnimator.setDuration(linearAnimation || speed > 0
-      ? getLocationUpdateDuration() : LocationLayerConstants.LOCATION_UPDATE_DELAY_MS);
-    if (linearAnimation || speed > 0) {
-      locationChangeAnimator.setInterpolator(new LinearInterpolator());
-    } else {
-      locationChangeAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-    }
-    locationChangeAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-      @Override
-      public void onAnimationUpdate(ValueAnimator animation) {
-        previousPoint = (Point) animation.getAnimatedValue();
-        locationLayer.setLocationPoint(previousPoint);
-      }
-    });
-    locationChangeAnimator.start();
-  }
-
-  /**
-   * Handles the animation from the previous user bearing to the current.
-   *
-   * @param magneticHeading the raw compass heading
-   * @since 0.1.0
-   */
-  private void bearingChangeAnimate(float magneticHeading) {
-    if (bearingChangeAnimator != null) {
-      previousMagneticHeading = (Float) bearingChangeAnimator.getAnimatedValue();
-      bearingChangeAnimator.end();
-      bearingChangeAnimator = null;
-    }
-
-    // Always rotate the bearing shortest distance
-    magneticHeading = shortestRotation(magneticHeading, previousMagneticHeading);
-
-    // No visible change occurred
-    if (Math.abs(magneticHeading - previousMagneticHeading) < 1) {
-      return;
-    }
-
-    bearingChangeAnimator = ValueAnimator.ofFloat(previousMagneticHeading, magneticHeading);
-    bearingChangeAnimator.setDuration(COMPASS_UPDATE_RATE_MS);
-    bearingChangeAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-      @Override
-      public void onAnimationUpdate(ValueAnimator valueAnimator) {
-        float bearing = (float) valueAnimator.getAnimatedValue();
-        setBearing(bearing);
-        updateCameraBearing(bearing);
-      }
-    });
-    bearingChangeAnimator.start();
-    previousMagneticHeading = magneticHeading;
-  }
-
-  private void updateCameraBearing(float bearing) {
-    if (camera != null) {
-//      camera.updateFromBearing(bearing);
-    }
-  }
-
-  private void setBearing(float bearing) {
-    locationLayer.setLayerBearing(
-      locationLayerMode == RenderMode.GPS
-        ? NAVIGATION_LAYER : BEARING_LAYER, bearing
-    );
-  }
-
-  /**
-   * Internal method being used to calculate the time duration for the location change animator.
-   *
-   * @return millisecond time value as a long value
-   * @since 0.1.0
-   */
-  private long getLocationUpdateDuration() {
-    // calculate updateLatLng time + add some extra offset to improve animation
-    long previousUpdateTimeStamp = locationUpdateTimestamp;
-    locationUpdateTimestamp = SystemClock.elapsedRealtime();
-    long duration = locationUpdateTimestamp - previousUpdateTimeStamp;
-    return duration < MAX_ANIMATION_DURATION_MS ? duration : MAX_ANIMATION_DURATION_MS;
+  private void updateCompassHeading(float heading) {
+    locationLayerAnimator.feedNewCompassBearing(compassManager.getLastHeading(), heading);
   }
 }
