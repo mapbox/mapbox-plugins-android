@@ -27,11 +27,24 @@ final class LocationLayerAnimator {
   }
 
   void feedNewLocation(@NonNull Location previousLocation, @NonNull Location newLocation) {
-    cancelLocationAnimations();
-    LatLng previousLatLng = new LatLng(previousLocation);
+    LatLng previousLatLng;
+    if (latLngAnimator != null) {
+      previousLatLng = (LatLng) latLngAnimator.getAnimatedValue();
+    } else {
+      previousLatLng = new LatLng(previousLocation);
+    }
     LatLng newLatLng = new LatLng(newLocation);
+
+    float previousBearing;
+    if (gpsBearingAnimator != null) {
+      previousBearing = (float) gpsBearingAnimator.getAnimatedValue();
+    } else {
+      previousBearing = previousLocation.getBearing();
+    }
+
+    cancelLocationAnimations();
     latLngAnimator = new LatLngAnimator(previousLatLng, newLatLng, 1000);
-    gpsBearingAnimator = new BearingAnimator(previousLocation.getBearing(), newLocation.getBearing(), 1000);
+    gpsBearingAnimator = new BearingAnimator(previousBearing, newLocation.getBearing(), 1000);
     // FIXME: 22/02/2018 evaluate duration of animation better
 
     latLngAnimator.addUpdateListener(latLngUpdateListener);
@@ -93,16 +106,19 @@ final class LocationLayerAnimator {
   private void cancelLocationAnimations() {
     if (latLngAnimator != null) {
       latLngAnimator.cancel();
+      latLngAnimator.removeAllUpdateListeners();
     }
 
     if (gpsBearingAnimator != null) {
       gpsBearingAnimator.cancel();
+      gpsBearingAnimator.removeAllUpdateListeners();
     }
   }
 
   private void cancelCompassAnimations() {
     if (compassBearingAnimator != null) {
       compassBearingAnimator.cancel();
+      compassBearingAnimator.removeAllUpdateListeners();
     }
   }
 }
