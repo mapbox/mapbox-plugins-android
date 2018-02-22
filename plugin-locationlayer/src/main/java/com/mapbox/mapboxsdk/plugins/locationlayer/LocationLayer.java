@@ -193,7 +193,7 @@ final class LocationLayer implements LocationLayerAnimator.OnAnimationsValuesCha
 
   void updateAccuracyRadius(Location location) {
     CircleLayer accuracyLayer = (CircleLayer) layerMap.get(ACCURACY_LAYER);
-    if (accuracyLayer != null && accuracyLayer.getVisibility().isValue()) {
+    if (accuracyLayer != null && (renderMode == RenderMode.COMPASS || renderMode == RenderMode.NORMAL)) {
       accuracyLayer.setProperties(
         circleRadius(calculateZoomLevelRadius(location))
       );
@@ -223,7 +223,7 @@ final class LocationLayer implements LocationLayerAnimator.OnAnimationsValuesCha
     sourceMap.put(LOCATION_SOURCE, locationSource);
   }
 
-  void setLocationPoint(Point locationPoint) {
+  private void setLocationPoint(Point locationPoint) {
     sourceMap.get(LOCATION_SOURCE).setGeoJson(locationPoint);
   }
 
