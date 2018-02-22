@@ -166,10 +166,10 @@ class CompassManager implements SensorEventListener {
   }
 
   private void notifyCompassChangeListeners(float heading) {
-    lastHeading = heading;
     for (CompassListener compassListener : compassListeners) {
       compassListener.onCompassChanged(heading);
     }
+    lastHeading = heading;
   }
 
   int getLastAccuracy() {
