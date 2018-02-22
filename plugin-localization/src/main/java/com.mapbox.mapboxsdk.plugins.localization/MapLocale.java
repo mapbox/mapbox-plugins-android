@@ -16,19 +16,19 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 /**
  * A {@link MapLocale} object builds off of the {@link Locale} object and provides additional
- * geographical information particular to the Mapbox Map SDK. Like Locale, MapLocale can be used to
+ * geographical information particular to the Mapbox Maps SDK. Like Locale, MapLocale can be used to
  * make the <em>map locale sensitive</em>.
  * <p>
- * The {@link MapLocale} object can be used to aquire the matching Locales map language; useful for
+ * The {@link MapLocale} object can be used to acquire the matching Locale's map language; useful for
  * translating the map language into one of the supported ones found in {@link Languages}.
  * <p>
- * You'll also be able to get bounding box information for that same country so the map starting
- * position target can adjust itself over the devices locale country.
+ * You'll also be able to get bounding box information for that same country so the map's starting
+ * position target can adjust itself over the device's Locale country.
  * <p>
  * A handful of {@link MapLocale}'s are already constructed and offered through this class as static
  * variables. If a country is missing and you'd like to add it, you can use one of the
  * {@link MapLocale} constructors to build a valid map locale. Once this is done, you need to add it
- * to the locale cache using {@link MapLocale#addMapLocale(Locale, MapLocale)} were the first
+ * to the Locale cache using {@link MapLocale#addMapLocale(Locale, MapLocale)} where the first
  * parameter is the {@link Locale} object which matches up with your newly created
  * {@link MapLocale}.
  *
@@ -331,8 +331,8 @@ public final class MapLocale {
    * passed in Locale. If you expected a non-null result, you should make sure you used
    * {@link #addMapLocale(Locale, MapLocale)} before making this call.
    *
-   * @param locale the locale which you'd like to recieve it's matching {@link MapLocale} if one exist
-   * @return the matching {@link MapLocale} if one exist, otherwise null
+   * @param locale the locale which you'd like to receive its matching {@link MapLocale} if one exists
+   * @return the matching {@link MapLocale} if one exists, otherwise null
    * @since 0.1.0
    */
   @Nullable
