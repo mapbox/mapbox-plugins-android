@@ -92,7 +92,6 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     locationEngine.activate();
     locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine);
     locationLayerPlugin.addOnLocationClickListener(this);
-    locationLayerPlugin.setLocationLayerEnabled(true);
     getLifecycle().addObserver(locationLayerPlugin);
   }
 
