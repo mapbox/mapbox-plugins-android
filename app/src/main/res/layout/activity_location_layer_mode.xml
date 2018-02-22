@@ -50,7 +50,7 @@
       android:layout_height="wrap_content"
       android:layout_weight="1.25"
       android:gravity="center"
-      android:text="@string/button_location_mode_none"
+      android:text="@string/button_location_mode_normal"
       android:textColor="@android:color/white"/>
 
     <TextView
@@ -71,7 +71,7 @@
       android:layout_height="wrap_content"
       android:layout_weight="1.15"
       android:gravity="center"
-      android:text="@string/button_location_mode_tracking"
+      android:text="@string/button_location_mode_none"
       android:textColor="@android:color/white"/>
 
   </LinearLayout>
