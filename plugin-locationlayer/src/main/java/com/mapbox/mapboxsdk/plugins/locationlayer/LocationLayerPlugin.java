@@ -114,7 +114,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     mapView.addOnMapChangedListener(this);
     mapboxMap.addOnMapClickListener(this);
 
-    locationLayer = new LocationLayer(mapView, mapboxMap, options, staleStateRunnable);
+    locationLayer = new LocationLayer(mapView, mapboxMap, options);
     compassManager = new CompassManager(mapView.getContext());
     compassManager.addCompassListener(this);
     staleStateRunnable = new StaleStateRunnable(this, options.staleStateDelay());
@@ -191,7 +191,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   @Override
   public void onStaleStateChange(boolean isStale) {
     Timber.v("onStaleStateChange: %b", isStale);
-    locationLayer.locationsStale(isStale);
+    locationLayer.setLocationsStale(isStale);
 
     for (OnLocationStaleListener listener : onLocationStaleListeners) {
       listener.onStaleStateChange(isStale);
@@ -209,7 +209,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   }
 
   public void applyStyle(LocationLayerOptions options) {
-    locationLayer.applyStyle(options);
+    locationLayer.applyStyle(mapView.getContext(), options, staleStateRunnable.isStale());
     if (!options.enableStaleState()) {
       staleStateRunnable.onStop();
     }
