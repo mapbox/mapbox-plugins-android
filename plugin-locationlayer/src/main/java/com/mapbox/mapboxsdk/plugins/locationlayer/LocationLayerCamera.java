@@ -17,6 +17,7 @@ public class LocationLayerCamera implements LocationLayerAnimator.OnAnimationsVa
 
   public void setCameraMode(@CameraMode.Mode int cameraMode) {
     this.cameraMode = cameraMode;
+    mapboxMap.cancelTransitions();
   }
 
   public int getCameraMode() {

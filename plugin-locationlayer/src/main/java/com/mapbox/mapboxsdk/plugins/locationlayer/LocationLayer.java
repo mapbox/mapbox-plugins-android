@@ -132,21 +132,17 @@ final class LocationLayer implements LocationLayerAnimator.OnAnimationsValuesCha
   //
 
   void show() {
-    setLayersVisibility(VISIBLE);
+    setRenderMode(renderMode);
   }
 
   void hide() {
-    setLayersVisibility(NONE);
+    for (Layer layer : layerMap.values()) {
+      layer.setProperties(visibility(NONE));
+    }
   }
 
   void setLayerVisibility(String layerId, boolean visible) {
     layerMap.get(layerId).setProperties(visibility(visible ? VISIBLE : NONE));
-  }
-
-  private void setLayersVisibility(String visibility) {
-    for (Layer layer : layerMap.values()) {
-      layer.setProperties(visibility(visibility));
-    }
   }
 
   private void addLayers() {

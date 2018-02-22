@@ -18,9 +18,10 @@ import com.mapbox.mapboxsdk.maps.MapView.OnMapChangedListener;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.MapboxMap.OnCameraMoveListener;
 import com.mapbox.mapboxsdk.maps.MapboxMap.OnMapClickListener;
+import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode;
+import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode;
 import com.mapbox.services.android.telemetry.location.LocationEngine;
 import com.mapbox.services.android.telemetry.location.LocationEngineListener;
-import com.mapbox.services.commons.geojson.Point;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -56,11 +57,13 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   private final MapboxMap mapboxMap;
   private final MapView mapView;
   private LocationLayerOptions options;
-  private LocationLayer locationLayer;
   private LocationEngine locationEngine;
   private CompassManager compassManager;
 
-  // TODO: 21/02/2018 references to animator, LL and camera
+  private LocationLayer locationLayer;
+  private LocationLayerCamera locationLayerCamera;
+
+  private LocationLayerAnimator locationLayerAnimator;
 
   private boolean isEnabled;
   private StaleStateRunnable staleStateRunnable;
@@ -114,10 +117,15 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     mapView.addOnMapChangedListener(this);
     mapboxMap.addOnMapClickListener(this);
 
-    locationLayer = new LocationLayer(mapView, mapboxMap, options);
     compassManager = new CompassManager(mapView.getContext());
     compassManager.addCompassListener(this);
     staleStateRunnable = new StaleStateRunnable(this, options.staleStateDelay());
+
+    locationLayer = new LocationLayer(mapView, mapboxMap, options);
+    locationLayerCamera = new LocationLayerCamera(mapboxMap);
+    locationLayerAnimator = new LocationLayerAnimator();
+    locationLayerAnimator.addListener(locationLayer);
+    locationLayerAnimator.addListener(locationLayerCamera);
 
     enableLocationLayerPlugin();
   }
@@ -138,7 +146,8 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
       locationEngine.addLocationEngineListener(this);
     }
     setLastLocation();
-    locationLayer.setLayersVisibility(true);
+    setLastCompassHeading();
+    locationLayer.show();
   }
 
   private void disableLocationLayerPlugin() {
@@ -147,7 +156,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     if (locationEngine != null) {
       locationEngine.removeLocationEngineListener(this);
     }
-    locationLayer.setLayersVisibility(false);
+    locationLayer.hide();
   }
 
   /**
@@ -165,9 +174,23 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    * @param locationLayerMode one of the modes found in {@link LocationLayerMode}
    * @since 0.1.0
    */
-  // TODO: 21/02/2018 set render mode and camera mode
+  public void setCameraMode(@CameraMode.Mode int cameraMode) {
+    locationLayerCamera.setCameraMode(cameraMode);
+  }
 
-  // TODO: 21/02/2018 return current render mode and camera mode
+  public @CameraMode.Mode
+  int getCameraMode() {
+    return locationLayerCamera.getCameraMode();
+  }
+
+  public void setRenderMode(@RenderMode.Mode int renderMode) {
+    locationLayer.setRenderMode(renderMode);
+  }
+
+  public @RenderMode.Mode
+  int getRenderMode() {
+    return locationLayer.getRenderMode();
+  }
 
   /**
    * Returns the current location mode being used with this plugin.
@@ -182,7 +205,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   @Override
   public void onMapChanged(int change) {
     if (change == MapView.WILL_START_LOADING_MAP) {
-      // TODO: 21/02/2018 stop animations, notify anyone interested
+      locationLayerAnimator.cancelAllAnimations();
     } else if (change == MapView.DID_FINISH_LOADING_STYLE) {
       mapStyleFinishedLoading();
     }
@@ -270,7 +293,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
         locationEngine.addLocationEngineListener(this);
       }
       setLastLocation();
-      // TODO: 21/02/2018 reset modes
+      setLastCompassHeading();
     }
     if (mapboxMap != null) {
       mapboxMap.addOnCameraMoveListener(this);
@@ -290,7 +313,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   public void onStop() {
     staleStateRunnable.onStop();
     compassManager.onStop();
-    // TODO: 21/02/2018 stop animations
+    locationLayerAnimator.cancelAllAnimations();
     if (locationEngine != null) {
       locationEngine.removeLocationEngineListener(this);
     }
@@ -409,10 +432,9 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   @SuppressWarnings( {"MissingPermission"})
   private void mapStyleFinishedLoading() {
     // recreate runtime style components
-    locationLayer = new LocationLayer(mapView, mapboxMap, options, staleStateRunnable);
-    // TODO: 21/02/2018 reset state
+    locationLayer = new LocationLayer(mapView, mapboxMap, options);
     setLastLocation();
-
+    setLastCompassHeading();
   }
 
   @Override
@@ -420,7 +442,6 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     CameraPosition position = mapboxMap.getCameraPosition();
     locationLayer.updateAccuracyRadius(getLastKnownLocation());
     locationLayer.updateForegroundOffset(position.tilt);
-    locationLayer.updateForegroundBearing((float) position.bearing);
   }
 
   /**
@@ -435,17 +456,13 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     }
 
     staleStateRunnable.updateLatestLocationTime();
-
-    // Convert the new location to a Point object.
-    Point newPoint = Point.fromCoordinates(new double[] {location.getLongitude(),
-      location.getLatitude()});
-
-    locationLayer.setLocationPoint(newPoint);
-
-    // TODO: 21/02/2018 notify animator class about new location
+    Location lastLocation = getLastKnownLocation();
+    if (lastLocation != null) {
+      locationLayerAnimator.feedNewLocation(lastLocation, location);
+    }
   }
 
   private void updateCompassHeading(float heading) {
-    // TODO: 21/02/2018 notify animator class about new heading
+    locationLayerAnimator.feedNewCompassBearing(compassManager.getLastHeading(), heading);
   }
 }
