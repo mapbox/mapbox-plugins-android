@@ -91,8 +91,7 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     locationEngine.addLocationEngineListener(this);
     locationEngine.activate();
     locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine);
-    locationLayerPlugin.setOnLocationClickListener(this);
-    locationLayerPlugin.setLocationLayerEnabled(true);
+    locationLayerPlugin.addOnLocationClickListener(this);
     getLifecycle().addObserver(locationLayerPlugin);
   }
 
@@ -214,11 +213,11 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
       String selectedMode = modes.get(position);
       locationModeBtn.setText(selectedMode);
       if (selectedMode.contentEquals("Normal")) {
-        locationLayerPlugin.setLocationLayerMode(RenderMode.NORMAL);
+        locationLayerPlugin.setRenderMode(RenderMode.NORMAL);
       } else if (selectedMode.contentEquals("Compass")) {
-        locationLayerPlugin.setLocationLayerMode(RenderMode.COMPASS);
+        locationLayerPlugin.setRenderMode(RenderMode.COMPASS);
       } else if (selectedMode.contentEquals("GPS")) {
-        locationLayerPlugin.setLocationLayerMode(RenderMode.GPS);
+        locationLayerPlugin.setRenderMode(RenderMode.GPS);
       }
       listPopup.dismiss();
     });
@@ -241,15 +240,15 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
       String selectedTrackingType = trackingTypes.get(position);
       locationTrackingBtn.setText(selectedTrackingType);
       if (selectedTrackingType.contentEquals("None")) {
-        locationLayerPlugin.setLocationLayerTracking(CameraMode.NONE);
+        locationLayerPlugin.setCameraMode(CameraMode.NONE);
       } else if (selectedTrackingType.contentEquals("Tracking")) {
-        locationLayerPlugin.setLocationLayerTracking(CameraMode.TRACKING);
+        locationLayerPlugin.setCameraMode(CameraMode.TRACKING);
       } else if (selectedTrackingType.contentEquals("Tracking Compass")) {
-        locationLayerPlugin.setLocationLayerTracking(CameraMode.TRACKING_COMPASS);
+        locationLayerPlugin.setCameraMode(CameraMode.TRACKING_COMPASS);
       } else if (selectedTrackingType.contentEquals("Tracking GPS")) {
-        locationLayerPlugin.setLocationLayerTracking(CameraMode.TRACKING_GPS);
+        locationLayerPlugin.setCameraMode(CameraMode.TRACKING_GPS);
       } else if (selectedTrackingType.contentEquals("Tracking GPS North")) {
-        locationLayerPlugin.setLocationLayerTracking(CameraMode.TRACKING_GPS_NORTH);
+        locationLayerPlugin.setCameraMode(CameraMode.TRACKING_GPS_NORTH);
       }
       listPopup.dismiss();
     });

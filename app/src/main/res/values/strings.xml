@@ -46,6 +46,7 @@
 
   <!-- Buttons -->
   <string name="button_location_mode_none">None</string>
+  <string name="button_location_mode_normal">Normal</string>
   <string name="button_location_mode_tracking">Tracking</string>
   <string name="button_location_mode_compass">Compass</string>
   <string name="button_location_mode_navigation">Nav</string>

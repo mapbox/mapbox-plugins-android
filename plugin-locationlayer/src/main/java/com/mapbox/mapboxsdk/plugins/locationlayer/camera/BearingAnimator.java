@@ -7,10 +7,11 @@ public class BearingAnimator extends ValueAnimator {
 
   private float targetBearing;
 
-  public BearingAnimator(double targetBearing, long duration) {
-    setEvaluator(new FloatEvaluator());
+  public BearingAnimator(float previous, float target, long duration) {
     setDuration(duration);
-    this.targetBearing = (float) targetBearing;
+    setEvaluator(new FloatEvaluator());
+    setFloatValues(previous, target);
+    this.targetBearing = target;
   }
 
   public float getTargetBearing() {

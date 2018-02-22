@@ -37,7 +37,6 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.FOREGROUND_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.FOREGROUND_STALE_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.LOCATION_SOURCE;
-import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.NAVIGATION_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.SHADOW_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.SHADOW_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.generateShadow;
@@ -63,35 +62,31 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotationAlig
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
 
-final class LocationLayer {
+final class LocationLayer implements LocationLayerAnimator.OnAnimationsValuesChangeListener {
 
-  private RenderModeManager renderModeManager;
+  @RenderMode.Mode
+  private int renderMode;
+  private boolean isStale;
+
   private final MapboxMap mapboxMap;
-  private float elevation;
+  private LocationLayerOptions options;
+  private Context context;
 
   private final Map<String, Layer> layerMap = new HashMap<>();
   private final Map<String, GeoJsonSource> sourceMap = new HashMap<>();
 
   LocationLayer(MapView mapView, MapboxMap mapboxMap, LocationLayerOptions options) {
-    this.renderModeManager = new RenderModeManager(this);
     this.mapboxMap = mapboxMap;
+    this.context = mapView.getContext();
     addLocationSource();
     addLayers();
-    applyStyle(mapView.getContext(), options, false);
+    applyStyle(options);
+    setRenderMode(RenderMode.NORMAL);
   }
 
-  void updateRenderMode(@RenderMode.Mode int renderMode) {
-    renderModeManager.updateMode(renderMode);
-  }
-
-  void applyStyle(@NonNull Context context, @NonNull LocationLayerOptions options, boolean isStale) {
-    elevation = options.elevation();
-    styleShadow(ContextCompat.getDrawable(context, R.drawable.mapbox_user_icon_shadow));
-
-    styleForeground(
-      getDrawable(context, options.foregroundDrawable(), options.foregroundTintColor()),
-      getDrawable(context, options.foregroundDrawableStale(), options.foregroundStaleTintColor()),
-      isStale);
+  void applyStyle(@NonNull LocationLayerOptions options) {
+    this.options = options;
+    styleForeground(options, isStale);
     styleBackground(
       getDrawable(context, options.backgroundDrawable(), options.backgroundTintColor()),
       getDrawable(context, options.backgroundDrawableStale(), options.backgroundStaleTintColor()),
@@ -99,6 +94,39 @@ final class LocationLayer {
     styleBearing(
       getDrawable(context, options.bearingDrawable(), options.bearingTintColor()));
     styleAccuracy(options.accuracyAlpha(), options.accuracyColor());
+    styleShadow(ContextCompat.getDrawable(context, R.drawable.mapbox_user_icon_shadow));
+  }
+
+  void setRenderMode(@RenderMode.Mode int renderMode) {
+    this.renderMode = renderMode;
+    hide();
+
+    switch (renderMode) {
+      case RenderMode.NORMAL:
+        styleForeground(options, isStale);
+        setLayerVisibility(FOREGROUND_LAYER, true);
+        setLayerVisibility(BACKGROUND_LAYER, true);
+        setLayerVisibility(ACCURACY_LAYER, true);
+        break;
+      case RenderMode.COMPASS:
+        styleForeground(options, isStale);
+        setLayerVisibility(FOREGROUND_LAYER, true);
+        setLayerVisibility(BACKGROUND_LAYER, true);
+        setLayerVisibility(ACCURACY_LAYER, true);
+        setLayerVisibility(BEARING_LAYER, true);
+        break;
+      case RenderMode.GPS:
+        styleForeground(options, isStale);
+        setLayerVisibility(FOREGROUND_LAYER, true);
+        setLayerVisibility(BACKGROUND_LAYER, true);
+        break;
+      default:
+        break;
+    }
+  }
+
+  int getRenderMode() {
+    return renderMode;
   }
 
   //
@@ -106,87 +134,28 @@ final class LocationLayer {
   //
 
   void show() {
-    updateLayerVisibility(VISIBLE);
+    setRenderMode(renderMode);
   }
 
   void hide() {
-    updateLayerVisibility(NONE);
+    for (Layer layer : layerMap.values()) {
+      layer.setProperties(visibility(NONE));
+    }
   }
 
   void setLayerVisibility(String layerId, boolean visible) {
     layerMap.get(layerId).setProperties(visibility(visible ? VISIBLE : NONE));
   }
 
-  void setLayerBearing(String layerId, float bearing) {
-    layerMap.get(layerId).setProperties(iconRotate(bearing));
-  }
-
-  void updateAccuracyRadius(Location location) {
-    CircleLayer accuracyLayer = (CircleLayer) mapboxMap.getLayer(ACCURACY_LAYER);
-    if (accuracyLayer != null && accuracyLayer.getVisibility().isValue()) {
-      accuracyLayer.setProperties(
-        circleRadius(calculateZoomLevelRadius(location))
-      );
-    }
-  }
-
-  private void addLayerToMap(Layer layer, @Nullable String idBelowLayer) {
-    if (idBelowLayer == null) {
-      mapboxMap.addLayer(layer);
-    } else {
-      mapboxMap.addLayerBelow(layer, idBelowLayer);
-    }
-    layerMap.put(layer.getId(), layer);
-  }
-
-  private void addAccuracyLayer() {
-    CircleLayer locationAccuracyLayer = new CircleLayer(ACCURACY_LAYER, LOCATION_SOURCE)
-      .withProperties(circleRadius(0f));
-    addLayerToMap(locationAccuracyLayer, BACKGROUND_LAYER);
-  }
-
-  private float calculateZoomLevelRadius(Location location) {
-    if (location == null) {
-      return 0;
-    }
-    double metersPerPixel = mapboxMap.getProjection().getMetersPerPixelAtLatitude(
-      location.getLatitude());
-    return (float) (location.getAccuracy() * (1 / metersPerPixel));
-  }
-
-  //
-  // Source actions
-  //
-
-  void setLocationPoint(Point locationPoint) {
-    sourceMap.get(LOCATION_SOURCE).setGeoJson(locationPoint);
-  }
-
-  private void addLocationSource() {
-    FeatureCollection emptyFeature = FeatureCollection.fromFeatures(new Feature[] {});
-    GeoJsonSource locationSource = new GeoJsonSource(
-      LOCATION_SOURCE,
-      emptyFeature,
-      new GeoJsonOptions().withMaxZoom(16));
-    mapboxMap.addSource(locationSource);
-    sourceMap.put(LOCATION_SOURCE, locationSource);
-  }
-
   private void addLayers() {
-    addSymbolLayerToMap(SHADOW_LAYER, BACKGROUND_LAYER);
-    addSymbolLayerToMap(BACKGROUND_LAYER, FOREGROUND_LAYER);
-    addSymbolLayerToMap(FOREGROUND_LAYER, null);
-    addSymbolLayerToMap(LocationLayerConstants.BEARING_LAYER, null);
+    addSymbolLayer(SHADOW_LAYER, BACKGROUND_LAYER);
+    addSymbolLayer(BACKGROUND_LAYER, FOREGROUND_LAYER);
+    addSymbolLayer(FOREGROUND_LAYER, null);
+    addSymbolLayer(LocationLayerConstants.BEARING_LAYER, null);
     addAccuracyLayer();
   }
 
-  private void updateLayerVisibility(String visibility) {
-    for (Layer layer : layerMap.values()) {
-      layer.setProperties(visibility(visibility));
-    }
-  }
-
-  private void addSymbolLayerToMap(String layerId, String beforeLayerId) {
+  private void addSymbolLayer(String layerId, String beforeLayerId) {
     SymbolLayer layer = new SymbolLayer(layerId, LOCATION_SOURCE);
     layer.setProperties(
       iconAllowOverlap(true),
@@ -203,6 +172,61 @@ final class LocationLayer {
     addLayerToMap(layer, beforeLayerId);
   }
 
+  private void addAccuracyLayer() {
+    CircleLayer locationAccuracyLayer = new CircleLayer(ACCURACY_LAYER, LOCATION_SOURCE)
+      .withProperties(circleRadius(0f));
+    addLayerToMap(locationAccuracyLayer, BACKGROUND_LAYER);
+  }
+
+  private void addLayerToMap(Layer layer, @Nullable String idBelowLayer) {
+    if (idBelowLayer == null) {
+      mapboxMap.addLayer(layer);
+    } else {
+      mapboxMap.addLayerBelow(layer, idBelowLayer);
+    }
+    layerMap.put(layer.getId(), layer);
+  }
+
+  void setLayerBearing(String layerId, float bearing) {
+    layerMap.get(layerId).setProperties(iconRotate(bearing));
+  }
+
+  void updateAccuracyRadius(Location location) {
+    CircleLayer accuracyLayer = (CircleLayer) layerMap.get(ACCURACY_LAYER);
+    if (accuracyLayer != null && (renderMode == RenderMode.COMPASS || renderMode == RenderMode.NORMAL)) {
+      accuracyLayer.setProperties(
+        circleRadius(calculateZoomLevelRadius(location))
+      );
+    }
+  }
+
+  private float calculateZoomLevelRadius(Location location) {
+    if (location == null) {
+      return 0;
+    }
+    double metersPerPixel = mapboxMap.getProjection().getMetersPerPixelAtLatitude(
+      location.getLatitude());
+    return (float) (location.getAccuracy() * (1 / metersPerPixel));
+  }
+
+  //
+  // Source actions
+  //
+
+  private void addLocationSource() {
+    FeatureCollection emptyFeature = FeatureCollection.fromFeatures(new Feature[] {});
+    GeoJsonSource locationSource = new GeoJsonSource(
+      LOCATION_SOURCE,
+      emptyFeature,
+      new GeoJsonOptions().withMaxZoom(16));
+    mapboxMap.addSource(locationSource);
+    sourceMap.put(LOCATION_SOURCE, locationSource);
+  }
+
+  private void setLocationPoint(Point locationPoint) {
+    sourceMap.get(LOCATION_SOURCE).setGeoJson(locationPoint);
+  }
+
   //
   // Styling
   //
@@ -215,18 +239,8 @@ final class LocationLayer {
   }
 
   private void styleShadow(Drawable shadowDrawable) {
-    mapboxMap.addImage(SHADOW_ICON, generateShadow(shadowDrawable, elevation));
+    mapboxMap.addImage(SHADOW_ICON, generateShadow(shadowDrawable, options.elevation()));
     layerMap.get(SHADOW_LAYER).setProperties(iconImage(SHADOW_ICON));
-  }
-
-  private void styleForeground(Drawable foregroundDrawable, Drawable foregroundDrawableStale, boolean isStale) {
-    mapboxMap.addImage(FOREGROUND_ICON, getBitmapFromDrawable(foregroundDrawable));
-    mapboxMap.addImage(FOREGROUND_STALE_ICON, getBitmapFromDrawable(foregroundDrawableStale));
-
-    layerMap.get(FOREGROUND_LAYER).setProperties(
-      iconImage(isStale
-        ? FOREGROUND_STALE_ICON : FOREGROUND_ICON),
-      iconRotate(90f));
   }
 
   private void styleBearing(Drawable bearingDrawable) {
@@ -244,6 +258,34 @@ final class LocationLayer {
     );
   }
 
+  private void styleForeground(Drawable foregroundDrawable, Drawable foregroundDrawableStale, boolean isStale) {
+    mapboxMap.addImage(FOREGROUND_ICON, getBitmapFromDrawable(foregroundDrawable));
+    mapboxMap.addImage(FOREGROUND_STALE_ICON, getBitmapFromDrawable(foregroundDrawableStale));
+
+    layerMap.get(FOREGROUND_LAYER).setProperties(
+      iconImage(isStale
+        ? FOREGROUND_STALE_ICON : FOREGROUND_ICON),
+      iconRotate(90f));
+  }
+
+  private void styleForeground(@NonNull LocationLayerOptions options, boolean isStale) {
+    if (renderMode == RenderMode.GPS) {
+      styleForegroundGPS(isStale);
+    } else {
+      styleForeground(
+        getDrawable(context, options.foregroundDrawable(), options.foregroundTintColor()),
+        getDrawable(context, options.foregroundDrawableStale(), options.foregroundStaleTintColor()),
+        isStale);
+    }
+  }
+
+  private void styleForegroundGPS(boolean isStale) {
+    styleForeground(
+      getDrawable(context, options.gpsDrawable(), options.foregroundTintColor()),
+      getDrawable(context, options.gpsDrawable(), options.foregroundStaleTintColor()),
+      isStale);
+  }
+
   void updateForegroundOffset(double tilt) {
     layerMap.get(FOREGROUND_LAYER).setProperties(
       iconOffset(new Float[] {0f, (float) (-0.05 * tilt)}));
@@ -251,15 +293,11 @@ final class LocationLayer {
       iconOffset(new Float[] {0f, (float) (0.05 * tilt)}));
   }
 
-  void updateForegroundBearing(float bearing) {
-    layerMap.get(FOREGROUND_LAYER).setProperties(iconRotate(bearing));
-    layerMap.get(SHADOW_LAYER).setProperties(iconRotate(bearing));
-  }
-
-  void locationsStale(boolean stale) {
-    layerMap.get(FOREGROUND_LAYER).setProperties(iconImage(stale ? FOREGROUND_STALE_ICON : FOREGROUND_ICON));
-    layerMap.get(BACKGROUND_LAYER).setProperties(iconImage(stale ? BACKGROUND_STALE_ICON : BACKGROUND_ICON));
-    layerMap.get(ACCURACY_LAYER).setProperties(visibility(stale ? NONE : VISIBLE));
+  void setLocationsStale(boolean isStale) {
+    this.isStale = isStale;
+    layerMap.get(FOREGROUND_LAYER).setProperties(iconImage(isStale ? FOREGROUND_STALE_ICON : FOREGROUND_ICON));
+    layerMap.get(BACKGROUND_LAYER).setProperties(iconImage(isStale ? BACKGROUND_STALE_ICON : BACKGROUND_ICON));
+    layerMap.get(ACCURACY_LAYER).setProperties(visibility(isStale ? NONE : VISIBLE));
   }
 
   //
@@ -271,9 +309,29 @@ final class LocationLayer {
     List<Feature> features = mapboxMap.queryRenderedFeatures(screenLoc,
       BACKGROUND_LAYER,
       FOREGROUND_LAYER,
-      BEARING_LAYER,
-      NAVIGATION_LAYER
+      BEARING_LAYER
     );
     return !features.isEmpty();
+  }
+
+  @Override
+  public void onNewLatLngValue(LatLng latLng) {
+    Point point = Point.fromCoordinates(new double[] {latLng.getLongitude(), latLng.getLatitude()});
+    setLocationPoint(point);
+  }
+
+  @Override
+  public void onNewGpsBearingValue(float gpsBearing) {
+    if (renderMode == RenderMode.GPS) {
+      setLayerBearing(LocationLayerConstants.FOREGROUND_LAYER, gpsBearing);
+      setLayerBearing(LocationLayerConstants.BACKGROUND_LAYER, gpsBearing);
+    }
+  }
+
+  @Override
+  public void onNewCompassBearingValue(float compassBearing) {
+    if (renderMode == RenderMode.COMPASS) {
+      setLayerBearing(LocationLayerConstants.BEARING_LAYER, compassBearing);
+    }
   }
 }
