@@ -104,7 +104,7 @@ public abstract class LocationLayerOptions implements Parcelable {
       builder.staleStateDelay(typedArray.getInteger(
         R.styleable.LocationLayer_staleStateDelay, (int) STALE_STATE_DELAY_MS));
     }
-    builder.navigationDrawable(typedArray.getResourceId(
+    builder.gpsDrawable(typedArray.getResourceId(
       R.styleable.LocationLayer_navigationDrawable, -1));
     float elevation = typedArray.getDimension(
       R.styleable.LocationLayer_elevation, 0);
@@ -199,7 +199,7 @@ public abstract class LocationLayerOptions implements Parcelable {
    * @since 0.4.0
    */
   @DrawableRes
-  public abstract int navigationDrawable();
+  public abstract int gpsDrawable();
 
   /**
    * Supply a Drawable that is to be rendered on top of all of the content in the Location Layer
@@ -391,12 +391,12 @@ public abstract class LocationLayerOptions implements Parcelable {
     /**
      * Defines the drawable used for the navigation state icon.
      *
-     * @param navigationDrawable the drawable resource ID
+     * @param gpsDrawable the drawable resource ID
      * @return this builder for chaining options together
      * @attr ref R.styleable#LocationLayer_navigationDrawable
      * @since 0.4.0
      */
-    public abstract Builder navigationDrawable(@DrawableRes int navigationDrawable);
+    public abstract Builder gpsDrawable(@DrawableRes int gpsDrawable);
 
     /**
      * Supply a Drawable that is to be rendered on top of all of the content in the Location Layer

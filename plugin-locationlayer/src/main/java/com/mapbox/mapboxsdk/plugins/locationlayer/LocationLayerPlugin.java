@@ -213,7 +213,6 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
 
   @Override
   public void onStaleStateChange(boolean isStale) {
-    Timber.v("onStaleStateChange: %b", isStale);
     locationLayer.setLocationsStale(isStale);
 
     for (OnLocationStaleListener listener : onLocationStaleListeners) {
@@ -232,7 +231,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   }
 
   public void applyStyle(LocationLayerOptions options) {
-    locationLayer.applyStyle(mapView.getContext(), options, staleStateRunnable.isStale());
+    locationLayer.applyStyle(options);
     if (!options.enableStaleState()) {
       staleStateRunnable.onStop();
     }
