@@ -64,6 +64,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   private LocationLayerCamera locationLayerCamera;
 
   private LocationLayerAnimator locationLayerAnimator;
+  private Location lastLocation;
 
   private boolean isEnabled;
   private StaleStateRunnable staleStateRunnable;
@@ -178,8 +179,8 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     locationLayerCamera.setCameraMode(cameraMode);
   }
 
-  public @CameraMode.Mode
-  int getCameraMode() {
+  @CameraMode.Mode
+  public int getCameraMode() {
     return locationLayerCamera.getCameraMode();
   }
 
@@ -187,8 +188,8 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     locationLayer.setRenderMode(renderMode);
   }
 
-  public @RenderMode.Mode
-  int getRenderMode() {
+  @RenderMode.Mode
+  public int getRenderMode() {
     return locationLayer.getRenderMode();
   }
 
@@ -456,10 +457,11 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     }
 
     staleStateRunnable.updateLatestLocationTime();
-    Location lastLocation = getLastKnownLocation();
     if (lastLocation != null) {
       locationLayerAnimator.feedNewLocation(lastLocation, location);
     }
+
+    lastLocation = location;
   }
 
   private void updateCompassHeading(float heading) {
