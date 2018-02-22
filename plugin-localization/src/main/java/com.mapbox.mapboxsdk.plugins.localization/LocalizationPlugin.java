@@ -78,9 +78,9 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
 
   /**
    * If you'd like to set the map language to a specific locale, you can pass it in as a parameter
-   * and MapLocale will try matching the information with one of the MapLocales found in it's map.
+   * and MapLocale will try matching the information with one of the MapLocales found in its map.
    * If one isn't found, a null point exception will be thrown. To prevent this, ensure that the
-   * locale you are trying to use have a complementary {@link MapLocale} for it.
+   * locale you are trying to use, has a complementary {@link MapLocale} for it.
    *
    * @param locale a {@link Locale} which has a complementary {@link MapLocale} for it
    * @throws NullPointerException thrown when the locale passed into the method doesn't have a
