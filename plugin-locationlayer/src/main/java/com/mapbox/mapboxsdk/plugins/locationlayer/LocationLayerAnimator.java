@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 final class LocationLayerAnimator {
+
   private final List<OnAnimationsValuesChangeListener> listeners = new ArrayList<>();
   private LatLngAnimator latLngAnimator;
   private BearingAnimator gpsBearingAnimator;
@@ -25,11 +26,12 @@ final class LocationLayerAnimator {
     listeners.remove(listener);
   }
 
-  void feedNewLocation(@NonNull Location location) {
+  void feedNewLocation(@NonNull Location previousLocation, @NonNull Location newLocation) {
     cancelLocationAnimations();
-    LatLng latLng = new LatLng(location);
-    latLngAnimator = new LatLngAnimator(latLng, 1000);
-    gpsBearingAnimator = new BearingAnimator(location.getBearing(), 1000);
+    LatLng previousLatLng = new LatLng(previousLocation);
+    LatLng newLatLng = new LatLng(newLocation);
+    latLngAnimator = new LatLngAnimator(previousLatLng, newLatLng, 1000);
+    gpsBearingAnimator = new BearingAnimator(previousLocation.getBearing(), newLocation.getBearing(), 1000);
     // FIXME: 22/02/2018 evaluate duration of animation better
 
     latLngAnimator.addUpdateListener(latLngUpdateListener);
@@ -39,9 +41,9 @@ final class LocationLayerAnimator {
     gpsBearingAnimator.start();
   }
 
-  void feedNewCompassBearing(float compassBearing) {
+  void feedNewCompassBearing(float previousCompassBearing, float targetCompassBearing) {
     cancelCompassAnimations();
-    compassBearingAnimator = new BearingAnimator(compassBearing, 1000);
+    compassBearingAnimator = new BearingAnimator(previousCompassBearing, targetCompassBearing, 1000);
     // FIXME: 22/02/2018 evaluate duration of animation better
 
     compassBearingAnimator.addUpdateListener(compassBearingUpdateListener);
