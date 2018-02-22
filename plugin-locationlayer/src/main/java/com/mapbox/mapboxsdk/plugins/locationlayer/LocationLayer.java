@@ -66,29 +66,27 @@ final class LocationLayer implements LocationLayerAnimator.OnAnimationsValuesCha
 
   @RenderMode.Mode
   private int renderMode;
+  private boolean isStale;
 
   private final MapboxMap mapboxMap;
-  private float elevation;
+  private LocationLayerOptions options;
+  private Context context;
 
   private final Map<String, Layer> layerMap = new HashMap<>();
   private final Map<String, GeoJsonSource> sourceMap = new HashMap<>();
 
   LocationLayer(MapView mapView, MapboxMap mapboxMap, LocationLayerOptions options) {
     this.mapboxMap = mapboxMap;
+    this.context = mapView.getContext();
     addLocationSource();
     addLayers();
-    applyStyle(mapView.getContext(), options, false);
+    applyStyle(options);
     setRenderMode(RenderMode.NORMAL);
   }
 
-  void applyStyle(@NonNull Context context, @NonNull LocationLayerOptions options, boolean isStale) {
-    elevation = options.elevation();
-    styleShadow(ContextCompat.getDrawable(context, R.drawable.mapbox_user_icon_shadow));
-
-    styleForeground(
-      getDrawable(context, options.foregroundDrawable(), options.foregroundTintColor()),
-      getDrawable(context, options.foregroundDrawableStale(), options.foregroundStaleTintColor()),
-      isStale);
+  void applyStyle(@NonNull LocationLayerOptions options) {
+    this.options = options;
+    styleForeground(options, isStale);
     styleBackground(
       getDrawable(context, options.backgroundDrawable(), options.backgroundTintColor()),
       getDrawable(context, options.backgroundDrawableStale(), options.backgroundStaleTintColor()),
@@ -96,6 +94,7 @@ final class LocationLayer implements LocationLayerAnimator.OnAnimationsValuesCha
     styleBearing(
       getDrawable(context, options.bearingDrawable(), options.bearingTintColor()));
     styleAccuracy(options.accuracyAlpha(), options.accuracyColor());
+    styleShadow(ContextCompat.getDrawable(context, R.drawable.mapbox_user_icon_shadow));
   }
 
   void setRenderMode(@RenderMode.Mode int renderMode) {
@@ -104,17 +103,20 @@ final class LocationLayer implements LocationLayerAnimator.OnAnimationsValuesCha
 
     switch (renderMode) {
       case RenderMode.NORMAL:
+        styleForeground(options, isStale);
         setLayerVisibility(FOREGROUND_LAYER, true);
         setLayerVisibility(BACKGROUND_LAYER, true);
         setLayerVisibility(ACCURACY_LAYER, true);
         break;
       case RenderMode.COMPASS:
+        styleForeground(options, isStale);
         setLayerVisibility(FOREGROUND_LAYER, true);
         setLayerVisibility(BACKGROUND_LAYER, true);
         setLayerVisibility(ACCURACY_LAYER, true);
         setLayerVisibility(BEARING_LAYER, true);
         break;
       case RenderMode.GPS:
+        styleForeground(options, isStale);
         setLayerVisibility(FOREGROUND_LAYER, true);
         setLayerVisibility(BACKGROUND_LAYER, true);
         break;
@@ -237,18 +239,8 @@ final class LocationLayer implements LocationLayerAnimator.OnAnimationsValuesCha
   }
 
   private void styleShadow(Drawable shadowDrawable) {
-    mapboxMap.addImage(SHADOW_ICON, generateShadow(shadowDrawable, elevation));
+    mapboxMap.addImage(SHADOW_ICON, generateShadow(shadowDrawable, options.elevation()));
     layerMap.get(SHADOW_LAYER).setProperties(iconImage(SHADOW_ICON));
-  }
-
-  private void styleForeground(Drawable foregroundDrawable, Drawable foregroundDrawableStale, boolean isStale) {
-    mapboxMap.addImage(FOREGROUND_ICON, getBitmapFromDrawable(foregroundDrawable));
-    mapboxMap.addImage(FOREGROUND_STALE_ICON, getBitmapFromDrawable(foregroundDrawableStale));
-
-    layerMap.get(FOREGROUND_LAYER).setProperties(
-      iconImage(isStale
-        ? FOREGROUND_STALE_ICON : FOREGROUND_ICON),
-      iconRotate(90f));
   }
 
   private void styleBearing(Drawable bearingDrawable) {
@@ -266,6 +258,34 @@ final class LocationLayer implements LocationLayerAnimator.OnAnimationsValuesCha
     );
   }
 
+  private void styleForeground(Drawable foregroundDrawable, Drawable foregroundDrawableStale, boolean isStale) {
+    mapboxMap.addImage(FOREGROUND_ICON, getBitmapFromDrawable(foregroundDrawable));
+    mapboxMap.addImage(FOREGROUND_STALE_ICON, getBitmapFromDrawable(foregroundDrawableStale));
+
+    layerMap.get(FOREGROUND_LAYER).setProperties(
+      iconImage(isStale
+        ? FOREGROUND_STALE_ICON : FOREGROUND_ICON),
+      iconRotate(90f));
+  }
+
+  private void styleForeground(@NonNull LocationLayerOptions options, boolean isStale) {
+    if (renderMode == RenderMode.GPS) {
+      styleForegroundGPS(isStale);
+    } else {
+      styleForeground(
+        getDrawable(context, options.foregroundDrawable(), options.foregroundTintColor()),
+        getDrawable(context, options.foregroundDrawableStale(), options.foregroundStaleTintColor()),
+        isStale);
+    }
+  }
+
+  private void styleForegroundGPS(boolean isStale) {
+    styleForeground(
+      getDrawable(context, options.gpsDrawable(), options.foregroundTintColor()),
+      getDrawable(context, options.gpsDrawable(), options.foregroundStaleTintColor()),
+      isStale);
+  }
+
   void updateForegroundOffset(double tilt) {
     layerMap.get(FOREGROUND_LAYER).setProperties(
       iconOffset(new Float[] {0f, (float) (-0.05 * tilt)}));
@@ -273,10 +293,11 @@ final class LocationLayer implements LocationLayerAnimator.OnAnimationsValuesCha
       iconOffset(new Float[] {0f, (float) (0.05 * tilt)}));
   }
 
-  void setLocationsStale(boolean stale) {
-    layerMap.get(FOREGROUND_LAYER).setProperties(iconImage(stale ? FOREGROUND_STALE_ICON : FOREGROUND_ICON));
-    layerMap.get(BACKGROUND_LAYER).setProperties(iconImage(stale ? BACKGROUND_STALE_ICON : BACKGROUND_ICON));
-    layerMap.get(ACCURACY_LAYER).setProperties(visibility(stale ? NONE : VISIBLE));
+  void setLocationsStale(boolean isStale) {
+    this.isStale = isStale;
+    layerMap.get(FOREGROUND_LAYER).setProperties(iconImage(isStale ? FOREGROUND_STALE_ICON : FOREGROUND_ICON));
+    layerMap.get(BACKGROUND_LAYER).setProperties(iconImage(isStale ? BACKGROUND_STALE_ICON : BACKGROUND_ICON));
+    layerMap.get(ACCURACY_LAYER).setProperties(visibility(isStale ? NONE : VISIBLE));
   }
 
   //
