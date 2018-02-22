@@ -71,7 +71,7 @@ public class ManualLocationUpdatesActivity extends AppCompatActivity implements 
     locationEngine.setPriority(LocationEnginePriority.HIGH_ACCURACY);
     locationEngine.activate();
     locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap, null);
-    locationLayerPlugin.setLocationLayerMode(RenderMode.NORMAL);
+    locationLayerPlugin.setRenderMode(RenderMode.NORMAL);
     getLifecycle().addObserver(locationLayerPlugin);
   }
 
