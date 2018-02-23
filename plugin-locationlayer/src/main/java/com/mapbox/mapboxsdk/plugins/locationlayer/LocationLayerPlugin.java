@@ -138,23 +138,16 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     }
   }
 
+  @SuppressLint("MissingPermission")
   private void enableLocationLayerPlugin() {
     isEnabled = true;
-
-    if (locationEngine != null) {
-      locationEngine.addLocationEngineListener(this);
-    }
-    setLastLocation();
-    setLastCompassHeading();
+    onStart();
     locationLayer.show();
   }
 
   private void disableLocationLayerPlugin() {
     isEnabled = false;
-
-    if (locationEngine != null) {
-      locationEngine.removeLocationEngineListener(this);
-    }
+    onStop();
     locationLayer.hide();
   }
 
