@@ -27,8 +27,8 @@ public final class RenderMode {
    * @since 0.1.0
    */
   @IntDef( {COMPASS, GPS, NORMAL})
-  public @Retention(RetentionPolicy.SOURCE)
-  @interface Mode {
+  @Retention(RetentionPolicy.SOURCE)
+  public @interface Mode {
   }
 
   /**
