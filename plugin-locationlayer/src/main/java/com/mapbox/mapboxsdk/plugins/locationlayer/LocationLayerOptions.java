@@ -320,6 +320,39 @@ public abstract class LocationLayerOptions implements Parcelable {
   public abstract long staleStateTimeout();
 
   /**
+   * Sets the distance from the edges of the map view’s frame to the edges of the map
+   * view’s logical viewport.
+   * </p>
+   * <p>
+   * When the value of this property is equal to {0,0,0,0}, viewport
+   * properties such as `centerCoordinate` assume a viewport that matches the map
+   * view’s frame. Otherwise, those properties are inset, excluding part of the
+   * frame from the viewport. For instance, if the only the top edge is inset, the
+   * map center is effectively shifted downward.
+   * </p>
+   *
+   * @return integer array of padding values
+   * @since 0.5.0
+   */
+  public abstract int[] padding();
+
+  /**
+   * The maximum zoom level the map can be displayed at.
+   *
+   * @return the maximum zoom level
+   * @since 0.5.0
+   */
+  public abstract double maxZoom();
+
+  /**
+   * The minimum zoom level the map can be displayed at.
+   *
+   * @return the minimum zoom level
+   * @since 0.5.0
+   */
+  public abstract double minZoom();
+
+  /**
    * Builder class for constructing a new instance of {@link LocationLayerOptions}.
    *
    * @since 0.4.0
@@ -493,6 +526,39 @@ public abstract class LocationLayerOptions implements Parcelable {
      */
     public abstract Builder staleStateTimeout(long timeout);
 
+    /**
+     * Sets the distance from the edges of the map view’s frame to the edges of the map
+     * view’s logical viewport.
+     * </p>
+     * <p>
+     * When the value of this property is equal to {0,0,0,0}, viewport
+     * properties such as `centerCoordinate` assume a viewport that matches the map
+     * view’s frame. Otherwise, those properties are inset, excluding part of the
+     * frame from the viewport. For instance, if the only the top edge is inset, the
+     * map center is effectively shifted downward.
+     * </p>
+     *
+     * @param padding The margins for the map in pixels (left, top, right, bottom).
+     * @since 0.5.0
+     */
+    public abstract Builder setPadding(int[] padding);
+
+    /**
+     * Sets the maximum zoom level the map can be displayed at.
+     * <p>
+     * The default maximum zoomn level is 22. The upper bound for this value is 25.5.
+     *
+     * @param maxZoom The new maximum zoom level.
+     * @since 0.5.0
+     */
+    public abstract Builder setMaxZoom(double maxZoom);
+
+    /**
+     * Sets the minimum zoom level the map can be displayed at.
+     *
+     * @param minZoom The new minimum zoom level.
+     */
+    public abstract Builder setMinZoom(double minZoom);
 
     abstract LocationLayerOptions autoBuild();
 

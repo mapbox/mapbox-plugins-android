@@ -257,6 +257,27 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   }
 
   /**
+   * Sets the maximum zoom level the map can be displayed at.
+   * <p>
+   * The default maximum zoom level is 22. The upper bound for this value is 25.5.
+   *
+   * @param maxZoom The new maximum zoom level.
+   * @since 0.5.0
+   */
+  public void setMaxZoom(double maxZoom) {
+    mapboxMap.setMaxZoomPreference(maxZoom);
+  }
+
+  /**
+   * Sets the minimum zoom level the map can be displayed at.
+   *
+   * @param minZoom The new minimum zoom level.
+   */
+  public void setMinZoom(double minZoom) {
+    mapboxMap.setMinZoomPreference(minZoom);
+  }
+
+  /**
    * Use to either force a location update or to manually control when the user location gets
    * updated.
    *
@@ -443,6 +464,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     mapView.addOnMapChangedListener(onMapChangedListener);
     mapboxMap.addOnMapClickListener(onMapClickListener);
     mapboxMap.addOnMapLongClickListener(onMapLongClickListener);
+    updateMapWithOptions(options);
 
     compassManager = new CompassManager(mapView.getContext());
     compassManager.addCompassListener(compassListener);
@@ -475,6 +497,19 @@ public final class LocationLayerPlugin implements LifecycleObserver {
       locationEngine.removeLocationEngineListener(locationEngineListener);
     }
     locationLayer.hide();
+  }
+
+  private void updateMapWithOptions(LocationLayerOptions options) {
+    int[] padding = options.padding();
+    if (options.padding() != null && options.padding().length == 4) {
+      setPadding(options.padding()[0], padding[1], padding[2], padding[3]);
+    }
+    if (options.maxZoom() > 0) {
+      setMaxZoom(options.maxZoom());
+    }
+    if (options.minZoom() > 0) {
+      setMinZoom(options.minZoom());
+    }
   }
 
   /**
