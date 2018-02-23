@@ -72,6 +72,8 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     = new CopyOnWriteArrayList<>();
   private final CopyOnWriteArrayList<OnLocationLayerClickListener> onLocationLayerClickListeners
     = new CopyOnWriteArrayList<>();
+  private final CopyOnWriteArrayList<OnLocationLayerLongClickListener> onLocationLayerLongClickListeners
+    = new CopyOnWriteArrayList<>();
 
   /**
    * Construct a LocationLayerPlugin
@@ -332,22 +334,43 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   /**
    * Adds a listener that gets invoked when the user clicks the location layer.
    *
-   * @param locationClickListener The location layer click listener that is invoked when the
-   *                              location layer is clicked
+   * @param listener The location layer click listener that is invoked when the
+   *                 location layer is clicked
    * @since 0.3.0
    */
-  public void addOnLocationClickListener(@NonNull OnLocationLayerClickListener locationClickListener) {
-    onLocationLayerClickListeners.add(locationClickListener);
+  public void addOnLocationClickListener(@NonNull OnLocationLayerClickListener listener) {
+    onLocationLayerClickListeners.add(listener);
   }
 
   /**
    * Removes the passed listener from the current list of location click listeners.
    *
-   * @param locationClickListener to be removed
+   * @param listener to be removed
    * @since 0.3.0
    */
-  public void removeOnLocationClickListener(@NonNull OnLocationLayerClickListener locationClickListener) {
-    onLocationLayerClickListeners.remove(locationClickListener);
+  public void removeOnLocationClickListener(@NonNull OnLocationLayerClickListener listener) {
+    onLocationLayerClickListeners.remove(listener);
+  }
+
+  /**
+   * Adds a listener that gets invoked when the user long clicks the location layer.
+   *
+   * @param listener The location layer click listener that is invoked when the
+   *                 location layer is clicked
+   * @since 0.5.0
+   */
+  public void addOnLocationClickListener(@NonNull OnLocationLayerLongClickListener listener) {
+    onLocationLayerLongClickListeners.add(listener);
+  }
+
+  /**
+   * Removes the passed listener from the current list of location long click listeners.
+   *
+   * @param listener to be removed
+   * @since 0.5.0
+   */
+  public void removeOnLocationClickListener(@NonNull OnLocationLayerLongClickListener listener) {
+    onLocationLayerLongClickListeners.remove(listener);
   }
 
   /**
@@ -419,6 +442,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
 
     mapView.addOnMapChangedListener(onMapChangedListener);
     mapboxMap.addOnMapClickListener(onMapClickListener);
+    mapboxMap.addOnMapLongClickListener(onMapLongClickListener);
 
     compassManager = new CompassManager(mapView.getContext());
     compassManager.addCompassListener(compassListener);
@@ -518,6 +542,17 @@ public final class LocationLayerPlugin implements LifecycleObserver {
       if (!onLocationLayerClickListeners.isEmpty() && locationLayer.onMapClick(point)) {
         for (OnLocationLayerClickListener listener : onLocationLayerClickListeners) {
           listener.onLocationLayerClick();
+        }
+      }
+    }
+  };
+
+  private MapboxMap.OnMapLongClickListener onMapLongClickListener = new MapboxMap.OnMapLongClickListener() {
+    @Override
+    public void onMapLongClick(@NonNull LatLng point) {
+      if (!onLocationLayerLongClickListeners.isEmpty() && locationLayer.onMapClick(point)) {
+        for (OnLocationLayerLongClickListener listener : onLocationLayerLongClickListeners) {
+          listener.onLocationLayerLongClick();
         }
       }
     }
