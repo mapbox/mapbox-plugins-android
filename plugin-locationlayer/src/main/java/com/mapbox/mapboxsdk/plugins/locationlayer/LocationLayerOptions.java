@@ -100,9 +100,9 @@ public abstract class LocationLayerOptions implements Parcelable {
       builder.enableStaleState(typedArray.getBoolean(
         R.styleable.LocationLayer_enableStaleState, true));
     }
-    if (typedArray.hasValue(R.styleable.LocationLayer_staleStateDelay)) {
-      builder.staleStateDelay(typedArray.getInteger(
-        R.styleable.LocationLayer_staleStateDelay, (int) STALE_STATE_DELAY_MS));
+    if (typedArray.hasValue(R.styleable.LocationLayer_staleStateTimeout)) {
+      builder.staleStateTimeout(typedArray.getInteger(
+        R.styleable.LocationLayer_staleStateTimeout, (int) STALE_STATE_DELAY_MS));
     }
     builder.gpsDrawable(typedArray.getResourceId(
       R.styleable.LocationLayer_navigationDrawable, -1));
@@ -148,7 +148,7 @@ public abstract class LocationLayerOptions implements Parcelable {
   private static Builder builder() {
     return new AutoValue_LocationLayerOptions.Builder()
       .enableStaleState(true)
-      .staleStateDelay(STALE_STATE_DELAY_MS);
+      .staleStateTimeout(STALE_STATE_DELAY_MS);
   }
 
   /**
@@ -317,7 +317,7 @@ public abstract class LocationLayerOptions implements Parcelable {
    * @attr ref R.styleable#LocationLayer_staleStateDelay
    * @since 0.4.0
    */
-  public abstract long staleStateDelay();
+  public abstract long staleStateTimeout();
 
   /**
    * Builder class for constructing a new instance of {@link LocationLayerOptions}.
@@ -481,17 +481,17 @@ public abstract class LocationLayerOptions implements Parcelable {
     public abstract Builder enableStaleState(boolean enabled);
 
     /**
-     * Set the delay before the location icon becomes stale. The timer begins approximately when a
+     * Set the timeout before the location icon becomes stale. The timer begins approximately when a
      * new location update comes in and using this defined time, if an update hasn't occurred by the
      * end, the location is considered stale.
      *
-     * @param delay the duration in milliseconds which it should take before the location layer is
-     *              considered stale
+     * @param timeout the duration in milliseconds which it should take before the location layer is
+     *                considered stale
      * @return this builder for chaining options together
-     * @attr ref R.styleable#LocationLayer_staleStateDelay
+     * @attr ref R.styleable#LocationLayer_staleStateTimeout
      * @since 0.4.0
      */
-    public abstract Builder staleStateDelay(long delay);
+    public abstract Builder staleStateTimeout(long timeout);
 
 
     abstract LocationLayerOptions autoBuild();
