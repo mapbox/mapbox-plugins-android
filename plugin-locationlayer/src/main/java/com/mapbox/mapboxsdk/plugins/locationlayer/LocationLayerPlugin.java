@@ -25,8 +25,6 @@ import com.mapbox.services.android.telemetry.location.LocationEngineListener;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import timber.log.Timber;
-
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -67,7 +65,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   private Location lastLocation;
 
   private boolean isEnabled;
-  private StaleStateRunnable staleStateRunnable;
+  private StaleStateManager staleStateManager;
   private final CopyOnWriteArrayList<OnLocationStaleListener> onLocationStaleListeners
     = new CopyOnWriteArrayList<>();
   private final CopyOnWriteArrayList<OnLocationLayerClickListener> onLocationLayerClickListeners
@@ -121,7 +119,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
 
     compassManager = new CompassManager(mapView.getContext());
     compassManager.addCompassListener(this);
-    staleStateRunnable = new StaleStateRunnable(this, options.staleStateDelay());
+    staleStateManager = new StaleStateManager(this, options.staleStateDelay());
 
     locationLayer = new LocationLayer(mapView, mapboxMap, options);
     locationLayerCamera = new LocationLayerCamera(mapboxMap);
@@ -222,6 +220,10 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     }
   }
 
+  public boolean isLocationStale() {
+    return staleStateManager.isStale();
+  }
+
   /**
    * Apply a new Location Layer style after the {@link LocationLayerPlugin} has been constructed.
    *
@@ -235,9 +237,9 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   public void applyStyle(LocationLayerOptions options) {
     locationLayer.applyStyle(options);
     if (!options.enableStaleState()) {
-      staleStateRunnable.onStop();
+      staleStateManager.onStop();
     }
-    staleStateRunnable.setDelayTime(options.staleStateDelay());
+    staleStateManager.setDelayTime(options.staleStateDelay());
   }
 
   /**
@@ -300,7 +302,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
       mapboxMap.addOnCameraMoveListener(this);
     }
     if (options.enableStaleState()) {
-      staleStateRunnable.onStart();
+      staleStateManager.onStart();
     }
     compassManager.onStart();
   }
@@ -312,7 +314,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
    */
   @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
   public void onStop() {
-    staleStateRunnable.onStop();
+    staleStateManager.onStop();
     compassManager.onStop();
     locationLayerAnimator.cancelAllAnimations();
     if (locationEngine != null) {
@@ -456,7 +458,7 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
       return;
     }
 
-    staleStateRunnable.updateLatestLocationTime();
+    staleStateManager.updateLatestLocationTime();
     if (lastLocation != null) {
       locationLayerAnimator.feedNewLocation(lastLocation, location);
     }
