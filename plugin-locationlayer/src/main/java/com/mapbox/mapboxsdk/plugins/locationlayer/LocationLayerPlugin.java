@@ -116,15 +116,15 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
     mapView.addOnMapChangedListener(this);
     mapboxMap.addOnMapClickListener(this);
 
-    compassManager = new CompassManager(mapView.getContext());
-    compassManager.addCompassListener(this);
-    staleStateManager = new StaleStateManager(this, options.staleStateDelay());
-
     locationLayer = new LocationLayer(mapView, mapboxMap, options);
     locationLayerCamera = new LocationLayerCamera(mapboxMap);
     locationLayerAnimator = new LocationLayerAnimator();
     locationLayerAnimator.addListener(locationLayer);
     locationLayerAnimator.addListener(locationLayerCamera);
+
+    compassManager = new CompassManager(mapView.getContext());
+    compassManager.addCompassListener(this);
+    staleStateManager = new StaleStateManager(this, options.staleStateDelay());
 
     enableLocationLayerPlugin();
   }
@@ -197,9 +197,11 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   @Override
   public void onMapChanged(int change) {
     if (change == MapView.WILL_START_LOADING_MAP) {
-      locationLayerAnimator.cancelAllAnimations();
+      onStop();
     } else if (change == MapView.DID_FINISH_LOADING_STYLE) {
-      mapStyleFinishedLoading();
+      locationLayer.initializeComponents();
+      setRenderMode(locationLayer.getRenderMode());
+      onStart();
     }
   }
 
@@ -418,18 +420,6 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
   @Nullable
   public Location getLastKnownLocation() {
     return locationEngine != null ? locationEngine.getLastLocation() : null;
-  }
-
-  /**
-   * If the location layer was being displayed before the style change, it will need to be displayed
-   * in the new style.
-   */
-  @SuppressWarnings( {"MissingPermission"})
-  private void mapStyleFinishedLoading() {
-    // recreate runtime style components
-    locationLayer = new LocationLayer(mapView, mapboxMap, options);
-    setLastLocation();
-    setLastCompassHeading();
   }
 
   @Override
