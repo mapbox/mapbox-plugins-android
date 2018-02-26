@@ -162,6 +162,10 @@ public final class LocationLayerPlugin implements LocationEngineListener, Compas
         locationEngine.addLocationEngineListener(this);
       }
 
+      // On Camera move is called here so that the layer icon offsets adjusted properly when the
+      // maps initially tilted.
+      onCameraMove();
+
       toggleCameraListener();
 
       if (locationLayerMode == LocationLayerMode.COMPASS) {
