@@ -1,4 +1,4 @@
-# Changelog for the Mapbox localization layer plugin
+# Changelog for the Mapbox location layer plugin
 
 Mapbox welcomes participation and contributions from everyone.
 
