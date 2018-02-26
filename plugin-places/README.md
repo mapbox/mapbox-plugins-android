@@ -12,13 +12,14 @@ To use the places plugin, you include it in your `build.gradle` file.
 // In the root build.gradle file
 repositories {
     mavenCentral()
+    google()
 }
 
 ...
 
 // In the app build.gradle file
 dependencies {
-    compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-places:0.1.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-places:0.2.0'
 }
 ```
 
@@ -28,6 +29,7 @@ The places plugin is published to Maven Central and nightly SNAPSHOTs are availa
 // In the root build.gradle file
 repositories {
     mavenCentral()
+    google()
     maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
@@ -35,7 +37,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-places:0.2.0-SNAPSHOT'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-places:0.3.0-SNAPSHOT'
 }
 ```
 
