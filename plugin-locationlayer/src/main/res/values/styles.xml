@@ -16,6 +16,6 @@
     <item name="elevation">12dp</item>
 
     <item name="enableStaleState">true</item>
-    <item name="staleStateDelay">10000</item>
+    <item name="staleStateTimeout">10000</item>
   </style>
 </resources>
