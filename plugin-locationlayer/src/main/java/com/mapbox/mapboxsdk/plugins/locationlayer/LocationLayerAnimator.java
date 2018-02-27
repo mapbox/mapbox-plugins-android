@@ -1,7 +1,6 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer;
 
 import android.animation.ValueAnimator;
-import android.location.Location;
 import android.support.annotation.NonNull;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -26,31 +25,22 @@ final class LocationLayerAnimator {
     listeners.remove(listener);
   }
 
-  void feedNewLocation(@NonNull Location previousLocation, @NonNull Location newLocation) {
-    LatLng previousLatLng;
-    if (latLngAnimator != null) {
-      previousLatLng = (LatLng) latLngAnimator.getAnimatedValue();
-    } else {
-      previousLatLng = new LatLng(previousLocation);
-    }
-    LatLng newLatLng = new LatLng(newLocation);
-
-    float previousBearing;
-    if (gpsBearingAnimator != null) {
-      previousBearing = (float) gpsBearingAnimator.getAnimatedValue();
-    } else {
-      previousBearing = previousLocation.getBearing();
-    }
-
-    cancelLocationAnimations();
-    latLngAnimator = new LatLngAnimator(previousLatLng, newLatLng, 1000);
-    gpsBearingAnimator = new BearingAnimator(previousBearing, newLocation.getBearing(), 1000);
+  void feedNewLatLng(@NonNull LatLng previousTargetLatLng, @NonNull LatLng targetLatLng) {
+    cancelLatLngAnimation();
+    latLngAnimator = new LatLngAnimator(previousTargetLatLng, targetLatLng, 1000);
     // FIXME: 22/02/2018 evaluate duration of animation better
 
     latLngAnimator.addUpdateListener(latLngUpdateListener);
-    gpsBearingAnimator.addUpdateListener(gpsBearingUpdateListener);
-
     latLngAnimator.start();
+  }
+
+  void feedNewGpsBearing(float previousGpsBearing, float targetGpsBearing) {
+    cancelBearingAnimation();
+    float normalizedTargetGpsBearing = Utils.shortestRotation(previousGpsBearing, targetGpsBearing);
+    gpsBearingAnimator = new BearingAnimator(previousGpsBearing, normalizedTargetGpsBearing, 1000);
+    // FIXME: 22/02/2018 evaluate duration of animation better
+
+    gpsBearingAnimator.addUpdateListener(gpsBearingUpdateListener);
     gpsBearingAnimator.start();
   }
 
@@ -102,16 +92,18 @@ final class LocationLayerAnimator {
   }
 
   void cancelAllAnimations() {
-    cancelLocationAnimations();
+    cancelLatLngAnimation();
     cancelCompassAnimations();
   }
 
-  private void cancelLocationAnimations() {
+  private void cancelLatLngAnimation() {
     if (latLngAnimator != null) {
       latLngAnimator.cancel();
       latLngAnimator.removeAllUpdateListeners();
     }
+  }
 
+  private void cancelBearingAnimation() {
     if (gpsBearingAnimator != null) {
       gpsBearingAnimator.cancel();
       gpsBearingAnimator.removeAllUpdateListeners();

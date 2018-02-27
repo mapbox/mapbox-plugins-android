@@ -45,12 +45,9 @@ public class LocationLayerCamera implements LocationLayerAnimator.OnAnimationsVa
   @Override
   public void onNewGpsBearingValue(float gpsBearing) {
     if (cameraMode == CameraMode.TRACKING_GPS
-      || cameraMode == CameraMode.NONE_GPS) {
+      || cameraMode == CameraMode.NONE_GPS
+      || cameraMode == CameraMode.TRACKING_GPS_NORTH) {
       setBearing(gpsBearing);
-    }
-
-    if (cameraMode == CameraMode.TRACKING_GPS_NORTH) {
-      setBearing(0);
     }
   }
 
@@ -62,8 +59,3 @@ public class LocationLayerCamera implements LocationLayerAnimator.OnAnimationsVa
     }
   }
 }
-
-
-/*
-
-  float targetBearing = Utils.shortestRotation(0, (float) bearing);*/
