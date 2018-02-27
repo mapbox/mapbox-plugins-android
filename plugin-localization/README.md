@@ -11,7 +11,7 @@ To use the localization plugin, you include it in your `build.gradle` file.
 // In the root build.gradle file
 repositories {
     mavenCentral()
-    maven { url 'https://maven.google.com' }
+    google()
 }
 
 ...
