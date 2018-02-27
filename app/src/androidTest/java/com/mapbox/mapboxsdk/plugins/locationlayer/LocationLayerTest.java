@@ -8,6 +8,8 @@ import android.support.test.espresso.UiController;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.location.LocationLayerModesActivity;
@@ -16,6 +18,7 @@ import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.utils.OnMapReadyIdlingResource;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -202,6 +205,18 @@ public class LocationLayerTest {
         assert symbolLayer != null;
         assertThat(symbolLayer.getIconImage().getValue(), not(FOREGROUND_ICON));
       }});
+  }
+
+  @Test
+  public void whenMapCameraInitializesTilted_iconsGetPlacedWithCorrectOffset() throws Exception {
+    executeLocationLayerTest((locationLayerPlugin, mapboxMap, uiController, context) -> {
+      mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder().tilt(60).build()));
+      locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.TRACKING);
+      locationLayerPlugin.forceLocationUpdate(location);
+      SymbolLayer layer = mapboxMap.getLayerAs(FOREGROUND_LAYER);
+      Float[] value = layer.getIconOffset().getValue();
+      Assert.assertEquals((-0.05 * 60), value[1], 0.1);
+    });
   }
 
   @After
