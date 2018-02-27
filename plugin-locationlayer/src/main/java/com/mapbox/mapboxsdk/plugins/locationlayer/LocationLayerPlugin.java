@@ -72,6 +72,8 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     = new CopyOnWriteArrayList<>();
   private final CopyOnWriteArrayList<OnLocationLayerClickListener> onLocationLayerClickListeners
     = new CopyOnWriteArrayList<>();
+  private final CopyOnWriteArrayList<OnLocationLayerLongClickListener> onLocationLayerLongClickListeners
+    = new CopyOnWriteArrayList<>();
 
   /**
    * Construct a LocationLayerPlugin
@@ -257,6 +259,27 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   }
 
   /**
+   * Sets the maximum zoom level the map can be displayed at.
+   * <p>
+   * The default maximum zoom level is 22. The upper bound for this value is 25.5.
+   *
+   * @param maxZoom The new maximum zoom level.
+   * @since 0.5.0
+   */
+  public void setMaxZoom(double maxZoom) {
+    mapboxMap.setMaxZoomPreference(maxZoom);
+  }
+
+  /**
+   * Sets the minimum zoom level the map can be displayed at.
+   *
+   * @param minZoom The new minimum zoom level.
+   */
+  public void setMinZoom(double minZoom) {
+    mapboxMap.setMinZoomPreference(minZoom);
+  }
+
+  /**
    * Use to either force a location update or to manually control when the user location gets
    * updated.
    *
@@ -303,9 +326,9 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   }
 
   /**
-   * Required to place inside your activities {@code onStart} method. You'll also most likely want
-   * to check that this Location Layer plugin instance inside your activity is null or not.
+   * Get the last know location of the location layer plugin.
    *
+   * @return the last known location
    * @since 0.1.0
    */
   @SuppressLint("MissingPermission")
@@ -340,22 +363,43 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   /**
    * Adds a listener that gets invoked when the user clicks the location layer.
    *
-   * @param locationClickListener The location layer click listener that is invoked when the
-   *                              location layer is clicked
+   * @param listener The location layer click listener that is invoked when the
+   *                 location layer is clicked
    * @since 0.3.0
    */
-  public void addOnLocationClickListener(@NonNull OnLocationLayerClickListener locationClickListener) {
-    onLocationLayerClickListeners.add(locationClickListener);
+  public void addOnLocationClickListener(@NonNull OnLocationLayerClickListener listener) {
+    onLocationLayerClickListeners.add(listener);
   }
 
   /**
    * Removes the passed listener from the current list of location click listeners.
    *
-   * @param locationClickListener to be removed
+   * @param listener to be removed
    * @since 0.3.0
    */
-  public void removeOnLocationClickListener(@NonNull OnLocationLayerClickListener locationClickListener) {
-    onLocationLayerClickListeners.remove(locationClickListener);
+  public void removeOnLocationClickListener(@NonNull OnLocationLayerClickListener listener) {
+    onLocationLayerClickListeners.remove(listener);
+  }
+
+  /**
+   * Adds a listener that gets invoked when the user long clicks the location layer.
+   *
+   * @param listener The location layer click listener that is invoked when the
+   *                 location layer is clicked
+   * @since 0.5.0
+   */
+  public void addOnLocationLongClickListener(@NonNull OnLocationLayerLongClickListener listener) {
+    onLocationLayerLongClickListeners.add(listener);
+  }
+
+  /**
+   * Removes the passed listener from the current list of location long click listeners.
+   *
+   * @param listener to be removed
+   * @since 0.5.0
+   */
+  public void removeOnLocationLongClickListener(@NonNull OnLocationLayerLongClickListener listener) {
+    onLocationLayerLongClickListeners.remove(listener);
   }
 
   /**
@@ -409,7 +453,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   /**
    * Required to place inside your activities {@code onStop} method.
    *
-   * @since 0.4.0
+   * @since 0.1.0
    */
   @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
   public void onStop() {
@@ -429,6 +473,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
 
     mapView.addOnMapChangedListener(onMapChangedListener);
     mapboxMap.addOnMapClickListener(onMapClickListener);
+    updateMapWithOptions(options);
 
     locationLayer = new LocationLayer(mapView, mapboxMap, options);
     locationLayerCamera = new LocationLayerCamera(mapboxMap);
@@ -454,6 +499,19 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     isEnabled = false;
     onStop();
     locationLayer.hide();
+  }
+
+  private void updateMapWithOptions(LocationLayerOptions options) {
+    int[] padding = options.padding();
+    if (padding != null && padding.length == 4) {
+      setPadding(options.padding()[0], padding[1], padding[2], padding[3]);
+    }
+    if (options.maxZoom() > 0) {
+      setMaxZoom(options.maxZoom());
+    }
+    if (options.minZoom() > 0) {
+      setMinZoom(options.minZoom());
+    }
   }
 
   /**
@@ -509,6 +567,17 @@ public final class LocationLayerPlugin implements LifecycleObserver {
       if (!onLocationLayerClickListeners.isEmpty() && locationLayer.onMapClick(point)) {
         for (OnLocationLayerClickListener listener : onLocationLayerClickListeners) {
           listener.onLocationLayerClick();
+        }
+      }
+    }
+  };
+
+  private MapboxMap.OnMapLongClickListener onMapLongClickListener = new MapboxMap.OnMapLongClickListener() {
+    @Override
+    public void onMapLongClick(@NonNull LatLng point) {
+      if (!onLocationLayerLongClickListeners.isEmpty() && locationLayer.onMapClick(point)) {
+        for (OnLocationLayerLongClickListener listener : onLocationLayerLongClickListeners) {
+          listener.onLocationLayerLongClick();
         }
       }
     }

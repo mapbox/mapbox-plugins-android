@@ -43,6 +43,21 @@ public abstract class LocationLayerOptions implements Parcelable {
   private static final float ACCURACY_ALPHA_DEFAULT = 0.15f;
 
   /**
+   * Default max map zoom
+   */
+  private static final float MAX_ZOOM_DEFAULT = 20;
+
+  /**
+   * Default min map zoom
+   */
+  private static final float MIN_ZOOM_DEFAULT = 2;
+
+  /**
+   * Default map padding
+   */
+  private static final int[] PADDING_DEFAULT = {0, 0, 0, 0};
+
+  /**
    * The default value which is used when the stale state is enabled
    */
   private static final long STALE_STATE_DELAY_MS = 30000;
@@ -149,7 +164,10 @@ public abstract class LocationLayerOptions implements Parcelable {
   private static Builder builder() {
     return new AutoValue_LocationLayerOptions.Builder()
       .enableStaleState(true)
-      .staleStateTimeout(STALE_STATE_DELAY_MS);
+      .staleStateTimeout(STALE_STATE_DELAY_MS)
+      .maxZoom(MAX_ZOOM_DEFAULT)
+      .minZoom(MIN_ZOOM_DEFAULT)
+      .padding(PADDING_DEFAULT);
   }
 
   /**
@@ -319,6 +337,40 @@ public abstract class LocationLayerOptions implements Parcelable {
    * @since 0.4.0
    */
   public abstract long staleStateTimeout();
+
+  /**
+   * Sets the distance from the edges of the map view’s frame to the edges of the map
+   * view’s logical viewport.
+   * </p>
+   * <p>
+   * When the value of this property is equal to {0,0,0,0}, viewport
+   * properties such as `centerCoordinate` assume a viewport that matches the map
+   * view’s frame. Otherwise, those properties are inset, excluding part of the
+   * frame from the viewport. For instance, if the only the top edge is inset, the
+   * map center is effectively shifted downward.
+   * </p>
+   *
+   * @return integer array of padding values
+   * @since 0.5.0
+   */
+  @SuppressWarnings("mutable")
+  public abstract int[] padding();
+
+  /**
+   * The maximum zoom level the map can be displayed at.
+   *
+   * @return the maximum zoom level
+   * @since 0.5.0
+   */
+  public abstract double maxZoom();
+
+  /**
+   * The minimum zoom level the map can be displayed at.
+   *
+   * @return the minimum zoom level
+   * @since 0.5.0
+   */
+  public abstract double minZoom();
 
   /**
    * Builder class for constructing a new instance of {@link LocationLayerOptions}.
@@ -494,6 +546,39 @@ public abstract class LocationLayerOptions implements Parcelable {
      */
     public abstract Builder staleStateTimeout(long timeout);
 
+    /**
+     * Sets the distance from the edges of the map view’s frame to the edges of the map
+     * view’s logical viewport.
+     * </p>
+     * <p>
+     * When the value of this property is equal to {0,0,0,0}, viewport
+     * properties such as `centerCoordinate` assume a viewport that matches the map
+     * view’s frame. Otherwise, those properties are inset, excluding part of the
+     * frame from the viewport. For instance, if the only the top edge is inset, the
+     * map center is effectively shifted downward.
+     * </p>
+     *
+     * @param padding The margins for the map in pixels (left, top, right, bottom).
+     * @since 0.5.0
+     */
+    public abstract Builder padding(int[] padding);
+
+    /**
+     * Sets the maximum zoom level the map can be displayed at.
+     * <p>
+     * The default maximum zoomn level is 22. The upper bound for this value is 25.5.
+     *
+     * @param maxZoom The new maximum zoom level.
+     * @since 0.5.0
+     */
+    public abstract Builder maxZoom(double maxZoom);
+
+    /**
+     * Sets the minimum zoom level the map can be displayed at.
+     *
+     * @param minZoom The new minimum zoom level.
+     */
+    public abstract Builder minZoom(double minZoom);
 
     abstract LocationLayerOptions autoBuild();
 
