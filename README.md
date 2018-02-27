@@ -53,7 +53,7 @@ repositories {
 }
 
 dependencies {
-  compile 'com.mapbox.mapboxsdk:PLUGIN_NAME:PLUGIN_VERSION_NUMBER'
+  implementation 'com.mapbox.mapboxsdk:PLUGIN_NAME:PLUGIN_VERSION_NUMBER'
 }
 ```
 5. Click the Sync Project with Gradle Files near the toolbar in Studio.
