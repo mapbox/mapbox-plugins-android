@@ -176,15 +176,9 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    * Sets the render mode, which determines how the location updates will be rendered on the map.
    * <p>
    * <ul>
-   * <<<<<<< HEAD
-   * <li>{@link RenderMode#NORMAL}: Basic tracking is enabled, bearing ignored</li>
-   * <li>{@link RenderMode#COMPASS}: Tracking the user location with bearing considered from compass</li>
-   * <li>{@link RenderMode#GPS}: Tracking the user location with bearing considered from location</li>
-   * =======
    * <li>{@link RenderMode#NORMAL}: Shows user location, bearing ignored</li>
    * <li>{@link RenderMode#COMPASS}: Shows user location with bearing considered from compass</li>
    * <li>{@link RenderMode#GPS}: Shows user location with bearing considered from location</li>
-   * >>>>>>> map-location-animators
    * </ul>
    *
    * @param renderMode one of the modes found in {@link RenderMode}
@@ -326,12 +320,10 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   }
 
   /**
-   * <<<<<<< HEAD
    * Get the last know location of the location layer plugin.
    *
    * @return the last known location
    * @since 0.1.0
-   * >>>>>>> map-location-animators
    */
   @SuppressLint("MissingPermission")
   @Nullable
