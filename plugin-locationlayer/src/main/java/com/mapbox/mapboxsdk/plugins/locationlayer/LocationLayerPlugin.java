@@ -284,6 +284,9 @@ public final class LocationLayerPlugin implements LifecycleObserver {
 
     if (locationEngine != null) {
       this.locationEngine = locationEngine;
+      if (isEnabled) {
+        this.locationEngine.addLocationEngineListener(locationEngineListener);
+      }
     }
   }
 
