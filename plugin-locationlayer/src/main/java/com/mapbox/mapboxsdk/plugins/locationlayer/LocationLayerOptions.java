@@ -541,7 +541,7 @@ public abstract class LocationLayerOptions implements Parcelable {
      * @param padding The margins for the map in pixels (left, top, right, bottom).
      * @since 0.5.0
      */
-    public abstract Builder setPadding(int[] padding);
+    public abstract Builder padding(int[] padding);
 
     /**
      * Sets the maximum zoom level the map can be displayed at.
@@ -551,14 +551,14 @@ public abstract class LocationLayerOptions implements Parcelable {
      * @param maxZoom The new maximum zoom level.
      * @since 0.5.0
      */
-    public abstract Builder setMaxZoom(double maxZoom);
+    public abstract Builder maxZoom(double maxZoom);
 
     /**
      * Sets the minimum zoom level the map can be displayed at.
      *
      * @param minZoom The new minimum zoom level.
      */
-    public abstract Builder setMinZoom(double minZoom);
+    public abstract Builder minZoom(double minZoom);
 
     abstract LocationLayerOptions autoBuild();
 

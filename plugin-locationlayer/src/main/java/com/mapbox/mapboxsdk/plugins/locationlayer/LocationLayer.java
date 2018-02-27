@@ -78,10 +78,14 @@ final class LocationLayer implements LocationLayerAnimator.OnAnimationsValuesCha
   LocationLayer(MapView mapView, MapboxMap mapboxMap, LocationLayerOptions options) {
     this.mapboxMap = mapboxMap;
     this.context = mapView.getContext();
+    initializeComponents();
+    setRenderMode(RenderMode.NORMAL);
+  }
+
+  void initializeComponents() {
     addLocationSource();
     addLayers();
     applyStyle(options);
-    setRenderMode(RenderMode.NORMAL);
   }
 
   void applyStyle(@NonNull LocationLayerOptions options) {
@@ -297,7 +301,7 @@ final class LocationLayer implements LocationLayerAnimator.OnAnimationsValuesCha
     this.isStale = isStale;
     layerMap.get(FOREGROUND_LAYER).setProperties(iconImage(isStale ? FOREGROUND_STALE_ICON : FOREGROUND_ICON));
     layerMap.get(BACKGROUND_LAYER).setProperties(iconImage(isStale ? BACKGROUND_STALE_ICON : BACKGROUND_ICON));
-    layerMap.get(ACCURACY_LAYER).setProperties(visibility(isStale ? NONE : VISIBLE));
+    layerMap.get(ACCURACY_LAYER).setProperties(visibility(isStale && renderMode != RenderMode.GPS ? NONE : VISIBLE));
   }
 
   //

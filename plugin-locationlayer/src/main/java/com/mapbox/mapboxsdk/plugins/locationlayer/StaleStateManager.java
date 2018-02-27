@@ -10,24 +10,26 @@ import android.os.Handler;
  *
  * @since 0.4.0
  */
-class StaleStateRunnable implements Runnable {
+class StaleStateManager {
 
   private final OnLocationStaleListener innerOnLocationStaleListeners;
   private final Handler handler;
   private boolean isStale;
   private long delayTime;
 
-  StaleStateRunnable(OnLocationStaleListener innerListener, long delayTime) {
+  StaleStateManager(OnLocationStaleListener innerListener, long delayTime) {
     innerOnLocationStaleListeners = innerListener;
     this.delayTime = delayTime;
     handler = new Handler();
   }
 
-  @Override
-  public void run() {
-    isStale = true;
-    innerOnLocationStaleListeners.onStaleStateChange(true);
-  }
+  private Runnable staleStateRunnable = new Runnable() {
+    @Override
+    public void run() {
+      isStale = true;
+      innerOnLocationStaleListeners.onStaleStateChange(true);
+    }
+  };
 
   boolean isStale() {
     return isStale;
@@ -38,24 +40,26 @@ class StaleStateRunnable implements Runnable {
       isStale = false;
       innerOnLocationStaleListeners.onStaleStateChange(false);
     }
-
-    handler.removeCallbacksAndMessages(this);
-    handler.postDelayed(this, delayTime);
+    postTheCallback();
   }
 
   void setDelayTime(long delayTime) {
     this.delayTime = delayTime;
-    handler.removeCallbacksAndMessages(this);
-    handler.postDelayed(this, delayTime);
+    postTheCallback();
   }
 
   void onStart() {
     if (!isStale) {
-      handler.postDelayed(this, delayTime);
+      postTheCallback();
     }
   }
 
   void onStop() {
-    handler.removeCallbacksAndMessages(this);
+    handler.removeCallbacksAndMessages(null);
+  }
+
+  private void postTheCallback() {
+    handler.removeCallbacksAndMessages(null);
+    handler.postDelayed(staleStateRunnable, delayTime);
   }
 }
