@@ -63,32 +63,35 @@ final class LocationLayerAnimator {
     compassBearingAnimator.start();
   }
 
-  private final ValueAnimator.AnimatorUpdateListener latLngUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
-    @Override
-    public void onAnimationUpdate(ValueAnimator valueAnimator) {
-      for (OnAnimationsValuesChangeListener listener : listeners) {
-        listener.onNewLatLngValue((LatLng) valueAnimator.getAnimatedValue());
+  private final ValueAnimator.AnimatorUpdateListener latLngUpdateListener =
+    new ValueAnimator.AnimatorUpdateListener() {
+      @Override
+      public void onAnimationUpdate(ValueAnimator valueAnimator) {
+        for (OnAnimationsValuesChangeListener listener : listeners) {
+          listener.onNewLatLngValue((LatLng) valueAnimator.getAnimatedValue());
+        }
       }
-    }
-  };
+    };
 
-  private final ValueAnimator.AnimatorUpdateListener compassBearingUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
-    @Override
-    public void onAnimationUpdate(ValueAnimator valueAnimator) {
-      for (OnAnimationsValuesChangeListener listener : listeners) {
-        listener.onNewCompassBearingValue((Float) valueAnimator.getAnimatedValue());
+  private final ValueAnimator.AnimatorUpdateListener compassBearingUpdateListener =
+    new ValueAnimator.AnimatorUpdateListener() {
+      @Override
+      public void onAnimationUpdate(ValueAnimator valueAnimator) {
+        for (OnAnimationsValuesChangeListener listener : listeners) {
+          listener.onNewCompassBearingValue((Float) valueAnimator.getAnimatedValue());
+        }
       }
-    }
-  };
+    };
 
-  private final ValueAnimator.AnimatorUpdateListener gpsBearingUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
-    @Override
-    public void onAnimationUpdate(ValueAnimator valueAnimator) {
-      for (OnAnimationsValuesChangeListener listener : listeners) {
-        listener.onNewGpsBearingValue((Float) valueAnimator.getAnimatedValue());
+  private final ValueAnimator.AnimatorUpdateListener gpsBearingUpdateListener =
+    new ValueAnimator.AnimatorUpdateListener() {
+      @Override
+      public void onAnimationUpdate(ValueAnimator valueAnimator) {
+        for (OnAnimationsValuesChangeListener listener : listeners) {
+          listener.onNewGpsBearingValue((Float) valueAnimator.getAnimatedValue());
+        }
       }
-    }
-  };
+    };
 
   interface OnAnimationsValuesChangeListener {
     void onNewLatLngValue(LatLng latLng);
