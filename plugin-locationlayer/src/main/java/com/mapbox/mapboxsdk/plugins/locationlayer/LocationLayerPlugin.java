@@ -467,6 +467,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
 
     mapView.addOnMapChangedListener(onMapChangedListener);
     mapboxMap.addOnMapClickListener(onMapClickListener);
+    updateMapWithOptions(options);
 
     locationLayer = new LocationLayer(mapView, mapboxMap, options);
     locationLayerCamera = new LocationLayerCamera(mapboxMap);
@@ -496,7 +497,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
 
   private void updateMapWithOptions(LocationLayerOptions options) {
     int[] padding = options.padding();
-    if (options.padding() != null && options.padding().length == 4) {
+    if (padding != null && padding.length == 4) {
       setPadding(options.padding()[0], padding[1], padding[2], padding[3]);
     }
     if (options.maxZoom() > 0) {

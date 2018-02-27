@@ -43,6 +43,21 @@ public abstract class LocationLayerOptions implements Parcelable {
   private static final float ACCURACY_ALPHA_DEFAULT = 0.15f;
 
   /**
+   * Default max map zoom
+   */
+  private static final float MAX_ZOOM_DEFAULT = 20;
+
+  /**
+   * Default min map zoom
+   */
+  private static final float MIN_ZOOM_DEFAULT = 2;
+
+  /**
+   * Default map padding
+   */
+  private static final int[] PADDING_DEFAULT = {0, 0, 0, 0};
+
+  /**
    * The default value which is used when the stale state is enabled
    */
   private static final long STALE_STATE_DELAY_MS = 30000;
@@ -148,7 +163,10 @@ public abstract class LocationLayerOptions implements Parcelable {
   private static Builder builder() {
     return new AutoValue_LocationLayerOptions.Builder()
       .enableStaleState(true)
-      .staleStateTimeout(STALE_STATE_DELAY_MS);
+      .staleStateTimeout(STALE_STATE_DELAY_MS)
+      .maxZoom(MAX_ZOOM_DEFAULT)
+      .minZoom(MIN_ZOOM_DEFAULT)
+      .padding(PADDING_DEFAULT);
   }
 
   /**
@@ -334,6 +352,7 @@ public abstract class LocationLayerOptions implements Parcelable {
    * @return integer array of padding values
    * @since 0.5.0
    */
+  @SuppressWarnings("mutable")
   public abstract int[] padding();
 
   /**
