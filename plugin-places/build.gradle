@@ -55,7 +55,6 @@ dependencies {
   annotationProcessor dependenciesList.roomCompiler
 
   implementation dependenciesList.mapboxGeocoding
-  implementation project(':plugin-locationlayer')
   api dependenciesList.mapboxMapSdk
 
   // Unit testing
