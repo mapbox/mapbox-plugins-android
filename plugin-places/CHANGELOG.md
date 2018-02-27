@@ -2,6 +2,9 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### 0.2.1 - February 27, 2018
+- Remove location layer dep [#319](https://github.com/mapbox/mapbox-plugins-android/pull/319)
+
 ### 0.2.0 - February 26, 2018
 - Place Picker added [#262](https://github.com/mapbox/mapbox-plugins-android/pull/262)
 - Updated geocoding dependency [#261](https://github.com/mapbox/mapbox-plugins-android/pull/261)
