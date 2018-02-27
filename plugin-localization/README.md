@@ -18,7 +18,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-localization:0.1.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-localization:0.1.0'
 }
 ```
 
@@ -36,7 +36,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    compile 'com.mapbox.mapboxsdk:mapbox-android-plugin-localization:0.2.0-SNAPSHOT'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-localization:0.2.0-SNAPSHOT'
 }
 ```
 
