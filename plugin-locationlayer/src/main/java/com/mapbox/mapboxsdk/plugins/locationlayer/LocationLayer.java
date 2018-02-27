@@ -76,8 +76,9 @@ final class LocationLayer implements LocationLayerAnimator.OnAnimationsValuesCha
   private final Map<String, GeoJsonSource> sourceMap = new HashMap<>();
 
   LocationLayer(MapView mapView, MapboxMap mapboxMap, LocationLayerOptions options) {
-    this.mapboxMap = mapboxMap;
     this.context = mapView.getContext();
+    this.mapboxMap = mapboxMap;
+    this.options = options;
     initializeComponents();
     setRenderMode(RenderMode.NORMAL);
   }

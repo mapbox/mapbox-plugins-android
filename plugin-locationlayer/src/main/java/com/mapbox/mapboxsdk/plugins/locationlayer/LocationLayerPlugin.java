@@ -525,10 +525,19 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     }
 
     staleStateManager.updateLatestLocationTime();
-    if (lastLocation != null) {
-      locationLayerAnimator.feedNewLocation(lastLocation, location);
-    }
 
+    if (lastLocation != null) {
+      LatLng previousLatLngTarget = new LatLng(lastLocation);
+      LatLng latLngTarget = new LatLng(location);
+      locationLayerAnimator.feedNewLatLng(previousLatLngTarget, latLngTarget);
+
+      float previousGpsBearing = lastLocation.getBearing();
+      if (getCameraMode() == CameraMode.TRACKING_GPS_NORTH && mapboxMap.getCameraPosition().bearing != 0) {
+        locationLayerAnimator.feedNewGpsBearing(previousGpsBearing, 0);
+      } else {
+        locationLayerAnimator.feedNewGpsBearing(previousGpsBearing, location.getBearing());
+      }
+    }
     lastLocation = location;
   }
 
