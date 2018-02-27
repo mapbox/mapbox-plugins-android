@@ -62,7 +62,7 @@ dependencies {
   implementation dependenciesList.roomRuntime
   annotationProcessor dependenciesList.roomCompiler
 
-  implementation dependenciesList.mapboxGeocoding
+  implementation dependenciesList.mapboxServices
   api dependenciesList.mapboxMapSdk
 
   // Unit testing

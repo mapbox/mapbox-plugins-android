@@ -9,6 +9,11 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.geojson.LineString;
+import com.mapbox.geojson.Point;
+import com.mapbox.geojson.Polygon;
 import com.mapbox.mapboxsdk.annotations.Marker;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.annotations.PolygonOptions;
@@ -22,12 +27,6 @@ import com.mapbox.mapboxsdk.plugins.geojson.listener.OnMarkerEventListener;
 import com.mapbox.mapboxsdk.plugins.geojson.model.DataModel;
 import com.mapbox.mapboxsdk.plugins.geojson.model.MarkerData;
 import com.mapbox.mapboxsdk.plugins.geojson.model.PolyData;
-import com.mapbox.services.commons.geojson.Feature;
-import com.mapbox.services.commons.geojson.FeatureCollection;
-import com.mapbox.services.commons.geojson.LineString;
-import com.mapbox.services.commons.geojson.Point;
-import com.mapbox.services.commons.geojson.Polygon;
-import com.mapbox.services.commons.models.Position;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -305,16 +304,16 @@ public class GeoJsonPlugin {
     DataModel dataModel = new DataModel();
     LatLngBounds.Builder builder = new LatLngBounds.Builder();
     FeatureCollection featureCollection = FeatureCollection.fromJson(geoJson);
-    List<Feature> listFeature = featureCollection.getFeatures();
+    List<Feature> listFeature = featureCollection.features();
     for (Feature feature : listFeature) {
-      String featureType = feature.getGeometry().getType();
+      String featureType = feature.geometry().type();
       if (!TextUtils.isEmpty(featureType)) {
         if (featureType.equalsIgnoreCase("LineString")) {
           List<LatLng> latLngs = new ArrayList<>();
-          LineString lineString = (LineString) feature.getGeometry().getCoordinates();
-          List<Position> coordinates = lineString.getCoordinates();
-          for (Position position : coordinates) {
-            LatLng latLng = new LatLng(position.getLatitude(), position.getLongitude());
+          LineString lineString = (LineString) feature.geometry().coordinates();
+          List<Point> coordinates = lineString.coordinates();
+          for (Point point : coordinates) {
+            LatLng latLng = new LatLng(point.latitude(), point.longitude());
             latLngs.add(latLng);
             pointCount++;
             builder.include(latLng);
@@ -324,20 +323,20 @@ public class GeoJsonPlugin {
           polylinePolyData.setType(featureType);
           dataModel.addPolyline(polylinePolyData);
         } else if (featureType.equalsIgnoreCase("Point")) {
-          Point point = (Point) feature.getGeometry();
-          LatLng latLng = new LatLng(point.getCoordinates().getLatitude(), point.getCoordinates().getLongitude());
+          Point point = (Point) feature.geometry();
+          LatLng latLng = new LatLng(point.latitude(), point.longitude());
           MarkerData markerData = new MarkerData();
           markerData.setPoint(latLng);
-          markerData.setProperties(feature.getProperties());
+          markerData.setProperties(feature.properties());
           dataModel.addMarker(markerData);
           pointCount++;
           builder.include(latLng);
         } else if (featureType.equalsIgnoreCase("Polygon")) {
           List<LatLng> latLngs = new ArrayList<>();
-          Polygon polygon = (Polygon) feature.getGeometry();
-          List<Position> listPosition = polygon.getCoordinates().get(0);
-          for (Position position : listPosition) {
-            LatLng latLng = new LatLng(position.getLatitude(), position.getLongitude());
+          Polygon polygon = (Polygon) feature.geometry();
+          List<Point> listPoint = polygon.coordinates().get(0);
+          for (Point point : listPoint) {
+            LatLng latLng = new LatLng(point.latitude(), point.longitude());
             latLngs.add(latLng);
             pointCount++;
             builder.include(latLng);

@@ -30,9 +30,12 @@ import com.mapbox.mapboxsdk.plugins.locationlayer.OnLocationLayerClickListener;
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
+<<<<<<<HEAD
 
 import java.util.ArrayList;
 import java.util.List;
+=======
+  >>>>>>>79a9324f...Update to Maps SDK6.0.0and MAS3.0.0
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -92,12 +95,20 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     locationEngine.setPriority(LocationEnginePriority.HIGH_ACCURACY);
     locationEngine.addLocationEngineListener(this);
     locationEngine.activate();
+
     LocationLayerOptions options = LocationLayerOptions.builder(this)
       .padding(new int[] {0, 650, 0, 0})
       .build();
     locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine, options);
     locationLayerPlugin.addOnLocationClickListener(this);
     locationLayerPlugin.addOnCameraTrackingChangedListener(this);
+
+    Location lastLocation = locationEngine.getLastLocation();
+    if (lastLocation != null) {
+      onLocationChanged(lastLocation);
+    }
+
+    locationLayerPlugin.addOnLocationClickListener(this);
     getLifecycle().addObserver(locationLayerPlugin);
   }
 

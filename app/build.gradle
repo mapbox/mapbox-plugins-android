@@ -49,7 +49,7 @@ android {
 dependencies {
   // Mapbox
   implementation dependenciesList.mapboxMapSdk
-  implementation dependenciesList.mapboxGeocoding
+  implementation dependenciesList.mapboxServices
 
   // Architecture
   implementation dependenciesList.lifecycleExtensions
