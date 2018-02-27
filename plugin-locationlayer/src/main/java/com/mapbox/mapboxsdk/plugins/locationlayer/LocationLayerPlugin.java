@@ -173,9 +173,9 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    * Sets the render mode, which determines how the location updates will be rendered on the map.
    * <p>
    * <ul>
-   * <li>{@link RenderMode#NORMAL}: Basic tracking is enabled, bearing ignored</li>
-   * <li>{@link RenderMode#COMPASS}: Tracking the user location with bearing considered from compass</li>
-   * <li>{@link RenderMode#GPS}: Tracking the user location with bearing considered from location</li>
+   * <li>{@link RenderMode#NORMAL}: Shows user location, bearing ignored</li>
+   * <li>{@link RenderMode#COMPASS}: Shows user location with bearing considered from compass</li>
+   * <li>{@link RenderMode#GPS}: Shows user location with bearing considered from location</li>
    * </ul>
    *
    * @param renderMode one of the modes found in {@link RenderMode}
@@ -353,6 +353,8 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   /**
    * Adds the passed listener that gets invoked when user updates have stopped long enough for the last update
    * to be considered stale.
+   * <p>
+   * This timeout is set by {@link LocationLayerOptions#staleStateTimeout()}.
    *
    * @param listener invoked when last update is considered stale
    * @since 0.5.0
