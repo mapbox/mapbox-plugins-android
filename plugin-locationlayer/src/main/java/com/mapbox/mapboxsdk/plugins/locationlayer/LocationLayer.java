@@ -78,10 +78,14 @@ final class LocationLayer implements LocationLayerAnimator.OnAnimationsValuesCha
   LocationLayer(MapView mapView, MapboxMap mapboxMap, LocationLayerOptions options) {
     this.mapboxMap = mapboxMap;
     this.context = mapView.getContext();
+    initializeComponents();
+    setRenderMode(RenderMode.NORMAL);
+  }
+
+  void initializeComponents() {
     addLocationSource();
     addLayers();
     applyStyle(options);
-    setRenderMode(RenderMode.NORMAL);
   }
 
   void applyStyle(@NonNull LocationLayerOptions options) {

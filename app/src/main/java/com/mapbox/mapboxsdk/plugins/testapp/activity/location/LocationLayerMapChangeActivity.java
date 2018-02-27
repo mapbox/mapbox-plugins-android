@@ -65,9 +65,6 @@ public class LocationLayerMapChangeActivity extends AppCompatActivity implements
   @Override
   protected void onStart() {
     super.onStart();
-    if (locationPlugin != null) {
-      locationPlugin.onStart();
-    }
     mapView.onStart();
   }
 
@@ -86,9 +83,6 @@ public class LocationLayerMapChangeActivity extends AppCompatActivity implements
   @Override
   protected void onStop() {
     super.onStop();
-    if (locationPlugin != null) {
-      locationPlugin.onStop();
-    }
     if (locationEngine != null) {
       locationEngine.removeLocationUpdates();
     }

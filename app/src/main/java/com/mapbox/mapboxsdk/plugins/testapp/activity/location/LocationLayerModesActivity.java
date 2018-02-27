@@ -101,6 +101,7 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     return true;
   }
 
+  @SuppressLint("MissingPermission")
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     if (locationLayerPlugin == null) {
@@ -109,6 +110,12 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
 
     if (item.getItemId() == R.id.action_style_change) {
       toggleStyle();
+      return true;
+    } else if (item.getItemId() == R.id.action_plugin_disable) {
+      locationLayerPlugin.setLocationLayerEnabled(false);
+      return true;
+    } else if (item.getItemId() == R.id.action_plugin_enabled) {
+      locationLayerPlugin.setLocationLayerEnabled(true);
       return true;
     }
 
