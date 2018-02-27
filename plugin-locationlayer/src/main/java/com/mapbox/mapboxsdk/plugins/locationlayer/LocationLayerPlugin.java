@@ -67,7 +67,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   private Location lastLocation;
 
   private boolean isEnabled;
-  private StaleStateRunnable staleStateRunnable;
+  private StaleStateManager staleStateManager;
   private final CopyOnWriteArrayList<OnLocationStaleListener> onLocationStaleListeners
     = new CopyOnWriteArrayList<>();
   private final CopyOnWriteArrayList<OnLocationLayerClickListener> onLocationLayerClickListeners
@@ -129,6 +129,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    * @since 0.5.0
    */
   @RequiresPermission(anyOf = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION})
+
   public void setLocationLayerEnabled(boolean isEnabled) {
     if (isEnabled) {
       enableLocationLayerPlugin();
@@ -227,9 +228,9 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   public void applyStyle(LocationLayerOptions options) {
     locationLayer.applyStyle(options);
     if (!options.enableStaleState()) {
-      staleStateRunnable.onStop();
+      staleStateManager.onStop();
     }
-    staleStateRunnable.setDelayTime(options.staleStateTimeout());
+    staleStateManager.setDelayTime(options.staleStateTimeout());
   }
 
   /**
@@ -296,10 +297,10 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   }
 
   /**
-   * Get the last know location of the location layer plugin.
+   * Required to place inside your activities {@code onStart} method. You'll also most likely want
+   * to check that this Location Layer plugin instance inside your activity is null or not.
    *
-   * @return the last known location
-   * @since 0.4.0
+   * @since 0.1.0
    */
   @SuppressLint("MissingPermission")
   @Nullable
@@ -315,6 +316,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    *                        accuracy changes
    * @since 0.2.0
    */
+
   public void addCompassListener(@NonNull CompassListener compassListener) {
     compassManager.addCompassListener(compassListener);
   }
@@ -393,7 +395,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
       mapboxMap.addOnCameraMoveListener(onCameraMoveListener);
     }
     if (options.enableStaleState()) {
-      staleStateRunnable.onStart();
+      staleStateManager.onStart();
     }
     compassManager.onStart();
   }
@@ -401,11 +403,11 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   /**
    * Required to place inside your activities {@code onStop} method.
    *
-   * @since 0.1.0
+   * @since 0.4.0
    */
   @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
   public void onStop() {
-    staleStateRunnable.onStop();
+    staleStateManager.onStop();
     compassManager.onStop();
     locationLayerAnimator.cancelAllAnimations();
     if (locationEngine != null) {
@@ -422,36 +424,29 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     mapView.addOnMapChangedListener(onMapChangedListener);
     mapboxMap.addOnMapClickListener(onMapClickListener);
 
-    compassManager = new CompassManager(mapView.getContext());
-    compassManager.addCompassListener(compassListener);
-    staleStateRunnable = new StaleStateRunnable(onLocationStaleListener, options.staleStateTimeout());
-
     locationLayer = new LocationLayer(mapView, mapboxMap, options);
     locationLayerCamera = new LocationLayerCamera(mapboxMap);
     locationLayerAnimator = new LocationLayerAnimator();
     locationLayerAnimator.addListener(locationLayer);
     locationLayerAnimator.addListener(locationLayerCamera);
 
+    compassManager = new CompassManager(mapView.getContext());
+    compassManager.addCompassListener(compassListener);
+    staleStateManager = new StaleStateManager(onLocationStaleListener, options.staleStateTimeout());
+
     enableLocationLayerPlugin();
   }
 
+  @SuppressLint("MissingPermission")
   private void enableLocationLayerPlugin() {
     isEnabled = true;
-
-    if (locationEngine != null) {
-      locationEngine.addLocationEngineListener(locationEngineListener);
-    }
-    setLastLocation();
-    setLastCompassHeading();
+    onStart();
     locationLayer.show();
   }
 
   private void disableLocationLayerPlugin() {
     isEnabled = false;
-
-    if (locationEngine != null) {
-      locationEngine.removeLocationEngineListener(locationEngineListener);
-    }
+    onStop();
     locationLayer.hide();
   }
 
@@ -466,7 +461,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
       return;
     }
 
-    staleStateRunnable.updateLatestLocationTime();
+    staleStateManager.updateLatestLocationTime();
     if (lastLocation != null) {
       locationLayerAnimator.feedNewLocation(lastLocation, location);
     }
@@ -476,18 +471,6 @@ public final class LocationLayerPlugin implements LifecycleObserver {
 
   private void updateCompassHeading(float heading) {
     locationLayerAnimator.feedNewCompassBearing(compassManager.getLastHeading(), heading);
-  }
-
-  /**
-   * If the location layer was being displayed before the style change, it will need to be displayed
-   * in the new style.
-   */
-  @SuppressWarnings( {"MissingPermission"})
-  private void mapStyleFinishedLoading() {
-    // recreate runtime style components
-    locationLayer = new LocationLayer(mapView, mapboxMap, options);
-    setLastLocation();
-    setLastCompassHeading();
   }
 
   /**
@@ -537,12 +520,15 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   };
 
   private OnMapChangedListener onMapChangedListener = new OnMapChangedListener() {
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapChanged(int change) {
       if (change == MapView.WILL_START_LOADING_MAP) {
-        locationLayerAnimator.cancelAllAnimations();
+        onStop();
       } else if (change == MapView.DID_FINISH_LOADING_STYLE) {
-        mapStyleFinishedLoading();
+        locationLayer.initializeComponents();
+        setRenderMode(locationLayer.getRenderMode());
+        onStart();
       }
     }
   };
