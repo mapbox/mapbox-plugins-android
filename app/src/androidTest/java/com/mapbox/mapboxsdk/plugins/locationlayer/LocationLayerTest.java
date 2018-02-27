@@ -186,7 +186,7 @@ public class LocationLayerTest {
         SymbolLayer symbolLayer = mapboxMap.getLayerAs(FOREGROUND_LAYER);
         assert symbolLayer != null;
         assertThat(symbolLayer.getIconImage().getValue(), equalTo(FOREGROUND_ICON));
-        locationLayerPlugin.applyStyle(context, LocationLayerOptions.builder(context).staleStateDelay(400).build());
+        locationLayerPlugin.applyStyle(context, LocationLayerOptions.builder(context).staleStateTimeout(400).build());
         locationLayerPlugin.forceLocationUpdate(location);
         uiController.loopMainThreadForAtLeast(500);
         assertThat(symbolLayer.getIconImage().getValue(), equalTo(FOREGROUND_STALE_ICON));
@@ -201,7 +201,7 @@ public class LocationLayerTest {
       public void onLocationLayerAction(LocationLayerPlugin locationLayerPlugin, MapboxMap mapboxMap,
                                         UiController uiController, Context context) {
         locationLayerPlugin.setLocationLayerMode(RenderMode.NORMAL);
-        locationLayerPlugin.applyStyle(context, LocationLayerOptions.builder(context).staleStateDelay(100).build());
+        locationLayerPlugin.applyStyle(context, LocationLayerOptions.builder(context).staleStateTimeout(100).build());
         locationLayerPlugin.forceLocationUpdate(location);
         uiController.loopMainThreadForAtLeast(200);
         rule.getActivity().toggleStyle();

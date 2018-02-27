@@ -15,6 +15,6 @@
     <item name="mapbox_elevation">12dp</item>
 
     <item name="mapbox_enableStaleState">true</item>
-    <item name="mapbox_staleStateDelay">10000</item>
+    <item name="mapbox_staleStateTimeout">10000</item>
   </style>
 </resources>
