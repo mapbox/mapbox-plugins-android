@@ -34,14 +34,14 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginEnd="16dp"
+    android:layout_marginRight="16dp"
     android:tint="@color/mapbox_offline_white"
     app:backgroundTint="@color/mapbox_offline_green"
     app:elevation="3dp"
     app:layout_constraintBottom_toBottomOf="@+id/mapbox_offline_region_selection_map_view"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/mapbox_offline_scrim_view"
-    app:srcCompat="@drawable/mapbox_ic_check"
-    android:layout_marginRight="16dp"/>
+    app:srcCompat="@drawable/mapbox_ic_check"/>
 
   <TextView
     android:id="@+id/mapbox_offline_region_name_text_view"
@@ -49,9 +49,9 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="72dp"
     android:layout_marginStart="72dp"
+    android:ellipsize="end"
     android:maxLines="1"
     android:text="@string/mapbox_offline_default_region_name"
-    android:ellipsize="end"
     android:textSize="16sp"
     android:textStyle="bold"
     app:layout_constraintBottom_toBottomOf="parent"

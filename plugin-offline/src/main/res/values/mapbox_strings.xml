@@ -2,6 +2,7 @@
 <resources>
 
   <string name="mapbox_offline_default_region_name">Map </string>
+
   <string name="mapbox_offline_toolbar_primary_text">Select a region</string>
   <string name="mapbox_offline_toolbar_secondary_text">Pan and zoom to adjust</string>
 
