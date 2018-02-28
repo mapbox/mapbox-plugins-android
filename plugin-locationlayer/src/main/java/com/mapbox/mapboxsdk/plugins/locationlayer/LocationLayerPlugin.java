@@ -228,11 +228,13 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    * @since 0.4.0
    */
   public void applyStyle(LocationLayerOptions options) {
+    this.options = options;
     locationLayer.applyStyle(options);
     if (!options.enableStaleState()) {
       staleStateManager.onStop();
     }
     staleStateManager.setDelayTime(options.staleStateTimeout());
+    updateMapWithOptions(options);
   }
 
   /**
@@ -600,7 +602,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
       if (change == MapView.WILL_START_LOADING_MAP) {
         onStop();
       } else if (change == MapView.DID_FINISH_LOADING_STYLE) {
-        locationLayer.initializeComponents();
+        locationLayer.initializeComponents(options);
         setRenderMode(locationLayer.getRenderMode());
         onStart();
       }
