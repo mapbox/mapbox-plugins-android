@@ -23,7 +23,9 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerOptions;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
+import com.mapbox.mapboxsdk.plugins.locationlayer.OnCameraTrackingChangedListener;
 import com.mapbox.mapboxsdk.plugins.locationlayer.OnLocationLayerClickListener;
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode;
@@ -37,7 +39,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LocationLayerModesActivity extends AppCompatActivity implements OnMapReadyCallback,
-  LocationEngineListener, OnLocationLayerClickListener {
+  LocationEngineListener, OnLocationLayerClickListener, OnCameraTrackingChangedListener {
 
   @BindView(R.id.map_view)
   MapView mapView;
@@ -90,8 +92,12 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     locationEngine.setPriority(LocationEnginePriority.HIGH_ACCURACY);
     locationEngine.addLocationEngineListener(this);
     locationEngine.activate();
-    locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine);
+    LocationLayerOptions options = LocationLayerOptions.builder(this)
+      .padding(new int[] {0, 650, 0, 0})
+      .build();
+    locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine, options);
     locationLayerPlugin.addOnLocationClickListener(this);
+    locationLayerPlugin.addOnCameraTrackingChangedListener(this);
     getLifecycle().addObserver(locationLayerPlugin);
   }
 
@@ -259,5 +265,15 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
       listPopup.dismiss();
     });
     listPopup.show();
+  }
+
+  @Override
+  public void onCameraTrackingDismissed() {
+    locationTrackingBtn.setText("None");
+  }
+
+  @Override
+  public void onCameraTrackingChanged(int currentMode) {
+    // do nothing
   }
 }

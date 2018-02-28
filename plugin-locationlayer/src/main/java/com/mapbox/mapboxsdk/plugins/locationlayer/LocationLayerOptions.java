@@ -129,6 +129,15 @@ public abstract class LocationLayerOptions implements Parcelable {
       R.styleable.LocationLayer_accuracyAlpha, ACCURACY_ALPHA_DEFAULT));
     builder.elevation(elevation);
 
+    float defaultTrackingInitialMoveThreshold =
+      context.getResources().getDimension(R.dimen.mapbox_locationLayerTrackingInitialMoveThreshold);
+
+    float defaultTrackingMultiFingerMoveThreshold =
+      context.getResources().getDimension(R.dimen.mapbox_locationLayerTrackingMultiFingerMoveThreshold);
+
+    builder.trackingInitialMoveThreshold(defaultTrackingInitialMoveThreshold);
+    builder.trackingMultiFingerMoveThreshold(defaultTrackingMultiFingerMoveThreshold);
+
     typedArray.recycle();
 
     return builder.build();
@@ -372,6 +381,22 @@ public abstract class LocationLayerOptions implements Parcelable {
   public abstract double minZoom();
 
   /**
+   * Minimum single pointer movement in pixels required to break camera tracking.
+   *
+   * @return the minimum movement
+   * @since 0.5.0
+   */
+  public abstract float trackingInitialMoveThreshold();
+
+  /**
+   * Minimum multi pointer movement in pixels required to break camera tracking (for example during scale gesture).
+   *
+   * @return the minimum movement
+   * @since 0.5.0
+   */
+  public abstract float trackingMultiFingerMoveThreshold();
+
+  /**
    * Builder class for constructing a new instance of {@link LocationLayerOptions}.
    *
    * @since 0.4.0
@@ -578,6 +603,23 @@ public abstract class LocationLayerOptions implements Parcelable {
      * @param minZoom The new minimum zoom level.
      */
     public abstract Builder minZoom(double minZoom);
+
+    /**
+     * Sets minimum single pointer movement (map pan) in pixels required to break camera tracking.
+     *
+     * @param moveThreshold the minimum movement
+     * @since 0.5.0
+     */
+    public abstract Builder trackingInitialMoveThreshold(float moveThreshold);
+
+    /**
+     * Sets minimum multi pointer movement (map pan) in pixels required to break camera tracking
+     * (for example during scale gesture).
+     *
+     * @param moveThreshold the minimum movement
+     * @since 0.5.0
+     */
+    public abstract Builder trackingMultiFingerMoveThreshold(float moveThreshold);
 
     abstract LocationLayerOptions autoBuild();
 
