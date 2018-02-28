@@ -14,20 +14,20 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mapbox.android.core.location.LocationEngine;
+import com.mapbox.android.core.location.LocationEngineListener;
+import com.mapbox.android.core.location.LocationEnginePriority;
+import com.mapbox.android.core.location.LocationEngineProvider;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
-import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.OnLocationLayerClickListener;
+import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode;
+import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
-import com.mapbox.services.android.location.LostLocationEngine;
-import com.mapbox.services.android.telemetry.location.LocationEngine;
-import com.mapbox.services.android.telemetry.location.LocationEngineListener;
-import com.mapbox.services.android.telemetry.location.LocationEnginePriority;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +86,7 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
-    locationEngine = new LostLocationEngine(this);
+    locationEngine = new LocationEngineProvider(this).obtainBestLocationEngineAvailable();
     locationEngine.setPriority(LocationEnginePriority.HIGH_ACCURACY);
     locationEngine.addLocationEngineListener(this);
     locationEngine.activate();

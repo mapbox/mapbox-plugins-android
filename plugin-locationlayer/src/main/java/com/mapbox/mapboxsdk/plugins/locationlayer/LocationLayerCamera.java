@@ -1,5 +1,6 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer;
 
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode;
@@ -25,11 +26,11 @@ public class LocationLayerCamera implements LocationLayerAnimator.OnAnimationsVa
   }
 
   private void setBearing(float bearing) {
-    mapboxMap.setBearing(bearing);
+    mapboxMap.moveCamera(CameraUpdateFactory.bearingTo(bearing));
   }
 
   private void setLatLng(LatLng latLng) {
-    mapboxMap.setLatLng(latLng);
+    mapboxMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
   }
 
   @Override
@@ -62,8 +63,3 @@ public class LocationLayerCamera implements LocationLayerAnimator.OnAnimationsVa
     }
   }
 }
-
-
-/*
-
-  float targetBearing = Utils.shortestRotation(0, (float) bearing);*/

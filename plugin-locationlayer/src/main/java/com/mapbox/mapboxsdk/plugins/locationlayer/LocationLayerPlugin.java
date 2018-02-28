@@ -11,6 +11,8 @@ import android.support.annotation.RequiresPermission;
 import android.support.annotation.StyleRes;
 import android.support.v7.app.AppCompatDelegate;
 
+import com.mapbox.android.core.location.LocationEngine;
+import com.mapbox.android.core.location.LocationEngineListener;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -20,8 +22,6 @@ import com.mapbox.mapboxsdk.maps.MapboxMap.OnCameraMoveListener;
 import com.mapbox.mapboxsdk.maps.MapboxMap.OnMapClickListener;
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode;
-import com.mapbox.services.android.telemetry.location.LocationEngine;
-import com.mapbox.services.android.telemetry.location.LocationEngineListener;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -46,7 +46,7 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
  * to disable the Location Layer but keep the instance around till the activity is destroyed.
  * <p>
  * Using this plugin requires you to request permission beforehand manually or using
- * {@link com.mapbox.services.android.telemetry.permissions.PermissionsManager}. Either
+ * {@link com.mapbox.android.core.permissions.PermissionsManager}. Either
  * {@code ACCESS_COARSE_LOCATION} or {@code ACCESS_FINE_LOCATION} permissions can be requested and
  * this plugin work as expected.
  *
