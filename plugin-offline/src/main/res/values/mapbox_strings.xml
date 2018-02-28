@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <string name="mapbox_offline_default_region_name">Map </string>
+  <string name="mapbox_plugins_offline_toolbar_primary_text">Select a region</string>
+  <string name="mapbox_plugins_offline_toolbar_secondary_text">Pan and zoom to adjust</string>
+
+  <string name="mapbox_plugins_cd_exit_offline">Exit place picker</string>
+
+</resources>
