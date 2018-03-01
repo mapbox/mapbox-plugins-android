@@ -1,6 +1,7 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 
 import org.junit.Before;
@@ -21,6 +22,8 @@ public class LocationLayerOptionsTest {
   private Context context;
   @Mock
   private TypedArray array;
+  @Mock
+  private Resources resources;
 
   @Rule
   public ExpectedException thrown = ExpectedException.none();
@@ -31,6 +34,7 @@ public class LocationLayerOptionsTest {
       .thenReturn(array);
     when(array.getResourceId(R.styleable.mapbox_LocationLayer_mapbox_foregroundDrawable, -1))
       .thenReturn(R.drawable.mapbox_user_icon);
+    when(context.getResources()).thenReturn(resources);
   }
 
   @Test

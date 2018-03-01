@@ -9,11 +9,11 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.plugins.locationlayer.CompassListener;
-import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
+import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.services.android.telemetry.location.LocationEngine;
-import com.mapbox.services.android.telemetry.location.LostLocationEngine;
+import com.mapbox.services.android.telemetry.location.LocationEngineProvider;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,7 +39,7 @@ public class CompassListenerActivity extends AppCompatActivity implements OnMapR
 
   @Override
   public void onMapReady(final MapboxMap mapboxMap) {
-    LocationEngine locationEngine = new LostLocationEngine(this);
+    LocationEngine locationEngine = new LocationEngineProvider(this).obtainBestLocationEngineAvailable();
     locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine);
     locationLayerPlugin.setRenderMode(RenderMode.COMPASS);
     locationLayerPlugin.addCompassListener(new CompassListener() {

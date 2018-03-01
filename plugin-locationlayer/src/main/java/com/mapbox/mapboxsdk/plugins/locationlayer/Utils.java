@@ -1,6 +1,5 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer;
 
-import android.animation.TypeEvaluator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -12,8 +11,6 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-
-import com.mapbox.services.commons.geojson.Point;
 
 public final class Utils {
 
@@ -78,24 +75,6 @@ public final class Utils {
       drawable.mutate().setColorFilter(tintColor, PorterDuff.Mode.SRC_IN);
     }
     return drawable;
-  }
-
-  /**
-   * Used for animating the user location icon
-   *
-   * @since 0.1.0
-   */
-  static class PointEvaluator implements TypeEvaluator<Point> {
-    // Method is used to interpolate the user icon animation.
-    @Override
-    public Point evaluate(float fraction, Point startValue, Point endValue) {
-      return Point.fromCoordinates(new double[] {
-        startValue.getCoordinates().getLongitude() + (
-          (endValue.getCoordinates().getLongitude() - startValue.getCoordinates().getLongitude()) * fraction),
-        startValue.getCoordinates().getLatitude() + (
-          (endValue.getCoordinates().getLatitude() - startValue.getCoordinates().getLatitude()) * fraction)
-      });
-    }
   }
 
   /**
