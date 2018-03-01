@@ -11,6 +11,8 @@ import android.support.annotation.RequiresPermission;
 import android.support.annotation.StyleRes;
 import android.support.v7.app.AppCompatDelegate;
 
+import com.mapbox.android.core.location.LocationEngine;
+import com.mapbox.android.core.location.LocationEngineListener;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -20,8 +22,6 @@ import com.mapbox.mapboxsdk.maps.MapboxMap.OnCameraMoveListener;
 import com.mapbox.mapboxsdk.maps.MapboxMap.OnMapClickListener;
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode;
-import com.mapbox.services.android.telemetry.location.LocationEngine;
-import com.mapbox.services.android.telemetry.location.LocationEngineListener;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -46,7 +46,7 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
  * to disable the Location Layer but keep the instance around till the activity is destroyed.
  * <p>
  * Using this plugin requires you to request permission beforehand manually or using
- * {@link com.mapbox.services.android.telemetry.permissions.PermissionsManager}. Either
+ * {@link com.mapbox.android.core.permissions.PermissionsManager}. Either
  * {@code ACCESS_COARSE_LOCATION} or {@code ACCESS_FINE_LOCATION} permissions can be requested and
  * this plugin work as expected.
  *
@@ -73,6 +73,8 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   private final CopyOnWriteArrayList<OnLocationLayerClickListener> onLocationLayerClickListeners
     = new CopyOnWriteArrayList<>();
   private final CopyOnWriteArrayList<OnLocationLayerLongClickListener> onLocationLayerLongClickListeners
+    = new CopyOnWriteArrayList<>();
+  private final CopyOnWriteArrayList<OnCameraTrackingChangedListener> onCameraTrackingChangedListeners
     = new CopyOnWriteArrayList<>();
 
   /**
@@ -188,7 +190,6 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     locationLayer.setRenderMode(renderMode);
   }
 
-
   /**
    * Provides the current render mode being used to show
    * the location and/or compass updates on the map.
@@ -228,11 +229,13 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    * @since 0.4.0
    */
   public void applyStyle(LocationLayerOptions options) {
+    this.options = options;
     locationLayer.applyStyle(options);
     if (!options.enableStaleState()) {
       staleStateManager.onStop();
     }
     staleStateManager.setDelayTime(options.staleStateTimeout());
+    updateMapWithOptions(options);
   }
 
   /**
@@ -402,6 +405,26 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   }
 
   /**
+   * Adds a listener that gets invoked when camera tracking state changes.
+   *
+   * @param listener Listener that gets invoked when camera tracking state changes.
+   * @since 0.5.0
+   */
+  public void addOnCameraTrackingChangedListener(@NonNull OnCameraTrackingChangedListener listener) {
+    onCameraTrackingChangedListeners.add(listener);
+  }
+
+  /**
+   * Removes a listener that gets invoked when camera tracking state changes.
+   *
+   * @param listener Listener that gets invoked when camera tracking state changes.
+   * @since 0.5.0
+   */
+  public void removeOnCameraTrackingChangedListener(@NonNull OnCameraTrackingChangedListener listener) {
+    onCameraTrackingChangedListeners.remove(listener);
+  }
+
+  /**
    * Adds the passed listener that gets invoked when user updates have stopped long enough for the last update
    * to be considered stale.
    * <p>
@@ -475,7 +498,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     updateMapWithOptions(options);
 
     locationLayer = new LocationLayer(mapView, mapboxMap, options);
-    locationLayerCamera = new LocationLayerCamera(mapboxMap);
+    locationLayerCamera = new LocationLayerCamera(mapboxMap, cameraTrackingChangedListener, options);
     locationLayerAnimator = new LocationLayerAnimator();
     locationLayerAnimator.addListener(locationLayer);
     locationLayerAnimator.addListener(locationLayerCamera);
@@ -600,7 +623,8 @@ public final class LocationLayerPlugin implements LifecycleObserver {
       if (change == MapView.WILL_START_LOADING_MAP) {
         onStop();
       } else if (change == MapView.DID_FINISH_LOADING_STYLE) {
-        locationLayer.initializeComponents();
+        locationLayer.initializeComponents(options);
+        locationLayerCamera.initializeOptions(options);
         setRenderMode(locationLayer.getRenderMode());
         onStart();
       }
@@ -631,6 +655,22 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     @Override
     public void onLocationChanged(Location location) {
       updateLocation(location);
+    }
+  };
+
+  private OnCameraTrackingChangedListener cameraTrackingChangedListener = new OnCameraTrackingChangedListener() {
+    @Override
+    public void onCameraTrackingDismissed() {
+      for (OnCameraTrackingChangedListener listener : onCameraTrackingChangedListeners) {
+        listener.onCameraTrackingDismissed();
+      }
+    }
+
+    @Override
+    public void onCameraTrackingChanged(int currentMode) {
+      for (OnCameraTrackingChangedListener listener : onCameraTrackingChangedListeners) {
+        listener.onCameraTrackingChanged(currentMode);
+      }
     }
   };
 }

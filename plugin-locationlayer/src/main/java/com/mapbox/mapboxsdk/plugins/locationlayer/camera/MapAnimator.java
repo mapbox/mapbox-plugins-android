@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.plugins.locationlayer.Utils;
@@ -80,7 +81,7 @@ public class MapAnimator {
       latLngAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
         @Override
         public void onAnimationUpdate(ValueAnimator animation) {
-          mapboxMap.setLatLng((LatLng) animation.getAnimatedValue());
+          mapboxMap.moveCamera(CameraUpdateFactory.newLatLng((LatLng) animation.getAnimatedValue()));
         }
       });
 
@@ -99,7 +100,7 @@ public class MapAnimator {
       zoomAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
         @Override
         public void onAnimationUpdate(ValueAnimator animation) {
-          mapboxMap.setZoom((Float) animation.getAnimatedValue());
+          mapboxMap.moveCamera(CameraUpdateFactory.zoomTo((Float) animation.getAnimatedValue()));
         }
       });
 
@@ -119,7 +120,7 @@ public class MapAnimator {
       bearingAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
         @Override
         public void onAnimationUpdate(ValueAnimator animation) {
-          mapboxMap.setBearing((Float) animation.getAnimatedValue());
+          mapboxMap.moveCamera(CameraUpdateFactory.bearingTo((Float) animation.getAnimatedValue()));
         }
       });
 
@@ -138,14 +139,13 @@ public class MapAnimator {
       tiltAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
         @Override
         public void onAnimationUpdate(ValueAnimator animation) {
-          mapboxMap.setTilt((Float) animation.getAnimatedValue());
+          mapboxMap.moveCamera(CameraUpdateFactory.tiltTo((Float) animation.getAnimatedValue()));
         }
       });
 
       animators.add(tiltAnimator);
       return this;
     }
-
 
 
     public MapAnimator build() {

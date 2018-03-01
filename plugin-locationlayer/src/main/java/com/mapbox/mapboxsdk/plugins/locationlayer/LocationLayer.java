@@ -9,6 +9,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -19,9 +22,6 @@ import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
-import com.mapbox.services.commons.geojson.Feature;
-import com.mapbox.services.commons.geojson.FeatureCollection;
-import com.mapbox.services.commons.geojson.Point;
 
 import java.util.HashMap;
 import java.util.List;
@@ -78,11 +78,11 @@ final class LocationLayer implements LocationLayerAnimator.OnAnimationsValuesCha
   LocationLayer(MapView mapView, MapboxMap mapboxMap, LocationLayerOptions options) {
     this.mapboxMap = mapboxMap;
     this.context = mapView.getContext();
-    initializeComponents();
+    initializeComponents(options);
     setRenderMode(RenderMode.NORMAL);
   }
 
-  void initializeComponents() {
+  void initializeComponents(LocationLayerOptions options) {
     addLocationSource();
     addLayers();
     applyStyle(options);
@@ -320,7 +320,7 @@ final class LocationLayer implements LocationLayerAnimator.OnAnimationsValuesCha
 
   @Override
   public void onNewLatLngValue(LatLng latLng) {
-    Point point = Point.fromCoordinates(new double[] {latLng.getLongitude(), latLng.getLatitude()});
+    Point point = Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
     setLocationPoint(point);
   }
 
