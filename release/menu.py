@@ -4,6 +4,7 @@ import termios
 import fcntl
 from blessings import Terminal
 
+
 def getch():
     fd = sys.stdin.fileno()
 
@@ -27,6 +28,7 @@ def getch():
         termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
         fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
     return c
+
 
 prefix = '\x1b\x5b'
 lookup = {
