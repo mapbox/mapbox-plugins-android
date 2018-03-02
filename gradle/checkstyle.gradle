@@ -1,18 +1,24 @@
 apply plugin: 'checkstyle'
 
 checkstyle.toolVersion = '8.8'
+checkstyle.configFile = rootProject.file('config/checkstyle/checkstyle.xml')
 
 task checkstyle(type: Checkstyle) {
   description 'Checks if the code adheres to coding standards'
   group 'verification'
 
-  configFile = new File(rootDir, "config/checkstyle/checkstyle.xml")
+  configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+  configProperties = [
+      'configDir': rootProject.file('config/checkstyle'),
+      'baseDir'  : rootDir,
+  ]
+
   source 'src'
   include '**/*.java'
   exclude '**/gen/**'
   exclude '**/*Test.java'
   exclude '**/*FeatureOverviewActivity.java'
-
+  exclude '**/BuildConfig.java'
   classpath = files()
   ignoreFailures = false
 }

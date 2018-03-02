@@ -6,10 +6,10 @@
 <module name="Checker">
     <property name="fileExtensions" value="java, properties, xml"/>
 
-    <module name="SuppressionFilter">
-        <property name="file" value="config/checkstyle/suppressions.xml"/>
-        <property name="optional" value="false"/>
-    </module>
+    <!--<module name="SuppressionFilter">-->
+        <!--<property name="file" value="config/checkstyle/suppressions.xml"/>-->
+        <!--<property name="optional" value="false"/>-->
+    <!--</module>-->
 
     <!-- Require UTF-8 encoding for all files -->
     <property name="charset" value="UTF-8"/>
