@@ -41,7 +41,6 @@ android {
 dependencies {
   // Mapbox
   implementation dependenciesList.mapboxMapSdk
-  implementation dependenciesList.mapboxServices
   implementation dependenciesList.mapboxGeocoding
 
   // Architecture
