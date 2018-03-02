@@ -28,7 +28,7 @@ The location layer plugin is published to Maven Central and nightly SNAPSHOTs ar
 // In the root build.gradle file
 repositories {
     mavenCentral()
-    maven { url 'https://maven.google.com' }
+    google()
     maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
