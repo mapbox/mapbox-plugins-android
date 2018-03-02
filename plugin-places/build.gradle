@@ -33,7 +33,7 @@ android {
   }
 
   // Avoid naming conflicts
-  resourcePrefix 'mapbox_plugins_'
+  resourcePrefix 'mapbox_'
 }
 
 dependencies {

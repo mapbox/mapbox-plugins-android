@@ -6,8 +6,8 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.mapbox.maboxsdk.plugins.SingleFragmentActivity;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
-import com.mapbox.plugins.places.autocomplete.model.PlaceOptions;
-import com.mapbox.plugins.places.autocomplete.ui.PlaceAutocompleteFragment;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.ui.PlaceAutocompleteFragment;
 
 import org.junit.Before;
 import org.junit.Rule;

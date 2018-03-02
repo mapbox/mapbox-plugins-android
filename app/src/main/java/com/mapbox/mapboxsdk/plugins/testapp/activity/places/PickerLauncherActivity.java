@@ -11,9 +11,9 @@ import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.plugins.places.picker.PlacePicker;
+import com.mapbox.mapboxsdk.plugins.places.picker.model.PlacePickerOptions;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
-import com.mapbox.plugins.places.picker.PlacePicker;
-import com.mapbox.plugins.places.picker.model.PlacePickerOptions;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
