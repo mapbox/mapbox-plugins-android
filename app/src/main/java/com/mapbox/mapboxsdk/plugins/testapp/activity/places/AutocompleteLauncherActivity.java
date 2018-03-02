@@ -13,9 +13,9 @@ import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
-import com.mapbox.plugins.places.autocomplete.PlaceAutocomplete;
-import com.mapbox.plugins.places.autocomplete.model.PlaceOptions;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

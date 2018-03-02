@@ -42,7 +42,7 @@
 
   </com.mapbox.mapboxsdk.maps.MapView>
 
-  <com.mapbox.plugins.places.picker.ui.CurrentPlaceSelectionBottomSheet
+  <com.mapbox.mapboxsdk.plugins.places.picker.ui.CurrentPlaceSelectionBottomSheet
     android:id="@+id/mapbox_plugins_picker_bottom_sheet"
     android:layout_width="0dp"
     android:layout_height="0dp"

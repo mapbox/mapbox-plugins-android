@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.mapbox.places">
+          package="com.mapbox.mapboxsdk.places">
 
   <application>
     <activity
-      android:name="com.mapbox.plugins.places.autocomplete.ui.PlaceAutocompleteActivity"
+      android:name="com.mapbox.mapboxsdk.plugins.places.autocomplete.ui.PlaceAutocompleteActivity"
       android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
       android:theme="@style/mapbox_plugins_translucent"
       android:windowSoftInputMode="stateVisible|adjustPan"/>
 
     <activity
-      android:name="com.mapbox.plugins.places.picker.ui.PlacePickerActivity"
+      android:name="com.mapbox.mapboxsdk.plugins.places.picker.ui.PlacePickerActivity"
       android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
   </application>
 </manifest>
