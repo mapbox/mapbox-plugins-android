@@ -38,7 +38,7 @@
     app:layout_constraintTop_toBottomOf="@+id/place_picker_toolbar_primary_text_view"/>
 
   <ImageView
-    android:id="@+id/place_picker_toolbar_back_button"
+    android:id="@+id/mapbox_place_picker_toolbar_back_button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/mapbox_plugins_image_view_left_margin"
