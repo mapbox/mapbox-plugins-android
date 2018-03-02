@@ -75,11 +75,22 @@ public class PlacePickerActivity extends AppCompatActivity implements OnMapReady
     viewModel.getResults().observe(this, this);
 
     bindViews();
+    addBackButtonListener();
     addChosenLocationButton();
     customizeViews();
 
     mapView.onCreate(savedInstanceState);
     mapView.getMapAsync(this);
+  }
+
+  private void addBackButtonListener() {
+    ImageView backButton = findViewById(R.id.mapbox_place_picker_toolbar_back_button);
+    backButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        finish();
+      }
+    });
   }
 
   private void bindViews() {
