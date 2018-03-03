@@ -111,7 +111,7 @@ ext {
   pluginVersion = [
       checkstyle: '8.5',
       pmd       : '6.0.0',
-      jacoco    : '0.7.9',
+      jacoco    : '0.8.0',
       errorprone: '0.0.13',
       sonarqube : '2.6.1',
       gradle    : '3.0.1'
