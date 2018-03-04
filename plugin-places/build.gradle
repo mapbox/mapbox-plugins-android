@@ -33,10 +33,14 @@ android {
   }
 
   testOptions {
-    unitTests.all {
-      jacoco {
-        includeNoLocationClasses = true
+    unitTests {
+      all {
+        jacoco {
+          includeNoLocationClasses = true
+        }
       }
+      includeAndroidResources = true
+      returnDefaultValues = true
     }
   }
 
@@ -52,6 +56,7 @@ dependencies {
   implementation dependenciesList.supportCardView
   implementation dependenciesList.supportRecyclerView
   implementation dependenciesList.supportV4
+  implementation 'com.android.support:design:27.0.2'
 
   // AutoValues
   annotationProcessor dependenciesList.autoValuesParcel
@@ -71,7 +76,6 @@ dependencies {
   testImplementation dependenciesList.androidArchCore
 
   javadocDeps dependenciesList.mapboxMapSdk
-  implementation 'com.android.support:design:27.0.2'
 }
 
 apply from: 'javadoc.gradle'

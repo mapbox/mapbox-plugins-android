@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -390,6 +391,7 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
     }
   }
 
+  @VisibleForTesting
   static class TrafficData {
     static final String SOURCE_ID = "traffic";
     static final String SOURCE_LAYER = "traffic";
