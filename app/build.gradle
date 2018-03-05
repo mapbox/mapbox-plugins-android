@@ -44,14 +44,6 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
-
-  testOptions {
-    unitTests.all {
-      jacoco {
-        includeNoLocationClasses = true
-      }
-    }
-  }
 }
 
 // Disable Leak Canary for UI and unit test.
@@ -128,4 +120,3 @@ dependencies {
 
 apply from: "${rootDir}/gradle/checkstyle.gradle"
 apply from: "${rootDir}/gradle/generate-token.gradle"
-apply from: "${rootDir}/gradle/jacoco.gradle"

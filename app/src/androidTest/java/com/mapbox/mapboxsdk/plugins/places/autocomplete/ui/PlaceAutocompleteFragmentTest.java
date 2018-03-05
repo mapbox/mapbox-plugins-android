@@ -1,25 +1,33 @@
 package com.mapbox.mapboxsdk.plugins.places.autocomplete.ui;
 
-
+import android.graphics.Color;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.mapbox.maboxsdk.plugins.SingleFragmentActivity;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.TestData;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
+import com.mapbox.mapboxsdk.plugins.testapp.activity.SingleFragmentActivity;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.hasBackground;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(AndroidJUnit4.class)
 public class PlaceAutocompleteFragmentTest {
@@ -34,13 +42,25 @@ public class PlaceAutocompleteFragmentTest {
 
   @Before
   public void init() {
+    PlaceOptions.Builder builder = PlaceOptions.builder();
+    // Inject a bunch of data to ensure result scroll view is greater than the device screen height
+    for (int i = 0; i < 50; i++) {
+      builder.addInjectedFeature(TestData.CARMEN_FEATURE);
+    }
+
+    // For style test
+    builder.backgroundColor(Color.BLUE);
+    builder.hint("foobar");
+
     placeAutocompleteFragment = PlaceAutocompleteFragment.newInstance(
-      ACCESS_TOKEN, PlaceOptions.builder().build(PlaceOptions.MODE_CARDS)
+      ACCESS_TOKEN, builder.build(PlaceOptions.MODE_CARDS)
     );
     activityRule.getActivity().setFragment(placeAutocompleteFragment);
   }
 
+  // TODO
   @Test
+  @Ignore
   public void newInstance_doesPutAccessTokenInBundle() throws Exception {
     assertThat(placeAutocompleteFragment.getAccessToken(), equalTo(ACCESS_TOKEN));
   }
@@ -51,8 +71,38 @@ public class PlaceAutocompleteFragmentTest {
   }
 
   @Test
-  public void onScrollChanged_showsDropShadowWhyVerticalNotZero() throws Exception {
-    onView(withId(R.id.scroll_view_results)).perform(ViewActions.scrollTo());
+  public void onScrollChanged_hidesDropShadowWhenVerticalZero() throws Exception {
+    onView(withId(R.id.scroll_drop_shadow)).check(matches(not(isDisplayed())));
+  }
+
+  @Test
+  public void onScrollChanged_showsDropShadowWhenVerticalNotZero() throws Exception {
+    onView(withId(R.id.scroll_view_results)).perform(ViewActions.swipeUp());
     onView(withId(R.id.scroll_drop_shadow)).check(matches(isDisplayed()));
+  }
+
+  @Test
+  public void onBackButtonPress_doesInvokeOnCancelCallback() throws Exception {
+    PlaceSelectionListener listener = mock(PlaceSelectionListener.class);
+    placeAutocompleteFragment.setOnPlaceSelectedListener(listener);
+    placeAutocompleteFragment.onBackButtonPress();
+    verify(listener, times(1)).onCancel();
+  }
+
+  // TODO fix
+  @Test
+  @Ignore
+  public void styleView_doesSetBackgroundColorCorrectly() throws Exception {
+    onView(withId(R.id.root_layout)).check(matches(hasBackground(Color.BLUE)));
+  }
+
+  @Test
+  public void styleView_doesSetToolbarColorCorrectly() throws Exception {
+    // TODO
+  }
+
+  @Test
+  public void styleView_doesChangeEditTextHintToOption() throws Exception {
+    onView(withId(R.id.edittext_search)).check(matches(withHint("foobar")));
   }
 }
