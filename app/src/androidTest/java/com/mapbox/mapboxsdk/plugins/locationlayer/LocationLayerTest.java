@@ -204,7 +204,8 @@ public class LocationLayerTest {
         SymbolLayer symbolLayer = mapboxMap.getLayerAs(FOREGROUND_LAYER);
         assert symbolLayer != null;
         assertThat(symbolLayer.getIconImage().getValue(), not(FOREGROUND_ICON));
-      }});
+      }
+    });
   }
 
   @Test

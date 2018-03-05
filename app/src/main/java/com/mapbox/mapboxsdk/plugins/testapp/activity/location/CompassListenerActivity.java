@@ -17,6 +17,7 @@ import com.mapbox.services.android.telemetry.location.LostLocationEngine;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class CompassListenerActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -50,7 +51,7 @@ public class CompassListenerActivity extends AppCompatActivity implements OnMapR
 
       @Override
       public void onCompassAccuracyChange(int compassStatus) {
-        System.out.println(compassStatus);
+        Timber.v("Compass reading: %d", compassStatus);
       }
     });
   }
