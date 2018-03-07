@@ -11,7 +11,7 @@ ext {
       mapboxMapSdk       : '6.0.0-beta.3',
       mapboxGeocoding    : '3.0.0-beta.3',
       mapboxGeoJson      : '3.0.0-beta.3',
-      mapboxServices     : '2.2.10',
+      mapboxServices     : '2.2.9',
       lost               : '3.0.4',
       autoValue          : '1.5.3',
       autoValueParcel    : '0.2.6',
