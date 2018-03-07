@@ -495,6 +495,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
 
     mapView.addOnMapChangedListener(onMapChangedListener);
     mapboxMap.addOnMapClickListener(onMapClickListener);
+    mapboxMap.addOnMapLongClickListener(onMapLongClickListener);
     updateMapWithOptions(options);
 
     locationLayer = new LocationLayer(mapView, mapboxMap, options);
