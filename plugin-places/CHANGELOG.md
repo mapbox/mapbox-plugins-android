@@ -2,6 +2,11 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### 0.2.2 - March 7, 2018
+- Package namespacing is now corrected to match other plugins [#336](https://github.com/mapbox/mapbox-plugins-android/pull/336)
+- Back button in Place Picker activity now calls `finish()` [#337](https://github.com/mapbox/mapbox-plugins-android/pull/337)
+- Adds missing Javadoc information for `PlaceOptions` class [#339](https://github.com/mapbox/mapbox-plugins-android/pull/339)
+
 ### 0.2.1 - February 27, 2018
 - Remove location layer dep [#319](https://github.com/mapbox/mapbox-plugins-android/pull/319)
 
