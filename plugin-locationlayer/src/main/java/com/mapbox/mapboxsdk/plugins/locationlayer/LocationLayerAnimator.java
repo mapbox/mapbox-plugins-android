@@ -3,6 +3,7 @@ package com.mapbox.mapboxsdk.plugins.locationlayer;
 import android.animation.ValueAnimator;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.view.animation.LinearInterpolator;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.locationlayer.camera.BearingAnimator;
@@ -18,6 +19,9 @@ final class LocationLayerAnimator {
   private BearingAnimator gpsBearingAnimator;
   private BearingAnimator compassBearingAnimator;
 
+  private Location previousLocation;
+  private float previousCompassBearing = -1;
+
   void addListener(OnAnimationsValuesChangeListener listener) {
     listeners.add(listener);
   }
@@ -26,41 +30,56 @@ final class LocationLayerAnimator {
     listeners.remove(listener);
   }
 
-  void feedNewLocation(@NonNull Location previousLocation, @NonNull Location newLocation) {
-    LatLng previousLatLng;
-    if (latLngAnimator != null) {
-      previousLatLng = (LatLng) latLngAnimator.getAnimatedValue();
-    } else {
-      previousLatLng = new LatLng(previousLocation);
+  void feedNewLocation(@NonNull Location newLocation) {
+    if (previousLocation == null) {
+      previousLocation = newLocation;
     }
-    LatLng newLatLng = new LatLng(newLocation);
 
-    float previousBearing;
-    if (gpsBearingAnimator != null) {
-      previousBearing = (float) gpsBearingAnimator.getAnimatedValue();
-    } else {
-      previousBearing = previousLocation.getBearing();
-    }
+    LatLng previousLatLng = getPreviousLatLng();
+    LatLng targetLatLng = new LatLng(newLocation);
+
+    float previousBearing = getPreviousGpsBearing();
+    float targetBearing = newLocation.getBearing();
+
+    // TODO create animator duration / interpolator
+//    float speed = location == null ? 0 : location.getSpeed();
+//
+//    locationChangeAnimator.setDuration(linearAnimation || speed > 0
+//      ? getLocationUpdateDuration() : LocationLayerConstants.LOCATION_UPDATE_DELAY_MS);
+//    if (linearAnimation || speed > 0) {
+//      locationChangeAnimator.setInterpolator(new LinearInterpolator());
+//    } else {
+//      locationChangeAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+//    }
 
     cancelLocationAnimations();
-    latLngAnimator = new LatLngAnimator(previousLatLng, newLatLng, 1000);
-    gpsBearingAnimator = new BearingAnimator(previousBearing, newLocation.getBearing(), 1000);
-    // FIXME: 22/02/2018 evaluate duration of animation better
+    latLngAnimator = new LatLngAnimator(previousLatLng, targetLatLng, 1000);
+    gpsBearingAnimator = new BearingAnimator(previousBearing, targetBearing, 1000);
 
     latLngAnimator.addUpdateListener(latLngUpdateListener);
     gpsBearingAnimator.addUpdateListener(gpsBearingUpdateListener);
 
     latLngAnimator.start();
     gpsBearingAnimator.start();
+
+    previousLocation = newLocation;
   }
 
-  void feedNewCompassBearing(float previousCompassBearing, float targetCompassBearing) {
+  void feedNewCompassBearing(float targetCompassBearing) {
+    if (previousCompassBearing < 0) {
+      previousCompassBearing = targetCompassBearing;
+    }
+
+    float previousBearing = getPreviousCompassBearing();
+
     cancelCompassAnimations();
-    compassBearingAnimator = new BearingAnimator(previousCompassBearing, targetCompassBearing, 1000);
-    // FIXME: 22/02/2018 evaluate duration of animation better
+    compassBearingAnimator = new BearingAnimator(previousBearing, targetCompassBearing, 1000);
+    compassBearingAnimator.setInterpolator(new LinearInterpolator());
 
     compassBearingAnimator.addUpdateListener(compassBearingUpdateListener);
     compassBearingAnimator.start();
+
+    previousCompassBearing = targetCompassBearing;
   }
 
   private final ValueAnimator.AnimatorUpdateListener latLngUpdateListener =
@@ -106,12 +125,49 @@ final class LocationLayerAnimator {
     cancelCompassAnimations();
   }
 
+  private LatLng getPreviousLatLng() {
+    LatLng previousLatLng;
+    if (latLngAnimator != null) {
+      previousLatLng = (LatLng) latLngAnimator.getAnimatedValue();
+    } else {
+      previousLatLng = new LatLng(previousLocation);
+    }
+    return previousLatLng;
+  }
+
+  private float getPreviousGpsBearing() {
+    float previousBearing;
+    if (gpsBearingAnimator != null) {
+      previousBearing = (float) gpsBearingAnimator.getAnimatedValue();
+    } else {
+      previousBearing = previousLocation.getBearing();
+    }
+    return previousBearing;
+  }
+
+  private float getPreviousCompassBearing() {
+    float previousBearing;
+    if (compassBearingAnimator != null) {
+      previousBearing = (float) compassBearingAnimator.getAnimatedValue();
+    } else {
+      previousBearing = previousCompassBearing;
+    }
+    return previousBearing;
+  }
+
   private void cancelLocationAnimations() {
+    cancelLatLngAnimations();
+    cancelGpsBearingAnimations();
+  }
+
+  private void cancelLatLngAnimations() {
     if (latLngAnimator != null) {
       latLngAnimator.cancel();
       latLngAnimator.removeAllUpdateListeners();
     }
+  }
 
+  private void cancelGpsBearingAnimations() {
     if (gpsBearingAnimator != null) {
       gpsBearingAnimator.cancel();
       gpsBearingAnimator.removeAllUpdateListeners();
