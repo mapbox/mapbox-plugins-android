@@ -2,6 +2,7 @@ from version import update_current_version
 import sys
 import os
 import constants
+import subprocess
 from git import git_get_current_branch
 from git import git_add
 from git import git_commit_and_push
@@ -22,10 +23,10 @@ def release(version_name, plugin):
     if not continue_release.startswith('y'):
         print 'Aborting release'
         sys.exit()
-    releaseFinal(branch, plugin, version_name)
+    release_final(branch, plugin, version_name)
 
 
-def releaseFinal(branch, plugin, version_name):
+def release_final(branch, plugin, version_name):
     print 'Publishing %s final release from branch: %s (version: %s).' % (
     plugin, branch, version_name)
     file_path = '../plugin-%s/gradle.properties' % plugin
