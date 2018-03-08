@@ -500,8 +500,9 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     locationLayer = new LocationLayer(mapView, mapboxMap, options);
     locationLayerCamera = new LocationLayerCamera(mapboxMap, cameraTrackingChangedListener, options);
     locationLayerAnimator = new LocationLayerAnimator();
-    locationLayerAnimator.addListener(locationLayer);
-    locationLayerAnimator.addListener(locationLayerCamera);
+    locationLayerAnimator.addLayerListener(locationLayer);
+    locationLayerAnimator.addCameraListener(locationLayerCamera);
+    locationLayerAnimator.updateCameraPosition(mapboxMap.getCameraPosition());
 
     compassManager = new CompassManager(mapView.getContext());
     compassManager.addCompassListener(compassListener);
@@ -575,6 +576,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
       CameraPosition position = mapboxMap.getCameraPosition();
       locationLayer.updateAccuracyRadius(getLastKnownLocation());
       locationLayer.updateForegroundOffset(position.tilt);
+      locationLayerAnimator.updateCameraPosition(position);
     }
   };
 

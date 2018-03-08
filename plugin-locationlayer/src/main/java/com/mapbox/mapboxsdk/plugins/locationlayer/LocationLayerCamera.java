@@ -9,7 +9,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode;
 
-final class LocationLayerCamera implements LocationLayerAnimator.OnAnimationsValuesChangeListener {
+final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimationsValuesChangeListener {
 
   @CameraMode.Mode
   private int cameraMode;
@@ -77,12 +77,9 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnAnimationsVal
   @Override
   public void onNewGpsBearingValue(float gpsBearing) {
     if (cameraMode == CameraMode.TRACKING_GPS
-      || cameraMode == CameraMode.NONE_GPS) {
+      || cameraMode == CameraMode.NONE_GPS
+      || cameraMode == CameraMode.TRACKING_GPS_NORTH) {
       setBearing(gpsBearing);
-    }
-
-    if (cameraMode == CameraMode.TRACKING_GPS_NORTH) {
-      setBearing(0);
     }
   }
 
