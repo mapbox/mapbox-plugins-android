@@ -1,19 +1,24 @@
 package com.mapbox.mapboxsdk.plugins.offline.ui;
 
+import android.graphics.PointF;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.offline.R;
+import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
+import com.mapbox.mapboxsdk.plugins.offline.R;
 import com.mapbox.mapboxsdk.style.sources.VectorSource;
 import com.mapbox.services.commons.geojson.Feature;
 
@@ -32,13 +37,13 @@ public class RegionSelectionFragment extends Fragment implements OnMapReadyCallb
     "place_label", "state_label", "country_label"
   };
 
+  private RegionSelectedCallback selectedCallback;
   private TextView regionNameTextView;
-  private View selectionBoxView;
   private MapboxMap mapboxMap;
-  private String regionName;
+  private RectF boundingBox;
   private MapView mapView;
   private View rootView;
-  private RectF boundingBox;
+  String regionName;
 
   public static RegionSelectionFragment newInstance() {
     return new RegionSelectionFragment();
@@ -51,10 +56,6 @@ public class RegionSelectionFragment extends Fragment implements OnMapReadyCallb
     rootView = inflater.inflate(R.layout.mapbox_offline_region_selection_fragment, container, false);
     mapView = rootView.findViewById(R.id.mapbox_offline_region_selection_map_view);
     regionNameTextView = rootView.findViewById(R.id.mapbox_offline_region_name_text_view);
-    selectionBoxView = rootView.findViewById(R.id.mapbox_offline_scrim_view);
-    int top = selectionBoxView.getTop() - mapView.getTop();
-    int left = selectionBoxView.getLeft() - mapView.getLeft();
-    boundingBox = new RectF(left, top, left + selectionBoxView.getWidth(), top + selectionBoxView.getHeight());
     return rootView;
   }
 
@@ -63,6 +64,15 @@ public class RegionSelectionFragment extends Fragment implements OnMapReadyCallb
     super.onViewCreated(view, savedInstanceState);
     mapView.onCreate(savedInstanceState);
     mapView.getMapAsync(this);
+    bindClickListeners();
+  }
+
+  public RegionSelectedCallback getSelectedCallback() {
+    return selectedCallback;
+  }
+
+  public void setSelectedCallback(@NonNull RegionSelectedCallback selectedCallback) {
+    this.selectedCallback = selectedCallback;
   }
 
   @Override
@@ -73,6 +83,9 @@ public class RegionSelectionFragment extends Fragment implements OnMapReadyCallb
 
   @Override
   public void onCameraIdle() {
+    if (boundingBox == null) {
+      boundingBox = getSelectionRegion();
+    }
     Timber.v("Camera moved");
     regionName = getOfflineRegionName();
     regionNameTextView.setText(regionName);
@@ -120,6 +133,16 @@ public class RegionSelectionFragment extends Fragment implements OnMapReadyCallb
     mapView.onDestroy();
   }
 
+  private RectF getSelectionRegion() {
+    View selectionBoxView = rootView.findViewById(R.id.mapbox_offline_scrim_view);
+    int paddingInPixels = (int) getResources().getDimension(R.dimen.mapbox_offline_scrim_padding);
+
+    float top = selectionBoxView.getY() + paddingInPixels;
+    float left = selectionBoxView.getX() + paddingInPixels;
+    return new RectF(left, top, selectionBoxView.getWidth() - paddingInPixels,
+      selectionBoxView.getHeight() - paddingInPixels);
+  }
+
   public String getOfflineRegionName() {
     List<Feature> featureList = mapboxMap.queryRenderedFeatures(boundingBox, LAYER_IDS);
     if (featureList.isEmpty()) {
@@ -133,5 +156,31 @@ public class RegionSelectionFragment extends Fragment implements OnMapReadyCallb
       return featureList.get(0).getStringProperty("name");
     }
     return getString(R.string.mapbox_offline_default_region_name);
+  }
+
+  OfflineTilePyramidRegionDefinition createRegion() {
+    RectF rectF = getSelectionRegion();
+    LatLng northEast = mapboxMap.getProjection().fromScreenLocation(new PointF(rectF.right, rectF.top));
+    LatLng southWest = mapboxMap.getProjection().fromScreenLocation(new PointF(rectF.left, rectF.bottom));
+
+    LatLngBounds bounds = new LatLngBounds.Builder().include(northEast).include(southWest).build();
+    double cameraZoom = mapboxMap.getCameraPosition().zoom;
+    float pixelRatio = getActivity().getResources().getDisplayMetrics().density;
+
+    return new OfflineTilePyramidRegionDefinition(
+      mapboxMap.getStyleUrl(), bounds, cameraZoom - 2, cameraZoom + 2, pixelRatio
+    );
+  }
+
+  private void bindClickListeners() {
+    FloatingActionButton button = getView().findViewById(R.id.mapbox_offline_select_region_button);
+    button.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (getSelectedCallback() != null) {
+          getSelectedCallback().onSelected(createRegion(), regionName);
+        }
+      }
+    });
   }
 }

@@ -7,4 +7,6 @@
   <dimen name="mapbox_offline_extended_toolbar_height">78dp</dimen>
 
   <dimen name="mapbox_offline_region_name_snackbar_height">56dp</dimen>
+
+  <dimen name="mapbox_offline_scrim_padding">30dp</dimen>
 </resources>

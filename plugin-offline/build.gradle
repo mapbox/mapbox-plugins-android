@@ -7,6 +7,7 @@ android {
   defaultConfig {
     minSdkVersion androidVersions.minSdkVersion
     targetSdkVersion androidVersions.targetSdkVersion
+    vectorDrawables.useSupportLibrary = true
   }
   buildTypes {
     release {
@@ -30,6 +31,7 @@ dependencies {
   implementation dependenciesList.mapboxMapSdk
   implementation dependenciesList.supportAnnotation
   implementation dependenciesList.supportV4
+  implementation 'com.android.support:design:27.0.2'
   javadocDeps dependenciesList.mapboxMapSdk
 }
 

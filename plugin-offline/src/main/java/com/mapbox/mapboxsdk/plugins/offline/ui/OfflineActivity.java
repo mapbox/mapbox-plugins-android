@@ -1,15 +1,20 @@
 package com.mapbox.mapboxsdk.plugins.offline.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 
-import com.mapbox.mapboxsdk.offline.R;
+import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
+import com.mapbox.mapboxsdk.plugins.offline.R;
 import com.mapbox.mapboxsdk.plugins.offline.utils.ColorUtils;
 
-public class OfflineActivity extends AppCompatActivity {
+import static com.mapbox.mapboxsdk.plugins.offline.Constants.RETURNING_DEFINITION;
+import static com.mapbox.mapboxsdk.plugins.offline.Constants.RETURNING_REGION_NAME;
+
+public class OfflineActivity extends AppCompatActivity implements RegionSelectedCallback {
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,6 +39,23 @@ public class OfflineActivity extends AppCompatActivity {
 
       getSupportFragmentManager().beginTransaction()
         .add(R.id.fragment_container, fragment, RegionSelectionFragment.TAG).commit();
+
+      fragment.setSelectedCallback(this);
     }
+  }
+
+  @Override
+  public void onSelected(OfflineTilePyramidRegionDefinition definition, String regionName) {
+    Intent returningIntent = new Intent();
+    returningIntent.putExtra(RETURNING_DEFINITION, definition);
+    returningIntent.putExtra(RETURNING_REGION_NAME, regionName);
+    setResult(AppCompatActivity.RESULT_OK, returningIntent);
+    finish();
+  }
+
+  @Override
+  public void onCancel() {
+    setResult(AppCompatActivity.RESULT_CANCELED);
+    finish();
   }
 }

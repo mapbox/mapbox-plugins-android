@@ -6,7 +6,6 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.LiveDataTestUtil;
-import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.SearchHistoryDatabase;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.dao.SearchHistoryDao;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.entity.SearchHistoryEntity;
 
