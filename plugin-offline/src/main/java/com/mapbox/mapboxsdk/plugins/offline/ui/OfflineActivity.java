@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
-import com.mapbox.mapboxsdk.plugins.offline.R;
 import com.mapbox.mapboxsdk.plugins.offline.utils.ColorUtils;
 
 import static com.mapbox.mapboxsdk.plugins.offline.Constants.RETURNING_DEFINITION;
