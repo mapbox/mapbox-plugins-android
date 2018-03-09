@@ -6,6 +6,7 @@ import android.support.test.espresso.Espresso;
 import android.support.test.espresso.IdlingResourceTimeoutException;
 import android.support.test.espresso.UiController;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -45,11 +46,13 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
-@SuppressWarnings( {"MissingPermission"})
 public class LocationLayerTest {
 
   @Rule
   public ActivityTestRule<LocationLayerModesActivity> rule = new ActivityTestRule<>(LocationLayerModesActivity.class);
+
+  @Rule
+  public GrantPermissionRule permissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
   private OnMapReadyIdlingResource idlingResource;
   private LocationLayerPlugin locationLayerPlugin;

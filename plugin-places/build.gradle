@@ -32,6 +32,14 @@ android {
     abortOnError false
   }
 
+  testOptions {
+    unitTests.all {
+      jacoco {
+        includeNoLocationClasses = true
+      }
+    }
+  }
+
   // Avoid naming conflicts
   resourcePrefix 'mapbox_'
 }
