@@ -9,9 +9,9 @@ import com.mapbox.mapboxsdk.plugins.offline.ui.OfflineActivity;
 import static com.mapbox.mapboxsdk.plugins.offline.Constants.RETURNING_DEFINITION;
 import static com.mapbox.mapboxsdk.plugins.offline.Constants.RETURNING_REGION_NAME;
 
-public class MapboxOffline {
+public class OfflineRegionSelector {
 
-  private MapboxOffline() {
+  private OfflineRegionSelector() {
     // No Instances
   }
 

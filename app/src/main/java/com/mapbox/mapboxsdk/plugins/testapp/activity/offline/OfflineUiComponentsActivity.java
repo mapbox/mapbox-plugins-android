@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.mapbox.mapboxsdk.plugins.offline.MapboxOffline;
+import com.mapbox.mapboxsdk.plugins.offline.OfflineRegionSelector;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 
 import java.util.Locale;
@@ -27,7 +27,7 @@ public class OfflineUiComponentsActivity extends AppCompatActivity {
 
   @OnClick(R.id.launch_offline_region_selector_button)
   public void onOfflineRegionSelectorButtonClicked() {
-    Intent intent = new MapboxOffline.IntentBuilder()
+    Intent intent = new OfflineRegionSelector.IntentBuilder()
       .build(this);
     startActivityForResult(intent, REQUEST_CODE);
   }
@@ -37,7 +37,7 @@ public class OfflineUiComponentsActivity extends AppCompatActivity {
     super.onActivityResult(requestCode, resultCode, data);
     if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
       Toast.makeText(this,
-        String.format(Locale.US, "Region name: %s", MapboxOffline.getRegionName(data)),
+        String.format(Locale.US, "Region name: %s", OfflineRegionSelector.getRegionName(data)),
         Toast.LENGTH_LONG).show();
     } else if (resultCode == Activity.RESULT_CANCELED) {
       Toast.makeText(this, "user canceled out of region selector", Toast.LENGTH_LONG)
