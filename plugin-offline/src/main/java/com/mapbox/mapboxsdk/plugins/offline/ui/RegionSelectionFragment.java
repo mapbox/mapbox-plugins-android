@@ -43,7 +43,7 @@ public class RegionSelectionFragment extends Fragment implements OnMapReadyCallb
   private RectF boundingBox;
   private MapView mapView;
   private View rootView;
-  String regionName;
+  private String regionName;
 
   public static RegionSelectionFragment newInstance() {
     return new RegionSelectionFragment();
@@ -95,6 +95,9 @@ public class RegionSelectionFragment extends Fragment implements OnMapReadyCallb
   public void onStart() {
     super.onStart();
     mapView.onStart();
+    if (mapboxMap != null) {
+      mapboxMap.addOnCameraIdleListener(this);
+    }
   }
 
   @Override
@@ -119,6 +122,9 @@ public class RegionSelectionFragment extends Fragment implements OnMapReadyCallb
   public void onStop() {
     super.onStop();
     mapView.onStop();
+    if (mapboxMap != null) {
+      mapboxMap.removeOnCameraIdleListener(this);
+    }
   }
 
   @Override
@@ -177,7 +183,7 @@ public class RegionSelectionFragment extends Fragment implements OnMapReadyCallb
   }
 
   private void bindClickListeners() {
-    FloatingActionButton button = getView().findViewById(R.id.mapbox_offline_select_region_button);
+    FloatingActionButton button = rootView.findViewById(R.id.mapbox_offline_select_region_button);
     button.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
