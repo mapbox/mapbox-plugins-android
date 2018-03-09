@@ -70,8 +70,9 @@ dependencies {
   androidTestImplementation dependenciesList.testEspressoCore
   androidTestImplementation dependenciesList.testRoom
   androidTestImplementation dependenciesList.testArchCore
-  androidTestImplementation( dependenciesList.mockitoCore, {
-    exclude group: 'net.bytebuddy'})
+  androidTestImplementation(dependenciesList.mockitoCore, {
+    exclude group: 'net.bytebuddy'
+  })
 
   implementation dependenciesList.materialDialogs
 

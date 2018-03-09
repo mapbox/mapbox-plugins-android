@@ -6,7 +6,7 @@
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
   <application>
-    <activity android:name="com.mapbox.maboxsdk.plugins.SingleFragmentActivity"/>
+    <activity android:name=".activity.SingleFragmentActivity"/>
 
   </application>
 </manifest>

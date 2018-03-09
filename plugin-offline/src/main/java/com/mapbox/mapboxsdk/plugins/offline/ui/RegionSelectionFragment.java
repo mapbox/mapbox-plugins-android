@@ -159,6 +159,10 @@ public class RegionSelectionFragment extends Fragment implements OnMapReadyCallb
   }
 
   OfflineTilePyramidRegionDefinition createRegion() {
+    if (mapboxMap == null) {
+      throw new NullPointerException("MapboxMap is null and can't be used to create Offline region"
+        + "definition.");
+    }
     RectF rectF = getSelectionRegion();
     LatLng northEast = mapboxMap.getProjection().fromScreenLocation(new PointF(rectF.right, rectF.top));
     LatLng southWest = mapboxMap.getProjection().fromScreenLocation(new PointF(rectF.left, rectF.bottom));
