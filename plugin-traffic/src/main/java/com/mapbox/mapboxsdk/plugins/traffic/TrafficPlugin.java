@@ -390,7 +390,7 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
     }
   }
 
-  private static class TrafficData {
+  static class TrafficData {
     static final String SOURCE_ID = "traffic";
     static final String SOURCE_LAYER = "traffic";
     static final String SOURCE_URL = "mapbox://mapbox.mapbox-traffic-v1";
