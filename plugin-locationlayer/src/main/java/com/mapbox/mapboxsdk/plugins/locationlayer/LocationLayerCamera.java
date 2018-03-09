@@ -76,9 +76,12 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimati
 
   @Override
   public void onNewGpsBearingValue(float gpsBearing) {
+    boolean trackingNorth = cameraMode == CameraMode.TRACKING_GPS_NORTH
+      && mapboxMap.getCameraPosition().bearing != 0;
+
     if (cameraMode == CameraMode.TRACKING_GPS
       || cameraMode == CameraMode.NONE_GPS
-      || cameraMode == CameraMode.TRACKING_GPS_NORTH) {
+      || trackingNorth) {
       setBearing(gpsBearing);
     }
   }
