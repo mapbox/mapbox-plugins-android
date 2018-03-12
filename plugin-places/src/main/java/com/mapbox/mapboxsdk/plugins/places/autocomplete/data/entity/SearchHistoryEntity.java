@@ -29,16 +29,8 @@ public class SearchHistoryEntity implements SearchHistory {
     return placeId;
   }
 
-  public void setPlaceId(@NonNull String placeId) {
-    this.placeId = placeId;
-  }
-
   @Override
   public CarmenFeature getCarmenFeature() {
     return carmenFeature;
-  }
-
-  public void setCarmenFeature(CarmenFeature carmenFeature) {
-    this.carmenFeature = carmenFeature;
   }
 }

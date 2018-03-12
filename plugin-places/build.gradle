@@ -32,10 +32,14 @@ android {
   }
 
   testOptions {
-    unitTests.all {
-      jacoco {
-        includeNoLocationClasses = true
+    unitTests {
+      all {
+        jacoco {
+          includeNoLocationClasses = true
+        }
       }
+      includeAndroidResources = true
+      returnDefaultValues = true
     }
   }
 

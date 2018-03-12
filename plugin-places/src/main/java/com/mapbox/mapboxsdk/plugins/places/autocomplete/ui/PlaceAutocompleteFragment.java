@@ -70,7 +70,7 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
     placeOptions = bundle.getParcelable(PlaceConstants.PLACE_OPTIONS);
     if (placeOptions == null) {
       // Increase geocoding limit
-      placeOptions = PlaceOptions.builder().limit(10).build();
+      placeOptions = PlaceOptions.builder().build();
     }
 
     mode = placeOptions.viewMode();
@@ -239,5 +239,9 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
           updateSearchHistoryView(searchHistoryEntities);
         }
       });
+  }
+
+  public String getAccessToken() {
+    return accessToken;
   }
 }

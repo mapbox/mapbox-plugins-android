@@ -12,7 +12,7 @@ import com.mapbox.mapboxsdk.plugins.places.picker.model.PlacePickerOptions;
 import com.mapbox.mapboxsdk.plugins.places.picker.ui.PlacePickerActivity;
 
 
-public class PlacePicker {
+public final class PlacePicker {
 
   private PlacePicker() {
     // No instances
