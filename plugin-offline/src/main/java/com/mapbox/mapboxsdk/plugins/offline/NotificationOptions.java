@@ -8,8 +8,6 @@ import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.NotificationCompat;
 
-import com.mapbox.androidsdk.plugins.offline.R;
-
 import static android.support.v4.app.NotificationCompat.Builder;
 
 public class NotificationOptions implements Parcelable {

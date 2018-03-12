@@ -1,1 +1,10 @@
-<manifest package="com.mapbox.androidsdk.plugins.offline"/>
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.mapbox.mapboxsdk.plugins.offline">
+
+  <application>
+    <activity
+      android:name="com.mapbox.mapboxsdk.plugins.offline.ui.OfflineActivity"
+      android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
+  </application>
+</manifest>

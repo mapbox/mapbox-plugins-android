@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <dimen name="mapbox_offline_image_view_left_margin">16dp</dimen>
+  <dimen name="mapbox_offline_text_left_margin">72dp</dimen>
+  <dimen name="mapbox_offline_toolbar_primary_text">20sp</dimen>
+  <dimen name="mapbox_offline_toolbar_secondary_text">14sp</dimen>
+  <dimen name="mapbox_offline_extended_toolbar_height">78dp</dimen>
+
+  <dimen name="mapbox_offline_region_name_snackbar_height">56dp</dimen>
+
+  <dimen name="mapbox_offline_scrim_padding">30dp</dimen>
+</resources>
