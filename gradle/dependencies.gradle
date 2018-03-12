@@ -8,7 +8,7 @@ ext {
   ]
 
   version = [
-      mapboxMapSdk       : '6.0.0-beta.2',
+      mapboxMapSdk       : '6.0.0-beta.3',
       mapboxGeoJson      : '3.0.0-beta.3',
       mapboxServices     : '3.0.0-beta.3',
       lost               : '3.0.4',
@@ -35,12 +35,12 @@ ext {
       okhttp             : '3.9.1',
       materialDialogs    : '0.9.6.0'
   ]
+
   dependenciesList = [
       // mapbox
       mapboxMapSdk           : "com.mapbox.mapboxsdk:mapbox-android-sdk:${version.mapboxMapSdk}",
       mapboxServices         : "com.mapbox.mapboxsdk:mapbox-sdk-services:${version.mapboxServices}",
-      mapboxGeoJson          : "com.mapbox.mapboxsdk:mapbox-sdk-geojson:${version.mapboxGeoJson}",
-      mapboxGeocoding        : "com.mapbox.mapboxsdk:mapbox-sdk-services:${version.mapboxGeocoding}",
+      mapboxGeoJson          : "com.mapbox.mapboxsdk:mapbox-sdk-geojson:${version.mapboxServices}",
 
       // Lost
       lost                   : "com.mapzen.android:lost:${version.lost}",
