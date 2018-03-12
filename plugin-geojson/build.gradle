@@ -31,10 +31,10 @@ dependencies {
   // TODO change back to using constant in dependencies.gradle
   implementation "com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.0"
   implementation dependenciesList.supportAppcompatV7
-  implementation dependenciesList.mapboxGeoJson
+  implementation "com.mapbox.mapboxsdk:mapbox-android-services:2.2.9"
   implementation dependenciesList.okhttp
   implementation dependenciesList.timber
-  javadocDeps dependenciesList.mapboxMapSdk
+  javadocDeps "com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.0"
 }
 
 apply from: 'javadoc.gradle'
