@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+  <!-- Offline region selector UI-->
   <string name="mapbox_offline_default_region_name">Map </string>
+
   <string name="mapbox_offline_toolbar_primary_text">Select a region</string>
   <string name="mapbox_offline_toolbar_secondary_text">Pan and zoom to adjust</string>
 
+  <!-- Notification strings -->
+  <string name="mapbox_offline_notification_default_content_title">Offline download</string>
+  <string name="mapbox_offline_notification_default_content_text">Downloading..</string>
+  <string name="mapbox_offline_notification_action_cancel">Cancel</string>
+
+  <!-- Accessibility -->
   <string name="mapbox_offline_cd_exit_offline">Exit place picker</string>
 
 </resources>

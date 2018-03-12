@@ -6,8 +6,8 @@ import android.content.Intent;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
 import com.mapbox.mapboxsdk.plugins.offline.ui.OfflineActivity;
 
-import static com.mapbox.mapboxsdk.plugins.offline.Constants.RETURNING_DEFINITION;
-import static com.mapbox.mapboxsdk.plugins.offline.Constants.RETURNING_REGION_NAME;
+import static com.mapbox.mapboxsdk.plugins.offline.OfflineConstants.RETURNING_DEFINITION;
+import static com.mapbox.mapboxsdk.plugins.offline.OfflineConstants.RETURNING_REGION_NAME;
 
 public class OfflineRegionSelector {
 

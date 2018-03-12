@@ -7,9 +7,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
+import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.mapbox.mapboxsdk.plugins.offline.OfflineConstants.KEY_BUNDLE;
 
 /**
  * OfflinePlugin is the main entry point for integrating the offline plugin into your app.
@@ -20,7 +23,7 @@ import java.util.List;
 public class OfflinePlugin {
 
   private static OfflinePlugin INSTANCE;
-  private final List<OfflineDownload> offlineDownloads = new ArrayList<>();
+  private final List<OfflineDownloadOptions> offlineDownloads = new ArrayList<>();
   private final OfflineDownloadChangeDispatcher stateChangeDispatcher = new OfflineDownloadChangeDispatcher();
 
   /**
@@ -51,7 +54,7 @@ public class OfflinePlugin {
    * @return a List of active offline downloads.
    */
   @NonNull
-  public List<OfflineDownload> getActiveDownloads() {
+  public List<OfflineDownloadOptions> getActiveDownloads() {
     return offlineDownloads;
   }
 
@@ -67,8 +70,8 @@ public class OfflinePlugin {
   public void startDownload(@NonNull Context context, OfflineDownloadOptions options) {
     Context appContext = context.getApplicationContext();
     Intent intent = new Intent(appContext, OfflineDownloadService.class);
-    intent.setAction(Constants.ACTION_START_DOWNLOAD);
-    intent.putExtra(OfflineDownload.KEY_BUNDLE, options.build());
+    intent.setAction(OfflineConstants.ACTION_START_DOWNLOAD);
+    intent.putExtra(KEY_BUNDLE, options);
     appContext.startService(intent);
   }
 
@@ -78,25 +81,25 @@ public class OfflinePlugin {
    * @param context         the context to derive the application context of
    * @param offlineDownload the offline download
    */
-  public void cancelDownload(@NonNull Context context, OfflineDownload offlineDownload) {
+  public void cancelDownload(@NonNull Context context, OfflineDownloadOptions offlineDownload) {
     Context appContext = context.getApplicationContext();
     Intent intent = new Intent(appContext, OfflineDownloadService.class);
-    intent.setAction(Constants.ACTION_CANCEL_DOWNLOAD);
-    intent.putExtra(OfflineDownload.KEY_BUNDLE, offlineDownload);
+    intent.setAction(OfflineConstants.ACTION_CANCEL_DOWNLOAD);
+    intent.putExtra(KEY_BUNDLE, offlineDownload);
     appContext.startService(intent);
   }
 
   /**
-   * Get the OfflineDownload for an offline region, returns null if no download is active for region.
+   * Get the OfflineDownloadOptions for an offline region, returns null if no download is active for region.
    *
    * @param offlineRegion the offline region to get related offline download for
    * @return the active offline download, null if not downloading the region.
    */
   @Nullable
-  public OfflineDownload getActiveDownloadForOfflineRegion(OfflineRegion offlineRegion) {
-    OfflineDownload offlineDownload = null;
+  public OfflineDownloadOptions getActiveDownloadForOfflineRegion(OfflineRegion offlineRegion) {
+    OfflineDownloadOptions offlineDownload = null;
     if (!offlineDownloads.isEmpty()) {
-      for (OfflineDownload download : offlineDownloads) {
+      for (OfflineDownloadOptions download : offlineDownloads) {
         if (download.getRegionId() == offlineRegion.getID()) {
           offlineDownload = download;
         }
@@ -139,7 +142,7 @@ public class OfflinePlugin {
    *
    * @param offlineDownload the offline download to track
    */
-  void addDownload(OfflineDownload offlineDownload) {
+  void addDownload(OfflineDownloadOptions offlineDownload) {
     offlineDownloads.add(offlineDownload);
     stateChangeDispatcher.onCreate(offlineDownload);
   }
@@ -149,7 +152,7 @@ public class OfflinePlugin {
    *
    * @param offlineDownload the offline download to stop tracking
    */
-  void removeDownload(OfflineDownload offlineDownload, boolean canceled) {
+  void removeDownload(OfflineDownloadOptions offlineDownload, boolean canceled) {
     if (canceled) {
       stateChangeDispatcher.onCancel(offlineDownload);
     } else {
@@ -165,7 +168,7 @@ public class OfflinePlugin {
    * @param error           short description of the error
    * @param errorMessage    full description of the error
    */
-  void errorDownload(OfflineDownload offlineDownload, String error, String errorMessage) {
+  void errorDownload(OfflineDownloadOptions offlineDownload, String error, String errorMessage) {
     stateChangeDispatcher.onError(offlineDownload, error, errorMessage);
     offlineDownloads.remove(offlineDownload);
   }
@@ -176,7 +179,7 @@ public class OfflinePlugin {
    * @param offlineDownload the offline download for which progress was made
    * @param progress        the amount of progress
    */
-  void onProgressChanged(OfflineDownload offlineDownload, int progress) {
+  void onProgressChanged(OfflineDownloadOptions offlineDownload, int progress) {
     stateChangeDispatcher.onProgress(offlineDownload, progress);
   }
 }
