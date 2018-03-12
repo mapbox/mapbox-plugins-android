@@ -7,7 +7,6 @@ android {
   defaultConfig {
     minSdkVersion androidVersions.minSdkVersion
     targetSdkVersion androidVersions.targetSdkVersion
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     vectorDrawables.useSupportLibrary = true
 
     // Write out the current schema of Room
@@ -45,13 +44,12 @@ android {
 }
 
 dependencies {
-  implementation fileTree(dir: 'libs', include: ['*.jar'])
-
   implementation dependenciesList.supportAppcompatV7
   implementation dependenciesList.supportConstraintLayout
   implementation dependenciesList.supportCardView
   implementation dependenciesList.supportRecyclerView
   implementation dependenciesList.supportV4
+  implementation dependenciesList.supportDesign
 
   // AutoValues
   annotationProcessor dependenciesList.autoValuesParcel
@@ -71,7 +69,6 @@ dependencies {
   testImplementation dependenciesList.androidArchCore
 
   javadocDeps dependenciesList.mapboxMapSdk
-  implementation 'com.android.support:design:27.0.2'
 }
 
 apply from: 'javadoc.gradle'

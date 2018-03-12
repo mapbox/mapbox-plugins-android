@@ -1,15 +1,17 @@
 package com.mapbox.mapboxsdk.plugins.offline;
 
+import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions;
+
 public interface OfflineDownloadChangeListener {
 
-  void onCreate(OfflineDownload offlineDownload);
+  void onCreate(OfflineDownloadOptions offlineDownload);
 
-  void onSuccess(OfflineDownload offlineDownload);
+  void onSuccess(OfflineDownloadOptions offlineDownload);
 
-  void onCancel(OfflineDownload offlineDownload);
+  void onCancel(OfflineDownloadOptions offlineDownload);
 
-  void onError(OfflineDownload offlineDownload, String error, String message);
+  void onError(OfflineDownloadOptions offlineDownload, String error, String message);
 
-  void onProgress(OfflineDownload offlineDownload, int progress);
+  void onProgress(OfflineDownloadOptions offlineDownload, int progress);
 
 }
