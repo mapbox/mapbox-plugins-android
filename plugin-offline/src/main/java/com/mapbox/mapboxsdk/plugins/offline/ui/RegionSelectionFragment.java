@@ -18,6 +18,7 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
+import com.mapbox.mapboxsdk.plugins.offline.R;
 import com.mapbox.mapboxsdk.style.sources.VectorSource;
 import com.mapbox.services.commons.geojson.Feature;
 
