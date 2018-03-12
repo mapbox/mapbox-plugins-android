@@ -28,7 +28,8 @@ android {
 }
 
 dependencies {
-  implementation dependenciesList.mapboxMapSdk
+  // TODO change back to using constant in dependencies.gradle
+  implementation "com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.0"
   implementation dependenciesList.supportAppcompatV7
   implementation dependenciesList.mapboxGeoJson
   implementation dependenciesList.okhttp

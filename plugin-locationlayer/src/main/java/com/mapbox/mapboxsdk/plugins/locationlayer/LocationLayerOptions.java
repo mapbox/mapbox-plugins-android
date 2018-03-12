@@ -115,12 +115,12 @@ public abstract class LocationLayerOptions implements Parcelable {
       builder.enableStaleState(typedArray.getBoolean(
         R.styleable.mapbox_LocationLayer_mapbox_enableStaleState, true));
     }
-    if (typedArray.hasValue(R.styleable.mapbox_LocationLayer_staleStateTimeout)) {
+    if (typedArray.hasValue(R.styleable.mapbox_LocationLayer_mapbox_staleStateTimeout)) {
       builder.staleStateTimeout(typedArray.getInteger(
-        R.styleable.mapbox_LocationLayer_staleStateTimeout, (int) STALE_STATE_DELAY_MS));
+        R.styleable.mapbox_LocationLayer_mapbox_staleStateTimeout, (int) STALE_STATE_DELAY_MS));
     }
     builder.gpsDrawable(typedArray.getResourceId(
-      R.styleable.mapbox_LocationLayer_navigationDrawable, -1));
+      R.styleable.mapbox_LocationLayer_mapbox_navigationDrawable, -1));
     float elevation = typedArray.getDimension(
       R.styleable.mapbox_LocationLayer_mapbox_elevation, 0);
     builder.accuracyColor(typedArray.getColor(
