@@ -92,12 +92,20 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     locationEngine.setPriority(LocationEnginePriority.HIGH_ACCURACY);
     locationEngine.addLocationEngineListener(this);
     locationEngine.activate();
+
     LocationLayerOptions options = LocationLayerOptions.builder(this)
       .padding(new int[] {0, 650, 0, 0})
       .build();
     locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine, options);
     locationLayerPlugin.addOnLocationClickListener(this);
     locationLayerPlugin.addOnCameraTrackingChangedListener(this);
+
+    Location lastLocation = locationEngine.getLastLocation();
+    if (lastLocation != null) {
+      onLocationChanged(lastLocation);
+    }
+
+    locationLayerPlugin.addOnLocationClickListener(this);
     getLifecycle().addObserver(locationLayerPlugin);
   }
 

@@ -125,7 +125,7 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
   /**
    * Adjust the map's camera position so that the entire countries boarders are within the viewport.
    * Specifically, this method gets the devices currently set locale and adjust the map camera to
-   * view that country if a {@link MapLocale]} matches.
+   * view that country if a {@link MapLocale} matches.
    *
    * @since 0.1.0
    */

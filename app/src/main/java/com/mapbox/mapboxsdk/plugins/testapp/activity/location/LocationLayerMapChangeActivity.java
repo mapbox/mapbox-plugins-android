@@ -1,5 +1,6 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.location;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -45,6 +46,7 @@ public class LocationLayerMapChangeActivity extends AppCompatActivity implements
     mapView.getMapAsync(this);
   }
 
+  @SuppressLint("MissingPermission")
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
@@ -63,6 +65,7 @@ public class LocationLayerMapChangeActivity extends AppCompatActivity implements
     }
   }
 
+  @SuppressLint("MissingPermission")
   @Override
   protected void onStart() {
     super.onStart();

@@ -1,5 +1,6 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.location;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -37,6 +38,7 @@ public class CompassListenerActivity extends AppCompatActivity implements OnMapR
     mapView.getMapAsync(this);
   }
 
+  @SuppressLint("MissingPermission")
   @Override
   public void onMapReady(final MapboxMap mapboxMap) {
     LocationEngine locationEngine = new LocationEngineProvider(this).obtainBestLocationEngineAvailable();

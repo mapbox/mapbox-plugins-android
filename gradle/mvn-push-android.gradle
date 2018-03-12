@@ -108,6 +108,7 @@ afterEvaluate { project ->
     }
 
     task androidJavadocs(type: Javadoc) {
+        options.tags = [ "attr" ]
         source = android.sourceSets.main.java.srcDirs
         classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     }
