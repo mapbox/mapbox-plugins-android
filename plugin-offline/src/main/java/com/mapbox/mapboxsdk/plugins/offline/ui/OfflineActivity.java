@@ -10,8 +10,8 @@ import android.view.Window;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
 import com.mapbox.mapboxsdk.plugins.offline.utils.ColorUtils;
 
-import static com.mapbox.mapboxsdk.plugins.offline.Constants.RETURNING_DEFINITION;
-import static com.mapbox.mapboxsdk.plugins.offline.Constants.RETURNING_REGION_NAME;
+import static com.mapbox.mapboxsdk.plugins.offline.OfflineConstants.RETURNING_DEFINITION;
+import static com.mapbox.mapboxsdk.plugins.offline.OfflineConstants.RETURNING_REGION_NAME;
 
 public class OfflineActivity extends AppCompatActivity implements RegionSelectedCallback {
 

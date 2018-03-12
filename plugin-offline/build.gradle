@@ -31,18 +31,35 @@ android {
       }
     }
   }
+
+  // Avoid naming conflicts
+  resourcePrefix 'mapbox_'
 }
 
 dependencies {
   implementation dependenciesList.supportAppcompatV7
   implementation dependenciesList.supportConstraintLayout
-  implementation dependenciesList.mapboxMapSdk
   implementation dependenciesList.supportAnnotation
   implementation dependenciesList.supportV4
-  implementation 'com.android.support:design:27.0.2'
+  implementation dependenciesList.supportDesign
+
+  // Mapbox
+  implementation dependenciesList.mapboxMapSdk
+
+  // AutoValues
+  annotationProcessor dependenciesList.autoValuesParcel
+  annotationProcessor dependenciesList.autoValue
+  compileOnly dependenciesList.autoValue
+
+  // Unit testing
+  testImplementation dependenciesList.junit
+  testImplementation dependenciesList.mockito
+  testImplementation dependenciesList.androidArchCore
+
   javadocDeps dependenciesList.mapboxMapSdk
 }
 
 apply from: 'javadoc.gradle'
 apply from: "${rootDir}/gradle/mvn-push-android.gradle"
 apply from: "${rootDir}/gradle/checkstyle.gradle"
+apply from: "${rootDir}/gradle/jacoco.gradle"
