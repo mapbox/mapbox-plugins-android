@@ -99,7 +99,10 @@ final class LocationLayer {
   void applyStyle(@NonNull LocationLayerOptions options) {
 
     elevation = options.elevation();
-    styleShadow(ContextCompat.getDrawable(context, R.drawable.mapbox_user_icon_shadow));
+    // Only add icon elevation if the values greater than 0.
+    if (elevation > 0) {
+      styleShadow(ContextCompat.getDrawable(context, R.drawable.mapbox_user_icon_shadow));
+    }
 
     styleForeground(
       getDrawable(context, options.foregroundDrawable(), options.foregroundTintColor()),
