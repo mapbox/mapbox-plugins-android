@@ -30,12 +30,9 @@ import com.mapbox.mapboxsdk.plugins.locationlayer.OnLocationLayerClickListener;
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
-<<<<<<<HEAD
 
 import java.util.ArrayList;
 import java.util.List;
-=======
-  >>>>>>>79a9324f...Update to Maps SDK6.0.0and MAS3.0.0
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
