@@ -4,9 +4,9 @@ package com.mapbox.mapboxsdk.plugins.places.autocomplete.ui;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.mapbox.maboxsdk.plugins.SingleFragmentActivity;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
+import com.mapbox.mapboxsdk.plugins.testapp.activity.SingleFragmentActivity;
 
 import org.junit.Before;
 import org.junit.Rule;
