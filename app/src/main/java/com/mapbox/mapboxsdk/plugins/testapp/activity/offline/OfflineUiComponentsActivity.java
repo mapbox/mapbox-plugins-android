@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.mapbox.mapboxsdk.offline.OfflineRegion;
 import com.mapbox.mapboxsdk.plugins.offline.OfflinePlugin;
 import com.mapbox.mapboxsdk.plugins.offline.OfflineRegionSelector;
 import com.mapbox.mapboxsdk.plugins.offline.model.DownloadOptions;

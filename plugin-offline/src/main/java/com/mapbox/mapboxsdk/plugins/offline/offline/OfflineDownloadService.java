@@ -90,6 +90,7 @@ public class OfflineDownloadService extends Service implements OfflineCallback, 
     OfflineDownloadStateReceiver.dispatchSuccessBroadcast(this, downloadOptions);
     offlineRegion.setDownloadState(OfflineRegion.STATE_INACTIVE);
     offlineRegion.setObserver(null);
+    destroyThread();
     stopSelf();
   }
 
@@ -129,6 +130,17 @@ public class OfflineDownloadService extends Service implements OfflineCallback, 
     }
   }
 
+  private void destroyThread() {
+    if (thread == null) {
+      return;
+    }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+      thread.quitSafely();
+    } else {
+      thread.quit();
+    }
+  }
+
   //
   // Thread callbacks
   //
@@ -157,17 +169,13 @@ public class OfflineDownloadService extends Service implements OfflineCallback, 
   public void onDownloadCancel() {
     OfflineDownloadStateReceiver.dispatchCancelBroadcast(getApplicationContext(), downloadOptions);
     notificationManager.cancel(NotificationOptions.NOTIFICATION_ID);
-    // Destroy thread
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-      thread.quitSafely();
-    } else {
-      thread.quit();
-    }
+    destroyThread();
   }
 
   @Override
   public void onError(String message) {
     OfflineDownloadStateReceiver.dispatchErrorBroadcast(getApplicationContext(), downloadOptions, message);
+    destroyThread();
     stopSelf();
   }
 
