@@ -21,7 +21,7 @@ import static com.mapbox.mapboxsdk.offline.OfflineRegion.STATE_INACTIVE;
 public class OfflineDownloadThread extends HandlerThread implements Handler.Callback,
   CreateOfflineRegionCallback, OfflineRegion.OfflineRegionDeleteCallback, OfflineRegionObserver {
 
-  private static final String THREAD_NAME = "mapbox:offline:download:thread";
+  private static final String THREAD_NAME = "Offline Plugin";
   static final int START_DOWNLOAD = 2039;
   static final int CANCEL_DOWNLOAD = 3928;
 
