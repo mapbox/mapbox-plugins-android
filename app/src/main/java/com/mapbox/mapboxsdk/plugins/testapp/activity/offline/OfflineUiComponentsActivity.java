@@ -6,7 +6,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.mapbox.mapboxsdk.offline.OfflineRegion;
+import com.mapbox.mapboxsdk.plugins.offline.OfflinePlugin;
 import com.mapbox.mapboxsdk.plugins.offline.OfflineRegionSelector;
+import com.mapbox.mapboxsdk.plugins.offline.model.DownloadOptions;
+import com.mapbox.mapboxsdk.plugins.offline.model.NotificationOptions;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 
 import java.util.Locale;
@@ -36,6 +40,17 @@ public class OfflineUiComponentsActivity extends AppCompatActivity {
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
+
+      NotificationOptions notificationOptions = NotificationOptions.builder(this)
+        .contentTitle("Downloading: ")
+        .contentText(OfflineRegionSelector.getRegionName(data))
+        .returnActivity(OfflineUiComponentsActivity.class.getName())
+        .smallIconRes(R.drawable.mapbox_info_icon_default)
+        .build();
+
+      DownloadOptions o = OfflineRegionSelector.getDownloadOptions(data, notificationOptions);
+      OfflinePlugin.getInstance().startDownload(this, o);
+
       Toast.makeText(this,
         String.format(Locale.US, "Region name: %s", OfflineRegionSelector.getRegionName(data)),
         Toast.LENGTH_LONG).show();

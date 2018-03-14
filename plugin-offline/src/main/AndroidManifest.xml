@@ -6,5 +6,7 @@
     <activity
       android:name="com.mapbox.mapboxsdk.plugins.offline.ui.OfflineActivity"
       android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
+
+    <service android:name=".offline.OfflineDownloadService"/>
   </application>
 </manifest>

@@ -1,6 +1,6 @@
 package com.mapbox.mapboxsdk.plugins.offline;
 
-import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions;
+import com.mapbox.mapboxsdk.plugins.offline.model.DownloadOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ class OfflineDownloadChangeDispatcher implements OfflineDownloadChangeListener {
   }
 
   @Override
-  public void onCreate(OfflineDownloadOptions offlineDownload) {
+  public void onCreate(DownloadOptions offlineDownload) {
     if (!changeListeners.isEmpty()) {
       for (OfflineDownloadChangeListener changeListener : changeListeners) {
         changeListener.onCreate(offlineDownload);
@@ -29,7 +29,7 @@ class OfflineDownloadChangeDispatcher implements OfflineDownloadChangeListener {
   }
 
   @Override
-  public void onSuccess(OfflineDownloadOptions offlineDownload) {
+  public void onSuccess(DownloadOptions offlineDownload) {
     if (!changeListeners.isEmpty()) {
       for (OfflineDownloadChangeListener changeListener : changeListeners) {
         changeListener.onSuccess(offlineDownload);
@@ -38,7 +38,7 @@ class OfflineDownloadChangeDispatcher implements OfflineDownloadChangeListener {
   }
 
   @Override
-  public void onCancel(OfflineDownloadOptions offlineDownload) {
+  public void onCancel(DownloadOptions offlineDownload) {
     if (!changeListeners.isEmpty()) {
       for (OfflineDownloadChangeListener changeListener : changeListeners) {
         changeListener.onCancel(offlineDownload);
@@ -47,7 +47,7 @@ class OfflineDownloadChangeDispatcher implements OfflineDownloadChangeListener {
   }
 
   @Override
-  public void onError(OfflineDownloadOptions offlineDownload, String error, String message) {
+  public void onError(DownloadOptions offlineDownload, String error, String message) {
     if (!changeListeners.isEmpty()) {
       for (OfflineDownloadChangeListener changeListener : changeListeners) {
         changeListener.onError(offlineDownload, error, message);
@@ -56,7 +56,7 @@ class OfflineDownloadChangeDispatcher implements OfflineDownloadChangeListener {
   }
 
   @Override
-  public void onProgress(OfflineDownloadOptions offlineDownload, int progress) {
+  public void onProgress(DownloadOptions offlineDownload, int progress) {
     if (!changeListeners.isEmpty()) {
       for (OfflineDownloadChangeListener changeListener : changeListeners) {
         changeListener.onProgress(offlineDownload, progress);

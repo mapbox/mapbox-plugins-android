@@ -16,7 +16,7 @@ import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
 import com.mapbox.mapboxsdk.plugins.offline.OfflinePlugin;
 import com.mapbox.mapboxsdk.plugins.offline.model.NotificationOptions;
-import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions;
+import com.mapbox.mapboxsdk.plugins.offline.model.DownloadOptions;
 import com.mapbox.mapboxsdk.plugins.offline.utils.OfflineUtils;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 
@@ -183,7 +183,7 @@ public class OfflineDownloadActivity extends AppCompatActivity {
 
     // start offline download
     OfflinePlugin.getInstance().startDownload(this,
-      OfflineDownloadOptions.builder()
+      DownloadOptions.builder()
         .definition(definition)
         .metadata(OfflineUtils.convertRegionName(regionName))
         .notificationOptions(notificationOptions)
