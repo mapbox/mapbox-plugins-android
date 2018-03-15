@@ -9,6 +9,8 @@ import com.mapbox.mapboxsdk.offline.OfflineRegion;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
 import com.mapbox.mapboxsdk.plugins.offline.offline.OfflineDownloadService;
 
+import java.util.UUID;
+
 /**
  * This model class wraps the offline region definition with notifications options and the offline
  * region metadata. It is a companion object to {@link OfflineRegion} with regionId and
@@ -18,8 +20,6 @@ import com.mapbox.mapboxsdk.plugins.offline.offline.OfflineDownloadService;
  */
 @AutoValue
 public abstract class DownloadOptions implements Parcelable {
-
-  private int progress;
 
   @NonNull
   public abstract OfflineTilePyramidRegionDefinition definition();
@@ -31,17 +31,13 @@ public abstract class DownloadOptions implements Parcelable {
 
   public abstract byte[] metadata();
 
-  public void setProgress(int progress) {
-    this.progress = progress;
-  }
-
-  public int getProgress() {
-    return progress;
-  }
+  @NonNull
+  public abstract Long uuid();
 
   public static Builder builder() {
     return new AutoValue_DownloadOptions.Builder()
-      .metadata(new byte[]{});
+      .metadata(new byte[] {})
+      .uuid(UUID.randomUUID().getMostSignificantBits());
     // TODO user must provide a notificationOptions object¬
   }
 
@@ -49,6 +45,8 @@ public abstract class DownloadOptions implements Parcelable {
 
   @AutoValue.Builder
   public abstract static class Builder {
+
+    abstract Builder uuid(@NonNull Long uuid);
 
     public abstract Builder definition(@NonNull OfflineTilePyramidRegionDefinition definition);
 

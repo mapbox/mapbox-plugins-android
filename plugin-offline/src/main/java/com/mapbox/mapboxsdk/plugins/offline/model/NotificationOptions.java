@@ -10,8 +10,6 @@ import com.mapbox.mapboxsdk.plugins.offline.R;
 @AutoValue
 public abstract class NotificationOptions implements Parcelable {
 
-  public static final int NOTIFICATION_ID = 5938;
-
   @DrawableRes
   public abstract int smallIconRes();
 

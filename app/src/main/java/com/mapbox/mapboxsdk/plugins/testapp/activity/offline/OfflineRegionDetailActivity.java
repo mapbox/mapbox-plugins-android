@@ -30,7 +30,6 @@ import butterknife.OnClick;
 import timber.log.Timber;
 
 import static com.mapbox.mapboxsdk.plugins.offline.OfflineConstants.KEY_BUNDLE;
-import static com.mapbox.mapboxsdk.plugins.offline.model.NotificationOptions.NOTIFICATION_ID;
 
 /**
  * Activity showing the detail of an offline region.
@@ -95,7 +94,7 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
     DownloadOptions offlineDownload = bundle.getParcelable(KEY_BUNDLE);
     if (offlineDownload != null) {
       // coming from notification
-      regionId = NOTIFICATION_ID;
+      regionId = offlineDownload.uuid();
     } else {
       // coming from list
       regionId = bundle.getLong(KEY_REGION_ID_BUNDLE, -1);
@@ -218,7 +217,7 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
       return;
     }
 
-    if (NOTIFICATION_ID == offlineRegion.getID()) {
+    if (offlineDownload.uuid() == offlineRegion.getID()) {
       if (progressBar.getVisibility() != View.VISIBLE) {
         progressBar.setVisibility(View.VISIBLE);
       }

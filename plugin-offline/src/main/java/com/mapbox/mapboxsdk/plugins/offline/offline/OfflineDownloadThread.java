@@ -25,6 +25,7 @@ public class OfflineDownloadThread extends HandlerThread implements Handler.Call
   static final int START_DOWNLOAD = 2039;
   static final int CANCEL_DOWNLOAD = 3928;
 
+  private DownloadOptions downloadOptions;
   private final OfflineManager offlineManager;
   private final OfflineCallback callback;
   private final Handler responseHandler;
@@ -43,13 +44,13 @@ public class OfflineDownloadThread extends HandlerThread implements Handler.Call
     workerHandler = new Handler(getLooper(), this);
   }
 
-  void threadAction(int message, DownloadOptions downloadOptions) {
+  void threadAction(int message) {
     workerHandler.obtainMessage(message, downloadOptions).sendToTarget();
   }
 
   @Override
   public boolean handleMessage(Message msg) {
-    DownloadOptions downloadOptions = (DownloadOptions) msg.obj;
+    downloadOptions = (DownloadOptions) msg.obj;
     if (msg.what == START_DOWNLOAD) {
       downloadRegion(downloadOptions);
     } else if (msg.what == CANCEL_DOWNLOAD) {
@@ -76,7 +77,7 @@ public class OfflineDownloadThread extends HandlerThread implements Handler.Call
     responseHandler.post(new Runnable() {
       @Override
       public void run() {
-        callback.onDownloadCancel();
+        callback.onDownloadCancel(downloadOptions);
       }
     });
   }
@@ -90,7 +91,7 @@ public class OfflineDownloadThread extends HandlerThread implements Handler.Call
     responseHandler.post(new Runnable() {
       @Override
       public void run() {
-        callback.onDownloadStarted();
+        callback.onDownloadStarted(downloadOptions);
       }
     });
   }
@@ -103,7 +104,7 @@ public class OfflineDownloadThread extends HandlerThread implements Handler.Call
       responseHandler.post(new Runnable() {
         @Override
         public void run() {
-          callback.onDownloadStatusChange(offlineRegion, status, progress);
+          callback.onDownloadStatusChange(offlineRegion, downloadOptions, status, progress);
         }
       });
     }
@@ -123,7 +124,7 @@ public class OfflineDownloadThread extends HandlerThread implements Handler.Call
     responseHandler.post(new Runnable() {
       @Override
       public void run() {
-        callback.onError(error);
+        callback.onError(error, downloadOptions);
       }
     });
   }
@@ -133,7 +134,7 @@ public class OfflineDownloadThread extends HandlerThread implements Handler.Call
     responseHandler.post(new Runnable() {
       @Override
       public void run() {
-        callback.onError(error.getReason() + "\n" + error.getMessage());
+        callback.onError(error.getReason() + "\n" + error.getMessage(), downloadOptions);
       }
     });
   }
@@ -143,7 +144,7 @@ public class OfflineDownloadThread extends HandlerThread implements Handler.Call
     responseHandler.post(new Runnable() {
       @Override
       public void run() {
-        callback.onError("Mapbox tile count limit exceeded: " + limit);
+        callback.onError("Mapbox tile count limit exceeded: " + limit, downloadOptions);
       }
     });
   }
@@ -154,12 +155,13 @@ public class OfflineDownloadThread extends HandlerThread implements Handler.Call
 
   interface OfflineCallback {
 
-    void onDownloadStarted();
+    void onDownloadStarted(DownloadOptions downloadOptions);
 
-    void onDownloadStatusChange(OfflineRegion offlineRegion, OfflineRegionStatus status, int progress);
+    void onDownloadStatusChange(OfflineRegion offlineRegion, DownloadOptions downloadOptions,
+                                OfflineRegionStatus status, int progress);
 
-    void onDownloadCancel();
+    void onDownloadCancel(DownloadOptions downloadOptions);
 
-    void onError(String message);
+    void onError(String message, DownloadOptions downloadOptions);
   }
 }

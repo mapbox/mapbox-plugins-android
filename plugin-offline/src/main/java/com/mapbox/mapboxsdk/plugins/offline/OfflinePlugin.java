@@ -102,7 +102,7 @@ public class OfflinePlugin {
     DownloadOptions offlineDownload = null;
     if (!offlineDownloads.isEmpty()) {
       for (DownloadOptions download : offlineDownloads) {
-        if (NotificationOptions.NOTIFICATION_ID == offlineRegion.getID()) {
+        if (download.uuid() == offlineRegion.getID()) {
           offlineDownload = download;
         }
       }

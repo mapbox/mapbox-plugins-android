@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.util.LongSparseArray;
 
 import com.mapbox.mapboxsdk.offline.OfflineManager;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
@@ -17,23 +18,22 @@ import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
 import com.mapbox.mapboxsdk.plugins.offline.OfflineConstants;
 import com.mapbox.mapboxsdk.plugins.offline.OfflineDownloadStateReceiver;
 import com.mapbox.mapboxsdk.plugins.offline.model.DownloadOptions;
-import com.mapbox.mapboxsdk.plugins.offline.model.NotificationOptions;
 import com.mapbox.mapboxsdk.plugins.offline.offline.OfflineDownloadThread.OfflineCallback;
 import com.mapbox.mapboxsdk.plugins.offline.utils.NotificationUtils;
 import com.mapbox.mapboxsdk.snapshotter.MapSnapshot;
 import com.mapbox.mapboxsdk.snapshotter.MapSnapshotter;
+import com.mapbox.mapboxsdk.snapshotter.MapSnapshotter.SnapshotReadyCallback;
 
 import timber.log.Timber;
 
 import static com.mapbox.mapboxsdk.plugins.offline.OfflineConstants.KEY_BUNDLE;
 
-public class OfflineDownloadService extends Service implements OfflineCallback, MapSnapshotter.SnapshotReadyCallback {
+public class OfflineDownloadService extends Service implements OfflineCallback, SnapshotReadyCallback {
 
   private NotificationCompat.Builder notificationBuilder;
   private NotificationManagerCompat notificationManager;
-  private DownloadOptions downloadOptions;
   private MapSnapshotter mapSnapshotter;
-  private OfflineDownloadThread thread;
+  private final LongSparseArray<OfflineDownloadThread> downloadThreads = new LongSparseArray<>();
 
   @Override
   public void onCreate() {
@@ -50,60 +50,69 @@ public class OfflineDownloadService extends Service implements OfflineCallback, 
   @Override
   public int onStartCommand(final Intent intent, int flags, final int startId) {
     Timber.v("onStartCommand called");
-    downloadOptions = intent.getParcelableExtra(KEY_BUNDLE);
+    DownloadOptions downloadOptions = intent.getParcelableExtra(KEY_BUNDLE);
     if (downloadOptions != null) {
-      onResolveCommand(intent.getAction(), startId);
+      onResolveCommand(intent.getAction(), startId, downloadOptions);
     } else {
-      stopSelf(startId);
+      stopService();
       throw new NullPointerException("A DownloadOptions instance must be passed into the service to"
         + " begin downloading.");
     }
     return START_STICKY;
   }
 
-  private void onResolveCommand(String intentAction, int startId) {
+  private void onResolveCommand(String intentAction, int startId, DownloadOptions downloadOptions) {
     Timber.v("onResolveCommand called");
-    if (thread == null) {
-      createDownloadThread();
-    }
+    createDownloadThread(downloadOptions);
+
+    OfflineDownloadThread thread = downloadThreads.get(downloadOptions.uuid());
     if (OfflineConstants.ACTION_START_DOWNLOAD.equals(intentAction)) {
       Timber.v("Starting a new download");
-      thread.threadAction(OfflineDownloadThread.START_DOWNLOAD, downloadOptions);
+      thread.threadAction(OfflineDownloadThread.START_DOWNLOAD);
     } else if (OfflineConstants.ACTION_CANCEL_DOWNLOAD.equals(intentAction)) {
       Timber.v("Canceling the current download");
-      thread.threadAction(OfflineDownloadThread.CANCEL_DOWNLOAD, downloadOptions);
-      stopSelf(startId);
+      thread.threadAction(OfflineDownloadThread.CANCEL_DOWNLOAD);
+      stopService();
     }
   }
 
-  private void createDownloadThread() {
+  private void createDownloadThread(DownloadOptions downloadOptions) {
     // Setup thread
-    thread = new OfflineDownloadThread(new Handler(), OfflineManager.getInstance(this), this);
+    OfflineDownloadThread thread
+      = new OfflineDownloadThread(new Handler(), OfflineManager.getInstance(this), this);
     thread.start();
     thread.prepareHandler();
+    downloadThreads.put(downloadOptions.uuid(), thread);
   }
 
-  private void finishDownload(OfflineRegion offlineRegion) {
+  private void finishDownload(OfflineRegion offlineRegion, DownloadOptions downloadOptions) {
     if (notificationBuilder != null) {
-      notificationManager.cancel(NotificationOptions.NOTIFICATION_ID);
+      notificationManager.cancel(downloadOptions.uuid().intValue());
     }
     OfflineDownloadStateReceiver.dispatchSuccessBroadcast(this, downloadOptions);
     offlineRegion.setDownloadState(OfflineRegion.STATE_INACTIVE);
     offlineRegion.setObserver(null);
-    destroyThread();
-    stopSelf();
+    destroyThread(downloadThreads.get(downloadOptions.uuid()));
+    stopService();
   }
 
-  private void progressDownload(int progress) {
+  private void stopService() {
+    // If no other downloads are running stop service
+    if (downloadThreads.size() == 0) {
+      stopSelf();
+    }
+  }
+
+  private void progressDownload(int progress, DownloadOptions downloadOptions) {
     OfflineDownloadStateReceiver.dispatchProgressChanged(this, downloadOptions, progress);
     if (notificationBuilder != null) {
       notificationBuilder.setProgress(100, progress, false);
-      notificationManager.notify(NotificationOptions.NOTIFICATION_ID, notificationBuilder.build());
+      notificationManager.notify(downloadOptions.uuid().intValue(), notificationBuilder.build());
     }
   }
 
   private void createMapSnapshot(OfflineTilePyramidRegionDefinition definition,
-                                 MapSnapshotter.SnapshotReadyCallback callback) {
+                                 SnapshotReadyCallback callback) {
     Resources resources = getResources();
     int height = (int) resources.getDimension(android.R.dimen.notification_large_icon_height);
     int width = (int) resources.getDimension(android.R.dimen.notification_large_icon_width);
@@ -130,7 +139,7 @@ public class OfflineDownloadService extends Service implements OfflineCallback, 
     }
   }
 
-  private void destroyThread() {
+  private void destroyThread(OfflineDownloadThread thread) {
     if (thread == null) {
       return;
     }
@@ -146,42 +155,44 @@ public class OfflineDownloadService extends Service implements OfflineCallback, 
   //
 
   @Override
-  public void onDownloadStarted() {
+  public void onDownloadStarted(DownloadOptions downloadOptions) {
     OfflineDownloadStateReceiver.dispatchStartBroadcast(getApplicationContext(), downloadOptions);
     notificationBuilder = NotificationUtils.buildNotification(downloadOptions);
-    startForeground(NotificationOptions.NOTIFICATION_ID, notificationBuilder.build());
-    notificationManager.notify(NotificationOptions.NOTIFICATION_ID, notificationBuilder.build());
+    startForeground(downloadOptions.uuid().intValue(), notificationBuilder.build());
+    notificationManager.notify(downloadOptions.uuid().intValue(), notificationBuilder.build());
 
     // create map bitmap to show as notification icon
     createMapSnapshot(downloadOptions.definition(), this);
   }
 
   @Override
-  public void onDownloadStatusChange(OfflineRegion offlineRegion, OfflineRegionStatus status, int progress) {
+  public void onDownloadStatusChange(OfflineRegion offlineRegion, DownloadOptions downloadOptions,
+                                     OfflineRegionStatus status, int progress) {
     if (status.isComplete()) {
-      finishDownload(offlineRegion);
+      finishDownload(offlineRegion, downloadOptions);
     } else {
-      progressDownload(progress);
+      progressDownload(progress, downloadOptions);
     }
   }
 
   @Override
-  public void onDownloadCancel() {
+  public void onDownloadCancel(DownloadOptions downloadOptions) {
     OfflineDownloadStateReceiver.dispatchCancelBroadcast(getApplicationContext(), downloadOptions);
-    notificationManager.cancel(NotificationOptions.NOTIFICATION_ID);
-    destroyThread();
+    destroyThread(downloadThreads.get(downloadOptions.uuid()));
+    notificationManager.cancel(downloadOptions.uuid().intValue());
   }
 
   @Override
-  public void onError(String message) {
+  public void onError(String message, DownloadOptions downloadOptions) {
     OfflineDownloadStateReceiver.dispatchErrorBroadcast(getApplicationContext(), downloadOptions, message);
-    destroyThread();
-    stopSelf();
+    destroyThread(downloadThreads.get(downloadOptions.uuid()));
+    stopService();
   }
 
   @Override
   public void onSnapshotReady(MapSnapshot snapshot) {
-    notificationBuilder.setLargeIcon(snapshot.getBitmap());
-    notificationManager.notify(NotificationOptions.NOTIFICATION_ID, notificationBuilder.build());
+    // TODO fix
+//    notificationBuilder.setLargeIcon(snapshot.getBitmap());
+//    notificationManager.notify(, notificationBuilder.build());
   }
 }
