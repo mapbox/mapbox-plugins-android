@@ -33,7 +33,8 @@ public class OfflineRegionSelector {
       .build();
   }
 
-  public static DownloadOptions getDownloadOptions(final Intent data, NotificationOptions notificationOptions, byte[] metadata) {
+  public static DownloadOptions getDownloadOptions(final Intent data,
+                                                   NotificationOptions notificationOptions, byte[] metadata) {
     return DownloadOptions.builder()
       .definition(getRegionDefinition(data))
       .regionName(getRegionName(data))

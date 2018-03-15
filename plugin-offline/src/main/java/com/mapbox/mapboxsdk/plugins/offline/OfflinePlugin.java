@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
 import com.mapbox.mapboxsdk.plugins.offline.model.DownloadOptions;
-import com.mapbox.mapboxsdk.plugins.offline.model.NotificationOptions;
 import com.mapbox.mapboxsdk.plugins.offline.offline.OfflineDownloadService;
 
 import java.util.ArrayList;
