@@ -113,7 +113,6 @@ public class OfflineDownloadService extends Service implements OfflineCallback, 
     } else if (OfflineConstants.ACTION_CANCEL_DOWNLOAD.equals(intentAction)) {
       Timber.v("Canceling the current download");
       thread.threadAction(OfflineDownloadThread.CANCEL_DOWNLOAD, downloadOptions);
-      stopService();
     }
   }
 
@@ -128,6 +127,10 @@ public class OfflineDownloadService extends Service implements OfflineCallback, 
    * @since 0.1.0
    */
   private void createDownloadThread(DownloadOptions downloadOptions) {
+    // If a thread is already created for the downloadOptions, no need to create a new one.
+    if (downloadThreads.get(downloadOptions.uuid()) != null) {
+      return;
+    }
     // Setup thread
     OfflineDownloadThread thread
       = new OfflineDownloadThread(new Handler(), OfflineManager.getInstance(this), this);
@@ -152,6 +155,7 @@ public class OfflineDownloadService extends Service implements OfflineCallback, 
     offlineRegion.setDownloadState(OfflineRegion.STATE_INACTIVE);
     offlineRegion.setObserver(null);
     destroyThread(downloadThreads.get(downloadOptions.uuid()));
+    downloadThreads.remove(downloadOptions.uuid());
     stopService();
   }
 
@@ -248,15 +252,20 @@ public class OfflineDownloadService extends Service implements OfflineCallback, 
 
   @Override
   public void onDownloadCancel(DownloadOptions downloadOptions) {
+    if (notificationBuilder != null) {
+      notificationManager.cancel(downloadOptions.uuid().intValue());
+    }
     OfflineDownloadStateReceiver.dispatchCancelBroadcast(getApplicationContext(), downloadOptions);
     destroyThread(downloadThreads.get(downloadOptions.uuid()));
-    notificationManager.cancel(downloadOptions.uuid().intValue());
+    downloadThreads.remove(downloadOptions.uuid());
+    stopService();
   }
 
   @Override
   public void onError(String message, DownloadOptions downloadOptions) {
     OfflineDownloadStateReceiver.dispatchErrorBroadcast(getApplicationContext(), downloadOptions, message);
     destroyThread(downloadThreads.get(downloadOptions.uuid()));
+    downloadThreads.remove(downloadOptions.uuid());
     stopService();
   }
 

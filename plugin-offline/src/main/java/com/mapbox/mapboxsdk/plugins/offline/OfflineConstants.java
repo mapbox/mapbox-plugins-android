@@ -15,7 +15,6 @@ public class OfflineConstants {
   public static final String KEY_BUNDLE_MESSAGE = "com.mapbox.mapboxsdk.plugins.offline.error";
   public static final String KEY_PROGRESS = "com.mapbox.mapboxsdk.plugins.offline.progress";
   public static final String NOTIFICATION_CHANNEL = "offline";
-  public static final int REQ_CANCEL_DOWNLOAD = 98;
 
   public static final String RETURNING_DEFINITION = "com.mapbox.mapboxsdk.plugins.offline.returning.definition";
   public static final String RETURNING_REGION_NAME = "com.mapbox.mapboxsdk.plugins.offline.returing.region.name";
