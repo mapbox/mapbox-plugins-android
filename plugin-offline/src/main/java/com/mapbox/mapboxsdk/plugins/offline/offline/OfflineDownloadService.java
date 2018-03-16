@@ -94,7 +94,7 @@ public class OfflineDownloadService extends Service implements OfflineCallback, 
    * specific region download. This method first generates a new thread which the action will
    * actually take place. From there, it is determined what action to take by using the
    * {@code intentAction} parameter. This action is finally passed in through the
-   * {@link OfflineDownloadThread#threadAction(int)}.
+   * {@link OfflineDownloadThread#threadAction(int, DownloadOptions)}.
    *
    * @param intentAction    string holding the task that should be performed on the specific
    *                        {@link DownloadOptions} regional download.
@@ -109,10 +109,10 @@ public class OfflineDownloadService extends Service implements OfflineCallback, 
     OfflineDownloadThread thread = downloadThreads.get(downloadOptions.uuid());
     if (OfflineConstants.ACTION_START_DOWNLOAD.equals(intentAction)) {
       Timber.v("Starting a new download");
-      thread.threadAction(OfflineDownloadThread.START_DOWNLOAD);
+      thread.threadAction(OfflineDownloadThread.START_DOWNLOAD, downloadOptions);
     } else if (OfflineConstants.ACTION_CANCEL_DOWNLOAD.equals(intentAction)) {
       Timber.v("Canceling the current download");
-      thread.threadAction(OfflineDownloadThread.CANCEL_DOWNLOAD);
+      thread.threadAction(OfflineDownloadThread.CANCEL_DOWNLOAD, downloadOptions);
       stopService();
     }
   }

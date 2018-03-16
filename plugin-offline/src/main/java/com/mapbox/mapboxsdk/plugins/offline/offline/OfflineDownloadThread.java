@@ -44,7 +44,7 @@ public class OfflineDownloadThread extends HandlerThread implements Handler.Call
     workerHandler = new Handler(getLooper(), this);
   }
 
-  void threadAction(int message) {
+  void threadAction(int message, DownloadOptions downloadOptions) {
     workerHandler.obtainMessage(message, downloadOptions).sendToTarget();
   }
 
