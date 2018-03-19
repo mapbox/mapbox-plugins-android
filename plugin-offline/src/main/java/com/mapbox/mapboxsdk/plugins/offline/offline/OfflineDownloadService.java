@@ -23,11 +23,11 @@ import com.mapbox.mapboxsdk.plugins.offline.offline.OfflineDownloadThread.Offlin
 import com.mapbox.mapboxsdk.plugins.offline.utils.NotificationUtils;
 import com.mapbox.mapboxsdk.snapshotter.MapSnapshot;
 import com.mapbox.mapboxsdk.snapshotter.MapSnapshotter;
-import com.mapbox.mapboxsdk.snapshotter.MapSnapshotter.SnapshotReadyCallback;
 
 import timber.log.Timber;
 
 import static com.mapbox.mapboxsdk.plugins.offline.OfflineConstants.KEY_BUNDLE;
+import static com.mapbox.mapboxsdk.plugins.offline.utils.ThreadUtils.destroyThread;
 
 /**
  * Internal usage only, use this service indirectly by using methods found in {@link OfflinePlugin}.
@@ -42,15 +42,15 @@ import static com.mapbox.mapboxsdk.plugins.offline.OfflineConstants.KEY_BUNDLE;
  *
  * @since 0.1.0
  */
-public class OfflineDownloadService extends Service implements OfflineCallback, SnapshotReadyCallback {
+public class OfflineDownloadService extends Service implements OfflineCallback {
 
   /**
    * Map used to track download threads and their corresponding {@link DownloadOptions} UUID value.
    */
   private final LongSparseArray<OfflineDownloadThread> downloadThreads = new LongSparseArray<>();
 
-  private NotificationCompat.Builder notificationBuilder;
-  private NotificationManagerCompat notificationManager;
+  NotificationCompat.Builder notificationBuilder;
+  NotificationManagerCompat notificationManager;
   private MapSnapshotter mapSnapshotter;
 
   @Override
@@ -187,7 +187,7 @@ public class OfflineDownloadService extends Service implements OfflineCallback, 
   }
 
   private void createMapSnapshot(OfflineTilePyramidRegionDefinition definition,
-                                 SnapshotReadyCallback callback) {
+                                 final DownloadOptions downloadOptions) {
     Resources resources = getResources();
     int height = (int) resources.getDimension(android.R.dimen.notification_large_icon_height);
     int width = (int) resources.getDimension(android.R.dimen.notification_large_icon_width);
@@ -196,7 +196,13 @@ public class OfflineDownloadService extends Service implements OfflineCallback, 
     options.withStyle(definition.getStyleURL());
     options.withRegion(definition.getBounds());
     mapSnapshotter = new MapSnapshotter(this, options);
-    mapSnapshotter.start(callback);
+    mapSnapshotter.start(new MapSnapshotter.SnapshotReadyCallback() {
+      @Override
+      public void onSnapshotReady(MapSnapshot snapshot) {
+        notificationBuilder.setLargeIcon(snapshot.getBitmap());
+        notificationManager.notify(downloadOptions.uuid().intValue(), notificationBuilder.build());
+      }
+    });
   }
 
   @Override
@@ -214,17 +220,6 @@ public class OfflineDownloadService extends Service implements OfflineCallback, 
     return null;
   }
 
-  private void destroyThread(OfflineDownloadThread thread) {
-    if (thread == null) {
-      return;
-    }
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-      thread.quitSafely();
-    } else {
-      thread.quit();
-    }
-  }
-
   //
   // Thread callbacks
   //
@@ -237,7 +232,7 @@ public class OfflineDownloadService extends Service implements OfflineCallback, 
     notificationManager.notify(downloadOptions.uuid().intValue(), notificationBuilder.build());
 
     // create map bitmap to show as notification icon
-    createMapSnapshot(downloadOptions.definition(), this);
+    createMapSnapshot(downloadOptions.definition(), downloadOptions);
   }
 
   @Override
@@ -267,12 +262,5 @@ public class OfflineDownloadService extends Service implements OfflineCallback, 
     destroyThread(downloadThreads.get(downloadOptions.uuid()));
     downloadThreads.remove(downloadOptions.uuid());
     stopService();
-  }
-
-  @Override
-  public void onSnapshotReady(MapSnapshot snapshot) {
-    // TODO fix
-    //    notificationBuilder.setLargeIcon(snapshot.getBitmap());
-    //    notificationManager.notify(, notificationBuilder.build());
   }
 }

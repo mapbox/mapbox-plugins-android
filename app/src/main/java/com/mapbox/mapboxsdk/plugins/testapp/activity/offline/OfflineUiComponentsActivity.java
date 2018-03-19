@@ -40,15 +40,17 @@ public class OfflineUiComponentsActivity extends AppCompatActivity {
     super.onActivityResult(requestCode, resultCode, data);
     if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
 
-      NotificationOptions notificationOptions = NotificationOptions.builder(this)
+      NotificationOptions.Builder builder = NotificationOptions.builder(this)
         .contentTitle("Downloading: ")
-        .contentText(OfflineRegionSelector.getRegionName(data))
         .returnActivity(OfflineUiComponentsActivity.class.getName())
-        .smallIconRes(R.drawable.mapbox_info_icon_default)
-        .build();
+        .smallIconRes(R.drawable.mapbox_info_icon_default);
 
-      DownloadOptions o = OfflineRegionSelector.getDownloadOptions(data, notificationOptions);
-      OfflinePlugin.getInstance().startDownload(this, o);
+      if (OfflineRegionSelector.getRegionName(data) != null) {
+        builder.contentText(OfflineRegionSelector.getRegionName(data));
+      }
+
+      DownloadOptions options = OfflineRegionSelector.getDownloadOptions(data, builder.build());
+      OfflinePlugin.getInstance().startDownload(this, options);
 
       Toast.makeText(this,
         String.format(Locale.US, "Region name: %s", OfflineRegionSelector.getRegionName(data)),
