@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.api.geocoding.v5.models.GeocodingResponse;
@@ -24,6 +25,8 @@ import com.mapbox.mapboxsdk.plugins.places.common.utils.KeyboardUtils;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 public class PlaceAutocompleteFragment extends Fragment implements ResultClickCallback,
   SearchView.QueryListener, SearchView.BackButtonListener,
   ViewTreeObserver.OnScrollChangedListener {
@@ -35,6 +38,7 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
   private ResultView searchHistoryView;
   private ResultView searchResultView;
   private ScrollView resultScrollView;
+  private View offlineResultView;
   private PlaceOptions placeOptions;
   private ResultView starredView;
   private SearchView searchView;
@@ -189,6 +193,7 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
   private void bindViews() {
     searchHistoryView = rootView.findViewById(R.id.searchHistoryResultsView);
     resultScrollView = rootView.findViewById(R.id.scroll_view_results);
+    offlineResultView = rootView.findViewById(R.id.offlineResultView);
     searchResultView = rootView.findViewById(R.id.searchResultView);
     dropShadowView = rootView.findViewById(R.id.scroll_drop_shadow);
     starredView = rootView.findViewById(R.id.favoriteResultView);
@@ -196,7 +201,7 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
     rootView = rootView.findViewById(R.id.root_layout);
   }
 
-  private void updateSearchHistoryView(@Nullable List<SearchHistoryEntity> searchHistoryEntities) {
+  void updateSearchHistoryView(@Nullable List<SearchHistoryEntity> searchHistoryEntities) {
     searchHistoryView.getResultsList().clear();
     if (searchHistoryEntities != null) {
       for (SearchHistoryEntity entity : searchHistoryEntities) {
@@ -209,13 +214,18 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
     );
   }
 
-  private void updateSearchResultView(@Nullable GeocodingResponse response) {
+  void updateSearchResultView(@Nullable GeocodingResponse response) {
     searchResultView.getResultsList().clear();
     searchResultView.getResultsList().addAll(response.features());
     searchResultView.setVisibility(
       searchResultView.getResultsList().isEmpty() ? View.GONE : View.VISIBLE
     );
     searchResultView.notifyDataSetChanged();
+
+    // Remove offline card if displayed
+    if (offlineResultView.getVisibility() == View.VISIBLE) {
+      offlineResultView.setVisibility(View.GONE);
+    }
   }
 
   private void updateFavoritePlacesView() {
@@ -223,11 +233,26 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
     starredView.getResultsList().addAll(favoriteFeatures);
   }
 
+  void showOfflineView() {
+    searchResultView.setVisibility(View.GONE);
+    if (offlineResultView.getVisibility() == View.VISIBLE) {
+      Toast.makeText(rootView.getContext(),
+        getString(R.string.mapbox_snackbar_offline_message), Toast.LENGTH_LONG).show();
+    } else {
+      offlineResultView.setVisibility(View.VISIBLE);
+    }
+  }
+
   private void subscribe() {
     viewModel.geocodingLiveData.observe(this, new Observer<GeocodingResponse>() {
       @Override
       public void onChanged(@Nullable GeocodingResponse geocodingResponse) {
-        updateSearchResultView(geocodingResponse);
+        if (geocodingResponse != null) {
+          updateSearchResultView(geocodingResponse);
+        } else {
+          Timber.v("Response is null, likely due to no internet connection.");
+          showOfflineView();
+        }
       }
     });
 

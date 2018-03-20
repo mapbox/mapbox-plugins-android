@@ -14,7 +14,7 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/mapbox_plugins_text_left_margin"
     android:layout_marginStart="@dimen/mapbox_plugins_text_left_margin"
-    android:text="@string/mapbox_plugins_place_picker_toolbar_primiary_text"
+    android:text="@string/mapbox_plugins_place_picker_toolbar_primary_text"
     android:textColor="@color/mapbox_plugins_white"
     android:textSize="@dimen/mapbox_plugins_toolbar_primary_text"
     android:textStyle="bold"

@@ -74,6 +74,11 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:visibility="gone"/>
+        
+        <include
+          android:id="@+id/offlineResultView"
+          layout="@layout/mapbox_item_offline_message"
+          android:visibility="gone"/>
 
         <com.mapbox.mapboxsdk.plugins.places.autocomplete.ui.ResultView
           android:id="@+id/searchHistoryResultsView"
