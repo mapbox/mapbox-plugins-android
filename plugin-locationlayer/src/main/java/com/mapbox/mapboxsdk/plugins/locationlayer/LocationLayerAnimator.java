@@ -164,9 +164,10 @@ final class LocationLayerAnimator {
     void onNewCompassBearingValue(float compassBearing);
   }
 
-  void cancelAllCameraAnimations() {
-    cancelCameraCompassAnimations();
-    cancelCameraLocationAnimations();
+  void resetAllCameraAnimations(CameraPosition currentCameraPosition) {
+    resetCameraCompassAnimation(currentCameraPosition);
+    resetCameraLocationAnimations(currentCameraPosition);
+    playLocationAnimators(1500);
   }
 
   void cancelAllAnimations() {
@@ -308,11 +309,27 @@ final class LocationLayerAnimator {
     cancelCameraGpsBearingAnimations();
   }
 
+  private void resetCameraLocationAnimations(CameraPosition currentCameraPosition) {
+    resetCameraLatLngAnimation(currentCameraPosition);
+    resetCameraGpsBearingAnimation(currentCameraPosition);
+  }
+
   private void cancelCameraLatLngAnimations() {
     if (cameraLatLngAnimator != null) {
       cameraLatLngAnimator.cancel();
       cameraLatLngAnimator.removeAllUpdateListeners();
     }
+  }
+
+  private void resetCameraLatLngAnimation(CameraPosition currentCameraPosition) {
+    if (cameraLatLngAnimator == null) {
+      return;
+    }
+    cancelCameraLatLngAnimations();
+    LatLng currentTarget = cameraLatLngAnimator.getTarget();
+    LatLng previousCameraTarget = currentCameraPosition.target;
+    cameraLatLngAnimator = new LatLngAnimator(previousCameraTarget, currentTarget, 1000);
+    cameraLatLngAnimator.addUpdateListener(cameraLatLngUpdateListener);
   }
 
   private void cancelCameraGpsBearingAnimations() {
@@ -322,10 +339,34 @@ final class LocationLayerAnimator {
     }
   }
 
+  private void resetCameraGpsBearingAnimation(CameraPosition currentCameraPosition) {
+    if (cameraGpsBearingAnimator == null) {
+      return;
+    }
+    cancelCameraGpsBearingAnimations();
+    float currentTargetBearing = cameraGpsBearingAnimator.getTargetBearing();
+    float previousCameraBearing = (float) currentCameraPosition.bearing;
+    float normalizedCameraBearing = Utils.shortestRotation(currentTargetBearing, previousCameraBearing);
+    cameraGpsBearingAnimator = new BearingAnimator(previousCameraBearing, normalizedCameraBearing, 1000);
+    cameraGpsBearingAnimator.addUpdateListener(cameraGpsBearingUpdateListener);
+  }
+
   private void cancelCameraCompassAnimations() {
     if (cameraCompassBearingAnimator != null) {
       cameraCompassBearingAnimator.cancel();
       cameraCompassBearingAnimator.removeAllUpdateListeners();
     }
+  }
+
+  private void resetCameraCompassAnimation(CameraPosition currentCameraPosition) {
+    if (cameraCompassBearingAnimator == null) {
+      return;
+    }
+    cancelCameraCompassAnimations();
+    float currentTargetBearing = cameraCompassBearingAnimator.getTargetBearing();
+    float previousCameraBearing = (float) currentCameraPosition.bearing;
+    float normalizedCameraBearing = Utils.shortestRotation(currentTargetBearing, previousCameraBearing);
+    cameraCompassBearingAnimator = new BearingAnimator(previousCameraBearing, normalizedCameraBearing, 1000);
+    cameraCompassBearingAnimator.addUpdateListener(cameraCompassBearingUpdateListener);
   }
 }

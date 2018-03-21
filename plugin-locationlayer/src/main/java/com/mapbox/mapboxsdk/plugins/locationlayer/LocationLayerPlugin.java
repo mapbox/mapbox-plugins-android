@@ -158,7 +158,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    * @since 0.5.0
    */
   public void setCameraMode(@CameraMode.Mode int cameraMode) {
-    locationLayerAnimator.cancelAllCameraAnimations();
+    locationLayerAnimator.resetAllCameraAnimations(mapboxMap.getCameraPosition());
     locationLayerCamera.setCameraMode(cameraMode);
   }
 
