@@ -2,11 +2,13 @@ package com.mapbox.mapboxsdk.plugins.places.autocomplete.data;
 
 import com.google.gson.JsonObject;
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
-import com.mapbox.plugins.places.autocomplete.data.entity.SearchHistoryEntity;
+import com.mapbox.geojson.Point;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.entity.SearchHistoryEntity;
 
 final class TestData {
 
   static final CarmenFeature CARMEN_FEATURE = CarmenFeature.builder()
+    .geometry(Point.fromLngLat(1.0, 2.0))
     .id("placeId")
     .address("address")
     .language("language")
@@ -17,6 +19,7 @@ final class TestData {
     .build();
 
   static final CarmenFeature CARMEN_FEATURE_TWO = CarmenFeature.builder()
+    .geometry(Point.fromLngLat(5.0, 6.0))
     .id("placeIdTwo")
     .address("addressTwo")
     .language("languageTwo")

@@ -21,7 +21,19 @@ android {
 
   testOptions {
     unitTests.returnDefaultValues = true
+    unitTests.all {
+      jacoco {
+        includeNoLocationClasses = true
+      }
+    }
   }
+
+  sourceSets {
+    main.res.srcDirs += 'src/main/res-public'
+  }
+
+  // Avoid naming conflicts
+  resourcePrefix 'mapbox_'
 }
 
 dependencies {

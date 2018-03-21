@@ -55,7 +55,7 @@ public class TrafficActivity extends AppCompatActivity implements OnMapReadyCall
   public void onTrafficFabClick() {
     if (mapboxMap != null) {
       trafficPlugin.setVisibility(!trafficPlugin.isVisible());
-      Timber.e("Traffic plugin is enabled :%s", trafficPlugin.isVisible());
+      Timber.d("Traffic plugin is enabled : %s", trafficPlugin.isVisible());
     }
   }
 

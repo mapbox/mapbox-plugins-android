@@ -5,6 +5,7 @@ MBGL_ANDROID_PLUGINS += building;plugin-building
 MBGL_ANDROID_PLUGINS += cluster;plugin-cluster
 MBGL_ANDROID_PLUGINS += offline;plugin-offline
 MBGL_ANDROID_PLUGINS += places;plugin-places
+MBGL_ANDROID_PLUGINS += localization;plugin-localization
 
 sonarqube:
 	./gradlew test

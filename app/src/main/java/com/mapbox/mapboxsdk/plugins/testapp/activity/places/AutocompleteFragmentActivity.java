@@ -9,10 +9,10 @@ import android.widget.Toast;
 
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.ui.PlaceAutocompleteFragment;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.ui.PlaceSelectionListener;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
-import com.mapbox.plugins.places.autocomplete.model.PlaceOptions;
-import com.mapbox.plugins.places.autocomplete.ui.PlaceAutocompleteFragment;
-import com.mapbox.plugins.places.autocomplete.ui.PlaceSelectionListener;
 
 import butterknife.ButterKnife;
 

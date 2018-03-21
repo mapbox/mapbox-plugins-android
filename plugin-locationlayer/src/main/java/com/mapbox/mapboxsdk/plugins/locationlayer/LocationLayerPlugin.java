@@ -88,7 +88,8 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   public LocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap,
                              @Nullable LocationEngine locationEngine) {
     this(mapView, mapboxMap, locationEngine,
-      LocationLayerOptions.createFromAttributes(mapView.getContext(), R.style.LocationLayer));
+      LocationLayerOptions.createFromAttributes(mapView.getContext(),
+        R.style.mapbox_LocationLayer));
   }
 
   /**

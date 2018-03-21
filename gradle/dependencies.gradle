@@ -11,7 +11,7 @@ ext {
       mapboxMapSdk       : '6.0.0-beta.3',
       mapboxGeocoding    : '3.0.0-beta.3',
       mapboxGeoJson      : '3.0.0-beta.3',
-      mapboxServices     : '2.2.9',
+      mapboxServices     : '2.2.10',
       lost               : '3.0.4',
       autoValue          : '1.5.3',
       autoValueParcel    : '0.2.6',
@@ -111,9 +111,9 @@ ext {
   pluginVersion = [
       checkstyle: '8.5',
       pmd       : '6.0.0',
-      jacoco    : '0.7.9',
+      jacoco    : '0.8.0',
       errorprone: '0.0.13',
-      sonarqube : '2.6.1',
+      sonarqube : '2.6.2',
       gradle    : '3.0.1'
   ]
 

@@ -27,7 +27,7 @@ Plugins are single-purpose libraries built on top of the [Mapbox Maps SDK for An
 
 * [**Location layer:** Add a location marker on your map indicating the user's location.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-locationlayer)
 
-* [**Building:** Add extruded buildings in your map style.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-building)
+* [**Building:** Add extruded "3D" buildings in your map style.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-building)
 
 * [**GeoJSON:** Load GeoJSON data from a URL, an asset file, or path.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-geojson)
 
@@ -37,6 +37,8 @@ Plugins are single-purpose libraries built on top of the [Mapbox Maps SDK for An
 
 * [**Places:** Add location search to your app with beautiful UI.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-places)
 
+* [**Localization:** Have your map's text automatically match the device's default language setting.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-localization)
+* 
 ## Installing a plugin
 
 By using a plugin, you also include the Android Map SDK which means that you'll need to setup your project to use the Map SDK if you haven't already. Head over to the [overview page for the Mapbox Maps SDK](https://www.mapbox.com/android-docs/map-sdk/overview/) to learn more.
@@ -53,7 +55,7 @@ repositories {
 }
 
 dependencies {
-  compile 'com.mapbox.mapboxsdk:PLUGIN_NAME:PLUGIN_VERSION_NUMBER'
+  implementation 'com.mapbox.mapboxsdk:PLUGIN_NAME:PLUGIN_VERSION_NUMBER'
 }
 ```
 5. Click the Sync Project with Gradle Files near the toolbar in Studio.

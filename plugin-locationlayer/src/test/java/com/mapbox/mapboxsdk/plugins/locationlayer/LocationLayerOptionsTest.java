@@ -30,9 +30,9 @@ public class LocationLayerOptionsTest {
 
   @Before
   public void setUp() throws Exception {
-    when(context.obtainStyledAttributes(R.style.LocationLayer, R.styleable.LocationLayer))
+    when(context.obtainStyledAttributes(R.style.mapbox_LocationLayer, R.styleable.mapbox_LocationLayer))
       .thenReturn(array);
-    when(array.getResourceId(R.styleable.LocationLayer_foregroundDrawable, -1))
+    when(array.getResourceId(R.styleable.mapbox_LocationLayer_mapbox_foregroundDrawable, -1))
       .thenReturn(R.drawable.mapbox_user_icon);
     when(context.getResources()).thenReturn(resources);
   }

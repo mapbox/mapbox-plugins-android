@@ -51,12 +51,14 @@ public final class Utils {
   }
 
   static Bitmap generateShadow(Drawable drawable, float elevation) {
-    int widthHeight = toEven(10 * (elevation == 0 ? 1 : elevation));
-    Bitmap bitmap = Bitmap.createBitmap(widthHeight, widthHeight,
-      Bitmap.Config.ARGB_8888);
+    int width = drawable.getIntrinsicWidth();
+    int height = drawable.getIntrinsicHeight();
+    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
     Canvas canvas = new Canvas(bitmap);
     drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
     drawable.draw(canvas);
+    bitmap = Bitmap.createScaledBitmap(bitmap,
+      toEven(width + elevation), toEven(height + elevation), false);
     return bitmap;
   }
 

@@ -32,8 +32,16 @@ android {
     abortOnError false
   }
 
+  testOptions {
+    unitTests.all {
+      jacoco {
+        includeNoLocationClasses = true
+      }
+    }
+  }
+
   // Avoid naming conflicts
-  resourcePrefix 'mapbox_plugins_'
+  resourcePrefix 'mapbox_'
 }
 
 dependencies {
@@ -55,7 +63,6 @@ dependencies {
   annotationProcessor dependenciesList.roomCompiler
 
   implementation dependenciesList.mapboxGeocoding
-  implementation project(':plugin-locationlayer')
   api dependenciesList.mapboxMapSdk
 
   // Unit testing

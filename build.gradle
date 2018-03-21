@@ -1,5 +1,6 @@
 buildscript {
   apply from: "${rootDir}/gradle/dependencies.gradle"
+  apply plugin: 'jacoco'
 
   repositories {
     maven { url 'https://plugins.gradle.org/m2' }
@@ -25,6 +26,7 @@ allprojects {
 
 subprojects {
   apply plugin: 'idea'
+  apply plugin: 'jacoco'
   apply plugin: 'net.ltgt.errorprone'
   apply from: "${rootDir}/gradle/dependencies.gradle"
 

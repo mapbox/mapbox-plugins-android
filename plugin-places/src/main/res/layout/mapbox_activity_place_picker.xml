@@ -4,7 +4,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  tools:context="com.mapbox.plugins.places.picker.ui.PlacePickerActivity">
+  tools:context="com.mapbox.mapboxsdk.plugins.places.picker.ui.PlacePickerActivity">
 
   <android.support.design.widget.AppBarLayout
     android:id="@+id/place_picker_app_bar_layout"

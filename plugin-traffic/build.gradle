@@ -17,13 +17,20 @@ android {
   lintOptions {
     abortOnError false
   }
+
+  testOptions {
+    unitTests.all {
+      jacoco {
+        includeNoLocationClasses = true
+      }
+    }
+  }
 }
 
 dependencies {
   implementation dependenciesList.mapboxMapSdk
   implementation dependenciesList.supportAnnotation
   implementation dependenciesList.timber
-  implementation dependenciesList.mapboxServices
 
   // Unit testing
   testImplementation dependenciesList.junit

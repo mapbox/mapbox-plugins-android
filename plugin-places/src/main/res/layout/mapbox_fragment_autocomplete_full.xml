@@ -19,7 +19,7 @@
     local:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     local:theme="@style/ThemeOverlay.AppCompat.Light">
 
-    <com.mapbox.plugins.places.autocomplete.ui.SearchView
+    <com.mapbox.mapboxsdk.plugins.places.autocomplete.ui.SearchView
       android:id="@+id/searchView"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
@@ -69,19 +69,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/scroll_drop_shadow">
 
-        <com.mapbox.plugins.places.autocomplete.ui.ResultView
+        <com.mapbox.mapboxsdk.plugins.places.autocomplete.ui.ResultView
           android:id="@+id/searchResultView"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:visibility="gone"/>
 
-        <com.mapbox.plugins.places.autocomplete.ui.ResultView
+        <com.mapbox.mapboxsdk.plugins.places.autocomplete.ui.ResultView
           android:id="@+id/searchHistoryResultsView"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:visibility="gone"/>
 
-        <com.mapbox.plugins.places.autocomplete.ui.ResultView
+        <com.mapbox.mapboxsdk.plugins.places.autocomplete.ui.ResultView
           android:id="@+id/favoriteResultView"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"/>

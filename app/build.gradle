@@ -26,6 +26,14 @@ android {
     abortOnError false
   }
 
+  testOptions {
+    unitTests.all {
+      jacoco {
+        includeNoLocationClasses = true
+      }
+    }
+  }
+
   dexOptions {
     maxProcessCount 8
     javaMaxHeapSize "2g"
@@ -41,7 +49,6 @@ android {
 dependencies {
   // Mapbox
   implementation dependenciesList.mapboxMapSdk
-  implementation dependenciesList.mapboxServices
   implementation dependenciesList.mapboxGeocoding
 
   // Architecture
@@ -94,10 +101,7 @@ dependencies {
   implementation project(':plugin-cluster')
   implementation project(':plugin-places')
   implementation project(':plugin-offline')
-}
-
-sonarqube {
-  skipProject = true
+  implementation project(':plugin-localization')
 }
 
 apply from: "${rootDir}/gradle/checkstyle.gradle"
