@@ -8,6 +8,7 @@ android {
     minSdkVersion androidVersions.minSdkVersion
     targetSdkVersion androidVersions.targetSdkVersion
     vectorDrawables.useSupportLibrary = true
+    consumerProguardFiles 'proguard-consumer.pro'
   }
   buildTypes {
     release {

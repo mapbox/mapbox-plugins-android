@@ -9,6 +9,8 @@ android {
     targetSdkVersion androidVersions.targetSdkVersion
     vectorDrawables.useSupportLibrary = true
 
+    consumerProguardFiles 'proguard-consumer.pro'
+
     // Write out the current schema of Room
     javaCompileOptions {
       annotationProcessorOptions {
