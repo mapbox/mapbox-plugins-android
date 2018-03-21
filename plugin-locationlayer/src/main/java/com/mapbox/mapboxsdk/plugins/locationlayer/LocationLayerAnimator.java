@@ -63,10 +63,12 @@ final class LocationLayerAnimator {
     float previousCameraBearing = (float) currentCameraPosition.bearing;
 
     LatLng targetLatLng = new LatLng(newLocation);
-    float targetBearing = newLocation.getBearing();
+    float targetLayerBearing = newLocation.getBearing();
+    float targetCameraBearing = newLocation.getBearing();
+    targetCameraBearing = checkGpsNorth(isGpsNorth, targetCameraBearing);
 
-    updateLayerAnimators(previousLayerLatLng, targetLatLng, previousLayerBearing, targetBearing);
-    updateCameraAnimators(previousCameraLatLng, previousCameraBearing, targetLatLng, targetBearing);
+    updateLayerAnimators(previousLayerLatLng, targetLatLng, previousLayerBearing, targetLayerBearing);
+    updateCameraAnimators(previousCameraLatLng, previousCameraBearing, targetLatLng, targetCameraBearing);
 
     //    long animationDuration = getAnimationDuration();
     playLocationAnimators(1500);
@@ -164,9 +166,9 @@ final class LocationLayerAnimator {
     void onNewCompassBearingValue(float compassBearing);
   }
 
-  void resetAllCameraAnimations(CameraPosition currentCameraPosition) {
+  void resetAllCameraAnimations(CameraPosition currentCameraPosition, boolean isGpsNorth) {
     resetCameraCompassAnimation(currentCameraPosition);
-    resetCameraLocationAnimations(currentCameraPosition);
+    resetCameraLocationAnimations(currentCameraPosition, isGpsNorth);
     playLocationAnimators(1500);
   }
 
@@ -243,6 +245,13 @@ final class LocationLayerAnimator {
     return animationDuration;
   }
 
+  private float checkGpsNorth(boolean isGpsNorth, float targetCameraBearing) {
+    if (isGpsNorth) {
+      targetCameraBearing = 0;
+    }
+    return targetCameraBearing;
+  }
+
   private void playLocationAnimators(long duration) {
     List<Animator> locationAnimators = new ArrayList<>();
     locationAnimators.add(layerLatLngAnimator);
@@ -309,9 +318,9 @@ final class LocationLayerAnimator {
     cancelCameraGpsBearingAnimations();
   }
 
-  private void resetCameraLocationAnimations(CameraPosition currentCameraPosition) {
+  private void resetCameraLocationAnimations(CameraPosition currentCameraPosition, boolean isGpsNorth) {
     resetCameraLatLngAnimation(currentCameraPosition);
-    resetCameraGpsBearingAnimation(currentCameraPosition);
+    resetCameraGpsBearingAnimation(currentCameraPosition, isGpsNorth);
   }
 
   private void cancelCameraLatLngAnimations() {
@@ -339,12 +348,13 @@ final class LocationLayerAnimator {
     }
   }
 
-  private void resetCameraGpsBearingAnimation(CameraPosition currentCameraPosition) {
+  private void resetCameraGpsBearingAnimation(CameraPosition currentCameraPosition, boolean isGpsNorth) {
     if (cameraGpsBearingAnimator == null) {
       return;
     }
     cancelCameraGpsBearingAnimations();
     float currentTargetBearing = cameraGpsBearingAnimator.getTargetBearing();
+    currentTargetBearing = checkGpsNorth(isGpsNorth, currentTargetBearing);
     float previousCameraBearing = (float) currentCameraPosition.bearing;
     float normalizedCameraBearing = Utils.shortestRotation(currentTargetBearing, previousCameraBearing);
     cameraGpsBearingAnimator = new BearingAnimator(previousCameraBearing, normalizedCameraBearing, 1000);

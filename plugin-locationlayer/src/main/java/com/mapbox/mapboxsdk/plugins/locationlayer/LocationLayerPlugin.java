@@ -158,7 +158,8 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    * @since 0.5.0
    */
   public void setCameraMode(@CameraMode.Mode int cameraMode) {
-    locationLayerAnimator.resetAllCameraAnimations(mapboxMap.getCameraPosition());
+    boolean isGpsNorth = cameraMode == CameraMode.TRACKING_GPS_NORTH;
+    locationLayerAnimator.resetAllCameraAnimations(mapboxMap.getCameraPosition(), isGpsNorth);
     locationLayerCamera.setCameraMode(cameraMode);
   }
 
