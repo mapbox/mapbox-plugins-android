@@ -646,9 +646,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     @Override
     @SuppressWarnings( {"MissingPermission"})
     public void onConnected() {
-      if (locationEngine != null) {
-        locationEngine.requestLocationUpdates();
-      }
+      // Currently don't handle this inside SDK
     }
 
     @Override

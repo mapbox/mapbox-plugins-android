@@ -90,6 +90,7 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     this.mapboxMap = mapboxMap;
     locationEngine = new LocationEngineProvider(this).obtainBestLocationEngineAvailable();
     locationEngine.setPriority(LocationEnginePriority.HIGH_ACCURACY);
+    locationEngine.setFastestInterval(1000);
     locationEngine.addLocationEngineListener(this);
     locationEngine.activate();
     LocationLayerOptions options = LocationLayerOptions.builder(this)

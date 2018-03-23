@@ -6,6 +6,7 @@ import android.animation.ValueAnimator;
 import android.location.Location;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.view.animation.LinearInterpolator;
 
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -70,8 +71,7 @@ final class LocationLayerAnimator {
     updateLayerAnimators(previousLayerLatLng, targetLatLng, previousLayerBearing, targetLayerBearing);
     updateCameraAnimators(previousCameraLatLng, previousCameraBearing, targetLatLng, targetCameraBearing);
 
-    //    long animationDuration = getAnimationDuration();
-    playLocationAnimators(1500);
+    playAllLocationAnimators(getAnimationDuration());
 
     previousLocation = newLocation;
   }
@@ -169,7 +169,7 @@ final class LocationLayerAnimator {
   void resetAllCameraAnimations(CameraPosition currentCameraPosition, boolean isGpsNorth) {
     resetCameraCompassAnimation(currentCameraPosition);
     resetCameraLocationAnimations(currentCameraPosition, isGpsNorth);
-    playLocationAnimators(1500);
+    playCameraAnimators();
   }
 
   void cancelAllAnimations() {
@@ -252,7 +252,7 @@ final class LocationLayerAnimator {
     return targetCameraBearing;
   }
 
-  private void playLocationAnimators(long duration) {
+  private void playAllLocationAnimators(long duration) {
     List<Animator> locationAnimators = new ArrayList<>();
     locationAnimators.add(layerLatLngAnimator);
     locationAnimators.add(layerGpsBearingAnimator);
@@ -260,7 +260,18 @@ final class LocationLayerAnimator {
     locationAnimators.add(cameraGpsBearingAnimator);
     AnimatorSet locationAnimatorSet = new AnimatorSet();
     locationAnimatorSet.playTogether(locationAnimators);
+    locationAnimatorSet.setInterpolator(new LinearInterpolator());
     locationAnimatorSet.setDuration(duration);
+    locationAnimatorSet.start();
+  }
+
+  private void playCameraAnimators() {
+    List<Animator> locationAnimators = new ArrayList<>();
+    locationAnimators.add(cameraLatLngAnimator);
+    locationAnimators.add(cameraGpsBearingAnimator);
+    AnimatorSet locationAnimatorSet = new AnimatorSet();
+    locationAnimatorSet.playTogether(locationAnimators);
+    locationAnimatorSet.setInterpolator(new LinearInterpolator());
     locationAnimatorSet.start();
   }
 
@@ -334,10 +345,11 @@ final class LocationLayerAnimator {
     if (cameraLatLngAnimator == null) {
       return;
     }
+    long duration = cameraLatLngAnimator.getDuration();
     cancelCameraLatLngAnimations();
     LatLng currentTarget = cameraLatLngAnimator.getTarget();
     LatLng previousCameraTarget = currentCameraPosition.target;
-    cameraLatLngAnimator = new LatLngAnimator(previousCameraTarget, currentTarget, 1000);
+    cameraLatLngAnimator = new LatLngAnimator(previousCameraTarget, currentTarget, duration);
     cameraLatLngAnimator.addUpdateListener(cameraLatLngUpdateListener);
   }
 
@@ -352,12 +364,13 @@ final class LocationLayerAnimator {
     if (cameraGpsBearingAnimator == null) {
       return;
     }
+    long duration = cameraLatLngAnimator.getDuration();
     cancelCameraGpsBearingAnimations();
     float currentTargetBearing = cameraGpsBearingAnimator.getTargetBearing();
     currentTargetBearing = checkGpsNorth(isGpsNorth, currentTargetBearing);
     float previousCameraBearing = (float) currentCameraPosition.bearing;
     float normalizedCameraBearing = Utils.shortestRotation(currentTargetBearing, previousCameraBearing);
-    cameraGpsBearingAnimator = new BearingAnimator(previousCameraBearing, normalizedCameraBearing, 1000);
+    cameraGpsBearingAnimator = new BearingAnimator(previousCameraBearing, normalizedCameraBearing, duration);
     cameraGpsBearingAnimator.addUpdateListener(cameraGpsBearingUpdateListener);
   }
 
@@ -372,11 +385,12 @@ final class LocationLayerAnimator {
     if (cameraCompassBearingAnimator == null) {
       return;
     }
+    long duration = cameraLatLngAnimator.getDuration();
     cancelCameraCompassAnimations();
     float currentTargetBearing = cameraCompassBearingAnimator.getTargetBearing();
     float previousCameraBearing = (float) currentCameraPosition.bearing;
     float normalizedCameraBearing = Utils.shortestRotation(currentTargetBearing, previousCameraBearing);
-    cameraCompassBearingAnimator = new BearingAnimator(previousCameraBearing, normalizedCameraBearing, 1000);
+    cameraCompassBearingAnimator = new BearingAnimator(previousCameraBearing, normalizedCameraBearing, duration);
     cameraCompassBearingAnimator.addUpdateListener(cameraCompassBearingUpdateListener);
   }
 }
