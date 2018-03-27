@@ -39,8 +39,8 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimati
   }
 
   void setCameraMode(@CameraMode.Mode int cameraMode) {
-    this.cameraMode = cameraMode;
     boolean wasTracking = isLocationTracking();
+    this.cameraMode = cameraMode;
     mapboxMap.cancelTransitions();
     adjustGesturesThresholds();
     notifyCameraTrackingChangeListener(wasTracking);
