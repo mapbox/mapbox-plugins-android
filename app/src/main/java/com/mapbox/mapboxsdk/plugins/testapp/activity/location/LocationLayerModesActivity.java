@@ -1,6 +1,7 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.location;
 
 import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
@@ -57,6 +58,15 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
   private MapboxMap mapboxMap;
   private boolean customStyle;
 
+  private static final String SAVED_STATE_CAMERA = "saved_state_camera";
+  private static final String SAVED_STATE_RENDER = "saved_state_render";
+
+  @CameraMode.Mode
+  private int cameraMode = CameraMode.NONE;
+
+  @RenderMode.Mode
+  private int renderMode = RenderMode.NORMAL;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -65,6 +75,11 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
 
     mapView.onCreate(savedInstanceState);
     mapView.getMapAsync(this);
+
+    if (savedInstanceState != null) {
+      cameraMode = savedInstanceState.getInt(SAVED_STATE_CAMERA);
+      renderMode = savedInstanceState.getInt(SAVED_STATE_RENDER);
+    }
   }
 
   @SuppressWarnings( {"MissingPermission"})
@@ -88,17 +103,28 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
+
     locationEngine = new LocationEngineProvider(this).obtainBestLocationEngineAvailable();
     locationEngine.setPriority(LocationEnginePriority.HIGH_ACCURACY);
     locationEngine.setFastestInterval(1000);
     locationEngine.addLocationEngineListener(this);
     locationEngine.activate();
+
+    int[] padding;
+    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+      padding = new int[] {0, 750, 0, 0};
+    } else {
+      padding = new int[] {0, 250, 0, 0};
+    }
     LocationLayerOptions options = LocationLayerOptions.builder(this)
-      .padding(new int[] {0, 650, 0, 0})
+      .padding(padding)
       .build();
     locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine, options);
     locationLayerPlugin.addOnLocationClickListener(this);
     locationLayerPlugin.addOnCameraTrackingChangedListener(this);
+    locationLayerPlugin.setCameraMode(cameraMode);
+    setRendererMode(renderMode);
+
     getLifecycle().addObserver(locationLayerPlugin);
   }
 
@@ -178,6 +204,8 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
   protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     mapView.onSaveInstanceState(outState);
+    outState.putInt(SAVED_STATE_CAMERA, cameraMode);
+    outState.putInt(SAVED_STATE_RENDER, renderMode);
   }
 
   @Override
@@ -227,15 +255,27 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
       String selectedMode = modes.get(position);
       locationModeBtn.setText(selectedMode);
       if (selectedMode.contentEquals("Normal")) {
-        locationLayerPlugin.setRenderMode(RenderMode.NORMAL);
+        setRendererMode(RenderMode.NORMAL);
       } else if (selectedMode.contentEquals("Compass")) {
-        locationLayerPlugin.setRenderMode(RenderMode.COMPASS);
+        setRendererMode(RenderMode.COMPASS);
       } else if (selectedMode.contentEquals("GPS")) {
-        locationLayerPlugin.setRenderMode(RenderMode.GPS);
+        setRendererMode(RenderMode.GPS);
       }
       listPopup.dismiss();
     });
     listPopup.show();
+  }
+
+  private void setRendererMode(@RenderMode.Mode int mode) {
+    renderMode = mode;
+    locationLayerPlugin.setRenderMode(mode);
+    if (mode == RenderMode.NORMAL) {
+      locationModeBtn.setText("Normal");
+    } else if (mode == RenderMode.COMPASS) {
+      locationModeBtn.setText("Compass");
+    } else if (mode == RenderMode.GPS) {
+      locationModeBtn.setText("Gps");
+    }
   }
 
   private void showTrackingListDialog() {
@@ -276,6 +316,18 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
 
   @Override
   public void onCameraTrackingChanged(int currentMode) {
-    // do nothing
+    this.cameraMode = currentMode;
+
+    if (cameraMode == CameraMode.NONE) {
+      locationTrackingBtn.setText("None");
+    } else if (cameraMode == CameraMode.TRACKING) {
+      locationTrackingBtn.setText("Tracking");
+    } else if (cameraMode == CameraMode.TRACKING_COMPASS) {
+      locationTrackingBtn.setText("Tracking Compass");
+    } else if (cameraMode == CameraMode.TRACKING_GPS) {
+      locationTrackingBtn.setText("Tracking GPS");
+    } else if (cameraMode == CameraMode.TRACKING_GPS_NORTH) {
+      locationTrackingBtn.setText("Tracking GPS North");
+    }
   }
 }
