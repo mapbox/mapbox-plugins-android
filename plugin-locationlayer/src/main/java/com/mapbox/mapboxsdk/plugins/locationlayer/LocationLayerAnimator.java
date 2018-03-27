@@ -382,7 +382,7 @@ final class LocationLayerAnimator {
   }
 
   private void resetCameraCompassAnimation(CameraPosition currentCameraPosition) {
-    if (cameraCompassBearingAnimator == null) {
+    if (cameraCompassBearingAnimator == null || cameraLatLngAnimator == null) {
       return;
     }
     long duration = cameraLatLngAnimator.getDuration();
