@@ -168,9 +168,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
       iconSize(
         interpolate(exponential(1f), zoom(),
           stop(0f, 0.6f),
-          stop(10f, 0.6f),
-          stop(12f, 1f),
-          stop(22f, 1f)
+          stop(18f, 1.2f)
         )
       ),
       iconRotationAlignment(ICON_ROTATION_ALIGNMENT_MAP));
