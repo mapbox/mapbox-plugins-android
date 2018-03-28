@@ -188,8 +188,8 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
   }
 
   @Override
-  public void onCreate(DownloadOptions offlineDownload) {
-    Timber.e("DownloadOptions created %s", offlineDownload.hashCode());
+  public void onCreate(DownloadOptions downloadOptions) {
+    Timber.e("DownloadOptions created %s", downloadOptions.hashCode());
   }
 
   @Override

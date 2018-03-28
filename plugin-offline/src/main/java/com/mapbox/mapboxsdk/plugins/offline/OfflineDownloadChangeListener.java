@@ -4,7 +4,7 @@ import com.mapbox.mapboxsdk.plugins.offline.model.DownloadOptions;
 
 public interface OfflineDownloadChangeListener {
 
-  void onCreate(DownloadOptions offlineDownload);
+  void onCreate(DownloadOptions downloadOptions);
 
   void onSuccess(DownloadOptions offlineDownload);
 
