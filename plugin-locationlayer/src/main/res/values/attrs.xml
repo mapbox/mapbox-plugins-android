@@ -21,7 +21,7 @@
     <attr name="mapbox_elevation" format="dimension"/>
 
     <attr name="mapbox_enableStaleState" format="boolean"/>
-    <attr name="mapbox_staleStateDelay" format="integer" min="0"/>
+    <attr name="mapbox_staleStateTimeout" format="integer" min="0"/>
 
   </declare-styleable>
 </resources>

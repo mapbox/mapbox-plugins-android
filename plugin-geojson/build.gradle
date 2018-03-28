@@ -35,7 +35,6 @@ dependencies {
   implementation dependenciesList.mapboxGeoJson
   implementation dependenciesList.okhttp
   implementation dependenciesList.timber
-  javadocDeps dependenciesList.mapboxMapSdk
 }
 
 apply from: 'javadoc.gradle'

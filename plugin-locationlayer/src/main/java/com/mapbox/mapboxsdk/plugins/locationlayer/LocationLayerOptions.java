@@ -43,6 +43,21 @@ public abstract class LocationLayerOptions implements Parcelable {
   private static final float ACCURACY_ALPHA_DEFAULT = 0.15f;
 
   /**
+   * Default max map zoom
+   */
+  private static final float MAX_ZOOM_DEFAULT = 18;
+
+  /**
+   * Default min map zoom
+   */
+  private static final float MIN_ZOOM_DEFAULT = 2;
+
+  /**
+   * Default map padding
+   */
+  private static final int[] PADDING_DEFAULT = {0, 0, 0, 0};
+
+  /**
    * The default value which is used when the stale state is enabled
    */
   private static final long STALE_STATE_DELAY_MS = 30000;
@@ -100,11 +115,11 @@ public abstract class LocationLayerOptions implements Parcelable {
       builder.enableStaleState(typedArray.getBoolean(
         R.styleable.mapbox_LocationLayer_mapbox_enableStaleState, true));
     }
-    if (typedArray.hasValue(R.styleable.mapbox_LocationLayer_mapbox_staleStateDelay)) {
-      builder.staleStateDelay(typedArray.getInteger(
-        R.styleable.mapbox_LocationLayer_mapbox_staleStateDelay, (int) STALE_STATE_DELAY_MS));
+    if (typedArray.hasValue(R.styleable.mapbox_LocationLayer_mapbox_staleStateTimeout)) {
+      builder.staleStateTimeout(typedArray.getInteger(
+        R.styleable.mapbox_LocationLayer_mapbox_staleStateTimeout, (int) STALE_STATE_DELAY_MS));
     }
-    builder.navigationDrawable(typedArray.getResourceId(
+    builder.gpsDrawable(typedArray.getResourceId(
       R.styleable.mapbox_LocationLayer_mapbox_navigationDrawable, -1));
     float elevation = typedArray.getDimension(
       R.styleable.mapbox_LocationLayer_mapbox_elevation, 0);
@@ -113,6 +128,15 @@ public abstract class LocationLayerOptions implements Parcelable {
     builder.accuracyAlpha(typedArray.getFloat(
       R.styleable.mapbox_LocationLayer_mapbox_accuracyAlpha, ACCURACY_ALPHA_DEFAULT));
     builder.elevation(elevation);
+
+    float defaultTrackingInitialMoveThreshold =
+      context.getResources().getDimension(R.dimen.mapbox_locationLayerTrackingInitialMoveThreshold);
+
+    float defaultTrackingMultiFingerMoveThreshold =
+      context.getResources().getDimension(R.dimen.mapbox_locationLayerTrackingMultiFingerMoveThreshold);
+
+    builder.trackingInitialMoveThreshold(defaultTrackingInitialMoveThreshold);
+    builder.trackingMultiFingerMoveThreshold(defaultTrackingMultiFingerMoveThreshold);
 
     typedArray.recycle();
 
@@ -149,7 +173,10 @@ public abstract class LocationLayerOptions implements Parcelable {
   private static Builder builder() {
     return new AutoValue_LocationLayerOptions.Builder()
       .enableStaleState(true)
-      .staleStateDelay(STALE_STATE_DELAY_MS);
+      .staleStateTimeout(STALE_STATE_DELAY_MS)
+      .maxZoom(MAX_ZOOM_DEFAULT)
+      .minZoom(MIN_ZOOM_DEFAULT)
+      .padding(PADDING_DEFAULT);
   }
 
   /**
@@ -200,7 +227,7 @@ public abstract class LocationLayerOptions implements Parcelable {
    * @since 0.4.0
    */
   @DrawableRes
-  public abstract int navigationDrawable();
+  public abstract int gpsDrawable();
 
   /**
    * Supply a Drawable that is to be rendered on top of all of the content in the Location Layer
@@ -318,7 +345,57 @@ public abstract class LocationLayerOptions implements Parcelable {
    * @attr ref R.styleable#LocationLayer_staleStateDelay
    * @since 0.4.0
    */
-  public abstract long staleStateDelay();
+  public abstract long staleStateTimeout();
+
+  /**
+   * Sets the distance from the edges of the map view’s frame to the edges of the map
+   * view’s logical viewport.
+   * </p>
+   * <p>
+   * When the value of this property is equal to {0,0,0,0}, viewport
+   * properties such as `centerCoordinate` assume a viewport that matches the map
+   * view’s frame. Otherwise, those properties are inset, excluding part of the
+   * frame from the viewport. For instance, if the only the top edge is inset, the
+   * map center is effectively shifted downward.
+   * </p>
+   *
+   * @return integer array of padding values
+   * @since 0.5.0
+   */
+  @SuppressWarnings("mutable")
+  public abstract int[] padding();
+
+  /**
+   * The maximum zoom level the map can be displayed at.
+   *
+   * @return the maximum zoom level
+   * @since 0.5.0
+   */
+  public abstract double maxZoom();
+
+  /**
+   * The minimum zoom level the map can be displayed at.
+   *
+   * @return the minimum zoom level
+   * @since 0.5.0
+   */
+  public abstract double minZoom();
+
+  /**
+   * Minimum single pointer movement in pixels required to break camera tracking.
+   *
+   * @return the minimum movement
+   * @since 0.5.0
+   */
+  public abstract float trackingInitialMoveThreshold();
+
+  /**
+   * Minimum multi pointer movement in pixels required to break camera tracking (for example during scale gesture).
+   *
+   * @return the minimum movement
+   * @since 0.5.0
+   */
+  public abstract float trackingMultiFingerMoveThreshold();
 
   /**
    * Builder class for constructing a new instance of {@link LocationLayerOptions}.
@@ -392,12 +469,12 @@ public abstract class LocationLayerOptions implements Parcelable {
     /**
      * Defines the drawable used for the navigation state icon.
      *
-     * @param navigationDrawable the drawable resource ID
+     * @param gpsDrawable the drawable resource ID
      * @return this builder for chaining options together
      * @attr ref R.styleable#LocationLayer_navigationDrawable
      * @since 0.4.0
      */
-    public abstract Builder navigationDrawable(@DrawableRes int navigationDrawable);
+    public abstract Builder gpsDrawable(@DrawableRes int gpsDrawable);
 
     /**
      * Supply a Drawable that is to be rendered on top of all of the content in the Location Layer
@@ -482,18 +559,68 @@ public abstract class LocationLayerOptions implements Parcelable {
     public abstract Builder enableStaleState(boolean enabled);
 
     /**
-     * Set the delay before the location icon becomes stale. The timer begins approximately when a
+     * Set the timeout before the location icon becomes stale. The timer begins approximately when a
      * new location update comes in and using this defined time, if an update hasn't occurred by the
      * end, the location is considered stale.
      *
-     * @param delay the duration in milliseconds which it should take before the location layer is
-     *              considered stale
+     * @param timeout the duration in milliseconds which it should take before the location layer is
+     *                considered stale
      * @return this builder for chaining options together
-     * @attr ref R.styleable#LocationLayer_staleStateDelay
+     * @attr ref R.styleable#LocationLayer_staleStateTimeout
      * @since 0.4.0
      */
-    public abstract Builder staleStateDelay(long delay);
+    public abstract Builder staleStateTimeout(long timeout);
 
+    /**
+     * Sets the distance from the edges of the map view’s frame to the edges of the map
+     * view’s logical viewport.
+     * </p>
+     * <p>
+     * When the value of this property is equal to {0,0,0,0}, viewport
+     * properties such as `centerCoordinate` assume a viewport that matches the map
+     * view’s frame. Otherwise, those properties are inset, excluding part of the
+     * frame from the viewport. For instance, if the only the top edge is inset, the
+     * map center is effectively shifted downward.
+     * </p>
+     *
+     * @param padding The margins for the map in pixels (left, top, right, bottom).
+     * @since 0.5.0
+     */
+    public abstract Builder padding(int[] padding);
+
+    /**
+     * Sets the maximum zoom level the map can be displayed at.
+     * <p>
+     * The default maximum zoomn level is 22. The upper bound for this value is 25.5.
+     *
+     * @param maxZoom The new maximum zoom level.
+     * @since 0.5.0
+     */
+    public abstract Builder maxZoom(double maxZoom);
+
+    /**
+     * Sets the minimum zoom level the map can be displayed at.
+     *
+     * @param minZoom The new minimum zoom level.
+     */
+    public abstract Builder minZoom(double minZoom);
+
+    /**
+     * Sets minimum single pointer movement (map pan) in pixels required to break camera tracking.
+     *
+     * @param moveThreshold the minimum movement
+     * @since 0.5.0
+     */
+    public abstract Builder trackingInitialMoveThreshold(float moveThreshold);
+
+    /**
+     * Sets minimum multi pointer movement (map pan) in pixels required to break camera tracking
+     * (for example during scale gesture).
+     *
+     * @param moveThreshold the minimum movement
+     * @since 0.5.0
+     */
+    public abstract Builder trackingMultiFingerMoveThreshold(float moveThreshold);
 
     abstract LocationLayerOptions autoBuild();
 

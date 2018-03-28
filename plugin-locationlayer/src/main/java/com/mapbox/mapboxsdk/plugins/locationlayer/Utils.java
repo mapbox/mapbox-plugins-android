@@ -1,6 +1,5 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer;
 
-import android.animation.TypeEvaluator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -13,9 +12,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
-import com.mapbox.services.commons.geojson.Point;
-
-final class Utils {
+public final class Utils {
 
   private Utils() {
     // Class should not be initialized
@@ -29,7 +26,7 @@ final class Utils {
    * @return the shortest degree of rotation possible
    * @since 0.4.0
    */
-  static float shortestRotation(float magneticHeading, float previousMagneticHeading) {
+  public static float shortestRotation(float magneticHeading, float previousMagneticHeading) {
     double diff = previousMagneticHeading - magneticHeading;
     if (diff > 180.0f) {
       magneticHeading += 360.0f;
@@ -78,24 +75,6 @@ final class Utils {
       drawable.mutate().setColorFilter(tintColor, PorterDuff.Mode.SRC_IN);
     }
     return drawable;
-  }
-
-  /**
-   * Used for animating the user location icon
-   *
-   * @since 0.1.0
-   */
-  static class PointEvaluator implements TypeEvaluator<Point> {
-    // Method is used to interpolate the user icon animation.
-    @Override
-    public Point evaluate(float fraction, Point startValue, Point endValue) {
-      return Point.fromCoordinates(new double[] {
-        startValue.getCoordinates().getLongitude() + (
-          (endValue.getCoordinates().getLongitude() - startValue.getCoordinates().getLongitude()) * fraction),
-        startValue.getCoordinates().getLatitude() + (
-          (endValue.getCoordinates().getLatitude() - startValue.getCoordinates().getLatitude()) * fraction)
-      });
-    }
   }
 
   /**

@@ -3,17 +3,17 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity.location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.mapbox.android.core.location.LocationEngine;
+import com.mapbox.android.core.location.LocationEngineProvider;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.plugins.locationlayer.CompassListener;
-import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerMode;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
+import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
-import com.mapbox.services.android.telemetry.location.LocationEngine;
-import com.mapbox.services.android.telemetry.location.LostLocationEngine;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,9 +39,9 @@ public class CompassListenerActivity extends AppCompatActivity implements OnMapR
 
   @Override
   public void onMapReady(final MapboxMap mapboxMap) {
-    LocationEngine locationEngine = new LostLocationEngine(this);
+    LocationEngine locationEngine = new LocationEngineProvider(this).obtainBestLocationEngineAvailable();
     locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine);
-    locationLayerPlugin.setLocationLayerEnabled(LocationLayerMode.COMPASS);
+    locationLayerPlugin.setRenderMode(RenderMode.COMPASS);
     locationLayerPlugin.addCompassListener(new CompassListener() {
       @Override
       public void onCompassChanged(float userHeading) {
@@ -96,7 +96,7 @@ public class CompassListenerActivity extends AppCompatActivity implements OnMapR
   protected void onDestroy() {
     super.onDestroy();
     mapView.onDestroy();
-    locationLayerPlugin.removeCompassListener(null);
+    //locationLayerPlugin.removeCompassListener();
   }
 
   @Override

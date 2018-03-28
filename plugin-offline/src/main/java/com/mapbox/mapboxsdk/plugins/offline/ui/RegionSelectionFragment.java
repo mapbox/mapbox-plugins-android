@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.mapbox.geojson.Feature;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -20,7 +21,6 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
 import com.mapbox.mapboxsdk.plugins.offline.R;
 import com.mapbox.mapboxsdk.style.sources.VectorSource;
-import com.mapbox.services.commons.geojson.Feature;
 
 import java.util.List;
 
@@ -158,7 +158,7 @@ public class RegionSelectionFragment extends Fragment implements OnMapReadyCallb
         featureList = source.querySourceFeatures(SOURCE_LAYER_IDS, null);
       }
     }
-    if (!featureList.isEmpty() && featureList.get(0).getProperties().has("name")) {
+    if (!featureList.isEmpty() && featureList.get(0).properties().has("name")) {
       return featureList.get(0).getStringProperty("name");
     }
     return getString(R.string.mapbox_offline_default_region_name);

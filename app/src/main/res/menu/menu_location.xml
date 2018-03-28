@@ -4,4 +4,13 @@
     <item android:id="@+id/action_style_change"
           android:title="Toggle custom style"
           app:showAsAction="never"/>
+
+    <item android:id="@+id/action_plugin_disable"
+        android:title="Disable"
+        app:showAsAction="never"/>
+
+
+    <item android:id="@+id/action_plugin_enabled"
+        android:title="Enabled"
+        app:showAsAction="never"/>
 </menu>

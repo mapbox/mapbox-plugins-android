@@ -8,13 +8,11 @@ import android.support.annotation.VisibleForTesting;
 
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.style.functions.CameraFunction;
-import com.mapbox.mapboxsdk.style.functions.Function;
-import com.mapbox.mapboxsdk.style.functions.stops.Stop;
-import com.mapbox.mapboxsdk.style.layers.Filter;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.Source;
 import com.mapbox.mapboxsdk.style.sources.VectorSource;
@@ -24,12 +22,14 @@ import java.util.List;
 
 import timber.log.Timber;
 
-import static com.mapbox.mapboxsdk.style.functions.Function.zoom;
-import static com.mapbox.mapboxsdk.style.functions.stops.Stop.stop;
-import static com.mapbox.mapboxsdk.style.functions.stops.Stops.categorical;
-import static com.mapbox.mapboxsdk.style.functions.stops.Stops.exponential;
-import static com.mapbox.mapboxsdk.style.layers.Filter.in;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillColor;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.exponential;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.literal;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.match;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.stop;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.toColor;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineCap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineColor;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineJoin;
@@ -337,25 +337,25 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
 
   private static class TrafficLayer {
 
-    static LineLayer getLineLayer(String lineLayerId, float minZoom, Filter.Statement statement,
-                                  Function lineColor, CameraFunction lineWidth, Function lineOffset) {
+    static LineLayer getLineLayer(String lineLayerId, float minZoom, Expression statement,
+                                  Expression lineColor, Expression lineWidth, Expression lineOffset) {
       return getLineLayer(lineLayerId, minZoom, statement, lineColor, lineWidth, lineOffset, null);
     }
 
-    static LineLayer getLineLayer(String lineLayerId, float minZoom, Filter.Statement statement,
-                                  Function lineColor, CameraFunction lineWidth, Function lineOffset,
-                                  Function lineOpacity) {
+    static LineLayer getLineLayer(String lineLayerId, float minZoom, Expression statement,
+                                  Expression lineColorExpression, Expression lineWidthExpression,
+                                  Expression lineOffsetExpression, Expression lineOpacityExpression) {
       LineLayer lineLayer = new LineLayer(lineLayerId, TrafficData.SOURCE_ID);
       lineLayer.setSourceLayer(TrafficData.SOURCE_LAYER);
       lineLayer.setProperties(
         lineCap("round"),
         lineJoin("round"),
-        lineColor(lineColor),
-        lineWidth(lineWidth),
-        lineOffset(lineOffset)
+        lineColor(lineColorExpression),
+        lineWidth(lineWidthExpression),
+        lineOffset(lineOffsetExpression)
       );
-      if (lineOpacity != null) {
-        lineLayer.setProperties(lineOpacity(lineOpacity));
+      if (lineOpacityExpression != null) {
+        lineLayer.setProperties(lineOpacity(lineOpacityExpression));
       }
 
       lineLayer.setFilter(statement);
@@ -365,29 +365,14 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
   }
 
   private static class TrafficFunction {
-    static Function getLineColorFunction(@ColorInt int low, @ColorInt int moderate, @ColorInt int heavy,
-                                         @ColorInt int severe) {
-      return Function.property(
-        "congestion",
-        categorical(
-          stop("low", fillColor(low)),
-          stop("moderate", fillColor(moderate)),
-          stop("heavy", fillColor(heavy)),
-          stop("severe", fillColor(severe))
-        )
-      ).withDefaultValue(fillColor(Color.TRANSPARENT));
-    }
-
-    static CameraFunction getOffsetFunction(Stop... stops) {
-      return zoom(exponential(stops).withBase(1.5f));
-    }
-
-    static CameraFunction getWidthFunction(Stop... stops) {
-      return zoom(exponential(stops).withBase(1.5f));
-    }
-
-    static Function getOpacityFunction(Stop... stops) {
-      return zoom(exponential(stops));
+    static Expression getLineColorFunction(@ColorInt int low, @ColorInt int moderate, @ColorInt int heavy,
+                                           @ColorInt int severe) {
+      // fixme replace toColor with color expression after 6.0.0-beta.5
+      return match(get("congestion"), toColor(literal(PropertyFactory.colorToRgbaString(Color.TRANSPARENT))),
+        stop("low", toColor(literal(PropertyFactory.colorToRgbaString(low)))),
+        stop("moderate", toColor(literal(PropertyFactory.colorToRgbaString(moderate)))),
+        stop("heavy", toColor(literal(PropertyFactory.colorToRgbaString(heavy)))),
+        stop("severe", toColor(literal(PropertyFactory.colorToRgbaString(severe)))));
     }
   }
 
@@ -399,9 +384,9 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
   }
 
   private static class TrafficType {
-    static final Function FUNCTION_LINE_COLOR = TrafficFunction.getLineColorFunction(TrafficColor.BASE_GREEN,
+    static final Expression FUNCTION_LINE_COLOR = TrafficFunction.getLineColorFunction(TrafficColor.BASE_GREEN,
       TrafficColor.BASE_YELLOW, TrafficColor.BASE_ORANGE, TrafficColor.BASE_RED);
-    static final Function FUNCTION_LINE_COLOR_CASE = TrafficFunction.getLineColorFunction(
+    static final Expression FUNCTION_LINE_COLOR_CASE = TrafficFunction.getLineColorFunction(
       TrafficColor.CASE_GREEN, TrafficColor.CASE_YELLOW, TrafficColor.CASE_ORANGE, TrafficColor.CASE_RED);
   }
 
@@ -409,78 +394,157 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
     static final String BASE_LAYER_ID = "traffic-motorway";
     static final String CASE_LAYER_ID = "traffic-motorway-bg";
     static final float ZOOM_LEVEL = 6.0f;
-    static final Filter.Statement FILTER = in("class", "motorway");
-    static final CameraFunction FUNCTION_LINE_WIDTH = TrafficFunction.getWidthFunction(
-      stop(6, lineWidth(0.5f)), stop(9, lineWidth(1.5f)), stop(18.0f, lineWidth(14.0f)),
-      stop(20.0f, lineWidth(18.0f)));
-    static final CameraFunction FUNCTION_LINE_WIDTH_CASE = TrafficFunction.getWidthFunction(
-      stop(6, lineWidth(0.5f)), stop(9, lineWidth(3.0f)), stop(18.0f, lineWidth(16.0f)),
-      stop(20.0f, lineWidth(20.0f)));
-    static final CameraFunction FUNCTION_LINE_OFFSET = TrafficFunction.getOffsetFunction(
-      stop(7, lineOffset(0.0f)), stop(9, lineOffset(1.2f)), stop(11, lineOffset(1.2f)),
-      stop(18, lineOffset(10.0f)), stop(20, lineOffset(15.5f)));
+    static final Expression FILTER = match(
+      get("class"), literal(false),
+      stop("motorway", true)
+    );
+
+    static final Expression FUNCTION_LINE_WIDTH = interpolate(exponential(1.5f), zoom(),
+      stop(6, 0.5f),
+      stop(9, 1.5f),
+      stop(18.0f, 14.0f),
+      stop(20.0f, 18.0f)
+    );
+
+    static final Expression FUNCTION_LINE_WIDTH_CASE = interpolate(exponential(1.5f), zoom(),
+      stop(6, 0.5f),
+      stop(9, 3.0f),
+      stop(18.0f, 16.0f),
+      stop(20.0f, 20.0f)
+    );
+
+    static final Expression FUNCTION_LINE_OFFSET = interpolate(exponential(1.5f), zoom(),
+      stop(7, 0.0f),
+      stop(9, 1.2f),
+      stop(11, 1.2f),
+      stop(18, 10.0f),
+      stop(20, 15.5f));
   }
 
   static class Trunk extends TrafficType {
     static final String BASE_LAYER_ID = "traffic-trunk";
     static final String CASE_LAYER_ID = "traffic-trunk-bg";
     static final float ZOOM_LEVEL = 6.0f;
-    static final Filter.Statement FILTER = in("class", "trunk");
-    static final CameraFunction FUNCTION_LINE_WIDTH = TrafficFunction.getWidthFunction(
-      stop(8, lineWidth(0.75f)), stop(18, lineWidth(11f)), stop(20f, lineWidth(15.0f)));
-    static final CameraFunction FUNCTION_LINE_WIDTH_CASE = TrafficFunction.getWidthFunction(
-      stop(8, lineWidth(0.5f)), stop(9, lineWidth(2.25f)), stop(18.0f, lineWidth(13.0f)),
-      stop(20.0f, lineWidth(17.5f)));
-    static final CameraFunction FUNCTION_LINE_OFFSET = TrafficFunction.getOffsetFunction(
-      stop(7, lineOffset(0.0f)), stop(9, lineOffset(1f)), stop(18, lineOffset(13f)),
-      stop(20, lineOffset(18.0f)));
+
+    static final Expression FILTER = match(
+      get("class"), literal(false),
+      stop("trunk", true)
+    );
+
+    static final Expression FUNCTION_LINE_WIDTH = interpolate(exponential(1.5f), zoom(),
+      stop(8, 0.75f),
+      stop(18, 11f),
+      stop(20f, 15.0f)
+    );
+
+    static final Expression FUNCTION_LINE_WIDTH_CASE = interpolate(exponential(1.5f), zoom(),
+      stop(8, 0.5f),
+      stop(9, 2.25f),
+      stop(18.0f, 13.0f),
+      stop(20.0f, 17.5f)
+    );
+
+    static final Expression FUNCTION_LINE_OFFSET = interpolate(exponential(1.5f), zoom(),
+      stop(7, 0.0f),
+      stop(9, 1f),
+      stop(18, 13f),
+      stop(20, 18.0f));
   }
 
   static class Primary extends TrafficType {
     static final String BASE_LAYER_ID = "traffic-primary";
     static final String CASE_LAYER_ID = "traffic-primary-bg";
     static final float ZOOM_LEVEL = 6.0f;
-    static final Filter.Statement FILTER = in("class", "primary");
-    static final CameraFunction FUNCTION_LINE_WIDTH = TrafficFunction.getWidthFunction(
-      stop(10, lineWidth(1.0f)), stop(15, lineWidth(4.0f)), stop(20, lineWidth(16f)));
-    static final CameraFunction FUNCTION_LINE_WIDTH_CASE = TrafficFunction.getWidthFunction(
-      stop(10, lineWidth(0.75f)), stop(15, lineWidth(6f)), stop(20.0f, lineWidth(18.0f)));
-    static final CameraFunction FUNCTION_LINE_OFFSET = TrafficFunction.getOffsetFunction(
-      stop(10, lineOffset(0.0f)), stop(12, lineOffset(1.5f)), stop(18, lineOffset(13f)),
-      stop(20, lineOffset(16.0f)));
-    static final Function FUNCTION_LINE_OPACITY_CASE = TrafficFunction.getOpacityFunction(
-      stop(11, lineOpacity(0.0f)), stop(12, lineOpacity(1.0f)));
+
+    static final Expression FILTER = match(
+      get("class"), literal(false),
+      stop("primary", literal(true))
+    );
+
+    static final Expression FUNCTION_LINE_WIDTH = interpolate(exponential(1.5f), zoom(),
+      stop(10, 1.0f),
+      stop(15, 4.0f),
+      stop(20, 16f)
+    );
+
+    static final Expression FUNCTION_LINE_WIDTH_CASE = interpolate(exponential(1.5f), zoom(),
+      stop(10, 0.75f),
+      stop(15, 6f),
+      stop(20.0f, 18.0f)
+    );
+
+    static final Expression FUNCTION_LINE_OFFSET = interpolate(exponential(1.5f), zoom(),
+      stop(10, 0.0f),
+      stop(12, 1.5f),
+      stop(18, 13f),
+      stop(20, 16.0f)
+    );
+
+    static final Expression FUNCTION_LINE_OPACITY_CASE = interpolate(exponential(1.0f), zoom(),
+      stop(11, 0.0f),
+      stop(12, 1.0f)
+    );
   }
 
   static class Secondary extends TrafficType {
     static final String BASE_LAYER_ID = "traffic-secondary-tertiary";
     static final String CASE_LAYER_ID = "traffic-secondary-tertiary-bg";
     static final float ZOOM_LEVEL = 6.0f;
-    static final Filter.Statement FILTER = in("class", "secondary", "tertiary");
-    static final CameraFunction FUNCTION_LINE_WIDTH = TrafficFunction.getWidthFunction(
-      stop(9, lineWidth(0.5f)), stop(18, lineWidth(9.0f)), stop(20, lineWidth(14f)));
-    static final CameraFunction FUNCTION_LINE_WIDTH_CASE = TrafficFunction.getWidthFunction(
-      stop(9, lineWidth(1.5f)), stop(18, lineWidth(11f)), stop(20.0f, lineWidth(16.5f)));
-    static final CameraFunction FUNCTION_LINE_OFFSET = TrafficFunction.getOffsetFunction(
-      stop(10, lineOffset(0.5f)), stop(15, lineOffset(5f)), stop(18, lineOffset(11f)),
-      stop(20, lineOffset(14.5f)));
-    static final Function FUNCTION_LINE_OPACITY_CASE = TrafficFunction.getOpacityFunction(
-      stop(13, lineOpacity(0.0f)), stop(14, lineOpacity(1.0f)));
+    static final String[] FILTER_LAYERS = new String[] {"secondary", "tertiary"};
+
+    static final Expression FILTER = match(get("class"), literal(false), literal(FILTER_LAYERS), literal(true));
+
+    static final Expression FUNCTION_LINE_WIDTH = interpolate(exponential(1.5f), zoom(),
+      stop(9, 0.5f),
+      stop(18, 9.0f),
+      stop(20, 14f)
+    );
+
+    static final Expression FUNCTION_LINE_WIDTH_CASE = interpolate(exponential(1.5f), zoom(),
+      stop(9, 1.5f),
+      stop(18, 11f),
+      stop(20.0f, 16.5f)
+    );
+
+    static final Expression FUNCTION_LINE_OFFSET = interpolate(exponential(1.5f), zoom(),
+      stop(10, 0.5f),
+      stop(15, 5f),
+      stop(18, 11f),
+      stop(20, 14.5f)
+    );
+
+    static final Expression FUNCTION_LINE_OPACITY_CASE = interpolate(exponential(1.0f), zoom(),
+      stop(13, 0.0f),
+      stop(14, 1.0f)
+    );
   }
 
   static class Local extends TrafficType {
     static final String BASE_LAYER_ID = "traffic-local";
     static final String CASE_LAYER_ID = "traffic-local-case";
     static final float ZOOM_LEVEL = 15.0f;
-    static final Filter.Statement FILTER = in("class", "motorway_link", "service", "street");
-    static final CameraFunction FUNCTION_LINE_WIDTH = TrafficFunction.getWidthFunction(
-      stop(14, lineWidth(1.5f)), stop(20, lineWidth(13.5f)));
-    static final CameraFunction FUNCTION_LINE_WIDTH_CASE = TrafficFunction.getWidthFunction(
-      stop(14, lineWidth(2.5f)), stop(20, lineWidth(15.5f)));
-    static final CameraFunction FUNCTION_LINE_OFFSET = TrafficFunction.getOffsetFunction(
-      stop(14, lineOffset(2f)), stop(20, lineOffset(18f)));
-    static final Function FUNCTION_LINE_OPACITY_CASE = TrafficFunction.getOpacityFunction(
-      stop(15, lineOpacity(0.0f)), stop(16, lineOpacity(1.0f)));
+
+    static final String[] FILTER_LAYERS = new String[] {"motorway_link", "service", "street"};
+
+    static final Expression FILTER = match(get("class"), literal(false), literal(FILTER_LAYERS), literal(true));
+
+    static final Expression FUNCTION_LINE_WIDTH = interpolate(exponential(1.5f), zoom(),
+      stop(14, 1.5f),
+      stop(20, 13.5f)
+    );
+    static final Expression FUNCTION_LINE_WIDTH_CASE = interpolate(exponential(1.5f), zoom(),
+      stop(14, 2.5f),
+      stop(20, 15.5f)
+    );
+    static final Expression FUNCTION_LINE_OFFSET = interpolate(exponential(1.5f), zoom(),
+      stop(14, 2f),
+      stop(20, 18f)
+    );
+
+    static final Expression FUNCTION_LINE_OPACITY_CASE = interpolate(exponential(1.0f), zoom(),
+      stop(15, 0.0f),
+      stop(16, 1.0f)
+    );
   }
 
   private static class TrafficColor {
