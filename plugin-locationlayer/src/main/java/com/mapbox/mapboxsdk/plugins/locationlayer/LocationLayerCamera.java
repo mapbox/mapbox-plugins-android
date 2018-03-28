@@ -202,7 +202,8 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimati
       super(context, exclusiveGestures);
     }
 
-    public PluginsGesturesManager(Context context, List<Set<Integer>> exclusiveGestures, boolean applyDefaultThresholds) {
+    public PluginsGesturesManager(Context context, List<Set<Integer>> exclusiveGestures,
+                                  boolean applyDefaultThresholds) {
       super(context, exclusiveGestures, applyDefaultThresholds);
     }
 
