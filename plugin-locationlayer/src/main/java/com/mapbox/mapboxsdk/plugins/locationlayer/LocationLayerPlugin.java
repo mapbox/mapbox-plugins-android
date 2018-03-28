@@ -500,7 +500,8 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     updateMapWithOptions(options);
 
     locationLayer = new LocationLayer(mapView, mapboxMap, options);
-    locationLayerCamera = new LocationLayerCamera(mapboxMap, cameraTrackingChangedListener, options);
+    locationLayerCamera = new LocationLayerCamera(
+      mapView.getContext(), mapboxMap, cameraTrackingChangedListener, options);
     locationLayerAnimator = new LocationLayerAnimator();
     locationLayerAnimator.addLayerListener(locationLayer);
     locationLayerAnimator.addCameraListener(locationLayerCamera);
@@ -552,6 +553,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     CameraPosition currentCameraPosition = mapboxMap.getCameraPosition();
     boolean isGpsNorth = getCameraMode() == CameraMode.TRACKING_GPS_NORTH;
     locationLayerAnimator.feedNewLocation(location, currentCameraPosition, isGpsNorth);
+    locationLayer.updateAccuracyRadius(location);
   }
 
   private void updateCompassHeading(float heading) {
@@ -574,11 +576,16 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   }
 
   private OnCameraMoveListener onCameraMoveListener = new OnCameraMoveListener() {
+
+    private double lastZoom;
+
     @Override
     public void onCameraMove() {
-      CameraPosition position = mapboxMap.getCameraPosition();
-      locationLayer.updateAccuracyRadius(getLastKnownLocation());
-      locationLayer.updateForegroundOffset(position.tilt);
+      double zoom = mapboxMap.getCameraPosition().zoom;
+      if (zoom != lastZoom) {
+        locationLayer.updateAccuracyRadius(getLastKnownLocation());
+      }
+      lastZoom = zoom;
     }
   };
 

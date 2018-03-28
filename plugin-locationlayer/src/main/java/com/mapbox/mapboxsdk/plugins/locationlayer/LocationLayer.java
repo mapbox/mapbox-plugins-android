@@ -57,7 +57,6 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeColo
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotate;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotationAlignment;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
@@ -289,13 +288,6 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
       getDrawable(context, options.gpsDrawable(), options.foregroundTintColor()),
       getDrawable(context, options.gpsDrawable(), options.foregroundStaleTintColor()),
       isStale);
-  }
-
-  void updateForegroundOffset(double tilt) {
-    layerMap.get(FOREGROUND_LAYER).setProperties(
-      iconOffset(new Float[] {0f, (float) (-0.05 * tilt)}));
-    layerMap.get(SHADOW_LAYER).setProperties(
-      iconOffset(new Float[] {0f, (float) (0.05 * tilt)}));
   }
 
   void setLocationsStale(boolean isStale) {
