@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="mapbox_offline_navy">#263d57</color>
+  <color name="mapbox_offline_light_navy">#949fac</color>
+  <color name="mapbox_offline_bright_blue">#4a90e2</color>
+  <color name="mapbox_offline_green">#58BA93</color>
+  <color name="mapbox_offline_material_grey_200">#EEEEEE</color>
+  <color name="mapbox_offline_white">#FFFFFF</color>
+
+  <color name="mapbox_offline_dim_scrim">#44000000</color>
+
+</resources>

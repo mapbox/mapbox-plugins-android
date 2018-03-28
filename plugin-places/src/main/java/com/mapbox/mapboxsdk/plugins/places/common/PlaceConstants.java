@@ -14,6 +14,6 @@ public final class PlaceConstants {
     = "com.mapbox.mapboxsdk.plugins.places.cameraPosition";
 
   private PlaceConstants() {
-    throw new AssertionError("No Instances.");
+    // No Instances
   }
 }

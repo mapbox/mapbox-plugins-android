@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/place_picker_toolbar"
+  android:layout_width="match_parent"
+  android:layout_height="@dimen/mapbox_offline_extended_toolbar_height"
+  tools:background="@color/mapbox_offline_navy">
+
+  <TextView
+    android:id="@+id/place_picker_toolbar_primary_text_view"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/mapbox_offline_text_left_margin"
+    android:layout_marginStart="@dimen/mapbox_offline_text_left_margin"
+    android:text="@string/mapbox_offline_toolbar_primary_text"
+    android:textColor="@color/mapbox_offline_white"
+    android:textSize="@dimen/mapbox_offline_toolbar_primary_text"
+    android:textStyle="bold"
+    app:layout_constraintBottom_toTopOf="@+id/place_picker_toolbar_secondary_text_view"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_chainStyle="packed"/>
+
+  <TextView
+    android:id="@+id/place_picker_toolbar_secondary_text_view"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/mapbox_offline_text_left_margin"
+    android:layout_marginStart="@dimen/mapbox_offline_text_left_margin"
+    android:text="@string/mapbox_offline_toolbar_secondary_text"
+    android:textColor="@color/mapbox_offline_white"
+    android:textSize="@dimen/mapbox_offline_toolbar_secondary_text"
+    android:textStyle="normal"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/place_picker_toolbar_primary_text_view"/>
+
+  <ImageView
+    android:id="@+id/place_picker_toolbar_back_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/mapbox_offline_image_view_left_margin"
+    android:layout_marginStart="@dimen/mapbox_offline_image_view_left_margin"
+    android:contentDescription="@string/mapbox_offline_cd_exit_offline"
+    android:tint="@color/mapbox_offline_white"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@drawable/mapbox_ic_arrow_back"/>
+
+</android.support.constraint.ConstraintLayout>

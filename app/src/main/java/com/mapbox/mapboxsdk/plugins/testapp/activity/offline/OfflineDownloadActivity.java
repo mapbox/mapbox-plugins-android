@@ -14,10 +14,10 @@ import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
-import com.mapbox.mapboxsdk.plugins.offline.NotificationOptions;
-import com.mapbox.mapboxsdk.plugins.offline.OfflineDownloadOptions;
 import com.mapbox.mapboxsdk.plugins.offline.OfflinePlugin;
-import com.mapbox.mapboxsdk.plugins.offline.OfflineUtils;
+import com.mapbox.mapboxsdk.plugins.offline.model.NotificationOptions;
+import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions;
+import com.mapbox.mapboxsdk.plugins.offline.utils.OfflineUtils;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 
 import java.util.ArrayList;
@@ -175,17 +175,19 @@ public class OfflineDownloadActivity extends AppCompatActivity {
       getResources().getDisplayMetrics().density
     );
 
-    // customise notification appearance
-    NotificationOptions notificationOptions = new NotificationOptions()
-      .withSmallIconRes(R.drawable.mapbox_logo_icon)
-      .withReturnActivity(OfflineRegionDetailActivity.class.getName());
+    // customize notification appearance
+    NotificationOptions notificationOptions = NotificationOptions.builder(this)
+      .smallIconRes(R.drawable.mapbox_logo_icon)
+      .returnActivity(OfflineRegionDetailActivity.class.getName())
+      .build();
 
     // start offline download
     OfflinePlugin.getInstance().startDownload(this,
-      new OfflineDownloadOptions()
-        .withDefinition(definition)
-        .withMetadata(OfflineUtils.convertRegionName(regionName))
-        .withNotificationOptions(notificationOptions)
+      OfflineDownloadOptions.builder()
+        .definition(definition)
+        .metadata(OfflineUtils.convertRegionName(regionName))
+        .notificationOptions(notificationOptions)
+        .build()
     );
   }
 

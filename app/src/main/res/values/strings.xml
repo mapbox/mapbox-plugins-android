@@ -27,6 +27,7 @@
   <string name="title_offline_regions">List regions</string>
   <string name="title_place_picker">Place picker</string>
   <string name="title_localization">Localization Plugin</string>
+  <string name="title_offline_ui_components">Offline Ui Components</string>
 
   <!-- Descriptions -->
   <string name="description_traffic">Add Traffic layers to any Mapbox basemap.</string>
@@ -34,7 +35,7 @@
   <string name="description_location_modes">Switch between the different location modes.</string>
   <string name="description_location_map_change">Change map styles while the location layers on the map.</string>
   <string name="description_location_manual_update">Toggle the user location manual mode on and off.</string>
-  <string name="description_compass_listener">Add a compass listener to know when heading changes or when the accuracy dropsx</string>
+  <string name="description_compass_listener">Add a compass listener to know when heading changes or when the accuracy drops.</string>
   <string name="description_geojson">Load GeoJson file from assets, path or url to the Mapbox.</string>
   <string name="description_cluster">Add marker clustering to a Mapbox map.</string>
   <string name="description_autocomplete">Launch the autocomplete activity.</string>
@@ -43,6 +44,7 @@
   <string name="description_offline_regions">List all offline regions.</string>
   <string name="description_place_picker">Launch the place picker activity and receive result</string>
   <string name="description_localization">Automatically localize the map labels into the device\'s set language.</string>
+  <string name="description_offline_ui_components">Shows off the UI components included in the offline plugin.</string>
 
   <!-- Buttons -->
   <string name="button_location_mode_none">None</string>

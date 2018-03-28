@@ -3,6 +3,7 @@
 Mapbox welcomes participation and contributions from everyone.
 
 ### 0.5.0 - TBD
+- Fixed icon elevation still showing even when set to zero in some cases [#356](https://github.com/mapbox/mapbox-plugins-android/pull/356)
 - Location layer accuracy visibility issue fix [#306](https://github.com/mapbox/mapbox-plugins-android/pull/306)
 
 ### 0.4.0 - February 26, 2018

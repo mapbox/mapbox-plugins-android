@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 
-public class CarmenFeatureConverter {
+public final class CarmenFeatureConverter {
 
   private CarmenFeatureConverter() {
     // class shouldn't be initialized

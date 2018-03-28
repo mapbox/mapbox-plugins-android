@@ -7,6 +7,8 @@ android {
   defaultConfig {
     minSdkVersion androidVersions.minSdkVersion
     targetSdkVersion androidVersions.targetSdkVersion
+    vectorDrawables.useSupportLibrary = true
+    consumerProguardFiles 'proguard-consumer.pro'
   }
   buildTypes {
     release {
@@ -30,15 +32,35 @@ android {
       }
     }
   }
+
+  // Avoid naming conflicts
+  resourcePrefix 'mapbox_'
 }
 
 dependencies {
-  implementation dependenciesList.mapboxMapSdk
+  implementation dependenciesList.supportAppcompatV7
+  implementation dependenciesList.supportConstraintLayout
   implementation dependenciesList.supportAnnotation
   implementation dependenciesList.supportV4
+  implementation dependenciesList.supportDesign
+
+  // Mapbox
+  implementation dependenciesList.mapboxMapSdk
+
+  // AutoValues
+  annotationProcessor dependenciesList.autoValuesParcel
+  annotationProcessor dependenciesList.autoValue
+  compileOnly dependenciesList.autoValue
+
+  // Unit testing
+  testImplementation dependenciesList.junit
+  testImplementation dependenciesList.mockito
+  testImplementation dependenciesList.androidArchCore
+
   javadocDeps dependenciesList.mapboxMapSdk
 }
 
 apply from: 'javadoc.gradle'
 apply from: "${rootDir}/gradle/mvn-push-android.gradle"
 apply from: "${rootDir}/gradle/checkstyle.gradle"
+apply from: "${rootDir}/gradle/jacoco.gradle"

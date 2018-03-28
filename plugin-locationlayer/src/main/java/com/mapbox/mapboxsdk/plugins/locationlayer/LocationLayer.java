@@ -91,6 +91,16 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   void applyStyle(@NonNull LocationLayerOptions options) {
     this.options = options;
     styleForeground(options, isStale);
+
+    float elevation = options.elevation();
+    // Only add icon elevation if the values greater than 0.
+    if (elevation > 0) {
+      styleShadow(ContextCompat.getDrawable(context, R.drawable.mapbox_user_icon_shadow));
+    }
+    styleForeground(
+      getDrawable(context, options.foregroundDrawable(), options.foregroundTintColor()),
+      getDrawable(context, options.foregroundDrawableStale(), options.foregroundStaleTintColor()),
+      isStale);
     styleBackground(
       getDrawable(context, options.backgroundDrawable(), options.backgroundTintColor()),
       getDrawable(context, options.backgroundDrawableStale(), options.backgroundStaleTintColor()),
@@ -98,7 +108,6 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
     styleBearing(
       getDrawable(context, options.bearingDrawable(), options.bearingTintColor()));
     styleAccuracy(options.accuracyAlpha(), options.accuracyColor());
-    styleShadow(ContextCompat.getDrawable(context, R.drawable.mapbox_user_icon_shadow));
   }
 
   void setRenderMode(@RenderMode.Mode int renderMode) {

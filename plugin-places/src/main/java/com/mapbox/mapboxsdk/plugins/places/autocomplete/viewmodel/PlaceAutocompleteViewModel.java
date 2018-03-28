@@ -24,17 +24,19 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class PlaceAutocompleteViewModel extends AndroidViewModel
   implements Callback<GeocodingResponse> {
 
-  public final MutableLiveData<GeocodingResponse> geocodingLiveData = new MutableLiveData<>();
+  public final MutableLiveData<GeocodingResponse> geocodingLiveData;
   private MapboxGeocoding.Builder geocoderBuilder;
   private PlaceOptions placeOptions;
 
   PlaceAutocompleteViewModel(@NonNull Application application, @NonNull PlaceOptions placeOptions) {
     super(application);
     this.placeOptions = placeOptions;
+    geocodingLiveData = new MutableLiveData<>();
   }
 
   public void buildGeocodingRequest(String accessToken) {
@@ -103,13 +105,15 @@ public class PlaceAutocompleteViewModel extends AndroidViewModel
                          @NonNull Response<GeocodingResponse> response) {
     if (response.isSuccessful()) {
       geocodingLiveData.setValue(response.body());
+    } else {
+      geocodingLiveData.setValue(null);
     }
   }
 
   @Override
-  public void onFailure(@NonNull Call<GeocodingResponse> call,
-                        @NonNull Throwable throwable) {
-    throw new RuntimeException("Request failed with following message: ", throwable);
+  public void onFailure(@NonNull Call<GeocodingResponse> call, @NonNull Throwable throwable) {
+    Timber.e(throwable);
+    geocodingLiveData.setValue(null);
   }
 
   public SearchHistoryDatabase getDatabase() {

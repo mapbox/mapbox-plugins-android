@@ -5,6 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions;
+
+import static com.mapbox.mapboxsdk.plugins.offline.OfflineConstants.KEY_BUNDLE;
+
 public class OfflineDownloadStateReceiver extends BroadcastReceiver {
 
   private OfflinePlugin offlinePlugin;
@@ -15,82 +19,84 @@ public class OfflineDownloadStateReceiver extends BroadcastReceiver {
 
   @Override
   public void onReceive(Context context, Intent intent) {
-    String actionName = intent.getStringExtra(Constants.KEY_STATE);
-    OfflineDownload offlineDownload = intent.getParcelableExtra(OfflineDownload.KEY_BUNDLE);
+    String actionName = intent.getStringExtra(OfflineConstants.KEY_STATE);
+    OfflineDownloadOptions offlineDownload = intent.getParcelableExtra(KEY_BUNDLE);
 
     switch (actionName) {
-      case Constants.STATE_STARTED:
+      case OfflineConstants.STATE_STARTED:
         offlinePlugin.addDownload(offlineDownload);
         break;
-      case Constants.STATE_ERROR:
-        String error = intent.getStringExtra(Constants.KEY_BUNDLE_OFFLINE_REGION);
-        String message = intent.getStringExtra(Constants.KEY_BUNDLE_ERROR);
+      case OfflineConstants.STATE_ERROR:
+        String error = intent.getStringExtra(OfflineConstants.KEY_BUNDLE_OFFLINE_REGION);
+        String message = intent.getStringExtra(OfflineConstants.KEY_BUNDLE_ERROR);
         offlinePlugin.errorDownload(offlineDownload, error, message);
         break;
-      case Constants.STATE_PROGRESS:
-        int progress = intent.getIntExtra(Constants.KEY_PROGRESS, 0);
+      case OfflineConstants.STATE_PROGRESS:
+        int progress = intent.getIntExtra(OfflineConstants.KEY_PROGRESS, 0);
         offlinePlugin.onProgressChanged(offlineDownload, progress);
         break;
       default:
         // removes the offline download (cancel or finish)
-        offlinePlugin.removeDownload(offlineDownload, actionName.equals(Constants.STATE_CANCEL));
+        offlinePlugin.removeDownload(offlineDownload, actionName.equals(OfflineConstants.STATE_CANCEL));
         break;
     }
   }
 
-  static void dispatchProgressChanged(Context context, OfflineDownload offlineDownload, int percentage) {
-    Intent intent = new Intent(Constants.ACTION_OFFLINE);
-    intent.putExtra(Constants.KEY_STATE, Constants.STATE_PROGRESS);
-    intent.putExtra(OfflineDownload.KEY_BUNDLE, offlineDownload);
-    intent.putExtra(Constants.KEY_PROGRESS, percentage);
+  static void dispatchProgressChanged(Context context, OfflineDownloadOptions offlineDownload,
+                                      int percentage) {
+    Intent intent = new Intent(OfflineConstants.ACTION_OFFLINE);
+    intent.putExtra(OfflineConstants.KEY_STATE, OfflineConstants.STATE_PROGRESS);
+    intent.putExtra(KEY_BUNDLE, offlineDownload);
+    intent.putExtra(OfflineConstants.KEY_PROGRESS, percentage);
     context.getApplicationContext().sendBroadcast(intent);
   }
 
-  static void dispatchStartBroadcast(Context context, OfflineDownload offlineDownload) {
-    Intent intent = new Intent(Constants.ACTION_OFFLINE);
-    intent.putExtra(Constants.KEY_STATE, Constants.STATE_STARTED);
-    intent.putExtra(OfflineDownload.KEY_BUNDLE, offlineDownload);
+  static void dispatchStartBroadcast(Context context, OfflineDownloadOptions offlineDownload) {
+    Intent intent = new Intent(OfflineConstants.ACTION_OFFLINE);
+    intent.putExtra(OfflineConstants.KEY_STATE, OfflineConstants.STATE_STARTED);
+    intent.putExtra(KEY_BUNDLE, offlineDownload);
     context.getApplicationContext().sendBroadcast(intent);
   }
 
-  static void dispatchSuccessBroadcast(Context context, OfflineDownload offlineDownload) {
-    Intent intent = new Intent(Constants.ACTION_OFFLINE);
-    intent.putExtra(Constants.KEY_STATE, Constants.STATE_FINISHED);
-    intent.putExtra(OfflineDownload.KEY_BUNDLE, offlineDownload);
+  static void dispatchSuccessBroadcast(Context context, OfflineDownloadOptions offlineDownload) {
+    Intent intent = new Intent(OfflineConstants.ACTION_OFFLINE);
+    intent.putExtra(OfflineConstants.KEY_STATE, OfflineConstants.STATE_FINISHED);
+    intent.putExtra(KEY_BUNDLE, offlineDownload);
     context.getApplicationContext().sendBroadcast(intent);
   }
 
-  static void dispatchErrorBroadcast(Context context, OfflineDownload offlineDownload, String error) {
+  static void dispatchErrorBroadcast(Context context, OfflineDownloadOptions offlineDownload, String error) {
     dispatchErrorBroadcast(context, offlineDownload, error, error);
   }
 
-  static void dispatchErrorBroadcast(Context context, OfflineDownload offlineDownload, String error, String message) {
-    Intent intent = new Intent(Constants.ACTION_OFFLINE);
-    intent.putExtra(Constants.KEY_STATE, Constants.STATE_ERROR);
-    intent.putExtra(OfflineDownload.KEY_BUNDLE, offlineDownload);
-    intent.putExtra(Constants.KEY_BUNDLE_ERROR, error);
-    intent.putExtra(Constants.KEY_BUNDLE_MESSAGE, message);
+  static void dispatchErrorBroadcast(Context context, OfflineDownloadOptions offlineDownload,
+                                     String error, String message) {
+    Intent intent = new Intent(OfflineConstants.ACTION_OFFLINE);
+    intent.putExtra(OfflineConstants.KEY_STATE, OfflineConstants.STATE_ERROR);
+    intent.putExtra(KEY_BUNDLE, offlineDownload);
+    intent.putExtra(OfflineConstants.KEY_BUNDLE_ERROR, error);
+    intent.putExtra(OfflineConstants.KEY_BUNDLE_MESSAGE, message);
     context.getApplicationContext().sendBroadcast(intent);
   }
 
-  static void dispatchCancelBroadcast(Context context, OfflineDownload offlineDownload) {
-    Intent intent = new Intent(Constants.ACTION_OFFLINE);
-    intent.putExtra(Constants.KEY_STATE, Constants.STATE_CANCEL);
-    intent.putExtra(OfflineDownload.KEY_BUNDLE, offlineDownload);
+  static void dispatchCancelBroadcast(Context context, OfflineDownloadOptions offlineDownload) {
+    Intent intent = new Intent(OfflineConstants.ACTION_OFFLINE);
+    intent.putExtra(OfflineConstants.KEY_STATE, OfflineConstants.STATE_CANCEL);
+    intent.putExtra(KEY_BUNDLE, offlineDownload);
     context.getApplicationContext().sendBroadcast(intent);
   }
 
-  static Intent createCancelIntent(Context context, OfflineDownload offlineDownload) {
+  static Intent createCancelIntent(Context context, OfflineDownloadOptions offlineDownload) {
     Intent cancelIntent = new Intent(context, OfflineDownloadService.class);
-    cancelIntent.putExtra(OfflineDownload.KEY_BUNDLE, offlineDownload);
-    cancelIntent.setAction(Constants.ACTION_CANCEL_DOWNLOAD);
+    cancelIntent.putExtra(KEY_BUNDLE, offlineDownload);
+    cancelIntent.setAction(OfflineConstants.ACTION_CANCEL_DOWNLOAD);
     return cancelIntent;
   }
 
-  static PendingIntent createNotificationIntent(Context context, OfflineDownload offlineDownload) {
-    Class returnActivity = offlineDownload.getNotificationOptions().getReturnActivity();
+  static PendingIntent createNotificationIntent(Context context, OfflineDownloadOptions offlineDownload) {
+    Class returnActivity = offlineDownload.notificationOptions().getReturnActivity();
     Intent notificationIntent = new Intent(context, returnActivity);
-    notificationIntent.putExtra(OfflineDownload.KEY_BUNDLE, offlineDownload);
+    notificationIntent.putExtra(KEY_BUNDLE, offlineDownload);
     return PendingIntent.getActivity(
       context,
       0,

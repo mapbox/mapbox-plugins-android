@@ -2,9 +2,11 @@
 
   <!-- Autocomplete -->
   <string name="mapbox_plugins_autocomplete_search_hint">Search here</string>
+  <string name="mapbox_plugins_offline_message">Offline - Try again</string>
+  <string name="mapbox_snackbar_offline_message">Offline</string>
 
   <!-- Place picker -->
-  <string name="mapbox_plugins_place_picker_toolbar_primiary_text">Choose location on map</string>
+  <string name="mapbox_plugins_place_picker_toolbar_primary_text">Choose location on map</string>
   <string name="mapbox_plugins_place_picker_toolbar_secondary_text">Pan and zoom to adjust</string>
 
   <string name="mapbox_plugins_place_picker_not_valid_selection">The selected location isn\'t valid</string>
@@ -13,5 +15,6 @@
   <string name="mapbox_plugins_cd_exit_place_picker">Exit place picker</string>
   <string name="mapbox_plugins_cd_search_back_button">Close Search</string>
   <string name="mapbox_plugins_cd_search_clear_button">Clear Search Query</string>
+  <string name="mapbox_plugins_cd_offline_icon">Offline icon</string>
 
 </resources>

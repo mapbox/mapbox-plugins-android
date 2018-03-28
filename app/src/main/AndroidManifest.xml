@@ -143,6 +143,17 @@
         android:value=".activity.FeatureOverviewActivity"/>
     </activity>
     <activity
+      android:name=".activity.offline.OfflineUiComponentsActivity"
+      android:description="@string/description_offline_ui_components"
+      android:label="@string/title_offline_ui_components">
+      <meta-data
+        android:name="@string/category"
+        android:value="@string/category_offline"/>
+      <meta-data
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value=".activity.FeatureOverviewActivity"/>
+    </activity>
+    <activity
       android:name=".activity.offline.OfflineRegionListActivity"
       android:description="@string/description_offline_regions"
       android:label="@string/title_offline_regions">
@@ -158,7 +169,6 @@
       android:description="@string/description_offline_regions"
       android:label="@string/title_offline_regions"
       android:theme="@style/Translucent"/>
-
     <activity
       android:name=".activity.places.PickerLauncherActivity"
       android:description="@string/description_place_picker"
@@ -170,7 +180,6 @@
         android:name="android.support.PARENT_ACTIVITY"
         android:value=".activity.FeatureOverviewActivity"/>
     </activity>
-
     <activity
       android:name=".activity.LocalizationActivity"
       android:description="@string/description_localization"
@@ -182,8 +191,6 @@
         android:name="android.support.PARENT_ACTIVITY"
         android:value=".activity.FeatureOverviewActivity"/>
     </activity>
-
-    <activity android:name="com.mapbox.maboxsdk.plugins.SingleFragmentActivity"/>
 
     <service
       android:name="com.mapbox.mapboxsdk.plugins.offline.OfflineDownloadService"

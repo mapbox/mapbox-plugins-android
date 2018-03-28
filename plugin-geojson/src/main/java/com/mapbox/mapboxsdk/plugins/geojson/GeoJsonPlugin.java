@@ -311,7 +311,7 @@ public class GeoJsonPlugin {
       if (!TextUtils.isEmpty(featureType)) {
         if (featureType.equalsIgnoreCase("LineString")) {
           List<LatLng> latLngs = new ArrayList<>();
-          LineString lineString = (LineString) feature.getGeometry().getCoordinates();
+          LineString lineString = (LineString) feature.getGeometry();
           List<Position> coordinates = lineString.getCoordinates();
           for (Position position : coordinates) {
             LatLng latLng = new LatLng(position.getLatitude(), position.getLongitude());

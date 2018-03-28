@@ -1,4 +1,4 @@
-package com.mapbox.maboxsdk.plugins;
+package com.mapbox.mapboxsdk.plugins.testapp.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

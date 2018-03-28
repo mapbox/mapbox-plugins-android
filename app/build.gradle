@@ -17,7 +17,7 @@ android {
       testCoverageEnabled true
     }
     release {
-      minifyEnabled false
+      minifyEnabled true
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
@@ -43,6 +43,19 @@ android {
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
+  }
+}
+
+// Disable Leak Canary for UI and unit test.
+configurations.all { config ->
+  if (config.name.contains('UnitTest') || config.name.contains('AndroidTest')) {
+    config.resolutionStrategy.eachDependency { details ->
+      if (details.requested.group == 'com.squareup.leakcanary'
+          && details.requested.name == 'leakcanary-android') {
+        details.useTarget(group: details.requested.group, name: 'leakcanary-android-no-op',
+            version: details.requested.version)
+      }
+    }
   }
 }
 
@@ -78,8 +91,9 @@ dependencies {
   androidTestImplementation dependenciesList.testEspressoCore
   androidTestImplementation dependenciesList.testRoom
   androidTestImplementation dependenciesList.testArchCore
-  androidTestImplementation( dependenciesList.mockitoCore, {
-    exclude group: 'net.bytebuddy'})
+  androidTestImplementation(dependenciesList.mockitoCore, {
+    exclude group: 'net.bytebuddy'
+  })
 
   implementation dependenciesList.materialDialogs
 
