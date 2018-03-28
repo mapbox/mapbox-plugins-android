@@ -27,7 +27,6 @@ import com.mapbox.mapboxsdk.plugins.geojson.listener.OnMarkerEventListener;
 import com.mapbox.mapboxsdk.plugins.geojson.model.DataModel;
 import com.mapbox.mapboxsdk.plugins.geojson.model.MarkerData;
 import com.mapbox.mapboxsdk.plugins.geojson.model.PolyData;
-import com.mapbox.mapboxsdk.style.light.Position;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -324,7 +323,7 @@ public class GeoJsonPlugin {
           dataModel.addPolyline(polylinePolyData);
         } else if (featureType.equalsIgnoreCase("Point")) {
           Point point = (Point) feature.geometry();
-          if(point!=null) {
+          if (point != null) {
             LatLng latLng = new LatLng(point.latitude(), point.longitude());
             MarkerData markerData = new MarkerData();
             markerData.setPoint(latLng);
