@@ -9,7 +9,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode;
 
-final class LocationLayerCamera implements LocationLayerAnimator.OnAnimationsValuesChangeListener {
+final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimationsValuesChangeListener {
 
   @CameraMode.Mode
   private int cameraMode;
@@ -39,8 +39,8 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnAnimationsVal
   }
 
   void setCameraMode(@CameraMode.Mode int cameraMode) {
+    final boolean wasTracking = isLocationTracking();
     this.cameraMode = cameraMode;
-    boolean wasTracking = isLocationTracking();
     mapboxMap.cancelTransitions();
     adjustGesturesThresholds();
     notifyCameraTrackingChangeListener(wasTracking);
@@ -76,13 +76,13 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnAnimationsVal
 
   @Override
   public void onNewGpsBearingValue(float gpsBearing) {
-    if (cameraMode == CameraMode.TRACKING_GPS
-      || cameraMode == CameraMode.NONE_GPS) {
-      setBearing(gpsBearing);
-    }
+    boolean trackingNorth = cameraMode == CameraMode.TRACKING_GPS_NORTH
+      && mapboxMap.getCameraPosition().bearing != 0;
 
-    if (cameraMode == CameraMode.TRACKING_GPS_NORTH) {
-      setBearing(0);
+    if (cameraMode == CameraMode.TRACKING_GPS
+      || cameraMode == CameraMode.NONE_GPS
+      || trackingNorth) {
+      setBearing(gpsBearing);
     }
   }
 
@@ -120,7 +120,7 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnAnimationsVal
     internalCameraTrackingChangedListener.onCameraTrackingChanged(cameraMode);
     if (wasTracking && !isLocationTracking()) {
       mapboxMap.getUiSettings().setFocalPoint(null);
-      moveGestureDetector.setMoveThreshold(moveGestureDetector.getDefaultMoveThreshold());
+      moveGestureDetector.setMoveThreshold(0f);
       internalCameraTrackingChangedListener.onCameraTrackingDismissed();
     }
   }

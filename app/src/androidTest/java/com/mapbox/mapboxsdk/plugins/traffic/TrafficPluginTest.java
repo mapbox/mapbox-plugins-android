@@ -9,8 +9,6 @@ import android.support.test.runner.AndroidJUnit4;
 import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.TrafficActivity;
-import com.mapbox.mapboxsdk.style.functions.CameraFunction;
-import com.mapbox.mapboxsdk.style.functions.stops.ExponentialStops;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.utils.OnMapReadyIdlingResource;
@@ -822,11 +820,7 @@ public class TrafficPluginTest {
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         LineLayer layer = mapboxMap.getLayerAs(Local.BASE_LAYER_ID);
         assertNotNull(layer.getLineWidth());
-        assertNotNull(layer.getLineWidth().getFunction());
-        assertEquals(CameraFunction.class, layer.getLineWidth().getFunction().getClass());
-        assertEquals(ExponentialStops.class, layer.getLineWidth().getFunction().getStops().getClass());
-        assertEquals(1.5f, ((ExponentialStops) layer.getLineWidth().getFunction().getStops()).getBase(), 0.001);
-        assertEquals(2, ((ExponentialStops) layer.getLineWidth().getFunction().getStops()).size());
+        assertNotNull(layer.getLineWidth().getExpression());
       }
     });
   }
@@ -838,11 +832,7 @@ public class TrafficPluginTest {
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         LineLayer layer = mapboxMap.getLayerAs(Local.CASE_LAYER_ID);
         assertNotNull(layer.getLineWidth());
-        assertNotNull(layer.getLineWidth().getFunction());
-        assertEquals(CameraFunction.class, layer.getLineWidth().getFunction().getClass());
-        assertEquals(ExponentialStops.class, layer.getLineWidth().getFunction().getStops().getClass());
-        assertEquals(1.5f, ((ExponentialStops) layer.getLineWidth().getFunction().getStops()).getBase(), 0.001);
-        assertEquals(2, ((ExponentialStops) layer.getLineWidth().getFunction().getStops()).size());
+        assertNotNull(layer.getLineWidth().getExpression());
       }
     });
   }
@@ -855,11 +845,7 @@ public class TrafficPluginTest {
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         LineLayer layer = mapboxMap.getLayerAs(Secondary.BASE_LAYER_ID);
         assertNotNull(layer.getLineWidth());
-        assertNotNull(layer.getLineWidth().getFunction());
-        assertEquals(CameraFunction.class, layer.getLineWidth().getFunction().getClass());
-        assertEquals(ExponentialStops.class, layer.getLineWidth().getFunction().getStops().getClass());
-        assertEquals(1.5f, ((ExponentialStops) layer.getLineWidth().getFunction().getStops()).getBase(), 0.001);
-        assertEquals(3, ((ExponentialStops) layer.getLineWidth().getFunction().getStops()).size());
+        assertNotNull(layer.getLineWidth().getExpression());
       }
     });
   }
@@ -871,11 +857,7 @@ public class TrafficPluginTest {
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         LineLayer layer = mapboxMap.getLayerAs(Secondary.CASE_LAYER_ID);
         assertNotNull(layer.getLineWidth());
-        assertNotNull(layer.getLineWidth().getFunction());
-        assertEquals(CameraFunction.class, layer.getLineWidth().getFunction().getClass());
-        assertEquals(ExponentialStops.class, layer.getLineWidth().getFunction().getStops().getClass());
-        assertEquals(1.5f, ((ExponentialStops) layer.getLineWidth().getFunction().getStops()).getBase(), 0.001);
-        assertEquals(3, ((ExponentialStops) layer.getLineWidth().getFunction().getStops()).size());
+        assertNotNull(layer.getLineWidth().getExpression());
       }
     });
   }
@@ -887,11 +869,7 @@ public class TrafficPluginTest {
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         LineLayer layer = mapboxMap.getLayerAs(Primary.BASE_LAYER_ID);
         assertNotNull(layer.getLineWidth());
-        assertNotNull(layer.getLineWidth().getFunction());
-        assertEquals(CameraFunction.class, layer.getLineWidth().getFunction().getClass());
-        assertEquals(ExponentialStops.class, layer.getLineWidth().getFunction().getStops().getClass());
-        assertEquals(1.5f, ((ExponentialStops) layer.getLineWidth().getFunction().getStops()).getBase(), 0.001);
-        assertEquals(3, ((ExponentialStops) layer.getLineWidth().getFunction().getStops()).size());
+        assertNotNull(layer.getLineWidth().getExpression());
       }
     });
   }
@@ -903,11 +881,7 @@ public class TrafficPluginTest {
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         LineLayer layer = mapboxMap.getLayerAs(Primary.CASE_LAYER_ID);
         assertNotNull(layer.getLineWidth());
-        assertNotNull(layer.getLineWidth().getFunction());
-        assertEquals(CameraFunction.class, layer.getLineWidth().getFunction().getClass());
-        assertEquals(ExponentialStops.class, layer.getLineWidth().getFunction().getStops().getClass());
-        assertEquals(1.5f, ((ExponentialStops) layer.getLineWidth().getFunction().getStops()).getBase(), 0.001);
-        assertEquals(3, ((ExponentialStops) layer.getLineWidth().getFunction().getStops()).size());
+        assertNotNull(layer.getLineWidth().getExpression());
       }
     });
   }
@@ -919,11 +893,7 @@ public class TrafficPluginTest {
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         LineLayer layer = mapboxMap.getLayerAs(Trunk.BASE_LAYER_ID);
         assertNotNull(layer.getLineWidth());
-        assertNotNull(layer.getLineWidth().getFunction());
-        assertEquals(CameraFunction.class, layer.getLineWidth().getFunction().getClass());
-        assertEquals(ExponentialStops.class, layer.getLineWidth().getFunction().getStops().getClass());
-        assertEquals(1.5f, ((ExponentialStops) layer.getLineWidth().getFunction().getStops()).getBase(), 0.001);
-        assertEquals(3, ((ExponentialStops) layer.getLineWidth().getFunction().getStops()).size());
+        assertNotNull(layer.getLineWidth().getExpression());
       }
     });
   }
@@ -935,11 +905,7 @@ public class TrafficPluginTest {
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         LineLayer layer = mapboxMap.getLayerAs(Trunk.CASE_LAYER_ID);
         assertNotNull(layer.getLineWidth());
-        assertNotNull(layer.getLineWidth().getFunction());
-        assertEquals(CameraFunction.class, layer.getLineWidth().getFunction().getClass());
-        assertEquals(ExponentialStops.class, layer.getLineWidth().getFunction().getStops().getClass());
-        assertEquals(1.5f, ((ExponentialStops) layer.getLineWidth().getFunction().getStops()).getBase(), 0.001);
-        assertEquals(4, ((ExponentialStops) layer.getLineWidth().getFunction().getStops()).size());
+        assertNotNull(layer.getLineWidth().getExpression());
       }
     });
   }
@@ -951,11 +917,7 @@ public class TrafficPluginTest {
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         LineLayer layer = mapboxMap.getLayerAs(MotorWay.BASE_LAYER_ID);
         assertNotNull(layer.getLineWidth());
-        assertNotNull(layer.getLineWidth().getFunction());
-        assertEquals(CameraFunction.class, layer.getLineWidth().getFunction().getClass());
-        assertEquals(ExponentialStops.class, layer.getLineWidth().getFunction().getStops().getClass());
-        assertEquals(1.5f, ((ExponentialStops) layer.getLineWidth().getFunction().getStops()).getBase(), 0.001);
-        assertEquals(4, ((ExponentialStops) layer.getLineWidth().getFunction().getStops()).size());
+        assertNotNull(layer.getLineWidth().getExpression());
       }
     });
   }
@@ -967,11 +929,7 @@ public class TrafficPluginTest {
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         LineLayer layer = mapboxMap.getLayerAs(MotorWay.CASE_LAYER_ID);
         assertNotNull(layer.getLineWidth());
-        assertNotNull(layer.getLineWidth().getFunction());
-        assertEquals(CameraFunction.class, layer.getLineWidth().getFunction().getClass());
-        assertEquals(ExponentialStops.class, layer.getLineWidth().getFunction().getStops().getClass());
-        assertEquals(1.5f, ((ExponentialStops) layer.getLineWidth().getFunction().getStops()).getBase(), 0.001);
-        assertEquals(4, ((ExponentialStops) layer.getLineWidth().getFunction().getStops()).size());
+        assertNotNull(layer.getLineWidth().getExpression());
       }
     });
   }
@@ -983,11 +941,7 @@ public class TrafficPluginTest {
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         LineLayer layer = mapboxMap.getLayerAs(Local.BASE_LAYER_ID);
         assertNotNull(layer.getLineOffset());
-        assertNotNull(layer.getLineOffset().getFunction());
-        assertEquals(CameraFunction.class, layer.getLineOffset().getFunction().getClass());
-        assertEquals(ExponentialStops.class, layer.getLineOffset().getFunction().getStops().getClass());
-        assertEquals(1.5f, ((ExponentialStops) layer.getLineOffset().getFunction().getStops()).getBase(), 0.001);
-        assertEquals(2, ((ExponentialStops) layer.getLineOffset().getFunction().getStops()).size());
+        assertNotNull(layer.getLineOffset().getExpression());
       }
     });
   }
@@ -999,11 +953,7 @@ public class TrafficPluginTest {
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         LineLayer layer = mapboxMap.getLayerAs(Local.CASE_LAYER_ID);
         assertNotNull(layer.getLineOffset());
-        assertNotNull(layer.getLineOffset().getFunction());
-        assertEquals(CameraFunction.class, layer.getLineOffset().getFunction().getClass());
-        assertEquals(ExponentialStops.class, layer.getLineOffset().getFunction().getStops().getClass());
-        assertEquals(1.5f, ((ExponentialStops) layer.getLineOffset().getFunction().getStops()).getBase(), 0.001);
-        assertEquals(2, ((ExponentialStops) layer.getLineOffset().getFunction().getStops()).size());
+        assertNotNull(layer.getLineOffset().getExpression());
       }
     });
   }
@@ -1016,11 +966,7 @@ public class TrafficPluginTest {
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         LineLayer layer = mapboxMap.getLayerAs(Secondary.BASE_LAYER_ID);
         assertNotNull(layer.getLineOffset());
-        assertNotNull(layer.getLineOffset().getFunction());
-        assertEquals(CameraFunction.class, layer.getLineOffset().getFunction().getClass());
-        assertEquals(ExponentialStops.class, layer.getLineOffset().getFunction().getStops().getClass());
-        assertEquals(1.5f, ((ExponentialStops) layer.getLineOffset().getFunction().getStops()).getBase(), 0.001);
-        assertEquals(4, ((ExponentialStops) layer.getLineOffset().getFunction().getStops()).size());
+        assertNotNull(layer.getLineOffset().getExpression());
       }
     });
   }
@@ -1032,11 +978,7 @@ public class TrafficPluginTest {
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         LineLayer layer = mapboxMap.getLayerAs(Secondary.CASE_LAYER_ID);
         assertNotNull(layer.getLineOffset());
-        assertNotNull(layer.getLineOffset().getFunction());
-        assertEquals(CameraFunction.class, layer.getLineOffset().getFunction().getClass());
-        assertEquals(ExponentialStops.class, layer.getLineOffset().getFunction().getStops().getClass());
-        assertEquals(1.5f, ((ExponentialStops) layer.getLineOffset().getFunction().getStops()).getBase(), 0.001);
-        assertEquals(4, ((ExponentialStops) layer.getLineOffset().getFunction().getStops()).size());
+        assertNotNull(layer.getLineOffset().getExpression());
       }
     });
   }
@@ -1048,11 +990,7 @@ public class TrafficPluginTest {
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         LineLayer layer = mapboxMap.getLayerAs(Primary.BASE_LAYER_ID);
         assertNotNull(layer.getLineOffset());
-        assertNotNull(layer.getLineOffset().getFunction());
-        assertEquals(CameraFunction.class, layer.getLineOffset().getFunction().getClass());
-        assertEquals(ExponentialStops.class, layer.getLineOffset().getFunction().getStops().getClass());
-        assertEquals(1.5f, ((ExponentialStops) layer.getLineOffset().getFunction().getStops()).getBase(), 0.001);
-        assertEquals(4, ((ExponentialStops) layer.getLineOffset().getFunction().getStops()).size());
+        assertNotNull(layer.getLineOffset().getExpression());
       }
     });
   }
@@ -1064,11 +1002,7 @@ public class TrafficPluginTest {
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         LineLayer layer = mapboxMap.getLayerAs(Primary.CASE_LAYER_ID);
         assertNotNull(layer.getLineOffset());
-        assertNotNull(layer.getLineOffset().getFunction());
-        assertEquals(CameraFunction.class, layer.getLineOffset().getFunction().getClass());
-        assertEquals(ExponentialStops.class, layer.getLineOffset().getFunction().getStops().getClass());
-        assertEquals(1.5f, ((ExponentialStops) layer.getLineOffset().getFunction().getStops()).getBase(), 0.001);
-        assertEquals(4, ((ExponentialStops) layer.getLineOffset().getFunction().getStops()).size());
+        assertNotNull(layer.getLineOffset().getExpression());
       }
     });
   }
@@ -1080,11 +1014,7 @@ public class TrafficPluginTest {
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         LineLayer layer = mapboxMap.getLayerAs(Trunk.BASE_LAYER_ID);
         assertNotNull(layer.getLineOffset());
-        assertNotNull(layer.getLineOffset().getFunction());
-        assertEquals(CameraFunction.class, layer.getLineOffset().getFunction().getClass());
-        assertEquals(ExponentialStops.class, layer.getLineOffset().getFunction().getStops().getClass());
-        assertEquals(1.5f, ((ExponentialStops) layer.getLineOffset().getFunction().getStops()).getBase(), 0.001);
-        assertEquals(4, ((ExponentialStops) layer.getLineOffset().getFunction().getStops()).size());
+        assertNotNull(layer.getLineOffset().getExpression());
       }
     });
   }
@@ -1096,11 +1026,7 @@ public class TrafficPluginTest {
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         LineLayer layer = mapboxMap.getLayerAs(Trunk.CASE_LAYER_ID);
         assertNotNull(layer.getLineOffset());
-        assertNotNull(layer.getLineOffset().getFunction());
-        assertEquals(CameraFunction.class, layer.getLineOffset().getFunction().getClass());
-        assertEquals(ExponentialStops.class, layer.getLineOffset().getFunction().getStops().getClass());
-        assertEquals(1.5f, ((ExponentialStops) layer.getLineOffset().getFunction().getStops()).getBase(), 0.001);
-        assertEquals(4, ((ExponentialStops) layer.getLineOffset().getFunction().getStops()).size());
+        assertNotNull(layer.getLineOffset().getExpression());
       }
     });
   }
@@ -1112,11 +1038,7 @@ public class TrafficPluginTest {
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         LineLayer layer = mapboxMap.getLayerAs(MotorWay.BASE_LAYER_ID);
         assertNotNull(layer.getLineOffset());
-        assertNotNull(layer.getLineOffset().getFunction());
-        assertEquals(CameraFunction.class, layer.getLineOffset().getFunction().getClass());
-        assertEquals(ExponentialStops.class, layer.getLineOffset().getFunction().getStops().getClass());
-        assertEquals(1.5f, ((ExponentialStops) layer.getLineOffset().getFunction().getStops()).getBase(), 0.001);
-        assertEquals(5, ((ExponentialStops) layer.getLineOffset().getFunction().getStops()).size());
+        assertNotNull(layer.getLineOffset().getExpression());
       }
     });
   }
@@ -1128,11 +1050,7 @@ public class TrafficPluginTest {
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         LineLayer layer = mapboxMap.getLayerAs(MotorWay.CASE_LAYER_ID);
         assertNotNull(layer.getLineOffset());
-        assertNotNull(layer.getLineOffset().getFunction());
-        assertEquals(CameraFunction.class, layer.getLineOffset().getFunction().getClass());
-        assertEquals(ExponentialStops.class, layer.getLineOffset().getFunction().getStops().getClass());
-        assertEquals(1.5f, ((ExponentialStops) layer.getLineOffset().getFunction().getStops()).getBase(), 0.001);
-        assertEquals(5, ((ExponentialStops) layer.getLineOffset().getFunction().getStops()).size());
+        assertNotNull(layer.getLineOffset().getExpression());
       }
     });
   }

@@ -45,7 +45,7 @@ public abstract class LocationLayerOptions implements Parcelable {
   /**
    * Default max map zoom
    */
-  private static final float MAX_ZOOM_DEFAULT = 20;
+  private static final float MAX_ZOOM_DEFAULT = 18;
 
   /**
    * Default min map zoom

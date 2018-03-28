@@ -117,7 +117,6 @@ public class BuildingActivity extends AppCompatActivity implements OnMapReadyCal
       return super.onOptionsItemSelected(item);
     }
 
-
     switch (item.getItemId()) {
       case R.id.menu_building_min_zoom:
         buildingPlugin.setMinZoomLevel(14);
