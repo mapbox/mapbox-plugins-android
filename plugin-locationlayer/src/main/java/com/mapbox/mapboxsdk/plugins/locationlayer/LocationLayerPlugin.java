@@ -500,7 +500,8 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     updateMapWithOptions(options);
 
     locationLayer = new LocationLayer(mapView, mapboxMap, options);
-    locationLayerCamera = new LocationLayerCamera(mapboxMap, cameraTrackingChangedListener, options);
+    locationLayerCamera = new LocationLayerCamera(
+      mapView.getContext(), mapboxMap, cameraTrackingChangedListener, options);
     locationLayerAnimator = new LocationLayerAnimator();
     locationLayerAnimator.addLayerListener(locationLayer);
     locationLayerAnimator.addCameraListener(locationLayerCamera);

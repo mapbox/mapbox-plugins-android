@@ -1,13 +1,19 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer;
 
+import android.content.Context;
 import android.graphics.PointF;
+import android.view.MotionEvent;
 
+import com.mapbox.android.gestures.AndroidGesturesManager;
 import com.mapbox.android.gestures.MoveGestureDetector;
 import com.mapbox.android.gestures.RotateGestureDetector;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode;
+
+import java.util.List;
+import java.util.Set;
 
 final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimationsValuesChangeListener {
 
@@ -22,16 +28,19 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimati
   private final MoveGestureDetector moveGestureDetector;
 
   LocationLayerCamera(
+    Context context,
     MapboxMap mapboxMap,
     OnCameraTrackingChangedListener internalCameraTrackingChangedListener,
     LocationLayerOptions options) {
     this.mapboxMap = mapboxMap;
-    this.internalCameraTrackingChangedListener = internalCameraTrackingChangedListener;
-    initializeOptions(options);
-
+    mapboxMap.setGesturesManager(
+      new PluginsGesturesManager(context), true, true);
     moveGestureDetector = mapboxMap.getGesturesManager().getMoveGestureDetector();
     mapboxMap.addOnMoveListener(onMoveListener);
     mapboxMap.addOnRotateListener(onRotateListener);
+
+    this.internalCameraTrackingChangedListener = internalCameraTrackingChangedListener;
+    initializeOptions(options);
   }
 
   void initializeOptions(LocationLayerOptions options) {
@@ -98,6 +107,8 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimati
     if (isLocationTracking()) {
       adjustFocalPoint = true;
       moveGestureDetector.setMoveThreshold(options.trackingInitialMoveThreshold());
+    } else {
+      moveGestureDetector.setMoveThreshold(0f);
     }
   }
 
@@ -120,7 +131,6 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimati
     internalCameraTrackingChangedListener.onCameraTrackingChanged(cameraMode);
     if (wasTracking && !isLocationTracking()) {
       mapboxMap.getUiSettings().setFocalPoint(null);
-      moveGestureDetector.setMoveThreshold(0f);
       internalCameraTrackingChangedListener.onCameraTrackingDismissed();
     }
   }
@@ -177,4 +187,34 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimati
       // no implementation
     }
   };
+
+  private class PluginsGesturesManager extends AndroidGesturesManager {
+
+    public PluginsGesturesManager(Context context) {
+      super(context);
+    }
+
+    public PluginsGesturesManager(Context context, boolean applyDefaultThresholds) {
+      super(context, applyDefaultThresholds);
+    }
+
+    public PluginsGesturesManager(Context context, Set<Integer>[] exclusiveGestures) {
+      super(context, exclusiveGestures);
+    }
+
+    public PluginsGesturesManager(Context context, List<Set<Integer>> exclusiveGestures, boolean applyDefaultThresholds) {
+      super(context, exclusiveGestures, applyDefaultThresholds);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent motionEvent) {
+      if (motionEvent != null) {
+        int action = motionEvent.getActionMasked();
+        if (action == MotionEvent.ACTION_UP) {
+          adjustGesturesThresholds();
+        }
+      }
+      return super.onTouchEvent(motionEvent);
+    }
+  }
 }
