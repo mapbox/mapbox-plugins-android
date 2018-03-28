@@ -39,7 +39,7 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimati
   }
 
   void setCameraMode(@CameraMode.Mode int cameraMode) {
-    boolean wasTracking = isLocationTracking();
+    final boolean wasTracking = isLocationTracking();
     this.cameraMode = cameraMode;
     mapboxMap.cancelTransitions();
     adjustGesturesThresholds();
@@ -120,7 +120,7 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimati
     internalCameraTrackingChangedListener.onCameraTrackingChanged(cameraMode);
     if (wasTracking && !isLocationTracking()) {
       mapboxMap.getUiSettings().setFocalPoint(null);
-      moveGestureDetector.setMoveThreshold(moveGestureDetector.getDefaultMoveThreshold());
+      moveGestureDetector.setMoveThreshold(0f);
       internalCameraTrackingChangedListener.onCameraTrackingDismissed();
     }
   }

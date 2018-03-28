@@ -218,6 +218,7 @@ public class LocationLayerTest {
       locationLayerPlugin.setRenderMode(RenderMode.NORMAL);
       locationLayerPlugin.forceLocationUpdate(location);
       SymbolLayer layer = mapboxMap.getLayerAs(FOREGROUND_LAYER);
+      uiController.loopMainThreadForAtLeast(200);
       Float[] value = layer.getIconOffset().getValue();
       Assert.assertEquals((-0.05 * 60), value[1], 0.1);
     });
