@@ -9,9 +9,8 @@ ext {
 
   version = [
       mapboxMapSdk       : '6.0.0-beta.5',
-      mapboxGeocoding    : '3.0.0-beta.3',
-      mapboxGeoJson      : '3.0.0-beta.3',
-      mapboxServices     : '2.2.10',
+      mapboxGeocoding    : '3.0.0-beta.4',
+      mapboxGeoJson      : '3.0.0-beta.4',
       lost               : '3.0.4',
       autoValue          : '1.5.3',
       autoValueParcel    : '0.2.6',
@@ -36,10 +35,10 @@ ext {
       okhttp             : '3.9.1',
       materialDialogs    : '0.9.6.0'
   ]
+
   dependenciesList = [
       // mapbox
       mapboxMapSdk           : "com.mapbox.mapboxsdk:mapbox-android-sdk:${version.mapboxMapSdk}",
-      mapboxServices         : "com.mapbox.mapboxsdk:mapbox-android-services:${version.mapboxServices}",
       mapboxGeoJson          : "com.mapbox.mapboxsdk:mapbox-sdk-geojson:${version.mapboxGeoJson}",
       mapboxGeocoding        : "com.mapbox.mapboxsdk:mapbox-sdk-services:${version.mapboxGeocoding}",
 
@@ -116,7 +115,6 @@ ext {
       sonarqube : '2.6.2',
       gradle    : '3.0.1'
   ]
-
 
   pluginDependencies = [
       gradle    : "com.android.tools.build:gradle:${pluginVersion.gradle}",
