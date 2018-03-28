@@ -18,7 +18,7 @@ import com.mapbox.mapboxsdk.offline.OfflineManager;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
 import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
-import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions;
+import com.mapbox.mapboxsdk.plugins.offline.model.DownloadOptions;
 import com.mapbox.mapboxsdk.plugins.offline.OfflineDownloadChangeListener;
 import com.mapbox.mapboxsdk.plugins.offline.OfflinePlugin;
 import com.mapbox.mapboxsdk.plugins.offline.utils.OfflineUtils;
@@ -91,10 +91,10 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
 
   private void loadOfflineDownload(Bundle bundle) {
     long regionId;
-    OfflineDownloadOptions offlineDownload = bundle.getParcelable(KEY_BUNDLE);
+    DownloadOptions offlineDownload = bundle.getParcelable(KEY_BUNDLE);
     if (offlineDownload != null) {
       // coming from notification
-      regionId = offlineDownload.getRegionId();
+      regionId = offlineDownload.uuid();
     } else {
       // coming from list
       regionId = bundle.getLong(KEY_REGION_ID_BUNDLE, -1);
@@ -177,7 +177,7 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
         offlineRegion.delete(offlineRegionDeleteCallback);
       } else {
         // cancel download
-        OfflineDownloadOptions offlineDownload = offlinePlugin.getActiveDownloadForOfflineRegion(offlineRegion);
+        DownloadOptions offlineDownload = offlinePlugin.getActiveDownloadForOfflineRegion(offlineRegion);
         if (offlineDownload != null) {
           offlinePlugin.cancelDownload(this, offlineDownload);
           isDownloading = false;
@@ -188,36 +188,36 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
   }
 
   @Override
-  public void onCreate(OfflineDownloadOptions offlineDownload) {
-    Timber.e("OfflineDownloadOptions created %s", offlineDownload.hashCode());
+  public void onCreate(DownloadOptions downloadOptions) {
+    Timber.e("DownloadOptions created %s", downloadOptions.hashCode());
   }
 
   @Override
-  public void onSuccess(OfflineDownloadOptions offlineDownload) {
+  public void onSuccess(DownloadOptions offlineDownload) {
     isDownloading = false;
     progressBar.setVisibility(View.INVISIBLE);
     updateFab();
   }
 
   @Override
-  public void onCancel(OfflineDownloadOptions offlineDownload) {
+  public void onCancel(DownloadOptions offlineDownload) {
     finish(); // nothing to do in this screen, cancel = delete
   }
 
   @Override
-  public void onError(OfflineDownloadOptions offlineDownload, String error, String message) {
+  public void onError(DownloadOptions offlineDownload, String error, String message) {
     progressBar.setVisibility(View.INVISIBLE);
     stateView.setText("ERROR");
     Toast.makeText(this, error + message, Toast.LENGTH_LONG).show();
   }
 
   @Override
-  public void onProgress(OfflineDownloadOptions offlineDownload, int progress) {
+  public void onProgress(DownloadOptions offlineDownload, int progress) {
     if (offlineRegion == null) {
       return;
     }
 
-    if (offlineDownload.getRegionId() == offlineRegion.getID()) {
+    if (offlineDownload.uuid() == offlineRegion.getID()) {
       if (progressBar.getVisibility() != View.VISIBLE) {
         progressBar.setVisibility(View.VISIBLE);
       }

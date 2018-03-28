@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.mapbox.mapboxsdk.constants.MapboxConstants;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -178,7 +179,10 @@ public class RegionSelectionFragment extends Fragment implements OnMapReadyCallb
     float pixelRatio = getActivity().getResources().getDisplayMetrics().density;
 
     return new OfflineTilePyramidRegionDefinition(
-      mapboxMap.getStyleUrl(), bounds, cameraZoom - 2, cameraZoom + 2, pixelRatio
+      mapboxMap.getStyleUrl(), bounds,
+      Math.max(MapboxConstants.MINIMUM_ZOOM, cameraZoom - 2),
+      Math.min(MapboxConstants.MAXIMUM_ZOOM, cameraZoom + 2),
+      pixelRatio
     );
   }
 
