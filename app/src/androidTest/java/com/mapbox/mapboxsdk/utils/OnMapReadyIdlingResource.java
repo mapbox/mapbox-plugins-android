@@ -3,8 +3,6 @@ package com.mapbox.mapboxsdk.utils;
 import android.app.Activity;
 import android.support.test.espresso.IdlingResource;
 
-import timber.log.Timber;
-
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
