@@ -15,7 +15,7 @@ final class LocationLayerConstants {
   static final int LOCATION_UPDATE_DELAY_MS = 500;
 
   // Sets the max allowed time for the location icon animation from one latlng to another.
-  static final long MAX_ANIMATION_DURATION_MS = 1500;
+  static final long MIN_ANIMATION_DURATION_MS = 1500;
 
   // Sources
   static final String LOCATION_SOURCE = "mapbox-location-source";

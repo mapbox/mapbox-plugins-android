@@ -8,14 +8,17 @@ import android.support.annotation.Nullable;
 
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.style.functions.Function;
 import com.mapbox.mapboxsdk.style.layers.FillExtrusionLayer;
 import com.mapbox.mapboxsdk.style.light.Light;
 
 import static com.mapbox.mapboxsdk.constants.MapboxConstants.MAXIMUM_ZOOM;
 import static com.mapbox.mapboxsdk.constants.MapboxConstants.MINIMUM_ZOOM;
-import static com.mapbox.mapboxsdk.style.functions.stops.Stop.stop;
-import static com.mapbox.mapboxsdk.style.functions.stops.Stops.exponential;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.exponential;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.literal;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.stop;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
 import static com.mapbox.mapboxsdk.style.layers.Property.NONE;
 import static com.mapbox.mapboxsdk.style.layers.Property.VISIBLE;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillExtrusionColor;
@@ -93,13 +96,14 @@ public final class BuildingPlugin {
     fillExtrusionLayer.setProperties(
       visibility(visible ? VISIBLE : NONE),
       fillExtrusionColor(color),
-      fillExtrusionHeight(Function.composite(
-        "height",
-        exponential(
-          stop(15f, 0f, fillExtrusionHeight(0f)),
-          stop(16f, 0f, fillExtrusionHeight(0f)),
-          stop(16f, 1000f, fillExtrusionHeight(1000f))
-        ))),
+      fillExtrusionHeight(
+        interpolate(
+          exponential(1f),
+          zoom(),
+          stop(15, literal(0)),
+          stop(16, get("height"))
+        )
+      ),
       fillExtrusionOpacity(opacity)
     );
     addLayer(fillExtrusionLayer, belowLayer);

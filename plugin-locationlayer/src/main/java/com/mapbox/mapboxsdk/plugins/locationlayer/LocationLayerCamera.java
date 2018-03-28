@@ -1,7 +1,10 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer;
 
+import android.content.Context;
 import android.graphics.PointF;
+import android.view.MotionEvent;
 
+import com.mapbox.android.gestures.AndroidGesturesManager;
 import com.mapbox.android.gestures.MoveGestureDetector;
 import com.mapbox.android.gestures.RotateGestureDetector;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -9,7 +12,10 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode;
 
-final class LocationLayerCamera implements LocationLayerAnimator.OnAnimationsValuesChangeListener {
+import java.util.List;
+import java.util.Set;
+
+final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimationsValuesChangeListener {
 
   @CameraMode.Mode
   private int cameraMode;
@@ -22,16 +28,19 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnAnimationsVal
   private final MoveGestureDetector moveGestureDetector;
 
   LocationLayerCamera(
+    Context context,
     MapboxMap mapboxMap,
     OnCameraTrackingChangedListener internalCameraTrackingChangedListener,
     LocationLayerOptions options) {
     this.mapboxMap = mapboxMap;
-    this.internalCameraTrackingChangedListener = internalCameraTrackingChangedListener;
-    initializeOptions(options);
-
+    mapboxMap.setGesturesManager(
+      new PluginsGesturesManager(context), true, true);
     moveGestureDetector = mapboxMap.getGesturesManager().getMoveGestureDetector();
     mapboxMap.addOnMoveListener(onMoveListener);
     mapboxMap.addOnRotateListener(onRotateListener);
+
+    this.internalCameraTrackingChangedListener = internalCameraTrackingChangedListener;
+    initializeOptions(options);
   }
 
   void initializeOptions(LocationLayerOptions options) {
@@ -39,8 +48,8 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnAnimationsVal
   }
 
   void setCameraMode(@CameraMode.Mode int cameraMode) {
+    final boolean wasTracking = isLocationTracking();
     this.cameraMode = cameraMode;
-    boolean wasTracking = isLocationTracking();
     mapboxMap.cancelTransitions();
     adjustGesturesThresholds();
     notifyCameraTrackingChangeListener(wasTracking);
@@ -76,13 +85,13 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnAnimationsVal
 
   @Override
   public void onNewGpsBearingValue(float gpsBearing) {
-    if (cameraMode == CameraMode.TRACKING_GPS
-      || cameraMode == CameraMode.NONE_GPS) {
-      setBearing(gpsBearing);
-    }
+    boolean trackingNorth = cameraMode == CameraMode.TRACKING_GPS_NORTH
+      && mapboxMap.getCameraPosition().bearing != 0;
 
-    if (cameraMode == CameraMode.TRACKING_GPS_NORTH) {
-      setBearing(0);
+    if (cameraMode == CameraMode.TRACKING_GPS
+      || cameraMode == CameraMode.NONE_GPS
+      || trackingNorth) {
+      setBearing(gpsBearing);
     }
   }
 
@@ -98,6 +107,8 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnAnimationsVal
     if (isLocationTracking()) {
       adjustFocalPoint = true;
       moveGestureDetector.setMoveThreshold(options.trackingInitialMoveThreshold());
+    } else {
+      moveGestureDetector.setMoveThreshold(0f);
     }
   }
 
@@ -120,7 +131,6 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnAnimationsVal
     internalCameraTrackingChangedListener.onCameraTrackingChanged(cameraMode);
     if (wasTracking && !isLocationTracking()) {
       mapboxMap.getUiSettings().setFocalPoint(null);
-      moveGestureDetector.setMoveThreshold(moveGestureDetector.getDefaultMoveThreshold());
       internalCameraTrackingChangedListener.onCameraTrackingDismissed();
     }
   }
@@ -177,4 +187,35 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnAnimationsVal
       // no implementation
     }
   };
+
+  private class PluginsGesturesManager extends AndroidGesturesManager {
+
+    public PluginsGesturesManager(Context context) {
+      super(context);
+    }
+
+    public PluginsGesturesManager(Context context, boolean applyDefaultThresholds) {
+      super(context, applyDefaultThresholds);
+    }
+
+    public PluginsGesturesManager(Context context, Set<Integer>[] exclusiveGestures) {
+      super(context, exclusiveGestures);
+    }
+
+    public PluginsGesturesManager(Context context, List<Set<Integer>> exclusiveGestures,
+                                  boolean applyDefaultThresholds) {
+      super(context, exclusiveGestures, applyDefaultThresholds);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent motionEvent) {
+      if (motionEvent != null) {
+        int action = motionEvent.getActionMasked();
+        if (action == MotionEvent.ACTION_UP) {
+          adjustGesturesThresholds();
+        }
+      }
+      return super.onTouchEvent(motionEvent);
+    }
+  }
 }
