@@ -577,15 +577,17 @@ public final class LocationLayerPlugin implements LifecycleObserver {
 
   private OnCameraMoveListener onCameraMoveListener = new OnCameraMoveListener() {
 
-    private double lastZoom;
+    private CameraPosition lastCameraPosition;
 
     @Override
     public void onCameraMove() {
-      double zoom = mapboxMap.getCameraPosition().zoom;
-      if (zoom != lastZoom) {
+      CameraPosition position = mapboxMap.getCameraPosition();
+      if (position.equals(lastCameraPosition)) {
         locationLayer.updateAccuracyRadius(getLastKnownLocation());
+        locationLayer.updateForegroundOffset(position.tilt);
+        locationLayer.updateForegroundBearing((float) position.bearing);
       }
-      lastZoom = zoom;
+      lastCameraPosition = position;
     }
   };
 
