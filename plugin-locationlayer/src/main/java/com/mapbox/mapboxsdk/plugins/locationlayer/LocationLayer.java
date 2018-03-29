@@ -57,6 +57,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeColo
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotate;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotationAlignment;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
@@ -117,12 +118,14 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
     switch (renderMode) {
       case RenderMode.NORMAL:
         styleForeground(options, isStale);
+        setLayerVisibility(SHADOW_LAYER, true);
         setLayerVisibility(FOREGROUND_LAYER, true);
         setLayerVisibility(BACKGROUND_LAYER, true);
         setLayerVisibility(ACCURACY_LAYER, true);
         break;
       case RenderMode.COMPASS:
         styleForeground(options, isStale);
+        setLayerVisibility(SHADOW_LAYER, true);
         setLayerVisibility(FOREGROUND_LAYER, true);
         setLayerVisibility(BACKGROUND_LAYER, true);
         setLayerVisibility(ACCURACY_LAYER, true);
@@ -164,7 +167,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
     addSymbolLayer(SHADOW_LAYER, BACKGROUND_LAYER);
     addSymbolLayer(BACKGROUND_LAYER, FOREGROUND_LAYER);
     addSymbolLayer(FOREGROUND_LAYER, null);
-    addSymbolLayer(LocationLayerConstants.BEARING_LAYER, null);
+    addSymbolLayer(BEARING_LAYER, null);
     addAccuracyLayer();
   }
 
@@ -209,6 +212,18 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
         circleRadius(calculateZoomLevelRadius(location))
       );
     }
+  }
+
+  void updateForegroundOffset(double tilt) {
+    layerMap.get(FOREGROUND_LAYER).setProperties(
+      iconOffset(new Float[] {0f, (float) (-0.05 * tilt)}));
+    layerMap.get(SHADOW_LAYER).setProperties(
+      iconOffset(new Float[] {0f, (float) (0.05 * tilt)}));
+  }
+
+  void updateForegroundBearing(float bearing) {
+    layerMap.get(FOREGROUND_LAYER).setProperties(iconRotate(bearing));
+    layerMap.get(SHADOW_LAYER).setProperties(iconRotate(bearing));
   }
 
   private float calculateZoomLevelRadius(Location location) {
@@ -337,7 +352,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   @Override
   public void onNewCompassBearingValue(float compassBearing) {
     if (renderMode == RenderMode.COMPASS) {
-      setLayerBearing(LocationLayerConstants.BEARING_LAYER, compassBearing);
+      setLayerBearing(BEARING_LAYER, compassBearing);
     }
   }
 }

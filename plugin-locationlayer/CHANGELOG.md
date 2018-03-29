@@ -2,7 +2,14 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-### 0.5.0 - TBD
+### 0.5.0-beta.1 - March 29, 2018
+- Update Map SDK to 6.0.0-beta.4 [#384](https://github.com/mapbox/mapbox-plugins-android/pull/384)
+- Added Camera and tracking modes [#294](https://github.com/mapbox/mapbox-plugins-android/pull/294)
+- Added Location layer `onLongClickListener` [#313](https://github.com/mapbox/mapbox-plugins-android/pull/313)
+- Add padding APIs to LocationLayerOptions [#313](https://github.com/mapbox/mapbox-plugins-android/pull/313)
+- Improved enabling/disabling layers [#308](https://github.com/mapbox/mapbox-plugins-android/pull/308)
+- LocationEngine listens to updates after resetting [#307](https://github.com/mapbox/mapbox-plugins-android/pull/307)
+- Add ProGuard consumer rules file [#373](https://github.com/mapbox/mapbox-plugins-android/pull/373)
 - Fixed icon elevation still showing even when set to zero in some cases [#356](https://github.com/mapbox/mapbox-plugins-android/pull/356)
 - Location layer accuracy visibility issue fix [#306](https://github.com/mapbox/mapbox-plugins-android/pull/306)
 
