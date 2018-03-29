@@ -20,6 +20,8 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.
 
 final class LocationLayerAnimator {
 
+  private static final int ONE_SECOND = 1000;
+
   private final List<OnLayerAnimationsValuesChangeListener> layerListeners = new ArrayList<>();
   private final List<OnCameraAnimationsValuesChangeListener> cameraListeners = new ArrayList<>();
 
@@ -56,6 +58,10 @@ final class LocationLayerAnimator {
     if (previousLocation == null) {
       previousLocation = newLocation;
       locationUpdateTimestamp = SystemClock.elapsedRealtime();
+    }
+
+    if (invalidUpdateInterval()) {
+      return;
     }
 
     LatLng previousLayerLatLng = getPreviousLayerLatLng();
@@ -177,6 +183,10 @@ final class LocationLayerAnimator {
     cancelLayerCompassAnimations();
     cancelCameraLocationAnimations();
     cancelCameraCompassAnimations();
+  }
+
+  private boolean invalidUpdateInterval() {
+    return (SystemClock.elapsedRealtime() - locationUpdateTimestamp) < ONE_SECOND;
   }
 
   private LatLng getPreviousLayerLatLng() {
