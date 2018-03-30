@@ -26,12 +26,14 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimati
   private boolean adjustFocalPoint;
 
   private final MoveGestureDetector moveGestureDetector;
+  private final OnCameraMoveInvalidateListener onCameraMoveInvalidateListener;
 
   LocationLayerCamera(
     Context context,
     MapboxMap mapboxMap,
     OnCameraTrackingChangedListener internalCameraTrackingChangedListener,
-    LocationLayerOptions options) {
+    LocationLayerOptions options,
+    OnCameraMoveInvalidateListener onCameraMoveInvalidateListener) {
     this.mapboxMap = mapboxMap;
     mapboxMap.setGesturesManager(
       new PluginsGesturesManager(context), true, true);
@@ -40,6 +42,7 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimati
     mapboxMap.addOnRotateListener(onRotateListener);
 
     this.internalCameraTrackingChangedListener = internalCameraTrackingChangedListener;
+    this.onCameraMoveInvalidateListener = onCameraMoveInvalidateListener;
     initializeOptions(options);
   }
 
@@ -65,6 +68,7 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimati
 
   private void setLatLng(LatLng latLng) {
     mapboxMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+    onCameraMoveInvalidateListener.onInvalidateCameraMove();
   }
 
   @Override

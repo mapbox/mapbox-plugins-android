@@ -52,7 +52,7 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
  *
  * @since 0.1.0
  */
-public final class LocationLayerPlugin implements LifecycleObserver {
+public final class LocationLayerPlugin implements LifecycleObserver, OnCameraMoveInvalidateListener {
 
   private final MapboxMap mapboxMap;
   private final MapView mapView;
@@ -491,6 +491,11 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     }
   }
 
+  @Override
+  public void onInvalidateCameraMove() {
+    onCameraMoveListener.onCameraMove();
+  }
+
   private void initialize() {
     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
@@ -501,7 +506,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
 
     locationLayer = new LocationLayer(mapView, mapboxMap, options);
     locationLayerCamera = new LocationLayerCamera(
-      mapView.getContext(), mapboxMap, cameraTrackingChangedListener, options);
+      mapView.getContext(), mapboxMap, cameraTrackingChangedListener, options, this);
     locationLayerAnimator = new LocationLayerAnimator();
     locationLayerAnimator.addLayerListener(locationLayer);
     locationLayerAnimator.addCameraListener(locationLayerCamera);
