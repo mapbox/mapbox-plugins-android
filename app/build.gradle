@@ -71,8 +71,8 @@ dependencies {
   implementation dependenciesList.roomRuntime
   annotationProcessor dependenciesList.roomCompiler
 
-  // LOST
-  implementation dependenciesList.lost
+  // Google Play Location
+  implementation dependenciesList.playLocation
 
   // Support libraries
   implementation dependenciesList.supportAnnotation
