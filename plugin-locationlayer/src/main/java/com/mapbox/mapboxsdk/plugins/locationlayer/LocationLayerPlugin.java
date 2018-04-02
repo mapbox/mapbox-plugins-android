@@ -422,6 +422,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
       }
       setLastLocation();
       setLastCompassHeading();
+      mapView.addOnMapChangedListener(onMapChangedListener);
     }
     if (mapboxMap != null) {
       mapboxMap.addOnCameraMoveListener(onCameraMoveListener);
@@ -448,6 +449,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     if (mapboxMap != null) {
       mapboxMap.removeOnCameraMoveListener(onCameraMoveListener);
     }
+    mapView.removeOnMapChangedListener(onMapChangedListener);
   }
 
   private void initialize() {
