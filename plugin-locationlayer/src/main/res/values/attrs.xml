@@ -20,8 +20,23 @@
 
     <attr name="mapbox_elevation" format="dimension"/>
 
+    <!-- Stale state -->
     <attr name="mapbox_enableStaleState" format="boolean"/>
     <attr name="mapbox_staleStateTimeout" format="integer" min="0"/>
+
+    <!-- Location icon padding -->
+    <attr name="mapbox_iconPaddingLeft" format="integer"/>
+    <attr name="mapbox_iconPaddingTop" format="integer"/>
+    <attr name="mapbox_iconPaddingRight" format="integer"/>
+    <attr name="mapbox_iconPaddingBottom" format="integer"/>
+
+    <!-- Map zoom levels -->
+    <attr name="mapbox_maxZoom" format="float"/>
+    <attr name="mapbox_minZoom" format="float"/>
+
+    <!-- Camera tracking settings -->
+    <attr name="mapbox_trackingInitialMoveThreshold" format="dimension"/>
+    <attr name="mapbox_trackingMultiFingerMoveThreshold" format="dimension"/>
 
   </declare-styleable>
 </resources>

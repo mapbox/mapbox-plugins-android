@@ -129,14 +129,23 @@ public abstract class LocationLayerOptions implements Parcelable {
       R.styleable.mapbox_LocationLayer_mapbox_accuracyAlpha, ACCURACY_ALPHA_DEFAULT));
     builder.elevation(elevation);
 
-    float defaultTrackingInitialMoveThreshold =
-      context.getResources().getDimension(R.dimen.mapbox_locationLayerTrackingInitialMoveThreshold);
+    builder.trackingInitialMoveThreshold(typedArray.getInteger(
+      R.styleable.mapbox_LocationLayer_mapbox_trackingInitialMoveThreshold,
+      (int) context.getResources().getDimension(R.dimen.mapbox_locationLayerTrackingInitialMoveThreshold)));
 
-    float defaultTrackingMultiFingerMoveThreshold =
-      context.getResources().getDimension(R.dimen.mapbox_locationLayerTrackingMultiFingerMoveThreshold);
+    builder.trackingMultiFingerMoveThreshold(typedArray.getInteger(
+      R.styleable.mapbox_LocationLayer_mapbox_trackingMultiFingerMoveThreshold,
+      (int) context.getResources().getDimension(R.dimen.mapbox_locationLayerTrackingMultiFingerMoveThreshold)));
 
-    builder.trackingInitialMoveThreshold(defaultTrackingInitialMoveThreshold);
-    builder.trackingMultiFingerMoveThreshold(defaultTrackingMultiFingerMoveThreshold);
+    builder.padding(new int[] {
+      typedArray.getInt(R.styleable.mapbox_LocationLayer_mapbox_iconPaddingLeft, 0),
+      typedArray.getInt(R.styleable.mapbox_LocationLayer_mapbox_iconPaddingTop, 0),
+      typedArray.getInt(R.styleable.mapbox_LocationLayer_mapbox_iconPaddingRight, 0),
+      typedArray.getInt(R.styleable.mapbox_LocationLayer_mapbox_iconPaddingBottom, 0),
+    });
+
+    builder.maxZoom(typedArray.getFloat(R.styleable.mapbox_LocationLayer_mapbox_maxZoom, MAX_ZOOM_DEFAULT));
+    builder.minZoom(typedArray.getFloat(R.styleable.mapbox_LocationLayer_mapbox_minZoom, MIN_ZOOM_DEFAULT));
 
     typedArray.recycle();
 
@@ -159,7 +168,7 @@ public abstract class LocationLayerOptions implements Parcelable {
    * automatically to their defined defaults in this library. This allows you to adjust a few
    * attributes while leaving the rest alone and maintaining their default behavior.
    *
-   * @param context your activites context used to acquire the style resource
+   * @param context your activities context used to acquire the style resource
    * @return the Location Layer builder which contains the default values defined by the style
    * resource
    * @since 0.4.0
