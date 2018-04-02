@@ -236,50 +236,6 @@ public final class LocationLayerPlugin implements LifecycleObserver {
       staleStateManager.onStop();
     }
     staleStateManager.setDelayTime(options.staleStateTimeout());
-    updateMapWithOptions(options);
-  }
-
-  /**
-   * Sets the distance from the edges of the map view’s frame to the edges of the map
-   * view’s logical viewport.
-   * </p>
-   * <p>
-   * When the value of this property is equal to {0,0,0,0}, viewport
-   * properties such as `centerCoordinate` assume a viewport that matches the map
-   * view’s frame. Otherwise, those properties are inset, excluding part of the
-   * frame from the viewport. For instance, if the only the top edge is inset, the
-   * map center is effectively shifted downward.
-   * </p>
-   *
-   * @param left   The left margin in pixels.
-   * @param top    The top margin in pixels.
-   * @param right  The right margin in pixels.
-   * @param bottom The bottom margin in pixels.
-   * @since 0.5.0
-   */
-  public void setPadding(int left, int top, int right, int bottom) {
-    mapboxMap.setPadding(left, top, right, bottom);
-  }
-
-  /**
-   * Sets the maximum zoom level the map can be displayed at.
-   * <p>
-   * The default maximum zoom level is 22. The upper bound for this value is 25.5.
-   *
-   * @param maxZoom The new maximum zoom level.
-   * @since 0.5.0
-   */
-  public void setMaxZoom(double maxZoom) {
-    mapboxMap.setMaxZoomPreference(maxZoom);
-  }
-
-  /**
-   * Sets the minimum zoom level the map can be displayed at.
-   *
-   * @param minZoom The new minimum zoom level.
-   */
-  public void setMinZoom(double minZoom) {
-    mapboxMap.setMinZoomPreference(minZoom);
   }
 
   /**
@@ -348,7 +304,6 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    *                        accuracy changes
    * @since 0.2.0
    */
-
   public void addCompassListener(@NonNull CompassListener compassListener) {
     compassManager.addCompassListener(compassListener);
   }
@@ -497,7 +452,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     mapView.addOnMapChangedListener(onMapChangedListener);
     mapboxMap.addOnMapClickListener(onMapClickListener);
     mapboxMap.addOnMapLongClickListener(onMapLongClickListener);
-    updateMapWithOptions(options);
+    applyStyle(options);
 
     locationLayer = new LocationLayer(mapView, mapboxMap, options);
     locationLayerCamera = new LocationLayerCamera(
@@ -524,19 +479,6 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     isEnabled = false;
     onStop();
     locationLayer.hide();
-  }
-
-  private void updateMapWithOptions(LocationLayerOptions options) {
-    int[] padding = options.padding();
-    if (padding != null && padding.length == 4) {
-      setPadding(options.padding()[0], padding[1], padding[2], padding[3]);
-    }
-    if (options.maxZoom() > 0) {
-      setMaxZoom(options.maxZoom());
-    }
-    if (options.minZoom() > 0) {
-      setMinZoom(options.minZoom());
-    }
   }
 
   /**
