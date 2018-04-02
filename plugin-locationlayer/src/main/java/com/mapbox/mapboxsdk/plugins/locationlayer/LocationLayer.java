@@ -1,6 +1,7 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -37,8 +38,10 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.FOREGROUND_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.FOREGROUND_STALE_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.LOCATION_SOURCE;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.PLACE_TEXT_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.SHADOW_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.SHADOW_LAYER;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.STREET_TEXT_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.generateShadow;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.getBitmapFromDrawable;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.getDrawable;
@@ -61,6 +64,15 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotate;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotationAlignment;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textAllowOverlap;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textColor;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textFont;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textHaloBlur;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textHaloColor;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textHaloWidth;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textIgnorePlacement;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textOffset;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
 
 final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValuesChangeListener {
@@ -101,7 +113,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
     styleForeground(
       getDrawable(context, options.foregroundDrawable(), options.foregroundTintColor()),
       getDrawable(context, options.foregroundDrawableStale(), options.foregroundStaleTintColor()),
-      isStale);
+      options.foregroundTintColor(), isStale);
     styleBackground(
       getDrawable(context, options.backgroundDrawable(), options.backgroundTintColor()),
       getDrawable(context, options.backgroundDrawableStale(), options.backgroundStaleTintColor()),
@@ -122,6 +134,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
         setLayerVisibility(FOREGROUND_LAYER, true);
         setLayerVisibility(BACKGROUND_LAYER, true);
         setLayerVisibility(ACCURACY_LAYER, true);
+        setLayerVisibility(PLACE_TEXT_LAYER, true);
         break;
       case RenderMode.COMPASS:
         styleForeground(options, isStale);
@@ -130,11 +143,13 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
         setLayerVisibility(BACKGROUND_LAYER, true);
         setLayerVisibility(ACCURACY_LAYER, true);
         setLayerVisibility(BEARING_LAYER, true);
+        setLayerVisibility(PLACE_TEXT_LAYER, true);
         break;
       case RenderMode.GPS:
         styleForeground(options, isStale);
         setLayerVisibility(FOREGROUND_LAYER, true);
         setLayerVisibility(BACKGROUND_LAYER, true);
+        setLayerVisibility(STREET_TEXT_LAYER, true);
         break;
       default:
         break;
@@ -168,7 +183,21 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
     addSymbolLayer(BACKGROUND_LAYER, FOREGROUND_LAYER);
     addSymbolLayer(FOREGROUND_LAYER, null);
     addSymbolLayer(BEARING_LAYER, null);
+    addSymbolPlaceTextLayer(PLACE_TEXT_LAYER);
     addAccuracyLayer();
+  }
+
+  private void addSymbolPlaceTextLayer(String layerId) {
+    SymbolLayer layer = new SymbolLayer(layerId, LOCATION_SOURCE);
+    layer.setProperties(
+      textAllowOverlap(false),
+      textIgnorePlacement(true),
+      textOffset(new Float[] {0f, 1.75f}),
+      textHaloBlur(1.5f),
+      textFont(new String[] {"Open Sans SemiBold", "Arial Unicode MS Bold"}),
+      textHaloColor(Color.WHITE),
+      textHaloWidth(1.5f));
+    addLayerToMap(layer, null);
   }
 
   private void addSymbolLayer(String layerId, String beforeLayerId) {
@@ -224,6 +253,12 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   void updateForegroundBearing(float bearing) {
     layerMap.get(FOREGROUND_LAYER).setProperties(iconRotate(bearing));
     layerMap.get(SHADOW_LAYER).setProperties(iconRotate(bearing));
+  }
+
+  void updatePlaceText(String placeText) {
+    layerMap.get(PLACE_TEXT_LAYER).setProperties(
+      textField(placeText)
+    );
   }
 
   private float calculateZoomLevelRadius(Location location) {
@@ -284,7 +319,8 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
     );
   }
 
-  private void styleForeground(Drawable foregroundDrawable, Drawable foregroundDrawableStale, boolean isStale) {
+  private void styleForeground(Drawable foregroundDrawable, Drawable foregroundDrawableStale,
+                               @ColorInt Integer color, boolean isStale) {
     mapboxMap.addImage(FOREGROUND_ICON, getBitmapFromDrawable(foregroundDrawable));
     mapboxMap.addImage(FOREGROUND_STALE_ICON, getBitmapFromDrawable(foregroundDrawableStale));
 
@@ -292,6 +328,11 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
       iconImage(isStale
         ? FOREGROUND_STALE_ICON : FOREGROUND_ICON),
       iconRotate(90f));
+
+    // Style text colors
+    layerMap.get(PLACE_TEXT_LAYER).setProperties(
+      textColor(color == null ? ContextCompat.getColor(context, R.color.mapbox_location_layer_blue) : color)
+    );
   }
 
   private void styleForeground(@NonNull LocationLayerOptions options, boolean isStale) {
@@ -301,7 +342,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
       styleForeground(
         getDrawable(context, options.foregroundDrawable(), options.foregroundTintColor()),
         getDrawable(context, options.foregroundDrawableStale(), options.foregroundStaleTintColor()),
-        isStale);
+        options.foregroundTintColor(), isStale);
     }
   }
 
@@ -309,7 +350,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
     styleForeground(
       getDrawable(context, options.gpsDrawable(), options.foregroundTintColor()),
       getDrawable(context, options.gpsDrawable(), options.foregroundStaleTintColor()),
-      isStale);
+      options.foregroundTintColor(), isStale);
   }
 
   void setLocationsStale(boolean isStale) {

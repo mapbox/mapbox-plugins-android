@@ -239,6 +239,10 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     updateMapWithOptions(options);
   }
 
+  public void setPlaceText(String placeText) {
+    locationLayer.updatePlaceText(placeText);
+  }
+
   /**
    * Sets the distance from the edges of the map view’s frame to the edges of the map
    * view’s logical viewport.
