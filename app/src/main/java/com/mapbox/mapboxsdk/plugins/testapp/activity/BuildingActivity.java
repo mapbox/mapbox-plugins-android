@@ -2,6 +2,7 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -108,6 +109,11 @@ public class BuildingActivity extends AppCompatActivity implements OnMapReadyCal
     float azimuthalAngle = seekbarAzimuthalAngle.getProgress();
     float polarAngle = seekbarPolarAngle.getProgress();
     light.setPosition(new Position(radialCoordinate, azimuthalAngle, polarAngle));
+  }
+
+  @VisibleForTesting
+  public BuildingPlugin getBuildingPlugin() {
+    return buildingPlugin;
   }
 
   @Override

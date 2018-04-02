@@ -118,6 +118,16 @@ public final class BuildingPlugin {
   }
 
   /**
+   * Returns true if the traffic plugin is currently enabled.
+   *
+   * @return true if enabled, false otherwise
+   * @since 0.2.0
+   */
+  public boolean isVisible() {
+    return visible;
+  }
+
+  /**
    * Toggles the visibility of the building layer.
    *
    * @param visible true for visible, false for none
