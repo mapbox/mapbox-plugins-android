@@ -35,8 +35,8 @@
     <attr name="mapbox_minZoom" format="float"/>
 
     <!-- Camera tracking settings -->
-    <attr name="mapbox_trackingInitialMoveThreshold" format="float"/>
-    <attr name="mapbox_trackingMultiFingerMoveThreshold" format="float"/>
+    <attr name="mapbox_trackingInitialMoveThreshold" format="dimension"/>
+    <attr name="mapbox_trackingMultiFingerMoveThreshold" format="dimension"/>
 
   </declare-styleable>
 </resources>

@@ -133,7 +133,7 @@ public abstract class LocationLayerOptions implements Parcelable {
       R.styleable.mapbox_LocationLayer_mapbox_trackingInitialMoveThreshold,
       (int) context.getResources().getDimension(R.dimen.mapbox_locationLayerTrackingInitialMoveThreshold)));
 
-    builder.trackingInitialMoveThreshold(typedArray.getInteger(
+    builder.trackingMultiFingerMoveThreshold(typedArray.getInteger(
       R.styleable.mapbox_LocationLayer_mapbox_trackingMultiFingerMoveThreshold,
       (int) context.getResources().getDimension(R.dimen.mapbox_locationLayerTrackingMultiFingerMoveThreshold)));
 
