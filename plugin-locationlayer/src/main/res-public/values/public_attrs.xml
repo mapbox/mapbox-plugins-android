@@ -26,17 +26,17 @@
   <public name="mapbox_staleStateTimeout" format="integer" min="0" type="attr"/>
 
   <!-- Location icon padding -->
-  <attr name="mapbox_iconPaddingLeft" format="integer" type="attr"/>
-  <attr name="mapbox_iconPaddingTop" format="integer" type="attr"/>
-  <attr name="mapbox_iconPaddingRight" format="integer" type="attr"/>
-  <attr name="mapbox_iconPaddingBottom" format="integer" type="attr"/>
+  <public name="mapbox_iconPaddingLeft" format="integer" type="attr"/>
+  <public name="mapbox_iconPaddingTop" format="integer" type="attr"/>
+  <public name="mapbox_iconPaddingRight" format="integer" type="attr"/>
+  <public name="mapbox_iconPaddingBottom" format="integer" type="attr"/>
 
   <!-- Map zoom levels -->
-  <attr name="mapbox_maxZoom" format="float" type="attr"/>
-  <attr name="mapbox_minZoom" format="float" type="attr"/>
+  <public name="mapbox_maxZoom" format="float" type="attr"/>
+  <public name="mapbox_minZoom" format="float" type="attr"/>
 
   <!-- Camera tracking settings -->
-  <attr name="mapbox_trackingInitialMoveThreshold" format="float" type="attr"/>
-  <attr name="mapbox_trackingMultiFingerMoveThreshold" format="float" type="attr"/>
+  <public name="mapbox_trackingInitialMoveThreshold" format="float" type="attr"/>
+  <public name="mapbox_trackingMultiFingerMoveThreshold" format="float" type="attr"/>
 
 </resources>
