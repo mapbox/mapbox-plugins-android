@@ -168,7 +168,7 @@ public abstract class LocationLayerOptions implements Parcelable {
    * automatically to their defined defaults in this library. This allows you to adjust a few
    * attributes while leaving the rest alone and maintaining their default behavior.
    *
-   * @param context your activates context used to acquire the style resource
+   * @param context your activities context used to acquire the style resource
    * @return the Location Layer builder which contains the default values defined by the style
    * resource
    * @since 0.4.0
