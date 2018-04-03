@@ -38,10 +38,10 @@ Plugins are single-purpose libraries built on top of the [Mapbox Maps SDK for An
 * [**Places:** Add location search to your app with beautiful UI.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-places)
 
 * [**Localization:** Have your map's text automatically match the device's default language setting.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-localization)
-* 
+
 ## Installing a plugin
 
-By using a plugin, you also include the Android Map SDK which means that you'll need to setup your project to use the Map SDK if you haven't already. Head over to the [overview page for the Mapbox Maps SDK](https://www.mapbox.com/android-docs/map-sdk/overview/) to learn more.
+By using a plugin, you also have to include the Mapbox Maps SDK for Android which means that you'll need to setup your project to use the Maps SDK if you haven't already. Head over to the [overview page for the Maps SDK](https://www.mapbox.com/android-docs/map-sdk/overview/) to learn more.
 
 Note that depending on the plugin you add, there might be required permissions and additional setup steps. You'll find more information on whether or not more configuration steps are involved when looking at the specific plugin documentation.
 
