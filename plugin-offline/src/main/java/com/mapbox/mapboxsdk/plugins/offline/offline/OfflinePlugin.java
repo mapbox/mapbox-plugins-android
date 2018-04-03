@@ -1,4 +1,4 @@
-package com.mapbox.mapboxsdk.plugins.offline;
+package com.mapbox.mapboxsdk.plugins.offline.offline;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,7 +12,7 @@ import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mapbox.mapboxsdk.plugins.offline.OfflineConstants.KEY_BUNDLE;
+import static com.mapbox.mapboxsdk.plugins.offline.offline.OfflineConstants.KEY_BUNDLE;
 
 /**
  * OfflinePlugin is the main entry point for integrating the offline plugin into your app.
@@ -100,7 +100,7 @@ public class OfflinePlugin {
     OfflineDownloadOptions offlineDownload = null;
     if (!offlineDownloads.isEmpty()) {
       for (OfflineDownloadOptions download : offlineDownloads) {
-        if (download.getRegionId() == offlineRegion.getID()) {
+        if (download.regionId() == offlineRegion.getID()) {
           offlineDownload = download;
         }
       }

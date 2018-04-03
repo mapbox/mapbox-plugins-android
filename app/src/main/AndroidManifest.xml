@@ -192,11 +192,7 @@
         android:value=".activity.FeatureOverviewActivity"/>
     </activity>
 
-    <service
-      android:name="com.mapbox.mapboxsdk.plugins.offline.OfflineDownloadService"
-      android:exported="false"/>
-
-    <receiver android:name="com.mapbox.mapboxsdk.plugins.offline.OfflineDownloadStateReceiver">
+    <receiver android:name="com.mapbox.mapboxsdk.plugins.offline.offline.OfflineDownloadStateReceiver">
       <intent-filter>
         <action android:name="com.mapbox.mapboxsdk.plugins.offline"/>
       </intent-filter>
