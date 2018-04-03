@@ -2,11 +2,14 @@ package com.mapbox.mapboxsdk.plugins.offline.model;
 
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
-import com.mapbox.mapboxsdk.plugins.offline.OfflineDownloadService;
+import com.mapbox.mapboxsdk.plugins.offline.offline.OfflineDownloadService;
+
+import java.util.UUID;
 
 /**
  * This model class wraps the offline region definition with notifications options and the offline
@@ -18,58 +21,51 @@ import com.mapbox.mapboxsdk.plugins.offline.OfflineDownloadService;
 @AutoValue
 public abstract class OfflineDownloadOptions implements Parcelable {
 
-  // unique identifier used by service + notifications
-  // will be created at service startup as part of onStartCommand
-  private int serviceId = -1;
-  // unique identifier matching an offline region
-  // will be created during the start of a download after creating an offline region
-  private long regionId = -1;
-  // download progress
-  private int progress;
-
   @NonNull
   public abstract OfflineTilePyramidRegionDefinition definition();
 
   public abstract NotificationOptions notificationOptions();
 
+  @Nullable
+  public abstract String regionName();
+
+  @SuppressWarnings("mutable")
   public abstract byte[] metadata();
 
-  public void setProgress(int progress) {
-    this.progress = progress;
-  }
+  public abstract long regionId();
 
-  public int getProgress() {
-    return progress;
-  }
+  public abstract int progress();
 
-  public int getServiceId() {
-    return serviceId;
-  }
-
-  public void setServiceId(int serviceId) {
-    this.serviceId = serviceId;
-  }
-
-  public void setRegionId(long regionId) {
-    this.regionId = regionId;
-  }
-
-  public long getRegionId() {
-    return regionId;
-  }
+  @NonNull
+  public abstract Long uuid();
 
   public static Builder builder() {
-    return new AutoValue_OfflineDownloadOptions.Builder();
+    return new AutoValue_OfflineDownloadOptions.Builder()
+      .uuid(UUID.randomUUID().getMostSignificantBits())
+      .metadata(new byte[] {})
+      .progress(0)
+      .regionId(-1);
+    // TODO user must provide a notificationOptions object
   }
+
+  public abstract Builder toBuilder();
 
   @AutoValue.Builder
   public abstract static class Builder {
+
+    abstract Builder uuid(@NonNull Long uuid);
+
+    public abstract Builder progress(int progress);
 
     public abstract Builder definition(@NonNull OfflineTilePyramidRegionDefinition definition);
 
     public abstract Builder notificationOptions(NotificationOptions notificationOptions);
 
-    public abstract Builder metadata(byte[] metadata);
+    public abstract Builder regionName(@Nullable String regionName);
+
+    public abstract Builder metadata(@NonNull byte[] metadata);
+
+    public abstract Builder regionId(long regionId);
 
     public abstract OfflineDownloadOptions build();
   }

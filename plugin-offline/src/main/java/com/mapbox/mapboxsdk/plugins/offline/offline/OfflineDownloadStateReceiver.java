@@ -1,4 +1,4 @@
-package com.mapbox.mapboxsdk.plugins.offline;
+package com.mapbox.mapboxsdk.plugins.offline.offline;
 
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -7,7 +7,7 @@ import android.content.Intent;
 
 import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions;
 
-import static com.mapbox.mapboxsdk.plugins.offline.OfflineConstants.KEY_BUNDLE;
+import static com.mapbox.mapboxsdk.plugins.offline.offline.OfflineConstants.KEY_BUNDLE;
 
 public class OfflineDownloadStateReceiver extends BroadcastReceiver {
 
