@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import com.mapbox.android.gestures.AndroidGesturesManager;
 import com.mapbox.android.gestures.MoveGestureDetector;
 import com.mapbox.android.gestures.RotateGestureDetector;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -26,6 +27,8 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimati
   private boolean adjustFocalPoint;
 
   private final MoveGestureDetector moveGestureDetector;
+  private float bearing;
+  private LatLng latLng;
 
   LocationLayerCamera(
     Context context,
@@ -59,12 +62,10 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimati
     return cameraMode;
   }
 
-  private void setBearing(float bearing) {
-    mapboxMap.moveCamera(CameraUpdateFactory.bearingTo(bearing));
-  }
-
-  private void setLatLng(LatLng latLng) {
-    mapboxMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+  private void setCameraLatLngBearing() {
+    mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(
+      new CameraPosition.Builder().bearing(bearing).target(latLng).build())
+    );
   }
 
   @Override
@@ -73,7 +74,8 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimati
       || cameraMode == CameraMode.TRACKING_COMPASS
       || cameraMode == CameraMode.TRACKING_GPS
       || cameraMode == CameraMode.TRACKING_GPS_NORTH) {
-      setLatLng(latLng);
+      this.latLng = latLng;
+      setCameraLatLngBearing();
     }
 
     if (adjustFocalPoint) {
@@ -91,7 +93,8 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimati
     if (cameraMode == CameraMode.TRACKING_GPS
       || cameraMode == CameraMode.NONE_GPS
       || trackingNorth) {
-      setBearing(gpsBearing);
+      this.bearing = gpsBearing;
+      setCameraLatLngBearing();
     }
   }
 
@@ -99,7 +102,8 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimati
   public void onNewCompassBearingValue(float compassBearing) {
     if (cameraMode == CameraMode.TRACKING_COMPASS
       || cameraMode == CameraMode.NONE_COMPASS) {
-      setBearing(compassBearing);
+      this.bearing = compassBearing;
+      setCameraLatLngBearing();
     }
   }
 
