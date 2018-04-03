@@ -32,7 +32,6 @@ android {
 dependencies {
   implementation dependenciesList.mapboxMapSdk
   implementation dependenciesList.supportAppcompatV7
-  implementation dependenciesList.mapboxGeoJson
   implementation dependenciesList.okhttp
   implementation dependenciesList.timber
 }
