@@ -236,6 +236,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
       staleStateManager.onStop();
     }
     staleStateManager.setDelayTime(options.staleStateTimeout());
+    updateMapWithOptions(options);
   }
 
   /**
@@ -452,7 +453,6 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     mapView.addOnMapChangedListener(onMapChangedListener);
     mapboxMap.addOnMapClickListener(onMapClickListener);
     mapboxMap.addOnMapLongClickListener(onMapLongClickListener);
-    applyStyle(options);
 
     locationLayer = new LocationLayer(mapView, mapboxMap, options);
     locationLayerCamera = new LocationLayerCamera(
@@ -464,6 +464,8 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     compassManager = new CompassManager(mapView.getContext());
     compassManager.addCompassListener(compassListener);
     staleStateManager = new StaleStateManager(onLocationStaleListener, options.staleStateTimeout());
+
+    updateMapWithOptions(options);
 
     enableLocationLayerPlugin();
   }
@@ -479,6 +481,15 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     isEnabled = false;
     onStop();
     locationLayer.hide();
+  }
+
+  private void updateMapWithOptions(final LocationLayerOptions options) {
+    mapboxMap.setPadding(
+      options.padding()[0], options.padding()[1],options.padding()[2], options.padding()[3]
+    );
+
+    mapboxMap.setMaxZoomPreference(options.maxZoom());
+    mapboxMap.setMinZoomPreference(options.minZoom());
   }
 
   /**
