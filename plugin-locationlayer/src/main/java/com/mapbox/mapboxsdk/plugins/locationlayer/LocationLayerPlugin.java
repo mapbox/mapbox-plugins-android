@@ -501,7 +501,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
 
     locationLayer = new LocationLayer(mapView, mapboxMap, options);
     locationLayerCamera = new LocationLayerCamera(
-      mapView.getContext(), mapboxMap, cameraTrackingChangedListener, options);
+      mapView.getContext(), mapboxMap, cameraTrackingChangedListener, options, onCameraMoveInvalidateListener);
     locationLayerAnimator = new LocationLayerAnimator();
     locationLayerAnimator.addLayerListener(locationLayer);
     locationLayerAnimator.addCameraListener(locationLayerCamera);
@@ -636,6 +636,13 @@ public final class LocationLayerPlugin implements LifecycleObserver {
         setRenderMode(locationLayer.getRenderMode());
         onStart();
       }
+    }
+  };
+
+  private OnCameraMoveInvalidateListener onCameraMoveInvalidateListener = new OnCameraMoveInvalidateListener() {
+    @Override
+    public void onInvalidateCameraMove() {
+      onCameraMoveListener.onCameraMove();
     }
   };
 
