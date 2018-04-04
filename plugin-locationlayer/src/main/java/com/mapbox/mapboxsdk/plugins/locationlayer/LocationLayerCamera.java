@@ -64,6 +64,7 @@ final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimati
 
   private void setBearing(float bearing) {
     mapboxMap.moveCamera(CameraUpdateFactory.bearingTo(bearing));
+    onCameraMoveInvalidateListener.onInvalidateCameraMove();
   }
 
   private void setLatLng(LatLng latLng) {
