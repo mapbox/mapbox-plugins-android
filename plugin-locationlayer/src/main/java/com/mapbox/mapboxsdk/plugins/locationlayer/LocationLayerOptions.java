@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 
 import com.google.auto.value.AutoValue;
+import com.mapbox.mapboxsdk.constants.MapboxConstants;
 
 /**
  * This class exposes options for the Location Layer Plugin. The options can be set by defining a
@@ -144,8 +145,22 @@ public abstract class LocationLayerOptions implements Parcelable {
       typedArray.getInt(R.styleable.mapbox_LocationLayer_mapbox_iconPaddingBottom, 0),
     });
 
-    builder.maxZoom(typedArray.getFloat(R.styleable.mapbox_LocationLayer_mapbox_maxZoom, MAX_ZOOM_DEFAULT));
-    builder.minZoom(typedArray.getFloat(R.styleable.mapbox_LocationLayer_mapbox_minZoom, MIN_ZOOM_DEFAULT));
+    float maxZoom
+      = typedArray.getFloat(R.styleable.mapbox_LocationLayer_mapbox_maxZoom, MAX_ZOOM_DEFAULT);
+    if (maxZoom < MapboxConstants.MINIMUM_ZOOM || maxZoom > MapboxConstants.MAXIMUM_ZOOM) {
+      throw new IllegalArgumentException("Max zoom value must be within "
+        + MapboxConstants.MINIMUM_ZOOM + " and " + MapboxConstants.MAXIMUM_ZOOM);
+    }
+
+    float minZoom
+      = typedArray.getFloat(R.styleable.mapbox_LocationLayer_mapbox_minZoom, MIN_ZOOM_DEFAULT);
+    if (minZoom < MapboxConstants.MINIMUM_ZOOM || minZoom > MapboxConstants.MAXIMUM_ZOOM) {
+      throw new IllegalArgumentException("Min zoom value must be within "
+        + MapboxConstants.MINIMUM_ZOOM + " and " + MapboxConstants.MAXIMUM_ZOOM);
+    }
+
+    builder.maxZoom(maxZoom);
+    builder.minZoom(minZoom);
 
     typedArray.recycle();
 
@@ -605,14 +620,16 @@ public abstract class LocationLayerOptions implements Parcelable {
      * @param maxZoom The new maximum zoom level.
      * @since 0.5.0
      */
-    public abstract Builder maxZoom(double maxZoom);
+    public abstract Builder maxZoom(@FloatRange(from = MapboxConstants.MINIMUM_ZOOM,
+      to = MapboxConstants.MAXIMUM_ZOOM) double maxZoom);
 
     /**
      * Sets the minimum zoom level the map can be displayed at.
      *
      * @param minZoom The new minimum zoom level.
      */
-    public abstract Builder minZoom(double minZoom);
+    public abstract Builder minZoom(@FloatRange(from = MapboxConstants.MINIMUM_ZOOM,
+      to = MapboxConstants.MAXIMUM_ZOOM) double minZoom);
 
     /**
      * Sets minimum single pointer movement (map pan) in pixels required to break camera tracking.

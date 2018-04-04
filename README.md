@@ -22,7 +22,7 @@ You'll [find documentation](https://www.mapbox.com/android-docs/overview/) for e
 Plugins are single-purpose libraries built on top of the [Mapbox Maps SDK for Android](https://www.mapbox.com/android-docs/) that you can include in your apps like any other Android dependency. You'll [find documentation](https://www.mapbox.com/android-docs/overview/) for each plugin on our website. A full list of the current plugins is available below.
 
 ## Available Plugins
-
+ 
 * [**Traffic:** Adds a real-time traffic layer to any Mapbox base map.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-traffic)
 
 * [**Location layer:** Add a location marker on your map indicating the user's location.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-locationlayer)
