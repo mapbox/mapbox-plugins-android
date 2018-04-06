@@ -5,6 +5,7 @@ import android.support.test.espresso.IdlingResourceTimeoutException;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.BuildingActivity;
@@ -69,6 +70,19 @@ public class BuildingPluginTest {
       // Now toggle the building layer visible and check that isVisible returns true
       onView(withId(R.id.fabBuilding)).perform(click());
       visible = buildingPlugin.isVisible();
+      assertTrue(visible);
+    });
+  }
+
+  @Test
+  public void whenMapStyleChanges_buildingVisibilityRemainsTheSame() {
+    executeBuildingTest((locationLayerPlugin, mapboxMap, uiController, context) -> {
+      // Display the buildings layer
+      onView(withId(R.id.fabBuilding)).perform(click());
+
+      // Now change the style and check if the building layer remains
+      mapboxMap.setStyle(Style.LIGHT);
+      boolean visible = buildingPlugin.isVisible();
       assertTrue(visible);
     });
   }
