@@ -2,6 +2,15 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### 0.5.0-beta.2 - April 5, 2018
+- Update Map SDK to 6.0.0-beta.6 [#414](https://github.com/mapbox/mapbox-plugins-android/pull/414)
+- Filter location updates and remove unused animator code [#393](https://github.com/mapbox/mapbox-plugins-android/pull/393)
+- Fix order of interpolator expression [#388](https://github.com/mapbox/mapbox-plugins-android/pull/388)
+- Remove duplicate map camera option APIs [#402](https://github.com/mapbox/mapbox-plugins-android/pull/402)
+- Fix `LocationLayerOption` class typed array trying to get demension as integer [#399](https://github.com/mapbox/mapbox-plugins-android/pull/399)
+- Invalidate onCameraMove as part of tracking animation [#395](https://github.com/mapbox/mapbox-plugins-android/pull/395)
+- Added missing Location Layer style attributes [#392](https://github.com/mapbox/mapbox-plugins-android/pull/392)
+
 ### 0.5.0-beta.1 - March 29, 2018
 - Update Map SDK to 6.0.0-beta.4 [#384](https://github.com/mapbox/mapbox-plugins-android/pull/384)
 - Added Camera and tracking modes [#294](https://github.com/mapbox/mapbox-plugins-android/pull/294)
