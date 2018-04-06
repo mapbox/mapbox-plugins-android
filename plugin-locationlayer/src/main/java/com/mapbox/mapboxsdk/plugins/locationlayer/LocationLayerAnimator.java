@@ -35,7 +35,7 @@ final class LocationLayerAnimator {
 
   private Location previousLocation;
   private float previousCompassBearing = -1;
-  private long locationUpdateTimestamp;
+  private long locationUpdateTimestamp = -1;
 
   void addLayerListener(OnLayerAnimationsValuesChangeListener listener) {
     layerListeners.add(listener);
@@ -186,7 +186,8 @@ final class LocationLayerAnimator {
   }
 
   private boolean invalidUpdateInterval() {
-    return (SystemClock.elapsedRealtime() - locationUpdateTimestamp) < ONE_SECOND;
+    return locationUpdateTimestamp > 0
+      && (SystemClock.elapsedRealtime() - locationUpdateTimestamp) < ONE_SECOND;
   }
 
   private LatLng getPreviousLayerLatLng() {
