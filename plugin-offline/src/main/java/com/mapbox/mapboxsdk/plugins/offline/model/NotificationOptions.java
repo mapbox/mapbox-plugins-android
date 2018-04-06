@@ -30,6 +30,7 @@ public abstract class NotificationOptions implements Parcelable {
 
   public static Builder builder(Context context) {
     return new AutoValue_NotificationOptions.Builder()
+      .smallIconRes(android.R.drawable.stat_sys_download)
       .contentTitle(context.getString(R.string.mapbox_offline_notification_default_content_title))
       .contentText(context.getString(R.string.mapbox_offline_notification_default_content_text));
   }
