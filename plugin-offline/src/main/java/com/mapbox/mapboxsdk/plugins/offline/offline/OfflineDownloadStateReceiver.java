@@ -11,16 +11,12 @@ import static com.mapbox.mapboxsdk.plugins.offline.offline.OfflineConstants.KEY_
 
 public class OfflineDownloadStateReceiver extends BroadcastReceiver {
 
-  private OfflinePlugin offlinePlugin;
-
-  public OfflineDownloadStateReceiver() {
-    offlinePlugin = OfflinePlugin.getInstance();
-  }
-
   @Override
   public void onReceive(Context context, Intent intent) {
     String actionName = intent.getStringExtra(OfflineConstants.KEY_STATE);
     OfflineDownloadOptions offlineDownload = intent.getParcelableExtra(KEY_BUNDLE);
+
+    OfflinePlugin offlinePlugin = OfflinePlugin.getInstance(context);
 
     switch (actionName) {
       case OfflineConstants.STATE_STARTED:

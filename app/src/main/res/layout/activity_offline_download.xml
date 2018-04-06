@@ -178,7 +178,7 @@ android:orientation="vertical">
 </android.support.v4.widget.NestedScrollView>
 
 <android.support.design.widget.FloatingActionButton
-  android:id="@+id/fab"
+  android:id="@+id/fab_start_download"
   android:layout_width="wrap_content"
   android:layout_height="wrap_content"
   android:layout_gravity="end|bottom"

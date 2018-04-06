@@ -2,6 +2,7 @@ package com.mapbox.mapboxsdk.plugins.offline.offline;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.IBinder;
@@ -45,6 +46,7 @@ public class OfflineDownloadService extends Service {
   private MapSnapshotter mapSnapshotter;
   NotificationManagerCompat notificationManager;
   NotificationCompat.Builder notificationBuilder;
+  OfflineDownloadStateReceiver broadcastReciever;
 
   // map offline regions to requests, ids are received with onStartCommand, these match serviceId
   // in OfflineDownloadOptions
@@ -59,6 +61,10 @@ public class OfflineDownloadService extends Service {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       setupNotificationChannel();
     }
+
+    // Register the broadcast receiver needed for updating APIs in the OfflinePlugin class.
+    IntentFilter filter = new IntentFilter(OfflineConstants.ACTION_OFFLINE);
+    getApplicationContext().registerReceiver(broadcastReciever, filter);
   }
 
   /**
@@ -255,6 +261,9 @@ public class OfflineDownloadService extends Service {
     super.onDestroy();
     if (mapSnapshotter != null) {
       mapSnapshotter.cancel();
+    }
+    if (broadcastReciever != null) {
+      getApplicationContext().unregisterReceiver(broadcastReciever);
     }
   }
 

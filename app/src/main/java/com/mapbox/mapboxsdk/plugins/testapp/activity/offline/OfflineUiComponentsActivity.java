@@ -50,7 +50,7 @@ public class OfflineUiComponentsActivity extends AppCompatActivity {
       }
 
       OfflineDownloadOptions options = OfflineRegionSelector.getOfflineDownloadOptions(data, builder.build());
-      OfflinePlugin.getInstance().startDownload(this, options);
+      OfflinePlugin.getInstance(this).startDownload(options);
 
       Toast.makeText(this,
         String.format(Locale.US, "Region name: %s", OfflineRegionSelector.getRegionName(data)),
