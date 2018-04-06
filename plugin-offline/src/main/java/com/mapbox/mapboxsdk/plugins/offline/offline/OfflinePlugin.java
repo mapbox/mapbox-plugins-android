@@ -1,5 +1,6 @@
 package com.mapbox.mapboxsdk.plugins.offline.offline;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -17,31 +18,40 @@ import static com.mapbox.mapboxsdk.plugins.offline.offline.OfflineConstants.KEY_
 /**
  * OfflinePlugin is the main entry point for integrating the offline plugin into your app.
  * <p>
- * To start downloading a region call {@link #startDownload(Context, OfflineDownloadOptions)}
+ * To start downloading a region call {@link #startDownload(OfflineDownloadOptions)}
  * </p>
+ *
+ * @since 0.1.0
  */
 public class OfflinePlugin {
 
-  private static OfflinePlugin INSTANCE;
-  private final List<OfflineDownloadOptions> offlineDownloads = new ArrayList<>();
+  // Suppress warning about context being possibly leaked, we immediately get the application
+  // context which removes this risk.
+  @SuppressLint("StaticFieldLeak")
+  private static OfflinePlugin instance;
+
   private final OfflineDownloadChangeDispatcher stateChangeDispatcher = new OfflineDownloadChangeDispatcher();
+  private final List<OfflineDownloadOptions> offlineDownloads = new ArrayList<>();
+  private final Context context;
 
   /**
    * Get a single instance of OfflinePlugin
    *
    * @return the single instance of OfflinePlugin
+   * @since 0.1.0
    */
-  public static synchronized OfflinePlugin getInstance() {
-    if (INSTANCE == null) {
-      INSTANCE = new OfflinePlugin();
+  public static synchronized OfflinePlugin getInstance(@NonNull Context context) {
+    if (instance == null) {
+      instance = new OfflinePlugin(context.getApplicationContext());
     }
-    return INSTANCE;
+    return instance;
   }
 
   /**
    * Private no-args constructor for singleton
    */
-  private OfflinePlugin() {
+  private OfflinePlugin(Context context) {
+    this.context = context;
   }
 
   //
@@ -52,6 +62,7 @@ public class OfflinePlugin {
    * Get the active offline downloads
    *
    * @return a List of active offline downloads.
+   * @since 0.1.0
    */
   @NonNull
   public List<OfflineDownloadOptions> getActiveDownloads() {
@@ -64,29 +75,27 @@ public class OfflinePlugin {
    * You can listen to the actual creation of the download with {@link OfflineDownloadChangeListener}.
    * </p>
    *
-   * @param context the context to derive the application context of
    * @param options the offline download builder
+   * @since 0.1.0
    */
-  public void startDownload(@NonNull Context context, OfflineDownloadOptions options) {
-    Context appContext = context.getApplicationContext();
-    Intent intent = new Intent(appContext, OfflineDownloadService.class);
+  public void startDownload(OfflineDownloadOptions options) {
+    Intent intent = new Intent(context, OfflineDownloadService.class);
     intent.setAction(OfflineConstants.ACTION_START_DOWNLOAD);
     intent.putExtra(KEY_BUNDLE, options);
-    appContext.startService(intent);
+    context.startService(intent);
   }
 
   /**
    * Cancel an ongoing download.
    *
-   * @param context         the context to derive the application context of
    * @param offlineDownload the offline download
+   * @since 0.1.0
    */
-  public void cancelDownload(@NonNull Context context, OfflineDownloadOptions offlineDownload) {
-    Context appContext = context.getApplicationContext();
-    Intent intent = new Intent(appContext, OfflineDownloadService.class);
+  public void cancelDownload(OfflineDownloadOptions offlineDownload) {
+    Intent intent = new Intent(context, OfflineDownloadService.class);
     intent.setAction(OfflineConstants.ACTION_CANCEL_DOWNLOAD);
     intent.putExtra(KEY_BUNDLE, offlineDownload);
-    appContext.startService(intent);
+    context.startService(intent);
   }
 
   /**
@@ -94,6 +103,7 @@ public class OfflinePlugin {
    *
    * @param offlineRegion the offline region to get related offline download for
    * @return the active offline download, null if not downloading the region.
+   * @since 0.1.0
    */
   @Nullable
   public OfflineDownloadOptions getActiveDownloadForOfflineRegion(OfflineRegion offlineRegion) {
@@ -115,6 +125,7 @@ public class OfflinePlugin {
    * </p>
    *
    * @param listener the callback that will be invoked
+   * @since 0.1.0
    */
   public void addOfflineDownloadStateChangeListener(OfflineDownloadChangeListener listener) {
     stateChangeDispatcher.addListener(listener);
@@ -127,6 +138,7 @@ public class OfflinePlugin {
    * </p>
    *
    * @param listener the callback that will be removed
+   * @since 0.1.0
    */
   public void removeOfflineDownloadStateChangeListener(OfflineDownloadChangeListener listener) {
     stateChangeDispatcher.removeListener(listener);
@@ -141,6 +153,7 @@ public class OfflinePlugin {
    * has assigned a region and service id.
    *
    * @param offlineDownload the offline download to track
+   * @since 0.1.0
    */
   void addDownload(OfflineDownloadOptions offlineDownload) {
     offlineDownloads.add(offlineDownload);
@@ -151,6 +164,7 @@ public class OfflinePlugin {
    * Called when the OfflineDownloadService has finished downloading.
    *
    * @param offlineDownload the offline download to stop tracking
+   * @since 0.1.0
    */
   void removeDownload(OfflineDownloadOptions offlineDownload, boolean canceled) {
     if (canceled) {
@@ -167,6 +181,7 @@ public class OfflinePlugin {
    * @param offlineDownload the offline download that produced an error
    * @param error           short description of the error
    * @param errorMessage    full description of the error
+   * @since 0.1.0
    */
   void errorDownload(OfflineDownloadOptions offlineDownload, String error, String errorMessage) {
     stateChangeDispatcher.onError(offlineDownload, error, errorMessage);
@@ -178,6 +193,7 @@ public class OfflinePlugin {
    *
    * @param offlineDownload the offline download for which progress was made
    * @param progress        the amount of progress
+   * @since 0.1.0
    */
   void onProgressChanged(OfflineDownloadOptions offlineDownload, int progress) {
     stateChangeDispatcher.onProgress(offlineDownload, progress);

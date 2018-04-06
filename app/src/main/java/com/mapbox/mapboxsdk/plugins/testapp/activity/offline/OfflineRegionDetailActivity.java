@@ -81,7 +81,7 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
     setContentView(R.layout.activity_offline_region_detail);
     ButterKnife.bind(this);
     mapView.onCreate(savedInstanceState);
-    offlinePlugin = OfflinePlugin.getInstance();
+    offlinePlugin = OfflinePlugin.getInstance(this);
 
     Bundle bundle = getIntent().getExtras();
     if (bundle != null) {
@@ -179,7 +179,7 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
         // cancel download
         OfflineDownloadOptions offlineDownload = offlinePlugin.getActiveDownloadForOfflineRegion(offlineRegion);
         if (offlineDownload != null) {
-          offlinePlugin.cancelDownload(this, offlineDownload);
+          offlinePlugin.cancelDownload(offlineDownload);
           isDownloading = false;
         }
       }
