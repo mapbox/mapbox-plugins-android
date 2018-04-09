@@ -1,4 +1,5 @@
 # Mapbox Plugin testapp ProGuard rules.
 
--keep class com.google.**
--dontwarn com.google.**
+# --- GMS ---
+-keep public class com.google.android.gms.* { public *; }
+-dontwarn com.google.android.gms.**
