@@ -28,8 +28,9 @@ ext {
       spoonRunner        : '1.6.2',
       commonsIO          : '2.5',
       robolectric        : '3.6.1',
-      lifecycleCompiler  : '1.0.0',
-      lifecycleExtensions: '1.0.0',
+      lifecycleCompiler  : '1.1.1',
+      lifecycleExtensions: '1.1.1',
+      lifecycleLiveData  : '1.1.1',
       room               : '1.0.0',
       androidArchCore    : '1.0.0',
       okhttp             : '3.9.1',
@@ -69,6 +70,7 @@ ext {
       // architecture
       lifecycleExtensions    : "android.arch.lifecycle:extensions:${version.lifecycleExtensions}",
       lifecycleCompiler      : "android.arch.lifecycle:compiler:${version.lifecycleCompiler}",
+      lifecycleLiveData      : "android.arch.lifecycle:livedata:${version.lifecycleLiveData}",
       roomRuntime            : "android.arch.persistence.room:runtime:${version.room}",
       roomCompiler           : "android.arch.persistence.room:compiler:${version.room}",
 
