@@ -11,7 +11,7 @@ ext {
       mapboxMapSdk       : '6.0.0-beta.6',
       mapboxGeocoding    : '3.0.0-beta.4',
       mapboxGeoJson      : '3.0.0-beta.4',
-      lost               : '3.0.4',
+      playLocation       : '11.8.0',
       autoValue          : '1.5.3',
       autoValueParcel    : '0.2.6',
       junit              : '4.12',
@@ -43,8 +43,8 @@ ext {
       mapboxGeoJson          : "com.mapbox.mapboxsdk:mapbox-sdk-geojson:${version.mapboxGeoJson}",
       mapboxGeocoding        : "com.mapbox.mapboxsdk:mapbox-sdk-services:${version.mapboxGeocoding}",
 
-      // Lost
-      lost                   : "com.mapzen.android:lost:${version.lost}",
+      // Google Play Location
+      playLocation           : "com.google.android.gms:play-services-location:${version.playLocation}",
 
       // AutoValue
       autoValue              : "com.google.auto.value:auto-value:${version.autoValue}",

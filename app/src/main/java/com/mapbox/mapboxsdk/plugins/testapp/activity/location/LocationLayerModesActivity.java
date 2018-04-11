@@ -2,6 +2,8 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity.location;
 
 import android.annotation.SuppressLint;
 import android.content.res.Configuration;
+import android.graphics.PointF;
+import android.graphics.RectF;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
@@ -19,6 +21,7 @@ import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineListener;
 import com.mapbox.android.core.location.LocationEnginePriority;
 import com.mapbox.android.core.location.LocationEngineProvider;
+import com.mapbox.geojson.Feature;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -39,6 +42,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.mapbox.mapboxsdk.style.expressions.Expression.has;
+
 public class LocationLayerModesActivity extends AppCompatActivity implements OnMapReadyCallback,
   LocationEngineListener, OnLocationLayerClickListener, OnCameraTrackingChangedListener {
 
@@ -57,6 +62,7 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
   private LocationEngine locationEngine;
   private MapboxMap mapboxMap;
   private boolean customStyle;
+  private boolean initialLocationUpdate = true;
 
   private static final String SAVED_STATE_CAMERA = "saved_state_camera";
   private static final String SAVED_STATE_RENDER = "saved_state_render";
@@ -107,6 +113,8 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     locationEngine = new LocationEngineProvider(this).obtainBestLocationEngineAvailable();
     locationEngine.setPriority(LocationEnginePriority.HIGH_ACCURACY);
     locationEngine.setFastestInterval(1000);
+    locationEngine.setSmallestDisplacement(0f);
+    locationEngine.setInterval(0);
     locationEngine.addLocationEngineListener(this);
     locationEngine.activate();
 
@@ -231,9 +239,22 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
 
   @Override
   public void onLocationChanged(Location location) {
-    mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-      new LatLng(location.getLatitude(), location.getLongitude()), 16));
-    locationEngine.removeLocationEngineListener(this);
+    if (initialLocationUpdate) {
+      mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+        new LatLng(location.getLatitude(), location.getLongitude()), 16));
+      initialLocationUpdate = false;
+    }
+
+    PointF pointF = mapboxMap.getProjection().toScreenLocation(
+      new LatLng(location.getLatitude(), location.getLongitude()));
+
+    // Add padding to the point
+    RectF rectF = new RectF(pointF.x + 50, pointF.y + 50, pointF.x + 50, pointF.y + 50);
+
+    List<Feature> features = mapboxMap.queryRenderedFeatures(rectF, has("name"));
+    if (!features.isEmpty()) {
+      locationLayerPlugin.setPlaceText(features.get(0).getStringProperty("name"));
+    }
   }
 
   @Override

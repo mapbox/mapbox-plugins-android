@@ -26,6 +26,8 @@ final class LocationLayerConstants {
   static final String BACKGROUND_LAYER = "mapbox-location-stroke-layer";
   static final String ACCURACY_LAYER = "mapbox-location-accuracy-layer";
   static final String BEARING_LAYER = "mapbox-location-bearing-layer";
+  static final String PLACE_TEXT_LAYER = "mapbox-location-place-text-layer";
+  static final String STREET_TEXT_LAYER = "mapbox-location-street-text-layer";
 
   // Icons
   static final String FOREGROUND_ICON = "mapbox-location-icon";

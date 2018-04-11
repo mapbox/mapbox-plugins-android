@@ -239,6 +239,10 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     updateMapWithOptions(options);
   }
 
+  public void setPlaceText(String placeText) {
+    locationLayer.updatePlaceText(placeText);
+  }
+
   /**
    * Use to either force a location update or to manually control when the user location gets
    * updated.
