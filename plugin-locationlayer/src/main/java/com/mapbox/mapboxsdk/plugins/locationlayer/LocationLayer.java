@@ -9,8 +9,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
+import com.google.gson.JsonObject;
 import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.geojson.Geometry;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -26,6 +27,9 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+
+import timber.log.Timber;
 
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.ACCURACY_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.BACKGROUND_ICON;
@@ -37,13 +41,18 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.FOREGROUND_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.FOREGROUND_STALE_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.LOCATION_SOURCE;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.PROPERTY_COMPASS_BEARING;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.PROPERTY_GPS_BEARING;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.SHADOW_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.SHADOW_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.generateShadow;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.getBitmapFromDrawable;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.getDrawable;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.exponential;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.literal;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.match;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.stop;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
 import static com.mapbox.mapboxsdk.style.layers.Property.ICON_ROTATION_ALIGNMENT_MAP;
@@ -74,7 +83,12 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   private Context context;
 
   private final Map<String, Layer> layerMap = new HashMap<>();
-  private final Map<String, GeoJsonSource> sourceMap = new HashMap<>();
+  private Feature locationFeature = Feature.fromGeometry(Point.fromLngLat(0, 0));
+  private final GeoJsonSource locationSource = new GeoJsonSource(
+    LOCATION_SOURCE,
+    locationFeature,
+    new GeoJsonOptions().withMaxZoom(16)
+  );
 
   LocationLayer(MapView mapView, MapboxMap mapboxMap, LocationLayerOptions options) {
     this.mapboxMap = mapboxMap;
@@ -159,7 +173,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
     }
   }
 
-  void setLayerVisibility(String layerId, boolean visible) {
+  private void setLayerVisibility(String layerId, boolean visible) {
     layerMap.get(layerId).setProperties(visibility(visible ? VISIBLE : NONE));
   }
 
@@ -182,7 +196,15 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
           stop(18f, 1.2f)
         )
       ),
-      iconRotationAlignment(ICON_ROTATION_ALIGNMENT_MAP));
+      iconRotationAlignment(ICON_ROTATION_ALIGNMENT_MAP),
+      iconRotate(
+        match(literal(layerId), literal(0f),
+          stop(literal(FOREGROUND_LAYER), get(PROPERTY_GPS_BEARING)),
+          stop(literal(BACKGROUND_LAYER), get(PROPERTY_GPS_BEARING)),
+          stop(literal(BEARING_LAYER), get(PROPERTY_COMPASS_BEARING))
+        )
+      )
+    );
     addLayerToMap(layer, beforeLayerId);
   }
 
@@ -201,8 +223,9 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
     layerMap.put(layer.getId(), layer);
   }
 
-  void setLayerBearing(String layerId, float bearing) {
-    layerMap.get(layerId).setProperties(iconRotate(bearing));
+  private void setBearingProperty(String propertyId, float bearing) {
+    locationFeature.addNumberProperty(propertyId, bearing);
+    locationSource.setGeoJson(locationFeature);
   }
 
   void updateAccuracyRadius(Location location) {
@@ -222,8 +245,9 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   }
 
   void updateForegroundBearing(float bearing) {
-    layerMap.get(FOREGROUND_LAYER).setProperties(iconRotate(bearing));
-    layerMap.get(SHADOW_LAYER).setProperties(iconRotate(bearing));
+//    TODO: 13.04.18
+//    layerMap.get(FOREGROUND_LAYER).setProperties(iconRotate(bearing));
+//    layerMap.get(SHADOW_LAYER).setProperties(iconRotate(bearing));
   }
 
   private float calculateZoomLevelRadius(Location location) {
@@ -240,17 +264,17 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   //
 
   private void addLocationSource() {
-    FeatureCollection emptyFeature = FeatureCollection.fromFeatures(new Feature[] {});
-    GeoJsonSource locationSource = new GeoJsonSource(
-      LOCATION_SOURCE,
-      emptyFeature,
-      new GeoJsonOptions().withMaxZoom(16));
+    locationFeature.addNumberProperty(PROPERTY_GPS_BEARING, 0f);
+    locationFeature.addNumberProperty(PROPERTY_COMPASS_BEARING, 0f);
     mapboxMap.addSource(locationSource);
-    sourceMap.put(LOCATION_SOURCE, locationSource);
   }
 
   private void setLocationPoint(Point locationPoint) {
-    sourceMap.get(LOCATION_SOURCE).setGeoJson(locationPoint);
+    JsonObject properties = locationFeature.properties();
+    if (properties != null) {
+      locationFeature = Feature.fromGeometry(locationPoint, properties);
+      locationSource.setGeoJson(locationFeature);
+    }
   }
 
   //
@@ -290,8 +314,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
 
     layerMap.get(FOREGROUND_LAYER).setProperties(
       iconImage(isStale
-        ? FOREGROUND_STALE_ICON : FOREGROUND_ICON),
-      iconRotate(90f));
+        ? FOREGROUND_STALE_ICON : FOREGROUND_ICON));
   }
 
   private void styleForeground(@NonNull LocationLayerOptions options, boolean isStale) {
@@ -344,15 +367,14 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   @Override
   public void onNewGpsBearingValue(float gpsBearing) {
     if (renderMode == RenderMode.GPS) {
-      setLayerBearing(LocationLayerConstants.FOREGROUND_LAYER, gpsBearing);
-      setLayerBearing(LocationLayerConstants.BACKGROUND_LAYER, gpsBearing);
+      setBearingProperty(PROPERTY_GPS_BEARING, gpsBearing);
     }
   }
 
   @Override
   public void onNewCompassBearingValue(float compassBearing) {
     if (renderMode == RenderMode.COMPASS) {
-      setLayerBearing(BEARING_LAYER, compassBearing);
+      setBearingProperty(PROPERTY_COMPASS_BEARING, compassBearing);
     }
   }
 }

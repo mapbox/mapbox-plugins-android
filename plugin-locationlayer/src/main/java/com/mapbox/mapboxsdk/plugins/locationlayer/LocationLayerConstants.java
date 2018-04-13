@@ -18,6 +18,8 @@ final class LocationLayerConstants {
 
   // Sources
   static final String LOCATION_SOURCE = "mapbox-location-source";
+  static final String PROPERTY_GPS_BEARING = "mapbox-property-gps-bearing";
+  static final String PROPERTY_COMPASS_BEARING = "mapbox-property-compass-bearing";
 
   // Layers
   static final String SHADOW_LAYER = "mapbox-location-shadow";
