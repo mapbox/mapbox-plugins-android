@@ -196,6 +196,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
         match(literal(layerId), literal(0f),
           stop(FOREGROUND_LAYER, get(PROPERTY_GPS_BEARING)),
           stop(BACKGROUND_LAYER, get(PROPERTY_GPS_BEARING)),
+          stop(SHADOW_LAYER, get(PROPERTY_GPS_BEARING)),
           stop(BEARING_LAYER, get(PROPERTY_COMPASS_BEARING))
         )
       ),
@@ -264,14 +265,15 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   }
 
   void updateForegroundOffset(double tilt) {
-    JsonArray jsonArray = new JsonArray();
-    jsonArray.add(0f);
-    jsonArray.add((float) (0.05 * tilt));
-    locationFeature.addProperty(PROPERTY_FOREGROUND_ICON_OFFSET, jsonArray);
+    JsonArray foregroundJsonArray = new JsonArray();
+    foregroundJsonArray.add(0f);
+    foregroundJsonArray.add((float) (-0.05 * tilt));
+    locationFeature.addProperty(PROPERTY_FOREGROUND_ICON_OFFSET, foregroundJsonArray);
 
-    jsonArray.remove(1);
-    jsonArray.add((float) (-0.05 * tilt));
-    locationFeature.addProperty(PROPERTY_SHADOW_ICON_OFFSET, jsonArray);
+    JsonArray backgroundJsonArray = new JsonArray();
+    backgroundJsonArray.add(0f);
+    backgroundJsonArray.add((float) (0.05 * tilt));
+    locationFeature.addProperty(PROPERTY_SHADOW_ICON_OFFSET, backgroundJsonArray);
 
     refreshSource();
   }
