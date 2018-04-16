@@ -87,11 +87,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
 
   private final Map<String, Layer> layerMap = new HashMap<>();
   private Feature locationFeature = Feature.fromGeometry(Point.fromLngLat(0, 0));
-  private final GeoJsonSource locationSource = new GeoJsonSource(
-    LOCATION_SOURCE,
-    locationFeature,
-    new GeoJsonOptions().withMaxZoom(16)
-  );
+  private GeoJsonSource locationSource;
 
   LocationLayer(MapView mapView, MapboxMap mapboxMap, LocationLayerOptions options) {
     this.mapboxMap = mapboxMap;
@@ -291,7 +287,14 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   private void addLocationSource() {
     locationFeature.addNumberProperty(PROPERTY_GPS_BEARING, 0f);
     locationFeature.addNumberProperty(PROPERTY_COMPASS_BEARING, 0f);
-    locationFeature.addBooleanProperty(PROPERTY_LOCATION_STALE, false);
+    locationFeature.addBooleanProperty(PROPERTY_LOCATION_STALE, true);
+
+    locationSource = new GeoJsonSource(
+      LOCATION_SOURCE,
+      locationFeature,
+      new GeoJsonOptions().withMaxZoom(16)
+    );
+
     mapboxMap.addSource(locationSource);
   }
 
