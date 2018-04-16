@@ -20,6 +20,12 @@ final class LocationLayerConstants {
   static final String LOCATION_SOURCE = "mapbox-location-source";
   static final String PROPERTY_GPS_BEARING = "mapbox-property-gps-bearing";
   static final String PROPERTY_COMPASS_BEARING = "mapbox-property-compass-bearing";
+  static final String PROPERTY_LOCATION_STALE = "mapbox-property-location-stale";
+  static final String PROPERTY_ACCURACY_RADIUS = "mapbox-property-accuracy-radius";
+  static final String PROPERTY_ACCURACY_COLOR = "mapbox-property-accuracy-color";
+  static final String PROPERTY_ACCURACY_ALPHA = "mapbox-property-accuracy-alpha";
+  static final String PROPERTY_FOREGROUND_ICON_OFFSET = "mapbox-property-foreground-icon-offset";
+  static final String PROPERTY_SHADOW_ICON_OFFSET = "mapbox-property-shadow-icon-offset";
 
   // Layers
   static final String SHADOW_LAYER = "mapbox-location-shadow";
