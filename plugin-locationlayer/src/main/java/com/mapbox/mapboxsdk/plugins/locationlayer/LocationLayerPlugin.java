@@ -505,12 +505,19 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     staleStateManager.updateLatestLocationTime();
     CameraPosition currentCameraPosition = mapboxMap.getCameraPosition();
     boolean isGpsNorth = getCameraMode() == CameraMode.TRACKING_GPS_NORTH;
-    locationLayerAnimator.feedNewLocation(location, currentCameraPosition, isGpsNorth);
+    boolean forceLocationUpdate = locationLayerAnimator.feedNewLocation(location, currentCameraPosition, isGpsNorth);
+    if (forceLocationUpdate) {
+      locationLayer.onNewLatLngValue(new LatLng(location.getLatitude(), location.getLongitude()));
+      locationLayer.onNewGpsBearingValue(location.getBearing());
+    }
     locationLayer.updateAccuracyRadius(location);
   }
 
   private void updateCompassHeading(float heading) {
-    locationLayerAnimator.feedNewCompassBearing(heading, mapboxMap.getCameraPosition());
+    boolean forceCompassUpdate = locationLayerAnimator.feedNewCompassBearing(heading, mapboxMap.getCameraPosition());
+    if (forceCompassUpdate) {
+      locationLayer.onNewCompassBearingValue(heading);
+    }
   }
 
   /**
