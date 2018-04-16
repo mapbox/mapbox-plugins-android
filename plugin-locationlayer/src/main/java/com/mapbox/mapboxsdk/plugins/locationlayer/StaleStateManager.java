@@ -14,13 +14,14 @@ class StaleStateManager {
 
   private final OnLocationStaleListener innerOnLocationStaleListeners;
   private final Handler handler;
-  private boolean isStale;
+  private boolean isStale = true;
   private long delayTime;
 
   StaleStateManager(OnLocationStaleListener innerListener, long delayTime) {
     innerOnLocationStaleListeners = innerListener;
     this.delayTime = delayTime;
     handler = new Handler();
+    innerOnLocationStaleListeners.onStaleStateChange(true);
   }
 
   private Runnable staleStateRunnable = new Runnable() {
