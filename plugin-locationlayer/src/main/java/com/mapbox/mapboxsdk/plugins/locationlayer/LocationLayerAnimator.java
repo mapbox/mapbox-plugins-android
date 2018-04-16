@@ -53,15 +53,19 @@ final class LocationLayerAnimator {
     cameraListeners.remove(listener);
   }
 
-  void feedNewLocation(@NonNull Location newLocation, @NonNull CameraPosition currentCameraPosition,
-                       boolean isGpsNorth) {
+  /**
+   * Returns whether location has to be updated manually.
+   */
+  boolean feedNewLocation(@NonNull Location newLocation, @NonNull CameraPosition currentCameraPosition,
+                          boolean isGpsNorth) {
     if (previousLocation == null) {
       previousLocation = newLocation;
       locationUpdateTimestamp = SystemClock.elapsedRealtime();
+      return true;
     }
 
     if (invalidUpdateInterval()) {
-      return;
+      return false;
     }
 
     LatLng previousLayerLatLng = getPreviousLayerLatLng();
@@ -80,11 +84,17 @@ final class LocationLayerAnimator {
     playAllLocationAnimators(getAnimationDuration());
 
     previousLocation = newLocation;
+
+    return false;
   }
 
-  void feedNewCompassBearing(float targetCompassBearing, @NonNull CameraPosition currentCameraPosition) {
+  /**
+   * Returns whether compass bearing has to be updated manually.
+   */
+  boolean feedNewCompassBearing(float targetCompassBearing, @NonNull CameraPosition currentCameraPosition) {
     if (previousCompassBearing < 0) {
       previousCompassBearing = targetCompassBearing;
+      return true;
     }
 
     float previousLayerBearing = getPreviousLayerCompassBearing();
@@ -94,6 +104,8 @@ final class LocationLayerAnimator {
     playCompassAnimators(COMPASS_UPDATE_RATE_MS);
 
     previousCompassBearing = targetCompassBearing;
+
+    return false;
   }
 
   private final ValueAnimator.AnimatorUpdateListener layerLatLngUpdateListener =
@@ -251,7 +263,7 @@ final class LocationLayerAnimator {
       animationDuration = 0;
     } else {
       animationDuration = (int) ((locationUpdateTimestamp - previousUpdateTimeStamp) * 1.1f)
-        /*make animation slightly longer*/;
+      /*make animation slightly longer*/;
     }
     return animationDuration;
   }
