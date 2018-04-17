@@ -60,10 +60,6 @@ final class LocationLayerAnimator {
       locationUpdateTimestamp = SystemClock.elapsedRealtime();
     }
 
-    if (invalidUpdateInterval()) {
-      return;
-    }
-
     LatLng previousLayerLatLng = getPreviousLayerLatLng();
     float previousLayerBearing = getPreviousLayerGpsBearing();
     LatLng previousCameraLatLng = currentCameraPosition.target;
@@ -183,11 +179,6 @@ final class LocationLayerAnimator {
     cancelLayerCompassAnimations();
     cancelCameraLocationAnimations();
     cancelCameraCompassAnimations();
-  }
-
-  private boolean invalidUpdateInterval() {
-    return locationUpdateTimestamp > 0
-      && (SystemClock.elapsedRealtime() - locationUpdateTimestamp) < ONE_SECOND;
   }
 
   private LatLng getPreviousLayerLatLng() {
