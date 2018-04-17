@@ -287,7 +287,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   private void addLocationSource() {
     locationFeature.addNumberProperty(PROPERTY_GPS_BEARING, 0f);
     locationFeature.addNumberProperty(PROPERTY_COMPASS_BEARING, 0f);
-    locationFeature.addBooleanProperty(PROPERTY_LOCATION_STALE, true);
+    locationFeature.addBooleanProperty(PROPERTY_LOCATION_STALE, false);
 
     locationSource = new GeoJsonSource(
       LOCATION_SOURCE,
