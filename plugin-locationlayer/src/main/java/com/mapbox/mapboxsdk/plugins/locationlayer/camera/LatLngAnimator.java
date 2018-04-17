@@ -10,8 +10,7 @@ public class LatLngAnimator extends ValueAnimator {
 
   private LatLng target;
 
-  public LatLngAnimator(@NonNull LatLng previous, @NonNull LatLng target, long duration) {
-    setDuration(duration);
+  public LatLngAnimator(@NonNull LatLng previous, @NonNull LatLng target) {
     setObjectValues(previous, target);
     setEvaluator(new LatLngEvaluator());
     this.target = target;
