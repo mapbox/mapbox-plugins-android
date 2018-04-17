@@ -19,8 +19,8 @@ import com.mapbox.mapboxsdk.offline.OfflineRegion;
 import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
 import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions;
-import com.mapbox.mapboxsdk.plugins.offline.OfflineDownloadChangeListener;
-import com.mapbox.mapboxsdk.plugins.offline.OfflinePlugin;
+import com.mapbox.mapboxsdk.plugins.offline.offline.OfflineDownloadChangeListener;
+import com.mapbox.mapboxsdk.plugins.offline.offline.OfflinePlugin;
 import com.mapbox.mapboxsdk.plugins.offline.utils.OfflineUtils;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 
@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import timber.log.Timber;
 
-import static com.mapbox.mapboxsdk.plugins.offline.OfflineConstants.KEY_BUNDLE;
+import static com.mapbox.mapboxsdk.plugins.offline.offline.OfflineConstants.KEY_BUNDLE;
 
 /**
  * Activity showing the detail of an offline region.
@@ -81,7 +81,7 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
     setContentView(R.layout.activity_offline_region_detail);
     ButterKnife.bind(this);
     mapView.onCreate(savedInstanceState);
-    offlinePlugin = OfflinePlugin.getInstance();
+    offlinePlugin = OfflinePlugin.getInstance(this);
 
     Bundle bundle = getIntent().getExtras();
     if (bundle != null) {
@@ -94,7 +94,7 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
     OfflineDownloadOptions offlineDownload = bundle.getParcelable(KEY_BUNDLE);
     if (offlineDownload != null) {
       // coming from notification
-      regionId = offlineDownload.getRegionId();
+      regionId = offlineDownload.regionId();
     } else {
       // coming from list
       regionId = bundle.getLong(KEY_REGION_ID_BUNDLE, -1);
@@ -179,7 +179,7 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
         // cancel download
         OfflineDownloadOptions offlineDownload = offlinePlugin.getActiveDownloadForOfflineRegion(offlineRegion);
         if (offlineDownload != null) {
-          offlinePlugin.cancelDownload(this, offlineDownload);
+          offlinePlugin.cancelDownload(offlineDownload);
           isDownloading = false;
         }
       }
@@ -217,7 +217,7 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
       return;
     }
 
-    if (offlineDownload.getRegionId() == offlineRegion.getID()) {
+    if (offlineDownload.regionId() == offlineRegion.getID()) {
       if (progressBar.getVisibility() != View.VISIBLE) {
         progressBar.setVisibility(View.VISIBLE);
       }

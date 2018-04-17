@@ -1,4 +1,4 @@
-package com.mapbox.mapboxsdk.plugins.offline;
+package com.mapbox.mapboxsdk.plugins.offline.offline;
 
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -7,20 +7,16 @@ import android.content.Intent;
 
 import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions;
 
-import static com.mapbox.mapboxsdk.plugins.offline.OfflineConstants.KEY_BUNDLE;
+import static com.mapbox.mapboxsdk.plugins.offline.offline.OfflineConstants.KEY_BUNDLE;
 
 public class OfflineDownloadStateReceiver extends BroadcastReceiver {
-
-  private OfflinePlugin offlinePlugin;
-
-  public OfflineDownloadStateReceiver() {
-    offlinePlugin = OfflinePlugin.getInstance();
-  }
 
   @Override
   public void onReceive(Context context, Intent intent) {
     String actionName = intent.getStringExtra(OfflineConstants.KEY_STATE);
     OfflineDownloadOptions offlineDownload = intent.getParcelableExtra(KEY_BUNDLE);
+
+    OfflinePlugin offlinePlugin = OfflinePlugin.getInstance(context);
 
     switch (actionName) {
       case OfflineConstants.STATE_STARTED:

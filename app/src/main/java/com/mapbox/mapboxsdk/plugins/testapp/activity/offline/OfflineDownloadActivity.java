@@ -14,7 +14,7 @@ import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
-import com.mapbox.mapboxsdk.plugins.offline.OfflinePlugin;
+import com.mapbox.mapboxsdk.plugins.offline.offline.OfflinePlugin;
 import com.mapbox.mapboxsdk.plugins.offline.model.NotificationOptions;
 import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions;
 import com.mapbox.mapboxsdk.plugins.offline.utils.OfflineUtils;
@@ -146,7 +146,7 @@ public class OfflineDownloadActivity extends AppCompatActivity {
     });
   }
 
-  @OnClick(R.id.fab)
+  @OnClick(R.id.fab_start_download)
   public void onDownloadRegion() {
     // get data from UI
     String regionName = regionNameView.getText().toString();
@@ -182,7 +182,7 @@ public class OfflineDownloadActivity extends AppCompatActivity {
       .build();
 
     // start offline download
-    OfflinePlugin.getInstance().startDownload(this,
+    OfflinePlugin.getInstance(this).startDownload(
       OfflineDownloadOptions.builder()
         .definition(definition)
         .metadata(OfflineUtils.convertRegionName(regionName))

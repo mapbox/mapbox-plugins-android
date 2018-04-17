@@ -1,4 +1,4 @@
-package com.mapbox.mapboxsdk.plugins.offline;
+package com.mapbox.mapboxsdk.plugins.offline.offline;
 
 import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions;
 
