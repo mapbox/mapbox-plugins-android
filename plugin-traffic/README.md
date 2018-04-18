@@ -18,7 +18,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-traffic:0.4.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-traffic:0.5.0'
 }
 ```
 
@@ -35,7 +35,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-traffic:0.5.0-SNAPSHOT'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-traffic:0.6.0-SNAPSHOT'
 }
 ```
 
