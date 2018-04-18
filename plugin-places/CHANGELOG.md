@@ -2,6 +2,11 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### 0.3.0 - April 18, 2018
+- Updates Map SDK to 6.0.1
+- Adds consumer ProGuard rules [#373](https://github.com/mapbox/mapbox-plugins-android/pull/373)
+- Resolves Places Plugin Offline crash [#377](https://github.com/mapbox/mapbox-plugins-android/pull/377)
+
 ### 0.2.2 - March 7, 2018
 - Package namespacing is now corrected to match other plugins [#336](https://github.com/mapbox/mapbox-plugins-android/pull/336)
 - Back button in Place Picker activity now calls `finish()` [#337](https://github.com/mapbox/mapbox-plugins-android/pull/337)
