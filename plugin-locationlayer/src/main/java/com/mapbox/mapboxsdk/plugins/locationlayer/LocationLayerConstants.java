@@ -10,12 +10,11 @@ final class LocationLayerConstants {
   // Controls the compass update rate in milliseconds
   static final int COMPASS_UPDATE_RATE_MS = 500;
 
-  // Sets the animation time when moving the user location icon from the previous location to the
-  // updated. If LinearAnimator's enabled, this values ignored.
-  static final int LOCATION_UPDATE_DELAY_MS = 500;
+  // Sets the transition animation duration when switching camera modes.
+  static final long TRANSITION_ANIMATION_DURATION_MS = 750;
 
-  // Sets the max allowed time for the location icon animation from one latlng to another.
-  static final long MIN_ANIMATION_DURATION_MS = 1500;
+  // Sets the max allowed time for the location icon animation from one LatLng to another.
+  static final long MAX_ANIMATION_DURATION_MS = 2000;
 
   // Sources
   static final String LOCATION_SOURCE = "mapbox-location-source";
