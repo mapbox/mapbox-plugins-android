@@ -65,6 +65,8 @@ public final class LocationLayerPlugin implements LifecycleObserver {
 
   private LocationLayerAnimator locationLayerAnimator;
 
+  private CameraPosition lastCameraPosition;
+
   private boolean isEnabled;
   private StaleStateManager staleStateManager;
   private final CopyOnWriteArrayList<OnLocationStaleListener> onLocationStaleListeners
@@ -189,6 +191,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    */
   public void setRenderMode(@RenderMode.Mode int renderMode) {
     locationLayer.setRenderMode(renderMode);
+    updateLayerOffsets(true);
   }
 
   /**
@@ -485,7 +488,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
 
   private void updateMapWithOptions(final LocationLayerOptions options) {
     mapboxMap.setPadding(
-      options.padding()[0], options.padding()[1],options.padding()[2], options.padding()[3]
+      options.padding()[0], options.padding()[1], options.padding()[2], options.padding()[3]
     );
 
     mapboxMap.setMaxZoomPreference(options.maxZoom());
@@ -528,19 +531,33 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     updateCompassHeading(compassManager.getLastHeading());
   }
 
-  private OnCameraMoveListener onCameraMoveListener = new OnCameraMoveListener() {
+  private void updateLayerOffsets(boolean forceUpdate) {
+    CameraPosition position = mapboxMap.getCameraPosition();
+    if (lastCameraPosition == null || forceUpdate) {
+      lastCameraPosition = position;
+      locationLayer.updateForegroundBearing((float) position.bearing);
+      locationLayer.updateForegroundOffset(position.tilt);
+      locationLayer.updateAccuracyRadius(getLastKnownLocation());
+      return;
+    }
 
-    private CameraPosition lastCameraPosition;
+    if (position.bearing != lastCameraPosition.bearing) {
+      locationLayer.updateForegroundBearing((float) position.bearing);
+    }
+    if (position.tilt != lastCameraPosition.tilt) {
+      locationLayer.updateForegroundOffset(position.tilt);
+    }
+    if (position.zoom != lastCameraPosition.zoom) {
+      locationLayer.updateAccuracyRadius(getLastKnownLocation());
+    }
+    lastCameraPosition = position;
+  }
+
+  private OnCameraMoveListener onCameraMoveListener = new OnCameraMoveListener() {
 
     @Override
     public void onCameraMove() {
-      CameraPosition position = mapboxMap.getCameraPosition();
-      if (position.equals(lastCameraPosition)) {
-        locationLayer.updateAccuracyRadius(getLastKnownLocation());
-        locationLayer.updateForegroundOffset(position.tilt);
-        locationLayer.updateForegroundBearing((float) position.bearing);
-      }
-      lastCameraPosition = position;
+      updateLayerOffsets(false);
     }
   };
 
