@@ -119,7 +119,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
 
   void setRenderMode(@RenderMode.Mode int renderMode) {
     this.renderMode = renderMode;
-    hide();
+    boolean isStale = locationFeature.getBooleanProperty(PROPERTY_LOCATION_STALE);
 
     switch (renderMode) {
       case RenderMode.NORMAL:
@@ -127,20 +127,24 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
         setLayerVisibility(SHADOW_LAYER, true);
         setLayerVisibility(FOREGROUND_LAYER, true);
         setLayerVisibility(BACKGROUND_LAYER, true);
-        setLayerVisibility(ACCURACY_LAYER, true);
+        setLayerVisibility(ACCURACY_LAYER, !isStale);
+        setLayerVisibility(BEARING_LAYER, false);
         break;
       case RenderMode.COMPASS:
         styleForeground(options);
         setLayerVisibility(SHADOW_LAYER, true);
         setLayerVisibility(FOREGROUND_LAYER, true);
         setLayerVisibility(BACKGROUND_LAYER, true);
-        setLayerVisibility(ACCURACY_LAYER, true);
+        setLayerVisibility(ACCURACY_LAYER, !isStale);
         setLayerVisibility(BEARING_LAYER, true);
         break;
       case RenderMode.GPS:
         styleForeground(options);
+        setLayerVisibility(SHADOW_LAYER, false);
         setLayerVisibility(FOREGROUND_LAYER, true);
         setLayerVisibility(BACKGROUND_LAYER, true);
+        setLayerVisibility(ACCURACY_LAYER, false);
+        setLayerVisibility(BEARING_LAYER, false);
         break;
       default:
         break;
@@ -166,7 +170,11 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   }
 
   private void setLayerVisibility(String layerId, boolean visible) {
-    layerMap.get(layerId).setProperties(visibility(visible ? VISIBLE : NONE));
+    Layer layer = layerMap.get(layerId);
+    String targetVisibility = visible ? VISIBLE : NONE;
+    if (!layer.getVisibility().value.equals(targetVisibility)) {
+      layer.setProperties(visibility(visible ? VISIBLE : NONE));
+    }
   }
 
   private void addLayers() {
