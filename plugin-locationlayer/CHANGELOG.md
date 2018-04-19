@@ -2,6 +2,17 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### 0.5.0 - April 19, 2018
+- Maps SDK Bumped to 6.0.1 [#432](https://github.com/mapbox/mapbox-plugins-android/pull/432)
+- Remove invalid Location update check [#431](https://github.com/mapbox/mapbox-plugins-android/pull/431)
+- Max animation duration when tracking [#430](https://github.com/mapbox/mapbox-plugins-android/pull/430)
+- Initialize in a stale state [#427](https://github.com/mapbox/mapbox-plugins-android/pull/427)
+- Use json features instead of layer properties setters [#426](https://github.com/mapbox/mapbox-plugins-android/pull/426)
+- Updated Maps SDK to 6.0.0-beta.7 and GeoJson lib to 3.0.1 [#425](https://github.com/mapbox/mapbox-plugins-android/pull/425)
+- Fix Proguard issues [#422](https://github.com/mapbox/mapbox-plugins-android/pull/422)
+- Fix LocationLayerAnimator ignored updates for first second [#420](https://github.com/mapbox/mapbox-plugins-android/pull/420)
+- Remove support library and use just livedata dependency [#419](https://github.com/mapbox/mapbox-plugins-android/pull/419)
+
 ### 0.5.0-beta.2 - April 5, 2018
 - Update Map SDK to 6.0.0-beta.6 [#414](https://github.com/mapbox/mapbox-plugins-android/pull/414)
 - Filter location updates and remove unused animator code [#393](https://github.com/mapbox/mapbox-plugins-android/pull/393)
