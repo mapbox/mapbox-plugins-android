@@ -91,7 +91,7 @@ jobs:
       - deploy:
           name: Publish Plugins SDK To Maven Central
           command: |
-            if [ "${CIRCLE_BRANCH}" == "release-locationlayerplugin-v0.5.0" ]; then
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
             make publish ;
             fi
       - store_artifacts:
