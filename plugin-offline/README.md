@@ -39,7 +39,7 @@ dependencies {
 
 ## Offline plugin examples
 
-- In this repo's test app: [Offline download](https://github.com/mapbox/mapbox-plugins-android/blob/396df90fb121402406928405634b9c56a2faa4ae/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/offline/OfflineDownloadActivity.java), [Downloaded region overview](https://github.com/mapbox/mapbox-plugins-android/blob/396df90fb121402406928405634b9c56a2faa4ae/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/offline/OfflineRegionDetailActivity.java), [List downloaded regions](https://github.com/mapbox/mapbox-plugins-android/blob/396df90fb121402406928405634b9c56a2faa4ae/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/offline/OfflineRegionListActivity.java)
+- In this repo's test app: [Offline download](https://github.com/mapbox/mapbox-plugins-android/blob/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/offline/OfflineDownloadActivity.java), [Downloaded region overview](https://github.com/mapbox/mapbox-plugins-android/blob/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/offline/OfflineRegionDetailActivity.java), [List downloaded regions](https://github.com/mapbox/mapbox-plugins-android/blob/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/offline/OfflineRegionListActivity.java)
 
 ## Help and Usage
 
