@@ -1,6 +1,7 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity;
 
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,14 +15,11 @@ import com.mapbox.mapboxsdk.plugins.localization.MapLocale;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.Utils;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LocalizationActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-  @BindView(R.id.mapView)
-  MapView mapView;
+  private MapView mapView;
 
   private LocalizationPlugin localizationPlugin;
   private MapboxMap mapboxMap;
@@ -45,9 +43,10 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_localization);
-    ButterKnife.bind(this);
+
     mapIsLocalized = true;
     Toast.makeText(this, R.string.change_language_instruction, Toast.LENGTH_LONG).show();
+    mapView = findViewById(R.id.map_view);
     mapView.onCreate(savedInstanceState);
     mapView.getMapAsync(this);
   }
@@ -177,6 +176,11 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
       index = 0;
     }
     return LOCALES[index];
+  }
+
+  @VisibleForTesting
+  public LocalizationPlugin getLocalizationPlugin() {
+    return localizationPlugin;
   }
 }
 
