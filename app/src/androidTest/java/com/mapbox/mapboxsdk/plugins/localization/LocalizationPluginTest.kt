@@ -10,6 +10,7 @@ import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
+import com.mapbox.mapboxsdk.constants.Style
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.plugins.testapp.activity.LocalizationActivity
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
@@ -45,6 +46,29 @@ class LocalizationPluginTest {
     onView(withId(android.R.id.content)).check(matches(isDisplayed()))
     mapboxMap = idlingResource!!.mapboxMap
     localizationPlugin = rule.activity.localizationPlugin
+  }
+
+  //
+  // Style Changes
+  //
+  
+  @Test
+  fun styleChanged_theCurrentLanguageRemainsTheSame() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocalizationPlugin> {
+      override fun onGenericPluginAction(plugin: LocalizationPlugin?, mapboxMap: MapboxMap?,
+                                         uiController: UiController, context: Context) {
+        val layer: SymbolLayer = mapboxMap?.getLayerAs("country-label-lg")!!
+
+        // Change the language
+        plugin?.setMapLanguage(MapLocale.RUSSIAN)
+        var language = layer.textField.getValue()
+        assertThat(language, equalTo("{name_ru}"))
+        mapboxMap.setStyleUrl(Style.DARK)
+        language = layer.textField.getValue()
+        assertThat(language, equalTo("{name_ru}"))
+      }
+    }
+    executePluginTest(pluginAction)
   }
 
   //
@@ -167,6 +191,180 @@ class LocalizationPluginTest {
       override fun onGenericPluginAction(plugin: LocalizationPlugin?, mapboxMap: MapboxMap?,
                                          uiController: UiController, context: Context) {
         val layer: SymbolLayer = mapboxMap?.getLayerAs("marine-label-lg-pt")!!
+        var language = layer.textField.getValue()
+
+        assertThat(language, equalTo("{name_en}"))
+        plugin?.setMapLanguage(MapLocale.RUSSIAN)
+        language = layer.textField.getValue()
+        assertThat(language, equalTo("{name_ru}"))
+      }
+    }
+    executePluginTest(pluginAction)
+  }
+
+  @Test
+  fun languageChanged_changesMarineLabelLgLnLanguage() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocalizationPlugin> {
+      override fun onGenericPluginAction(plugin: LocalizationPlugin?, mapboxMap: MapboxMap?,
+                                         uiController: UiController, context: Context) {
+        val layer: SymbolLayer = mapboxMap?.getLayerAs("marine-label-lg-ln")!!
+        var language = layer.textField.getValue()
+
+        assertThat(language, equalTo("{name_en}"))
+        plugin?.setMapLanguage(MapLocale.RUSSIAN)
+        language = layer.textField.getValue()
+        assertThat(language, equalTo("{name_ru}"))
+      }
+    }
+    executePluginTest(pluginAction)
+  }
+
+  @Test
+  fun languageChanged_changesMarineLabelMdPtLanguage() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocalizationPlugin> {
+      override fun onGenericPluginAction(plugin: LocalizationPlugin?, mapboxMap: MapboxMap?,
+                                         uiController: UiController, context: Context) {
+        val layer: SymbolLayer = mapboxMap?.getLayerAs("marine-label-md-pt")!!
+        var language = layer.textField.getValue()
+
+        assertThat(language, equalTo("{name_en}"))
+        plugin?.setMapLanguage(MapLocale.RUSSIAN)
+        language = layer.textField.getValue()
+        assertThat(language, equalTo("{name_ru}"))
+      }
+    }
+    executePluginTest(pluginAction)
+  }
+
+  @Test
+  fun languageChanged_changesMarineLabelMdLnLanguage() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocalizationPlugin> {
+      override fun onGenericPluginAction(plugin: LocalizationPlugin?, mapboxMap: MapboxMap?,
+                                         uiController: UiController, context: Context) {
+        val layer: SymbolLayer = mapboxMap?.getLayerAs("marine-label-md-ln")!!
+        var language = layer.textField.getValue()
+
+        assertThat(language, equalTo("{name_en}"))
+        plugin?.setMapLanguage(MapLocale.RUSSIAN)
+        language = layer.textField.getValue()
+        assertThat(language, equalTo("{name_ru}"))
+      }
+    }
+    executePluginTest(pluginAction)
+  }
+
+  @Test
+  fun languageChanged_changesMarineLabelSmPtLanguage() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocalizationPlugin> {
+      override fun onGenericPluginAction(plugin: LocalizationPlugin?, mapboxMap: MapboxMap?,
+                                         uiController: UiController, context: Context) {
+        val layer: SymbolLayer = mapboxMap?.getLayerAs("marine-label-sm-pt")!!
+        var language = layer.textField.getValue()
+
+        assertThat(language, equalTo("{name_en}"))
+        plugin?.setMapLanguage(MapLocale.RUSSIAN)
+        language = layer.textField.getValue()
+        assertThat(language, equalTo("{name_ru}"))
+      }
+    }
+    executePluginTest(pluginAction)
+  }
+
+  @Test
+  fun languageChanged_changesMarineLabelSmLnLanguage() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocalizationPlugin> {
+      override fun onGenericPluginAction(plugin: LocalizationPlugin?, mapboxMap: MapboxMap?,
+                                         uiController: UiController, context: Context) {
+        val layer: SymbolLayer = mapboxMap?.getLayerAs("marine-label-sm-ln")!!
+        var language = layer.textField.getValue()
+
+        assertThat(language, equalTo("{name_en}"))
+        plugin?.setMapLanguage(MapLocale.RUSSIAN)
+        language = layer.textField.getValue()
+        assertThat(language, equalTo("{name_ru}"))
+      }
+    }
+    executePluginTest(pluginAction)
+  }
+
+  //
+  // City Labels
+  //
+
+  @Test
+  fun languageChanged_changesPlaceCityLgnLanguage() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocalizationPlugin> {
+      override fun onGenericPluginAction(plugin: LocalizationPlugin?, mapboxMap: MapboxMap?,
+                                         uiController: UiController, context: Context) {
+        val layer: SymbolLayer = mapboxMap?.getLayerAs("place-city-lg-n")!!
+        var language = layer.textField.getValue()
+
+        assertThat(language, equalTo("{name_en}"))
+        plugin?.setMapLanguage(MapLocale.RUSSIAN)
+        language = layer.textField.getValue()
+        assertThat(language, equalTo("{name_ru}"))
+      }
+    }
+    executePluginTest(pluginAction)
+  }
+
+  @Test
+  fun languageChanged_changesPlaceCityLgsLanguage() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocalizationPlugin> {
+      override fun onGenericPluginAction(plugin: LocalizationPlugin?, mapboxMap: MapboxMap?,
+                                         uiController: UiController, context: Context) {
+        val layer: SymbolLayer = mapboxMap?.getLayerAs("place-city-lg-s")!!
+        var language = layer.textField.getValue()
+
+        assertThat(language, equalTo("{name_en}"))
+        plugin?.setMapLanguage(MapLocale.RUSSIAN)
+        language = layer.textField.getValue()
+        assertThat(language, equalTo("{name_ru}"))
+      }
+    }
+    executePluginTest(pluginAction)
+  }
+
+  @Test
+  fun languageChanged_changesPlaceCityMdnLanguage() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocalizationPlugin> {
+      override fun onGenericPluginAction(plugin: LocalizationPlugin?, mapboxMap: MapboxMap?,
+                                         uiController: UiController, context: Context) {
+        val layer: SymbolLayer = mapboxMap?.getLayerAs("place-city-md-n")!!
+        var language = layer.textField.getValue()
+
+        assertThat(language, equalTo("{name_en}"))
+        plugin?.setMapLanguage(MapLocale.RUSSIAN)
+        language = layer.textField.getValue()
+        assertThat(language, equalTo("{name_ru}"))
+      }
+    }
+    executePluginTest(pluginAction)
+  }
+
+  @Test
+  fun languageChanged_changesPlaceCityMdsLanguage() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocalizationPlugin> {
+      override fun onGenericPluginAction(plugin: LocalizationPlugin?, mapboxMap: MapboxMap?,
+                                         uiController: UiController, context: Context) {
+        val layer: SymbolLayer = mapboxMap?.getLayerAs("place-city-md-s")!!
+        var language = layer.textField.getValue()
+
+        assertThat(language, equalTo("{name_en}"))
+        plugin?.setMapLanguage(MapLocale.RUSSIAN)
+        language = layer.textField.getValue()
+        assertThat(language, equalTo("{name_ru}"))
+      }
+    }
+    executePluginTest(pluginAction)
+  }
+
+  @Test
+  fun languageChanged_changesPlaceCitySmLanguage() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocalizationPlugin> {
+      override fun onGenericPluginAction(plugin: LocalizationPlugin?, mapboxMap: MapboxMap?,
+                                         uiController: UiController, context: Context) {
+        val layer: SymbolLayer = mapboxMap?.getLayerAs("place-city-sm")!!
         var language = layer.textField.getValue()
 
         assertThat(language, equalTo("{name_en}"))
