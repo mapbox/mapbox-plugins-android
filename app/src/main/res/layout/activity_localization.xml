@@ -15,9 +15,7 @@
     app:mapbox_cameraTilt="20"
     app:mapbox_cameraZoom="2.5"
     app:mapbox_styleUrl="@string/mapbox_style_mapbox_streets"
-    app:mapbox_uiAttribution="false">
-
-  </com.mapbox.mapboxsdk.maps.MapView>
+    app:mapbox_uiAttribution="false"/>
 
   <android.support.design.widget.FloatingActionButton
     android:id="@+id/localize_fab"
@@ -26,11 +24,11 @@
     android:layout_marginBottom="16dp"
     android:layout_marginEnd="16dp"
     android:layout_marginRight="16dp"
-    app:srcCompat="@drawable/ic_translate_white_24dp"
     app:backgroundTint="@color/colorPrimary"
     app:fabSize="normal"
     app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"/>
+    app:layout_constraintEnd_toEndOf="parent"
+    app:srcCompat="@drawable/ic_translate_white_24dp"/>
 
   <android.support.design.widget.FloatingActionButton
     android:id="@+id/change_map_style"
@@ -39,13 +37,13 @@
     android:layout_marginBottom="8dp"
     android:layout_marginEnd="16dp"
     android:layout_marginRight="16dp"
-    app:srcCompat="@drawable/ic_layers"
     android:tint="@android:color/white"
     app:backgroundTint="@color/colorAccent"
     app:fabSize="normal"
     app:layout_constraintBottom_toTopOf="@+id/camera_localization"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintRight_toRightOf="parent"/>
+    app:layout_constraintRight_toRightOf="parent"
+    app:srcCompat="@drawable/ic_layers"/>
 
   <android.support.design.widget.FloatingActionButton
     android:id="@+id/camera_localization"
@@ -54,12 +52,12 @@
     android:layout_marginBottom="8dp"
     android:layout_marginEnd="16dp"
     android:layout_marginRight="16dp"
-    app:srcCompat="@drawable/ic_camera"
     android:tint="@android:color/white"
     app:backgroundTint="@color/colorAccent"
     app:fabSize="normal"
     app:layout_constraintBottom_toTopOf="@+id/localize_fab"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintRight_toRightOf="parent"/>
+    app:layout_constraintRight_toRightOf="parent"
+    app:srcCompat="@drawable/ic_camera"/>
 
 </android.support.constraint.ConstraintLayout>
