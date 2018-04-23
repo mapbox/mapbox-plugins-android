@@ -20,6 +20,7 @@ import com.mapbox.android.core.location.LocationEngineListener;
 import com.mapbox.android.core.location.LocationEnginePriority;
 import com.mapbox.android.core.location.LocationEngineProvider;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -141,13 +142,17 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
       return super.onOptionsItemSelected(item);
     }
 
-    if (item.getItemId() == R.id.action_style_change) {
+    int id = item.getItemId();
+    if (id == R.id.action_style_change) {
       toggleStyle();
       return true;
-    } else if (item.getItemId() == R.id.action_plugin_disable) {
+    } else if (id == R.id.action_map_style_change) {
+      toggleMapStyle();
+      return true;
+    } else if (id == R.id.action_plugin_disable) {
       locationLayerPlugin.setLocationLayerEnabled(false);
       return true;
-    } else if (item.getItemId() == R.id.action_plugin_enabled) {
+    } else if (id == R.id.action_plugin_enabled) {
       locationLayerPlugin.setLocationLayerEnabled(true);
       return true;
     }
@@ -160,6 +165,12 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     customStyle = !customStyle;
     locationLayerPlugin.applyStyle(customStyle ? R.style.CustomLocationLayer
       : R.style.mapbox_LocationLayer);
+  }
+
+  @VisibleForTesting
+  public void toggleMapStyle() {
+    String styleUrl = mapboxMap.getStyleUrl().contentEquals(Style.DARK) ? Style.LIGHT : Style.DARK;
+    mapboxMap.setStyle(styleUrl);
   }
 
   @VisibleForTesting
