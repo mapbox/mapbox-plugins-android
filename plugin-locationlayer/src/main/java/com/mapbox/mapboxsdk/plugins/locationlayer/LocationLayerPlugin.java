@@ -471,6 +471,8 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     updateMapWithOptions(options);
 
     enableLocationLayerPlugin();
+    setRenderMode(RenderMode.NORMAL);
+    setCameraMode(CameraMode.NONE);
   }
 
   @SuppressLint("MissingPermission")
@@ -604,6 +606,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
         locationLayer.initializeComponents(options);
         locationLayerCamera.initializeOptions(options);
         setRenderMode(locationLayer.getRenderMode());
+        setCameraMode(locationLayerCamera.getCameraMode());
         onStart();
       }
     }
