@@ -115,13 +115,15 @@ ext {
       jacoco    : '0.8.0',
       errorprone: '0.0.13',
       sonarqube : '2.6.2',
-      gradle    : '3.0.1'
+      gradle    : '3.0.1',
+      kotlin    : '1.2.40'
   ]
 
   pluginDependencies = [
       gradle    : "com.android.tools.build:gradle:${pluginVersion.gradle}",
       checkstyle: "com.puppycrawl.tools:checkstyle:${pluginVersion.checkstyle}",
       sonarqube : "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${pluginVersion.sonarqube}",
-      errorprone: "net.ltgt.gradle:gradle-errorprone-plugin:${pluginVersion.errorprone}"
+      errorprone: "net.ltgt.gradle:gradle-errorprone-plugin:${pluginVersion.errorprone}",
+      kotlin    : "org.jetbrains.kotlin:kotlin-gradle-plugin:${pluginVersion.kotlin}"
   ]
 }
