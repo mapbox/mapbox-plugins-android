@@ -1,0 +1,16 @@
+[main]
+host = https://www.transifex.com
+minimum_perc = 20
+lang_map = pt_BR: pt-rBR, pt_PT: pt-rPT
+
+[mapbox-plugins-for-android.plugin-offline-strings-file]
+file_filter = plugin-offline/src/main/res/values-<lang>/mapbox_strings.xml
+source_file = plugin-offline/src/main/res/values/mapbox_strings.xml
+source_lang = en
+type = ANDROID
+
+[mapbox-plugins-for-android.plugin-places-strings-file]
+file_filter = plugin-places/src/main/res/values-<lang>/strings.xml
+source_file = plugin-places/src/main/res/values/strings.xml
+source_lang = en
+type = ANDROID
