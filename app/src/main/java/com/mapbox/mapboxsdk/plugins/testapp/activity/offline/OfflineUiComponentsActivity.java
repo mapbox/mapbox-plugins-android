@@ -6,10 +6,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.mapbox.mapboxsdk.plugins.offline.offline.OfflinePlugin;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.offline.OfflineRegionSelector;
 import com.mapbox.mapboxsdk.plugins.offline.model.NotificationOptions;
 import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions;
+import com.mapbox.mapboxsdk.plugins.offline.model.RegionSelectionOptions;
+import com.mapbox.mapboxsdk.plugins.offline.offline.OfflinePlugin;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 
 import java.util.Locale;
@@ -30,7 +33,15 @@ public class OfflineUiComponentsActivity extends AppCompatActivity {
 
   @OnClick(R.id.launch_offline_region_selector_button)
   public void onOfflineRegionSelectorButtonClicked() {
+
+    // Create the offline region selector options
+    RegionSelectionOptions options = RegionSelectionOptions.builder()
+      .statingCameraPosition(
+        new CameraPosition.Builder().target(new LatLng(32.7852, -96.8154)).zoom(12).build()
+      ).build();
+
     Intent intent = new OfflineRegionSelector.IntentBuilder()
+      .regionSelectionOptions(options)
       .build(this);
     startActivityForResult(intent, REQUEST_CODE);
   }

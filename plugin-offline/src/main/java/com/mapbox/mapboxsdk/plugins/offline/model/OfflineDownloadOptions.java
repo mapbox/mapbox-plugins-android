@@ -89,6 +89,7 @@ public abstract class OfflineDownloadOptions implements Parcelable {
    * Used to build a new instance of this class.
    *
    * @return this classes builder class
+   * @since 0.1.0
    */
   public static Builder builder() {
     return new AutoValue_OfflineDownloadOptions.Builder()
@@ -187,9 +188,7 @@ public abstract class OfflineDownloadOptions implements Parcelable {
 
     /**
      * Build a new {@link OfflineDownloadOptions} instance using the information and values provided
-     * inside this builder class.
-    public abstract Builder regionId(long regionId);
-
+     * inside this builder class
      *
      * @return a new instance of the {@link OfflineDownloadOptions} which is using the values you
      * provided in this builder
