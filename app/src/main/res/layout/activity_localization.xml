@@ -2,7 +2,6 @@
 <android.support.constraint.ConstraintLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical">
@@ -15,7 +14,8 @@
     app:mapbox_cameraTargetLng="-0.075073"
     app:mapbox_cameraTilt="20"
     app:mapbox_cameraZoom="2.5"
-    app:mapbox_styleUrl="@string/mapbox_style_mapbox_streets">
+    app:mapbox_styleUrl="@string/mapbox_style_mapbox_streets"
+    app:mapbox_uiAttribution="false">
 
   </com.mapbox.mapboxsdk.maps.MapView>
 
@@ -26,7 +26,7 @@
     android:layout_marginBottom="16dp"
     android:layout_marginEnd="16dp"
     android:layout_marginRight="16dp"
-    android:src="@drawable/ic_translate_white_24dp"
+    app:srcCompat="@drawable/ic_translate_white_24dp"
     app:backgroundTint="@color/colorPrimary"
     app:fabSize="normal"
     app:layout_constraintBottom_toBottomOf="parent"
@@ -39,7 +39,7 @@
     android:layout_marginBottom="8dp"
     android:layout_marginEnd="16dp"
     android:layout_marginRight="16dp"
-    android:src="@drawable/ic_layers"
+    app:srcCompat="@drawable/ic_layers"
     android:tint="@android:color/white"
     app:backgroundTint="@color/colorAccent"
     app:fabSize="normal"
@@ -54,7 +54,7 @@
     android:layout_marginBottom="8dp"
     android:layout_marginEnd="16dp"
     android:layout_marginRight="16dp"
-    android:src="@drawable/ic_camera"
+    app:srcCompat="@drawable/ic_camera"
     android:tint="@android:color/white"
     app:backgroundTint="@color/colorAccent"
     app:fabSize="normal"
