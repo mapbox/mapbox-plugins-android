@@ -94,7 +94,7 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
     OfflineDownloadOptions offlineDownload = bundle.getParcelable(KEY_BUNDLE);
     if (offlineDownload != null) {
       // coming from notification
-      regionId = offlineDownload.regionId();
+      regionId = offlineDownload.uuid();
     } else {
       // coming from list
       regionId = bundle.getLong(KEY_REGION_ID_BUNDLE, -1);
@@ -217,7 +217,7 @@ public class OfflineRegionDetailActivity extends AppCompatActivity implements Of
       return;
     }
 
-    if (offlineDownload.regionId() == offlineRegion.getID()) {
+    if (offlineDownload.uuid() == offlineRegion.getID()) {
       if (progressBar.getVisibility() != View.VISIBLE) {
         progressBar.setVisibility(View.VISIBLE);
       }

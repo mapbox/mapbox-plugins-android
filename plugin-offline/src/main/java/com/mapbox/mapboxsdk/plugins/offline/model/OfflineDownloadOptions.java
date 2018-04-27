@@ -64,8 +64,6 @@ public abstract class OfflineDownloadOptions implements Parcelable {
   @SuppressWarnings("mutable")
   public abstract byte[] metadata();
 
-  public abstract long regionId();
-
   /**
    * Current download progress for this specific offline region. This will be 0 until the download
    * actually starts and will be a value between 0 and 100 once the download begins.
@@ -91,13 +89,13 @@ public abstract class OfflineDownloadOptions implements Parcelable {
    * Used to build a new instance of this class.
    *
    * @return this classes builder class
+   * @since 0.1.0
    */
   public static Builder builder() {
     return new AutoValue_OfflineDownloadOptions.Builder()
       .uuid(UUID.randomUUID().getMostSignificantBits())
       .metadata(new byte[] {})
-      .progress(0)
-      .regionId(-1);
+      .progress(0);
     // TODO user must provide a notificationOptions object
   }
 
@@ -130,7 +128,7 @@ public abstract class OfflineDownloadOptions implements Parcelable {
      * @return this builder for chaining options together
      * @since 0.1.0
      */
-    abstract Builder uuid(@NonNull Long uuid);
+    public abstract Builder uuid(@NonNull Long uuid);
 
     /**
      * Current download progress for this specific offline region. This will be 0 until the download
@@ -190,9 +188,7 @@ public abstract class OfflineDownloadOptions implements Parcelable {
 
     /**
      * Build a new {@link OfflineDownloadOptions} instance using the information and values provided
-     * inside this builder class.
-    public abstract Builder regionId(long regionId);
-
+     * inside this builder class
      *
      * @return a new instance of the {@link OfflineDownloadOptions} which is using the values you
      * provided in this builder
