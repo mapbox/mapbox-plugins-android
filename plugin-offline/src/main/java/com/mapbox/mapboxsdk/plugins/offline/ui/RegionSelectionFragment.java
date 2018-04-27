@@ -13,13 +13,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mapbox.geojson.Feature;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
+import com.mapbox.mapboxsdk.plugins.offline.OfflinePluginConstants;
 import com.mapbox.mapboxsdk.plugins.offline.R;
+import com.mapbox.mapboxsdk.plugins.offline.model.RegionSelectionOptions;
 import com.mapbox.mapboxsdk.style.sources.VectorSource;
 
 import java.util.List;
@@ -37,16 +40,25 @@ public class RegionSelectionFragment extends Fragment implements OnMapReadyCallb
     "place_label", "state_label", "country_label"
   };
 
+  private RegionSelectionOptions options;
   private RegionSelectedCallback selectedCallback;
   private TextView regionNameTextView;
   private MapboxMap mapboxMap;
+  private String regionName;
   private RectF boundingBox;
   private MapView mapView;
   private View rootView;
-  private String regionName;
 
   public static RegionSelectionFragment newInstance() {
     return new RegionSelectionFragment();
+  }
+
+  public static RegionSelectionFragment newInstance(@Nullable RegionSelectionOptions regionSelectionOptions) {
+    RegionSelectionFragment fragment = new RegionSelectionFragment();
+    Bundle bundle = new Bundle();
+    bundle.putParcelable(OfflinePluginConstants.REGION_SELECTION_OPTIONS, regionSelectionOptions);
+    fragment.setArguments(bundle);
+    return fragment;
   }
 
   @Nullable
@@ -56,6 +68,11 @@ public class RegionSelectionFragment extends Fragment implements OnMapReadyCallb
     rootView = inflater.inflate(R.layout.mapbox_offline_region_selection_fragment, container, false);
     mapView = rootView.findViewById(R.id.mapbox_offline_region_selection_map_view);
     regionNameTextView = rootView.findViewById(R.id.mapbox_offline_region_name_text_view);
+
+    Bundle bundle = getArguments();
+    // Get the regionSelectionOptions
+    options = bundle.getParcelable(OfflinePluginConstants.REGION_SELECTION_OPTIONS);
+
     return rootView;
   }
 
@@ -79,6 +96,14 @@ public class RegionSelectionFragment extends Fragment implements OnMapReadyCallb
   public void onMapReady(MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
     mapboxMap.addOnCameraIdleListener(this);
+
+    if (options != null) {
+      if (options.startingBounds() != null) {
+        mapboxMap.moveCamera(CameraUpdateFactory.newLatLngBounds(options.startingBounds(), 0));
+      } else if (options.statingCameraPosition() != null) {
+        mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(options.statingCameraPosition()));
+      }
+    }
   }
 
   @Override

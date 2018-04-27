@@ -124,7 +124,7 @@ public class OfflineDownloadService extends Service {
           @Override
           public void onCreate(OfflineRegion offlineRegion) {
             OfflineDownloadOptions options
-              = offlineDownload.toBuilder().regionId(offlineRegion.getID()).build();
+              = offlineDownload.toBuilder().uuid(offlineRegion.getID()).build();
             OfflineDownloadStateReceiver.dispatchStartBroadcast(getApplicationContext(), options);
             regionLongSparseArray.put(options.uuid(), offlineRegion);
 
