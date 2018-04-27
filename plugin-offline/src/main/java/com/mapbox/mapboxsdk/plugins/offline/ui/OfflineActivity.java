@@ -8,7 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
+import com.mapbox.mapboxsdk.plugins.offline.OfflinePluginConstants;
 import com.mapbox.mapboxsdk.plugins.offline.R;
+import com.mapbox.mapboxsdk.plugins.offline.model.RegionSelectionOptions;
 import com.mapbox.mapboxsdk.plugins.offline.utils.ColorUtils;
 
 import static com.mapbox.mapboxsdk.plugins.offline.offline.OfflineConstants.RETURNING_DEFINITION;
@@ -35,7 +37,13 @@ public class OfflineActivity extends AppCompatActivity implements RegionSelected
 
       RegionSelectionFragment fragment;
 
-      fragment = RegionSelectionFragment.newInstance();
+      RegionSelectionOptions regionSelectionOptions
+        = getIntent().getParcelableExtra(OfflinePluginConstants.REGION_SELECTION_OPTIONS);
+      if (regionSelectionOptions != null) {
+        fragment = RegionSelectionFragment.newInstance(regionSelectionOptions);
+      } else {
+        fragment = RegionSelectionFragment.newInstance();
+      }
 
       getSupportFragmentManager().beginTransaction()
         .add(R.id.fragment_container, fragment, RegionSelectionFragment.TAG).commit();

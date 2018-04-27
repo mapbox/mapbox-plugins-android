@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
 import com.mapbox.mapboxsdk.plugins.offline.model.NotificationOptions;
 import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions;
+import com.mapbox.mapboxsdk.plugins.offline.model.RegionSelectionOptions;
 import com.mapbox.mapboxsdk.plugins.offline.ui.OfflineActivity;
 
 import static com.mapbox.mapboxsdk.plugins.offline.offline.OfflineConstants.RETURNING_DEFINITION;
@@ -162,6 +163,11 @@ public class OfflineRegionSelector {
      */
     public IntentBuilder() {
       intent = new Intent();
+    }
+
+    public IntentBuilder regionSelectionOptions(RegionSelectionOptions regionSelectionOptions) {
+      intent.putExtra(OfflinePluginConstants.REGION_SELECTION_OPTIONS, regionSelectionOptions);
+      return this;
     }
 
     /**
