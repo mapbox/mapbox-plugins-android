@@ -12,6 +12,7 @@ buildscript {
     classpath pluginDependencies.gradle
     classpath pluginDependencies.sonarqube
     classpath pluginDependencies.errorprone
+    classpath pluginDependencies.kotlin
   }
 }
 

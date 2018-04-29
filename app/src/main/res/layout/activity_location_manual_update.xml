@@ -11,6 +11,7 @@
     android:id="@+id/map_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:mapbox_uiAttribution="false"
     android:layout_marginBottom="0dp"/>
 
   <android.support.design.widget.FloatingActionButton
