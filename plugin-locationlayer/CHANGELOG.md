@@ -2,6 +2,9 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### 0.6.0 - TBD
+- Lowered min SDK to API level 14 to match Map SDK
+
 ### 0.5.0 - April 19, 2018
 - Maps SDK Bumped to 6.0.1 [#432](https://github.com/mapbox/mapbox-plugins-android/pull/432)
 - Remove invalid Location update check [#431](https://github.com/mapbox/mapbox-plugins-android/pull/431)

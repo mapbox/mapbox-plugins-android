@@ -71,10 +71,10 @@ dependencies {
   // Architecture
   implementation dependenciesList.lifecycleExtensions
   implementation dependenciesList.roomRuntime
-  annotationProcessor dependenciesList.roomCompiler
+  kapt dependenciesList.roomCompiler
 
   // LOST
-  implementation dependenciesList.lost
+  implementation dependenciesList.playLocation
 
   // Support libraries
   implementation dependenciesList.supportAnnotation
