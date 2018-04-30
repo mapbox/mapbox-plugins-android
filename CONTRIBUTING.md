@@ -29,7 +29,7 @@ Once you’ve finished translating the Android Plugins SDK into a new language i
 
 1. Create a new branch that will contain the new translations.
 1. _(First time only.)_ Download the [`tx` command line tool](https://docs.transifex.com/client/installing-the-client) and [configure your .transifexrc](https://docs.transifex.com/client/client-configuration).
-1. Run `tx pull -a` to fetch translations from Transifex. You can restrict the operation to only pull in the new language using `tx pull -l xyz`, where _xyz_ is the language code.
+1. Run `tx pull -a` to fetch translations from Transifex. You can restrict the operation to just the new language using `tx pull -l xyz`, where _xyz_ is the language code.
 1. Commit any new files that were added and open a pull request with your changes.
 
 # Code of conduct
