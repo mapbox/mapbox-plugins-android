@@ -39,8 +39,11 @@ class CompassManager implements SensorEventListener {
   @Nullable
   private Sensor compassSensor;
 
-  private int lastAccuracy;
+  private float[] truncatedRotationVectorValue = new float[4];
+  private float[] rotationMatrix = new float[9];
+  private float[] rotationVectorValue;
   private float lastHeading;
+  private int lastAccuracy;
 
   // CompassManager data
   private long compassUpdateNextTimestamp;
@@ -104,7 +107,8 @@ class CompassManager implements SensorEventListener {
       return;
     }
     if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
-      updateOrientation(event.values);
+      rotationVectorValue = getRotationVectorFromSensorEvent(event);
+      updateOrientation();
 
       // Update the compassUpdateNextTimestamp
       compassUpdateNextTimestamp = currentTime + LocationLayerConstants.COMPASS_UPDATE_RATE_MS;
@@ -124,9 +128,8 @@ class CompassManager implements SensorEventListener {
   }
 
   @SuppressWarnings("SuspiciousNameCombination")
-  private void updateOrientation(float[] rotationVector) {
-    float[] rotationMatrix = new float[9];
-    SensorManager.getRotationMatrixFromVector(rotationMatrix, rotationVector);
+  private void updateOrientation() {
+    SensorManager.getRotationMatrixFromVector(rotationMatrix, rotationVectorValue);
 
     final int worldAxisForDeviceAxisX;
     final int worldAxisForDeviceAxisY;
@@ -178,5 +181,27 @@ class CompassManager implements SensorEventListener {
 
   float getLastHeading() {
     return lastHeading;
+  }
+
+  /**
+   * Pulls out the rotation vector from a SensorEvent, with a maximum length
+   * vector of four elements to avoid potential compatibility issues.
+   *
+   * @param event the sensor event
+   * @return the events rotation vector, potentially truncated
+   */
+  @NonNull
+  float[] getRotationVectorFromSensorEvent(@NonNull SensorEvent event) {
+    if (event.values.length > 4) {
+      // On some Samsung devices SensorManager.getRotationMatrixFromVector
+      // appears to throw an exception if rotation vector has length > 4.
+      // For the purposes of this class the first 4 values of the
+      // rotation vector are sufficient (see crbug.com/335298 for details).
+      // Only affects Android 4.3
+      System.arraycopy(event.values, 0, truncatedRotationVectorValue, 0, 4);
+      return truncatedRotationVectorValue;
+    } else {
+      return event.values;
+    }
   }
 }
