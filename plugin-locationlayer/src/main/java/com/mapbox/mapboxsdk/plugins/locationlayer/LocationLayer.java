@@ -99,7 +99,6 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
 
   void initializeComponents(LocationLayerOptions options) {
     prepareLocationSource();
-    addLocationSource();
     addLayers();
     applyStyle(options);
   }
