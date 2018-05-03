@@ -3,7 +3,7 @@ package com.mapbox.mapboxsdk.plugins.places.autocomplete.data;
 import com.google.gson.JsonObject;
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.geojson.Point;
-import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.entity.SearchHistoryEntity;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.entity.PlaceEntity;
 
 public final class TestData {
 
@@ -29,9 +29,9 @@ public final class TestData {
     .properties(new JsonObject())
     .build();
 
-  static final SearchHistoryEntity SEARCH_HISTORY_ENTITY
-    = new SearchHistoryEntity(CARMEN_FEATURE.placeName(), CARMEN_FEATURE);
+  static final PlaceEntity SEARCH_HISTORY_ENTITY
+    = new PlaceEntity(CARMEN_FEATURE.placeName(), CARMEN_FEATURE, false);
 
-  static final SearchHistoryEntity SEARCH_HISTORY_ENTITY_TWO
-    = new SearchHistoryEntity(CARMEN_FEATURE_TWO.placeName(), CARMEN_FEATURE_TWO);
+  static final PlaceEntity SEARCH_HISTORY_ENTITY_TWO
+    = new PlaceEntity(CARMEN_FEATURE_TWO.placeName(), CARMEN_FEATURE_TWO, false);
 }

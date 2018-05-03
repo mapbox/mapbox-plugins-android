@@ -5,11 +5,10 @@ import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 
-import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.SearchHistoryDatabase;
-import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.entity.SearchHistoryEntity;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.PlacesDatabase;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.entity.PlaceEntity;
 
 import java.util.List;
-
 
 /**
  * Used internally for the autocomplete view
@@ -22,36 +21,36 @@ public final class DataRepository {
 
   private static DataRepository instance;
 
-  private final SearchHistoryDatabase database;
-  private MediatorLiveData<List<SearchHistoryEntity>> observableSearchHistory;
+  private final PlacesDatabase database;
+  MediatorLiveData<List<PlaceEntity>> observablePlaces;
 
-  private DataRepository(final SearchHistoryDatabase database) {
+  private DataRepository(final PlacesDatabase database) {
     this.database = database;
-    observableSearchHistory = new MediatorLiveData<>();
+    observablePlaces = new MediatorLiveData<>();
 
-    observableSearchHistory.addSource(database.searchHistoryDao().getAll(),
-      new Observer<List<SearchHistoryEntity>>() {
+    observablePlaces.addSource(database.placesDao().getAll(),
+      new Observer<List<PlaceEntity>>() {
         @Override
-        public void onChanged(@Nullable List<SearchHistoryEntity> searchHistoryEntities) {
+        public void onChanged(@Nullable List<PlaceEntity> placeEntities) {
           if (database.getDatabaseCreated().getValue() != null) {
-            observableSearchHistory.postValue(searchHistoryEntities);
+            observablePlaces.postValue(placeEntities);
           }
         }
       });
   }
 
-  public static DataRepository getInstance(final SearchHistoryDatabase database) {
+  public static DataRepository getInstance(final PlacesDatabase database) {
     if (instance == null) {
       instance = new DataRepository(database);
     }
     return instance;
   }
 
-  public LiveData<List<SearchHistoryEntity>> getSearchHistory() {
-    return observableSearchHistory;
+  public LiveData<List<PlaceEntity>> getPlaces() {
+    return observablePlaces;
   }
 
-  public void addSearchHistoryEntity(SearchHistoryEntity searchHistory) {
-    SearchHistoryDatabase.insertData(database, searchHistory);
+  public void addSearchHistoryEntity(PlaceEntity placeEntity) {
+    PlacesDatabase.insertData(database, placeEntity);
   }
 }
