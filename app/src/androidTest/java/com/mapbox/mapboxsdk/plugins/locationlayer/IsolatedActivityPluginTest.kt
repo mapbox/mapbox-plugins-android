@@ -18,15 +18,16 @@ import com.mapbox.mapboxsdk.constants.Style
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.SupportMapFragment
+import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.*
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode
 import com.mapbox.mapboxsdk.plugins.testapp.activity.SingleFragmentActivity
 import com.mapbox.mapboxsdk.style.layers.CircleLayer
-import com.mapbox.mapboxsdk.style.layers.Property
+import com.mapbox.mapboxsdk.style.layers.Property.VISIBLE
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.GenericPluginAction
 import com.mapbox.mapboxsdk.utils.OnMapFragmentReadyIdlingResource
-import org.hamcrest.CoreMatchers
-import org.hamcrest.Matchers
+import org.hamcrest.CoreMatchers.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -92,17 +93,38 @@ class IsolatedActivityPluginTest {
         uiController.loopMainThreadForAtLeast(500)
 
         // Add map change listener
-        assertThat(locationLayerPlugin.renderMode, CoreMatchers.`is`(Matchers.equalTo(RenderMode.NORMAL)))
+        assertThat(locationLayerPlugin.renderMode, `is`(equalTo(RenderMode.NORMAL)))
         // Check that all layers visibilities are set to none
-        val foregroundLayer: SymbolLayer? = mapboxMap.getLayerAs(LocationLayerConstants.FOREGROUND_LAYER)
-        val backgroundLayer: SymbolLayer? = mapboxMap.getLayerAs(LocationLayerConstants.BACKGROUND_LAYER)
-        val shadowLayer: SymbolLayer? = mapboxMap.getLayerAs(LocationLayerConstants.SHADOW_LAYER)
-        val accuracyLayer: CircleLayer? = mapboxMap.getLayerAs(LocationLayerConstants.ACCURACY_LAYER)
+        val foregroundLayer: SymbolLayer? = mapboxMap.getLayerAs(FOREGROUND_LAYER)
+        val backgroundLayer: SymbolLayer? = mapboxMap.getLayerAs(BACKGROUND_LAYER)
+        val shadowLayer: SymbolLayer? = mapboxMap.getLayerAs(SHADOW_LAYER)
+        val accuracyLayer: CircleLayer? = mapboxMap.getLayerAs(ACCURACY_LAYER)
 
-        assertThat(foregroundLayer?.visibility?.value, CoreMatchers.`is`(Matchers.equalTo(Property.VISIBLE)))
-        assertThat(backgroundLayer?.visibility?.value, CoreMatchers.`is`(Matchers.equalTo(Property.VISIBLE)))
-        assertThat(shadowLayer?.visibility?.value, CoreMatchers.`is`(Matchers.equalTo(Property.VISIBLE)))
-        assertThat(accuracyLayer?.visibility?.value, CoreMatchers.`is`(Matchers.equalTo(Property.VISIBLE)))
+        assertThat(foregroundLayer?.visibility?.value, `is`(equalTo(VISIBLE)))
+        assertThat(backgroundLayer?.visibility?.value, `is`(equalTo(VISIBLE)))
+        assertThat(shadowLayer?.visibility?.value, `is`(equalTo(VISIBLE)))
+        assertThat(accuracyLayer?.visibility?.value, `is`(equalTo(VISIBLE)))
+      }
+    }
+    executePluginTest(pluginAction)
+  }
+
+  @Test
+  fun locationLayer_doesntShowUntilFirstLocationFix() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin?, mapboxMap: MapboxMap?,
+                                         uiController: UiController, context: Context) {
+        mapView = fragment?.view as MapView?
+        val locationLayerPlugin = LocationLayerPlugin(mapView!!, mapboxMap!!, null)
+
+        var source: GeoJsonSource? = mapboxMap.getSourceAs(LOCATION_SOURCE)
+        assertThat(source, nullValue())
+
+        // Force the first location update
+        locationLayerPlugin.forceLocationUpdate(location)
+
+        source = mapboxMap.getSourceAs(LOCATION_SOURCE)
+        assertThat(source, notNullValue())
       }
     }
     executePluginTest(pluginAction)
