@@ -604,6 +604,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
         onStop();
       } else if (change == MapView.DID_FINISH_LOADING_STYLE) {
         locationLayer.initializeComponents(options);
+        locationLayer.addLocationSource();
         locationLayerCamera.initializeOptions(options);
         setRenderMode(locationLayer.getRenderMode());
         setCameraMode(locationLayerCamera.getCameraMode());
