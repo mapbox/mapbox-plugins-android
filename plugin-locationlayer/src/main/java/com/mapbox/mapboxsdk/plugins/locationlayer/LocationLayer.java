@@ -99,6 +99,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
 
   void initializeComponents(LocationLayerOptions options) {
     prepareLocationSource();
+    addLocationSource();
     addLayers();
     applyStyle(options);
   }
@@ -305,7 +306,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
     );
   }
 
-  void addLocationSource() {
+  private void addLocationSource() {
     mapboxMap.addSource(locationSource);
     isSourceInitialized = true;
   }
