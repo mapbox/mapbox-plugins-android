@@ -9,6 +9,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.plugins.geojson.listener.OnLoadingGeoJsonListener;
 import com.mapbox.mapboxsdk.plugins.geojson.listener.OnMarkerEventListener;
 
+@Deprecated
 public class GeoJsonPluginBuilder {
   private Context context;
   private MapboxMap map;
@@ -30,7 +31,10 @@ public class GeoJsonPluginBuilder {
   /**
    * @param context the context of parent activity
    * @return instance of GeoJsonPluginBuilder class
+   * @deprecated this plugin has been deprecated and will no longer be supported. Similar
+   * functionality is built into Runtime Styling found inside the Map SDK.
    */
+  @Deprecated
   public GeoJsonPluginBuilder withContext(@NonNull Context context) {
     this.context = context;
     return this;
@@ -39,7 +43,10 @@ public class GeoJsonPluginBuilder {
   /**
    * @param map the MapboxMap
    * @return instance of GeoJsonPluginBuilder class
+   * @deprecated this plugin has been deprecated and will no longer be supported. Similar
+   * functionality is built into Runtime Styling found inside the Map SDK.
    */
+  @Deprecated
   public GeoJsonPluginBuilder withMap(@NonNull MapboxMap map) {
     this.map = map;
     return this;
@@ -48,7 +55,10 @@ public class GeoJsonPluginBuilder {
   /**
    * @param fileNameAssets the file name of GeoJson in Assets folder
    * @return instance of GeoJsonPluginBuilder class
+   * @deprecated this plugin has been deprecated and will no longer be supported. Similar
+   * functionality is built into Runtime Styling found inside the Map SDK.
    */
+  @Deprecated
   public GeoJsonPluginBuilder withAssetsName(String fileNameAssets) {
     this.fileNameAssets = fileNameAssets;
     return this;
@@ -57,7 +67,10 @@ public class GeoJsonPluginBuilder {
   /**
    * @param filePath the path of GeoJson file
    * @return instance of GeoJsonPluginBuilder class
+   * @deprecated this plugin has been deprecated and will no longer be supported. Similar
+   * functionality is built into Runtime Styling found inside the Map SDK.
    */
+  @Deprecated
   public GeoJsonPluginBuilder withFilePath(String filePath) {
     this.filePath = filePath;
     return this;
@@ -66,7 +79,10 @@ public class GeoJsonPluginBuilder {
   /**
    * @param url the url of GeoJson
    * @return instance of GeoJsonPluginBuilder class
+   * @deprecated this plugin has been deprecated and will no longer be supported. Similar
+   * functionality is built into Runtime Styling found inside the Map SDK.
    */
+  @Deprecated
   public GeoJsonPluginBuilder withUrl(String url) {
     this.url = url;
     return this;
@@ -75,7 +91,10 @@ public class GeoJsonPluginBuilder {
   /**
    * @param loadFileAssets the instance of onLoadingGeoJsonListener class
    * @return instance of GeoJsonPluginBuilder class
+   * @deprecated this plugin has been deprecated and will no longer be supported. Similar
+   * functionality is built into Runtime Styling found inside the Map SDK.
    */
+  @Deprecated
   public GeoJsonPluginBuilder withOnLoadingFileAssets(OnLoadingGeoJsonListener loadFileAssets) {
     this.loadFileAssets = loadFileAssets;
     return this;
@@ -85,7 +104,10 @@ public class GeoJsonPluginBuilder {
   /**
    * @param loadFilePath the instance of onLoadingGeoJsonListener class
    * @return instance of GeoJsonPluginBuilder class
+   * @deprecated this plugin has been deprecated and will no longer be supported. Similar
+   * functionality is built into Runtime Styling found inside the Map SDK.
    */
+  @Deprecated
   public GeoJsonPluginBuilder withOnLoadingFilePath(OnLoadingGeoJsonListener loadFilePath) {
     this.loadFilePath = loadFilePath;
     return this;
@@ -94,7 +116,10 @@ public class GeoJsonPluginBuilder {
   /**
    * @param loadURL the instance of onLoadingGeoJsonListener class
    * @return instance of GeoJsonPluginBuilder class
+   * @deprecated this plugin has been deprecated and will no longer be supported. Similar
+   * functionality is built into Runtime Styling found inside the Map SDK.
    */
+  @Deprecated
   public GeoJsonPluginBuilder withOnLoadingURL(OnLoadingGeoJsonListener loadURL) {
     this.loadURL = loadURL;
     return this;
@@ -103,8 +128,10 @@ public class GeoJsonPluginBuilder {
   /**
    * @param markerClickListener the instance of OnMarkerEventListener class
    * @return instance of GeoJsonPluginBuilder class
+   * @deprecated this plugin has been deprecated and will no longer be supported. Similar
+   * functionality is built into Runtime Styling found inside the Map SDK.
    */
-
+  @Deprecated
   public GeoJsonPluginBuilder withMarkerClickListener(OnMarkerEventListener markerClickListener) {
     this.markerEventListener = markerClickListener;
     return this;
@@ -113,7 +140,10 @@ public class GeoJsonPluginBuilder {
   /**
    * @param fillColor the fill color of polygon. default value is Color.argb(50, 0, 0, 250)
    * @return instance of GeoJsonPluginBuilder class
+   * @deprecated this plugin has been deprecated and will no longer be supported. Similar
+   * functionality is built into Runtime Styling found inside the Map SDK.
    */
+  @Deprecated
   public GeoJsonPluginBuilder withPolygonFillColor(@ColorInt int fillColor) {
     this.fillColor = fillColor;
     return this;
@@ -122,8 +152,10 @@ public class GeoJsonPluginBuilder {
   /**
    * @param stockColor the stock color of polyline and polygon. default value is Color.argb(80, 250, 0, 0);
    * @return instance of GeoJsonPluginBuilder class
+   * @deprecated this plugin has been deprecated and will no longer be supported. Similar
+   * functionality is built into Runtime Styling found inside the Map SDK.
    */
-
+  @Deprecated
   public GeoJsonPluginBuilder withStockColor(@ColorInt int stockColor) {
     this.stockColor = stockColor;
     return this;
@@ -132,8 +164,10 @@ public class GeoJsonPluginBuilder {
   /**
    * @param width the stock width of polyline and polygon. default value is 3
    * @return instance of GeoJsonPluginBuilder class
+   * @deprecated this plugin has been deprecated and will no longer be supported. Similar
+   * functionality is built into Runtime Styling found inside the Map SDK.
    */
-
+  @Deprecated
   public GeoJsonPluginBuilder withWidth(int width) {
     this.width = width;
     return this;
@@ -143,7 +177,10 @@ public class GeoJsonPluginBuilder {
    * set isRandomFillColor to true.
    *
    * @return instance of GeoJsonPluginBuilder class
+   * @deprecated this plugin has been deprecated and will no longer be supported. Similar
+   * functionality is built into Runtime Styling found inside the Map SDK.
    */
+  @Deprecated
   public GeoJsonPluginBuilder withRandomFillColor() {
     this.isRandomFillColor = true;
     return this;
@@ -153,7 +190,10 @@ public class GeoJsonPluginBuilder {
    * set isRandomStockColor to true.
    *
    * @return instance of GeoJsonPluginBuilder class
+   * @deprecated this plugin has been deprecated and will no longer be supported. Similar
+   * functionality is built into Runtime Styling found inside the Map SDK.
    */
+  @Deprecated
   public GeoJsonPluginBuilder withRandomStockColor() {
     this.isRandomStockColor = true;
     return this;
@@ -162,7 +202,10 @@ public class GeoJsonPluginBuilder {
 
   /**
    * @return instance of GeoJsonPlugin
+   * @deprecated this plugin has been deprecated and will no longer be supported. Similar
+   * functionality is built into Runtime Styling found inside the Map SDK.
    */
+  @Deprecated
   public GeoJsonPlugin build() {
     return new GeoJsonPlugin(context, map, fileNameAssets, filePath, url, loadFilePath, loadFileAssets, loadURL,
       fillColor, stockColor, width, isRandomFillColor, isRandomStockColor, markerEventListener);
