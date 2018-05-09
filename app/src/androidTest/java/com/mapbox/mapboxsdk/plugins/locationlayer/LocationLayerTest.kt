@@ -15,15 +15,14 @@ import android.support.test.rule.GrantPermissionRule
 import android.support.test.rule.GrantPermissionRule.grant
 import android.support.test.runner.AndroidJUnit4
 import com.mapbox.mapboxsdk.constants.Style
-import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.*
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode
-import com.mapbox.mapboxsdk.plugins.testapp.R
 import com.mapbox.mapboxsdk.plugins.testapp.activity.location.LocationLayerModesActivity
 import com.mapbox.mapboxsdk.style.layers.CircleLayer
 import com.mapbox.mapboxsdk.style.layers.Property
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.GenericPluginAction
 import com.mapbox.mapboxsdk.utils.OnMapReadyIdlingResource
 import org.hamcrest.CoreMatchers.`is`
@@ -169,27 +168,26 @@ class LocationLayerTest {
                                          uiController: UiController, context: Context) {
         plugin?.renderMode = RenderMode.NORMAL
         assertThat(mapboxMap?.getLayer(FOREGROUND_LAYER), notNullValue())
-
-        // Add map change listener
-        val mapView: MapView? = rule.activity.findViewById(R.id.map_view)
-        mapView?.addOnMapChangedListener {
-          if (it == MapView.DID_FINISH_LOADING_STYLE) {
-            assertThat(plugin?.renderMode, `is`(equalTo(RenderMode.NORMAL)))
-            // Check that all layers visibilities are set to none
-            val foregroundLayer: SymbolLayer? = mapboxMap?.getLayerAs(FOREGROUND_LAYER)
-            val backgroundLayer: SymbolLayer? = mapboxMap?.getLayerAs(BACKGROUND_LAYER)
-            val shadowLayer: SymbolLayer? = mapboxMap?.getLayerAs(SHADOW_LAYER)
-            val accuracyLayer: SymbolLayer? = mapboxMap?.getLayerAs(ACCURACY_LAYER)
-            val bearingLayer: SymbolLayer? = mapboxMap?.getLayerAs(BEARING_LAYER)
-
-            assertThat(foregroundLayer?.visibility?.value, `is`(equalTo(Property.VISIBLE)))
-            assertThat(backgroundLayer?.visibility?.value, `is`(equalTo(Property.VISIBLE)))
-            assertThat(shadowLayer?.visibility?.value, `is`(equalTo(Property.VISIBLE)))
-            assertThat(accuracyLayer?.visibility?.value, `is`(equalTo(Property.VISIBLE)))
-            assertThat(bearingLayer?.visibility?.value, `is`(equalTo(Property.VISIBLE)))
-          }
-        }
         mapboxMap?.setStyleUrl(Style.SATELLITE)
+
+        uiController.loopMainThreadForAtLeast(500)
+
+        assertThat(plugin?.renderMode, `is`(equalTo(RenderMode.NORMAL)))
+
+        // Check that the Source has been re-added to the new map style
+        val source: GeoJsonSource? = mapboxMap?.getSourceAs(LOCATION_SOURCE)
+        assertThat(source, notNullValue())
+
+        // Check that all layers visibilities are set to none
+        val foregroundLayer: SymbolLayer? = mapboxMap?.getLayerAs(FOREGROUND_LAYER)
+        val backgroundLayer: SymbolLayer? = mapboxMap?.getLayerAs(BACKGROUND_LAYER)
+        val shadowLayer: SymbolLayer? = mapboxMap?.getLayerAs(SHADOW_LAYER)
+        val accuracyLayer: CircleLayer? = mapboxMap?.getLayerAs(ACCURACY_LAYER)
+
+        assertThat(foregroundLayer?.visibility?.value, `is`(equalTo(Property.VISIBLE)))
+        assertThat(backgroundLayer?.visibility?.value, `is`(equalTo(Property.VISIBLE)))
+        assertThat(shadowLayer?.visibility?.value, `is`(equalTo(Property.VISIBLE)))
+        assertThat(accuracyLayer?.visibility?.value, `is`(equalTo(Property.VISIBLE)))
       }
     }
     executePluginTest(pluginAction)
