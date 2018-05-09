@@ -2,7 +2,8 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-### 0.3.0 - TBD
+### 0.3.0 - May 8, 2018
+- Deprecated plugin
 - Lowered min SDK to API level 14 to match Map SDK
 
 ### 0.2.0 - April 18, 2018

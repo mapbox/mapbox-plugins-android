@@ -485,7 +485,7 @@
         Require @deprecated Javadoc tag and @Deprecated annotation to be used
         together.
         -->
-        <module name="MissingDeprecated"/>
+        <!--<module name="MissingDeprecated"/>-->
 
         <!--#################################################################-->
         <!--################ MISC. LANGUAGE CHECKS ##########################-->

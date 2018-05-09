@@ -58,7 +58,11 @@ import timber.log.Timber;
  * with {@link MapboxMap}
  * and one the file's name, the file's path, or a URL that points to a GeoJSON file.
  * </p>
+ *
+ * @deprecated this plugin has been deprecated and will no longer be supported. Similar
+ * functionality is built into Runtime Styling found inside the Map SDK.
  */
+@Deprecated
 public class GeoJsonPlugin {
   private Context context;
   private MapboxMap map;
@@ -97,7 +101,10 @@ public class GeoJsonPlugin {
    * @param isRandomFillColor   if true, the fill color will be random
    * @param isRandomStockColor  if true, the stock color will be random
    * @param markerEventListener the instance of OnMarkerEventListener used to detect a marker click event
+   * @deprecated this plugin has been deprecated and will no longer be supported. Similar
+   * functionality is built into Runtime Styling found inside the Map SDK.
    */
+  @Deprecated
   public GeoJsonPlugin(Context context, MapboxMap map, String fileName, String filePath, String url,
                        OnLoadingGeoJsonListener loadFilePath, OnLoadingGeoJsonListener loadFileAssets,
                        OnLoadingGeoJsonListener loadURL, int fillColor, int stockColor, int width,
@@ -123,7 +130,10 @@ public class GeoJsonPlugin {
    * Updates the GeoJSON source from a URL and draws the GeoJSON on the map
    *
    * @param url the URL of GeoJson file
+   * @deprecated this plugin has been deprecated and will no longer be supported. Similar
+   * functionality is built into Runtime Styling found inside the Map SDK.
    */
+  @Deprecated
   public void setUrl(String url) {
     this.url = url;
     if (url != null) {
@@ -137,7 +147,10 @@ public class GeoJsonPlugin {
    * Updates the GeoJSON source from the assets folder file and draws the GeoJSON on the map
    *
    * @param fileName the name of file in Assets folder
+   *                 @deprecated this plugin has been deprecated and will no longer be supported. Similar
+   * functionality is built into Runtime Styling found inside the Map SDK.
    */
+  @Deprecated
   public void setAssetsName(String fileName) {
     this.fileName = fileName;
     if (fileName != null) {
@@ -151,7 +164,10 @@ public class GeoJsonPlugin {
    * Updates the GeoJSON source from an external storage path and draws the GeoJSON on the map
    *
    * @param filePath the path of file in external storage
+   *                 @deprecated this plugin has been deprecated and will no longer be supported. Similar
+   * functionality is built into Runtime Styling found inside the Map SDK.
    */
+  @Deprecated
   public void setFilePath(String filePath) {
     this.filePath = filePath;
     if (filePath != null) {
