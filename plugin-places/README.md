@@ -19,7 +19,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-places:0.3.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-places:0.4.0'
 }
 ```
 
@@ -37,7 +37,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-places:0.4.0-SNAPSHOT'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-places:0.5.0-SNAPSHOT'
 }
 ```
 
