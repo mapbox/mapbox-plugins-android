@@ -2,8 +2,13 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-### 0.6.0 - TBD
-- Lowered min SDK to API level 14 to match Map SDK
+### 0.5.1 - May 9, 2018
+- Updates Map SDK to 6.1.1 [#488](https://github.com/mapbox/mapbox-plugins-android/pull/488)
+- Lowered min SDK to API level 14 to match Map SDK [#472](https://github.com/mapbox/mapbox-plugins-android/pull/472)
+- Fix initialization not setting default modes [#458](https://github.com/mapbox/mapbox-plugins-android/pull/458)
+- Fix source not being re-added when the user switches map styles [#483](https://github.com/mapbox/mapbox-plugins-android/pull/483)
+- Max animation duration added when in tracking mode [#430](https://github.com/mapbox/mapbox-plugins-android/pull/430)
+- Remove invalid `Location` update check [#431](https://github.com/mapbox/mapbox-plugins-android/pull/431)
 
 ### 0.5.0 - April 19, 2018
 - Maps SDK Bumped to 6.0.1 [#432](https://github.com/mapbox/mapbox-plugins-android/pull/432)

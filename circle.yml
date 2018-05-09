@@ -64,9 +64,6 @@ jobs:
 
 # ------------------------------------------------------------------------------
   release:
-    branch:
-      only:
-      - master
     docker:
       - image: mbgl/7d2403f42e:android-ndk-r16b
     working_directory: ~/code
