@@ -2,6 +2,9 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### 0.5.2 - May 10, 2018
+- Fixes missing files from Maven Central
+
 ### 0.5.1 - May 9, 2018
 - Updates Maps SDK to 6.1.1 [#488](https://github.com/mapbox/mapbox-plugins-android/pull/488)
 - Lowered min SDK to API level 14 to match Map SDK [#472](https://github.com/mapbox/mapbox-plugins-android/pull/472)
