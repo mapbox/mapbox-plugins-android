@@ -2,8 +2,13 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-### 0.6.0 - TBD
-- Lowered min SDK to API level 14 to match Map SDK
+### 0.5.1 - May 9, 2018
+- Updates Maps SDK to 6.1.1 [#488](https://github.com/mapbox/mapbox-plugins-android/pull/488)
+- Lowered min SDK to API level 14 to match Map SDK [#472](https://github.com/mapbox/mapbox-plugins-android/pull/472)
+- Fix initialization not setting default modes [#458](https://github.com/mapbox/mapbox-plugins-android/pull/458)
+- Fix source not being re-added when the user switches map styles [#483](https://github.com/mapbox/mapbox-plugins-android/pull/483)
+- Max animation duration added when in tracking mode [#430](https://github.com/mapbox/mapbox-plugins-android/pull/430)
+- Remove invalid `Location` update check [#431](https://github.com/mapbox/mapbox-plugins-android/pull/431)
 
 ### 0.5.0 - April 19, 2018
 - Maps SDK Bumped to 6.0.1 [#432](https://github.com/mapbox/mapbox-plugins-android/pull/432)
@@ -17,7 +22,7 @@ Mapbox welcomes participation and contributions from everyone.
 - Remove support library and use just livedata dependency [#419](https://github.com/mapbox/mapbox-plugins-android/pull/419)
 
 ### 0.5.0-beta.2 - April 5, 2018
-- Update Map SDK to 6.0.0-beta.6 [#414](https://github.com/mapbox/mapbox-plugins-android/pull/414)
+- Update Maps SDK to 6.0.0-beta.6 [#414](https://github.com/mapbox/mapbox-plugins-android/pull/414)
 - Filter location updates and remove unused animator code [#393](https://github.com/mapbox/mapbox-plugins-android/pull/393)
 - Fix order of interpolator expression [#388](https://github.com/mapbox/mapbox-plugins-android/pull/388)
 - Remove duplicate map camera option APIs [#402](https://github.com/mapbox/mapbox-plugins-android/pull/402)
@@ -26,7 +31,7 @@ Mapbox welcomes participation and contributions from everyone.
 - Added missing Location Layer style attributes [#392](https://github.com/mapbox/mapbox-plugins-android/pull/392)
 
 ### 0.5.0-beta.1 - March 29, 2018
-- Update Map SDK to 6.0.0-beta.4 [#384](https://github.com/mapbox/mapbox-plugins-android/pull/384)
+- Update Maps SDK to 6.0.0-beta.4 [#384](https://github.com/mapbox/mapbox-plugins-android/pull/384)
 - Added Camera and tracking modes [#294](https://github.com/mapbox/mapbox-plugins-android/pull/294)
 - Added Location layer `onLongClickListener` [#313](https://github.com/mapbox/mapbox-plugins-android/pull/313)
 - Add padding APIs to LocationLayerOptions [#313](https://github.com/mapbox/mapbox-plugins-android/pull/313)
@@ -54,7 +59,7 @@ Mapbox welcomes participation and contributions from everyone.
 - Rework location layer abstraction [#196](https://github.com/mapbox/mapbox-plugins-android/pull/196)
 
 ### 0.2.0 - August 18, 2017
-- Updated Map and Mapbox Java Dependencies [#84](https://github.com/mapbox/mapbox-plugins-android/pull/84)
+- Updated Maps and Mapbox Java Dependencies [#84](https://github.com/mapbox/mapbox-plugins-android/pull/84)
 - Navigation icon now uses runtime styling to scale at lower zoom levels [#84](https://github.com/mapbox/mapbox-plugins-android/pull/84)
 - Added listener for compass heading and accuracy changes [#84](https://github.com/mapbox/mapbox-plugins-android/pull/84)
 
