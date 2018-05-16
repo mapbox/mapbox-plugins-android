@@ -3,8 +3,6 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity.location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEnginePriority;
@@ -50,6 +48,7 @@ public class LocationLayerMapChangeActivity extends AppCompatActivity implements
     this.mapboxMap = mapboxMap;
     locationEngine = new LocationEngineProvider(this).obtainBestLocationEngineAvailable();
     locationEngine.setPriority(LocationEnginePriority.HIGH_ACCURACY);
+    locationEngine.setFastestInterval(1000);
     locationEngine.activate();
     locationPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine);
     locationPlugin.setRenderMode(RenderMode.COMPASS);
@@ -64,9 +63,13 @@ public class LocationLayerMapChangeActivity extends AppCompatActivity implements
   }
 
   @Override
+  @SuppressWarnings( {"MissingPermission"})
   protected void onStart() {
     super.onStart();
     mapView.onStart();
+    if (locationEngine != null) {
+      locationEngine.requestLocationUpdates();
+    }
   }
 
   @Override
@@ -94,27 +97,6 @@ public class LocationLayerMapChangeActivity extends AppCompatActivity implements
   protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     mapView.onSaveInstanceState(outState);
-  }
-
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.menu_location, menu);
-    return true;
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    if (locationPlugin == null) {
-      return super.onOptionsItemSelected(item);
-    }
-
-    if (item.getItemId() == R.id.action_style_change) {
-      customStyle = !customStyle;
-      locationPlugin.applyStyle(customStyle ? R.style.CustomLocationLayer : R.style.mapbox_LocationLayer);
-      return true;
-    }
-
-    return super.onOptionsItemSelected(item);
   }
 
   @Override
