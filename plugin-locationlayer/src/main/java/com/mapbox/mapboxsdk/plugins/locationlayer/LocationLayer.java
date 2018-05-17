@@ -1,5 +1,6 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
@@ -86,7 +87,10 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   private Context context;
 
   private final Map<String, Layer> layerMap = new HashMap<>();
-  private Feature locationFeature = Feature.fromGeometry(Point.fromLngLat(0, 0));
+  @SuppressLint("Range")
+  private Feature locationFeature = Feature.fromGeometry(
+    Point.fromLngLat(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY)
+  );
   private GeoJsonSource locationSource;
   private boolean isSourceInitialized;
 
@@ -99,6 +103,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
 
   void initializeComponents(LocationLayerOptions options) {
     prepareLocationSource();
+    addLocationSource();
     addLayers();
     applyStyle(options);
   }
