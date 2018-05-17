@@ -416,6 +416,24 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   @RequiresPermission(anyOf = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION})
   @OnLifecycleEvent(Lifecycle.Event.ON_START)
   public void onStart() {
+    onLocationLayerStart();
+    if (isEnabled) {
+      mapView.addOnMapChangedListener(onMapChangedListener);
+    }
+  }
+
+  /**
+   * Required to place inside your activities {@code onStop} method.
+   *
+   * @since 0.1.0
+   */
+  @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+  public void onStop() {
+    onLocationLayerStop();
+    mapView.removeOnMapChangedListener(onMapChangedListener);
+  }
+
+  void onLocationLayerStart() {
     if (isEnabled) {
       if (locationEngine != null) {
         locationEngine.addLocationEngineListener(locationEngineListener);
@@ -432,13 +450,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     compassManager.onStart();
   }
 
-  /**
-   * Required to place inside your activities {@code onStop} method.
-   *
-   * @since 0.1.0
-   */
-  @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-  public void onStop() {
+  void onLocationLayerStop() {
     staleStateManager.onStop();
     compassManager.onStop();
     locationLayerAnimator.cancelAllAnimations();
@@ -453,7 +465,6 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   private void initialize() {
     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
-    mapView.addOnMapChangedListener(onMapChangedListener);
     mapboxMap.addOnMapClickListener(onMapClickListener);
     mapboxMap.addOnMapLongClickListener(onMapLongClickListener);
 
@@ -478,13 +489,13 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   @SuppressLint("MissingPermission")
   private void enableLocationLayerPlugin() {
     isEnabled = true;
-    onStart();
+    onLocationLayerStart();
     locationLayer.show();
   }
 
   private void disableLocationLayerPlugin() {
     isEnabled = false;
-    onStop();
+    onLocationLayerStop();
     locationLayer.hide();
   }
 
@@ -601,13 +612,13 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     @Override
     public void onMapChanged(int change) {
       if (change == MapView.WILL_START_LOADING_MAP) {
-        onStop();
+        onLocationLayerStop();
       } else if (change == MapView.DID_FINISH_LOADING_STYLE) {
         locationLayer.initializeComponents(options);
         locationLayerCamera.initializeOptions(options);
         setRenderMode(locationLayer.getRenderMode());
         setCameraMode(locationLayerCamera.getCameraMode());
-        onStart();
+        onLocationLayerStart();
       }
     }
   };
