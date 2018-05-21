@@ -3,6 +3,7 @@ package com.mapbox.mapboxsdk.plugins.locationlayer
 import android.Manifest
 import android.R
 import android.content.Context
+import android.graphics.Color
 import android.location.Location
 import android.support.test.espresso.Espresso
 import android.support.test.espresso.IdlingRegistry
@@ -155,6 +156,34 @@ class IsolatedActivityPluginTest {
         source?.querySourceFeatures(null)?.forEach {
           assertThat(it.getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(not(true)))
         }
+      }
+    }
+    executePluginTest(pluginAction)
+  }
+
+  @Test
+  fun locationLayerOptions_accuracyRingShownUsingTheSetColor() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin?, mapboxMap: MapboxMap?,
+                                         uiController: UiController, context: Context) {
+        mapView = fragment?.view as MapView?
+        LocationLayerPlugin(mapView!!, mapboxMap!!, null).apply {
+          renderMode = RenderMode.NORMAL
+        }
+
+        uiController.loopMainThreadForAtLeast(500)
+
+        val color = Color.parseColor("#4A90E2")
+
+        // Check that the source property changes correctly
+        val source: GeoJsonSource? = mapboxMap.getSourceAs(LOCATION_SOURCE)
+        source?.querySourceFeatures(null)?.forEach {
+          assertThat(it.getNumberProperty(PROPERTY_ACCURACY_COLOR).toInt(), `is`(equalTo(color)))
+        }
+
+        // Check that the layer shows the correct color
+        val layer: CircleLayer? = mapboxMap.getLayerAs(ACCURACY_LAYER)
+        assertThat(layer?.circleColor?.colorInt, `is`(equalTo(color)))
       }
     }
     executePluginTest(pluginAction)
