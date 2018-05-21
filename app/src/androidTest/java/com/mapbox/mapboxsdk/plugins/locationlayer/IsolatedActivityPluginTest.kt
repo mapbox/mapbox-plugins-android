@@ -77,6 +77,24 @@ class IsolatedActivityPluginTest {
   }
 
   @Test
+  fun locationLayerPlugin_initializesLocationEngineCorrectlyWhenOnesNotProvided() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin?, mapboxMap: MapboxMap?,
+                                         uiController: UiController, context: Context) {
+
+        mapView = fragment?.view as MapView?
+        val locationLayerPlugin = LocationLayerPlugin(mapView!!, mapboxMap!!)
+        val locationEngine = locationLayerPlugin.locationEngine
+        assertThat(locationEngine, notNullValue())
+
+        uiController.loopMainThreadForAtLeast(500)
+        assertThat(locationEngine?.isConnected, `is`(equalTo(true)))
+      }
+    }
+    executePluginTest(pluginAction)
+  }
+
+  @Test
   fun settingMapStyleImmediatelyBeforeLoadingPlugin_doesStillLoadLayersProperly() {
     // Using Empty fragment activity to test since Mapbox Style change needs to happen immediately.
 

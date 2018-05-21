@@ -13,6 +13,8 @@ import android.support.v7.app.AppCompatDelegate;
 
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineListener;
+import com.mapbox.android.core.location.LocationEnginePriority;
+import com.mapbox.android.core.location.LocationEngineProvider;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -59,6 +61,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   private LocationLayerOptions options;
   private LocationEngine locationEngine;
   private CompassManager compassManager;
+  private boolean usingInternalLocationEngine;
 
   private LocationLayer locationLayer;
   private LocationLayerCamera locationLayerCamera;
@@ -77,6 +80,24 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     = new CopyOnWriteArrayList<>();
   private final CopyOnWriteArrayList<OnCameraTrackingChangedListener> onCameraTrackingChangedListeners
     = new CopyOnWriteArrayList<>();
+
+  /**
+   * Construct a LocationLayerPlugin
+   * <p>
+   * <strong>Note</strong>: This constructor will initialize and use an internal {@link LocationEngine}.
+   * </p>
+   *
+   * @param mapView   the MapView to apply the LocationLayerPlugin to
+   * @param mapboxMap the MapboxMap to apply the LocationLayerPlugin with
+   * @since 0.5.3
+   */
+  public LocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
+    this.mapboxMap = mapboxMap;
+    this.mapView = mapView;
+    options = LocationLayerOptions.createFromAttributes(mapView.getContext(), R.style.mapbox_LocationLayer);
+    initializeLocationEngine();
+    initialize();
+  }
 
   /**
    * Construct a LocationLayerPlugin
@@ -483,6 +504,14 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     setCameraMode(CameraMode.NONE);
   }
 
+  private void initializeLocationEngine() {
+    usingInternalLocationEngine = true;
+    locationEngine = new LocationEngineProvider(mapView.getContext()).obtainBestLocationEngineAvailable();
+    locationEngine.setPriority(LocationEnginePriority.HIGH_ACCURACY);
+    locationEngine.setFastestInterval(1000);
+    locationEngine.activate();
+  }
+
   private void enableLocationLayerPlugin() {
     isEnabled = true;
     onLocationLayerStart();
@@ -643,7 +672,9 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     @Override
     @SuppressWarnings( {"MissingPermission"})
     public void onConnected() {
-      // Currently don't handle this inside SDK
+      if (usingInternalLocationEngine) {
+        locationEngine.requestLocationUpdates();
+      }
     }
 
     @Override
