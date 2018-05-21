@@ -416,7 +416,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   @RequiresPermission(anyOf = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION})
   @OnLifecycleEvent(Lifecycle.Event.ON_START)
   public void onStart() {
-    onLocationLayerStart();
+    enableLocationLayerPlugin();
     if (isEnabled) {
       mapView.addOnMapChangedListener(onMapChangedListener);
     }
@@ -429,7 +429,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    */
   @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
   public void onStop() {
-    onLocationLayerStop();
+    disableLocationLayerPlugin();
     mapView.removeOnMapChangedListener(onMapChangedListener);
   }
 
@@ -515,7 +515,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    * @since 0.1.0
    */
   private void updateLocation(final Location location) {
-    if (location == null) {
+    if (location == null || !isEnabled) {
       return;
     }
     staleStateManager.updateLatestLocationTime();
