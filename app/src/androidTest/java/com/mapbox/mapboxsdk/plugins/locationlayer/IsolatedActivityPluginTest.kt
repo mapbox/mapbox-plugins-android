@@ -130,6 +130,36 @@ class IsolatedActivityPluginTest {
     executePluginTest(pluginAction)
   }
 
+  //
+  // Location Layer Options
+  //
+
+  @Test
+  fun locationLayerOptions_disablingStaleStateDoesWorkCorrectly() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin?, mapboxMap: MapboxMap?,
+                                         uiController: UiController, context: Context) {
+        mapView = fragment?.view as MapView?
+
+        val options = LocationLayerOptions.builder(context)
+            .staleStateTimeout(500)
+            .enableStaleState(false)
+            .build()
+        LocationLayerPlugin(mapView!!, mapboxMap!!, null, options).apply {
+          renderMode = RenderMode.NORMAL
+        }
+
+        uiController.loopMainThreadForAtLeast(700)
+
+        val source: GeoJsonSource? = mapboxMap.getSourceAs(LOCATION_SOURCE)
+        source?.querySourceFeatures(null)?.forEach {
+          assertThat(it.getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(not(true)))
+        }
+      }
+    }
+    executePluginTest(pluginAction)
+  }
+
   @After
   fun afterTest() {
     Timber.e("@After: unregister idle resource")
