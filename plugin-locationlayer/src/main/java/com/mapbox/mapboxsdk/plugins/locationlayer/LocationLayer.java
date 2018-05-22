@@ -68,6 +68,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleOpacity;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circlePitchAlignment;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleRadius;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeColor;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.colorToRgbaString;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
@@ -357,7 +358,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
 
   private void styleAccuracy(float accuracyAlpha, @ColorInt int accuracyColor) {
     locationFeature.addNumberProperty(PROPERTY_ACCURACY_ALPHA, accuracyAlpha);
-    locationFeature.addNumberProperty(PROPERTY_ACCURACY_COLOR, accuracyColor);
+    locationFeature.addStringProperty(PROPERTY_ACCURACY_COLOR, colorToRgbaString(accuracyColor));
     refreshSource();
   }
 
