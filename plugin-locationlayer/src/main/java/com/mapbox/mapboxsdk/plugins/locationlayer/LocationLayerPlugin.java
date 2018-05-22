@@ -134,7 +134,6 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    * @param isEnabled true to show layers and enable camera, false otherwise
    * @since 0.5.0
    */
-  @RequiresPermission(anyOf = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION})
   public void setLocationLayerEnabled(boolean isEnabled) {
     if (isEnabled) {
       enableLocationLayerPlugin();
@@ -262,7 +261,6 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    * @param locationEngine a {@link LocationEngine} this plugin should use to handle updates
    * @since 0.1.0
    */
-  @SuppressWarnings( {"MissingPermission"})
   public void setLocationEngine(@Nullable LocationEngine locationEngine) {
     if (this.locationEngine != null) {
       this.locationEngine.removeLocationEngineListener(locationEngineListener);
@@ -294,8 +292,8 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    * @return the last known location
    * @since 0.1.0
    */
-  @SuppressLint("MissingPermission")
   @Nullable
+  @RequiresPermission(anyOf = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION})
   public Location getLastKnownLocation() {
     return locationEngine != null ? locationEngine.getLastLocation() : null;
   }
@@ -413,7 +411,6 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    *
    * @since 0.1.0
    */
-  @RequiresPermission(anyOf = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION})
   @OnLifecycleEvent(Lifecycle.Event.ON_START)
   public void onStart() {
     enableLocationLayerPlugin();
@@ -486,7 +483,6 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     setCameraMode(CameraMode.NONE);
   }
 
-  @SuppressLint("MissingPermission")
   private void enableLocationLayerPlugin() {
     isEnabled = true;
     onLocationLayerStart();
@@ -533,7 +529,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    * If the locationEngine contains a last location value, we use it for the initial location layer
    * position.
    */
-  @SuppressWarnings( {"MissingPermission"})
+  @SuppressLint("MissingPermission")
   private void setLastLocation() {
     if (locationEngine != null) {
       updateLocation(locationEngine.getLastLocation());
@@ -544,6 +540,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     updateCompassHeading(compassManager.getLastHeading());
   }
 
+  @SuppressLint("MissingPermission")
   private void updateLayerOffsets(boolean forceUpdate) {
     CameraPosition position = mapboxMap.getCameraPosition();
     if (lastCameraPosition == null || forceUpdate) {
