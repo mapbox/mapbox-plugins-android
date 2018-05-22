@@ -284,6 +284,13 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    */
   public void setLocationEngine(@Nullable LocationEngine locationEngine) {
     if (this.locationEngine != null) {
+      // If internal location engines being used, extra steps need to be taken to deconstruct the
+      // instance.
+      if (usingInternalLocationEngine) {
+        this.locationEngine.removeLocationUpdates();
+        this.locationEngine.deactivate();
+        usingInternalLocationEngine = false;
+      }
       this.locationEngine.removeLocationEngineListener(locationEngineListener);
       this.locationEngine = null;
     }
