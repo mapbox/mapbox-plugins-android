@@ -58,7 +58,10 @@ import java.util.concurrent.locks.ReentrantLock;
  * <p>
  * Inspired by https://github.com/googlemaps/android-maps-utils.
  * </p>
+ *
+ * @deprecated use runtime styling to cluster markers instead
  */
+@Deprecated
 public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRenderer<T> {
   private static final boolean SHOULD_ANIMATE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
   private final MapboxMap mMap;
@@ -114,6 +117,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
   private ClusterManagerPlugin.OnClusterItemClickListener<T> mItemClickListener;
   private ClusterManagerPlugin.OnClusterItemInfoWindowClickListener<T> mItemInfoWindowClickListener;
 
+  @Deprecated
   public DefaultClusterRenderer(Context context, MapboxMap map, ClusterManagerPlugin<T> clusterManagerPlugin) {
     mMap = map;
     mAnimate = true;
@@ -125,6 +129,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     mClusterManagerPlugin = clusterManagerPlugin;
   }
 
+  @Deprecated
   @Override
   public void onAdd() {
     mClusterManagerPlugin.getMarkerCollection().setOnMarkerClickListener(new MapboxMap.OnMarkerClickListener() {
@@ -163,6 +168,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
       });
   }
 
+  @Deprecated
   @Override
   public void onRemove() {
     mClusterManagerPlugin.getMarkerCollection().setOnMarkerClickListener(null);
@@ -247,6 +253,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     private boolean mViewModificationInProgress = false;
     private RenderTask mNextClusters = null;
 
+    @Deprecated
     @Override
     public void handleMessage(Message msg) {
       if (msg.what == TASK_FINISHED) {
@@ -335,20 +342,26 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
     /**
      * A callback to be run when all work has been completed.
+     *
+     * @deprecated use runtime styling to cluster markers instead
      */
+    @Deprecated
     public void setCallback(Runnable callback) {
       mCallback = callback;
     }
 
+    @Deprecated
     public void setProjection(Projection projection) {
       this.mProjection = projection;
     }
 
+    @Deprecated
     public void setMapZoom(float zoom) {
       this.mMapZoom = zoom;
       this.mSphericalMercatorProjection = new SphericalMercatorProjection(256 * Math.pow(2, Math.min(zoom, mZoom)));
     }
 
+    @Deprecated
     @SuppressLint("NewApi")
     public void run() {
       if (clusters.equals(DefaultClusterRenderer.this.mClusters)) {
@@ -446,32 +459,38 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     }
   }
 
+  @Deprecated
   @Override
   public void onClustersChanged(Set<? extends Cluster<T>> clusters) {
     mViewModifier.queue(clusters);
   }
 
+  @Deprecated
   @Override
   public void setOnClusterClickListener(ClusterManagerPlugin.OnClusterClickListener<T> listener) {
     mClickListener = listener;
   }
 
+  @Deprecated
   @Override
   public void setOnClusterInfoWindowClickListener(ClusterManagerPlugin.OnClusterInfoWindowClickListener<T> listener) {
     mInfoWindowClickListener = listener;
   }
 
+  @Deprecated
   @Override
   public void setOnClusterItemClickListener(ClusterManagerPlugin.OnClusterItemClickListener<T> listener) {
     mItemClickListener = listener;
   }
 
+  @Deprecated
   @Override
   public void setOnClusterItemInfoWindowClickListener(
     ClusterManagerPlugin.OnClusterItemInfoWindowClickListener<T> listener) {
     mItemInfoWindowClickListener = listener;
   }
 
+  @Deprecated
   @Override
   public void setAnimation(boolean animate) {
     mAnimate = animate;
@@ -530,7 +549,9 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * Creates markers for a cluster some time in the future.
      *
      * @param priority whether this operation should have priority.
+     * @deprecated use runtime styling to cluster markers instead
      */
+    @Deprecated
     public void add(boolean priority, CreateMarkerTask c) {
       lock.lock();
       sendEmptyMessage(BLANK);
@@ -547,7 +568,9 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      *
      * @param priority whether this operation should have priority.
      * @param m        the markerWithPosition to remove.
+     * @deprecated use runtime styling to cluster markers instead
      */
+    @Deprecated
     public void remove(boolean priority, Marker m) {
       lock.lock();
       sendEmptyMessage(BLANK);
@@ -565,7 +588,9 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * @param marker the markerWithPosition to animate.
      * @param from   the position to animate from.
      * @param to     the position to animate to.
+     * @deprecated use runtime styling to cluster markers instead
      */
+    @Deprecated
     public void animate(MarkerWithPosition marker, LatLng from, LatLng to) {
       lock.lock();
       mAnimationTasks.add(new AnimationTask(marker, from, to));
@@ -579,7 +604,9 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * @param marker the markerWithPosition to animate.
      * @param from   the position to animate from.
      * @param to     the position to animate to.
+     * @deprecated use runtime styling to cluster markers instead
      */
+    @Deprecated
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void animateThenRemove(MarkerWithPosition marker, LatLng from, LatLng to) {
       lock.lock();
@@ -589,6 +616,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
       lock.unlock();
     }
 
+    @Deprecated
     @Override
     public void handleMessage(Message msg) {
       if (!mListenerAdded) {
@@ -651,7 +679,9 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
     /**
      * @return true if there is still work to be processed.
+     * @deprecated use runtime styling to cluster markers instead
      */
+    @Deprecated
     public boolean isBusy() {
       try {
         lock.lock();
@@ -665,7 +695,9 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
     /**
      * Blocks the calling thread until all work has been processed.
+     * @deprecated use runtime styling to cluster markers instead
      */
+    @Deprecated
     public void waitUntilFree() {
       while (isBusy()) {
         // Sometimes the idle queue may not be called - schedule up some work regardless
@@ -684,6 +716,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
       }
     }
 
+    @Deprecated
     @Override
     public boolean queueIdle() {
       // When the UI is not busy, schedule some work.
@@ -699,19 +732,23 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     private Map<T, Marker> mCache = new HashMap<T, Marker>();
     private Map<Marker, T> mCacheReverse = new HashMap<Marker, T>();
 
+    @Deprecated
     public Marker get(T item) {
       return mCache.get(item);
     }
 
+    @Deprecated
     public T get(Marker m) {
       return mCacheReverse.get(m);
     }
 
+    @Deprecated
     public void put(T item, Marker m) {
       mCache.put(item, m);
       mCacheReverse.put(m, item);
     }
 
+    @Deprecated
     public void remove(Marker m) {
       T item = mCacheReverse.get(m);
       mCacheReverse.remove(m);
@@ -758,7 +795,9 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
    *
    * @param clusterItem ClusterItem which you will obtain its marker
    * @return a marker from a ClusterItem or null if it does not exists
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public Marker getMarker(T clusterItem) {
     return mMarkerCache.get(clusterItem);
   }
@@ -768,7 +807,9 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
    *
    * @param marker which you will obtain its ClusterItem
    * @return a ClusterItem from a marker or null if it does not exists
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public T getClusterItem(Marker marker) {
     return mMarkerCache.get(marker);
   }
@@ -778,7 +819,9 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
    *
    * @param cluster which you will obtain its marker
    * @return a marker from a cluster or null if it does not exists
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public Marker getMarker(Cluster<T> cluster) {
     return mClusterToMarker.get(cluster);
   }
@@ -788,7 +831,9 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
    *
    * @param marker which you will obtain its Cluster
    * @return a Cluster from a marker or null if it does not exists
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public Cluster<T> getCluster(Marker marker) {
     return mMarkerToCluster.get(marker);
   }
@@ -806,7 +851,9 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * @param markersAdded a collection of markers to append any created markers.
      * @param animateFrom  the location to animate the markerWithPosition from, or null if no
      *                     animation is required.
+     * @deprecated use runtime styling to cluster markers instead
      */
+    @Deprecated
     public CreateMarkerTask(Cluster<T> c, Set<MarkerWithPosition> markersAdded, LatLng animateFrom) {
       this.cluster = c;
       this.newMarkers = markersAdded;
@@ -884,6 +931,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
       position = marker.getPosition();
     }
 
+    @Deprecated
     @Override
     public boolean equals(Object other) {
       if (other instanceof MarkerWithPosition) {
@@ -892,6 +940,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
       return false;
     }
 
+    @Deprecated
     @Override
     public int hashCode() {
       return marker.hashCode();
@@ -927,6 +976,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
       valueAnimator.start();
     }
 
+    @Deprecated
     @Override
     public void onAnimationEnd(Animator animation) {
       if (mRemoveOnComplete) {
@@ -939,11 +989,13 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
       markerWithPosition.position = to;
     }
 
+    @Deprecated
     public void removeOnAnimationComplete(MarkerManager markerManager) {
       mMarkerManager = markerManager;
       mRemoveOnComplete = true;
     }
 
+    @Deprecated
     @Override
     public void onAnimationUpdate(ValueAnimator valueAnimator) {
       float fraction = valueAnimator.getAnimatedFraction();

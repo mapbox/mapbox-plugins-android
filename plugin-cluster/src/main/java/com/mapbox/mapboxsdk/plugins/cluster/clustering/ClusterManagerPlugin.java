@@ -32,7 +32,10 @@ import timber.log.Timber;
  * for clustering functionality at the core level,
  * please follow the work on https://github.com/mapbox/mapbox-gl-native/issues/5814
  * </p>
+ *
+ * @deprecated use runtime styling to cluster markers instead
  */
+@Deprecated
 public class ClusterManagerPlugin<T extends ClusterItem> implements
   MapboxMap.OnCameraIdleListener,
   MapboxMap.OnMarkerClickListener,
@@ -56,10 +59,12 @@ public class ClusterManagerPlugin<T extends ClusterItem> implements
   private OnClusterItemInfoWindowClickListener<T> mOnClusterItemInfoWindowClickListener;
   private OnClusterClickListener<T> mOnClusterClickListener;
 
+  @Deprecated
   public ClusterManagerPlugin(Context context, MapboxMap map) {
     this(context, map, new MarkerManager(map));
   }
 
+  @Deprecated
   public ClusterManagerPlugin(Context context, MapboxMap map, MarkerManager markerManager) {
     mMap = map;
     mMarkerManager = markerManager;
@@ -71,18 +76,22 @@ public class ClusterManagerPlugin<T extends ClusterItem> implements
     mRenderer.onAdd();
   }
 
+  @Deprecated
   public MarkerManager.Collection getMarkerCollection() {
     return mMarkers;
   }
 
+  @Deprecated
   public MarkerManager.Collection getClusterMarkerCollection() {
     return mClusterMarkers;
   }
 
+  @Deprecated
   public MarkerManager getMarkerManager() {
     return mMarkerManager;
   }
 
+  @Deprecated
   public void setRenderer(ClusterRenderer<T> view) {
     mRenderer.setOnClusterClickListener(null);
     mRenderer.setOnClusterItemClickListener(null);
@@ -98,6 +107,7 @@ public class ClusterManagerPlugin<T extends ClusterItem> implements
     cluster();
   }
 
+  @Deprecated
   public void setAlgorithm(Algorithm<T> algorithm) {
     mAlgorithmLock.writeLock().lock();
     try {
@@ -111,18 +121,22 @@ public class ClusterManagerPlugin<T extends ClusterItem> implements
     cluster();
   }
 
+  @Deprecated
   public void setAnimation(boolean animate) {
     mRenderer.setAnimation(animate);
   }
 
+  @Deprecated
   public ClusterRenderer<T> getRenderer() {
     return mRenderer;
   }
 
+  @Deprecated
   public Algorithm<T> getAlgorithm() {
     return mAlgorithm;
   }
 
+  @Deprecated
   public void clearItems() {
     mAlgorithmLock.writeLock().lock();
     try {
@@ -132,6 +146,7 @@ public class ClusterManagerPlugin<T extends ClusterItem> implements
     }
   }
 
+  @Deprecated
   public void addItems(Collection<T> items) {
     mAlgorithmLock.writeLock().lock();
     try {
@@ -142,6 +157,7 @@ public class ClusterManagerPlugin<T extends ClusterItem> implements
 
   }
 
+  @Deprecated
   public void addItem(T myItem) {
     mAlgorithmLock.writeLock().lock();
     try {
@@ -151,6 +167,7 @@ public class ClusterManagerPlugin<T extends ClusterItem> implements
     }
   }
 
+  @Deprecated
   public void removeItem(T item) {
     mAlgorithmLock.writeLock().lock();
     try {
@@ -162,7 +179,10 @@ public class ClusterManagerPlugin<T extends ClusterItem> implements
 
   /**
    * Force a re-cluster. You may want to call this after adding new item(s).
+   *
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public void cluster() {
     mClusterTaskLock.writeLock().lock();
     try {
@@ -181,7 +201,10 @@ public class ClusterManagerPlugin<T extends ClusterItem> implements
 
   /**
    * Might re-cluster.
+   *
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   @Override
   public void onCameraIdle() {
     Timber.d("OnCamerIdle");
@@ -199,12 +222,14 @@ public class ClusterManagerPlugin<T extends ClusterItem> implements
     cluster();
   }
 
+  @Deprecated
   @Override
   public boolean onInfoWindowClick(@NonNull Marker marker) {
     getMarkerManager().onInfoWindowClick(marker);
     return true;
   }
 
+  @Deprecated
   @Override
   public boolean onMarkerClick(Marker marker) {
     return getMarkerManager().onMarkerClick(marker);
@@ -233,7 +258,10 @@ public class ClusterManagerPlugin<T extends ClusterItem> implements
   /**
    * Sets a callback that's invoked when a Cluster is tapped. Note: For this listener to function,
    * the ClusterManagerPlugin must be added as a click listener to the map.
+   *
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public void setOnClusterClickListener(OnClusterClickListener<T> listener) {
     mOnClusterClickListener = listener;
     mRenderer.setOnClusterClickListener(listener);
@@ -242,7 +270,10 @@ public class ClusterManagerPlugin<T extends ClusterItem> implements
   /**
    * Sets a callback that's invoked when a Cluster is tapped. Note: For this listener to function,
    * the ClusterManagerPlugin must be added as a info window click listener to the map.
+   *
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public void setOnClusterInfoWindowClickListener(OnClusterInfoWindowClickListener<T> listener) {
     mOnClusterInfoWindowClickListener = listener;
     mRenderer.setOnClusterInfoWindowClickListener(listener);
@@ -251,7 +282,10 @@ public class ClusterManagerPlugin<T extends ClusterItem> implements
   /**
    * Sets a callback that's invoked when an individual ClusterItem is tapped. Note: For this
    * listener to function, the ClusterManagerPlugin must be added as a click listener to the map.
+   *
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public void setOnClusterItemClickListener(OnClusterItemClickListener<T> listener) {
     mOnClusterItemClickListener = listener;
     mRenderer.setOnClusterItemClickListener(listener);
@@ -260,7 +294,10 @@ public class ClusterManagerPlugin<T extends ClusterItem> implements
   /**
    * Sets a callback that's invoked when an individual ClusterItem's Info Window is tapped. Note: For this
    * listener to function, the ClusterManagerPlugin must be added as a info window click listener to the map.
+   *
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public void setOnClusterItemInfoWindowClickListener(OnClusterItemInfoWindowClickListener<T> listener) {
     mOnClusterItemInfoWindowClickListener = listener;
     mRenderer.setOnClusterItemInfoWindowClickListener(listener);
@@ -268,28 +305,40 @@ public class ClusterManagerPlugin<T extends ClusterItem> implements
 
   /**
    * Called when a Cluster is clicked.
+   *
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public interface OnClusterClickListener<T extends ClusterItem> {
     public boolean onClusterClick(Cluster<T> cluster);
   }
 
   /**
    * Called when a Cluster's Info Window is clicked.
+   *
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public interface OnClusterInfoWindowClickListener<T extends ClusterItem> {
     public void onClusterInfoWindowClick(Cluster<T> cluster);
   }
 
   /**
    * Called when an individual ClusterItem is clicked.
+   *
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public interface OnClusterItemClickListener<T extends ClusterItem> {
     public boolean onClusterItemClick(T item);
   }
 
   /**
    * Called when an individual ClusterItem's Info Window is clicked.
+   *
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public interface OnClusterItemInfoWindowClickListener<T extends ClusterItem> {
     public void onClusterItemInfoWindowClick(T item);
   }

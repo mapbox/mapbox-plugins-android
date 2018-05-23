@@ -7,7 +7,10 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
  * <p>
  * Inspired by https://github.com/googlemaps/android-maps-utils.
  * </p>
+ *
+ * @deprecated use runtime styling to cluster markers instead
  */
+@Deprecated
 public class Point implements Geometry {
 
   private static final String GEOMETRY_TYPE = "Point";
@@ -18,7 +21,9 @@ public class Point implements Geometry {
    * Creates a new Point object
    *
    * @param coordinates coordinates of Point to store
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public Point(LatLng coordinates) {
     if (coordinates == null) {
       throw new IllegalArgumentException("Coordinates cannot be null");
@@ -30,7 +35,9 @@ public class Point implements Geometry {
    * Gets the type of geometry
    *
    * @return type of geometry
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public String getGeometryType() {
     return GEOMETRY_TYPE;
   }
@@ -39,11 +46,14 @@ public class Point implements Geometry {
    * Gets the coordinates of the Point
    *
    * @return coordinates of the Point
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public LatLng getGeometryObject() {
     return mCoordinates;
   }
 
+  @Deprecated
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder(GEOMETRY_TYPE).append("{");

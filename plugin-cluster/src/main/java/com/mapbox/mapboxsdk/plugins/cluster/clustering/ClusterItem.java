@@ -7,7 +7,10 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
  * <p>
  * Inspired by https://github.com/googlemaps/android-maps-utils.
  * </p>
+ *
+ * @deprecated use runtime styling to cluster markers instead
  */
+@Deprecated
 public interface ClusterItem {
 
   /**

@@ -17,7 +17,10 @@ import java.util.Set;
  * <p>
  * Inspired by https://github.com/googlemaps/android-maps-utils.
  * </p>
+ *
+ * @deprecated use runtime styling to cluster markers instead
  */
+@Deprecated
 public class GridBasedAlgorithm<T extends ClusterItem> implements Algorithm<T> {
   private static final int GRID_SIZE = 100;
 
@@ -25,26 +28,31 @@ public class GridBasedAlgorithm<T extends ClusterItem> implements Algorithm<T> {
 
   private final Set<T> mItems = Collections.synchronizedSet(new HashSet<T>());
 
+  @Deprecated
   @Override
   public void addItem(T item) {
     mItems.add(item);
   }
 
+  @Deprecated
   @Override
   public void addItems(Collection<T> items) {
     mItems.addAll(items);
   }
 
+  @Deprecated
   @Override
   public void clearItems() {
     mItems.clear();
   }
 
+  @Deprecated
   @Override
   public void removeItem(T item) {
     mItems.remove(item);
   }
 
+  @Deprecated
   @Override
   public Set<? extends Cluster<T>> getClusters(double zoom) {
     long numCells = (long) Math.ceil(256 * Math.pow(2, zoom) / mGridSize);
@@ -72,16 +80,19 @@ public class GridBasedAlgorithm<T extends ClusterItem> implements Algorithm<T> {
     return clusters;
   }
 
+  @Deprecated
   @Override
   public Collection<T> getItems() {
     return mItems;
   }
 
+  @Deprecated
   @Override
   public void setMaxDistanceBetweenClusteredItems(int maxDistance) {
     mGridSize = maxDistance;
   }
 
+  @Deprecated
   @Override
   public int getMaxDistanceBetweenClusteredItems() {
     return mGridSize;

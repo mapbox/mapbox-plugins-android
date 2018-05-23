@@ -13,38 +13,48 @@ import java.util.List;
  * <p>
  * Inspired by https://github.com/googlemaps/android-maps-utils.
  * </p>
+ *
+ * @deprecated use runtime styling to cluster markers instead
  */
+@Deprecated
 public class StaticCluster<T extends ClusterItem> implements Cluster<T> {
   private final LatLng mCenter;
   private final List<T> mItems = new ArrayList<T>();
 
+  @Deprecated
   public StaticCluster(LatLng center) {
     mCenter = center;
   }
 
+  @Deprecated
   public boolean add(T t) {
     return mItems.add(t);
   }
 
+  @Deprecated
   @Override
   public LatLng getPosition() {
     return mCenter;
   }
 
+  @Deprecated
   public boolean remove(T t) {
     return mItems.remove(t);
   }
 
+  @Deprecated
   @Override
   public Collection<T> getItems() {
     return mItems;
   }
 
+  @Deprecated
   @Override
   public int getSize() {
     return mItems.size();
   }
 
+  @Deprecated
   @Override
   public String toString() {
     return "StaticCluster{"
@@ -53,11 +63,13 @@ public class StaticCluster<T extends ClusterItem> implements Cluster<T> {
       + '}';
   }
 
+  @Deprecated
   @Override
   public int hashCode() {
     return mCenter.hashCode() + mItems.hashCode();
   }
 
+  @Deprecated
   @Override
   public boolean equals(Object other) {
     if (!(other instanceof StaticCluster<?>)) {

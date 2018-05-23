@@ -14,7 +14,10 @@ import java.util.List;
  * <p>
  * Inspired by https://github.com/googlemaps/android-maps-utils.
  * </p>
+ *
+ * @deprecated use runtime styling to cluster markers instead
  */
+@Deprecated
 public class PointQuadTree<T extends PointQuadTree.Item> {
   public interface Item {
     public Point getPoint();
@@ -52,11 +55,15 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
 
   /**
    * Creates a new quad tree with specified bounds.
+   *
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public PointQuadTree(double minX, double maxX, double minY, double maxY) {
     this(new Bounds(minX, maxX, minY, maxY));
   }
 
+  @Deprecated
   public PointQuadTree(Bounds bounds) {
     this(bounds, 0);
   }
@@ -72,7 +79,10 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
 
   /**
    * Insert an item.
+   *
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public void add(T item) {
     Point point = item.getPoint();
     if (this.mBounds.contains(point.x, point.y)) {
@@ -129,7 +139,9 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
    * Remove the given item from the set.
    *
    * @return whether the item was removed.
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public boolean remove(T item) {
     Point point = item.getPoint();
     if (this.mBounds.contains(point.x, point.y)) {
@@ -165,7 +177,10 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
 
   /**
    * Removes all points from the quadTree
+   *
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public void clear() {
     mChildren = null;
     if (mItems != null) {
@@ -175,7 +190,10 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
 
   /**
    * Search for all items within a given bounds.
+   *
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public Collection<T> search(Bounds searchBounds) {
     final List<T> results = new ArrayList<T>();
     search(searchBounds, results);
