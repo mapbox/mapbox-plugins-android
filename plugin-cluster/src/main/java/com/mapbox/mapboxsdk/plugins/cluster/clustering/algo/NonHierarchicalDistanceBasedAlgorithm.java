@@ -32,7 +32,10 @@ import java.util.Set;
  * <p>
  * Inspired by https://github.com/googlemaps/android-maps-utils.
  * </p>
+ *
+ * @deprecated use runtime styling to cluster markers instead
  */
+@Deprecated
 public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implements Algorithm<T> {
   public static final int MAX_DISTANCE_AT_ZOOM = 100; // essentially 100 dp.
 
@@ -50,6 +53,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
 
   private static final SphericalMercatorProjection PROJECTION = new SphericalMercatorProjection(1);
 
+  @Deprecated
   @Override
   public void addItem(T item) {
     final QuadItem<T> quadItem = new QuadItem<T>(item);
@@ -59,6 +63,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
     }
   }
 
+  @Deprecated
   @Override
   public void addItems(Collection<T> items) {
     for (T item : items) {
@@ -66,6 +71,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
     }
   }
 
+  @Deprecated
   @Override
   public void clearItems() {
     synchronized (mQuadTree) {
@@ -74,6 +80,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
     }
   }
 
+  @Deprecated
   @Override
   public void removeItem(T item) {
     // QuadItem delegates hashcode() and equals() to its item so,
@@ -85,6 +92,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
     }
   }
 
+  @Deprecated
   @Override
   public Set<? extends Cluster<T>> getClusters(double zoom) {
     final int discreteZoom = (int) zoom;
@@ -137,6 +145,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
     return results;
   }
 
+  @Deprecated
   @Override
   public Collection<T> getItems() {
     final List<T> items = new ArrayList<T>();
@@ -148,11 +157,13 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
     return items;
   }
 
+  @Deprecated
   @Override
   public void setMaxDistanceBetweenClusteredItems(int maxDistance) {
     mMaxDistance = maxDistance;
   }
 
+  @Deprecated
   @Override
   public int getMaxDistanceBetweenClusteredItems() {
     return mMaxDistance;
@@ -182,31 +193,37 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
       singletonSet = Collections.singleton(mClusterItem);
     }
 
+    @Deprecated
     @Override
     public Point getPoint() {
       return mPoint;
     }
 
+    @Deprecated
     @Override
     public LatLng getPosition() {
       return mPosition;
     }
 
+    @Deprecated
     @Override
     public Set<T> getItems() {
       return singletonSet;
     }
 
+    @Deprecated
     @Override
     public int getSize() {
       return 1;
     }
 
+    @Deprecated
     @Override
     public int hashCode() {
       return mClusterItem.hashCode();
     }
 
+    @Deprecated
     @Override
     public boolean equals(Object other) {
       if (!(other instanceof QuadItem<?>)) {

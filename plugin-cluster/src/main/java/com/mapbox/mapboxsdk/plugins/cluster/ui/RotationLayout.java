@@ -13,18 +13,23 @@ import android.widget.FrameLayout;
  * <p>
  * Inspired by https://github.com/googlemaps/android-maps-utils.
  * </p>
+ * @deprecated use runtime styling to cluster markers instead
  */
+@Deprecated
 public class RotationLayout extends FrameLayout {
   private int mRotation;
 
+  @Deprecated
   public RotationLayout(Context context) {
     super(context);
   }
 
+  @Deprecated
   public RotationLayout(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
+  @Deprecated
   public RotationLayout(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
   }
@@ -41,12 +46,14 @@ public class RotationLayout extends FrameLayout {
 
   /**
    * @param degrees the rotation, in degrees.
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public void setViewRotation(int degrees) {
     mRotation = ((degrees + 360) % 360) / 90;
   }
 
-
+  @Deprecated
   @Override
   public void dispatchDraw(Canvas canvas) {
     if (mRotation == 0) {

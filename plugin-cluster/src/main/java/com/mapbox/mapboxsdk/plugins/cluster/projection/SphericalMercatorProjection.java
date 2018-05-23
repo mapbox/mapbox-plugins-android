@@ -8,14 +8,18 @@ import com.mapbox.mapboxsdk.plugins.cluster.geometry.Point;
  * <p>
  * Inspired by https://github.com/googlemaps/android-maps-utils.
  * </p>
+ * @deprecated use runtime styling to cluster markers instead
  */
+@Deprecated
 public class SphericalMercatorProjection {
   final double mWorldWidth;
 
+  @Deprecated
   public SphericalMercatorProjection(final double worldWidth) {
     mWorldWidth = worldWidth;
   }
 
+  @Deprecated
   public Point toPoint(final LatLng latLng) {
     final double x = latLng.getLongitude() / 360 + .5;
     final double siny = Math.sin(Math.toRadians(latLng.getLatitude()));
@@ -24,6 +28,7 @@ public class SphericalMercatorProjection {
     return new Point(x * mWorldWidth, y * mWorldWidth);
   }
 
+  @Deprecated
   public LatLng toLatLng(com.mapbox.mapboxsdk.plugins.cluster.geometry.Point point) {
     final double x = point.x / mWorldWidth - 0.5;
     final double lng = x * 360;

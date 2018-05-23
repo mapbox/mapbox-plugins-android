@@ -11,7 +11,10 @@ import java.util.Set;
  * <p>
  * Inspired by https://github.com/googlemaps/android-maps-utils.
  * </p>
+ *
+ * @deprecated use runtime styling to cluster markers instead
  */
+@Deprecated
 public interface Algorithm<T extends ClusterItem> {
   void addItem(T item);
 

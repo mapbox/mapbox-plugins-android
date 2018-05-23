@@ -26,7 +26,9 @@ import com.mapbox.mapboxsdk.plugins.cluster.R;
  * <p>
  * Inspired by https://github.com/googlemaps/android-maps-utils.
  * </p>
+ * @deprecated use runtime styling to cluster markers instead
  */
+@Deprecated
 public class IconGenerator {
   private final Context mContext;
 
@@ -43,7 +45,10 @@ public class IconGenerator {
 
   /**
    * Creates a new IconGenerator with the default style.
+   *
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public IconGenerator(Context context) {
     mContext = context;
     mBackground = new BubbleDrawable(mContext.getResources());
@@ -57,7 +62,9 @@ public class IconGenerator {
    * Sets the text content, then creates an icon with the current style.
    *
    * @param text the text content to display inside the icon.
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public Bitmap makeIcon(CharSequence text) {
     if (mTextView != null) {
       mTextView.setText(text);
@@ -71,7 +78,10 @@ public class IconGenerator {
    * <p/>
    * This method is useful if a custom view has previously been set, or if text content is not
    * applicable.
+   *
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public Bitmap makeIcon() {
     int measureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
     mContainer.measure(measureSpec, measureSpec);
@@ -111,7 +121,10 @@ public class IconGenerator {
    * <p/>
    * If the view contains a {@link TextView} with the id "text", operations such as {@link
    * #setTextAppearance} and {@link #makeIcon()} will operate upon that {@link TextView}.
+   *
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public void setContentView(View contentView) {
     mRotationLayout.removeAllViews();
     mRotationLayout.addView(contentView);
@@ -124,7 +137,9 @@ public class IconGenerator {
    * Rotates the contents of the icon.
    *
    * @param degrees the amount the contents should be rotated, as a multiple of 90 degrees.
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public void setContentRotation(int degrees) {
     mRotationLayout.setViewRotation(degrees);
   }
@@ -133,7 +148,9 @@ public class IconGenerator {
    * Rotates the icon.
    *
    * @param degrees the amount the icon should be rotated, as a multiple of 90 degrees.
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public void setRotation(int degrees) {
     mRotation = ((degrees + 360) % 360) / 90;
   }
@@ -141,14 +158,18 @@ public class IconGenerator {
 
   /**
    * @return u coordinate of the anchor, with rotation applied.
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public float getAnchorU() {
     return rotateAnchor(mAnchorU, mAnchorV);
   }
 
   /**
    * @return v coordinate of the anchor, with rotation applied.
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public float getAnchorV() {
     return rotateAnchor(mAnchorV, mAnchorU);
   }
@@ -175,7 +196,9 @@ public class IconGenerator {
    * <code>TextAppearance</code> resource.
    *
    * @param resid the identifier of the resource.
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public void setTextAppearance(Context context, int resid) {
     if (mTextView != null) {
       mTextView.setTextAppearance(context, resid);
@@ -187,14 +210,19 @@ public class IconGenerator {
    * <code>TextAppearance</code> resource.
    *
    * @param resid the identifier of the resource.
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public void setTextAppearance(int resid) {
     setTextAppearance(mContext, resid);
   }
 
   /**
    * Sets the style of the icon. The style consists of a background and text appearance.
+   *
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public void setStyle(int style) {
     setColor(getStyleColor(style));
     setTextAppearance(mContext, getTextStyle(style));
@@ -204,7 +232,9 @@ public class IconGenerator {
    * Sets the background to the default, with a given color tint.
    *
    * @param color the color for the background tint.
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public void setColor(int color) {
     mBackground.setColor(color);
     setBackground(mBackground);
@@ -214,9 +244,10 @@ public class IconGenerator {
    * Set the background to a given Drawable, or remove the background.
    *
    * @param background the Drawable to use as the background, or null to remove the background.
+   * @deprecated use runtime styling to cluster markers instead
    */
-  @SuppressWarnings("deprecation")
   // View#setBackgroundDrawable is compatible with pre-API level 16 (Jelly Bean).
+  @Deprecated
   public void setBackground(Drawable background) {
     mContainer.setBackgroundDrawable(background);
 
@@ -239,7 +270,9 @@ public class IconGenerator {
    * @param top    the top padding in pixels.
    * @param right  the right padding in pixels.
    * @param bottom the bottom padding in pixels.
+   * @deprecated use runtime styling to cluster markers instead
    */
+  @Deprecated
   public void setContentPadding(int left, int top, int right, int bottom) {
     mContentView.setPadding(left, top, right, bottom);
   }

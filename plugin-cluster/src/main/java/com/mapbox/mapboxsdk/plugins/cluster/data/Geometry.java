@@ -7,7 +7,9 @@ package com.mapbox.mapboxsdk.plugins.cluster.data;
  * </p>
  *
  * @param <T> the type of Geometry object
+ * @deprecated use runtime styling to cluster markers instead
  */
+@Deprecated
 public interface Geometry<T> {
   /**
    * Gets the type of geometry

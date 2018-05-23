@@ -11,19 +11,24 @@ import android.util.AttributeSet;
  * <p>
  * Inspired by https://github.com/googlemaps/android-maps-utils.
  * </p>
+ * @deprecated use runtime styling to cluster markers instead
  */
+@Deprecated
 public class SquareTextView extends AppCompatTextView {
   private int mOffsetTop = 0;
   private int mOffsetLeft = 0;
 
+  @Deprecated
   public SquareTextView(Context context) {
     super(context);
   }
 
+  @Deprecated
   public SquareTextView(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
+  @Deprecated
   public SquareTextView(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
   }
@@ -44,6 +49,7 @@ public class SquareTextView extends AppCompatTextView {
     setMeasuredDimension(dimension, dimension);
   }
 
+  @Deprecated
   @Override
   public void draw(Canvas canvas) {
     canvas.translate(mOffsetLeft / 2, mOffsetTop / 2);

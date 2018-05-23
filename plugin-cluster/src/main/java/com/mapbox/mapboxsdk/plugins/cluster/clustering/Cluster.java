@@ -9,7 +9,10 @@ import java.util.Collection;
  * <p>
  * Inspired by https://github.com/googlemaps/android-maps-utils.
  * </p>
+ *
+ * @deprecated use runtime styling to cluster markers instead
  */
+@Deprecated
 public interface Cluster<T extends ClusterItem> {
   public LatLng getPosition();
 
