@@ -95,7 +95,6 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     this.mapboxMap = mapboxMap;
     this.mapView = mapView;
     options = LocationLayerOptions.createFromAttributes(mapView.getContext(), R.style.mapbox_LocationLayer);
-    initializeLocationEngine();
     initialize();
   }
 
@@ -488,6 +487,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   }
 
   private void initialize() {
+    initializeLocationEngine();
     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
     mapboxMap.addOnMapClickListener(onMapClickListener);
@@ -512,11 +512,13 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   }
 
   private void initializeLocationEngine() {
-    usingInternalLocationEngine = true;
-    locationEngine = new LocationEngineProvider(mapView.getContext()).obtainBestLocationEngineAvailable();
-    locationEngine.setPriority(LocationEnginePriority.HIGH_ACCURACY);
-    locationEngine.setFastestInterval(1000);
-    locationEngine.activate();
+    if (locationEngine == null) {
+      usingInternalLocationEngine = true;
+      locationEngine = new LocationEngineProvider(mapView.getContext()).obtainBestLocationEngineAvailable();
+      locationEngine.setPriority(LocationEnginePriority.HIGH_ACCURACY);
+      locationEngine.setFastestInterval(1000);
+      locationEngine.activate();
+    }
   }
 
   private void enableLocationLayerPlugin() {
