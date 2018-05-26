@@ -15,6 +15,12 @@ import java.lang.annotation.RetentionPolicy;
  * @since 0.5.0
  */
 public final class CameraMode {
+  public static final int FOLLOW_NONE        = 0b0000_0000_0000;
+  public static final int FOLLOW_GPS         = 0b0000_0000_0001;
+  public static final int ORIENT_NONE        = 0b0000_0000_0000;
+  public static final int ORIENT_COMPASS     = 0b0001_0000_0000;
+  public static final int ORIENT_GPS         = 0b0010_0000_0000;
+  public static final int ORIENT_NORTH       = 0b0100_0000_0000;
 
   private CameraMode() {
     // Class should not be initialized
@@ -25,7 +31,7 @@ public final class CameraMode {
    *
    * @since 0.5.0
    */
-  @IntDef( {NONE, NONE_COMPASS, NONE_GPS, TRACKING, TRACKING_COMPASS, TRACKING_GPS, TRACKING_GPS_NORTH})
+  @IntDef({NONE, NONE_COMPASS, NONE_GPS, TRACKING, TRACKING_COMPASS, TRACKING_GPS, TRACKING_GPS_NORTH})
   @Retention(RetentionPolicy.SOURCE)
   public @interface Mode {
   }
@@ -35,28 +41,28 @@ public final class CameraMode {
    *
    * @since 0.5.0
    */
-  public static final int NONE = 0x00000000;
+  public static final int NONE = FOLLOW_NONE | ORIENT_NONE;
 
   /**
    * Camera does not track location, but does track compass bearing.
    *
    * @since 0.5.0
    */
-  public static final int NONE_COMPASS = 0x00000010;
+  public static final int NONE_COMPASS = FOLLOW_NONE | ORIENT_COMPASS;
 
   /**
    * Camera does not track location, but does track GPS {@link Location} bearing.
    *
    * @since 0.5.0
    */
-  public static final int NONE_GPS = 0x00000016;
+  public static final int NONE_GPS = FOLLOW_NONE | ORIENT_GPS;
 
   /**
    * Camera tracks the user location.
    *
    * @since 0.5.0
    */
-  public static final int TRACKING = 0x00000018;
+  public static final int TRACKING = FOLLOW_GPS | ORIENT_NONE;
 
   /**
    * Camera tracks the user location, with bearing
@@ -64,7 +70,7 @@ public final class CameraMode {
    *
    * @since 0.5.0
    */
-  public static final int TRACKING_COMPASS = 0x00000020;
+  public static final int TRACKING_COMPASS = FOLLOW_GPS | ORIENT_COMPASS;
 
   /**
    * Camera tracks the user location, with bearing
@@ -72,8 +78,7 @@ public final class CameraMode {
    *
    * @since 0.5.0
    */
-  public static final int TRACKING_GPS = 0x00000022;
-
+  public static final int TRACKING_GPS = FOLLOW_GPS | ORIENT_GPS;
 
   /**
    * Camera tracks the user location, with bearing
@@ -81,5 +86,5 @@ public final class CameraMode {
    *
    * @since 0.5.0
    */
-  public static final int TRACKING_GPS_NORTH = 0x00000024;
+  public static final int TRACKING_GPS_NORTH = FOLLOW_GPS | ORIENT_NORTH;
 }
