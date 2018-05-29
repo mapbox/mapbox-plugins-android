@@ -4,9 +4,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 
-import com.mapbox.android.core.location.LocationEngine;
-import com.mapbox.android.core.location.LocationEnginePriority;
-import com.mapbox.android.core.location.LocationEngineProvider;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
@@ -27,10 +24,7 @@ public class LocationLayerMapChangeActivity extends AppCompatActivity implements
   FloatingActionButton stylesFab;
 
   private LocationLayerPlugin locationPlugin;
-  private LocationEngine locationEngine;
   private MapboxMap mapboxMap;
-
-  private boolean customStyle;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +40,7 @@ public class LocationLayerMapChangeActivity extends AppCompatActivity implements
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
-    locationEngine = new LocationEngineProvider(this).obtainBestLocationEngineAvailable();
-    locationEngine.setPriority(LocationEnginePriority.HIGH_ACCURACY);
-    locationEngine.setFastestInterval(1000);
-    locationEngine.activate();
-    locationPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine);
+    locationPlugin = new LocationLayerPlugin(mapView, mapboxMap);
     locationPlugin.setRenderMode(RenderMode.COMPASS);
     getLifecycle().addObserver(locationPlugin);
   }
@@ -67,9 +57,6 @@ public class LocationLayerMapChangeActivity extends AppCompatActivity implements
   protected void onStart() {
     super.onStart();
     mapView.onStart();
-    if (locationEngine != null) {
-      locationEngine.requestLocationUpdates();
-    }
   }
 
   @Override
@@ -87,9 +74,6 @@ public class LocationLayerMapChangeActivity extends AppCompatActivity implements
   @Override
   protected void onStop() {
     super.onStop();
-    if (locationEngine != null) {
-      locationEngine.removeLocationUpdates();
-    }
     mapView.onStop();
   }
 
@@ -103,9 +87,6 @@ public class LocationLayerMapChangeActivity extends AppCompatActivity implements
   protected void onDestroy() {
     super.onDestroy();
     mapView.onDestroy();
-    if (locationEngine != null) {
-      locationEngine.deactivate();
-    }
   }
 
   @Override
