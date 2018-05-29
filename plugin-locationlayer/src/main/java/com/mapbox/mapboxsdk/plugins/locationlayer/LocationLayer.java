@@ -52,9 +52,9 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.generateShadow;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.getBitmapFromDrawable;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.getDrawable;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.exponential;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.linear;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.literal;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.match;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.stop;
@@ -121,6 +121,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
     styleBackground(options);
     styleBearing(options);
     styleAccuracy(options.accuracyAlpha(), options.accuracyColor());
+    styleScaling(options);
   }
 
   void setRenderMode(@RenderMode.Mode int renderMode) {
@@ -196,12 +197,6 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
     layer.setProperties(
       iconAllowOverlap(true),
       iconIgnorePlacement(true),
-      iconSize(
-        interpolate(exponential(1f), zoom(),
-          stop(0f, 0.6f),
-          stop(18f, 1.2f)
-        )
-      ),
       iconRotationAlignment(ICON_ROTATION_ALIGNMENT_MAP),
       iconRotate(
         match(literal(layerId), literal(0f),
@@ -381,6 +376,21 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
     styleForeground(
       getDrawable(context, options.gpsDrawable(), options.foregroundTintColor()),
       getDrawable(context, options.gpsDrawable(), options.foregroundStaleTintColor()));
+  }
+
+  private void styleScaling(LocationLayerOptions options) {
+    for (Layer layer : layerMap.values()) {
+      if (layer instanceof SymbolLayer) {
+        layer.setProperties(
+          iconSize(
+            interpolate(linear(), zoom(),
+              stop(options.minZoom(), options.minZoomIconScale()),
+              stop(options.maxZoom(), options.maxZoomIconScale())
+            )
+          )
+        );
+      }
+    }
   }
 
   void setLocationsStale(boolean isStale) {

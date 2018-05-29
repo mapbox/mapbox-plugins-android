@@ -54,6 +54,16 @@ public abstract class LocationLayerOptions implements Parcelable {
   private static final float MIN_ZOOM_DEFAULT = 2;
 
   /**
+   * Default icon scale factor when the map is zoomed out
+   */
+  private static final float MIN_ZOOM_ICON_SCALE_DEFAULT = 0.6f;
+
+  /**
+   * Default icon scale factor when the map is zoomed in
+   */
+  private static final float MAX_ZOOM_ICON_SCALE_DEFAULT = 1f;
+
+  /**
    * Default map padding
    */
   private static final int[] PADDING_DEFAULT = {0, 0, 0, 0};
@@ -162,6 +172,13 @@ public abstract class LocationLayerOptions implements Parcelable {
     builder.maxZoom(maxZoom);
     builder.minZoom(minZoom);
 
+    float minScale = typedArray.getFloat(
+      R.styleable.mapbox_LocationLayer_mapbox_minZoomIconScale, MIN_ZOOM_ICON_SCALE_DEFAULT);
+    float maxScale = typedArray.getFloat(
+      R.styleable.mapbox_LocationLayer_mapbox_maxZoomIconScale, MAX_ZOOM_ICON_SCALE_DEFAULT);
+    builder.minZoomIconScale(minScale);
+    builder.maxZoomIconScale(maxScale);
+
     typedArray.recycle();
 
     return builder.build();
@@ -200,6 +217,8 @@ public abstract class LocationLayerOptions implements Parcelable {
       .staleStateTimeout(STALE_STATE_DELAY_MS)
       .maxZoom(MAX_ZOOM_DEFAULT)
       .minZoom(MIN_ZOOM_DEFAULT)
+      .maxZoomIconScale(MAX_ZOOM_ICON_SCALE_DEFAULT)
+      .minZoomIconScale(MIN_ZOOM_ICON_SCALE_DEFAULT)
       .padding(PADDING_DEFAULT);
   }
 
@@ -404,6 +423,24 @@ public abstract class LocationLayerOptions implements Parcelable {
    * @since 0.5.0
    */
   public abstract double minZoom();
+
+  /**
+   * The scale factor of the location icon when the map is zoomed in. Based on {@link #maxZoom()}.
+   * Scaling is linear.
+   *
+   * @return icon scale factor
+   * @since 0.6.0
+   */
+  public abstract float maxZoomIconScale();
+
+  /**
+   * The scale factor of the location icon when the map is zoomed out. Based on {@link #minZoom()}.
+   * Scaling is linear.
+   *
+   * @return icon scale factor
+   * @since 0.6.0
+   */
+  public abstract float minZoomIconScale();
 
   /**
    * Minimum single pointer movement in pixels required to break camera tracking.
@@ -627,9 +664,34 @@ public abstract class LocationLayerOptions implements Parcelable {
      * Sets the minimum zoom level the map can be displayed at.
      *
      * @param minZoom The new minimum zoom level.
+     * @since 0.5.0
      */
     public abstract Builder minZoom(@FloatRange(from = MapboxConstants.MINIMUM_ZOOM,
       to = MapboxConstants.MAXIMUM_ZOOM) double minZoom);
+
+    /**
+     * Sets the scale factor of the location icon when the map is zoomed in. Based on {@link #maxZoom()}.
+     * Scaling is linear and the new pixel size of the image will be the original pixel size multiplied by the argument.
+     * <p>
+     * Set both this and {@link #minZoomIconScale(float)} to 1f to disable location icon scaling.
+     * </p>
+     *
+     * @param maxZoomIconScale icon scale factor
+     * @since 0.6.0
+     */
+    public abstract Builder maxZoomIconScale(float maxZoomIconScale);
+
+    /**
+     * Sets the scale factor of the location icon when the map is zoomed out. Based on {@link #maxZoom()}.
+     * Scaling is linear and the new pixel size of the image will be the original pixel size multiplied by the argument.
+     * <p>
+     * Set both this and {@link #maxZoomIconScale(float)} to 1f to disable location icon scaling.
+     * </p>
+     *
+     * @param minZoomIconScale icon scale factor
+     * @since 0.6.0
+     */
+    public abstract Builder minZoomIconScale(float minZoomIconScale);
 
     /**
      * Sets minimum single pointer movement (map pan) in pixels required to break camera tracking.
