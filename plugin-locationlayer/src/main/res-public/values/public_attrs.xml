@@ -35,6 +35,10 @@
   <public name="mapbox_maxZoom" format="float" type="attr"/>
   <public name="mapbox_minZoom" format="float" type="attr"/>
 
+  <!-- Icon scale based on map zoom levels -->
+  <public name="mapbox_maxZoomIconScale" format="float" type="attr"/>
+  <public name="mapbox_minZoomIconScale" format="float" type="attr"/>
+
   <!-- Camera tracking settings -->
   <public name="mapbox_trackingInitialMoveThreshold" format="float" type="attr"/>
   <public name="mapbox_trackingMultiFingerMoveThreshold" format="float" type="attr"/>

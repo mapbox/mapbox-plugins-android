@@ -34,6 +34,10 @@
     <attr name="mapbox_maxZoom" format="float"/>
     <attr name="mapbox_minZoom" format="float"/>
 
+    <!-- Icon scale based on map zoom levels -->
+    <attr name="mapbox_maxZoomIconScale" format="float"/>
+    <attr name="mapbox_minZoomIconScale" format="float"/>
+
     <!-- Camera tracking settings -->
     <attr name="mapbox_trackingInitialMoveThreshold" format="dimension"/>
     <attr name="mapbox_trackingMultiFingerMoveThreshold" format="dimension"/>
