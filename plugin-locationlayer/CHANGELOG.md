@@ -2,6 +2,15 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### 0.5.3 - May 23, 2018
+- Adds a constructor which doesn't take in a locationEngine and sets up an internal engine instead [#527](https://github.com/mapbox/mapbox-plugins-android/pull/527)
+- Remove and readd onMapChange in onStart/onStop [#403](https://github.com/mapbox/mapbox-plugins-android/pull/403)
+- Sets initial value to infinity to prevent puck showing at nullisland [#516](https://github.com/mapbox/mapbox-plugins-android/pull/516)
+- Use enable/disable methods in onStop and onStart to toggle `isEnabled` boolean [#528](https://github.com/mapbox/mapbox-plugins-android/pull/528)
+- Don’t update stale state if it’s not enabled in options [#525](https://github.com/mapbox/mapbox-plugins-android/pull/525)
+- Fixes accuracy circle layer not setting color correctly [#526](https://github.com/mapbox/mapbox-plugins-android/pull/526)
+- Updated Map SDK to 6.1.3 [#531](https://github.com/mapbox/mapbox-plugins-android/pull/531)
+
 ### 0.5.2 - May 10, 2018
 - Fixes missing files from Maven Central
 
