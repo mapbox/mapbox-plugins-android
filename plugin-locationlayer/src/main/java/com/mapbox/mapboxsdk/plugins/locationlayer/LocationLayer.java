@@ -94,6 +94,8 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   );
   private GeoJsonSource locationSource;
 
+  private boolean isHidden;
+
   LocationLayer(MapView mapView, MapboxMap mapboxMap, LocationLayerOptions options) {
     this.mapboxMap = mapboxMap;
     this.context = mapView.getContext();
@@ -105,6 +107,12 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
     addLocationSource();
     addLayers();
     applyStyle(options);
+
+    if (isHidden) {
+      hide();
+    } else {
+      show();
+    }
   }
 
   void applyStyle(@NonNull LocationLayerOptions options) {
@@ -165,12 +173,14 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
 
   void show() {
     setRenderMode(renderMode);
+    isHidden = false;
   }
 
   void hide() {
     for (String layerId : layerMap.keySet()) {
       setLayerVisibility(layerId, false);
     }
+    isHidden = true;
   }
 
   private void setLayerVisibility(String layerId, boolean visible) {
