@@ -454,9 +454,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   @OnLifecycleEvent(Lifecycle.Event.ON_START)
   public void onStart() {
     onLocationLayerStart();
-    if (isEnabled) {
-      mapView.addOnMapChangedListener(onMapChangedListener);
-    }
+    mapView.addOnMapChangedListener(onMapChangedListener);
   }
 
   /**
