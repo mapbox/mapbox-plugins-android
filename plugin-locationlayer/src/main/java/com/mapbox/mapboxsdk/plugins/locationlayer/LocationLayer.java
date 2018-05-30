@@ -93,7 +93,6 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
     Point.fromLngLat(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY)
   );
   private GeoJsonSource locationSource;
-  private boolean isSourceInitialized;
 
   LocationLayer(MapView mapView, MapboxMap mapboxMap, LocationLayerOptions options) {
     this.mapboxMap = mapboxMap;
@@ -103,7 +102,6 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   }
 
   void initializeComponents(LocationLayerOptions options) {
-    prepareLocationSource();
     addLocationSource();
     addLayers();
     applyStyle(options);
@@ -299,7 +297,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   // Source actions
   //
 
-  private void prepareLocationSource() {
+  private void addLocationSource() {
     locationFeature.addNumberProperty(PROPERTY_GPS_BEARING, 0f);
     locationFeature.addNumberProperty(PROPERTY_COMPASS_BEARING, 0f);
     locationFeature.addBooleanProperty(PROPERTY_LOCATION_STALE, false);
@@ -309,11 +307,8 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
       locationFeature,
       new GeoJsonOptions().withMaxZoom(16)
     );
-  }
 
-  private void addLocationSource() {
     mapboxMap.addSource(locationSource);
-    isSourceInitialized = true;
   }
 
   private void refreshSource() {
@@ -325,10 +320,6 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
     if (properties != null) {
       locationFeature = Feature.fromGeometry(locationPoint, properties);
       locationSource.setGeoJson(locationFeature);
-    }
-
-    if (!isSourceInitialized) {
-      addLocationSource();
     }
   }
 
