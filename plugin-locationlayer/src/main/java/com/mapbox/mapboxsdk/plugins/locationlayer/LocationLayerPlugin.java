@@ -71,6 +71,8 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   private CameraPosition lastCameraPosition;
 
   private boolean isEnabled;
+  private boolean isStarted;
+
   private StaleStateManager staleStateManager;
   private final CopyOnWriteArrayList<OnLocationStaleListener> onLocationStaleListeners
     = new CopyOnWriteArrayList<>();
@@ -161,6 +163,16 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     } else {
       disableLocationLayerPlugin();
     }
+  }
+
+  /**
+   * Returns whether the plugin is enabled, meaning that location can be displayed and camera modes can be used.
+   *
+   * @return true if the plugin is enabled, false otherwise
+   * @since 0.6.0
+   */
+  public boolean isLocationLayerEnabled() {
+    return isEnabled;
   }
 
   /**
@@ -459,12 +471,15 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   }
 
   void onLocationLayerStart() {
+    isStarted = true;
     if (isEnabled) {
       if (locationEngine != null) {
         locationEngine.addLocationEngineListener(locationEngineListener);
       }
       setLastLocation();
       setLastCompassHeading();
+      locationLayer.show();
+      setCameraMode(locationLayerCamera.getCameraMode());
     }
     if (mapboxMap != null) {
       mapboxMap.addOnCameraMoveListener(onCameraMoveListener);
@@ -476,6 +491,8 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   }
 
   void onLocationLayerStop() {
+    isStarted = false;
+    locationLayer.hide();
     staleStateManager.onStop();
     compassManager.onStop();
     locationLayerAnimator.cancelAllAnimations();
@@ -522,13 +539,11 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   private void enableLocationLayerPlugin() {
     isEnabled = true;
     onLocationLayerStart();
-    locationLayer.show();
   }
 
   private void disableLocationLayerPlugin() {
     isEnabled = false;
     onLocationLayerStop();
-    locationLayer.hide();
   }
 
   private void updateMapWithOptions(final LocationLayerOptions options) {
@@ -547,7 +562,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    * @since 0.1.0
    */
   private void updateLocation(final Location location) {
-    if (location == null) {
+    if (location == null || !isStarted) {
       return;
     }
     staleStateManager.updateLatestLocationTime();
@@ -649,8 +664,6 @@ public final class LocationLayerPlugin implements LifecycleObserver {
       } else if (change == MapView.DID_FINISH_LOADING_STYLE) {
         locationLayer.initializeComponents(options);
         locationLayerCamera.initializeOptions(options);
-        setRenderMode(locationLayer.getRenderMode());
-        setCameraMode(locationLayerCamera.getCameraMode());
         onLocationLayerStart();
       }
     }
