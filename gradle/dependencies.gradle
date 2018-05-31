@@ -4,44 +4,47 @@ ext {
       minSdkVersion    : 14,
       targetSdkVersion : 27,
       compileSdkVersion: 27,
-      buildToolsVersion: '27.0.2'
+      buildToolsVersion: '27.0.3'
   ]
 
   version = [
       mapboxMapSdk       : '6.1.3',
-      mapboxGeocoding    : '3.0.1',
-      mapboxGeoJson      : '3.0.1',
-      playLocation       : '11.8.0',
-      autoValue          : '1.5.3',
+      mapboxJava         : '3.2.0',
+      playLocation       : '15.0.1',
+      autoValue          : '1.5.4',
       autoValueParcel    : '0.2.6',
       junit              : '4.12',
-      supportLibVersion  : '27.0.2',
-      constraintLayout   : '1.0.2',
-      mockito            : '2.13.0',
-      hamcrest           : '2.0.0.0',
-      errorprone         : '2.1.3',
+      supportLib         : '27.1.1',
+      constraintLayout   : '1.1.0',
+      mockito            : '2.18.3',
+      errorprone         : '2.3.1',
       butterknife        : '8.8.1',
-      leakCanaryVersion  : '1.5.4',
-      timber             : '4.6.0',
-      testRunnerVersion  : '1.0.1',
-      espressoVersion    : '3.0.1',
-      spoonRunner        : '1.6.2',
-      commonsIO          : '2.5',
-      robolectric        : '3.6.1',
+      leakCanary         : '1.5.4',
+      timber             : '4.7.0',
+      testRunner         : '1.0.2',
+      espresso           : '3.0.2',
       lifecycleCompiler  : '1.1.1',
       lifecycleExtensions: '1.1.1',
       lifecycleLiveData  : '1.1.1',
-      room               : '1.0.0',
-      androidArchCore    : '1.0.0',
-      okhttp             : '3.9.1',
-      materialDialogs    : '0.9.6.0'
+      room               : '1.1.0',
+      androidArchCore    : '1.1.0'
+  ]
+
+  pluginVersion = [
+      checkstyle: '8.10.1',
+      jacoco    : '0.8.1',
+      errorprone: '0.0.14',
+      sonarqube : '2.6.2',
+      gradle    : '3.1.0',
+      kotlin    : '1.2.41',
+      dokka     : '0.9.17'
   ]
 
   dependenciesList = [
       // mapbox
       mapboxMapSdk           : "com.mapbox.mapboxsdk:mapbox-android-sdk:${version.mapboxMapSdk}",
-      mapboxGeoJson          : "com.mapbox.mapboxsdk:mapbox-sdk-geojson:${version.mapboxGeoJson}",
-      mapboxGeocoding        : "com.mapbox.mapboxsdk:mapbox-sdk-services:${version.mapboxGeocoding}",
+      mapboxGeoJson          : "com.mapbox.mapboxsdk:mapbox-sdk-geojson:${version.mapboxJava}",
+      mapboxGeocoding        : "com.mapbox.mapboxsdk:mapbox-sdk-services:${version.mapboxJava}",
 
       // Google Play Location
       playLocation           : "com.google.android.gms:play-services-location:${version.playLocation}",
@@ -51,20 +54,17 @@ ext {
       autoValuesParcel       : "com.ryanharter.auto.value:auto-value-parcel:${version.autoValueParcel}",
       autoValuesParcelAdapter: "com.ryanharter.auto.value:auto-value-parcel-adapter:${version.autoValueParcel}",
 
-      // Material dialogs
-      materialDialogs        : "com.afollestad.material-dialogs:commons:${version.materialDialogs}",
-
       // butterknife
       butterKnife            : "com.jakewharton:butterknife:${version.butterknife}",
       butterKnifeProcessor   : "com.jakewharton:butterknife-compiler:${version.butterknife}",
 
       // support
-      supportAnnotation      : "com.android.support:support-annotations:${version.supportLibVersion}",
-      supportAppcompatV7     : "com.android.support:appcompat-v7:${version.supportLibVersion}",
-      supportV4              : "com.android.support:support-v4:${version.supportLibVersion}",
-      supportDesign          : "com.android.support:design:${version.supportLibVersion}",
-      supportRecyclerView    : "com.android.support:recyclerview-v7:${version.supportLibVersion}",
-      supportCardView        : "com.android.support:cardview-v7:${version.supportLibVersion}",
+      supportAnnotation      : "com.android.support:support-annotations:${version.supportLib}",
+      supportAppcompatV7     : "com.android.support:appcompat-v7:${version.supportLib}",
+      supportV4              : "com.android.support:support-v4:${version.supportLib}",
+      supportDesign          : "com.android.support:design:${version.supportLib}",
+      supportRecyclerView    : "com.android.support:recyclerview-v7:${version.supportLib}",
+      supportCardView        : "com.android.support:cardview-v7:${version.supportLib}",
       supportConstraintLayout: "com.android.support.constraint:constraint-layout:${version.constraintLayout}",
 
       // architecture
@@ -76,16 +76,15 @@ ext {
 
       // square crew
       timber                 : "com.jakewharton.timber:timber:${version.timber}",
-      leakCanaryDebug        : "com.squareup.leakcanary:leakcanary-android:${version.leakCanaryVersion}",
-      leakCanaryRelease      : "com.squareup.leakcanary:leakcanary-android-no-op:${version.leakCanaryVersion}",
-      leakCanaryTest         : "com.squareup.leakcanary:leakcanary-android-no-op:${version.leakCanaryVersion}",
+      leakCanaryDebug        : "com.squareup.leakcanary:leakcanary-android:${version.leakCanary}",
+      leakCanaryRelease      : "com.squareup.leakcanary:leakcanary-android-no-op:${version.leakCanary}",
+      leakCanaryTest         : "com.squareup.leakcanary:leakcanary-android-no-op:${version.leakCanary}",
 
       // instrumentation test
-      testSpoonRunner        : "com.squareup.spoon:spoon-client:${version.spoonRunner}",
-      testRunner             : "com.android.support.test:runner:${version.testRunnerVersion}",
-      testRules              : "com.android.support.test:rules:${version.testRunnerVersion}",
-      testEspressoCore       : "com.android.support.test.espresso:espresso-core:${version.espressoVersion}",
-      testEspressoIntents    : "com.android.support.test.espresso:espresso-intents:${version.espressoVersion}",
+      testRunner             : "com.android.support.test:runner:${version.testRunner}",
+      testRules              : "com.android.support.test:rules:${version.testRunner}",
+      testEspressoCore       : "com.android.support.test.espresso:espresso-core:${version.espresso}",
+      testEspressoIntents    : "com.android.support.test.espresso:espresso-intents:${version.espresso}",
       testRoom               : "android.arch.persistence.room:testing:${version.room}",
       testArchCore           : "android.arch.core:core-testing:${version.androidArchCore}",
       mockitoCore            : "org.mockito:mockito-core:${version.mockito}",
@@ -94,29 +93,10 @@ ext {
       // unit test
       junit                  : "junit:junit:${version.junit}",
       mockito                : "org.mockito:mockito-inline:${version.mockito}",
-      hamcrest               : "org.hamcrest:hamcrest-junit:${version.hamcrest}",
-      commonsIO              : "commons-io:commons-io:${version.commonsIO}",
-      robolectric            : "org.robolectric:robolectric:${version.robolectric}",
       androidArchCore        : "android.arch.core:core-testing:${version.androidArchCore}",
-
-      // okhttp
-      okhttp                 : "com.squareup.okhttp3:okhttp:${version.okhttp}",
-
-      // aws polly
-      polly                  : "com.amazonaws:aws-android-sdk-polly:${version.awsPolly}",
 
       // errorprone
       errorprone             : "com.google.errorprone:error_prone_core:${version.errorprone}"
-  ]
-
-  pluginVersion = [
-      checkstyle: '8.5',
-      pmd       : '6.0.0',
-      jacoco    : '0.8.0',
-      errorprone: '0.0.13',
-      sonarqube : '2.6.2',
-      gradle    : '3.0.1',
-      kotlin    : '1.2.40'
   ]
 
   pluginDependencies = [
@@ -124,6 +104,7 @@ ext {
       checkstyle: "com.puppycrawl.tools:checkstyle:${pluginVersion.checkstyle}",
       sonarqube : "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${pluginVersion.sonarqube}",
       errorprone: "net.ltgt.gradle:gradle-errorprone-plugin:${pluginVersion.errorprone}",
-      kotlin    : "org.jetbrains.kotlin:kotlin-gradle-plugin:${pluginVersion.kotlin}"
+      kotlin    : "org.jetbrains.kotlin:kotlin-gradle-plugin:${pluginVersion.kotlin}",
+      dokka     : "org.jetbrains.dokka:dokka-android-gradle-plugin:${pluginVersion.dokka}"
   ]
 }

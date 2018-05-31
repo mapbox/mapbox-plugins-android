@@ -38,7 +38,7 @@ dependencies {
   testImplementation dependenciesList.mockito
 }
 
-apply from: 'javadoc.gradle'
-apply from: "${rootDir}/gradle/mvn-push-android.gradle"
+apply from: "${rootDir}/gradle/javadoc.gradle"
+apply from: "${rootDir}/gradle/publish.gradle"
 apply from: "${rootDir}/gradle/checkstyle.gradle"
 apply from: "${rootDir}/gradle/jacoco.gradle"

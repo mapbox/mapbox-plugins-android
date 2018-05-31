@@ -1,15 +1,17 @@
+apply from: "${rootDir}/gradle/dependencies.gradle"
+
 android.libraryVariants.all { variant ->
   def name = variant.name
   task "javadoc$name"(type: Javadoc) {
     description = "Generates javadoc for build $name"
     failOnError = false
     destinationDir = new File(destinationDir, variant.baseName)
-    source = files(variant.javaCompile.source)
-    classpath = files(variant.javaCompile.classpath.files) + files(android.bootClasspath) + configurations.javadocDeps
-    options.windowTitle("Mapbox Android Places Plugin $VERSION_NAME Reference")
-    options.docTitle("Mapbox Android Places Plugin $VERSION_NAME")
-    options.header("Mapbox Android Places Plugin $VERSION_NAME Reference")
-    options.bottom("&copy; 2017 Mapbox. All rights reserved.")
+    source = variant.javaCompile.source
+    classpath = files(android.bootClasspath)
+    options.windowTitle("$POM_NAME $VERSION_NAME Reference")
+    options.docTitle("$POM_NAME $VERSION_NAME")
+    options.header("$POM_NAME $VERSION_NAME Reference")
+    options.bottom("&copy; 2015&ndash;2018 Mapbox. All rights reserved.")
     options.links("http://docs.oracle.com/javase/7/docs/api/")
     options.linksOffline("http://d.android.com/reference/", "$System.env.ANDROID_HOME/docs/reference")
     exclude '**/R.java', '**/BuildConfig.java'
