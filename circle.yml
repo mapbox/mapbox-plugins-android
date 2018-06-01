@@ -65,7 +65,7 @@ jobs:
 # ------------------------------------------------------------------------------
   release:
     docker:
-      - image: mbgl/7d2403f42e:android-ndk-r16b
+      - image: mbgl/feb0443038:android-ndk-r17
     working_directory: ~/code
     environment:
       BUILDTYPE: Release
