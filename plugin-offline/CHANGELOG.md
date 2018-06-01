@@ -1,5 +1,8 @@
 # Changelog for the Mapbox offline plugin
 
+### 0.4.0 - TBD
+- Remove `allowobfuscation` option from ProGuard rule file in order to support built-in shrinker of Android Gradle Plugin [#549](https://github.com/mapbox/mapbox-plugins-android/pull/549)
+
 ### 0.3.0 - May 23, 2018
 - Updates the Map SDK to 6.1.3 [#531](https://github.com/mapbox/mapbox-plugins-android/pull/531)
 
