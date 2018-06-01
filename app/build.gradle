@@ -99,8 +99,6 @@ dependencies {
     exclude group: 'net.bytebuddy'
   })
 
-  implementation dependenciesList.materialDialogs
-
   // Square crew
   implementation dependenciesList.timber
   implementation dependenciesList.butterKnife

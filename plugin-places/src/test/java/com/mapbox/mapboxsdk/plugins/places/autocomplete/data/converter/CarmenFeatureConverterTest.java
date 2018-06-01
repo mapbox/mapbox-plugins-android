@@ -42,10 +42,13 @@ public class CarmenFeatureConverterTest {
   }
 
   @Test
-  public void fromCarmenFeature_doesSerializeCorrectly() throws Exception {
+  public void fromCarmenFeature_doesSerializeCorrectly() {
     String json = "{\"type\":\"Feature\",\"id\":\"id\",\"geometry\":{\"type\":\"Point\","
-      + "\"coordinates\":[1.0, 2.0]},\"properties\":{},\"address\":\"address\","
+      + "\"coordinates\":[1.0, 2.0]},\"properties\":{\"hello\":\"world\"},\"address\":\"address\","
       + "\"matching_place_name\":\"matchingPlaceName\",\"language\":\"language\"}";
+
+    JsonObject obj = new JsonObject();
+    obj.addProperty("hello", "world");
 
     CarmenFeature carmenFeature = CarmenFeature.builder()
       .geometry(Point.fromLngLat(1.0, 2.0))
@@ -54,7 +57,7 @@ public class CarmenFeatureConverterTest {
       .id("id")
       .language("language")
       .matchingPlaceName("matchingPlaceName")
-      .properties(new JsonObject())
+      .properties(obj)
       .build();
     String serializedFeature = CarmenFeatureConverter.fromCarmenFeature(carmenFeature);
     assertThat(serializedFeature, equalTo(json));
