@@ -65,7 +65,7 @@ public class PlaceAutocompleteViewModel extends AndroidViewModel
     // Countries
     String countriesJson = placeOptions.country();
     if (countriesJson != null) {
-      geocoderBuilder.geocodingTypes(countriesJson);
+      geocoderBuilder.country(countriesJson);
     }
 
     // Bounding box
