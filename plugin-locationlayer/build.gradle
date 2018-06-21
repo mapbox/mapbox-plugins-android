@@ -50,6 +50,9 @@ dependencies {
   // Timber
   implementation dependenciesList.timber
 
+  // Support lib
+  implementation dependenciesList.supportAppcompatV7
+
   // Unit testing
   testImplementation dependenciesList.junit
   testImplementation dependenciesList.mockito
