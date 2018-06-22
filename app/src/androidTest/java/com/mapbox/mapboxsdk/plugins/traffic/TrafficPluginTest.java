@@ -11,7 +11,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.TrafficActivity;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.Property;
-import com.mapbox.mapboxsdk.utils.OnMapReadyIdlingResource;
+import com.mapbox.mapboxsdk.plugins.utils.OnMapReadyIdlingResource;
 
 import org.junit.After;
 import org.junit.Before;
