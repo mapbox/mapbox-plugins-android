@@ -1,4 +1,4 @@
-package com.mapbox.mapboxsdk.utils
+package com.mapbox.mapboxsdk.plugins.utils
 
 import android.support.test.espresso.IdlingResource
 
@@ -8,7 +8,8 @@ import com.mapbox.mapboxsdk.maps.SupportMapFragment
 
 class OnMapFragmentReadyIdlingResource(fragment: SupportMapFragment?) : IdlingResource, OnMapReadyCallback {
 
-  var mapboxMap: MapboxMap? = null
+  lateinit var mapboxMap: MapboxMap
+
   private var resourceCallback: IdlingResource.ResourceCallback? = null
 
   init {
@@ -20,7 +21,7 @@ class OnMapFragmentReadyIdlingResource(fragment: SupportMapFragment?) : IdlingRe
   }
 
   override fun isIdleNow(): Boolean {
-    return mapboxMap != null
+    return this::mapboxMap.isInitialized
   }
 
   override fun registerIdleTransitionCallback(resourceCallback: IdlingResource.ResourceCallback) {

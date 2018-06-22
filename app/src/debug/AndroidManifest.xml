@@ -12,6 +12,7 @@
 
   <application>
     <activity android:name=".activity.SingleFragmentActivity"/>
+    <activity android:name=".activity.SingleActivity"/>
 
   </application>
 </manifest>

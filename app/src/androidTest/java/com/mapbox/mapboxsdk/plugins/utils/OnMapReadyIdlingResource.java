@@ -1,4 +1,4 @@
-package com.mapbox.mapboxsdk.utils;
+package com.mapbox.mapboxsdk.plugins.utils;
 
 import android.app.Activity;
 import android.support.test.espresso.IdlingResource;
@@ -12,13 +12,15 @@ import java.lang.reflect.Field;
 public class OnMapReadyIdlingResource implements IdlingResource, OnMapReadyCallback {
 
   private MapboxMap mapboxMap;
+  private MapView mapView;
   private IdlingResource.ResourceCallback resourceCallback;
 
   public OnMapReadyIdlingResource(Activity activity) {
     try {
       Field field = activity.getClass().getDeclaredField("mapView");
       field.setAccessible(true);
-      ((MapView) field.get(activity)).getMapAsync(this);
+      mapView = ((MapView) field.get(activity));
+      mapView.getMapAsync(this);
     } catch (Exception err) {
       throw new RuntimeException(err);
     }
@@ -37,6 +39,10 @@ public class OnMapReadyIdlingResource implements IdlingResource, OnMapReadyCallb
   @Override
   public void registerIdleTransitionCallback(ResourceCallback resourceCallback) {
     this.resourceCallback = resourceCallback;
+  }
+
+  public MapView getMapView() {
+    return mapView;
   }
 
   public MapboxMap getMapboxMap() {

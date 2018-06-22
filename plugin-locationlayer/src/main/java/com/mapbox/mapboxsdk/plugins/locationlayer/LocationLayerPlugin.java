@@ -142,7 +142,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    */
   public LocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap,
                              @Nullable LocationEngine locationEngine,
-                             LocationLayerOptions options) {
+                             @NonNull LocationLayerOptions options) {
     this.locationEngine = locationEngine;
     this.mapboxMap = mapboxMap;
     this.mapView = mapView;

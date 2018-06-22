@@ -4,6 +4,7 @@ import android.Manifest
 import android.R
 import android.content.Context
 import android.graphics.Color
+import android.graphics.RectF
 import android.location.Location
 import android.support.test.espresso.Espresso
 import android.support.test.espresso.IdlingRegistry
@@ -15,24 +16,25 @@ import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.rule.GrantPermissionRule
 import android.support.test.runner.AndroidJUnit4
+import com.mapbox.geojson.Feature
+import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.constants.Style
+import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.SupportMapFragment
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.*
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode
 import com.mapbox.mapboxsdk.plugins.testapp.activity.SingleFragmentActivity
-import com.mapbox.mapboxsdk.style.layers.CircleLayer
-import com.mapbox.mapboxsdk.style.layers.Property.VISIBLE
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer
+import com.mapbox.mapboxsdk.plugins.utils.GenericPluginAction
+import com.mapbox.mapboxsdk.plugins.utils.OnMapFragmentReadyIdlingResource
+import com.mapbox.mapboxsdk.plugins.utils.PluginGenerationUtil
+import com.mapbox.mapboxsdk.style.layers.Property
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
-import com.mapbox.mapboxsdk.utils.GenericPluginAction
-import com.mapbox.mapboxsdk.utils.OnMapFragmentReadyIdlingResource
 import org.hamcrest.CoreMatchers.*
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.hamcrest.Matchers
+import org.junit.*
 import org.junit.runner.RunWith
 import timber.log.Timber
 
@@ -45,17 +47,21 @@ class IsolatedActivityPluginTest {
 
   @Rule
   @JvmField
-  var rule = ActivityTestRule(SingleFragmentActivity::class.java, true, true)
+  val rule = ActivityTestRule(SingleFragmentActivity::class.java, true, true)
 
   @Rule
   @JvmField
   val permissionRule: GrantPermissionRule = GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION)
 
-  private var idlingResource: OnMapFragmentReadyIdlingResource? = null
-  private var fragment: SupportMapFragment? = null
-  private var mapboxMap: MapboxMap? = null
-  private var location: Location? = null
-  private var mapView: MapView? = null
+  private lateinit var idlingResource: OnMapFragmentReadyIdlingResource
+  private lateinit var fragment: SupportMapFragment
+  private lateinit var mapboxMap: MapboxMap
+  private val location: Location by lazy {
+    val initLocation = Location("test")
+    initLocation.latitude = 15.0
+    initLocation.longitude = 17.0
+    initLocation
+  }
 
   @Before
   fun beforeTest() {
@@ -67,83 +73,81 @@ class IsolatedActivityPluginTest {
     Timber.e("@Before: register idle resource")
     // If idlingResource is null, throw Kotlin exception
     idlingResource = OnMapFragmentReadyIdlingResource(fragment)
-    IdlingRegistry.getInstance().register(idlingResource!!)
+    IdlingRegistry.getInstance().register(idlingResource)
     Espresso.onView(ViewMatchers.withId(R.id.content)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-    mapboxMap = idlingResource!!.mapboxMap
-
-    location = Location("test")
-    location!!.latitude = 1.0
-    location!!.longitude = 2.0
+    mapboxMap = idlingResource.mapboxMap
   }
 
   @Test
   fun locationLayerPlugin_initializesLocationEngineCorrectlyWhenOnesNotProvided() {
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
-      override fun onGenericPluginAction(plugin: LocationLayerPlugin?, mapboxMap: MapboxMap?,
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
                                          uiController: UiController, context: Context) {
 
-        mapView = fragment?.view as MapView?
-        val locationLayerPlugin = LocationLayerPlugin(mapView!!, mapboxMap!!)
-        val locationEngine = locationLayerPlugin.locationEngine
+        val locationEngine = plugin.locationEngine
         assertThat(locationEngine, notNullValue())
 
         uiController.loopMainThreadForAtLeast(500)
         assertThat(locationEngine?.isConnected, `is`(equalTo(true)))
       }
     }
-    executePluginTest(pluginAction)
+
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, true))
   }
 
   @Test
   fun settingMapStyleImmediatelyBeforeLoadingPlugin_doesStillLoadLayersProperly() {
-    // Using Empty fragment activity to test since Mapbox Style change needs to happen immediately.
-
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
-      override fun onGenericPluginAction(plugin: LocationLayerPlugin?, mapboxMap: MapboxMap?,
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
                                          uiController: UiController, context: Context) {
-        // Sets the map Style first and then the plugin rather than initializing the plugin first,
-        // then changing the style.
-        mapboxMap?.setStyleUrl(Style.SATELLITE)
 
-        mapView = fragment?.view as MapView?
-        val locationLayerPlugin = LocationLayerPlugin(mapView!!, mapboxMap!!, null)
-        locationLayerPlugin.forceLocationUpdate(location)
+        plugin.forceLocationUpdate(location)
 
-        uiController.loopMainThreadForAtLeast(500)
-
-        // Add map change listener
-        assertThat(locationLayerPlugin.renderMode, `is`(equalTo(RenderMode.NORMAL)))
-        // Check that all layers visibilities are set to none
-        val foregroundLayer: SymbolLayer? = mapboxMap.getLayerAs(FOREGROUND_LAYER)
-        val backgroundLayer: SymbolLayer? = mapboxMap.getLayerAs(BACKGROUND_LAYER)
-        val shadowLayer: SymbolLayer? = mapboxMap.getLayerAs(SHADOW_LAYER)
-        val accuracyLayer: CircleLayer? = mapboxMap.getLayerAs(ACCURACY_LAYER)
-
-        assertThat(foregroundLayer?.visibility?.value, `is`(equalTo(VISIBLE)))
-        assertThat(backgroundLayer?.visibility?.value, `is`(equalTo(VISIBLE)))
-        assertThat(shadowLayer?.visibility?.value, `is`(equalTo(VISIBLE)))
-        assertThat(accuracyLayer?.visibility?.value, `is`(equalTo(VISIBLE)))
+        assertThat(plugin.renderMode, `is`(equalTo(RenderMode.NORMAL)))
+        assertThat(isLayerVisible(FOREGROUND_LAYER), `is`(Matchers.equalTo(true)))
+        assertThat(isLayerVisible(BACKGROUND_LAYER), `is`(Matchers.equalTo(true)))
+        assertThat(isLayerVisible(SHADOW_LAYER), `is`(Matchers.equalTo(true)))
+        assertThat(isLayerVisible(ACCURACY_LAYER), `is`(Matchers.equalTo(true)))
+        assertThat(isLayerVisible(BEARING_LAYER), `is`(Matchers.equalTo(false)))
       }
     }
-    executePluginTest(pluginAction)
+
+    executePluginTest(pluginAction, object : GenericPluginAction.PluginProvider<LocationLayerPlugin> {
+      override fun providePlugin(mapView: MapView, mapboxMap: MapboxMap, context: Context): LocationLayerPlugin {
+        // changing the style just before instantiating the plugin
+        mapboxMap.setStyleUrl(Style.SATELLITE)
+        return PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity).providePlugin(mapView, mapboxMap, context)
+      }
+
+      override fun isDataReady(plugin: LocationLayerPlugin, mapboxMap: MapboxMap): Boolean {
+        val source = mapboxMap.getSource(LOCATION_SOURCE)
+        return source != null && (source as GeoJsonSource).querySourceFeatures(null).isNotEmpty()
+      }
+    })
+  }
+
+  private fun isLayerVisible(layerId: String): Boolean {
+    return mapboxMap.getLayer(layerId)?.visibility?.value?.equals(Property.VISIBLE)!!
   }
 
   @Test
   fun locationLayer_doesntShowUntilFirstLocationFix() {
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
-      override fun onGenericPluginAction(plugin: LocationLayerPlugin?, mapboxMap: MapboxMap?,
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
                                          uiController: UiController, context: Context) {
-        mapView = fragment?.view as MapView?
-        val locationLayerPlugin = LocationLayerPlugin(mapView!!, mapboxMap!!, null)
 
-        var source: GeoJsonSource? = mapboxMap.getSourceAs(LOCATION_SOURCE)
-        assertThat(source, nullValue())
+        // Source should be present but empty
+        val source: GeoJsonSource? = mapboxMap.getSourceAs(LOCATION_SOURCE)
+        assertThat(source, notNullValue())
+        assert(queryLocationSourceRenderedFeatures().isEmpty())
 
         // Force the first location update
-        locationLayerPlugin.forceLocationUpdate(location)
+        plugin.forceLocationUpdate(location)
 
-        source = mapboxMap.getSourceAs(LOCATION_SOURCE)
-        assertThat(source, notNullValue())
+        // Check if the puck is visible
+        val latLng = LatLng(location.latitude, location.longitude)
+        val point = mapboxMap.projection.toScreenLocation(latLng)
+        assert(mapboxMap.queryRenderedFeatures(point, LocationLayerConstants.FOREGROUND_ICON).isNotEmpty())
       }
     }
     executePluginTest(pluginAction)
@@ -156,52 +160,63 @@ class IsolatedActivityPluginTest {
   @Test
   fun locationLayerOptions_disablingStaleStateDoesWorkCorrectly() {
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
-      override fun onGenericPluginAction(plugin: LocationLayerPlugin?, mapboxMap: MapboxMap?,
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
                                          uiController: UiController, context: Context) {
-        mapView = fragment?.view as MapView?
 
-        val options = LocationLayerOptions.builder(context)
-            .staleStateTimeout(500)
-            .enableStaleState(false)
-            .build()
-        LocationLayerPlugin(mapView!!, mapboxMap!!, null, options).apply {
-          renderMode = RenderMode.NORMAL
-        }
-
-        uiController.loopMainThreadForAtLeast(700)
-
-        val source: GeoJsonSource? = mapboxMap.getSourceAs(LOCATION_SOURCE)
-        source?.querySourceFeatures(null)?.forEach {
-          assertThat(it.getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(not(true)))
+        queryLocationSourceRenderedFeatures().also {
+          it.forEach {
+            assertThat(it.getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(false))
+          }
         }
       }
     }
-    executePluginTest(pluginAction)
+
+    val options = LocationLayerOptions.builder(fragment.activity)
+      .staleStateTimeout(200)
+      .enableStaleState(false)
+      .build()
+    executePluginTest(pluginAction,
+      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, options))
   }
 
   @Test
-  fun locationLayerOptions_accuracyRingShownUsingTheSetColor() {
+  fun locationLayerOptions_accuracyRingWithColor() {
+    val color = Color.parseColor("#4A90E2")
+    val rgbaColor = PropertyFactory.colorToRgbaString(color)
+
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
-      override fun onGenericPluginAction(plugin: LocationLayerPlugin?, mapboxMap: MapboxMap?,
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
                                          uiController: UiController, context: Context) {
-        mapView = fragment?.view as MapView?
-        LocationLayerPlugin(mapView!!, mapboxMap!!, null).apply {
-          renderMode = RenderMode.NORMAL
-        }
-
-        uiController.loopMainThreadForAtLeast(500)
-
-        val color = Color.parseColor("#4A90E2")
 
         // Check that the source property changes correctly
-        val source: GeoJsonSource? = mapboxMap.getSourceAs(LOCATION_SOURCE)
-        source?.querySourceFeatures(null)?.forEach {
-          assertThat(it.getNumberProperty(PROPERTY_ACCURACY_COLOR).toInt(), `is`(equalTo(color)))
+        queryLocationSourceRenderedFeatures().also {
+          it.forEach {
+            assertThat(it.getStringProperty(PROPERTY_ACCURACY_COLOR), `is`(equalTo(rgbaColor)))
+          }
         }
+      }
+    }
 
-        // Check that the layer shows the correct color
-        val layer: CircleLayer? = mapboxMap.getLayerAs(ACCURACY_LAYER)
-        assertThat(layer?.circleColor?.colorInt, `is`(equalTo(color)))
+    val options = LocationLayerOptions.builder(fragment.activity)
+      .accuracyColor(color)
+      .build()
+    executePluginTest(pluginAction,
+      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, options))
+  }
+
+  @Test
+  fun forceLocationUpdate_doesMoveLocationLayerIconToCorrectPosition() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+
+        plugin.forceLocationUpdate(location)
+
+        val point: Point = queryLocationSourceRenderedFeatures()[0].geometry() as Point
+
+        Assert.assertThat(plugin.locationEngine, nullValue())
+        Assert.assertThat(point.latitude(), `is`(equalTo(location.latitude)))
+        Assert.assertThat(point.longitude(), `is`(equalTo(location.longitude)))
       }
     }
     executePluginTest(pluginAction)
@@ -210,10 +225,21 @@ class IsolatedActivityPluginTest {
   @After
   fun afterTest() {
     Timber.e("@After: unregister idle resource")
-    IdlingRegistry.getInstance().unregister(idlingResource!!)
+    IdlingRegistry.getInstance().unregister(idlingResource)
   }
 
-  private fun executePluginTest(listener: GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin>) {
-    Espresso.onView(ViewMatchers.withId(R.id.content)).perform(GenericPluginAction(mapboxMap, null, listener))
+  private fun queryLocationSourceRenderedFeatures(): List<Feature> {
+    val mapView = fragment.view as MapView
+    return mapboxMap.queryRenderedFeatures(RectF(0f, 0f, mapView.width.toFloat(), mapView.height.toFloat()),
+      FOREGROUND_LAYER,
+      BACKGROUND_LAYER,
+      SHADOW_LAYER,
+      ACCURACY_LAYER,
+      BEARING_LAYER)
+  }
+
+  private fun executePluginTest(listener: GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin>,
+                                pluginProvider: GenericPluginAction.PluginProvider<LocationLayerPlugin> = PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity)) {
+    Espresso.onView(ViewMatchers.withId(R.id.content)).perform(GenericPluginAction(fragment.view as MapView, mapboxMap, pluginProvider, listener))
   }
 }
