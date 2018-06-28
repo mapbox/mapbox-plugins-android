@@ -581,7 +581,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   @SuppressLint("MissingPermission")
   private void setLastLocation() {
     if (locationEngine != null) {
-      updateLocation(locationEngine.getLastLocation());
+      updateLocation(getLastKnownLocation());
     }
   }
 

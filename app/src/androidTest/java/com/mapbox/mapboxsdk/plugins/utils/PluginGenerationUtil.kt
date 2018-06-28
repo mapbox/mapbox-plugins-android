@@ -11,9 +11,12 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 
 class PluginGenerationUtil {
   companion object {
-    fun getLocationLayerPluginProvider(activity: AppCompatActivity, useDefaultEngine: Boolean = false,
+    fun getLocationLayerPluginProvider(activity: AppCompatActivity,
+                                       useDefaultEngine: Boolean = false,
                                        engine: LocationEngine? = null,
-                                       options: LocationLayerOptions? = null): GenericPluginAction.PluginProvider<LocationLayerPlugin> {
+                                       options: LocationLayerOptions? = null,
+                                       registerLifecycleObserver: Boolean = true)
+      : GenericPluginAction.PluginProvider<LocationLayerPlugin> {
       return object : GenericPluginAction.PluginProvider<LocationLayerPlugin> {
         override fun providePlugin(mapView: MapView, mapboxMap: MapboxMap, context: Context): LocationLayerPlugin {
           val plugin = if (useDefaultEngine) {
@@ -25,15 +28,22 @@ class PluginGenerationUtil {
               LocationLayerPlugin(mapView, mapboxMap, engine)
             }
           }
-          activity.lifecycle.addObserver(plugin)
+
+          if (registerLifecycleObserver) {
+            activity.lifecycle.addObserver(plugin)
+          }
+
           return plugin
         }
 
-        override fun isDataReady(plugin: LocationLayerPlugin, mapboxMap: MapboxMap): Boolean {
+        override fun isPluginDataReady(plugin: LocationLayerPlugin, mapboxMap: MapboxMap): Boolean {
           val source = mapboxMap.getSource("mapbox-location-source")
           return source != null && (source as GeoJsonSource).querySourceFeatures(null).isNotEmpty()
         }
       }
     }
+
+    const val MAP_RENDER_DELAY = 250L
+    const val MAP_CONNECTION_DELAY = 1000L
   }
 }
