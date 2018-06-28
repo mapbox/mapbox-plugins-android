@@ -30,8 +30,6 @@ class OnMapFragmentReadyIdlingResource(fragment: SupportMapFragment?) : IdlingRe
 
   override fun onMapReady(mapboxMap: MapboxMap) {
     this.mapboxMap = mapboxMap
-    if (resourceCallback != null) {
-      resourceCallback!!.onTransitionToIdle()
-    }
+    resourceCallback?.onTransitionToIdle()
   }
 }

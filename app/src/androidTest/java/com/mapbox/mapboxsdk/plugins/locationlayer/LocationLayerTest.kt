@@ -14,6 +14,7 @@ import android.support.test.rule.ActivityTestRule
 import android.support.test.rule.GrantPermissionRule
 import android.support.test.rule.GrantPermissionRule.grant
 import android.support.test.runner.AndroidJUnit4
+import com.mapbox.geojson.Feature
 import com.mapbox.mapboxsdk.constants.Style
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.*
@@ -22,8 +23,9 @@ import com.mapbox.mapboxsdk.plugins.testapp.activity.SingleActivity
 import com.mapbox.mapboxsdk.plugins.utils.GenericPluginAction
 import com.mapbox.mapboxsdk.plugins.utils.OnMapReadyIdlingResource
 import com.mapbox.mapboxsdk.plugins.utils.PluginGenerationUtil
+import com.mapbox.mapboxsdk.plugins.utils.PluginGenerationUtil.Companion.MAP_CONNECTION_DELAY
+import com.mapbox.mapboxsdk.plugins.utils.PluginGenerationUtil.Companion.MAP_RENDER_DELAY
 import com.mapbox.mapboxsdk.style.layers.Property
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
@@ -77,6 +79,7 @@ class LocationLayerTest {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
                                          uiController: UiController, context: Context) {
         plugin.renderMode = RenderMode.NORMAL
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
         assertThat(mapboxMap.getSource(LOCATION_SOURCE), notNullValue())
       }
     }
@@ -84,7 +87,7 @@ class LocationLayerTest {
   }
 
   //
-  // Location Layers
+  // Location LayersL
   //
 
   @Test
@@ -93,6 +96,8 @@ class LocationLayerTest {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
                                          uiController: UiController, context: Context) {
         plugin.renderMode = RenderMode.NORMAL
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
         assertThat(isLayerVisible(FOREGROUND_LAYER), `is`(equalTo(true)))
         assertThat(isLayerVisible(BACKGROUND_LAYER), `is`(equalTo(true)))
         assertThat(isLayerVisible(SHADOW_LAYER), `is`(equalTo(true)))
@@ -103,16 +108,14 @@ class LocationLayerTest {
     executePluginTest(pluginAction)
   }
 
-  private fun isLayerVisible(layerId: String): Boolean {
-    return mapboxMap.getLayer(layerId)?.visibility?.value?.equals(Property.VISIBLE)!!
-  }
-
   @Test
   fun renderModeCompass_bearingLayersDoGetAdded() {
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
                                          uiController: UiController, context: Context) {
         plugin.renderMode = RenderMode.COMPASS
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
         assertThat(isLayerVisible(FOREGROUND_LAYER), `is`(equalTo(true)))
         assertThat(isLayerVisible(BACKGROUND_LAYER), `is`(equalTo(true)))
         assertThat(isLayerVisible(SHADOW_LAYER), `is`(equalTo(true)))
@@ -129,6 +132,8 @@ class LocationLayerTest {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
                                          uiController: UiController, context: Context) {
         plugin.renderMode = RenderMode.GPS
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
         assertThat(isLayerVisible(FOREGROUND_LAYER), `is`(equalTo(true)))
         assertThat(isLayerVisible(BACKGROUND_LAYER), `is`(equalTo(true)))
         assertThat(isLayerVisible(SHADOW_LAYER), `is`(equalTo(false)))
@@ -145,7 +150,9 @@ class LocationLayerTest {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
                                          uiController: UiController, context: Context) {
         plugin.renderMode = RenderMode.NORMAL
+        plugin.forceLocationUpdate(location)
         plugin.isLocationLayerEnabled = false
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
 
         // Check that all layers visibilities are set to none
         assertThat(isLayerVisible(FOREGROUND_LAYER), `is`(equalTo(false)))
@@ -164,9 +171,9 @@ class LocationLayerTest {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
                                          uiController: UiController, context: Context) {
         plugin.renderMode = RenderMode.NORMAL
+        plugin.forceLocationUpdate(location)
         mapboxMap.setStyleUrl(Style.SATELLITE)
-
-        uiController.loopMainThreadForAtLeast(1000)
+        uiController.loopMainThreadForAtLeast(MAP_CONNECTION_DELAY)
 
         assertThat(plugin.renderMode, `is`(equalTo(RenderMode.NORMAL)))
 
@@ -179,7 +186,7 @@ class LocationLayerTest {
         assertThat(isLayerVisible(BACKGROUND_LAYER), `is`(equalTo(true)))
         assertThat(isLayerVisible(SHADOW_LAYER), `is`(equalTo(true)))
         assertThat(isLayerVisible(ACCURACY_LAYER), `is`(equalTo(true)))
-        assertThat(isLayerVisible(BEARING_LAYER), `is`(equalTo(true)))
+        assertThat(isLayerVisible(BEARING_LAYER), `is`(equalTo(false)))
       }
     }
     executePluginTest(pluginAction)
@@ -197,22 +204,14 @@ class LocationLayerTest {
         plugin.applyStyle(LocationLayerOptions.builder(context).staleStateTimeout(100).build())
         plugin.forceLocationUpdate(location)
         uiController.loopMainThreadForAtLeast(200)
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
 
-
-        var foregroundLayer: SymbolLayer? = mapboxMap.getLayerAs(FOREGROUND_LAYER)
-        assertThat(foregroundLayer?.iconImage?.getValue(), `is`(equalTo(FOREGROUND_ICON)))
-
-        var backgroundLayer: SymbolLayer? = mapboxMap.getLayerAs(BACKGROUND_LAYER)
-        assertThat(backgroundLayer?.iconImage?.getValue(), `is`(equalTo(BACKGROUND_ICON)))
+        assertThat(queryLocationSourceFeatures()[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(true))
 
         mapboxMap.setStyleUrl(Style.SATELLITE)
-        uiController.loopMainThreadForAtLeast(1000)
+        uiController.loopMainThreadForAtLeast(MAP_CONNECTION_DELAY)
 
-        foregroundLayer = mapboxMap.getLayerAs(FOREGROUND_LAYER)
-        assertThat(foregroundLayer?.iconImage?.getValue(), `is`(equalTo(FOREGROUND_STALE_ICON)))
-
-        backgroundLayer = mapboxMap.getLayerAs(BACKGROUND_LAYER)
-        assertThat(backgroundLayer?.iconImage?.getValue(), `is`(equalTo(BACKGROUND_STALE_ICON)))
+        assertThat(queryLocationSourceFeatures()[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(true))
       }
     }
     executePluginTest(pluginAction)
@@ -222,6 +221,14 @@ class LocationLayerTest {
   fun afterTest() {
     Timber.e("@After: unregister idle resource")
     IdlingRegistry.getInstance().unregister(idlingResource)
+  }
+
+  private fun queryLocationSourceFeatures(): List<Feature> {
+    return mapboxMap.getSourceAs<GeoJsonSource>(LocationLayerConstants.LOCATION_SOURCE)?.querySourceFeatures(null) as List<Feature>
+  }
+
+  private fun isLayerVisible(layerId: String): Boolean {
+    return mapboxMap.getLayer(layerId)?.visibility?.value?.equals(Property.VISIBLE)!!
   }
 
   private fun executePluginTest(listener: GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin>) {

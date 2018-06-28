@@ -2,9 +2,9 @@ package com.mapbox.mapboxsdk.plugins.locationlayer
 
 import android.Manifest
 import android.R
+import android.arch.lifecycle.Lifecycle
 import android.content.Context
 import android.graphics.Color
-import android.graphics.RectF
 import android.location.Location
 import android.support.test.espresso.Espresso
 import android.support.test.espresso.IdlingRegistry
@@ -29,6 +29,9 @@ import com.mapbox.mapboxsdk.plugins.testapp.activity.SingleFragmentActivity
 import com.mapbox.mapboxsdk.plugins.utils.GenericPluginAction
 import com.mapbox.mapboxsdk.plugins.utils.OnMapFragmentReadyIdlingResource
 import com.mapbox.mapboxsdk.plugins.utils.PluginGenerationUtil
+import com.mapbox.mapboxsdk.plugins.utils.PluginGenerationUtil.Companion.MAP_CONNECTION_DELAY
+import com.mapbox.mapboxsdk.plugins.utils.PluginGenerationUtil.Companion.MAP_RENDER_DELAY
+import com.mapbox.mapboxsdk.plugins.utils.TestLifecycleOwner
 import com.mapbox.mapboxsdk.style.layers.Property
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
@@ -43,7 +46,7 @@ import timber.log.Timber
  */
 @RunWith(AndroidJUnit4::class)
 @LargeTest
-class IsolatedActivityPluginTest {
+class LocationLayerPluginTest {
 
   @Rule
   @JvmField
@@ -87,7 +90,7 @@ class IsolatedActivityPluginTest {
         val locationEngine = plugin.locationEngine
         assertThat(locationEngine, notNullValue())
 
-        uiController.loopMainThreadForAtLeast(500)
+        uiController.loopMainThreadForAtLeast(MAP_CONNECTION_DELAY)
         assertThat(locationEngine?.isConnected, `is`(equalTo(true)))
       }
     }
@@ -119,15 +122,11 @@ class IsolatedActivityPluginTest {
         return PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity).providePlugin(mapView, mapboxMap, context)
       }
 
-      override fun isDataReady(plugin: LocationLayerPlugin, mapboxMap: MapboxMap): Boolean {
+      override fun isPluginDataReady(plugin: LocationLayerPlugin, mapboxMap: MapboxMap): Boolean {
         val source = mapboxMap.getSource(LOCATION_SOURCE)
         return source != null && (source as GeoJsonSource).querySourceFeatures(null).isNotEmpty()
       }
     })
-  }
-
-  private fun isLayerVisible(layerId: String): Boolean {
-    return mapboxMap.getLayer(layerId)?.visibility?.value?.equals(Property.VISIBLE)!!
   }
 
   @Test
@@ -139,7 +138,7 @@ class IsolatedActivityPluginTest {
         // Source should be present but empty
         val source: GeoJsonSource? = mapboxMap.getSourceAs(LOCATION_SOURCE)
         assertThat(source, notNullValue())
-        assert(queryLocationSourceRenderedFeatures().isEmpty())
+        assert(queryLocationSourceFeatures().isEmpty())
 
         // Force the first location update
         plugin.forceLocationUpdate(location)
@@ -163,7 +162,11 @@ class IsolatedActivityPluginTest {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
                                          uiController: UiController, context: Context) {
 
-        queryLocationSourceRenderedFeatures().also {
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(200)
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+
+        queryLocationSourceFeatures().also {
           it.forEach {
             assertThat(it.getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(false))
           }
@@ -180,6 +183,60 @@ class IsolatedActivityPluginTest {
   }
 
   @Test
+  fun stillStaleAfterResuming() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        val testLifecycleOwner = TestLifecycleOwner()
+        testLifecycleOwner.markState(Lifecycle.State.RESUMED)
+        testLifecycleOwner.lifecycle.addObserver(plugin)
+
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(300) // engaging stale state
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+        assertThat(queryLocationSourceFeatures()[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(true))
+
+        testLifecycleOwner.markState(Lifecycle.State.CREATED)
+        testLifecycleOwner.markState(Lifecycle.State.RESUMED)
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+
+        assertThat(queryLocationSourceFeatures()[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(true))
+        assertThat(isLayerVisible(ACCURACY_LAYER), `is`(false))
+      }
+    }
+    val options = LocationLayerOptions.builder(fragment.activity)
+      .staleStateTimeout(200)
+      .build()
+    executePluginTest(pluginAction,
+      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, options, false))
+  }
+
+  @Test
+  fun stillNotStaleAfterResuming() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        val testLifecycleOwner = TestLifecycleOwner()
+        testLifecycleOwner.markState(Lifecycle.State.RESUMED)
+        testLifecycleOwner.lifecycle.addObserver(plugin)
+
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+        assertThat(queryLocationSourceFeatures()[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(false))
+
+        testLifecycleOwner.markState(Lifecycle.State.CREATED)
+        testLifecycleOwner.markState(Lifecycle.State.RESUMED)
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+
+        assertThat(queryLocationSourceFeatures()[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(false))
+        assertThat(isLayerVisible(ACCURACY_LAYER), `is`(true))
+      }
+    }
+    executePluginTest(pluginAction,
+      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+  }
+
+  @Test
   fun locationLayerOptions_accuracyRingWithColor() {
     val color = Color.parseColor("#4A90E2")
     val rgbaColor = PropertyFactory.colorToRgbaString(color)
@@ -189,7 +246,7 @@ class IsolatedActivityPluginTest {
                                          uiController: UiController, context: Context) {
 
         // Check that the source property changes correctly
-        queryLocationSourceRenderedFeatures().also {
+        queryLocationSourceFeatures().also {
           it.forEach {
             assertThat(it.getStringProperty(PROPERTY_ACCURACY_COLOR), `is`(equalTo(rgbaColor)))
           }
@@ -212,14 +269,118 @@ class IsolatedActivityPluginTest {
 
         plugin.forceLocationUpdate(location)
 
-        val point: Point = queryLocationSourceRenderedFeatures()[0].geometry() as Point
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+
+        val point: Point = queryLocationSourceFeatures()[0].geometry() as Point
 
         Assert.assertThat(plugin.locationEngine, nullValue())
-        Assert.assertThat(point.latitude(), `is`(equalTo(location.latitude)))
-        Assert.assertThat(point.longitude(), `is`(equalTo(location.longitude)))
+        Assert.assertEquals(point.latitude(), location.latitude, 0.1)
+        Assert.assertEquals(point.longitude(), location.longitude, 0.1)
       }
     }
     executePluginTest(pluginAction)
+  }
+
+  @Test
+  fun disablingPluginHidesPuck() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+        val point: Point = queryLocationSourceFeatures()[0].geometry() as Point
+        Assert.assertEquals(point.latitude(), location.latitude, 0.1)
+        Assert.assertEquals(point.longitude(), location.longitude, 0.1)
+
+        plugin.isLocationLayerEnabled = false
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+        assertThat(queryLocationSourceFeatures().isEmpty(), `is`(true))
+      }
+    }
+    executePluginTest(pluginAction)
+  }
+
+  @Test
+  fun lifecycle_keepsEnabledWhenStoppedAndStarted() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        val testLifecycleOwner = TestLifecycleOwner()
+        testLifecycleOwner.markState(Lifecycle.State.RESUMED)
+        testLifecycleOwner.lifecycle.addObserver(plugin)
+
+        assertThat(plugin.isLocationLayerEnabled, `is`(true))
+        testLifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+        testLifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
+        testLifecycleOwner.markState(Lifecycle.State.RESUMED)
+        assertThat(plugin.isLocationLayerEnabled, `is`(true))
+      }
+    }
+    executePluginTest(pluginAction,
+      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, null, false))
+  }
+
+  @Test
+  fun lifecycle_keepsDisabledWhenStoppedAndStarted() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        plugin.isLocationLayerEnabled = false
+
+        val testLifecycleOwner = TestLifecycleOwner()
+        testLifecycleOwner.markState(Lifecycle.State.RESUMED)
+        testLifecycleOwner.lifecycle.addObserver(plugin)
+
+        assertThat(plugin.isLocationLayerEnabled, `is`(false))
+        testLifecycleOwner.markState(Lifecycle.State.CREATED)
+        testLifecycleOwner.markState(Lifecycle.State.RESUMED)
+        assertThat(plugin.isLocationLayerEnabled, `is`(false))
+      }
+    }
+    executePluginTest(pluginAction,
+      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, null, false))
+  }
+
+  @Test
+  fun lifecycle_ableToChangeStyleAfterResuming() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+
+        val testLifecycleOwner = TestLifecycleOwner()
+        testLifecycleOwner.markState(Lifecycle.State.RESUMED)
+        testLifecycleOwner.lifecycle.addObserver(plugin)
+
+        testLifecycleOwner.markState(Lifecycle.State.CREATED)
+        testLifecycleOwner.markState(Lifecycle.State.RESUMED)
+
+        mapboxMap.setStyle(Style.DARK)
+        uiController.loopMainThreadForAtLeast(MAP_CONNECTION_DELAY)
+      }
+    }
+    executePluginTest(pluginAction,
+      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, null, false))
+  }
+
+  @Test
+  fun lifecycle_interruptedDuringStyleChange() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+
+        val testLifecycleOwner = TestLifecycleOwner()
+        testLifecycleOwner.markState(Lifecycle.State.RESUMED)
+        testLifecycleOwner.lifecycle.addObserver(plugin)
+        mapboxMap.setStyle(Style.DARK)
+
+        testLifecycleOwner.markState(Lifecycle.State.CREATED)
+        testLifecycleOwner.markState(Lifecycle.State.RESUMED)
+        uiController.loopMainThreadForAtLeast(MAP_CONNECTION_DELAY)
+      }
+    }
+    executePluginTest(pluginAction,
+      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, null, false))
   }
 
   @After
@@ -228,14 +389,12 @@ class IsolatedActivityPluginTest {
     IdlingRegistry.getInstance().unregister(idlingResource)
   }
 
-  private fun queryLocationSourceRenderedFeatures(): List<Feature> {
-    val mapView = fragment.view as MapView
-    return mapboxMap.queryRenderedFeatures(RectF(0f, 0f, mapView.width.toFloat(), mapView.height.toFloat()),
-      FOREGROUND_LAYER,
-      BACKGROUND_LAYER,
-      SHADOW_LAYER,
-      ACCURACY_LAYER,
-      BEARING_LAYER)
+  private fun isLayerVisible(layerId: String): Boolean {
+    return mapboxMap.getLayer(layerId)?.visibility?.value?.equals(Property.VISIBLE)!!
+  }
+
+  private fun queryLocationSourceFeatures(): List<Feature> {
+    return mapboxMap.getSourceAs<GeoJsonSource>(LocationLayerConstants.LOCATION_SOURCE)?.querySourceFeatures(null) as List<Feature>
   }
 
   private fun executePluginTest(listener: GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin>,

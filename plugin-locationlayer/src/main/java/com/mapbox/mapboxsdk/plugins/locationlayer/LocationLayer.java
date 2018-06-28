@@ -88,10 +88,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   private Context context;
 
   private final Map<String, Layer> layerMap = new HashMap<>();
-  @SuppressLint("Range")
-  private Feature locationFeature = Feature.fromGeometry(
-    Point.fromLngLat(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY)
-  );
+  private Feature locationFeature;
   private GeoJsonSource locationSource;
 
   private boolean isHidden;
@@ -99,6 +96,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   LocationLayer(MapView mapView, MapboxMap mapboxMap, LocationLayerOptions options) {
     this.mapboxMap = mapboxMap;
     this.context = mapView.getContext();
+    generateLocationFeature(options);
     initializeComponents(options);
     setRenderMode(RenderMode.NORMAL);
   }
@@ -302,11 +300,19 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   // Source actions
   //
 
-  private void addLocationSource() {
-    locationFeature.addNumberProperty(PROPERTY_GPS_BEARING, 0f);
-    locationFeature.addNumberProperty(PROPERTY_COMPASS_BEARING, 0f);
-    locationFeature.addBooleanProperty(PROPERTY_LOCATION_STALE, false);
+  @SuppressLint("Range")
+  private void generateLocationFeature(LocationLayerOptions options) {
+    if (locationFeature == null) {
+      locationFeature = Feature.fromGeometry(
+        Point.fromLngLat(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY)
+      );
+      locationFeature.addNumberProperty(PROPERTY_GPS_BEARING, 0f);
+      locationFeature.addNumberProperty(PROPERTY_COMPASS_BEARING, 0f);
+      locationFeature.addBooleanProperty(PROPERTY_LOCATION_STALE, options.enableStaleState());
+    }
+  }
 
+  private void addLocationSource() {
     locationSource = new GeoJsonSource(
       LOCATION_SOURCE,
       locationFeature,
