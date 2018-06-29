@@ -168,7 +168,8 @@ class LocationLayerTest {
                                          uiController: UiController, context: Context) {
         plugin.renderMode = RenderMode.NORMAL
         plugin.forceLocationUpdate(location)
-        mapboxMap.setStyleUrl(Style.SATELLITE)
+        mapboxMap.setStyleUrl(Style.LIGHT)
+        plugin.forceLocationUpdate(location)
         uiController.loopMainThreadForAtLeast(MAP_CONNECTION_DELAY)
 
         assertThat(plugin.renderMode, `is`(equalTo(RenderMode.NORMAL)))
@@ -193,7 +194,7 @@ class LocationLayerTest {
 //
 
   @Test
-  fun whenDrawableChanged_continuesUsingStaleIcons() {
+  fun whenStyleChanged_continuesUsingStaleIcons() {
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
                                          uiController: UiController, context: Context) {
@@ -202,12 +203,12 @@ class LocationLayerTest {
         uiController.loopMainThreadForAtLeast(200)
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
 
-        assertThat(mapboxMap.queryLocationSourceFeatures(LOCATION_SOURCE)[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(true))
+        assertThat(mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(true))
 
-        mapboxMap.setStyleUrl(Style.SATELLITE)
+        mapboxMap.setStyleUrl(Style.LIGHT)
         uiController.loopMainThreadForAtLeast(MAP_CONNECTION_DELAY)
 
-        assertThat(mapboxMap.queryLocationSourceFeatures(LOCATION_SOURCE)[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(true))
+        assertThat(mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(true))
       }
     }
     executePluginTest(pluginAction)

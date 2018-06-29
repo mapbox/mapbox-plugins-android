@@ -5,7 +5,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.style.layers.Property
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 
-fun MapboxMap.queryLocationSourceFeatures(sourceId: String): List<Feature> {
+fun MapboxMap.querySourceFeatures(sourceId: String): List<Feature> {
   return this.getSourceAs<GeoJsonSource>(sourceId)?.querySourceFeatures(null) as List<Feature>
 }
 
