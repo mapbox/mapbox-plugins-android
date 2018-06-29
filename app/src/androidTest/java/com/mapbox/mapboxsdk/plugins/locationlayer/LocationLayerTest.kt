@@ -83,7 +83,7 @@ class LocationLayerTest {
   }
 
   //
-  // Location LayersL
+  // Location Layers
   //
 
   @Test
