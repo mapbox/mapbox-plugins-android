@@ -16,7 +16,6 @@ import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.rule.GrantPermissionRule
 import android.support.test.runner.AndroidJUnit4
-import com.mapbox.geojson.Feature
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.constants.Style
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -26,13 +25,9 @@ import com.mapbox.mapboxsdk.maps.SupportMapFragment
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.*
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode
 import com.mapbox.mapboxsdk.plugins.testapp.activity.SingleFragmentActivity
-import com.mapbox.mapboxsdk.plugins.utils.GenericPluginAction
-import com.mapbox.mapboxsdk.plugins.utils.OnMapFragmentReadyIdlingResource
-import com.mapbox.mapboxsdk.plugins.utils.PluginGenerationUtil
+import com.mapbox.mapboxsdk.plugins.utils.*
 import com.mapbox.mapboxsdk.plugins.utils.PluginGenerationUtil.Companion.MAP_CONNECTION_DELAY
 import com.mapbox.mapboxsdk.plugins.utils.PluginGenerationUtil.Companion.MAP_RENDER_DELAY
-import com.mapbox.mapboxsdk.plugins.utils.TestLifecycleOwner
-import com.mapbox.mapboxsdk.style.layers.Property
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import org.hamcrest.CoreMatchers.*
@@ -107,11 +102,11 @@ class LocationLayerPluginTest {
         plugin.forceLocationUpdate(location)
 
         assertThat(plugin.renderMode, `is`(equalTo(RenderMode.NORMAL)))
-        assertThat(isLayerVisible(FOREGROUND_LAYER), `is`(Matchers.equalTo(true)))
-        assertThat(isLayerVisible(BACKGROUND_LAYER), `is`(Matchers.equalTo(true)))
-        assertThat(isLayerVisible(SHADOW_LAYER), `is`(Matchers.equalTo(true)))
-        assertThat(isLayerVisible(ACCURACY_LAYER), `is`(Matchers.equalTo(true)))
-        assertThat(isLayerVisible(BEARING_LAYER), `is`(Matchers.equalTo(false)))
+        assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(Matchers.equalTo(true)))
+        assertThat(mapboxMap.isLayerVisible(BACKGROUND_LAYER), `is`(Matchers.equalTo(true)))
+        assertThat(mapboxMap.isLayerVisible(SHADOW_LAYER), `is`(Matchers.equalTo(true)))
+        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(Matchers.equalTo(true)))
+        assertThat(mapboxMap.isLayerVisible(BEARING_LAYER), `is`(Matchers.equalTo(false)))
       }
     }
 
@@ -138,7 +133,7 @@ class LocationLayerPluginTest {
         // Source should be present but empty
         val source: GeoJsonSource? = mapboxMap.getSourceAs(LOCATION_SOURCE)
         assertThat(source, notNullValue())
-        assert(queryLocationSourceFeatures().isEmpty())
+        assert(mapboxMap.queryLocationSourceFeatures(LOCATION_SOURCE).isEmpty())
 
         // Force the first location update
         plugin.forceLocationUpdate(location)
@@ -166,7 +161,7 @@ class LocationLayerPluginTest {
         uiController.loopMainThreadForAtLeast(200)
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
 
-        queryLocationSourceFeatures().also {
+        mapboxMap.queryLocationSourceFeatures(LOCATION_SOURCE).also {
           it.forEach {
             assertThat(it.getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(false))
           }
@@ -194,14 +189,14 @@ class LocationLayerPluginTest {
         plugin.forceLocationUpdate(location)
         uiController.loopMainThreadForAtLeast(300) // engaging stale state
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
-        assertThat(queryLocationSourceFeatures()[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(true))
+        assertThat(mapboxMap.queryLocationSourceFeatures(LOCATION_SOURCE)[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(true))
 
         testLifecycleOwner.markState(Lifecycle.State.CREATED)
         testLifecycleOwner.markState(Lifecycle.State.RESUMED)
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
 
-        assertThat(queryLocationSourceFeatures()[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(true))
-        assertThat(isLayerVisible(ACCURACY_LAYER), `is`(false))
+        assertThat(mapboxMap.queryLocationSourceFeatures(LOCATION_SOURCE)[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(false))
       }
     }
     val options = LocationLayerOptions.builder(fragment.activity)
@@ -222,14 +217,14 @@ class LocationLayerPluginTest {
 
         plugin.forceLocationUpdate(location)
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
-        assertThat(queryLocationSourceFeatures()[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(false))
+        assertThat(mapboxMap.queryLocationSourceFeatures(LOCATION_SOURCE)[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(false))
 
         testLifecycleOwner.markState(Lifecycle.State.CREATED)
         testLifecycleOwner.markState(Lifecycle.State.RESUMED)
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
 
-        assertThat(queryLocationSourceFeatures()[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(false))
-        assertThat(isLayerVisible(ACCURACY_LAYER), `is`(true))
+        assertThat(mapboxMap.queryLocationSourceFeatures(LOCATION_SOURCE)[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(false))
+        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(true))
       }
     }
     executePluginTest(pluginAction,
@@ -246,7 +241,7 @@ class LocationLayerPluginTest {
                                          uiController: UiController, context: Context) {
 
         // Check that the source property changes correctly
-        queryLocationSourceFeatures().also {
+        mapboxMap.queryLocationSourceFeatures(LOCATION_SOURCE).also {
           it.forEach {
             assertThat(it.getStringProperty(PROPERTY_ACCURACY_COLOR), `is`(equalTo(rgbaColor)))
           }
@@ -271,7 +266,7 @@ class LocationLayerPluginTest {
 
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
 
-        val point: Point = queryLocationSourceFeatures()[0].geometry() as Point
+        val point: Point = mapboxMap.queryLocationSourceFeatures(LOCATION_SOURCE)[0].geometry() as Point
 
         Assert.assertThat(plugin.locationEngine, nullValue())
         Assert.assertEquals(point.latitude(), location.latitude, 0.1)
@@ -289,13 +284,13 @@ class LocationLayerPluginTest {
 
         plugin.forceLocationUpdate(location)
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
-        val point: Point = queryLocationSourceFeatures()[0].geometry() as Point
+        val point: Point = mapboxMap.queryLocationSourceFeatures(LOCATION_SOURCE)[0].geometry() as Point
         Assert.assertEquals(point.latitude(), location.latitude, 0.1)
         Assert.assertEquals(point.longitude(), location.longitude, 0.1)
 
         plugin.isLocationLayerEnabled = false
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
-        assertThat(queryLocationSourceFeatures().isEmpty(), `is`(true))
+        assertThat(mapboxMap.queryLocationSourceFeatures(LOCATION_SOURCE).isEmpty(), `is`(true))
       }
     }
     executePluginTest(pluginAction)
@@ -387,14 +382,6 @@ class LocationLayerPluginTest {
   fun afterTest() {
     Timber.e("@After: unregister idle resource")
     IdlingRegistry.getInstance().unregister(idlingResource)
-  }
-
-  private fun isLayerVisible(layerId: String): Boolean {
-    return mapboxMap.getLayer(layerId)?.visibility?.value?.equals(Property.VISIBLE)!!
-  }
-
-  private fun queryLocationSourceFeatures(): List<Feature> {
-    return mapboxMap.getSourceAs<GeoJsonSource>(LocationLayerConstants.LOCATION_SOURCE)?.querySourceFeatures(null) as List<Feature>
   }
 
   private fun executePluginTest(listener: GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin>,

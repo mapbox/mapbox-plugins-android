@@ -14,18 +14,14 @@ import android.support.test.rule.ActivityTestRule
 import android.support.test.rule.GrantPermissionRule
 import android.support.test.rule.GrantPermissionRule.grant
 import android.support.test.runner.AndroidJUnit4
-import com.mapbox.geojson.Feature
 import com.mapbox.mapboxsdk.constants.Style
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.*
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode
 import com.mapbox.mapboxsdk.plugins.testapp.activity.SingleActivity
-import com.mapbox.mapboxsdk.plugins.utils.GenericPluginAction
-import com.mapbox.mapboxsdk.plugins.utils.OnMapReadyIdlingResource
-import com.mapbox.mapboxsdk.plugins.utils.PluginGenerationUtil
+import com.mapbox.mapboxsdk.plugins.utils.*
 import com.mapbox.mapboxsdk.plugins.utils.PluginGenerationUtil.Companion.MAP_CONNECTION_DELAY
 import com.mapbox.mapboxsdk.plugins.utils.PluginGenerationUtil.Companion.MAP_RENDER_DELAY
-import com.mapbox.mapboxsdk.style.layers.Property
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
@@ -98,11 +94,11 @@ class LocationLayerTest {
         plugin.renderMode = RenderMode.NORMAL
         plugin.forceLocationUpdate(location)
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
-        assertThat(isLayerVisible(FOREGROUND_LAYER), `is`(equalTo(true)))
-        assertThat(isLayerVisible(BACKGROUND_LAYER), `is`(equalTo(true)))
-        assertThat(isLayerVisible(SHADOW_LAYER), `is`(equalTo(true)))
-        assertThat(isLayerVisible(ACCURACY_LAYER), `is`(equalTo(true)))
-        assertThat(isLayerVisible(BEARING_LAYER), `is`(equalTo(false)))
+        assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(equalTo(true)))
+        assertThat(mapboxMap.isLayerVisible(BACKGROUND_LAYER), `is`(equalTo(true)))
+        assertThat(mapboxMap.isLayerVisible(SHADOW_LAYER), `is`(equalTo(true)))
+        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(equalTo(true)))
+        assertThat(mapboxMap.isLayerVisible(BEARING_LAYER), `is`(equalTo(false)))
       }
     }
     executePluginTest(pluginAction)
@@ -116,11 +112,11 @@ class LocationLayerTest {
         plugin.renderMode = RenderMode.COMPASS
         plugin.forceLocationUpdate(location)
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
-        assertThat(isLayerVisible(FOREGROUND_LAYER), `is`(equalTo(true)))
-        assertThat(isLayerVisible(BACKGROUND_LAYER), `is`(equalTo(true)))
-        assertThat(isLayerVisible(SHADOW_LAYER), `is`(equalTo(true)))
-        assertThat(isLayerVisible(ACCURACY_LAYER), `is`(equalTo(true)))
-        assertThat(isLayerVisible(BEARING_LAYER), `is`(equalTo(true)))
+        assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(equalTo(true)))
+        assertThat(mapboxMap.isLayerVisible(BACKGROUND_LAYER), `is`(equalTo(true)))
+        assertThat(mapboxMap.isLayerVisible(SHADOW_LAYER), `is`(equalTo(true)))
+        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(equalTo(true)))
+        assertThat(mapboxMap.isLayerVisible(BEARING_LAYER), `is`(equalTo(true)))
       }
     }
     executePluginTest(pluginAction)
@@ -134,11 +130,11 @@ class LocationLayerTest {
         plugin.renderMode = RenderMode.GPS
         plugin.forceLocationUpdate(location)
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
-        assertThat(isLayerVisible(FOREGROUND_LAYER), `is`(equalTo(true)))
-        assertThat(isLayerVisible(BACKGROUND_LAYER), `is`(equalTo(true)))
-        assertThat(isLayerVisible(SHADOW_LAYER), `is`(equalTo(false)))
-        assertThat(isLayerVisible(ACCURACY_LAYER), `is`(equalTo(false)))
-        assertThat(isLayerVisible(BEARING_LAYER), `is`(equalTo(false)))
+        assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(equalTo(true)))
+        assertThat(mapboxMap.isLayerVisible(BACKGROUND_LAYER), `is`(equalTo(true)))
+        assertThat(mapboxMap.isLayerVisible(SHADOW_LAYER), `is`(equalTo(false)))
+        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(equalTo(false)))
+        assertThat(mapboxMap.isLayerVisible(BEARING_LAYER), `is`(equalTo(false)))
       }
     }
     executePluginTest(pluginAction)
@@ -155,11 +151,11 @@ class LocationLayerTest {
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
 
         // Check that all layers visibilities are set to none
-        assertThat(isLayerVisible(FOREGROUND_LAYER), `is`(equalTo(false)))
-        assertThat(isLayerVisible(BACKGROUND_LAYER), `is`(equalTo(false)))
-        assertThat(isLayerVisible(SHADOW_LAYER), `is`(equalTo(false)))
-        assertThat(isLayerVisible(ACCURACY_LAYER), `is`(equalTo(false)))
-        assertThat(isLayerVisible(BEARING_LAYER), `is`(equalTo(false)))
+        assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(equalTo(false)))
+        assertThat(mapboxMap.isLayerVisible(BACKGROUND_LAYER), `is`(equalTo(false)))
+        assertThat(mapboxMap.isLayerVisible(SHADOW_LAYER), `is`(equalTo(false)))
+        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(equalTo(false)))
+        assertThat(mapboxMap.isLayerVisible(BEARING_LAYER), `is`(equalTo(false)))
       }
     }
     executePluginTest(pluginAction)
@@ -182,11 +178,11 @@ class LocationLayerTest {
         assertThat(source, notNullValue())
 
         // Check that all layers visibilities are set to visible
-        assertThat(isLayerVisible(FOREGROUND_LAYER), `is`(equalTo(true)))
-        assertThat(isLayerVisible(BACKGROUND_LAYER), `is`(equalTo(true)))
-        assertThat(isLayerVisible(SHADOW_LAYER), `is`(equalTo(true)))
-        assertThat(isLayerVisible(ACCURACY_LAYER), `is`(equalTo(true)))
-        assertThat(isLayerVisible(BEARING_LAYER), `is`(equalTo(false)))
+        assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(equalTo(true)))
+        assertThat(mapboxMap.isLayerVisible(BACKGROUND_LAYER), `is`(equalTo(true)))
+        assertThat(mapboxMap.isLayerVisible(SHADOW_LAYER), `is`(equalTo(true)))
+        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(equalTo(true)))
+        assertThat(mapboxMap.isLayerVisible(BEARING_LAYER), `is`(equalTo(false)))
       }
     }
     executePluginTest(pluginAction)
@@ -206,12 +202,12 @@ class LocationLayerTest {
         uiController.loopMainThreadForAtLeast(200)
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
 
-        assertThat(queryLocationSourceFeatures()[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(true))
+        assertThat(mapboxMap.queryLocationSourceFeatures(LOCATION_SOURCE)[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(true))
 
         mapboxMap.setStyleUrl(Style.SATELLITE)
         uiController.loopMainThreadForAtLeast(MAP_CONNECTION_DELAY)
 
-        assertThat(queryLocationSourceFeatures()[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(true))
+        assertThat(mapboxMap.queryLocationSourceFeatures(LOCATION_SOURCE)[0].getBooleanProperty(PROPERTY_LOCATION_STALE), `is`(true))
       }
     }
     executePluginTest(pluginAction)
@@ -221,14 +217,6 @@ class LocationLayerTest {
   fun afterTest() {
     Timber.e("@After: unregister idle resource")
     IdlingRegistry.getInstance().unregister(idlingResource)
-  }
-
-  private fun queryLocationSourceFeatures(): List<Feature> {
-    return mapboxMap.getSourceAs<GeoJsonSource>(LocationLayerConstants.LOCATION_SOURCE)?.querySourceFeatures(null) as List<Feature>
-  }
-
-  private fun isLayerVisible(layerId: String): Boolean {
-    return mapboxMap.getLayer(layerId)?.visibility?.value?.equals(Property.VISIBLE)!!
   }
 
   private fun executePluginTest(listener: GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin>) {
