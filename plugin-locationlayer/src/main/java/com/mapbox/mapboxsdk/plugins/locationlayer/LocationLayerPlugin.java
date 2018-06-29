@@ -74,8 +74,27 @@ public final class LocationLayerPlugin implements LifecycleObserver {
 
   private CameraPosition lastCameraPosition;
 
+  /**
+   * Indicates that the plugin is enabled and should be displaying location if Mapbox components are available and
+   * the lifecycle is in a resumed state.
+   */
   private boolean isEnabled;
-  private boolean isStarted;
+
+  /**
+   * Indicated that plugin's lifecycle {@link #onStart()} method has been called or the plugin is initialized..
+   * This allows Mapbox components enter started state and display data, and adds state safety for methods like
+   * {@link #setLocationLayerEnabled(boolean)}
+   * <p>
+   * Initialized in a started state because the plugin can be instantiated after lifecycle's onStart() and
+   * the developer might not register the lifecycle observer but call lifecycle methods manually instead.
+   */
+  private boolean isPluginStarted = true;
+
+  /**
+   * Indicates if Mapbox components are ready to be interacted with. This can differ from {@link #isPluginStarted}
+   * if the Mapbox style is being reloaded.
+   */
+  private boolean isLocationLayerStarted;
 
   private StaleStateManager staleStateManager;
   private final CopyOnWriteArrayList<OnLocationStaleListener> onLocationStaleListeners
@@ -457,8 +476,8 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    */
   @OnLifecycleEvent(Lifecycle.Event.ON_START)
   public void onStart() {
+    isPluginStarted = true;
     onLocationLayerStart();
-    mapView.addOnMapChangedListener(onMapChangedListener);
   }
 
   /**
@@ -469,11 +488,15 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
   public void onStop() {
     onLocationLayerStop();
-    mapView.removeOnMapChangedListener(onMapChangedListener);
+    isPluginStarted = false;
   }
 
   void onLocationLayerStart() {
-    isStarted = true;
+    if (isLocationLayerStarted || !isPluginStarted) {
+      return;
+    }
+
+    isLocationLayerStarted = true;
     if (isEnabled) {
       if (locationEngine != null) {
         locationEngine.addLocationEngineListener(locationEngineListener);
@@ -493,7 +516,11 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   }
 
   void onLocationLayerStop() {
-    isStarted = false;
+    if (!isLocationLayerStarted || !isPluginStarted) {
+      return;
+    }
+
+    isLocationLayerStarted = false;
     locationLayer.hide();
     staleStateManager.onStop();
     compassManager.onStop();
@@ -508,6 +535,8 @@ public final class LocationLayerPlugin implements LifecycleObserver {
 
   private void initialize() {
     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
+    mapView.addOnMapChangedListener(onMapChangedListener);
 
     mapboxMap.addOnMapClickListener(onMapClickListener);
     mapboxMap.addOnMapLongClickListener(onMapLongClickListener);
@@ -564,7 +593,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    * @since 0.1.0
    */
   private void updateLocation(final Location location) {
-    if (location == null || !isStarted) {
+    if (location == null || !isLocationLayerStarted) {
       return;
     }
     staleStateManager.updateLatestLocationTime();
