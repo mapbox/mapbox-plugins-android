@@ -1,5 +1,6 @@
 /**
- * Contains the Data Access Objects where we define the search history database interactions.
+ * Contains the Data Access Objects where we define the search history and favorites database
+ * interactions.
  *
  * @since 0.1.0
  */

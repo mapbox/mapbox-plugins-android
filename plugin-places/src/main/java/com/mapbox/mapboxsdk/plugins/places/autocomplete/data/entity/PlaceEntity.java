@@ -6,15 +6,10 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
-import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.SearchHistory;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.Place;
 
-@Entity(tableName = "searchhistory")
-public class SearchHistoryEntity implements SearchHistory {
-
-  public SearchHistoryEntity(@NonNull String placeId, CarmenFeature carmenFeature) {
-    this.placeId = placeId;
-    this.carmenFeature = carmenFeature;
-  }
+@Entity(tableName = "places")
+public class PlaceEntity implements Place {
 
   @NonNull
   @PrimaryKey
@@ -22,6 +17,15 @@ public class SearchHistoryEntity implements SearchHistory {
 
   @ColumnInfo(name = "carmen_feature")
   private CarmenFeature carmenFeature;
+
+  @ColumnInfo(name = "favorite_item")
+  private boolean favoriteItem;
+
+  public PlaceEntity(@NonNull String placeId, CarmenFeature carmenFeature, boolean favoriteItem) {
+    this.placeId = placeId;
+    this.carmenFeature = carmenFeature;
+    this.favoriteItem = favoriteItem;
+  }
 
   @Override
   @NonNull
@@ -32,5 +36,10 @@ public class SearchHistoryEntity implements SearchHistory {
   @Override
   public CarmenFeature getCarmenFeature() {
     return carmenFeature;
+  }
+
+  @Override
+  public boolean getFavoriteItem() {
+    return favoriteItem;
   }
 }

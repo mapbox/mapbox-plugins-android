@@ -17,7 +17,7 @@ import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.api.geocoding.v5.models.GeocodingResponse;
 import com.mapbox.mapboxsdk.places.R;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.DataRepository;
-import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.entity.SearchHistoryEntity;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.entity.PlaceEntity;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.viewmodel.PlaceAutocompleteViewModel;
 import com.mapbox.mapboxsdk.plugins.places.common.PlaceConstants;
@@ -67,7 +67,7 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
 
   @Nullable
   @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
     Bundle bundle = getArguments();
     accessToken = bundle.getString(PlaceConstants.ACCESS_TOKEN);
@@ -89,7 +89,7 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
   }
 
   @Override
-  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     resultScrollView.getViewTreeObserver().addOnScrollChangedListener(this);
     styleView();
@@ -156,7 +156,7 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
 
   @Override
   public void onClick(CarmenFeature carmenFeature) {
-    viewModel.saveCarmenFeatureToDatabase(carmenFeature);
+    viewModel.saveCarmenFeatureToDatabase(carmenFeature, false);
     if (placeSelectionListener != null) {
       placeSelectionListener.onPlaceSelected(carmenFeature);
     }
@@ -201,10 +201,10 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
     rootView = rootView.findViewById(R.id.root_layout);
   }
 
-  void updateSearchHistoryView(@Nullable List<SearchHistoryEntity> searchHistoryEntities) {
+  void updateSearchHistoryView(@Nullable List<PlaceEntity> searchHistoryEntities) {
     searchHistoryView.getResultsList().clear();
     if (searchHistoryEntities != null) {
-      for (SearchHistoryEntity entity : searchHistoryEntities) {
+      for (PlaceEntity entity : searchHistoryEntities) {
         searchHistoryView.getResultsList().add(entity.getCarmenFeature());
       }
     }
@@ -257,11 +257,11 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
     });
 
     // Subscribe to the search history database
-    DataRepository.getInstance(viewModel.getDatabase()).getSearchHistory().observe(this,
-      new Observer<List<SearchHistoryEntity>>() {
+    DataRepository.getInstance(viewModel.getDatabase()).getPlaces().observe(this,
+      new Observer<List<PlaceEntity>>() {
         @Override
-        public void onChanged(@Nullable List<SearchHistoryEntity> searchHistoryEntities) {
-          updateSearchHistoryView(searchHistoryEntities);
+        public void onChanged(@Nullable List<PlaceEntity> placeEntities) {
+          updateSearchHistoryView(placeEntities);
         }
       });
   }

@@ -13,8 +13,8 @@ import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.api.geocoding.v5.models.GeocodingResponse;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.DataRepository;
-import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.SearchHistoryDatabase;
-import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.entity.SearchHistoryEntity;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.PlacesDatabase;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.entity.PlaceEntity;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions;
 import com.mapbox.mapboxsdk.plugins.places.common.PlaceConstants;
 
@@ -116,16 +116,16 @@ public class PlaceAutocompleteViewModel extends AndroidViewModel
     geocodingLiveData.setValue(null);
   }
 
-  public SearchHistoryDatabase getDatabase() {
-    return SearchHistoryDatabase.getInstance(this.getApplication().getApplicationContext());
+  public PlacesDatabase getDatabase() {
+    return PlacesDatabase.getInstance(this.getApplication().getApplicationContext());
   }
 
-  public void saveCarmenFeatureToDatabase(CarmenFeature carmenFeature) {
+  public void saveCarmenFeatureToDatabase(CarmenFeature carmenFeature, boolean favoriteItem) {
     // Check that the carmenFeature hasn't already been added
     if (carmenFeature.properties().has(PlaceConstants.SAVED_PLACE)) {
       return;
     }
-    SearchHistoryEntity searchHistory = new SearchHistoryEntity(carmenFeature.id(), carmenFeature);
+    PlaceEntity searchHistory = new PlaceEntity(carmenFeature.id(), carmenFeature, favoriteItem);
     DataRepository.getInstance(getDatabase()).addSearchHistoryEntity(searchHistory);
   }
 

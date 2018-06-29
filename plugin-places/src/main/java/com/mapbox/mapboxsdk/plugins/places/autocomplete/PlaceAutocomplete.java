@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
-import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.SearchHistoryDatabase;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.PlacesDatabase;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.ui.PlaceAutocompleteActivity;
 import com.mapbox.mapboxsdk.plugins.places.common.PlaceConstants;
@@ -50,8 +50,9 @@ public final class PlaceAutocomplete {
    * @since 0.1.0
    */
   public static void clearRecentHistory(Context context) {
-    SearchHistoryDatabase database = SearchHistoryDatabase.getInstance(context);
-    SearchHistoryDatabase.deleteAllData(database);
+    PlacesDatabase database = PlacesDatabase.getInstance(context);
+    // TODO only delete none favorites from database
+    PlacesDatabase.deleteAllData(database);
   }
 
   /**

@@ -6,8 +6,8 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.LiveDataTestUtil;
-import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.dao.SearchHistoryDao;
-import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.entity.SearchHistoryEntity;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.dao.PlacesDao;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.entity.PlaceEntity;
 
 import org.junit.After;
 import org.junit.Before;
@@ -24,46 +24,46 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 /**
- * Test the implementation of {@link SearchHistoryDao}
+ * Test the implementation of {@link PlacesDao}
  */
 @RunWith(AndroidJUnit4.class)
-public class SearchHistoryDaoTest {
+public class PlaceDaoTest {
 
   @Rule
   public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
-  private SearchHistoryDatabase database;
+  private PlacesDatabase database;
 
-  private SearchHistoryDao searchHistoryDao;
+  private PlacesDao placeDao;
 
   @Before
-  public void before() throws Exception {
+  public void before() {
     // using an in-memory database because the information stored here disappears when the
     // process is killed
     database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
-      SearchHistoryDatabase.class)
+      PlacesDatabase.class)
       // allowing main thread queries, just for testing
       .allowMainThreadQueries()
       .build();
 
-    searchHistoryDao = database.searchHistoryDao();
+    placeDao = database.placesDao();
   }
 
   @After
-  public void after() throws Exception {
+  public void after() {
     database.close();
   }
 
   @Test
-  public void getAll_whenNoEntityInserted() throws Exception {
-    List<SearchHistoryEntity> searchHistory = LiveDataTestUtil.getValue(searchHistoryDao.getAll());
+  public void getAll_whenNoEntityInserted() throws InterruptedException {
+    List<PlaceEntity> searchHistory = LiveDataTestUtil.getValue(placeDao.getAll());
     assertTrue(searchHistory.isEmpty());
   }
 
   @Test
-  public void getAll_afterInserting() throws Exception {
-    searchHistoryDao.insert(SEARCH_HISTORY_ENTITY);
-    List<SearchHistoryEntity> searchHistory = LiveDataTestUtil.getValue(searchHistoryDao.getAll());
+  public void getAll_afterInserting() throws InterruptedException {
+    placeDao.insert(SEARCH_HISTORY_ENTITY);
+    List<PlaceEntity> searchHistory = LiveDataTestUtil.getValue(placeDao.getAll());
     assertThat(searchHistory.size(), is(1));
     assertThat(searchHistory.get(0).getPlaceId(), is(SEARCH_HISTORY_ENTITY.getPlaceId()));
     assertThat(searchHistory.get(0).getCarmenFeature(),
@@ -73,14 +73,14 @@ public class SearchHistoryDaoTest {
   @Test
   public void deleteSearchHistory_doesDeleteAllEntries() throws Exception {
     // Add two entries
-    searchHistoryDao.insert(SEARCH_HISTORY_ENTITY);
-    searchHistoryDao.insert(SEARCH_HISTORY_ENTITY_TWO);
-    List<SearchHistoryEntity> searchHistory = LiveDataTestUtil.getValue(searchHistoryDao.getAll());
+    placeDao.insert(SEARCH_HISTORY_ENTITY);
+    placeDao.insert(SEARCH_HISTORY_ENTITY_TWO);
+    List<PlaceEntity> searchHistory = LiveDataTestUtil.getValue(placeDao.getAll());
     assertThat(searchHistory.size(), is(2));
 
     // Now delete all entries
-    searchHistoryDao.deleteAllEntries();
-    searchHistory = LiveDataTestUtil.getValue(searchHistoryDao.getAll());
+    placeDao.deleteAllEntries();
+    searchHistory = LiveDataTestUtil.getValue(placeDao.getAll());
     assertThat(searchHistory.size(), is(0));
   }
 }
