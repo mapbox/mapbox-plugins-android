@@ -9,6 +9,7 @@ import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.offline.OfflineDownloadActivity;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +24,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
-public class OfflinePluginTest {
+@Ignore public class OfflinePluginTest {
 
   @Rule
   public ActivityTestRule<OfflineDownloadActivity> rule = new ActivityTestRule<>(OfflineDownloadActivity.class);

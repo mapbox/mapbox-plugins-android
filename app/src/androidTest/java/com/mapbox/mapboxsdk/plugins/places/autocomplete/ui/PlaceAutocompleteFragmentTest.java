@@ -33,7 +33,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(AndroidJUnit4.class)
-public class PlaceAutocompleteFragmentTest {
+@Ignore public class PlaceAutocompleteFragmentTest {
 
   private static final String ACCESS_TOKEN = "pk.XXX";
 

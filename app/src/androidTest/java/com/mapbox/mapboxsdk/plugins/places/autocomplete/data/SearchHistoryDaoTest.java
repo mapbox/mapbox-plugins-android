@@ -11,6 +11,7 @@ import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.entity.SearchHistor
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +28,7 @@ import static org.junit.Assert.assertThat;
  * Test the implementation of {@link SearchHistoryDao}
  */
 @RunWith(AndroidJUnit4.class)
-public class SearchHistoryDaoTest {
+@Ignore public class SearchHistoryDaoTest {
 
   @Rule
   public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
