@@ -1,12 +1,16 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer
 
 import android.Manifest
+import android.R
 import android.content.Context
 import android.location.Location
+import android.support.test.espresso.Espresso
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.IdlingRegistry
 import android.support.test.espresso.UiController
+import android.support.test.espresso.assertion.ViewAssertions
 import android.support.test.espresso.assertion.ViewAssertions.matches
+import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.filters.LargeTest
@@ -20,6 +24,8 @@ import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.*
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode
 import com.mapbox.mapboxsdk.plugins.testapp.activity.SingleActivity
 import com.mapbox.mapboxsdk.plugins.utils.*
+import com.mapbox.mapboxsdk.plugins.utils.MapboxTestingUtils.Companion.MAPBOX_HEAVY_STYLE
+import com.mapbox.mapboxsdk.plugins.utils.MapboxTestingUtils.Companion.pushSourceUpdates
 import com.mapbox.mapboxsdk.plugins.utils.PluginGenerationUtil.Companion.MAP_CONNECTION_DELAY
 import com.mapbox.mapboxsdk.plugins.utils.PluginGenerationUtil.Companion.MAP_RENDER_DELAY
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
@@ -47,6 +53,7 @@ class LocationLayerTest {
   val permissionRule: GrantPermissionRule = grant(Manifest.permission.ACCESS_FINE_LOCATION)
 
   private lateinit var idlingResource: OnMapReadyIdlingResource
+  private lateinit var styleChangeIdlingResource: StyleChangeIdlingResource
   private lateinit var mapboxMap: MapboxMap
   private val location: Location by lazy {
     val initLocation = Location("test")
@@ -60,7 +67,9 @@ class LocationLayerTest {
     Timber.e("@Before: register idle resource")
     // If idlingResource is null, throw Kotlin exception
     idlingResource = OnMapReadyIdlingResource(rule.activity)
+    styleChangeIdlingResource = StyleChangeIdlingResource()
     IdlingRegistry.getInstance().register(idlingResource)
+    IdlingRegistry.getInstance().register(styleChangeIdlingResource)
     onView(withId(android.R.id.content)).check(matches(isDisplayed()))
     mapboxMap = idlingResource.mapboxMap
   }
@@ -214,10 +223,50 @@ class LocationLayerTest {
     executePluginTest(pluginAction)
   }
 
+  @Test
+  fun whenStyleChanged_staleStateChanges() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        plugin.applyStyle(LocationLayerOptions.builder(context).staleStateTimeout(1).build())
+        styleChangeIdlingResource.waitForStyle(idlingResource.mapView, mapboxMap, MAPBOX_HEAVY_STYLE)
+        pushSourceUpdates(styleChangeIdlingResource) {
+          plugin.forceLocationUpdate(location)
+        }
+      }
+    }
+    executePluginTest(pluginAction)
+
+    // Waiting for style to finish loading while pushing updates
+    Espresso.onView(ViewMatchers.withId(R.id.content)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+  }
+
+  @Test
+  fun whenStyleChanged_layerVisibilityUpdates() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        styleChangeIdlingResource.waitForStyle(idlingResource.mapView, mapboxMap, MAPBOX_HEAVY_STYLE)
+        var show = true
+        pushSourceUpdates(styleChangeIdlingResource) {
+          plugin.isLocationLayerEnabled = show
+          show = !show
+        }
+
+        uiController.loopMainThreadForAtLeast(MAP_CONNECTION_DELAY)
+      }
+    }
+    executePluginTest(pluginAction)
+
+    // Waiting for style to finish loading while pushing updates
+    Espresso.onView(ViewMatchers.withId(R.id.content)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+  }
+
   @After
   fun afterTest() {
     Timber.e("@After: unregister idle resource")
     IdlingRegistry.getInstance().unregister(idlingResource)
+    IdlingRegistry.getInstance().unregister(styleChangeIdlingResource)
   }
 
   private fun executePluginTest(listener: GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin>) {
