@@ -51,6 +51,10 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
  * {@link com.mapbox.android.core.permissions.PermissionsManager}. Either
  * {@code ACCESS_COARSE_LOCATION} or {@code ACCESS_FINE_LOCATION} permissions can be requested and
  * this plugin work as expected.
+ * <p>
+ * When instantiating the plugin for the first time, the map's max/min zoom levels will be set to
+ * {@link LocationLayerOptions#MAX_ZOOM_DEFAULT} and {@link LocationLayerOptions#MIN_ZOOM_DEFAULT} respectively.
+ * You can adjust the zoom range with {@link LocationLayerOptions#maxZoom()} and {@link LocationLayerOptions#minZoom()}.
  *
  * @since 0.1.0
  */
