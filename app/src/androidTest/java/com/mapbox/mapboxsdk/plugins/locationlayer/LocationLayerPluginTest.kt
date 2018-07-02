@@ -26,6 +26,8 @@ import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.*
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode
 import com.mapbox.mapboxsdk.plugins.testapp.activity.SingleFragmentActivity
 import com.mapbox.mapboxsdk.plugins.utils.*
+import com.mapbox.mapboxsdk.plugins.utils.MapboxTestingUtils.Companion.MAPBOX_HEAVY_STYLE
+import com.mapbox.mapboxsdk.plugins.utils.MapboxTestingUtils.Companion.pushSourceUpdates
 import com.mapbox.mapboxsdk.plugins.utils.PluginGenerationUtil.Companion.MAP_CONNECTION_DELAY
 import com.mapbox.mapboxsdk.plugins.utils.PluginGenerationUtil.Companion.MAP_RENDER_DELAY
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
@@ -57,6 +59,7 @@ class LocationLayerPluginTest {
   val permissionRule: GrantPermissionRule = GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION)
 
   private lateinit var idlingResource: OnMapFragmentReadyIdlingResource
+  private lateinit var styleChangeIdlingResource: StyleChangeIdlingResource
   private lateinit var fragment: SupportMapFragment
   private lateinit var mapboxMap: MapboxMap
   private val location: Location by lazy {
@@ -76,7 +79,9 @@ class LocationLayerPluginTest {
     Timber.e("@Before: register idle resource")
     // If idlingResource is null, throw Kotlin exception
     idlingResource = OnMapFragmentReadyIdlingResource(fragment)
+    styleChangeIdlingResource = StyleChangeIdlingResource()
     IdlingRegistry.getInstance().register(idlingResource)
+    IdlingRegistry.getInstance().register(styleChangeIdlingResource)
     Espresso.onView(ViewMatchers.withId(R.id.content)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     mapboxMap = idlingResource.mapboxMap
   }
@@ -444,10 +449,89 @@ class LocationLayerPluginTest {
       PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, null, false))
   }
 
+  @Test
+  fun mapChange_settingPluginStyle() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        styleChangeIdlingResource.waitForStyle(fragment.view as MapView, mapboxMap, MAPBOX_HEAVY_STYLE)
+        val options = LocationLayerOptions.builder(fragment.activity)
+          .accuracyColor(Color.RED)
+          .build()
+
+        pushSourceUpdates(styleChangeIdlingResource) {
+          plugin.applyStyle(options)
+        }
+
+        uiController.loopMainThreadForAtLeast(MAP_CONNECTION_DELAY)
+      }
+    }
+    executePluginTest(pluginAction,
+      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+
+    // Waiting for style to finish loading while pushing updates
+    Espresso.onView(ViewMatchers.withId(R.id.content)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+  }
+
+  @Test
+  fun mapChange_forcingLocation() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        styleChangeIdlingResource.waitForStyle(fragment.view as MapView, mapboxMap, MAPBOX_HEAVY_STYLE)
+
+        pushSourceUpdates(styleChangeIdlingResource) {
+          plugin.forceLocationUpdate(location)
+        }
+
+        uiController.loopMainThreadForAtLeast(MAP_CONNECTION_DELAY)
+      }
+    }
+    executePluginTest(pluginAction,
+      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+
+    // Waiting for style to finish loading while pushing updates
+    Espresso.onView(ViewMatchers.withId(R.id.content)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+  }
+
+  @Test
+  fun mapChange_settingMapStyleBeforePluginCreation() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        val options = LocationLayerOptions.builder(fragment.activity)
+          .accuracyColor(Color.RED)
+          .build()
+
+        pushSourceUpdates(styleChangeIdlingResource) {
+          plugin.forceLocationUpdate(location)
+          plugin.applyStyle(options)
+        }
+      }
+    }
+
+    executePluginTest(pluginAction, object : GenericPluginAction.PluginProvider<LocationLayerPlugin> {
+      override fun providePlugin(mapView: MapView, mapboxMap: MapboxMap, context: Context): LocationLayerPlugin {
+        // changing the style just before instantiating the plugin
+        styleChangeIdlingResource.waitForStyle(mapView, mapboxMap, MAPBOX_HEAVY_STYLE)
+        return PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, null, false)
+          .providePlugin(mapView, mapboxMap, context)
+      }
+
+      override fun isPluginDataReady(plugin: LocationLayerPlugin, mapboxMap: MapboxMap): Boolean {
+        return true
+      }
+    })
+
+    // Waiting for style to finish loading while pushing updates
+    Espresso.onView(ViewMatchers.withId(R.id.content)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+  }
+
   @After
   fun afterTest() {
     Timber.e("@After: unregister idle resource")
     IdlingRegistry.getInstance().unregister(idlingResource)
+    IdlingRegistry.getInstance().unregister(styleChangeIdlingResource)
   }
 
   private fun executePluginTest(listener: GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin>,
