@@ -15,7 +15,9 @@ import android.support.test.rule.ActivityTestRule
 import android.support.test.rule.GrantPermissionRule
 import android.support.test.rule.GrantPermissionRule.grant
 import android.support.test.runner.AndroidJUnit4
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.constants.Style
+import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.*
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode
@@ -30,6 +32,7 @@ import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.Matchers.equalTo
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -56,6 +59,7 @@ class LocationLayerTest {
     val initLocation = Location("test")
     initLocation.latitude = 15.0
     initLocation.longitude = 17.0
+    initLocation.accuracy = 2000f
     initLocation
   }
 
@@ -257,6 +261,62 @@ class LocationLayerTest {
 
     // Waiting for style to finish loading while pushing updates
     onView(withId(R.id.content)).check(matches(isDisplayed()))
+  }
+
+  @Test
+  fun accuracy_visibleWithNewLocation() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        mapboxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location), 16.0))
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+
+        assertEquals(Utils.calculateZoomLevelRadius(mapboxMap, location) /*meters projected to radius on zoom 16*/,
+          mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0]
+            .getNumberProperty(PROPERTY_ACCURACY_RADIUS).toFloat(), 0.1f)
+      }
+    }
+    executePluginTest(pluginAction)
+  }
+
+  @Test
+  fun accuracy_visibleWhenCameraEased() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+        mapboxMap.easeCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location), 16.0), 300)
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY + 300)
+
+        assertEquals(Utils.calculateZoomLevelRadius(mapboxMap, location) /*meters projected to radius on zoom 16*/,
+          mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0]
+            .getNumberProperty(PROPERTY_ACCURACY_RADIUS).toFloat(), 0.1f)
+      }
+    }
+    executePluginTest(pluginAction)
+  }
+
+  @Test
+  fun accuracy_visibleWhenCameraMoved() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+        mapboxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location), 16.0))
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY + 300)
+
+        assertEquals(Utils.calculateZoomLevelRadius(mapboxMap, location) /*meters projected to radius on zoom 16*/,
+          mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0]
+            .getNumberProperty(PROPERTY_ACCURACY_RADIUS).toFloat(), 0.1f)
+      }
+    }
+    executePluginTest(pluginAction)
   }
 
   @After

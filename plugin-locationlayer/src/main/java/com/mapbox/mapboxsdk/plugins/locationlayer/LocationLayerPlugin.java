@@ -20,6 +20,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapView.OnMapChangedListener;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.MapboxMap.OnCameraIdleListener;
 import com.mapbox.mapboxsdk.maps.MapboxMap.OnCameraMoveListener;
 import com.mapbox.mapboxsdk.maps.MapboxMap.OnMapClickListener;
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode;
@@ -72,6 +73,11 @@ public final class LocationLayerPlugin implements LifecycleObserver {
 
   private LocationLayerAnimator locationLayerAnimator;
 
+  /**
+   * Holds last location which is being returned in the {@link #getLastKnownLocation()}
+   * when there is no {@link #locationEngine} set or when the last location returned by the engine is null.
+   */
+  private Location lastLocation;
   private CameraPosition lastCameraPosition;
 
   /**
@@ -358,7 +364,11 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   @Nullable
   @RequiresPermission(anyOf = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION})
   public Location getLastKnownLocation() {
-    return locationEngine != null ? locationEngine.getLastLocation() : null;
+    Location location = locationEngine != null ? locationEngine.getLastLocation() : null;
+    if (location == null) {
+      location = lastLocation;
+    }
+    return location;
   }
 
   /**
@@ -508,6 +518,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     }
     if (mapboxMap != null) {
       mapboxMap.addOnCameraMoveListener(onCameraMoveListener);
+      mapboxMap.addOnCameraIdleListener(onCameraIdleListener);
     }
     if (options.enableStaleState()) {
       staleStateManager.onStart();
@@ -530,6 +541,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     }
     if (mapboxMap != null) {
       mapboxMap.removeOnCameraMoveListener(onCameraMoveListener);
+      mapboxMap.removeOnCameraIdleListener(onCameraIdleListener);
     }
   }
 
@@ -593,14 +605,19 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    * @since 0.1.0
    */
   private void updateLocation(final Location location) {
-    if (location == null || !isLocationLayerStarted) {
+    if (location == null) {
+      return;
+    } else if (!isLocationLayerStarted) {
+      lastLocation = location;
       return;
     }
+
     staleStateManager.updateLatestLocationTime();
     CameraPosition currentCameraPosition = mapboxMap.getCameraPosition();
     boolean isGpsNorth = getCameraMode() == CameraMode.TRACKING_GPS_NORTH;
     locationLayerAnimator.feedNewLocation(location, currentCameraPosition, isGpsNorth);
     locationLayer.updateAccuracyRadius(location);
+    lastLocation = location;
   }
 
   private void updateCompassHeading(float heading) {
@@ -646,9 +663,15 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   }
 
   private OnCameraMoveListener onCameraMoveListener = new OnCameraMoveListener() {
-
     @Override
     public void onCameraMove() {
+      updateLayerOffsets(false);
+    }
+  };
+
+  private OnCameraIdleListener onCameraIdleListener = new OnCameraIdleListener() {
+    @Override
+    public void onCameraIdle() {
       updateLayerOffsets(false);
     }
   };
