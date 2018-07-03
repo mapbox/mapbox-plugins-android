@@ -48,6 +48,7 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.PROPERTY_SHADOW_ICON_OFFSET;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.SHADOW_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.SHADOW_LAYER;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.calculateZoomLevelRadius;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.generateShadow;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.getBitmapFromDrawable;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.getDrawable;
@@ -263,18 +264,9 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
 
   void updateAccuracyRadius(Location location) {
     if (renderMode == RenderMode.COMPASS || renderMode == RenderMode.NORMAL) {
-      locationFeature.addNumberProperty(PROPERTY_ACCURACY_RADIUS, calculateZoomLevelRadius(location));
+      locationFeature.addNumberProperty(PROPERTY_ACCURACY_RADIUS, calculateZoomLevelRadius(mapboxMap, location));
       refreshSource();
     }
-  }
-
-  private float calculateZoomLevelRadius(Location location) {
-    if (location == null) {
-      return 0;
-    }
-    double metersPerPixel = mapboxMap.getProjection().getMetersPerPixelAtLatitude(
-      location.getLatitude());
-    return (float) (location.getAccuracy() * (1 / metersPerPixel));
   }
 
   void updateForegroundOffset(double tilt) {

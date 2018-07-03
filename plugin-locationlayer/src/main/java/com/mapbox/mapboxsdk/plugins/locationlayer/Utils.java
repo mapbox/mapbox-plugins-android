@@ -6,11 +6,14 @@ import android.graphics.Canvas;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+
+import com.mapbox.mapboxsdk.maps.MapboxMap;
 
 public final class Utils {
 
@@ -75,6 +78,15 @@ public final class Utils {
       drawable.mutate().setColorFilter(tintColor, PorterDuff.Mode.SRC_IN);
     }
     return drawable;
+  }
+
+  static float calculateZoomLevelRadius(MapboxMap mapboxMap, Location location) {
+    if (location == null) {
+      return 0;
+    }
+    double metersPerPixel = mapboxMap.getProjection().getMetersPerPixelAtLatitude(
+      location.getLatitude());
+    return (float) (location.getAccuracy() * (1 / metersPerPixel));
   }
 
   /**
