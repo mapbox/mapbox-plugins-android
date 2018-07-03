@@ -4,13 +4,10 @@ import android.Manifest
 import android.R
 import android.content.Context
 import android.location.Location
-import android.support.test.espresso.Espresso
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.IdlingRegistry
 import android.support.test.espresso.UiController
-import android.support.test.espresso.assertion.ViewAssertions
 import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.filters.LargeTest
@@ -103,11 +100,11 @@ class LocationLayerTest {
         plugin.renderMode = RenderMode.NORMAL
         plugin.forceLocationUpdate(location)
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
-        assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(equalTo(true)))
-        assertThat(mapboxMap.isLayerVisible(BACKGROUND_LAYER), `is`(equalTo(true)))
-        assertThat(mapboxMap.isLayerVisible(SHADOW_LAYER), `is`(equalTo(true)))
-        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(equalTo(true)))
-        assertThat(mapboxMap.isLayerVisible(BEARING_LAYER), `is`(equalTo(false)))
+        assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(BACKGROUND_LAYER), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(SHADOW_LAYER), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(BEARING_LAYER), `is`(false))
       }
     }
     executePluginTest(pluginAction)
@@ -121,11 +118,11 @@ class LocationLayerTest {
         plugin.renderMode = RenderMode.COMPASS
         plugin.forceLocationUpdate(location)
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
-        assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(equalTo(true)))
-        assertThat(mapboxMap.isLayerVisible(BACKGROUND_LAYER), `is`(equalTo(true)))
-        assertThat(mapboxMap.isLayerVisible(SHADOW_LAYER), `is`(equalTo(true)))
-        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(equalTo(true)))
-        assertThat(mapboxMap.isLayerVisible(BEARING_LAYER), `is`(equalTo(true)))
+        assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(BACKGROUND_LAYER), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(SHADOW_LAYER), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(BEARING_LAYER), `is`(true))
       }
     }
     executePluginTest(pluginAction)
@@ -139,11 +136,11 @@ class LocationLayerTest {
         plugin.renderMode = RenderMode.GPS
         plugin.forceLocationUpdate(location)
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
-        assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(equalTo(true)))
-        assertThat(mapboxMap.isLayerVisible(BACKGROUND_LAYER), `is`(equalTo(true)))
-        assertThat(mapboxMap.isLayerVisible(SHADOW_LAYER), `is`(equalTo(false)))
-        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(equalTo(false)))
-        assertThat(mapboxMap.isLayerVisible(BEARING_LAYER), `is`(equalTo(false)))
+        assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(BACKGROUND_LAYER), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(SHADOW_LAYER), `is`(false))
+        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(false))
+        assertThat(mapboxMap.isLayerVisible(BEARING_LAYER), `is`(false))
       }
     }
     executePluginTest(pluginAction)
@@ -160,11 +157,11 @@ class LocationLayerTest {
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
 
         // Check that all layers visibilities are set to none
-        assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(equalTo(false)))
-        assertThat(mapboxMap.isLayerVisible(BACKGROUND_LAYER), `is`(equalTo(false)))
-        assertThat(mapboxMap.isLayerVisible(SHADOW_LAYER), `is`(equalTo(false)))
-        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(equalTo(false)))
-        assertThat(mapboxMap.isLayerVisible(BEARING_LAYER), `is`(equalTo(false)))
+        assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(false))
+        assertThat(mapboxMap.isLayerVisible(BACKGROUND_LAYER), `is`(false))
+        assertThat(mapboxMap.isLayerVisible(SHADOW_LAYER), `is`(false))
+        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(false))
+        assertThat(mapboxMap.isLayerVisible(BEARING_LAYER), `is`(false))
       }
     }
     executePluginTest(pluginAction)
@@ -188,11 +185,11 @@ class LocationLayerTest {
         assertThat(source, notNullValue())
 
         // Check that all layers visibilities are set to visible
-        assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(equalTo(true)))
-        assertThat(mapboxMap.isLayerVisible(BACKGROUND_LAYER), `is`(equalTo(true)))
-        assertThat(mapboxMap.isLayerVisible(SHADOW_LAYER), `is`(equalTo(true)))
-        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(equalTo(true)))
-        assertThat(mapboxMap.isLayerVisible(BEARING_LAYER), `is`(equalTo(false)))
+        assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(BACKGROUND_LAYER), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(SHADOW_LAYER), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(BEARING_LAYER), `is`(false))
       }
     }
     executePluginTest(pluginAction)
@@ -238,7 +235,7 @@ class LocationLayerTest {
     executePluginTest(pluginAction)
 
     // Waiting for style to finish loading while pushing updates
-    Espresso.onView(ViewMatchers.withId(R.id.content)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    onView(withId(R.id.content)).check(matches(isDisplayed()))
   }
 
   @Test
@@ -259,7 +256,7 @@ class LocationLayerTest {
     executePluginTest(pluginAction)
 
     // Waiting for style to finish loading while pushing updates
-    Espresso.onView(ViewMatchers.withId(R.id.content)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    onView(withId(R.id.content)).check(matches(isDisplayed()))
   }
 
   @After
