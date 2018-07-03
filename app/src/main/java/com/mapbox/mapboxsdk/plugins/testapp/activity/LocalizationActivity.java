@@ -164,6 +164,12 @@ public class LocalizationActivity extends AppCompatActivity implements OnMapRead
       case R.id.arabic:
         localizationPlugin.setMapLanguage(MapLocale.ARABIC);
         return true;
+      case R.id.japanese:
+        localizationPlugin.setMapLanguage(MapLocale.JAPANESE);
+        return true;
+      case R.id.korean:
+        localizationPlugin.setMapLanguage(MapLocale.KOREAN);
+        return true;
       case android.R.id.home:
         finish();
         return true;
