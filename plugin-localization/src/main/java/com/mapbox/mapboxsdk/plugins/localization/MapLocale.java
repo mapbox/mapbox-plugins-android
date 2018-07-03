@@ -121,36 +121,42 @@ public final class MapLocale {
    * UK Bounding Box extracted from Open Street Map
    */
   static final LatLngBounds UK_BBOX = new LatLngBounds.Builder()
+    .include(new LatLng(59.360249, -8.623555))
     .include(new LatLng(49.906193, 1.759)).build();
 
   /**
    * Canada Bounding Box extracted from Open Street Map
    */
   static final LatLngBounds CANADA_BBOX = new LatLngBounds.Builder()
+    .include(new LatLng(83.110626, -141.0))
     .include(new LatLng(41.67598, -52.636291)).build();
 
   /**
    * China Bounding Box extracted from Open Street Map
    */
   static final LatLngBounds CHINA_BBOX = new LatLngBounds.Builder()
+    .include(new LatLng(53.56086, 73.557693))
     .include(new LatLng(15.775416, 134.773911)).build();
 
   /**
    * Germany Bounding Box extracted from Open Street Map
    */
   static final LatLngBounds GERMANY_BBOX = new LatLngBounds.Builder()
+    .include(new LatLng(55.055637, 5.865639))
     .include(new LatLng(47.275776, 15.039889)).build();
 
   /**
    * Korea Bounding Box extracted from Open Street Map
    */
   static final LatLngBounds KOREA_BBOX = new LatLngBounds.Builder()
+    .include(new LatLng(38.612446, 125.887108))
     .include(new LatLng(33.190945, 129.584671)).build();
 
   /**
    * Japan Bounding Box extracted from Open Street Map
    */
   static final LatLngBounds JAPAN_BBOX = new LatLngBounds.Builder()
+    .include(new LatLng(45.52314, 122.93853))
     .include(new LatLng(24.249472, 145.820892)).build();
 
   /**
@@ -163,12 +169,14 @@ public final class MapLocale {
    * Italy Bounding Box extracted from Open Street Map
    */
   static final LatLngBounds ITALY_BBOX = new LatLngBounds.Builder()
+    .include(new LatLng(47.095196, 6.614889))
     .include(new LatLng(36.652779, 18.513445)).build();
 
   /**
    * Peoples Republic of China Bounding Box extracted from Open Street Map
    */
   static final LatLngBounds PRC_BBOX = new LatLngBounds.Builder()
+    .include(new LatLng(53.56086, 73.557693))
     .include(new LatLng(15.775416, 134.773911)).build();
 
   /*
