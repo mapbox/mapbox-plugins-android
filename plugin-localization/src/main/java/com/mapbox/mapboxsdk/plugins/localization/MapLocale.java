@@ -163,6 +163,7 @@ public final class MapLocale {
    * France Bounding Box extracted from Open Street Map
    */
   static final LatLngBounds FRANCE_BBOX = new LatLngBounds.Builder()
+    .include(new LatLng(51.092804, -5.142222))
     .include(new LatLng(41.371582, 9.561556)).build();
 
   /**
