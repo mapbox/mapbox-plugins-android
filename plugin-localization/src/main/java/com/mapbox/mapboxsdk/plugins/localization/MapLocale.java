@@ -90,9 +90,19 @@ public final class MapLocale {
    */
   public static final String SIMPLIFIED_CHINESE = "name_zh-Hans";
 
+  /**
+   * Japanese (if available, otherwise same as name)
+   */
+  public static final String JAPANESE = "name_ja";
+
+  /**
+   * Korean (if available, otherwise same as name)
+   */
+  public static final String KOREAN = "name_ko";
+
   @Retention(SOURCE)
-  @StringDef( {LOCAL_NAME, ENGLISH, FRENCH, SIMPLIFIED_CHINESE, ARABIC, SPANISH, GERMAN, PORTUGUESE,
-    RUSSIAN, CHINESE})
+  @StringDef({LOCAL_NAME, ENGLISH, FRENCH, SIMPLIFIED_CHINESE, ARABIC, SPANISH, GERMAN, PORTUGUESE,
+      RUSSIAN, CHINESE, JAPANESE, KOREAN})
   public @interface Languages {
   }
 
@@ -111,63 +121,54 @@ public final class MapLocale {
    * UK Bounding Box extracted from Open Street Map
    */
   static final LatLngBounds UK_BBOX = new LatLngBounds.Builder()
-    .include(new LatLng(59.360249, -8.623555))
     .include(new LatLng(49.906193, 1.759)).build();
 
   /**
    * Canada Bounding Box extracted from Open Street Map
    */
   static final LatLngBounds CANADA_BBOX = new LatLngBounds.Builder()
-    .include(new LatLng(83.110626, -141.0))
     .include(new LatLng(41.67598, -52.636291)).build();
 
   /**
    * China Bounding Box extracted from Open Street Map
    */
   static final LatLngBounds CHINA_BBOX = new LatLngBounds.Builder()
-    .include(new LatLng(53.56086, 73.557693))
     .include(new LatLng(15.775416, 134.773911)).build();
 
   /**
    * Germany Bounding Box extracted from Open Street Map
    */
   static final LatLngBounds GERMANY_BBOX = new LatLngBounds.Builder()
-    .include(new LatLng(55.055637, 5.865639))
     .include(new LatLng(47.275776, 15.039889)).build();
 
   /**
    * Korea Bounding Box extracted from Open Street Map
    */
   static final LatLngBounds KOREA_BBOX = new LatLngBounds.Builder()
-    .include(new LatLng(38.612446, 125.887108))
     .include(new LatLng(33.190945, 129.584671)).build();
 
   /**
    * Japan Bounding Box extracted from Open Street Map
    */
   static final LatLngBounds JAPAN_BBOX = new LatLngBounds.Builder()
-    .include(new LatLng(45.52314, 122.93853))
     .include(new LatLng(24.249472, 145.820892)).build();
 
   /**
    * France Bounding Box extracted from Open Street Map
    */
   static final LatLngBounds FRANCE_BBOX = new LatLngBounds.Builder()
-    .include(new LatLng(51.092804, -5.142222))
     .include(new LatLng(41.371582, 9.561556)).build();
 
   /**
    * Italy Bounding Box extracted from Open Street Map
    */
   static final LatLngBounds ITALY_BBOX = new LatLngBounds.Builder()
-    .include(new LatLng(47.095196, 6.614889))
     .include(new LatLng(36.652779, 18.513445)).build();
 
   /**
    * Peoples Republic of China Bounding Box extracted from Open Street Map
    */
   static final LatLngBounds PRC_BBOX = new LatLngBounds.Builder()
-    .include(new LatLng(53.56086, 73.557693))
     .include(new LatLng(15.775416, 134.773911)).build();
 
   /*
