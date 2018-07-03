@@ -1,5 +1,7 @@
 package com.mapbox.mapboxsdk.plugins.utils
 
+import android.os.Handler
+import android.os.Looper
 import android.support.test.espresso.IdlingResource
 
 import com.mapbox.mapboxsdk.maps.MapboxMap
@@ -13,7 +15,9 @@ class OnMapFragmentReadyIdlingResource(fragment: SupportMapFragment?) : IdlingRe
   private var resourceCallback: IdlingResource.ResourceCallback? = null
 
   init {
-    fragment?.getMapAsync(this)
+    Handler(Looper.getMainLooper()).post {
+      fragment?.getMapAsync(this)
+    }
   }
 
   override fun getName(): String {

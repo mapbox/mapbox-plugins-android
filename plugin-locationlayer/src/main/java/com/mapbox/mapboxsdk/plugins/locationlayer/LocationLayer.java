@@ -25,9 +25,8 @@ import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.ACCURACY_LAYER;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.BACKGROUND_ICON;
@@ -87,7 +86,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   private LocationLayerOptions options;
   private Context context;
 
-  private final Map<String, Layer> layerMap = new HashMap<>();
+  private final List<String> layerMap = new ArrayList<>();
   private Feature locationFeature;
   private GeoJsonSource locationSource;
 
@@ -176,17 +175,19 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   }
 
   void hide() {
-    for (String layerId : layerMap.keySet()) {
+    for (String layerId : layerMap) {
       setLayerVisibility(layerId, false);
     }
     isHidden = true;
   }
 
   private void setLayerVisibility(String layerId, boolean visible) {
-    Layer layer = layerMap.get(layerId);
-    String targetVisibility = visible ? VISIBLE : NONE;
-    if (!layer.getVisibility().value.equals(targetVisibility)) {
-      layer.setProperties(visibility(visible ? VISIBLE : NONE));
+    Layer layer = mapboxMap.getLayer(layerId);
+    if (layer != null) {
+      String targetVisibility = visible ? VISIBLE : NONE;
+      if (!layer.getVisibility().value.equals(targetVisibility)) {
+        layer.setProperties(visibility(visible ? VISIBLE : NONE));
+      }
     }
   }
 
@@ -252,7 +253,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
     } else {
       mapboxMap.addLayerBelow(layer, idBelowLayer);
     }
-    layerMap.put(layer.getId(), layer);
+    layerMap.add(layer.getId());
   }
 
   private void setBearingProperty(String propertyId, float bearing) {
@@ -323,14 +324,17 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   }
 
   private void refreshSource() {
-    locationSource.setGeoJson(locationFeature);
+    GeoJsonSource source = mapboxMap.getSourceAs(LOCATION_SOURCE);
+    if (source != null) {
+      locationSource.setGeoJson(locationFeature);
+    }
   }
 
   private void setLocationPoint(Point locationPoint) {
     JsonObject properties = locationFeature.properties();
     if (properties != null) {
       locationFeature = Feature.fromGeometry(locationPoint, properties);
-      locationSource.setGeoJson(locationFeature);
+      refreshSource();
     }
   }
 
@@ -386,8 +390,9 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   }
 
   private void styleScaling(LocationLayerOptions options) {
-    for (Layer layer : layerMap.values()) {
-      if (layer instanceof SymbolLayer) {
+    for (String layerId : layerMap) {
+      Layer layer = mapboxMap.getLayer(layerId);
+      if (layer != null && layer instanceof SymbolLayer) {
         layer.setProperties(
           iconSize(
             interpolate(linear(), zoom(),

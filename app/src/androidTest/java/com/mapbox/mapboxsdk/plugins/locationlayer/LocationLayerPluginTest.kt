@@ -5,13 +5,13 @@ import android.R
 import android.arch.lifecycle.Lifecycle
 import android.content.Context
 import android.graphics.Color
+import android.graphics.RectF
 import android.location.Location
-import android.support.test.espresso.Espresso
+import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.IdlingRegistry
 import android.support.test.espresso.UiController
-import android.support.test.espresso.assertion.ViewAssertions
-import android.support.test.espresso.matcher.ViewMatchers
-import android.support.test.espresso.matcher.ViewMatchers.assertThat
+import android.support.test.espresso.assertion.ViewAssertions.matches
+import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.rule.GrantPermissionRule
@@ -33,7 +33,6 @@ import com.mapbox.mapboxsdk.plugins.utils.PluginGenerationUtil.Companion.MAP_REN
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import org.hamcrest.CoreMatchers.*
-import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
@@ -82,7 +81,7 @@ class LocationLayerPluginTest {
     styleChangeIdlingResource = StyleChangeIdlingResource()
     IdlingRegistry.getInstance().register(idlingResource)
     IdlingRegistry.getInstance().register(styleChangeIdlingResource)
-    Espresso.onView(ViewMatchers.withId(R.id.content)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    onView(withId(R.id.content)).check(matches(isDisplayed()))
     mapboxMap = idlingResource.mapboxMap
   }
 
@@ -96,7 +95,7 @@ class LocationLayerPluginTest {
         assertThat(locationEngine, notNullValue())
 
         uiController.loopMainThreadForAtLeast(MAP_CONNECTION_DELAY)
-        assertThat(locationEngine?.isConnected, `is`(equalTo(true)))
+        assertThat(locationEngine?.isConnected, `is`(true))
       }
     }
 
@@ -112,11 +111,11 @@ class LocationLayerPluginTest {
         uiController.loopMainThreadForAtLeast(MAP_CONNECTION_DELAY)
 
         assertThat(plugin.renderMode, `is`(equalTo(RenderMode.NORMAL)))
-        assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(Matchers.equalTo(true)))
-        assertThat(mapboxMap.isLayerVisible(BACKGROUND_LAYER), `is`(Matchers.equalTo(true)))
-        assertThat(mapboxMap.isLayerVisible(SHADOW_LAYER), `is`(Matchers.equalTo(true)))
-        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(Matchers.equalTo(true)))
-        assertThat(mapboxMap.isLayerVisible(BEARING_LAYER), `is`(Matchers.equalTo(false)))
+        assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(BACKGROUND_LAYER), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(SHADOW_LAYER), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(BEARING_LAYER), `is`(false))
       }
     }
 
@@ -145,18 +144,19 @@ class LocationLayerPluginTest {
                                          uiController: UiController, context: Context) {
 
         // Source should be present but empty
-        val source: GeoJsonSource? = mapboxMap.getSourceAs(LOCATION_SOURCE)
-        assertThat(source, notNullValue())
-        assert(mapboxMap.querySourceFeatures(LOCATION_SOURCE).isEmpty())
+        val mapView = fragment.view as MapView
+        assertThat(mapboxMap.queryRenderedFeatures(
+          RectF(0f, 0f, mapView.width.toFloat(), mapView.height.toFloat()), FOREGROUND_LAYER)
+          .isEmpty(), `is`(true))
 
         // Force the first location update
         plugin.forceLocationUpdate(location)
-        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+        uiController.loopMainThreadForAtLeast(MAP_CONNECTION_DELAY)
 
         // Check if the puck is visible
         val latLng = LatLng(location.latitude, location.longitude)
         val point = mapboxMap.projection.toScreenLocation(latLng)
-        assert(mapboxMap.queryRenderedFeatures(point, LocationLayerConstants.FOREGROUND_ICON).isNotEmpty())
+        assertThat(mapboxMap.queryRenderedFeatures(point, FOREGROUND_LAYER).isEmpty(), `is`(false))
       }
     }
     executePluginTest(pluginAction)
@@ -438,11 +438,11 @@ class LocationLayerPluginTest {
         assertEquals(point.latitude(), location.latitude, 0.1)
         assertEquals(point.longitude(), location.longitude, 0.1)
 
-        assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(Matchers.equalTo(true)))
-        assertThat(mapboxMap.isLayerVisible(BACKGROUND_LAYER), `is`(Matchers.equalTo(true)))
-        assertThat(mapboxMap.isLayerVisible(SHADOW_LAYER), `is`(Matchers.equalTo(true)))
-        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(Matchers.equalTo(true)))
-        assertThat(mapboxMap.isLayerVisible(BEARING_LAYER), `is`(Matchers.equalTo(false)))
+        assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(BACKGROUND_LAYER), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(SHADOW_LAYER), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(true))
+        assertThat(mapboxMap.isLayerVisible(BEARING_LAYER), `is`(false))
       }
     }
     executePluginTest(pluginAction,
@@ -470,7 +470,7 @@ class LocationLayerPluginTest {
       PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
 
     // Waiting for style to finish loading while pushing updates
-    Espresso.onView(ViewMatchers.withId(R.id.content)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    onView(withId(R.id.content)).check(matches(isDisplayed()))
   }
 
   @Test
@@ -491,7 +491,7 @@ class LocationLayerPluginTest {
       PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
 
     // Waiting for style to finish loading while pushing updates
-    Espresso.onView(ViewMatchers.withId(R.id.content)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    onView(withId(R.id.content)).check(matches(isDisplayed()))
   }
 
   @Test
@@ -524,7 +524,7 @@ class LocationLayerPluginTest {
     })
 
     // Waiting for style to finish loading while pushing updates
-    Espresso.onView(ViewMatchers.withId(R.id.content)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    onView(withId(R.id.content)).check(matches(isDisplayed()))
   }
 
   @After
@@ -536,6 +536,6 @@ class LocationLayerPluginTest {
 
   private fun executePluginTest(listener: GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin>,
                                 pluginProvider: GenericPluginAction.PluginProvider<LocationLayerPlugin> = PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity)) {
-    Espresso.onView(ViewMatchers.withId(R.id.content)).perform(GenericPluginAction(fragment.view as MapView, mapboxMap, pluginProvider, listener))
+    onView(withId(R.id.content)).perform(GenericPluginAction(fragment.view as MapView, mapboxMap, pluginProvider, listener))
   }
 }
