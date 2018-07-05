@@ -8,7 +8,7 @@
     <attr name="mapbox_backgroundTintColor" format="color"/>
     <attr name="mapbox_bearingDrawable" format="reference"/>
     <attr name="mapbox_bearingTintColor" format="color"/>
-    <attr name="mapbox_navigationDrawable" format="reference"/>
+    <attr name="mapbox_gpsDrawable" format="reference"/>
 
     <attr name="mapbox_foregroundDrawableStale" format="reference"/>
     <attr name="mapbox_foregroundStaleTintColor" format="color"/>

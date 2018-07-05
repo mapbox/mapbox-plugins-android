@@ -1,5 +1,9 @@
 package com.mapbox.mapboxsdk.plugins.utils
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.Looper
 import com.mapbox.geojson.Feature
@@ -49,4 +53,19 @@ class MapboxTestingUtils {
       }
     }
   }
+}
+
+fun MapboxMap.addImageFromDrawable(string: String, drawable: Drawable) {
+  val bitmapFromDrawable = getBitmapFromDrawable(drawable)
+  this.addImage(string, bitmapFromDrawable)
+}
+
+private fun getBitmapFromDrawable(drawable: Drawable): Bitmap {
+  if (drawable is BitmapDrawable) return drawable.bitmap
+  val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth,
+      drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+  val canvas = Canvas(bitmap)
+  drawable.setBounds(0, 0, canvas.width, canvas.height)
+  drawable.draw(canvas)
+  return bitmap
 }
