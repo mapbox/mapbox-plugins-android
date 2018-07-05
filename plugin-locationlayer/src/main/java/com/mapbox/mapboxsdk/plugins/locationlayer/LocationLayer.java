@@ -81,12 +81,14 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotationAlig
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
 
-final class LocationLayer implements PluginAnimator.OnLayerAnimationsValuesChangeListener {
+final class LocationLayer implements PluginAnimator.OnLayerAnimationsValuesChangeListener,
+  RefreshPluginRunnable.RefreshPluginListener {
 
   @RenderMode.Mode
   private int renderMode;
 
   private final MapboxMap mapboxMap;
+  private final RefreshPluginRunnable refreshPluginRunnable;
   private LocationLayerOptions options;
   private Context context;
 
@@ -99,9 +101,16 @@ final class LocationLayer implements PluginAnimator.OnLayerAnimationsValuesChang
   LocationLayer(MapView mapView, MapboxMap mapboxMap, LocationLayerOptions options) {
     this.mapboxMap = mapboxMap;
     this.context = mapView.getContext();
+    refreshPluginRunnable = new RefreshPluginRunnable(options.refreshIntervalInMillis());
+    refreshPluginRunnable.setListener(this);
     generateLocationFeature(options);
     initializeComponents(options);
     setRenderMode(RenderMode.NORMAL);
+  }
+
+  @Override
+  public void onShouldRefresh() {
+    refreshSource();
   }
 
   void initializeComponents(LocationLayerOptions options) {
@@ -178,6 +187,7 @@ final class LocationLayer implements PluginAnimator.OnLayerAnimationsValuesChang
 
   void show() {
     setRenderMode(renderMode);
+    refreshPluginRunnable.run();
     isHidden = false;
   }
 
@@ -185,6 +195,7 @@ final class LocationLayer implements PluginAnimator.OnLayerAnimationsValuesChang
     for (String layerId : layerMap) {
       setLayerVisibility(layerId, false);
     }
+    refreshPluginRunnable.cancel();
     isHidden = true;
   }
 
@@ -265,13 +276,11 @@ final class LocationLayer implements PluginAnimator.OnLayerAnimationsValuesChang
 
   private void setBearingProperty(String propertyId, float bearing) {
     locationFeature.addNumberProperty(propertyId, bearing);
-    refreshSource();
   }
 
   void updateAccuracyRadius(float accuracy) {
     if (renderMode == RenderMode.COMPASS || renderMode == RenderMode.NORMAL) {
       locationFeature.addNumberProperty(PROPERTY_ACCURACY_RADIUS, accuracy);
-      refreshSource();
     }
   }
 
@@ -285,8 +294,6 @@ final class LocationLayer implements PluginAnimator.OnLayerAnimationsValuesChang
     backgroundJsonArray.add(0f);
     backgroundJsonArray.add((float) (0.05 * tilt));
     locationFeature.addProperty(PROPERTY_SHADOW_ICON_OFFSET, backgroundJsonArray);
-
-    refreshSource();
   }
 
   void updateForegroundBearing(float bearing) {
@@ -332,7 +339,6 @@ final class LocationLayer implements PluginAnimator.OnLayerAnimationsValuesChang
     JsonObject properties = locationFeature.properties();
     if (properties != null) {
       locationFeature = Feature.fromGeometry(locationPoint, properties);
-      refreshSource();
     }
   }
 
@@ -363,7 +369,6 @@ final class LocationLayer implements PluginAnimator.OnLayerAnimationsValuesChang
   private void styleAccuracy(float accuracyAlpha, @ColorInt int accuracyColor) {
     locationFeature.addNumberProperty(PROPERTY_ACCURACY_ALPHA, accuracyAlpha);
     locationFeature.addStringProperty(PROPERTY_ACCURACY_COLOR, colorToRgbaString(accuracyColor));
-    refreshSource();
   }
 
   private void styleForeground(Drawable foregroundDrawable, Drawable foregroundDrawableStale) {
@@ -432,7 +437,6 @@ final class LocationLayer implements PluginAnimator.OnLayerAnimationsValuesChang
       return;
     }
     locationFeature.addBooleanProperty(PROPERTY_LOCATION_STALE, isStale);
-    refreshSource();
     if (renderMode != RenderMode.GPS) {
       setLayerVisibility(ACCURACY_LAYER, !isStale);
     }

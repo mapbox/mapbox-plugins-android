@@ -75,6 +75,11 @@ public abstract class LocationLayerOptions implements Parcelable {
   private static final long STALE_STATE_DELAY_MS = 30000;
 
   /**
+   * By default, the location layer and camera will update at 60/fps
+   */
+  private static final double REFRESH_INTERVAL_IN_MILLIS_DEFAULT = 16.67;
+
+  /**
    * Construct a new Location Layer Options class using the attributes found within a style
    * resource. It's important to note that you only need to define the attributes you plan to
    * change and can safely ignore the other attributes which will be set to their default value.
@@ -220,7 +225,8 @@ public abstract class LocationLayerOptions implements Parcelable {
       .minZoom(MIN_ZOOM_DEFAULT)
       .maxZoomIconScale(MAX_ZOOM_ICON_SCALE_DEFAULT)
       .minZoomIconScale(MIN_ZOOM_ICON_SCALE_DEFAULT)
-      .padding(PADDING_DEFAULT);
+      .padding(PADDING_DEFAULT)
+      .refreshIntervalInMillis(REFRESH_INTERVAL_IN_MILLIS_DEFAULT);
   }
 
   /**
@@ -548,6 +554,15 @@ public abstract class LocationLayerOptions implements Parcelable {
    * @since 0.5.0
    */
   public abstract float trackingMultiFingerMoveThreshold();
+
+  /**
+   * Determines how often the {@link LocationLayer} and {@link LocationLayerCamera}
+   * will update.  By default this is set to 60 frames per second.
+   *
+   * @return refresh interval in milliseconds
+   * @since 0.6.0
+   */
+  public abstract double refreshIntervalInMillis();
 
   /**
    * Builder class for constructing a new instance of {@link LocationLayerOptions}.
@@ -890,6 +905,15 @@ public abstract class LocationLayerOptions implements Parcelable {
      * @since 0.5.0
      */
     public abstract Builder trackingMultiFingerMoveThreshold(float moveThreshold);
+
+    /**
+     * Determines how often the {@link LocationLayer} and {@link LocationLayerCamera}
+     * will update.  By default this is set to 60 frames per second.
+     *
+     * @param refreshIntervalInMillis interval in milliseconds
+     * @since 0.6.0
+     */
+    public abstract Builder refreshIntervalInMillis(double refreshIntervalInMillis);
 
     abstract LocationLayerOptions autoBuild();
 

@@ -7,6 +7,8 @@ import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Contains the variety of camera modes which determine how the camera will track
@@ -81,4 +83,57 @@ public final class CameraMode {
    * @since 0.5.0
    */
   public static final int TRACKING_GPS_NORTH = 0x00000024;
+
+  /**
+   * Set of camera modes that are tracking user location.
+   *
+   * @since 0.6.0
+   */
+  public static final Set<Integer> TRACKING_LOCATION = new HashSet<Integer>() {
+    {
+      add(CameraMode.TRACKING_COMPASS);
+      add(CameraMode.TRACKING_GPS);
+      add(CameraMode.TRACKING);
+      add(CameraMode.TRACKING_GPS_NORTH);
+    }
+  };
+
+  /**
+   * Set of camera modes that are tracking user bearing.
+   *
+   * @since 0.6.0
+   */
+  public static final Set<Integer> TRACKING_BEARING = new HashSet<Integer>() {
+    {
+      add(CameraMode.NONE_COMPASS);
+      add(CameraMode.TRACKING_COMPASS);
+      add(CameraMode.NONE_GPS);
+      add(CameraMode.TRACKING_GPS);
+      add(CameraMode.TRACKING_GPS_NORTH);
+    }
+  };
+
+  /**
+   * Set of camera modes that are tracking compass bearing.
+   *
+   * @since 0.6.0
+   */
+  public static final Set<Integer> TRACKING_COMPASS_BEARING = new HashSet<Integer>() {
+    {
+      add(CameraMode.TRACKING_COMPASS);
+      add(CameraMode.NONE_COMPASS);
+    }
+  };
+
+  /**
+   * Set of camera modes that are tracking gps bearing.
+   *
+   * @since 0.6.0
+   */
+  public static final Set<Integer> TRACKING_GPS_BEARING = new HashSet<Integer>() {
+    {
+      add(CameraMode.TRACKING_GPS);
+      add(CameraMode.NONE_GPS);
+    }
+  };
 }

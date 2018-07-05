@@ -47,7 +47,7 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.
  * display a larger icon (customized with {@link LocationLayerOptions#gpsDrawable()}) we call the user puck.
  * <p>
  * This plugin also offers the ability to set a map camera behavior for tracking the user
- * location. These different {@link CameraMode}s will track, stop tracking the location based on the
+ * location. These different {@link CameraMode}s will track or cancel tracking the location based on the
  * mode set with {@link LocationLayerPlugin#setCameraMode(int)}.
  * <p>
  * Lastly, {@link LocationLayerPlugin#setLocationLayerEnabled(boolean)} can be used
@@ -645,6 +645,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
       staleStateManager.onStart();
     }
     compassManager.onStart();
+    locationLayerCamera.onStart();
   }
 
   void onLocationLayerStop() {
@@ -656,6 +657,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     locationLayer.hide();
     staleStateManager.onStop();
     compassManager.onStop();
+    locationLayerCamera.onStop();
     pluginAnimatorCoordinator.cancelAllAnimations();
     if (locationEngine != null) {
       locationEngine.removeLocationEngineListener(locationEngineListener);
@@ -675,8 +677,10 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     mapboxMap.addOnMapLongClickListener(onMapLongClickListener);
 
     locationLayer = new LocationLayer(mapView, mapboxMap, options);
-    locationLayerCamera = new LocationLayerCamera(
-      mapView.getContext(), mapboxMap, cameraTrackingChangedListener, options, onCameraMoveInvalidateListener);
+
+    locationLayerCamera = new LocationLayerCamera(mapView.getContext(),
+      cameraTrackingChangedListener, onCameraMoveInvalidateListener, mapboxMap, options);
+
     pluginAnimatorCoordinator = new PluginAnimatorCoordinator();
     pluginAnimatorCoordinator.addLayerListener(locationLayer);
     pluginAnimatorCoordinator.addCameraListener(locationLayerCamera);
@@ -842,7 +846,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
         onLocationLayerStop();
       } else if (change == MapView.DID_FINISH_LOADING_STYLE) {
         locationLayer.initializeComponents(options);
-        locationLayerCamera.initializeOptions(options);
+        locationLayerCamera.updateOptions(options);
         onLocationLayerStart();
       }
     }

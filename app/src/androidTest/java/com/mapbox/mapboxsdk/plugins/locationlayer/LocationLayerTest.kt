@@ -20,6 +20,7 @@ import com.mapbox.mapboxsdk.constants.Style
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.*
+import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode
 import com.mapbox.mapboxsdk.plugins.testapp.activity.SingleActivity
 import com.mapbox.mapboxsdk.plugins.utils.*
@@ -314,6 +315,43 @@ class LocationLayerTest {
         assertEquals(Utils.calculateZoomLevelRadius(mapboxMap, location) /*meters projected to radius on zoom 16*/,
           mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0]
             .getNumberProperty(PROPERTY_ACCURACY_RADIUS).toFloat(), 0.1f)
+      }
+    }
+    executePluginTest(pluginAction)
+  }
+
+  @Test
+  fun mapCamera_updatedWithNewLocation() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        plugin.cameraMode = CameraMode.TRACKING
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+
+        val currentPosition = mapboxMap.cameraPosition
+        val currentLongitude = currentPosition.target.longitude
+        assertEquals(17.0, currentLongitude, 0.1)
+      }
+    }
+    executePluginTest(pluginAction)
+  }
+
+  @Test
+  fun mapCamera_notUpdatedWithInvalidCameraMode() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        mapboxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(1.23, 3.45), 16.0))
+        plugin.cameraMode = CameraMode.NONE
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+
+        val currentPosition = mapboxMap.cameraPosition
+        val currentLongitude = currentPosition.target.longitude
+        assertEquals(3.45, currentLongitude, 0.1)
       }
     }
     executePluginTest(pluginAction)
