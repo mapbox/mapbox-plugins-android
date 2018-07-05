@@ -16,6 +16,7 @@ import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.rule.GrantPermissionRule
 import android.support.test.runner.AndroidJUnit4
+import android.support.v4.content.ContextCompat
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.constants.Style
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -31,7 +32,9 @@ import com.mapbox.mapboxsdk.plugins.utils.MapboxTestingUtils.Companion.pushSourc
 import com.mapbox.mapboxsdk.plugins.utils.PluginGenerationUtil.Companion.MAP_CONNECTION_DELAY
 import com.mapbox.mapboxsdk.plugins.utils.PluginGenerationUtil.Companion.MAP_RENDER_DELAY
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
+import junit.framework.Assert.assertTrue
 import org.hamcrest.CoreMatchers.*
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -190,6 +193,53 @@ class LocationLayerPluginTest {
       .build()
     executePluginTest(pluginAction,
       PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, options))
+  }
+
+  @Test
+  fun locationLayerOptions_loadsForegroundBitmapFromNameOption() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        val foregroundDrawable = ContextCompat.getDrawable(context, R.drawable.ic_media_play)
+        mapboxMap.addImageFromDrawable("custom-foreground-bitmap", foregroundDrawable!!)
+
+        val foregroundLayer = mapboxMap.getLayer(FOREGROUND_LAYER) as SymbolLayer
+        val iconImageValue = foregroundLayer.iconImage.expression.toString()
+
+        assertTrue(iconImageValue.contains("custom-foreground-bitmap"))
+      }
+    }
+
+    val options = LocationLayerOptions.builder(fragment.activity)
+            .foregroundName("custom-foreground-bitmap")
+            .build()
+    executePluginTest(pluginAction,
+            PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, options))
+  }
+
+  @Test
+  fun locationLayerOptions_loadsGpsNameWithGpsRenderMode() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        plugin.renderMode = RenderMode.GPS
+        val foregroundDrawable = ContextCompat.getDrawable(context, R.drawable.ic_media_play)
+        mapboxMap.addImageFromDrawable("custom-foreground-bitmap", foregroundDrawable!!)
+        mapboxMap.addImageFromDrawable("custom-gps-bitmap", foregroundDrawable)
+
+        val foregroundLayer = mapboxMap.getLayer(FOREGROUND_LAYER) as SymbolLayer
+        val iconImageValue = foregroundLayer.iconImage.expression.toString()
+
+        assertTrue(iconImageValue.contains("custom-gps-bitmap"))
+      }
+    }
+
+    val options = LocationLayerOptions.builder(fragment.activity)
+        .foregroundName("custom-foreground-bitmap")
+        .gpsName("custom-gps-bitmap")
+        .build()
+    executePluginTest(pluginAction,
+        PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, options))
   }
 
   @Test

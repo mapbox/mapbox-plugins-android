@@ -2,6 +2,7 @@ package com.mapbox.mapboxsdk.plugins.locationlayer;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.os.Parcelable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Dimension;
@@ -131,7 +132,7 @@ public abstract class LocationLayerOptions implements Parcelable {
         R.styleable.mapbox_LocationLayer_mapbox_staleStateTimeout, (int) STALE_STATE_DELAY_MS));
     }
     builder.gpsDrawable(typedArray.getResourceId(
-      R.styleable.mapbox_LocationLayer_mapbox_navigationDrawable, -1));
+      R.styleable.mapbox_LocationLayer_mapbox_gpsDrawable, -1));
     float elevation = typedArray.getDimension(
       R.styleable.mapbox_LocationLayer_mapbox_elevation, 0);
     builder.accuracyColor(typedArray.getColor(
@@ -253,6 +254,21 @@ public abstract class LocationLayerOptions implements Parcelable {
   public abstract int backgroundDrawableStale();
 
   /**
+   * String image name, identical to one used in
+   * the first parameter of {@link com.mapbox.mapboxsdk.maps.MapboxMap#addImage(String, Bitmap)}, the
+   * plugin, will used this image in place of the provided or default mapbox_foregroundDrawableStale.
+   * <p>
+   * A maki-icon name (example: "circle-15") may also be provided.  These are images that can be loaded
+   * with certain styles.  Note, this will fail if the provided icon name is not provided by the loaded map style.
+   * </p>
+   *
+   * @return String icon or maki-icon name
+   * @since 0.6.0
+   */
+  @Nullable
+  public abstract String backgroundStaleName();
+
+  /**
    * Defines the drawable used for the stale foreground icon.
    *
    * @return the drawable resource ID
@@ -263,14 +279,44 @@ public abstract class LocationLayerOptions implements Parcelable {
   public abstract int foregroundDrawableStale();
 
   /**
+   * String image name, identical to one used in
+   * the first parameter of {@link com.mapbox.mapboxsdk.maps.MapboxMap#addImage(String, Bitmap)}, the
+   * plugin, will used this image in place of the provided or default mapbox_foregroundDrawableStale.
+   * <p>
+   * A maki-icon name (example: "circle-15") may also be provided.  These are images that can be loaded
+   * with certain styles.  Note, this will fail if the provided icon name is not provided by the loaded map style.
+   * </p>
+   *
+   * @return String icon or maki-icon name
+   * @since 0.6.0
+   */
+  @Nullable
+  public abstract String foregroundStaleName();
+
+  /**
    * Defines the drawable used for the navigation state icon.
    *
    * @return the drawable resource ID
-   * @attr ref R.styleable#LocationLayer_navigationDrawable
+   * @attr ref R.styleable#LocationLayer_gpsDrawable
    * @since 0.4.0
    */
   @DrawableRes
   public abstract int gpsDrawable();
+
+  /**
+   * String image name, identical to one used in
+   * the first parameter of {@link com.mapbox.mapboxsdk.maps.MapboxMap#addImage(String, Bitmap)}, the
+   * plugin, will used this image in place of the provided or default mapbox_gpsDrawable.
+   * <p>
+   * A maki-icon name (example: "circle-15") may also be provided.  These are images that can be loaded
+   * with certain styles.  Note, this will fail if the provided icon name is not provided by the loaded map style.
+   * </p>
+   *
+   * @return String icon or maki-icon name
+   * @since 0.6.0
+   */
+  @Nullable
+  public abstract String gpsName();
 
   /**
    * Supply a Drawable that is to be rendered on top of all of the content in the Location Layer
@@ -284,6 +330,21 @@ public abstract class LocationLayerOptions implements Parcelable {
   public abstract int foregroundDrawable();
 
   /**
+   * String image name, identical to one used in
+   * the first parameter of {@link com.mapbox.mapboxsdk.maps.MapboxMap#addImage(String, Bitmap)}, the
+   * plugin, will used this image in place of the provided or default mapbox_foregroundDrawable.
+   * <p>
+   * A maki-icon name (example: "circle-15") may also be provided.  These are images that can be loaded
+   * with certain styles.  Note, this will fail if the provided icon name is not provided by the loaded map style.
+   * </p>
+   *
+   * @return String icon or maki-icon name
+   * @since 0.6.0
+   */
+  @Nullable
+  public abstract String foregroundName();
+
+  /**
    * Defines the drawable used for the background state icon.
    *
    * @return the drawable resource ID
@@ -294,6 +355,21 @@ public abstract class LocationLayerOptions implements Parcelable {
   public abstract int backgroundDrawable();
 
   /**
+   * String image name, identical to one used in
+   * the first parameter of {@link com.mapbox.mapboxsdk.maps.MapboxMap#addImage(String, Bitmap)}, the
+   * plugin, will used this image in place of the provided or default mapbox_backgroundDrawable.
+   * <p>
+   * A maki-icon name (example: "circle-15") may also be provided.  These are images that can be loaded
+   * with certain styles.  Note, this will fail if the provided icon name is not provided by the loaded map style.
+   * </p>
+   *
+   * @return String icon or maki-icon name
+   * @since 0.6.0
+   */
+  @Nullable
+  public abstract String backgroundName();
+
+  /**
    * Defines the drawable used for the bearing icon.
    *
    * @return the drawable resource ID
@@ -302,6 +378,21 @@ public abstract class LocationLayerOptions implements Parcelable {
    */
   @DrawableRes
   public abstract int bearingDrawable();
+
+  /**
+   * String image name, identical to one used in
+   * the first parameter of {@link com.mapbox.mapboxsdk.maps.MapboxMap#addImage(String, Bitmap)}, the
+   * plugin, will used this image in place of the provided or default mapbox_bearingDrawable.
+   * <p>
+   * A maki-icon name (example: "circle-15") may also be provided.  These are images that can be loaded
+   * with certain styles.  Note, this will fail if the provided icon name is not provided by the loaded map style.
+   * </p>
+   *
+   * @return String icon or maki-icon name
+   * @since 0.6.0
+   */
+  @Nullable
+  public abstract String bearingName();
 
   /**
    * Defines the bearing icon color as an integer.
@@ -498,6 +589,21 @@ public abstract class LocationLayerOptions implements Parcelable {
     public abstract Builder foregroundDrawableStale(@DrawableRes int foregroundDrawableStale);
 
     /**
+     * Given a String image name, identical to one used in
+     * the first parameter of {@link com.mapbox.mapboxsdk.maps.MapboxMap#addImage(String, Bitmap)}, the
+     * plugin, will used this image in place of the provided or default mapbox_foregroundDrawableStale.
+     * <p>
+     * A maki-icon name (example: "circle-15") may also be provided.  These are images that can be loaded
+     * with certain styles.  Note, this will fail if the provided icon name is not provided by the loaded map style.
+     * </p>
+     *
+     * @param foregroundStaleName String icon or maki-icon name
+     * @return this builder for chaining options together
+     * @since 0.6.0
+     */
+    public abstract Builder foregroundStaleName(@Nullable String foregroundStaleName);
+
+    /**
      * Defines the foreground stale color as an integer.
      *
      * @param foregroundStaleTintColor the color integer resource
@@ -518,6 +624,21 @@ public abstract class LocationLayerOptions implements Parcelable {
     public abstract Builder backgroundDrawableStale(@DrawableRes int backgroundDrawableStale);
 
     /**
+     * Given a String image name, identical to one used in
+     * the first parameter of {@link com.mapbox.mapboxsdk.maps.MapboxMap#addImage(String, Bitmap)}, the
+     * plugin, will used this image in place of the provided or default mapbox_backgroundDrawableStale.
+     * <p>
+     * A maki-icon name (example: "circle-15") may also be provided.  These are images that can be loaded
+     * with certain styles.  Note, this will fail if the provided icon name is not provided by the loaded map style.
+     * </p>
+     *
+     * @param backgroundStaleName String icon or maki-icon name
+     * @return this builder for chaining options together
+     * @since 0.6.0
+     */
+    public abstract Builder backgroundStaleName(@Nullable String backgroundStaleName);
+
+    /**
      * Defines the background stale color as an integer.
      *
      * @param backgroundStaleTintColor the color integer resource
@@ -532,10 +653,25 @@ public abstract class LocationLayerOptions implements Parcelable {
      *
      * @param gpsDrawable the drawable resource ID
      * @return this builder for chaining options together
-     * @attr ref R.styleable#LocationLayer_navigationDrawable
+     * @attr ref R.styleable#LocationLayer_gpsDrawable
      * @since 0.4.0
      */
     public abstract Builder gpsDrawable(@DrawableRes int gpsDrawable);
+
+    /**
+     * Given a String image name, identical to one used in
+     * the first parameter of {@link com.mapbox.mapboxsdk.maps.MapboxMap#addImage(String, Bitmap)}, the
+     * plugin, will used this image in place of the provided or default mapbox_gpsDrawable.
+     * <p>
+     * A maki-icon name (example: "circle-15") may also be provided.  These are images that can be loaded
+     * with certain styles.  Note, this will fail if the provided icon name is not provided by the loaded map style.
+     * </p>
+     *
+     * @param gpsName String icon or maki-icon name
+     * @return this builder for chaining options together
+     * @since 0.6.0
+     */
+    public abstract Builder gpsName(@Nullable String gpsName);
 
     /**
      * Supply a Drawable that is to be rendered on top of all of the content in the Location Layer
@@ -549,6 +685,21 @@ public abstract class LocationLayerOptions implements Parcelable {
     public abstract Builder foregroundDrawable(@DrawableRes int foregroundDrawable);
 
     /**
+     * Given a String image name, identical to one used in
+     * the first parameter of {@link com.mapbox.mapboxsdk.maps.MapboxMap#addImage(String, Bitmap)}, the
+     * plugin, will used this image in place of the provided or default mapbox_foregroundDrawable.
+     * <p>
+     * A maki-icon name (example: "circle-15") may also be provided.  These are images that can be loaded
+     * with certain styles.  Note, this will fail if the provided icon name is not provided by the loaded map style.
+     * </p>
+     *
+     * @param foregroundName String icon or maki-icon name
+     * @return this builder for chaining options together
+     * @since 0.6.0
+     */
+    public abstract Builder foregroundName(@Nullable String foregroundName);
+
+    /**
      * Defines the drawable used for the background state icon.
      *
      * @param backgroundDrawable the drawable resource ID
@@ -559,6 +710,21 @@ public abstract class LocationLayerOptions implements Parcelable {
     public abstract Builder backgroundDrawable(@DrawableRes int backgroundDrawable);
 
     /**
+     * Given a String image name, identical to one used in
+     * the first parameter of {@link com.mapbox.mapboxsdk.maps.MapboxMap#addImage(String, Bitmap)}, the
+     * plugin, will used this image in place of the provided or default mapbox_backgroundDrawable.
+     * <p>
+     * A maki-icon name (example: "circle-15") may also be provided.  These are images that can be loaded
+     * with certain styles.  Note, this will fail if the provided icon name is not provided by the loaded map style.
+     * </p>
+     *
+     * @param backgroundName String icon or maki-icon name
+     * @return this builder for chaining options together
+     * @since 0.6.0
+     */
+    public abstract Builder backgroundName(@Nullable String backgroundName);
+
+    /**
      * Defines the drawable used for the bearing icon.
      *
      * @param bearingDrawable the drawable resource ID
@@ -567,6 +733,21 @@ public abstract class LocationLayerOptions implements Parcelable {
      * @since 0.4.0
      */
     public abstract Builder bearingDrawable(@DrawableRes int bearingDrawable);
+
+    /**
+     * Given a String image name, identical to one used in
+     * the first parameter of {@link com.mapbox.mapboxsdk.maps.MapboxMap#addImage(String, Bitmap)}, the
+     * plugin, will used this image in place of the provided or default mapbox_bearingDrawable.
+     * <p>
+     * A maki-icon name (example: "circle-15") may also be provided.  These are images that can be loaded
+     * with certain styles.  Note, this will fail if the provided icon name is not provided by the loaded map style.
+     * </p>
+     *
+     * @param bearingName String icon or maki-icon name
+     * @return this builder for chaining options together
+     * @since 0.6.0
+     */
+    public abstract Builder bearingName(@Nullable String bearingName);
 
     /**
      * Defines the bearing icon color as an integer.

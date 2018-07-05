@@ -103,7 +103,7 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
 
   void initializeComponents(LocationLayerOptions options) {
     addLocationSource();
-    addLayers();
+    addLayers(options);
     applyStyle(options);
 
     if (isHidden) {
@@ -192,15 +192,22 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
     }
   }
 
-  private void addLayers() {
-    addSymbolLayer(SHADOW_LAYER, BACKGROUND_LAYER);
-    addSymbolLayer(BACKGROUND_LAYER, FOREGROUND_LAYER);
-    addSymbolLayer(FOREGROUND_LAYER, null);
-    addSymbolLayer(BEARING_LAYER, null);
+  private void addLayers(LocationLayerOptions options) {
+    addSymbolLayer(SHADOW_LAYER, BACKGROUND_LAYER, options);
+    addSymbolLayer(BACKGROUND_LAYER, FOREGROUND_LAYER, options);
+    addSymbolLayer(FOREGROUND_LAYER, null, options);
+    addSymbolLayer(BEARING_LAYER, null, options);
     addAccuracyLayer();
   }
 
-  private void addSymbolLayer(String layerId, String beforeLayerId) {
+  private void addSymbolLayer(String layerId, String beforeLayerId, LocationLayerOptions options) {
+    String foregroundString = options.gpsName() != null ? options.gpsName() : options.foregroundName();
+    String foregroundIconString = buildIconString(foregroundString, FOREGROUND_ICON);
+    String foregroundStaleIconString = buildIconString(options.foregroundStaleName(), FOREGROUND_STALE_ICON);
+    String backgroundIconString = buildIconString(options.backgroundName(), BACKGROUND_ICON);
+    String backgroundStaleIconString = buildIconString(options.backgroundStaleName(), BACKGROUND_STALE_ICON);
+    String bearingIconString = buildIconString(options.bearingName(), BEARING_ICON);
+
     SymbolLayer layer = new SymbolLayer(layerId, LOCATION_SOURCE);
     layer.setProperties(
       iconAllowOverlap(true),
@@ -217,13 +224,13 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
       iconImage(
         match(literal(layerId), literal(""),
           stop(FOREGROUND_LAYER, switchCase(
-            get(PROPERTY_LOCATION_STALE), literal(FOREGROUND_STALE_ICON),
-            literal(FOREGROUND_ICON))),
+            get(PROPERTY_LOCATION_STALE), literal(foregroundStaleIconString),
+            literal(foregroundIconString))),
           stop(BACKGROUND_LAYER, switchCase(
-            get(PROPERTY_LOCATION_STALE), literal(BACKGROUND_STALE_ICON),
-            literal(BACKGROUND_ICON))),
+            get(PROPERTY_LOCATION_STALE), literal(backgroundStaleIconString),
+            literal(backgroundIconString))),
           stop(SHADOW_LAYER, literal(SHADOW_ICON)),
-          stop(BEARING_LAYER, literal(BEARING_ICON))
+          stop(BEARING_LAYER, literal(bearingIconString))
         )
       ),
       iconOffset(
@@ -255,6 +262,13 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
       mapboxMap.addLayerBelow(layer, idBelowLayer);
     }
     layerMap.add(layer.getId());
+  }
+
+  private String buildIconString(String bitmapName, @NonNull String drawableName) {
+    if (bitmapName != null) {
+      return bitmapName;
+    }
+    return drawableName;
   }
 
   private void setBearingProperty(String propertyId, float bearing) {
@@ -334,14 +348,45 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
   // Styling
   //
 
-  private void styleBackground(LocationLayerOptions options) {
-    Drawable backgroundDrawable =
-      getDrawable(context, options.backgroundDrawable(), options.backgroundTintColor());
-    Drawable backgroundDrawableStale =
-      getDrawable(context, options.backgroundDrawableStale(), options.backgroundStaleTintColor());
+  private void styleForeground(@NonNull LocationLayerOptions options) {
+    boolean isGpsRenderMode = renderMode == RenderMode.GPS;
+    // GPS name will cover both foreground & foreground stale
+    if (isGpsRenderMode && options.gpsName() != null) {
+      return;
+    }
 
-    mapboxMap.addImage(BACKGROUND_ICON, getBitmapFromDrawable(backgroundDrawable));
-    mapboxMap.addImage(BACKGROUND_STALE_ICON, getBitmapFromDrawable(backgroundDrawableStale));
+    if (options.foregroundName() == null) {
+      int foregroundDrawableResId = isGpsRenderMode ? options.gpsDrawable() : options.foregroundDrawable();
+      Drawable foregroundDrawable = getDrawable(
+        context, foregroundDrawableResId, options.foregroundTintColor());
+      mapboxMap.addImage(FOREGROUND_ICON, getBitmapFromDrawable(foregroundDrawable));
+    }
+    if (options.foregroundStaleName() == null) {
+      int foregroundDrawableResId = isGpsRenderMode ? options.gpsDrawable() : options.foregroundDrawableStale();
+      Drawable foregroundDrawableStale = getDrawable(
+        context, foregroundDrawableResId, options.foregroundStaleTintColor());
+      mapboxMap.addImage(FOREGROUND_STALE_ICON, getBitmapFromDrawable(foregroundDrawableStale));
+    }
+  }
+
+  private void styleBackground(LocationLayerOptions options) {
+    if (options.backgroundName() == null) {
+      Drawable backgroundDrawable =
+        getDrawable(context, options.backgroundDrawable(), options.backgroundTintColor());
+      mapboxMap.addImage(BACKGROUND_ICON, getBitmapFromDrawable(backgroundDrawable));
+    }
+    if (options.backgroundStaleName() == null) {
+      Drawable backgroundDrawableStale =
+        getDrawable(context, options.backgroundDrawableStale(), options.backgroundStaleTintColor());
+      mapboxMap.addImage(BACKGROUND_STALE_ICON, getBitmapFromDrawable(backgroundDrawableStale));
+    }
+  }
+
+  private void styleBearing(LocationLayerOptions options) {
+    if (options.bearingName() == null) {
+      Drawable bearingDrawable = getDrawable(context, options.bearingDrawable(), options.bearingTintColor());
+      mapboxMap.addImage(BEARING_ICON, getBitmapFromDrawable(bearingDrawable));
+    }
   }
 
   private void styleShadow(LocationLayerOptions options) {
@@ -349,36 +394,10 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
     mapboxMap.addImage(SHADOW_ICON, generateShadow(shadowDrawable, options.elevation()));
   }
 
-  private void styleBearing(LocationLayerOptions options) {
-    Drawable bearingDrawable = getDrawable(context, options.bearingDrawable(), options.bearingTintColor());
-    mapboxMap.addImage(BEARING_ICON, getBitmapFromDrawable(bearingDrawable));
-  }
-
   private void styleAccuracy(float accuracyAlpha, @ColorInt int accuracyColor) {
     locationFeature.addNumberProperty(PROPERTY_ACCURACY_ALPHA, accuracyAlpha);
     locationFeature.addStringProperty(PROPERTY_ACCURACY_COLOR, colorToRgbaString(accuracyColor));
     refreshSource();
-  }
-
-  private void styleForeground(Drawable foregroundDrawable, Drawable foregroundDrawableStale) {
-    mapboxMap.addImage(FOREGROUND_ICON, getBitmapFromDrawable(foregroundDrawable));
-    mapboxMap.addImage(FOREGROUND_STALE_ICON, getBitmapFromDrawable(foregroundDrawableStale));
-  }
-
-  private void styleForeground(@NonNull LocationLayerOptions options) {
-    if (renderMode == RenderMode.GPS) {
-      styleForegroundGPS(options);
-    } else {
-      styleForeground(
-        getDrawable(context, options.foregroundDrawable(), options.foregroundTintColor()),
-        getDrawable(context, options.foregroundDrawableStale(), options.foregroundStaleTintColor()));
-    }
-  }
-
-  private void styleForegroundGPS(LocationLayerOptions options) {
-    styleForeground(
-      getDrawable(context, options.gpsDrawable(), options.foregroundTintColor()),
-      getDrawable(context, options.gpsDrawable(), options.foregroundStaleTintColor()));
   }
 
   private void styleScaling(LocationLayerOptions options) {
