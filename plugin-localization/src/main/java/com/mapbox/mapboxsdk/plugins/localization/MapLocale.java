@@ -90,9 +90,19 @@ public final class MapLocale {
    */
   public static final String SIMPLIFIED_CHINESE = "name_zh-Hans";
 
+  /**
+   * Japanese (if available, otherwise same as name)
+   */
+  public static final String JAPANESE = "name_ja";
+
+  /**
+   * Korean (if available, otherwise same as name)
+   */
+  public static final String KOREAN = "name_ko";
+
   @Retention(SOURCE)
-  @StringDef( {LOCAL_NAME, ENGLISH, FRENCH, SIMPLIFIED_CHINESE, ARABIC, SPANISH, GERMAN, PORTUGUESE,
-    RUSSIAN, CHINESE})
+  @StringDef({LOCAL_NAME, ENGLISH, FRENCH, SIMPLIFIED_CHINESE, ARABIC, SPANISH, GERMAN, PORTUGUESE,
+      RUSSIAN, CHINESE, JAPANESE, KOREAN})
   public @interface Languages {
   }
 

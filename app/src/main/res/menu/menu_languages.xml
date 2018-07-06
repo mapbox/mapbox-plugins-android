@@ -48,5 +48,14 @@
         android:title="Arabic"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/japanese"
+        android:title="Japanese"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/korean"
+        android:title="Korean"
+        app:showAsAction="never"/>
 
 </menu>
