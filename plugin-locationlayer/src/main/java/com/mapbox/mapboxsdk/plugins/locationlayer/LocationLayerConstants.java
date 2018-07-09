@@ -26,6 +26,11 @@ final class LocationLayerConstants {
   static final String PROPERTY_ACCURACY_ALPHA = "mapbox-property-accuracy-alpha";
   static final String PROPERTY_FOREGROUND_ICON_OFFSET = "mapbox-property-foreground-icon-offset";
   static final String PROPERTY_SHADOW_ICON_OFFSET = "mapbox-property-shadow-icon-offset";
+  static final String PROPERTY_FOREGROUND_ICON = "mapbox-property-foreground-icon";
+  static final String PROPERTY_BACKGROUND_ICON = "mapbox-property-background-icon";
+  static final String PROPERTY_FOREGROUND_STALE_ICON = "mapbox-property-foreground-stale-icon";
+  static final String PROPERTY_BACKGROUND_STALE_ICON = "mapbox-property-background-stale-icon";
+  static final String PROPERTY_BEARING_ICON = "mapbox-property-shadow-icon";
 
   // Layers
   static final String SHADOW_LAYER = "mapbox-location-shadow";

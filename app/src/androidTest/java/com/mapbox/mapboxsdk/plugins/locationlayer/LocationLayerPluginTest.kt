@@ -19,7 +19,6 @@ import android.support.test.runner.AndroidJUnit4
 import android.support.v4.content.ContextCompat
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.constants.Style
-import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.SupportMapFragment
@@ -32,9 +31,7 @@ import com.mapbox.mapboxsdk.plugins.utils.MapboxTestingUtils.Companion.pushSourc
 import com.mapbox.mapboxsdk.plugins.utils.PluginGenerationUtil.Companion.MAP_CONNECTION_DELAY
 import com.mapbox.mapboxsdk.plugins.utils.PluginGenerationUtil.Companion.MAP_RENDER_DELAY
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
-import junit.framework.Assert.assertTrue
 import org.hamcrest.CoreMatchers.*
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -157,9 +154,7 @@ class LocationLayerPluginTest {
         uiController.loopMainThreadForAtLeast(MAP_CONNECTION_DELAY)
 
         // Check if the puck is visible
-        val latLng = LatLng(location.latitude, location.longitude)
-        val point = mapboxMap.projection.toScreenLocation(latLng)
-        assertThat(mapboxMap.queryRenderedFeatures(point, FOREGROUND_LAYER).isEmpty(), `is`(false))
+        assertThat(mapboxMap.queryRenderedFeatures(location, FOREGROUND_LAYER).isEmpty(), `is`(false))
       }
     }
     executePluginTest(pluginAction)
@@ -202,19 +197,33 @@ class LocationLayerPluginTest {
                                          uiController: UiController, context: Context) {
         val foregroundDrawable = ContextCompat.getDrawable(context, R.drawable.ic_media_play)
         mapboxMap.addImageFromDrawable("custom-foreground-bitmap", foregroundDrawable!!)
+        mapboxMap.addImageFromDrawable("custom-background-bitmap", foregroundDrawable)
+        mapboxMap.addImageFromDrawable("custom-foreground-stale-bitmap", foregroundDrawable)
+        mapboxMap.addImageFromDrawable("custom-background-stale-bitmap", foregroundDrawable)
+        mapboxMap.addImageFromDrawable("custom-bearing-bitmap", foregroundDrawable)
 
-        val foregroundLayer = mapboxMap.getLayer(FOREGROUND_LAYER) as SymbolLayer
-        val iconImageValue = foregroundLayer.iconImage.expression.toString()
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(MAP_CONNECTION_DELAY)
+        assertThat(mapboxMap.queryRenderedFeatures(location, FOREGROUND_LAYER).isEmpty(), `is`(false))
 
-        assertTrue(iconImageValue.contains("custom-foreground-bitmap"))
+        val feature = mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0]
+        assertThat(feature.getStringProperty(PROPERTY_FOREGROUND_ICON), `is`(equalTo("custom-foreground-bitmap")))
+        assertThat(feature.getStringProperty(PROPERTY_BACKGROUND_ICON), `is`(equalTo("custom-background-bitmap")))
+        assertThat(feature.getStringProperty(PROPERTY_FOREGROUND_STALE_ICON), `is`(equalTo("custom-foreground-stale-bitmap")))
+        assertThat(feature.getStringProperty(PROPERTY_BACKGROUND_STALE_ICON), `is`(equalTo("custom-background-stale-bitmap")))
+        assertThat(feature.getStringProperty(PROPERTY_BEARING_ICON), `is`(equalTo("custom-bearing-bitmap")))
       }
     }
 
     val options = LocationLayerOptions.builder(fragment.activity)
-            .foregroundName("custom-foreground-bitmap")
-            .build()
+      .foregroundName("custom-foreground-bitmap")
+      .backgroundName("custom-background-bitmap")
+      .foregroundStaleName("custom-foreground-stale-bitmap")
+      .backgroundStaleName("custom-background-stale-bitmap")
+      .bearingName("custom-bearing-bitmap")
+      .build()
     executePluginTest(pluginAction,
-            PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, options))
+      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, options))
   }
 
   @Test
@@ -223,23 +232,75 @@ class LocationLayerPluginTest {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
                                          uiController: UiController, context: Context) {
         plugin.renderMode = RenderMode.GPS
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
         val foregroundDrawable = ContextCompat.getDrawable(context, R.drawable.ic_media_play)
         mapboxMap.addImageFromDrawable("custom-foreground-bitmap", foregroundDrawable!!)
         mapboxMap.addImageFromDrawable("custom-gps-bitmap", foregroundDrawable)
 
-        val foregroundLayer = mapboxMap.getLayer(FOREGROUND_LAYER) as SymbolLayer
-        val iconImageValue = foregroundLayer.iconImage.expression.toString()
-
-        assertTrue(iconImageValue.contains("custom-gps-bitmap"))
+        val foregroundId = mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].getStringProperty(PROPERTY_FOREGROUND_ICON)
+        assertThat(foregroundId, `is`(equalTo("custom-gps-bitmap")))
       }
     }
 
     val options = LocationLayerOptions.builder(fragment.activity)
-        .foregroundName("custom-foreground-bitmap")
-        .gpsName("custom-gps-bitmap")
-        .build()
+      .foregroundName("custom-foreground-bitmap")
+      .gpsName("custom-gps-bitmap")
+      .build()
     executePluginTest(pluginAction,
-        PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, options))
+      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, options))
+  }
+
+  @Test
+  fun locationLayerOptions_customIconNameRevertsToDefault() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        plugin.renderMode = RenderMode.GPS
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+
+        val foregroundId = mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].getStringProperty(PROPERTY_FOREGROUND_ICON)
+        assertThat(foregroundId, `is`(equalTo("custom-gps-bitmap")))
+
+        plugin.applyStyle(LocationLayerOptions.builder(fragment.activity).build())
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+
+        val revertedForegroundId = mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].getStringProperty(PROPERTY_FOREGROUND_ICON)
+        assertThat(revertedForegroundId, `is`(equalTo(FOREGROUND_ICON)))
+      }
+    }
+
+    val options = LocationLayerOptions.builder(fragment.activity)
+      .foregroundName("custom-foreground-bitmap")
+      .gpsName("custom-gps-bitmap")
+      .build()
+    executePluginTest(pluginAction,
+      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, options))
+  }
+
+  @Test
+  fun locationLayerOptions_customGpsIconNameChangeBackWithMode() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        plugin.renderMode = RenderMode.GPS
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+
+        val foregroundId = mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].getStringProperty(PROPERTY_FOREGROUND_ICON)
+        assertThat(foregroundId, `is`(equalTo("custom-gps-bitmap")))
+
+        plugin.renderMode = RenderMode.NORMAL
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+
+        val revertedForegroundId = mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].getStringProperty(PROPERTY_FOREGROUND_ICON)
+        assertThat(revertedForegroundId, `is`(equalTo(FOREGROUND_ICON)))
+      }
+    }
+
+    val options = LocationLayerOptions.builder(fragment.activity)
+      .gpsName("custom-gps-bitmap")
+      .build()
+    executePluginTest(pluginAction,
+      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, options))
   }
 
   @Test

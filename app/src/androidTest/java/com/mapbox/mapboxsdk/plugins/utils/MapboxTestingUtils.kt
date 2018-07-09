@@ -4,15 +4,23 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.location.Location
 import android.os.Handler
 import android.os.Looper
 import com.mapbox.geojson.Feature
+import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.style.layers.Property
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 
 fun MapboxMap.querySourceFeatures(sourceId: String): List<Feature> {
   return this.getSourceAs<GeoJsonSource>(sourceId)?.querySourceFeatures(null) as List<Feature>
+}
+
+fun MapboxMap.queryRenderedFeatures(location: Location, layerId: String): List<Feature> {
+  val latLng = LatLng(location.latitude, location.longitude)
+  val point = this.projection.toScreenLocation(latLng)
+  return this.queryRenderedFeatures(point, layerId)
 }
 
 fun MapboxMap.isLayerVisible(layerId: String): Boolean {
