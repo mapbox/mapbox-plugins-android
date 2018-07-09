@@ -11,6 +11,7 @@ import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -80,7 +81,7 @@ public final class Utils {
     return drawable;
   }
 
-  static float calculateZoomLevelRadius(MapboxMap mapboxMap, Location location) {
+  static float calculateZoomLevelRadius(@NonNull MapboxMap mapboxMap, @Nullable Location location) {
     if (location == null) {
       return 0;
     }

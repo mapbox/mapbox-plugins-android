@@ -616,7 +616,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     CameraPosition currentCameraPosition = mapboxMap.getCameraPosition();
     boolean isGpsNorth = getCameraMode() == CameraMode.TRACKING_GPS_NORTH;
     locationLayerAnimator.feedNewLocation(location, currentCameraPosition, isGpsNorth);
-    locationLayer.updateAccuracyRadius(location);
+    updateAccuracyRadius(location, false);
     lastLocation = location;
   }
 
@@ -646,7 +646,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
       lastCameraPosition = position;
       locationLayer.updateForegroundBearing((float) position.bearing);
       locationLayer.updateForegroundOffset(position.tilt);
-      locationLayer.updateAccuracyRadius(getLastKnownLocation());
+      updateAccuracyRadius(getLastKnownLocation(), true);
       return;
     }
 
@@ -657,9 +657,13 @@ public final class LocationLayerPlugin implements LifecycleObserver {
       locationLayer.updateForegroundOffset(position.tilt);
     }
     if (position.zoom != lastCameraPosition.zoom) {
-      locationLayer.updateAccuracyRadius(getLastKnownLocation());
+      updateAccuracyRadius(getLastKnownLocation(), true);
     }
     lastCameraPosition = position;
+  }
+
+  private void updateAccuracyRadius(Location location, boolean noAnimation) {
+    locationLayerAnimator.feedNewAccuracyRadius(Utils.calculateZoomLevelRadius(mapboxMap, location), noAnimation);
   }
 
   private OnCameraMoveListener onCameraMoveListener = new OnCameraMoveListener() {

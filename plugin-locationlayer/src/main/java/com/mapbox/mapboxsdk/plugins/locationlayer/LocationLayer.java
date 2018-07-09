@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -48,7 +47,6 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.PROPERTY_SHADOW_ICON_OFFSET;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.SHADOW_ICON;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.SHADOW_LAYER;
-import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.calculateZoomLevelRadius;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.generateShadow;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.getBitmapFromDrawable;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.Utils.getDrawable;
@@ -262,9 +260,9 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
     refreshSource();
   }
 
-  void updateAccuracyRadius(Location location) {
+  void updateAccuracyRadius(float accuracy) {
     if (renderMode == RenderMode.COMPASS || renderMode == RenderMode.NORMAL) {
-      locationFeature.addNumberProperty(PROPERTY_ACCURACY_RADIUS, calculateZoomLevelRadius(mapboxMap, location));
+      locationFeature.addNumberProperty(PROPERTY_ACCURACY_RADIUS, accuracy);
       refreshSource();
     }
   }
@@ -441,5 +439,10 @@ final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValu
     if (renderMode == RenderMode.COMPASS) {
       setBearingProperty(PROPERTY_COMPASS_BEARING, compassBearing);
     }
+  }
+
+  @Override
+  public void onNewAccuracyRadiusValue(float accuracyRadiusValue) {
+    updateAccuracyRadius(accuracyRadiusValue);
   }
 }
