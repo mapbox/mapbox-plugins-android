@@ -10,12 +10,14 @@ import android.view.animation.LinearInterpolator;
 
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.plugins.locationlayer.camera.AccuracyAnimator;
 import com.mapbox.mapboxsdk.plugins.locationlayer.camera.BearingAnimator;
 import com.mapbox.mapboxsdk.plugins.locationlayer.camera.LatLngAnimator;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.ACCURACY_RADIUS_ANIMATION_DURATION;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.COMPASS_UPDATE_RATE_MS;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.MAX_ANIMATION_DURATION_MS;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.TRANSITION_ANIMATION_DURATION_MS;
@@ -28,12 +30,14 @@ final class LocationLayerAnimator {
   private LatLngAnimator layerLatLngAnimator;
   private BearingAnimator layerGpsBearingAnimator;
   private BearingAnimator layerCompassBearingAnimator;
+  private AccuracyAnimator accuracyRadiusAnimator;
 
   private LatLngAnimator cameraLatLngAnimator;
   private BearingAnimator cameraGpsBearingAnimator;
   private BearingAnimator cameraCompassBearingAnimator;
 
   private Location previousLocation;
+  private float previousAccuracyRadius = -1;
   private float previousCompassBearing = -1;
   private long locationUpdateTimestamp = -1;
 
@@ -92,6 +96,19 @@ final class LocationLayerAnimator {
     previousCompassBearing = targetCompassBearing;
   }
 
+  void feedNewAccuracyRadius(float targetAccuracyRadius, boolean noAnimation) {
+    if (previousAccuracyRadius < 0) {
+      previousAccuracyRadius = targetAccuracyRadius;
+    }
+
+    float previousAccuracyRadius = getPreviousAccuracyRadius();
+    updateAccuracyAnimators(targetAccuracyRadius, previousAccuracyRadius);
+    accuracyRadiusAnimator.setDuration(noAnimation ? 0 : ACCURACY_RADIUS_ANIMATION_DURATION);
+    accuracyRadiusAnimator.start();
+
+    this.previousAccuracyRadius = targetAccuracyRadius;
+  }
+
   private final ValueAnimator.AnimatorUpdateListener layerLatLngUpdateListener =
     new ValueAnimator.AnimatorUpdateListener() {
       @Override
@@ -118,6 +135,16 @@ final class LocationLayerAnimator {
       public void onAnimationUpdate(ValueAnimator valueAnimator) {
         for (OnLayerAnimationsValuesChangeListener listener : layerListeners) {
           listener.onNewGpsBearingValue((Float) valueAnimator.getAnimatedValue());
+        }
+      }
+    };
+
+  private final ValueAnimator.AnimatorUpdateListener accuracyRadiusUpdateListener =
+    new ValueAnimator.AnimatorUpdateListener() {
+      @Override
+      public void onAnimationUpdate(ValueAnimator valueAnimator) {
+        for (OnLayerAnimationsValuesChangeListener listener : layerListeners) {
+          listener.onNewAccuracyRadiusValue((Float) valueAnimator.getAnimatedValue());
         }
       }
     };
@@ -158,6 +185,8 @@ final class LocationLayerAnimator {
     void onNewGpsBearingValue(float gpsBearing);
 
     void onNewCompassBearingValue(float compassBearing);
+
+    void onNewAccuracyRadiusValue(float accuracyRadiusValue);
   }
 
   interface OnCameraAnimationsValuesChangeListener {
@@ -177,6 +206,7 @@ final class LocationLayerAnimator {
   void cancelAllAnimations() {
     cancelLayerLocationAnimations();
     cancelLayerCompassAnimations();
+    cancelAccuracyRadiusAnimations();
     cancelCameraLocationAnimations();
     cancelCameraCompassAnimations();
   }
@@ -199,6 +229,16 @@ final class LocationLayerAnimator {
       previousBearing = previousLocation.getBearing();
     }
     return previousBearing;
+  }
+
+  private float getPreviousAccuracyRadius() {
+    float previousRadius;
+    if (accuracyRadiusAnimator != null) {
+      previousRadius = (float) accuracyRadiusAnimator.getAnimatedValue();
+    } else {
+      previousRadius = previousAccuracyRadius;
+    }
+    return previousRadius;
   }
 
   private float getPreviousLayerCompassBearing() {
@@ -304,6 +344,15 @@ final class LocationLayerAnimator {
     compassAnimatorSet.start();
   }
 
+  private void updateAccuracyAnimators(float targetAccuracyRadius, float previousAccuracyRadius) {
+    cancelAccuracyRadiusAnimations();
+    accuracyRadiusAnimator = new AccuracyAnimator(previousAccuracyRadius, targetAccuracyRadius);
+    accuracyRadiusAnimator.addUpdateListener(accuracyRadiusUpdateListener);
+  }
+
+  private void playAccuracyRadiusAnimation(long duration) {
+  }
+
   private void cancelLayerLocationAnimations() {
     cancelLayerLatLngAnimations();
     cancelLayerGpsBearingAnimations();
@@ -320,6 +369,13 @@ final class LocationLayerAnimator {
     if (layerGpsBearingAnimator != null) {
       layerGpsBearingAnimator.cancel();
       layerGpsBearingAnimator.removeAllUpdateListeners();
+    }
+  }
+
+  private void cancelAccuracyRadiusAnimations() {
+    if (accuracyRadiusAnimator != null) {
+      accuracyRadiusAnimator.cancel();
+      accuracyRadiusAnimator.removeAllUpdateListeners();
     }
   }
 

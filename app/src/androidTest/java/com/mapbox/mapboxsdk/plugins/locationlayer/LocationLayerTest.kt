@@ -271,7 +271,7 @@ class LocationLayerTest {
         mapboxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location), 16.0))
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
         plugin.forceLocationUpdate(location)
-        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY + ACCURACY_RADIUS_ANIMATION_DURATION)
 
         assertEquals(Utils.calculateZoomLevelRadius(mapboxMap, location) /*meters projected to radius on zoom 16*/,
           mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0]

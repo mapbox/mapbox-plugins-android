@@ -16,6 +16,9 @@ final class LocationLayerConstants {
   // Sets the max allowed time for the location icon animation from one LatLng to another.
   static final long MAX_ANIMATION_DURATION_MS = 2000;
 
+  // Sets the duration of change of accuracy radius when a different value is provided.
+  static final long ACCURACY_RADIUS_ANIMATION_DURATION = 250;
+
   // Sources
   static final String LOCATION_SOURCE = "mapbox-location-source";
   static final String PROPERTY_GPS_BEARING = "mapbox-property-gps-bearing";
