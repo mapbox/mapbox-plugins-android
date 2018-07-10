@@ -2,6 +2,18 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### 0.6.0 - July 9, 2018
+- Animate accuracy ring when new value is provided [#577](https://github.com/mapbox/mapbox-plugins-android/pull/577)
+- Allow pre-loaded MapboxMap images / maki icons in LocationLayerOptions [#574](https://github.com/mapbox/mapbox-plugins-android/pull/574)
+- Showing accuracy for forced location [#572](https://github.com/mapbox/mapbox-plugins-android/pull/572)
+- Update LocationLayerPlugin's readme examples [#571](https://github.com/mapbox/mapbox-plugins-android/pull/571)
+- Harden style changes [#568](https://github.com/mapbox/mapbox-plugins-android/pull/568)
+- Map zoom range docs [#565](https://github.com/mapbox/mapbox-plugins-android/pull/565)
+- 6.2.1 maps sdk bump [#562](https://github.com/mapbox/mapbox-plugins-android/pull/562)
+- Maps sdk bump to 6.2.0 [#559](https://github.com/mapbox/mapbox-plugins-android/pull/559)
+- Harden state and style changes [#545](https://github.com/mapbox/mapbox-plugins-android/pull/545)
+- Expose icon scale option [#543](https://github.com/mapbox/mapbox-plugins-android/pull/543)
+
 ### 0.5.3 - May 23, 2018
 - Adds a constructor which doesn't take in a locationEngine and sets up an internal engine instead [#527](https://github.com/mapbox/mapbox-plugins-android/pull/527)
 - Remove and readd onMapChange in onStart/onStop [#403](https://github.com/mapbox/mapbox-plugins-android/pull/403)
