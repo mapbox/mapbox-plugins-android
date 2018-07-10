@@ -2,6 +2,9 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### 0.5.4 - TBD
+- Remove `allowobfuscation` option from ProGuard rule file in order to support built-in shrinker of Android Gradle Plugin [#549](https://github.com/mapbox/mapbox-plugins-android/pull/549)
+
 ### 0.5.3 - May 23, 2018
 - Adds a constructor which doesn't take in a locationEngine and sets up an internal engine instead [#527](https://github.com/mapbox/mapbox-plugins-android/pull/527)
 - Remove and readd onMapChange in onStart/onStop [#403](https://github.com/mapbox/mapbox-plugins-android/pull/403)
