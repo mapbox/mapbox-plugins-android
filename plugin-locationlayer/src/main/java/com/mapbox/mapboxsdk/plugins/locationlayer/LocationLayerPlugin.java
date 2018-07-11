@@ -71,7 +71,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   private LocationLayer locationLayer;
   private LocationLayerCamera locationLayerCamera;
 
-  private LocationLayerAnimator locationLayerAnimator;
+  private LocationLayerAnimatorCoordinator locationLayerAnimatorCoordinator;
 
   /**
    * Holds last location which is being returned in the {@link #getLastKnownLocation()}
@@ -222,7 +222,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    */
   public void setCameraMode(@CameraMode.Mode int cameraMode) {
     boolean isGpsNorth = cameraMode == CameraMode.TRACKING_GPS_NORTH;
-    locationLayerAnimator.resetAllCameraAnimations(mapboxMap.getCameraPosition(), isGpsNorth);
+    locationLayerAnimatorCoordinator.resetAllCameraAnimations(mapboxMap.getCameraPosition(), isGpsNorth);
     locationLayerCamera.setCameraMode(cameraMode);
   }
 
@@ -535,7 +535,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     locationLayer.hide();
     staleStateManager.onStop();
     compassManager.onStop();
-    locationLayerAnimator.cancelAllAnimations();
+    locationLayerAnimatorCoordinator.cancelAllAnimations();
     if (locationEngine != null) {
       locationEngine.removeLocationEngineListener(locationEngineListener);
     }
@@ -556,9 +556,9 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     locationLayer = new LocationLayer(mapView, mapboxMap, options);
     locationLayerCamera = new LocationLayerCamera(
       mapView.getContext(), mapboxMap, cameraTrackingChangedListener, options, onCameraMoveInvalidateListener);
-    locationLayerAnimator = new LocationLayerAnimator();
-    locationLayerAnimator.addLayerListener(locationLayer);
-    locationLayerAnimator.addCameraListener(locationLayerCamera);
+    locationLayerAnimatorCoordinator = new LocationLayerAnimatorCoordinator();
+    locationLayerAnimatorCoordinator.addLayerListener(locationLayer);
+    locationLayerAnimatorCoordinator.addCameraListener(locationLayerCamera);
 
     compassManager = new CompassManager(mapView.getContext());
     compassManager.addCompassListener(compassListener);
@@ -615,13 +615,13 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     staleStateManager.updateLatestLocationTime();
     CameraPosition currentCameraPosition = mapboxMap.getCameraPosition();
     boolean isGpsNorth = getCameraMode() == CameraMode.TRACKING_GPS_NORTH;
-    locationLayerAnimator.feedNewLocation(location, currentCameraPosition, isGpsNorth);
+    locationLayerAnimatorCoordinator.feedNewLocation(location, currentCameraPosition, isGpsNorth);
     updateAccuracyRadius(location, false);
     lastLocation = location;
   }
 
   private void updateCompassHeading(float heading) {
-    locationLayerAnimator.feedNewCompassBearing(heading, mapboxMap.getCameraPosition());
+    locationLayerAnimatorCoordinator.feedNewCompassBearing(heading, mapboxMap.getCameraPosition());
   }
 
   /**
@@ -663,7 +663,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   }
 
   private void updateAccuracyRadius(Location location, boolean noAnimation) {
-    locationLayerAnimator.feedNewAccuracyRadius(Utils.calculateZoomLevelRadius(mapboxMap, location), noAnimation);
+    locationLayerAnimatorCoordinator.feedNewAccuracyRadius(Utils.calculateZoomLevelRadius(mapboxMap, location), noAnimation);
   }
 
   private OnCameraMoveListener onCameraMoveListener = new OnCameraMoveListener() {
