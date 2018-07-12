@@ -6,7 +6,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.List;
 
-class CameraLatLngAnimator extends LatLngAnimator<LocationLayerAnimator.OnCameraAnimationsValuesChangeListener> {
+class CameraLatLngAnimator extends PluginLatLngAnimator<PluginAnimator.OnCameraAnimationsValuesChangeListener> {
   CameraLatLngAnimator(LatLng previous, LatLng target, List<OnCameraAnimationsValuesChangeListener> updateListeners) {
     super(previous, target, updateListeners);
   }

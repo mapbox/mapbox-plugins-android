@@ -16,23 +16,31 @@ import java.util.List;
  * @param <K> Data type that will be animated.
  * @param <L> Listener of animation updates.
  */
-abstract class LocationLayerAnimator<K, L> extends ValueAnimator implements ValueAnimator.AnimatorUpdateListener {
+abstract class PluginAnimator<K, L> extends ValueAnimator implements ValueAnimator.AnimatorUpdateListener {
   @Retention(RetentionPolicy.SOURCE)
   @IntDef( {
     ANIMATOR_LAYER_LATLNG,
-    ANIMATOR_CAMERA_LATLNG
+    ANIMATOR_CAMERA_LATLNG,
+    ANIMATOR_LAYER_GPS_BEARING,
+    ANIMATOR_LAYER_COMPASS_BEARING,
+    ANIMATOR_CAMERA_GPS_BEARING,
+    ANIMATOR_CAMERA_COMPASS_BEARING
   })
   @interface Type {
   }
 
   static final int ANIMATOR_LAYER_LATLNG = 0;
   static final int ANIMATOR_CAMERA_LATLNG = 1;
+  static final int ANIMATOR_LAYER_GPS_BEARING = 2;
+  static final int ANIMATOR_LAYER_COMPASS_BEARING = 3;
+  static final int ANIMATOR_CAMERA_GPS_BEARING = 4;
+  static final int ANIMATOR_CAMERA_COMPASS_BEARING = 5;
 
   private final int animatorType = provideAnimatorType();
   final List<L> updateListeners;
   private final K target;
 
-  LocationLayerAnimator(K previous, K target, List<L> updateListeners) {
+  PluginAnimator(K previous, K target, List<L> updateListeners) {
     setObjectValues(previous, target);
     setEvaluator(provideEvaluator());
     this.updateListeners = updateListeners;

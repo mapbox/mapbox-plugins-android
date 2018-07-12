@@ -12,53 +12,51 @@ import android.view.animation.LinearInterpolator;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.locationlayer.camera.AccuracyAnimator;
-import com.mapbox.mapboxsdk.plugins.locationlayer.camera.BearingAnimator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerAnimator.ANIMATOR_CAMERA_LATLNG;
-import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerAnimator.ANIMATOR_LAYER_LATLNG;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.ACCURACY_RADIUS_ANIMATION_DURATION;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.COMPASS_UPDATE_RATE_MS;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.MAX_ANIMATION_DURATION_MS;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.TRANSITION_ANIMATION_DURATION_MS;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_CAMERA_COMPASS_BEARING;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_CAMERA_GPS_BEARING;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_CAMERA_LATLNG;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_LAYER_COMPASS_BEARING;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_LAYER_GPS_BEARING;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_LAYER_LATLNG;
 
-final class LocationLayerAnimatorCoordinator {
+final class PluginAnimatorCoordinator {
 
   @SuppressLint("UseSparseArrays")
-  private final Map<Integer, LocationLayerAnimator> animatorMap = new HashMap<>();
+  private final Map<Integer, PluginAnimator> animatorMap = new HashMap<>();
 
-  private final List<LocationLayerAnimator.OnLayerAnimationsValuesChangeListener> layerListeners = new ArrayList<>();
-  private final List<LocationLayerAnimator.OnCameraAnimationsValuesChangeListener> cameraListeners = new ArrayList<>();
+  private final List<PluginAnimator.OnLayerAnimationsValuesChangeListener> layerListeners = new ArrayList<>();
+  private final List<PluginAnimator.OnCameraAnimationsValuesChangeListener> cameraListeners = new ArrayList<>();
 
-  private BearingAnimator layerGpsBearingAnimator;
-  private BearingAnimator layerCompassBearingAnimator;
   private AccuracyAnimator accuracyRadiusAnimator;
-
-  private BearingAnimator cameraGpsBearingAnimator;
-  private BearingAnimator cameraCompassBearingAnimator;
 
   private Location previousLocation;
   private float previousAccuracyRadius = -1;
   private float previousCompassBearing = -1;
   private long locationUpdateTimestamp = -1;
 
-  void addLayerListener(LocationLayerAnimator.OnLayerAnimationsValuesChangeListener listener) {
+  void addLayerListener(PluginAnimator.OnLayerAnimationsValuesChangeListener listener) {
     layerListeners.add(listener);
   }
 
-  void removeLayerListener(LocationLayerAnimator.OnLayerAnimationsValuesChangeListener listener) {
+  void removeLayerListener(PluginAnimator.OnLayerAnimationsValuesChangeListener listener) {
     layerListeners.remove(listener);
   }
 
-  void addCameraListener(LocationLayerAnimator.OnCameraAnimationsValuesChangeListener listener) {
+  void addCameraListener(PluginAnimator.OnCameraAnimationsValuesChangeListener listener) {
     cameraListeners.add(listener);
   }
 
-  void removeCameraListener(LocationLayerAnimator.OnCameraAnimationsValuesChangeListener listener) {
+  void removeCameraListener(PluginAnimator.OnCameraAnimationsValuesChangeListener listener) {
     cameraListeners.remove(listener);
   }
 
@@ -114,72 +112,12 @@ final class LocationLayerAnimatorCoordinator {
     this.previousAccuracyRadius = targetAccuracyRadius;
   }
 
-  private final ValueAnimator.AnimatorUpdateListener layerLatLngUpdateListener =
-    new ValueAnimator.AnimatorUpdateListener() {
-      @Override
-      public void onAnimationUpdate(ValueAnimator valueAnimator) {
-        for (LocationLayerAnimator.OnLayerAnimationsValuesChangeListener listener : layerListeners) {
-          listener.onNewLatLngValue((LatLng) valueAnimator.getAnimatedValue());
-        }
-      }
-    };
-
-  private final ValueAnimator.AnimatorUpdateListener layerCompassBearingUpdateListener =
-    new ValueAnimator.AnimatorUpdateListener() {
-      @Override
-      public void onAnimationUpdate(ValueAnimator valueAnimator) {
-        for (LocationLayerAnimator.OnLayerAnimationsValuesChangeListener listener : layerListeners) {
-          listener.onNewCompassBearingValue((Float) valueAnimator.getAnimatedValue());
-        }
-      }
-    };
-
-  private final ValueAnimator.AnimatorUpdateListener layerGpsBearingUpdateListener =
-    new ValueAnimator.AnimatorUpdateListener() {
-      @Override
-      public void onAnimationUpdate(ValueAnimator valueAnimator) {
-        for (LocationLayerAnimator.OnLayerAnimationsValuesChangeListener listener : layerListeners) {
-          listener.onNewGpsBearingValue((Float) valueAnimator.getAnimatedValue());
-        }
-      }
-    };
-
   private final ValueAnimator.AnimatorUpdateListener accuracyRadiusUpdateListener =
     new ValueAnimator.AnimatorUpdateListener() {
       @Override
       public void onAnimationUpdate(ValueAnimator valueAnimator) {
-        for (LocationLayerAnimator.OnLayerAnimationsValuesChangeListener listener : layerListeners) {
+        for (PluginAnimator.OnLayerAnimationsValuesChangeListener listener : layerListeners) {
           listener.onNewAccuracyRadiusValue((Float) valueAnimator.getAnimatedValue());
-        }
-      }
-    };
-
-  private final ValueAnimator.AnimatorUpdateListener cameraLatLngUpdateListener =
-    new ValueAnimator.AnimatorUpdateListener() {
-      @Override
-      public void onAnimationUpdate(ValueAnimator valueAnimator) {
-        for (LocationLayerAnimator.OnCameraAnimationsValuesChangeListener listener : cameraListeners) {
-          listener.onNewLatLngValue((LatLng) valueAnimator.getAnimatedValue());
-        }
-      }
-    };
-
-  private final ValueAnimator.AnimatorUpdateListener cameraCompassBearingUpdateListener =
-    new ValueAnimator.AnimatorUpdateListener() {
-      @Override
-      public void onAnimationUpdate(ValueAnimator valueAnimator) {
-        for (LocationLayerAnimator.OnCameraAnimationsValuesChangeListener listener : cameraListeners) {
-          listener.onNewCompassBearingValue((Float) valueAnimator.getAnimatedValue());
-        }
-      }
-    };
-
-  private final ValueAnimator.AnimatorUpdateListener cameraGpsBearingUpdateListener =
-    new ValueAnimator.AnimatorUpdateListener() {
-      @Override
-      public void onAnimationUpdate(ValueAnimator valueAnimator) {
-        for (LocationLayerAnimator.OnCameraAnimationsValuesChangeListener listener : cameraListeners) {
-          listener.onNewGpsBearingValue((Float) valueAnimator.getAnimatedValue());
         }
       }
     };
@@ -200,7 +138,7 @@ final class LocationLayerAnimatorCoordinator {
 
   private LatLng getPreviousLayerLatLng() {
     LatLng previousLatLng;
-    LocationLayerAnimator latLngAnimator = animatorMap.get(ANIMATOR_LAYER_LATLNG);
+    PluginAnimator latLngAnimator = animatorMap.get(ANIMATOR_LAYER_LATLNG);
     if (latLngAnimator != null) {
       previousLatLng = (LatLng) latLngAnimator.getAnimatedValue();
     } else {
@@ -210,9 +148,10 @@ final class LocationLayerAnimatorCoordinator {
   }
 
   private float getPreviousLayerGpsBearing() {
+    LayerGpsBearingAnimator animator = (LayerGpsBearingAnimator) animatorMap.get(ANIMATOR_LAYER_GPS_BEARING);
     float previousBearing;
-    if (layerGpsBearingAnimator != null) {
-      previousBearing = (float) layerGpsBearingAnimator.getAnimatedValue();
+    if (animator != null) {
+      previousBearing = (float) animator.getAnimatedValue();
     } else {
       previousBearing = previousLocation.getBearing();
     }
@@ -230,9 +169,10 @@ final class LocationLayerAnimatorCoordinator {
   }
 
   private float getPreviousLayerCompassBearing() {
+    LayerCompassBearingAnimator animator = (LayerCompassBearingAnimator) animatorMap.get(ANIMATOR_LAYER_COMPASS_BEARING);
     float previousBearing;
-    if (layerCompassBearingAnimator != null) {
-      previousBearing = (float) layerCompassBearingAnimator.getAnimatedValue();
+    if (animator != null) {
+      previousBearing = (float) animator.getAnimatedValue();
     } else {
       previousBearing = previousCompassBearing;
     }
@@ -244,9 +184,7 @@ final class LocationLayerAnimatorCoordinator {
     cancelLayerLocationAnimations();
     animatorMap.put(ANIMATOR_LAYER_LATLNG, new LayerLatLngAnimator(previousLatLng, targetLatLng, layerListeners));
     float normalizedLayerBearing = Utils.shortestRotation(targetBearing, previousBearing);
-    layerGpsBearingAnimator = new BearingAnimator(previousBearing, normalizedLayerBearing);
-
-    layerGpsBearingAnimator.addUpdateListener(layerGpsBearingUpdateListener);
+    animatorMap.put(ANIMATOR_LAYER_GPS_BEARING, new LayerGpsBearingAnimator(previousBearing, normalizedLayerBearing, layerListeners));
   }
 
   private void updateCameraAnimators(LatLng previousCameraLatLng, float previousCameraBearing,
@@ -255,8 +193,7 @@ final class LocationLayerAnimatorCoordinator {
     animatorMap.put(ANIMATOR_CAMERA_LATLNG, new CameraLatLngAnimator(previousCameraLatLng, targetLatLng, cameraListeners));
 
     float normalizedCameraBearing = Utils.shortestRotation(targetBearing, previousCameraBearing);
-    cameraGpsBearingAnimator = new BearingAnimator(previousCameraBearing, normalizedCameraBearing);
-    cameraGpsBearingAnimator.addUpdateListener(cameraGpsBearingUpdateListener);
+    animatorMap.put(ANIMATOR_CAMERA_GPS_BEARING, new CameraGpsBearingAnimator(previousCameraBearing, normalizedCameraBearing, cameraListeners));
   }
 
   private long getAnimationDuration() {
@@ -286,9 +223,9 @@ final class LocationLayerAnimatorCoordinator {
   private void playAllLocationAnimators(long duration) {
     List<Animator> locationAnimators = new ArrayList<>();
     locationAnimators.add(animatorMap.get(ANIMATOR_LAYER_LATLNG));
-    locationAnimators.add(layerGpsBearingAnimator);
+    locationAnimators.add(animatorMap.get(ANIMATOR_LAYER_GPS_BEARING));
     locationAnimators.add(animatorMap.get(ANIMATOR_CAMERA_LATLNG));
-    locationAnimators.add(cameraGpsBearingAnimator);
+    locationAnimators.add(animatorMap.get(ANIMATOR_CAMERA_GPS_BEARING));
     AnimatorSet locationAnimatorSet = new AnimatorSet();
     locationAnimatorSet.playTogether(locationAnimators);
     locationAnimatorSet.setInterpolator(new LinearInterpolator());
@@ -299,7 +236,7 @@ final class LocationLayerAnimatorCoordinator {
   private void playCameraAnimators(long duration) {
     List<Animator> locationAnimators = new ArrayList<>();
     locationAnimators.add(animatorMap.get(ANIMATOR_CAMERA_LATLNG));
-    locationAnimators.add(cameraGpsBearingAnimator);
+    locationAnimators.add(animatorMap.get(ANIMATOR_CAMERA_GPS_BEARING));
     AnimatorSet locationAnimatorSet = new AnimatorSet();
     locationAnimatorSet.playTogether(locationAnimators);
     locationAnimatorSet.setInterpolator(new LinearInterpolator());
@@ -311,19 +248,17 @@ final class LocationLayerAnimatorCoordinator {
                                       float previousCameraBearing) {
     cancelLayerCompassAnimations();
     float normalizedLayerBearing = Utils.shortestRotation(targetCompassBearing, previousLayerBearing);
-    layerCompassBearingAnimator = new BearingAnimator(previousLayerBearing, normalizedLayerBearing);
-    layerCompassBearingAnimator.addUpdateListener(layerCompassBearingUpdateListener);
+    animatorMap.put(ANIMATOR_LAYER_COMPASS_BEARING, new LayerCompassBearingAnimator(previousLayerBearing, normalizedLayerBearing, layerListeners));
 
     cancelCameraCompassAnimations();
     float normalizedCameraBearing = Utils.shortestRotation(targetCompassBearing, previousCameraBearing);
-    cameraCompassBearingAnimator = new BearingAnimator(previousCameraBearing, normalizedCameraBearing);
-    cameraCompassBearingAnimator.addUpdateListener(cameraCompassBearingUpdateListener);
+    animatorMap.put(ANIMATOR_CAMERA_COMPASS_BEARING, new CameraCompassBearingAnimator(previousCameraBearing, normalizedCameraBearing, cameraListeners));
   }
 
   private void playCompassAnimators(long duration) {
     List<Animator> compassAnimators = new ArrayList<>();
-    compassAnimators.add(layerCompassBearingAnimator);
-    compassAnimators.add(cameraCompassBearingAnimator);
+    compassAnimators.add(animatorMap.get(ANIMATOR_LAYER_COMPASS_BEARING));
+    compassAnimators.add(animatorMap.get(ANIMATOR_CAMERA_COMPASS_BEARING));
     AnimatorSet compassAnimatorSet = new AnimatorSet();
     compassAnimatorSet.playTogether(compassAnimators);
     compassAnimatorSet.setDuration(duration);
@@ -342,7 +277,7 @@ final class LocationLayerAnimatorCoordinator {
   }
 
   private void cancelLayerLatLngAnimations() {
-    LocationLayerAnimator latLngAnimator = animatorMap.get(ANIMATOR_LAYER_LATLNG);
+    PluginAnimator latLngAnimator = animatorMap.get(ANIMATOR_LAYER_LATLNG);
     if (latLngAnimator != null) {
       latLngAnimator.cancel();
       latLngAnimator.removeAllUpdateListeners();
@@ -350,10 +285,7 @@ final class LocationLayerAnimatorCoordinator {
   }
 
   private void cancelLayerGpsBearingAnimations() {
-    if (layerGpsBearingAnimator != null) {
-      layerGpsBearingAnimator.cancel();
-      layerGpsBearingAnimator.removeAllUpdateListeners();
-    }
+    cancelAnimator(PluginAnimator.ANIMATOR_LAYER_GPS_BEARING);
   }
 
   private void cancelAccuracyRadiusAnimations() {
@@ -364,10 +296,7 @@ final class LocationLayerAnimatorCoordinator {
   }
 
   private void cancelLayerCompassAnimations() {
-    if (layerCompassBearingAnimator != null) {
-      layerCompassBearingAnimator.cancel();
-      layerCompassBearingAnimator.removeAllUpdateListeners();
-    }
+    cancelAnimator(PluginAnimator.ANIMATOR_LAYER_COMPASS_BEARING);
   }
 
   private void cancelCameraLocationAnimations() {
@@ -381,7 +310,7 @@ final class LocationLayerAnimatorCoordinator {
   }
 
   private void cancelCameraLatLngAnimations() {
-    LocationLayerAnimator latLngAnimator = animatorMap.get(ANIMATOR_CAMERA_LATLNG);
+    PluginAnimator latLngAnimator = animatorMap.get(ANIMATOR_CAMERA_LATLNG);
     if (latLngAnimator != null) {
       latLngAnimator.cancel();
       latLngAnimator.removeAllUpdateListeners();
@@ -400,42 +329,44 @@ final class LocationLayerAnimatorCoordinator {
   }
 
   private void cancelCameraGpsBearingAnimations() {
-    if (cameraGpsBearingAnimator != null) {
-      cameraGpsBearingAnimator.cancel();
-      cameraGpsBearingAnimator.removeAllUpdateListeners();
-    }
+    cancelAnimator(PluginAnimator.ANIMATOR_CAMERA_GPS_BEARING);
   }
 
   private void resetCameraGpsBearingAnimation(CameraPosition currentCameraPosition, boolean isGpsNorth) {
-    if (cameraGpsBearingAnimator == null) {
+    CameraGpsBearingAnimator animator = (CameraGpsBearingAnimator) animatorMap.get(ANIMATOR_CAMERA_GPS_BEARING);
+    if (animator == null) {
       return;
     }
     cancelCameraGpsBearingAnimations();
-    float currentTargetBearing = cameraGpsBearingAnimator.getTargetBearing();
+    float currentTargetBearing = animator.getTarget();
     currentTargetBearing = checkGpsNorth(isGpsNorth, currentTargetBearing);
     float previousCameraBearing = (float) currentCameraPosition.bearing;
     float normalizedCameraBearing = Utils.shortestRotation(currentTargetBearing, previousCameraBearing);
-    cameraGpsBearingAnimator = new BearingAnimator(previousCameraBearing, normalizedCameraBearing);
-    cameraGpsBearingAnimator.addUpdateListener(cameraGpsBearingUpdateListener);
+    animatorMap.put(ANIMATOR_CAMERA_GPS_BEARING, new CameraGpsBearingAnimator(previousCameraBearing, normalizedCameraBearing, cameraListeners));
   }
 
   private void cancelCameraCompassAnimations() {
-    if (cameraCompassBearingAnimator != null) {
-      cameraCompassBearingAnimator.cancel();
-      cameraCompassBearingAnimator.removeAllUpdateListeners();
-    }
+    cancelAnimator(PluginAnimator.ANIMATOR_CAMERA_COMPASS_BEARING);
   }
 
   private void resetCameraCompassAnimation(CameraPosition currentCameraPosition) {
     CameraLatLngAnimator cameraLatLngAnimator = (CameraLatLngAnimator) animatorMap.get(ANIMATOR_CAMERA_LATLNG);
+    CameraCompassBearingAnimator cameraCompassBearingAnimator = (CameraCompassBearingAnimator) animatorMap.get(ANIMATOR_CAMERA_COMPASS_BEARING);
     if (cameraCompassBearingAnimator == null || cameraLatLngAnimator == null) {
       return;
     }
     cancelCameraCompassAnimations();
-    float currentTargetBearing = cameraCompassBearingAnimator.getTargetBearing();
+    float currentTargetBearing = cameraCompassBearingAnimator.getTarget();
     float previousCameraBearing = (float) currentCameraPosition.bearing;
     float normalizedCameraBearing = Utils.shortestRotation(currentTargetBearing, previousCameraBearing);
-    cameraCompassBearingAnimator = new BearingAnimator(previousCameraBearing, normalizedCameraBearing);
-    cameraCompassBearingAnimator.addUpdateListener(cameraCompassBearingUpdateListener);
+    animatorMap.put(ANIMATOR_CAMERA_COMPASS_BEARING, new CameraCompassBearingAnimator(previousCameraBearing, normalizedCameraBearing, cameraListeners));
+  }
+
+  private void cancelAnimator(@PluginAnimator.Type int animatorType) {
+    PluginAnimator animator = animatorMap.get(animatorType);
+    if (animator != null) {
+      animator.cancel();
+      animator.removeAllUpdateListeners();
+    }
   }
 }

@@ -6,9 +6,9 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.List;
 
-abstract class LatLngAnimator<L> extends LocationLayerAnimator<LatLng, L> {
+abstract class PluginLatLngAnimator<L> extends PluginAnimator<LatLng, L> {
 
-  LatLngAnimator(LatLng previous, LatLng target, List<L> updateListeners) {
+  PluginLatLngAnimator(LatLng previous, LatLng target, List<L> updateListeners) {
     super(previous, target, updateListeners);
   }
 
