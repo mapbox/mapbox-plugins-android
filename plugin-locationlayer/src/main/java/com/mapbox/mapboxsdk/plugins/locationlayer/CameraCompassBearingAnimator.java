@@ -5,7 +5,8 @@ import android.animation.ValueAnimator;
 import java.util.List;
 
 class CameraCompassBearingAnimator extends PluginFloatAnimator<PluginAnimator.OnCameraAnimationsValuesChangeListener> {
-  CameraCompassBearingAnimator(Float previous, Float target, List<OnCameraAnimationsValuesChangeListener> updateListeners) {
+  CameraCompassBearingAnimator(Float previous, Float target,
+                               List<OnCameraAnimationsValuesChangeListener> updateListeners) {
     super(previous, target, updateListeners);
   }
 

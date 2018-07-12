@@ -5,7 +5,8 @@ import android.animation.ValueAnimator;
 import java.util.List;
 
 class LayerCompassBearingAnimator extends PluginFloatAnimator<PluginAnimator.OnLayerAnimationsValuesChangeListener> {
-  LayerCompassBearingAnimator(Float previous, Float target, List<OnLayerAnimationsValuesChangeListener> updateListeners) {
+  LayerCompassBearingAnimator(Float previous,
+                              Float target, List<OnLayerAnimationsValuesChangeListener> updateListeners) {
     super(previous, target, updateListeners);
   }
 
