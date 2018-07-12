@@ -23,6 +23,7 @@ import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.SupportMapFragment
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.*
+import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode
 import com.mapbox.mapboxsdk.plugins.testapp.activity.SingleFragmentActivity
 import com.mapbox.mapboxsdk.plugins.utils.*
@@ -636,6 +637,115 @@ class LocationLayerPluginTest {
 
     // Waiting for style to finish loading while pushing updates
     onView(withId(R.id.content)).check(matches(isDisplayed()))
+  }
+
+  @Test
+  fun animators_layerBearingCorrect() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        plugin.renderMode = RenderMode.GPS
+        location.bearing = 77f
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(1000)
+        assertEquals(77.0, mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].getNumberProperty(PROPERTY_GPS_BEARING) as Double, 0.1)
+
+        location.bearing = 92f
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(2000) // Waiting for the animation to finish
+        assertEquals(92.0, mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].getNumberProperty(PROPERTY_GPS_BEARING) as Double, 0.1)
+      }
+    }
+
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+  }
+
+  @Test
+  fun animators_cameraLatLngBearingCorrect() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        plugin.cameraMode = CameraMode.TRACKING_GPS
+        location.bearing = 77f
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(1000)
+        assertEquals(77.0, mapboxMap.cameraPosition.bearing, 0.1)
+        assertEquals(location.latitude, mapboxMap.cameraPosition.target.latitude, 0.1)
+        assertEquals(location.longitude, mapboxMap.cameraPosition.target.longitude, 0.1)
+
+        location.bearing = 92f
+        location.latitude = 30.0
+        location.longitude = 35.0
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(2000) // Waiting for the animation to finish
+        assertEquals(92.0, mapboxMap.cameraPosition.bearing, 0.1)
+        assertEquals(location.latitude, mapboxMap.cameraPosition.target.latitude, 0.1)
+        assertEquals(location.longitude, mapboxMap.cameraPosition.target.longitude, 0.1)
+      }
+    }
+
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+  }
+
+  @Test
+  fun animators_cameraBearingCorrect() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        plugin.cameraMode = CameraMode.NONE_GPS
+        val latitude = mapboxMap.cameraPosition.target.latitude
+        val longitude = mapboxMap.cameraPosition.target.longitude
+
+        location.bearing = 77f
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(1000)
+        assertEquals(77.0, mapboxMap.cameraPosition.bearing, 0.1)
+        assertEquals(latitude, mapboxMap.cameraPosition.target.latitude, 0.1)
+        assertEquals(longitude, mapboxMap.cameraPosition.target.longitude, 0.1)
+
+        location.bearing = 92f
+        location.latitude = 30.0
+        location.longitude = 35.0
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(2000) // Waiting for the animation to finish
+        assertEquals(92.0, mapboxMap.cameraPosition.bearing, 0.1)
+        assertEquals(latitude, mapboxMap.cameraPosition.target.latitude, 0.1)
+        assertEquals(longitude, mapboxMap.cameraPosition.target.longitude, 0.1)
+      }
+    }
+
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+  }
+
+  @Test
+  fun animators_cameraNoneCorrect() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        plugin.cameraMode = CameraMode.NONE
+        val latitude = mapboxMap.cameraPosition.target.latitude
+        val longitude = mapboxMap.cameraPosition.target.longitude
+        val bearing = mapboxMap.cameraPosition.bearing
+
+        location.bearing = 77f
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(1000)
+        assertEquals(bearing, mapboxMap.cameraPosition.bearing, 0.1)
+        assertEquals(latitude, mapboxMap.cameraPosition.target.latitude, 0.1)
+        assertEquals(longitude, mapboxMap.cameraPosition.target.longitude, 0.1)
+
+        location.bearing = 92f
+        location.latitude = 30.0
+        location.longitude = 35.0
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(2000) // Waiting for the animation to finish
+        assertEquals(bearing, mapboxMap.cameraPosition.bearing, 0.1)
+        assertEquals(latitude, mapboxMap.cameraPosition.target.latitude, 0.1)
+        assertEquals(longitude, mapboxMap.cameraPosition.target.longitude, 0.1)
+      }
+    }
+
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
   }
 
   @After
