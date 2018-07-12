@@ -19,6 +19,8 @@ final class LocationLayerConstants {
   // Sets the duration of change of accuracy radius when a different value is provided.
   static final long ACCURACY_RADIUS_ANIMATION_DURATION = 250;
 
+  static final long DEFAULT_TRACKING_ZOOM_ANIMATION_DURATION = 750;
+
   // Sources
   static final String LOCATION_SOURCE = "mapbox-location-source";
   static final String PROPERTY_GPS_BEARING = "mapbox-property-gps-bearing";

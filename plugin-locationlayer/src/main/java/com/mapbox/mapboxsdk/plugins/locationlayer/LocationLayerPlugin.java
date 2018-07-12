@@ -16,6 +16,7 @@ import com.mapbox.android.core.location.LocationEngineListener;
 import com.mapbox.android.core.location.LocationEnginePriority;
 import com.mapbox.android.core.location.LocationEngineProvider;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdate;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapView.OnMapChangedListener;
@@ -28,8 +29,11 @@ import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import timber.log.Timber;
+
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.DEFAULT_TRACKING_ZOOM_ANIMATION_DURATION;
 
 /**
  * The Location layer plugin provides location awareness to your mobile application. Enabling this
@@ -301,6 +305,66 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     }
     staleStateManager.setDelayTime(options.staleStateTimeout());
     updateMapWithOptions(options);
+  }
+
+  /**
+   * Zooms to the desired zoom level.
+   * This API can only be used in pair with camera modes other than {@link CameraMode#NONE}.
+   * If you are not using any of {@link CameraMode} modes,
+   * use one of {@link MapboxMap#moveCamera(CameraUpdate)},
+   * {@link MapboxMap#easeCamera(CameraUpdate)} or {@link MapboxMap#animateCamera(CameraUpdate)} instead.
+   *
+   * @param zoomLevel         The desired zoom level.
+   * @param animationDuration The zoom animation duration.
+   * @param callback          The callback with finish/cancel information
+   */
+  public void zoomWhileTracking(double zoomLevel, long animationDuration,
+                                @Nullable MapboxMap.CancelableCallback callback) {
+    if (!isLocationLayerStarted) {
+      return;
+    } else if (getCameraMode() == CameraMode.NONE) {
+      Timber.e("%s%s",
+        "LocationLayerPlugin#zoomWhileTracking method can only be used",
+        " when a camera mode other than CameraMode#NONE is engaged.");
+      return;
+    }
+    pluginAnimatorCoordinator.feedNewZoomLevel(zoomLevel, mapboxMap.getCameraPosition(), animationDuration, callback);
+  }
+
+  /**
+   * Zooms to the desired zoom level.
+   * This API can only be used in pair with camera modes other than {@link CameraMode#NONE}.
+   * If you are not using any of {@link CameraMode} modes,
+   * use one of {@link MapboxMap#moveCamera(CameraUpdate)},
+   * {@link MapboxMap#easeCamera(CameraUpdate)} or {@link MapboxMap#animateCamera(CameraUpdate)} instead.
+   *
+   * @param zoomLevel         The desired zoom level.
+   * @param animationDuration The zoom animation duration.
+   */
+  public void zoomWhileTracking(double zoomLevel, long animationDuration) {
+    zoomWhileTracking(zoomLevel, animationDuration, null);
+  }
+
+  /**
+   * Zooms to the desired zoom level.
+   * This API can only be used in pair with camera modes other than {@link CameraMode#NONE}.
+   * If you are not using any of {@link CameraMode} modes,
+   * use one of {@link MapboxMap#moveCamera(CameraUpdate)},
+   * {@link MapboxMap#easeCamera(CameraUpdate)} or {@link MapboxMap#animateCamera(CameraUpdate)} instead.
+   *
+   * @param zoomLevel The desired zoom level.
+   */
+  public void zoomWhileTracking(double zoomLevel) {
+    zoomWhileTracking(zoomLevel, DEFAULT_TRACKING_ZOOM_ANIMATION_DURATION, null);
+  }
+
+  public void cancelZoomWhileTrackingAnimation() {
+    pluginAnimatorCoordinator.cancelZoomAnimation();
+  }
+
+  // TODO: 12/07/2018 docs
+  public void tiltTo(double tilt) {
+
   }
 
   /**
@@ -771,6 +835,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
 
     @Override
     public void onCameraTrackingChanged(int currentMode) {
+      pluginAnimatorCoordinator.cancelZoomAnimation();
       for (OnCameraTrackingChangedListener listener : onCameraTrackingChangedListeners) {
         listener.onCameraTrackingChanged(currentMode);
       }
