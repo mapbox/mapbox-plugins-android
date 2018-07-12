@@ -6,10 +6,12 @@ import android.annotation.SuppressLint;
 import android.location.Location;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.animation.LinearInterpolator;
 
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +29,7 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR
 import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_LAYER_COMPASS_BEARING;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_LAYER_GPS_BEARING;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_LAYER_LATLNG;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_ZOOM;
 
 final class PluginAnimatorCoordinator {
 
@@ -106,6 +109,13 @@ final class PluginAnimatorCoordinator {
     playAccuracyAnimator(noAnimation ? 0 : ACCURACY_RADIUS_ANIMATION_DURATION);
 
     this.previousAccuracyRadius = targetAccuracyRadius;
+  }
+
+  // TODO: 12/07/2018 canceling zoom and tilt
+  void feedNewZoomLevel(double targetZoomLevel, @NonNull CameraPosition currentCameraPosition, long animationDuration,
+                        @Nullable MapboxMap.CancelableCallback callback) {
+    updateZoomAnimator((float) targetZoomLevel, (float) currentCameraPosition.zoom, callback);
+    playZoomAnimator(animationDuration);
   }
 
   private LatLng getPreviousLayerLatLng() {
@@ -189,6 +199,12 @@ final class PluginAnimatorCoordinator {
       new LayerAccuracyAnimator(previousAccuracyRadius, targetAccuracyRadius, layerListeners));
   }
 
+  private void updateZoomAnimator(float targetZoomLevel, float previousZoomLevel,
+                                  @Nullable MapboxMap.CancelableCallback cancelableCallback) {
+    createNewAnimator(ANIMATOR_ZOOM,
+      new ZoomAnimator(previousZoomLevel, targetZoomLevel, cameraListeners, cancelableCallback));
+  }
+
   private long getAnimationDuration() {
     long previousUpdateTimeStamp = locationUpdateTimestamp;
     locationUpdateTimestamp = SystemClock.elapsedRealtime();
@@ -238,6 +254,12 @@ final class PluginAnimatorCoordinator {
 
   private void playAccuracyAnimator(long duration) {
     PluginAnimator animator = animatorMap.get(ANIMATOR_LAYER_ACCURACY);
+    animator.setDuration(duration);
+    animator.start();
+  }
+
+  private void playZoomAnimator(long duration) {
+    PluginAnimator animator = animatorMap.get(ANIMATOR_ZOOM);
     animator.setDuration(duration);
     animator.start();
   }
@@ -309,6 +331,10 @@ final class PluginAnimatorCoordinator {
     animatorMap.put(animatorType, animator);
   }
 
+  void cancelZoomAnimation() {
+    cancelAnimator(ANIMATOR_ZOOM);
+  }
+
   void cancelAllAnimations() {
     for (@PluginAnimator.Type int animatorType : animatorMap.keySet()) {
       cancelAnimator(animatorType);
@@ -320,6 +346,7 @@ final class PluginAnimatorCoordinator {
     if (animator != null) {
       animator.cancel();
       animator.removeAllUpdateListeners();
+      animator.removeAllListeners();
       animatorMap.put(animatorType, null);
     }
   }
