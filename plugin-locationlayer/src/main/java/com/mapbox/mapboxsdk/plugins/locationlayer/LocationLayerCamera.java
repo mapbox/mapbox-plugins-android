@@ -15,7 +15,7 @@ import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode;
 import java.util.List;
 import java.util.Set;
 
-final class LocationLayerCamera implements LocationLayerAnimator.OnCameraAnimationsValuesChangeListener {
+final class LocationLayerCamera implements PluginAnimator.OnCameraAnimationsValuesChangeListener {
 
   @CameraMode.Mode
   private int cameraMode;

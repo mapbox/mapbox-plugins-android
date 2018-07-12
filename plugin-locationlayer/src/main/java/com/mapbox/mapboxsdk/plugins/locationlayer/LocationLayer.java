@@ -81,7 +81,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotationAlig
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
 
-final class LocationLayer implements LocationLayerAnimator.OnLayerAnimationsValuesChangeListener {
+final class LocationLayer implements PluginAnimator.OnLayerAnimationsValuesChangeListener {
 
   @RenderMode.Mode
   private int renderMode;

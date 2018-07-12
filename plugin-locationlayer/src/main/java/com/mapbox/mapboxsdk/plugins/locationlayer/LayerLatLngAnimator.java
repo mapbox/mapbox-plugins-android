@@ -6,7 +6,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.List;
 
-class LayerLatLngAnimator extends LatLngAnimator<LocationLayerAnimator.OnLayerAnimationsValuesChangeListener> {
+class LayerLatLngAnimator extends PluginLatLngAnimator<PluginAnimator.OnLayerAnimationsValuesChangeListener> {
   LayerLatLngAnimator(LatLng previous, LatLng target, List<OnLayerAnimationsValuesChangeListener> updateListeners) {
     super(previous, target, updateListeners);
   }
