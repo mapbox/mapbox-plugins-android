@@ -2,7 +2,6 @@ package com.mapbox.mapboxsdk.plugins.locationlayer;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.location.Location;
 import android.os.SystemClock;
@@ -11,7 +10,6 @@ import android.view.animation.LinearInterpolator;
 
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.plugins.locationlayer.camera.AccuracyAnimator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +23,7 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.
 import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_CAMERA_COMPASS_BEARING;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_CAMERA_GPS_BEARING;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_CAMERA_LATLNG;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_LAYER_ACCURACY;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_LAYER_COMPASS_BEARING;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_LAYER_GPS_BEARING;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_LAYER_LATLNG;
@@ -36,8 +35,6 @@ final class PluginAnimatorCoordinator {
 
   private final List<PluginAnimator.OnLayerAnimationsValuesChangeListener> layerListeners = new ArrayList<>();
   private final List<PluginAnimator.OnCameraAnimationsValuesChangeListener> cameraListeners = new ArrayList<>();
-
-  private AccuracyAnimator accuracyRadiusAnimator;
 
   private Location previousLocation;
   private float previousAccuracyRadius = -1;
@@ -106,21 +103,12 @@ final class PluginAnimatorCoordinator {
 
     float previousAccuracyRadius = getPreviousAccuracyRadius();
     updateAccuracyAnimators(targetAccuracyRadius, previousAccuracyRadius);
-    accuracyRadiusAnimator.setDuration(noAnimation ? 0 : ACCURACY_RADIUS_ANIMATION_DURATION);
-    accuracyRadiusAnimator.start();
+    PluginAnimator animator = animatorMap.get(ANIMATOR_LAYER_ACCURACY);
+    animator.setDuration(noAnimation ? 0 : ACCURACY_RADIUS_ANIMATION_DURATION);
+    animator.start();
 
     this.previousAccuracyRadius = targetAccuracyRadius;
   }
-
-  private final ValueAnimator.AnimatorUpdateListener accuracyRadiusUpdateListener =
-    new ValueAnimator.AnimatorUpdateListener() {
-      @Override
-      public void onAnimationUpdate(ValueAnimator valueAnimator) {
-        for (PluginAnimator.OnLayerAnimationsValuesChangeListener listener : layerListeners) {
-          listener.onNewAccuracyRadiusValue((Float) valueAnimator.getAnimatedValue());
-        }
-      }
-    };
 
   void resetAllCameraAnimations(CameraPosition currentCameraPosition, boolean isGpsNorth) {
     resetCameraCompassAnimation(currentCameraPosition);
@@ -159,9 +147,10 @@ final class PluginAnimatorCoordinator {
   }
 
   private float getPreviousAccuracyRadius() {
+    LayerAccuracyAnimator animator = (LayerAccuracyAnimator) animatorMap.get(ANIMATOR_LAYER_ACCURACY);
     float previousRadius;
-    if (accuracyRadiusAnimator != null) {
-      previousRadius = (float) accuracyRadiusAnimator.getAnimatedValue();
+    if (animator != null) {
+      previousRadius = (float) animator.getAnimatedValue();
     } else {
       previousRadius = previousAccuracyRadius;
     }
@@ -267,8 +256,7 @@ final class PluginAnimatorCoordinator {
 
   private void updateAccuracyAnimators(float targetAccuracyRadius, float previousAccuracyRadius) {
     cancelAccuracyRadiusAnimations();
-    accuracyRadiusAnimator = new AccuracyAnimator(previousAccuracyRadius, targetAccuracyRadius);
-    accuracyRadiusAnimator.addUpdateListener(accuracyRadiusUpdateListener);
+    animatorMap.put(ANIMATOR_LAYER_ACCURACY, new LayerAccuracyAnimator(previousAccuracyRadius, targetAccuracyRadius, layerListeners));
   }
 
   private void cancelLayerLocationAnimations() {
@@ -285,18 +273,15 @@ final class PluginAnimatorCoordinator {
   }
 
   private void cancelLayerGpsBearingAnimations() {
-    cancelAnimator(PluginAnimator.ANIMATOR_LAYER_GPS_BEARING);
+    cancelAnimator(ANIMATOR_LAYER_GPS_BEARING);
   }
 
   private void cancelAccuracyRadiusAnimations() {
-    if (accuracyRadiusAnimator != null) {
-      accuracyRadiusAnimator.cancel();
-      accuracyRadiusAnimator.removeAllUpdateListeners();
-    }
+    cancelAnimator(ANIMATOR_LAYER_ACCURACY);
   }
 
   private void cancelLayerCompassAnimations() {
-    cancelAnimator(PluginAnimator.ANIMATOR_LAYER_COMPASS_BEARING);
+    cancelAnimator(ANIMATOR_LAYER_COMPASS_BEARING);
   }
 
   private void cancelCameraLocationAnimations() {
