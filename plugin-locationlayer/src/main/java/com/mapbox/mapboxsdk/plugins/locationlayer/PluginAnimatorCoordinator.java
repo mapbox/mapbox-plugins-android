@@ -112,7 +112,6 @@ final class PluginAnimatorCoordinator {
     this.previousAccuracyRadius = targetAccuracyRadius;
   }
 
-  // TODO: 12/07/2018 canceling zoom and tilt
   void feedNewZoomLevel(double targetZoomLevel, @NonNull CameraPosition currentCameraPosition, long animationDuration,
                         @Nullable MapboxMap.CancelableCallback callback) {
     updateZoomAnimator((float) targetZoomLevel, (float) currentCameraPosition.zoom, callback);
