@@ -77,6 +77,11 @@ final class LocationLayerCamera implements PluginAnimator.OnCameraAnimationsValu
     onCameraMoveInvalidateListener.onInvalidateCameraMove();
   }
 
+  private void setTilt(float tilt) {
+    mapboxMap.moveCamera(CameraUpdateFactory.tiltTo(tilt));
+    onCameraMoveInvalidateListener.onInvalidateCameraMove();
+  }
+
   @Override
   public void onNewLatLngValue(LatLng latLng) {
     if (cameraMode == CameraMode.TRACKING
@@ -116,6 +121,11 @@ final class LocationLayerCamera implements PluginAnimator.OnCameraAnimationsValu
   @Override
   public void onNewZoomValue(float zoom) {
     setZoom(zoom);
+  }
+
+  @Override
+  public void onNewTiltValue(float tilt) {
+    setTilt(tilt);
   }
 
   private void adjustGesturesThresholds() {

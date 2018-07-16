@@ -33,6 +33,7 @@ import timber.log.Timber;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.DEFAULT_TRACKING_TILT_ANIMATION_DURATION;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.DEFAULT_TRACKING_ZOOM_ANIMATION_DURATION;
 
 /**
@@ -358,13 +359,69 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     zoomWhileTracking(zoomLevel, DEFAULT_TRACKING_ZOOM_ANIMATION_DURATION, null);
   }
 
+  /**
+   * Cancels animation started by {@link #zoomWhileTracking(double, long, MapboxMap.CancelableCallback)}.
+   */
   public void cancelZoomWhileTrackingAnimation() {
     pluginAnimatorCoordinator.cancelZoomAnimation();
   }
 
-  // TODO: 12/07/2018 docs
-  public void tiltTo(double tilt) {
+  /**
+   * Tilts the camera.
+   * This API can only be used in pair with camera modes other than {@link CameraMode#NONE}.
+   * If you are not using any of {@link CameraMode} modes,
+   * use one of {@link MapboxMap#moveCamera(CameraUpdate)},
+   * {@link MapboxMap#easeCamera(CameraUpdate)} or {@link MapboxMap#animateCamera(CameraUpdate)} instead.
+   *
+   * @param tilt              The desired camera tilt.
+   * @param animationDuration The tilt animation duration.
+   * @param callback          The callback with finish/cancel information
+   */
+  public void tiltWhileTracking(double tilt, long animationDuration,
+                                @Nullable MapboxMap.CancelableCallback callback) {
+    if (!isLocationLayerStarted) {
+      return;
+    } else if (getCameraMode() == CameraMode.NONE) {
+      Timber.e("%s%s",
+        "LocationLayerPlugin#tiltWhileTracking method can only be used",
+        " when a camera mode other than CameraMode#NONE is engaged.");
+      return;
+    }
+    pluginAnimatorCoordinator.feedNewTilt(tilt, mapboxMap.getCameraPosition(), animationDuration, callback);
+  }
 
+  /**
+   * Tilts the camera.
+   * This API can only be used in pair with camera modes other than {@link CameraMode#NONE}.
+   * If you are not using any of {@link CameraMode} modes,
+   * use one of {@link MapboxMap#moveCamera(CameraUpdate)},
+   * {@link MapboxMap#easeCamera(CameraUpdate)} or {@link MapboxMap#animateCamera(CameraUpdate)} instead.
+   *
+   * @param tilt              The desired camera tilt.
+   * @param animationDuration The tilt animation duration.
+   */
+  public void tiltWhileTracking(double tilt, long animationDuration) {
+    tiltWhileTracking(tilt, animationDuration, null);
+  }
+
+  /**
+   * Tilts the camera.
+   * This API can only be used in pair with camera modes other than {@link CameraMode#NONE}.
+   * If you are not using any of {@link CameraMode} modes,
+   * use one of {@link MapboxMap#moveCamera(CameraUpdate)},
+   * {@link MapboxMap#easeCamera(CameraUpdate)} or {@link MapboxMap#animateCamera(CameraUpdate)} instead.
+   *
+   * @param tilt The desired camera tilt.
+   */
+  public void tiltWhileTracking(double tilt) {
+    tiltWhileTracking(tilt, DEFAULT_TRACKING_TILT_ANIMATION_DURATION, null);
+  }
+
+  /**
+   * Cancels animation started by {@link #tiltWhileTracking(double, long, MapboxMap.CancelableCallback)}.
+   */
+  public void cancelTiltWhileTrackingAnimation() {
+    pluginAnimatorCoordinator.cancelTiltAnimation();
   }
 
   /**
@@ -836,6 +893,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     @Override
     public void onCameraTrackingChanged(int currentMode) {
       pluginAnimatorCoordinator.cancelZoomAnimation();
+      pluginAnimatorCoordinator.cancelTiltAnimation();
       for (OnCameraTrackingChangedListener listener : onCameraTrackingChangedListeners) {
         listener.onCameraTrackingChanged(currentMode);
       }

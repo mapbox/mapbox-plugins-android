@@ -29,6 +29,7 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR
 import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_LAYER_COMPASS_BEARING;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_LAYER_GPS_BEARING;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_LAYER_LATLNG;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_TILT;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_ZOOM;
 
 final class PluginAnimatorCoordinator {
@@ -118,6 +119,12 @@ final class PluginAnimatorCoordinator {
     playZoomAnimator(animationDuration);
   }
 
+  void feedNewTilt(double targetTilt, @NonNull CameraPosition currentCameraPosition, long animationDuration,
+                   @Nullable MapboxMap.CancelableCallback callback) {
+    updateTiltAnimator((float) targetTilt, (float) currentCameraPosition.tilt, callback);
+    playTiltAnimator(animationDuration);
+  }
+
   private LatLng getPreviousLayerLatLng() {
     LatLng previousLatLng;
     PluginAnimator latLngAnimator = animatorMap.get(ANIMATOR_LAYER_LATLNG);
@@ -205,6 +212,12 @@ final class PluginAnimatorCoordinator {
       new ZoomAnimator(previousZoomLevel, targetZoomLevel, cameraListeners, cancelableCallback));
   }
 
+  private void updateTiltAnimator(float targetTilt, float previousTiltLevel,
+                                  @Nullable MapboxMap.CancelableCallback cancelableCallback) {
+    createNewAnimator(ANIMATOR_TILT,
+      new TiltAnimator(previousTiltLevel, targetTilt, cameraListeners, cancelableCallback));
+  }
+
   private long getAnimationDuration() {
     long previousUpdateTimeStamp = locationUpdateTimestamp;
     locationUpdateTimestamp = SystemClock.elapsedRealtime();
@@ -260,6 +273,12 @@ final class PluginAnimatorCoordinator {
 
   private void playZoomAnimator(long duration) {
     PluginAnimator animator = animatorMap.get(ANIMATOR_ZOOM);
+    animator.setDuration(duration);
+    animator.start();
+  }
+
+  private void playTiltAnimator(long duration) {
+    PluginAnimator animator = animatorMap.get(ANIMATOR_TILT);
     animator.setDuration(duration);
     animator.start();
   }
@@ -333,6 +352,10 @@ final class PluginAnimatorCoordinator {
 
   void cancelZoomAnimation() {
     cancelAnimator(ANIMATOR_ZOOM);
+  }
+
+  void cancelTiltAnimation() {
+    cancelAnimator(ANIMATOR_TILT);
   }
 
   void cancelAllAnimations() {

@@ -816,6 +816,143 @@ class LocationLayerPluginTest {
     executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
   }
 
+  @Test
+  fun animators_dontZoomWhileStopped() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+
+        val testLifecycleOwner = TestLifecycleOwner()
+        testLifecycleOwner.markState(Lifecycle.State.RESUMED)
+        testLifecycleOwner.lifecycle.addObserver(plugin)
+
+        plugin.cameraMode = CameraMode.TRACKING
+        val zoom = mapboxMap.cameraPosition.zoom
+
+        testLifecycleOwner.markState(Lifecycle.State.CREATED)
+        plugin.zoomWhileTracking(10.0)
+        uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_ZOOM_ANIMATION_DURATION)
+
+        assertEquals(zoom, mapboxMap.cameraPosition.zoom, 0.1)
+      }
+    }
+
+    executePluginTest(pluginAction,
+      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, null, false))
+  }
+
+  @Test
+  fun animators_cancelZoomWhileTracking() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        plugin.cameraMode = CameraMode.TRACKING
+        plugin.zoomWhileTracking(15.0)
+        uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_ZOOM_ANIMATION_DURATION / 2)
+        plugin.cancelZoomWhileTrackingAnimation()
+        uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_ZOOM_ANIMATION_DURATION / 2)
+
+        assertEquals(15.0 / 2.0, mapboxMap.cameraPosition.zoom, 3.0)
+      }
+    }
+
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+  }
+
+  @Test
+  fun animators_dontTiltWhileNotTracking() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        plugin.cameraMode = CameraMode.NONE
+        val tilt = mapboxMap.cameraPosition.tilt
+        plugin.tiltWhileTracking(30.0)
+        uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_TILT_ANIMATION_DURATION)
+
+        assertEquals(tilt, mapboxMap.cameraPosition.tilt, 0.1)
+      }
+    }
+
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+  }
+
+  @Test
+  fun animators_tiltWhileTracking() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        plugin.cameraMode = CameraMode.TRACKING
+        plugin.tiltWhileTracking(30.0)
+        uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_TILT_ANIMATION_DURATION)
+
+        assertEquals(30.0, mapboxMap.cameraPosition.tilt, 0.1)
+      }
+    }
+
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+  }
+
+  @Test
+  fun animators_tiltWhileTrackingCanceledOnModeChange() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        plugin.cameraMode = CameraMode.TRACKING
+        plugin.tiltWhileTracking(30.0)
+        uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_TILT_ANIMATION_DURATION / 2)
+        plugin.cameraMode = CameraMode.NONE
+        uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_TILT_ANIMATION_DURATION / 2)
+
+        assertEquals(30.0 / 2.0, mapboxMap.cameraPosition.tilt, 3.0)
+      }
+    }
+
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+  }
+
+  @Test
+  fun animators_dontTiltWhileStopped() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+
+        val testLifecycleOwner = TestLifecycleOwner()
+        testLifecycleOwner.markState(Lifecycle.State.RESUMED)
+        testLifecycleOwner.lifecycle.addObserver(plugin)
+
+        plugin.cameraMode = CameraMode.TRACKING
+        val tilt = mapboxMap.cameraPosition.tilt
+
+        testLifecycleOwner.markState(Lifecycle.State.CREATED)
+        plugin.tiltWhileTracking(30.0)
+        uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_TILT_ANIMATION_DURATION)
+
+        assertEquals(tilt, mapboxMap.cameraPosition.tilt, 0.1)
+      }
+    }
+
+    executePluginTest(pluginAction,
+      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, null, false))
+  }
+
+  @Test
+  fun animators_cancelTiltWhileTracking() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        plugin.cameraMode = CameraMode.TRACKING
+        plugin.tiltWhileTracking(30.0)
+        uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_TILT_ANIMATION_DURATION / 2)
+        plugin.cancelTiltWhileTrackingAnimation()
+        uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_TILT_ANIMATION_DURATION / 2)
+
+        assertEquals(30.0 / 2.0, mapboxMap.cameraPosition.tilt, 3.0)
+      }
+    }
+
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+  }
+
   @After
   fun afterTest() {
     Timber.e("@After: unregister idle resource")
