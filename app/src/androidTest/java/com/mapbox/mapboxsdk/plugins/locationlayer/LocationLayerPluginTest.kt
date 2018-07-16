@@ -748,6 +748,23 @@ class LocationLayerPluginTest {
     executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
   }
 
+  @Test
+  fun animators_focalPointAdjustment() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        plugin.cameraMode = CameraMode.TRACKING
+        plugin.cameraMode = CameraMode.NONE
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+
+        assertThat(mapboxMap.uiSettings.focalPoint, nullValue())
+      }
+    }
+
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+  }
+
   @After
   fun afterTest() {
     Timber.e("@After: unregister idle resource")

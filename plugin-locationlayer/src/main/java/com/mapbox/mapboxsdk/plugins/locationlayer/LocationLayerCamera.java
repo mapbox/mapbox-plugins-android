@@ -84,12 +84,12 @@ final class LocationLayerCamera implements PluginAnimator.OnCameraAnimationsValu
       || cameraMode == CameraMode.TRACKING_GPS
       || cameraMode == CameraMode.TRACKING_GPS_NORTH) {
       setLatLng(latLng);
-    }
 
-    if (adjustFocalPoint) {
-      PointF focalPoint = mapboxMap.getProjection().toScreenLocation(latLng);
-      mapboxMap.getUiSettings().setFocalPoint(focalPoint);
-      adjustFocalPoint = false;
+      if (adjustFocalPoint) {
+        PointF focalPoint = mapboxMap.getProjection().toScreenLocation(latLng);
+        mapboxMap.getUiSettings().setFocalPoint(focalPoint);
+        adjustFocalPoint = false;
+      }
     }
   }
 
@@ -170,9 +170,7 @@ final class LocationLayerCamera implements PluginAnimator.OnCameraAnimationsValu
         return;
       }
 
-      if (isLocationTracking()) {
-        setCameraMode(CameraMode.NONE);
-      }
+      setCameraMode(CameraMode.NONE);
     }
 
     @Override
