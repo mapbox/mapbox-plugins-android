@@ -765,6 +765,57 @@ class LocationLayerPluginTest {
     executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
   }
 
+  @Test
+  fun animators_dontZoomWhileNotTracking() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        plugin.cameraMode = CameraMode.NONE
+        val zoom = mapboxMap.cameraPosition.zoom
+        plugin.zoomWhileTracking(10.0)
+        uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_ZOOM_ANIMATION_DURATION)
+
+        assertEquals(zoom, mapboxMap.cameraPosition.zoom, 0.1)
+      }
+    }
+
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+  }
+
+  @Test
+  fun animators_zoomWhileTracking() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        plugin.cameraMode = CameraMode.TRACKING
+        plugin.zoomWhileTracking(10.0)
+        uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_ZOOM_ANIMATION_DURATION)
+
+        assertEquals(10.0, mapboxMap.cameraPosition.zoom, 0.1)
+      }
+    }
+
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+  }
+
+  @Test
+  fun animators_zoomWhileTrackingCanceledOnModeChange() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        plugin.cameraMode = CameraMode.TRACKING
+        plugin.zoomWhileTracking(15.0)
+        uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_ZOOM_ANIMATION_DURATION / 2)
+        plugin.cameraMode = CameraMode.NONE
+        uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_ZOOM_ANIMATION_DURATION / 2)
+
+        assertEquals(15.0 / 2.0, mapboxMap.cameraPosition.zoom, 3.0)
+      }
+    }
+
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+  }
+
   @After
   fun afterTest() {
     Timber.e("@After: unregister idle resource")
