@@ -316,6 +316,22 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
         locationLayerPlugin.setCameraMode(CameraMode.TRACKING_GPS_NORTH);
       }
       listPopup.dismiss();
+
+      if (locationLayerPlugin.getCameraMode() != CameraMode.NONE) {
+        locationLayerPlugin.zoomWhileTracking(15, 750, new MapboxMap.CancelableCallback() {
+          @Override
+          public void onCancel() {
+            // No impl
+          }
+
+          @Override
+          public void onFinish() {
+            locationLayerPlugin.tiltWhileTracking(45);
+          }
+        });
+      } else {
+        mapboxMap.easeCamera(CameraUpdateFactory.tiltTo(0));
+      }
     });
     listPopup.show();
   }

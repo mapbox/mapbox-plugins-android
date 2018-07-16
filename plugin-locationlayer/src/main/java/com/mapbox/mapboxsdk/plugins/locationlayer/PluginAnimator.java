@@ -26,7 +26,8 @@ abstract class PluginAnimator<K, L> extends ValueAnimator implements ValueAnimat
     ANIMATOR_CAMERA_GPS_BEARING,
     ANIMATOR_CAMERA_COMPASS_BEARING,
     ANIMATOR_LAYER_ACCURACY,
-    ANIMATOR_ZOOM
+    ANIMATOR_ZOOM,
+    ANIMATOR_TILT
   })
   @interface Type {
   }
@@ -39,6 +40,7 @@ abstract class PluginAnimator<K, L> extends ValueAnimator implements ValueAnimat
   static final int ANIMATOR_CAMERA_COMPASS_BEARING = 5;
   static final int ANIMATOR_LAYER_ACCURACY = 6;
   static final int ANIMATOR_ZOOM = 7;
+  static final int ANIMATOR_TILT = 8;
 
   private final int animatorType = provideAnimatorType();
   final List<L> updateListeners;
@@ -84,5 +86,7 @@ abstract class PluginAnimator<K, L> extends ValueAnimator implements ValueAnimat
     void onNewCompassBearingValue(float compassBearing);
 
     void onNewZoomValue(float zoom);
+
+    void onNewTiltValue(float tilt);
   }
 }
