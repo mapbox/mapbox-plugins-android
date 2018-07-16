@@ -35,7 +35,7 @@ public final class CameraMode {
    *
    * @since 0.5.0
    */
-  public static final int NONE = 0x00000000;
+  public static final int NONE = 0x00000008;
 
   /**
    * Camera does not track location, but does track compass bearing.
@@ -73,7 +73,6 @@ public final class CameraMode {
    * @since 0.5.0
    */
   public static final int TRACKING_GPS = 0x00000022;
-
 
   /**
    * Camera tracks the user location, with bearing
