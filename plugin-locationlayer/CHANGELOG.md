@@ -2,6 +2,9 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### master
+- Additional methods to tilt and zoom in/out the camera while camera tracking is engaged [#583](https://github.com/mapbox/mapbox-plugins-android/pull/583)
+
 ### 0.6.0 - July 9, 2018
 - Animate accuracy ring when new value is provided [#577](https://github.com/mapbox/mapbox-plugins-android/pull/577)
 - Allow pre-loaded MapboxMap images / maki icons in LocationLayerOptions [#574](https://github.com/mapbox/mapbox-plugins-android/pull/574)
