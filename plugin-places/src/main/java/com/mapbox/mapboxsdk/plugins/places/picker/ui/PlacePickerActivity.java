@@ -132,7 +132,7 @@ public class PlacePickerActivity extends AppCompatActivity implements OnMapReady
   public void onCameraMoveStarted(int reason) {
     Timber.v("Map camera has begun moving.");
     if (markerImage.getTranslationY() == 0) {
-      markerImage.animate().yBy(-75)
+      markerImage.animate().translationY(-75)
         .setInterpolator(new OvershootInterpolator()).setDuration(250).start();
       if (bottomSheet.isShowing()) {
         bottomSheet.dismissPlaceDetails();
@@ -143,7 +143,7 @@ public class PlacePickerActivity extends AppCompatActivity implements OnMapReady
   @Override
   public void onCameraIdle() {
     Timber.v("Map camera is now idling.");
-    markerImage.animate().yBy(Math.abs(markerImage.getTranslationY()))
+    markerImage.animate().translationY(0)
       .setInterpolator(new OvershootInterpolator()).setDuration(250).start();
     bottomSheet.setPlaceDetails(null);
     makeReverseGeocodingSearch();
