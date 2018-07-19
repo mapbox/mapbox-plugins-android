@@ -18,10 +18,11 @@ import android.support.test.rule.GrantPermissionRule
 import android.support.test.runner.AndroidJUnit4
 import android.support.v4.content.ContextCompat
 import com.mapbox.geojson.Point
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
+import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.constants.Style
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
+import com.mapbox.mapboxsdk.maps.MapboxMapOptions
 import com.mapbox.mapboxsdk.maps.SupportMapFragment
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.*
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode
@@ -71,7 +72,9 @@ class LocationLayerPluginTest {
   fun beforeTest() {
 
     // Create a default support map fragment and pass it into the empty activity
-    fragment = SupportMapFragment.newInstance()
+    val options = MapboxMapOptions()
+      .camera(CameraPosition.Builder().zoom(2.0).build()) // to match plugins min zoom
+    fragment = SupportMapFragment.newInstance(options)
     rule.activity.setFragment(fragment)
 
     Timber.e("@Before: register idle resource")
@@ -826,7 +829,6 @@ class LocationLayerPluginTest {
         testLifecycleOwner.lifecycle.addObserver(plugin)
 
         plugin.cameraMode = CameraMode.TRACKING
-        mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(5.0))
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
         val zoom = mapboxMap.cameraPosition.zoom
 
