@@ -623,11 +623,10 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   }
 
   void onLocationLayerStart() {
-    if (isLocationLayerStarted || !isPluginStarted) {
+    if (!isPluginStarted) {
       return;
     }
 
-    isLocationLayerStarted = true;
     if (isEnabled) {
       if (locationEngine != null) {
         locationEngine.addLocationEngineListener(locationEngineListener);
@@ -637,6 +636,12 @@ public final class LocationLayerPlugin implements LifecycleObserver {
       locationLayer.show();
       setCameraMode(locationLayerCamera.getCameraMode());
     }
+
+    if (isLocationLayerStarted) {
+      return;
+    }
+
+    isLocationLayerStarted = true;
     if (mapboxMap != null) {
       mapboxMap.addOnCameraMoveListener(onCameraMoveListener);
       mapboxMap.addOnCameraIdleListener(onCameraIdleListener);
