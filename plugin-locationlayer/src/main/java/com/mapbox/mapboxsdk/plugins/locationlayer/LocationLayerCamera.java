@@ -40,6 +40,7 @@ final class LocationLayerCamera implements PluginAnimator.OnCameraAnimationsValu
     moveGestureDetector = mapboxMap.getGesturesManager().getMoveGestureDetector();
     mapboxMap.addOnMoveListener(onMoveListener);
     mapboxMap.addOnRotateListener(onRotateListener);
+    mapboxMap.addOnFlingListener(onFlingListener);
 
     this.internalCameraTrackingChangedListener = internalCameraTrackingChangedListener;
     this.onCameraMoveInvalidateListener = onCameraMoveInvalidateListener;
@@ -208,6 +209,13 @@ final class LocationLayerCamera implements PluginAnimator.OnCameraAnimationsValu
     @Override
     public void onRotateEnd(RotateGestureDetector detector) {
       // no implementation
+    }
+  };
+
+  private MapboxMap.OnFlingListener onFlingListener = new MapboxMap.OnFlingListener() {
+    @Override
+    public void onFling() {
+      setCameraMode(CameraMode.NONE);
     }
   };
 
