@@ -425,6 +425,27 @@ class LocationLayerPluginTest {
   }
 
   @Test
+  fun disablingPluginAndChangingStyleAllowsToEnableAgain() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+
+        plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+
+        plugin.isLocationLayerEnabled = false
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+        mapboxMap.setStyle(Style.LIGHT)
+        uiController.loopMainThreadForAtLeast(MAP_CONNECTION_DELAY)
+        plugin.isLocationLayerEnabled = true
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+        assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(true))
+      }
+    }
+    executePluginTest(pluginAction)
+  }
+
+  @Test
   fun lifecycle_keepsEnabledWhenStoppedAndStarted() {
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
