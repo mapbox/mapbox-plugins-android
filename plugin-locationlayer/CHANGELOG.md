@@ -2,8 +2,16 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-### master
+### 0.7.0 - July 19, 2018
 - Additional methods to tilt and zoom in/out the camera while camera tracking is engaged [#583](https://github.com/mapbox/mapbox-plugins-android/pull/583)
+- Fixed wrong focal point persisting when camera modes are changed quickly [#583](https://github.com/mapbox/mapbox-plugins-android/pull/583)
+- Update ProGuard to support built-in shrinker of Gradle Plugin [#582](https://github.com/mapbox/mapbox-plugins-android/pull/582)
+- Break camera tracking on fling [#587](https://github.com/mapbox/mapbox-plugins-android/pull/587)
+- Maps SDK bump to 6.3.0 [#585](https://github.com/mapbox/mapbox-plugins-android/pull/585)
+- Fixed memory leak when using the mapbox-plugins [#570](https://github.com/mapbox/mapbox-plugins-android/issues/570)
+- Always make plugin visible in location start when enabled [#592](https://github.com/mapbox/mapbox-plugins-android/pull/592)
+- Check if the layer is hidden when setting render mode [#594](https://github.com/mapbox/mapbox-plugins-android/pull/594)
+- Adjust camera based on the camera mode when plugin enabled [#596](https://github.com/mapbox/mapbox-plugins-android/pull/596)
 
 ### 0.6.0 - July 9, 2018
 - Animate accuracy ring when new value is provided [#577](https://github.com/mapbox/mapbox-plugins-android/pull/577)
