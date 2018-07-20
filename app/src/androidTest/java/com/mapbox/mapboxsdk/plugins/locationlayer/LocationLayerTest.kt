@@ -151,6 +151,25 @@ class LocationLayerTest {
   }
 
   @Test
+  fun dontShowPuckWhenRenderModeSetAndPluginDisabled() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        plugin.forceLocationUpdate(location)
+        plugin.isLocationLayerEnabled = false
+        plugin.renderMode = RenderMode.GPS
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+        assertThat(mapboxMap.isLayerVisible(FOREGROUND_LAYER), `is`(false))
+        assertThat(mapboxMap.isLayerVisible(BACKGROUND_LAYER), `is`(false))
+        assertThat(mapboxMap.isLayerVisible(SHADOW_LAYER), `is`(false))
+        assertThat(mapboxMap.isLayerVisible(ACCURACY_LAYER), `is`(false))
+        assertThat(mapboxMap.isLayerVisible(BEARING_LAYER), `is`(false))
+      }
+    }
+    executePluginTest(pluginAction)
+  }
+
+  @Test
   fun whenLocationLayerPluginDisabled_doesSetAllLayersToVisibilityNone() {
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,

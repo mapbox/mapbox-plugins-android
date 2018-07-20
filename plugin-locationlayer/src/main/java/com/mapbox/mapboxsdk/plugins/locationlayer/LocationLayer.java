@@ -134,38 +134,40 @@ final class LocationLayer implements PluginAnimator.OnLayerAnimationsValuesChang
 
   void setRenderMode(@RenderMode.Mode int renderMode) {
     this.renderMode = renderMode;
-    boolean isStale = locationFeature.getBooleanProperty(PROPERTY_LOCATION_STALE);
 
-    switch (renderMode) {
-      case RenderMode.NORMAL:
-        styleForeground(options);
-        setLayerVisibility(SHADOW_LAYER, true);
-        setLayerVisibility(FOREGROUND_LAYER, true);
-        setLayerVisibility(BACKGROUND_LAYER, true);
-        setLayerVisibility(ACCURACY_LAYER, !isStale);
-        setLayerVisibility(BEARING_LAYER, false);
-        break;
-      case RenderMode.COMPASS:
-        styleForeground(options);
-        setLayerVisibility(SHADOW_LAYER, true);
-        setLayerVisibility(FOREGROUND_LAYER, true);
-        setLayerVisibility(BACKGROUND_LAYER, true);
-        setLayerVisibility(ACCURACY_LAYER, !isStale);
-        setLayerVisibility(BEARING_LAYER, true);
-        break;
-      case RenderMode.GPS:
-        styleForeground(options);
-        setLayerVisibility(SHADOW_LAYER, false);
-        setLayerVisibility(FOREGROUND_LAYER, true);
-        setLayerVisibility(BACKGROUND_LAYER, true);
-        setLayerVisibility(ACCURACY_LAYER, false);
-        setLayerVisibility(BEARING_LAYER, false);
-        break;
-      default:
-        break;
+    if (!isHidden) {
+      boolean isStale = locationFeature.getBooleanProperty(PROPERTY_LOCATION_STALE);
+      switch (renderMode) {
+        case RenderMode.NORMAL:
+          styleForeground(options);
+          setLayerVisibility(SHADOW_LAYER, true);
+          setLayerVisibility(FOREGROUND_LAYER, true);
+          setLayerVisibility(BACKGROUND_LAYER, true);
+          setLayerVisibility(ACCURACY_LAYER, !isStale);
+          setLayerVisibility(BEARING_LAYER, false);
+          break;
+        case RenderMode.COMPASS:
+          styleForeground(options);
+          setLayerVisibility(SHADOW_LAYER, true);
+          setLayerVisibility(FOREGROUND_LAYER, true);
+          setLayerVisibility(BACKGROUND_LAYER, true);
+          setLayerVisibility(ACCURACY_LAYER, !isStale);
+          setLayerVisibility(BEARING_LAYER, true);
+          break;
+        case RenderMode.GPS:
+          styleForeground(options);
+          setLayerVisibility(SHADOW_LAYER, false);
+          setLayerVisibility(FOREGROUND_LAYER, true);
+          setLayerVisibility(BACKGROUND_LAYER, true);
+          setLayerVisibility(ACCURACY_LAYER, false);
+          setLayerVisibility(BEARING_LAYER, false);
+          break;
+        default:
+          break;
+      }
+
+      determineIconsSource(options);
     }
-
-    determineIconsSource(options);
   }
 
   int getRenderMode() {
@@ -177,15 +179,15 @@ final class LocationLayer implements PluginAnimator.OnLayerAnimationsValuesChang
   //
 
   void show() {
-    setRenderMode(renderMode);
     isHidden = false;
+    setRenderMode(renderMode);
   }
 
   void hide() {
+    isHidden = true;
     for (String layerId : layerMap) {
       setLayerVisibility(layerId, false);
     }
-    isHidden = true;
   }
 
   private void setLayerVisibility(String layerId, boolean visible) {
