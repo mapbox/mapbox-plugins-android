@@ -3,120 +3,127 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-  compileSdkVersion androidVersions.compileSdkVersion
-  buildToolsVersion androidVersions.buildToolsVersion
+    compileSdkVersion androidVersions.compileSdkVersion
+    buildToolsVersion androidVersions.buildToolsVersion
 
-  defaultConfig {
-    minSdkVersion androidVersions.minSdkVersion
-    targetSdkVersion androidVersions.targetSdkVersion
-    applicationId "com.mapbox.mapboxsdk.plugins.testapp"
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    vectorDrawables.useSupportLibrary = true
-  }
-
-  buildTypes {
-    debug {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-      testCoverageEnabled true
+    defaultConfig {
+        minSdkVersion androidVersions.minSdkVersion
+        targetSdkVersion androidVersions.targetSdkVersion
+        applicationId "com.mapbox.mapboxsdk.plugins.testapp"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
-    release {
-      minifyEnabled true
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            testCoverageEnabled true
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
     }
-  }
 
-  lintOptions {
-    abortOnError false
-  }
-
-  testOptions {
-    unitTests.all {
-      jacoco {
-        includeNoLocationClasses = true
-      }
+    lintOptions {
+        abortOnError false
     }
-  }
 
-  dexOptions {
-    maxProcessCount 8
-    javaMaxHeapSize "2g"
-    preDexLibraries true
-  }
+    testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
+    }
 
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
+    dexOptions {
+        maxProcessCount 8
+        javaMaxHeapSize "2g"
+        preDexLibraries true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 // Disable Leak Canary for UI and unit test.
 configurations.all { config ->
-  if (config.name.contains('UnitTest') || config.name.contains('AndroidTest')) {
-    config.resolutionStrategy.eachDependency { details ->
-      if (details.requested.group == 'com.squareup.leakcanary'
-          && details.requested.name == 'leakcanary-android') {
-        details.useTarget(group: details.requested.group, name: 'leakcanary-android-no-op',
-            version: details.requested.version)
-      }
+    if (config.name.contains('UnitTest') || config.name.contains('AndroidTest')) {
+        config.resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'com.squareup.leakcanary'
+                    && details.requested.name == 'leakcanary-android') {
+                details.useTarget(group: details.requested.group, name: 'leakcanary-android-no-op',
+                        version: details.requested.version)
+            }
+        }
     }
-  }
 }
 
 dependencies {
-  // Mapbox
-  implementation dependenciesList.mapboxMapSdk
-  implementation dependenciesList.mapboxGeocoding
+    // Mapbox
+    implementation dependenciesList.mapboxMapSdk
+    implementation dependenciesList.mapboxGeocoding
 
-  // Architecture
-  implementation dependenciesList.lifecycleExtensions
-  implementation dependenciesList.roomRuntime
-  kapt dependenciesList.roomCompiler
+    // Architecture
+    implementation dependenciesList.lifecycleExtensions
+    implementation dependenciesList.roomRuntime
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation 'com.android.support:support-v4:27.1.1'
+    kapt dependenciesList.roomCompiler
 
-  // LOST
-  implementation dependenciesList.playLocation
+    // LOST
+    implementation dependenciesList.playLocation
 
-  // Support libraries
-  implementation dependenciesList.supportAnnotation
-  implementation dependenciesList.supportAppcompatV7
-  implementation dependenciesList.supportDesign
-  implementation dependenciesList.supportRecyclerView
-  implementation dependenciesList.supportConstraintLayout
+    // Support libraries
+    implementation dependenciesList.supportAnnotation
+    implementation dependenciesList.supportAppcompatV7
+    implementation dependenciesList.supportDesign
+    implementation dependenciesList.supportRecyclerView
+    implementation dependenciesList.supportConstraintLayout
 
-  // Unit testing
-  testImplementation dependenciesList.junit
-  testImplementation dependenciesList.mockito
+    // Unit testing
+    testImplementation dependenciesList.junit
+    testImplementation dependenciesList.mockito
 
-  // Instrumentation testing
-  androidTestImplementation dependenciesList.mockitoAndroid
-  androidTestImplementation dependenciesList.supportAppcompatV7
-  androidTestImplementation dependenciesList.testRunner
-  androidTestImplementation dependenciesList.testRules
-  androidTestImplementation dependenciesList.testEspressoCore
-  androidTestImplementation dependenciesList.testRoom
-  androidTestImplementation dependenciesList.testArchCore
-  androidTestImplementation(dependenciesList.mockitoCore, {
-    exclude group: 'net.bytebuddy'
-  })
+    // Instrumentation testing
+    androidTestImplementation dependenciesList.mockitoAndroid
+    androidTestImplementation dependenciesList.supportAppcompatV7
+    androidTestImplementation dependenciesList.testRunner
+    androidTestImplementation dependenciesList.testRules
+    androidTestImplementation dependenciesList.testEspressoCore
+    androidTestImplementation dependenciesList.testRoom
+    androidTestImplementation dependenciesList.testArchCore
+    androidTestImplementation(dependenciesList.mockitoCore, {
+        exclude group: 'net.bytebuddy'
+    })
 
-  // Square crew
-  implementation dependenciesList.timber
-  implementation dependenciesList.butterKnife
-  kapt dependenciesList.butterKnifeProcessor
+    // Square crew
+    implementation dependenciesList.timber
+    implementation dependenciesList.butterKnife
+    kapt dependenciesList.butterKnifeProcessor
 
-  // Leak canary
-  debugImplementation dependenciesList.leakCanaryDebug
-  releaseImplementation dependenciesList.leakCanaryRelease
-  testImplementation dependenciesList.leakCanaryTest
+    // Leak canary
+    debugImplementation dependenciesList.leakCanaryDebug
+    releaseImplementation dependenciesList.leakCanaryRelease
+    testImplementation dependenciesList.leakCanaryTest
 
-  // Plugin modules
-  implementation project(':plugin-traffic')
-  implementation project(':plugin-locationlayer')
-  implementation project(':plugin-building')
-  implementation project(':plugin-places')
-  implementation project(':plugin-offline')
-  implementation project(':plugin-localization')
+    // Plugin modules
+    implementation project(':plugin-traffic')
+    implementation project(':plugin-locationlayer')
+    implementation project(':plugin-building')
+    implementation project(':plugin-places')
+    implementation project(':plugin-offline')
+    implementation project(':plugin-localization')
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 apply from: "${rootDir}/gradle/checkstyle.gradle"
 apply from: "${rootDir}/gradle/generate-token.gradle"
+repositories {
+    mavenCentral()
+}
+apply plugin: 'kotlin-android-extensions'
