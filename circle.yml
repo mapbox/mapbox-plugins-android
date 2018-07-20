@@ -102,7 +102,7 @@ jobs:
       - deploy:
           name: Publish Plugins SDK To Maven Central
           command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+            if [ "${CIRCLE_BRANCH}" == "release-llp-v0.7.0" ]; then
             make publish ;
             fi
       - store_artifacts:
