@@ -19,7 +19,9 @@ import android.support.test.runner.AndroidJUnit4
 import android.support.v4.content.ContextCompat
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.camera.CameraPosition
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.constants.Style
+import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.MapboxMapOptions
@@ -539,12 +541,33 @@ class LocationLayerPluginTest {
 
         testLifecycleOwner.markState(Lifecycle.State.CREATED)
         plugin.forceLocationUpdate(location)
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+
+        assertThat(mapboxMap.querySourceFeatures(LOCATION_SOURCE).isEmpty(), `is`(true))
+      }
+    }
+    executePluginTest(pluginAction,
+      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, null, false))
+  }
+
+  @Test
+  fun lifecycle_acceptAndReuseLocationUpdatesBeforeLayerStarted() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+
+        val testLifecycleOwner = TestLifecycleOwner()
+        testLifecycleOwner.markState(Lifecycle.State.RESUMED)
+        testLifecycleOwner.lifecycle.addObserver(plugin)
+
+        testLifecycleOwner.markState(Lifecycle.State.CREATED)
+        plugin.forceLocationUpdate(location)
         testLifecycleOwner.markState(Lifecycle.State.RESUMED)
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
 
         val point: Point = mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].geometry() as Point
-        assertNotEquals(point.latitude(), location.latitude, 0.1)
-        assertNotEquals(point.longitude(), location.longitude, 0.1)
+        assertEquals(point.latitude(), location.latitude, 0.1)
+        assertEquals(point.longitude(), location.longitude, 0.1)
       }
     }
     executePluginTest(pluginAction,
@@ -974,6 +997,28 @@ class LocationLayerPluginTest {
         uiController.loopMainThreadForAtLeast(DEFAULT_TRACKING_TILT_ANIMATION_DURATION / 2)
 
         assertEquals(30.0 / 2.0, mapboxMap.cameraPosition.tilt, 3.0)
+      }
+    }
+
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+  }
+
+  @Test
+  fun cameraPositionAdjustedToTrackingModeWhenPluginEnabled() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        plugin.cameraMode = CameraMode.TRACKING_GPS
+        plugin.forceLocationUpdate(location)
+        plugin.isLocationLayerEnabled = false
+        mapboxMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(51.0, 17.0)))
+        mapboxMap.moveCamera(CameraUpdateFactory.bearingTo(90.0))
+        plugin.isLocationLayerEnabled = true
+        uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
+
+        assertEquals(location.bearing.toDouble(), mapboxMap.cameraPosition.bearing, 0.1)
+        assertEquals(location.latitude, mapboxMap.cameraPosition.target.latitude, 0.1)
+        assertEquals(location.longitude, mapboxMap.cameraPosition.target.longitude, 0.1)
       }
     }
 
