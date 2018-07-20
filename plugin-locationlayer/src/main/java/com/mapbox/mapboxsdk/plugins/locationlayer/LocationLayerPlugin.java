@@ -432,7 +432,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    * @since 0.1.0
    */
   public void forceLocationUpdate(@Nullable Location location) {
-    updateLocation(location);
+    updateLocation(location, false);
   }
 
   /**
@@ -627,29 +627,27 @@ public final class LocationLayerPlugin implements LifecycleObserver {
       return;
     }
 
+    if (!isLocationLayerStarted) {
+      isLocationLayerStarted = true;
+      if (mapboxMap != null) {
+        mapboxMap.addOnCameraMoveListener(onCameraMoveListener);
+        mapboxMap.addOnCameraIdleListener(onCameraIdleListener);
+      }
+      if (options.enableStaleState()) {
+        staleStateManager.onStart();
+      }
+      compassManager.onStart();
+    }
+
     if (isEnabled) {
       if (locationEngine != null) {
         locationEngine.addLocationEngineListener(locationEngineListener);
       }
-      setLastLocation();
-      setLastCompassHeading();
       locationLayer.show();
       setCameraMode(locationLayerCamera.getCameraMode());
+      setLastLocation();
+      setLastCompassHeading();
     }
-
-    if (isLocationLayerStarted) {
-      return;
-    }
-
-    isLocationLayerStarted = true;
-    if (mapboxMap != null) {
-      mapboxMap.addOnCameraMoveListener(onCameraMoveListener);
-      mapboxMap.addOnCameraIdleListener(onCameraIdleListener);
-    }
-    if (options.enableStaleState()) {
-      staleStateManager.onStart();
-    }
-    compassManager.onStart();
   }
 
   void onLocationLayerStop() {
@@ -730,7 +728,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    * @param location the latest user location
    * @since 0.1.0
    */
-  private void updateLocation(final Location location) {
+  private void updateLocation(final Location location, boolean fromLastLocation) {
     if (location == null) {
       return;
     } else if (!isLocationLayerStarted) {
@@ -738,7 +736,9 @@ public final class LocationLayerPlugin implements LifecycleObserver {
       return;
     }
 
-    staleStateManager.updateLatestLocationTime();
+    if (!fromLastLocation) {
+      staleStateManager.updateLatestLocationTime();
+    }
     CameraPosition currentCameraPosition = mapboxMap.getCameraPosition();
     boolean isGpsNorth = getCameraMode() == CameraMode.TRACKING_GPS_NORTH;
     pluginAnimatorCoordinator.feedNewLocation(location, currentCameraPosition, isGpsNorth);
@@ -756,9 +756,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    */
   @SuppressLint("MissingPermission")
   private void setLastLocation() {
-    if (locationEngine != null) {
-      updateLocation(getLastKnownLocation());
-    }
+    updateLocation(getLastKnownLocation(), true);
   }
 
   private void setLastCompassHeading() {
@@ -883,7 +881,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
 
     @Override
     public void onLocationChanged(Location location) {
-      updateLocation(location);
+      updateLocation(location, false);
     }
   };
 
