@@ -622,6 +622,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     isPluginStarted = false;
   }
 
+  @SuppressLint("MissingPermission")
   void onLocationLayerStart() {
     if (!isPluginStarted) {
       return;
@@ -642,6 +643,9 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     if (isEnabled) {
       if (locationEngine != null) {
         locationEngine.addLocationEngineListener(locationEngineListener);
+        if (locationEngine.isConnected() && usingInternalLocationEngine) {
+          locationEngine.requestLocationUpdates();
+        }
       }
       locationLayer.show();
       setCameraMode(locationLayerCamera.getCameraMode());
@@ -661,6 +665,9 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     compassManager.onStop();
     pluginAnimatorCoordinator.cancelAllAnimations();
     if (locationEngine != null) {
+      if (usingInternalLocationEngine) {
+        locationEngine.removeLocationUpdates();
+      }
       locationEngine.removeLocationEngineListener(locationEngineListener);
     }
     if (mapboxMap != null) {
@@ -700,6 +707,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     locationEngine = new LocationEngineProvider(mapView.getContext()).obtainBestLocationEngineAvailable();
     locationEngine.setPriority(LocationEnginePriority.HIGH_ACCURACY);
     locationEngine.setFastestInterval(1000);
+    locationEngine.addLocationEngineListener(locationEngineListener);
     locationEngine.activate();
   }
 
@@ -874,7 +882,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     @Override
     @SuppressWarnings( {"MissingPermission"})
     public void onConnected() {
-      if (usingInternalLocationEngine) {
+      if (usingInternalLocationEngine && isLocationLayerStarted && isEnabled) {
         locationEngine.requestLocationUpdates();
       }
     }
