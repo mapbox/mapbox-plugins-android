@@ -3,9 +3,9 @@ buildscript {
   apply plugin: 'jacoco'
 
   repositories {
+    google()
     maven { url 'https://plugins.gradle.org/m2' }
     jcenter()
-    google()
   }
 
   dependencies {
@@ -18,10 +18,11 @@ buildscript {
 
 allprojects {
   repositories {
-    maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
+    google()
     maven { url 'https://plugins.gradle.org/m2' }
     jcenter()
-    google()
+//    SNAPSHOT repository
+//    maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
   }
 }
 
