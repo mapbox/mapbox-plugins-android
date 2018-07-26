@@ -2,6 +2,9 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### 0.7.1 - July 26, 2018
+- Request location updates for AndroidLocationEngine [#602](https://github.com/mapbox/mapbox-plugins-android/pull/602)
+
 ### 0.7.0 - July 19, 2018
 - Additional methods to tilt and zoom in/out the camera while camera tracking is engaged [#583](https://github.com/mapbox/mapbox-plugins-android/pull/583)
 - Fixed wrong focal point persisting when camera modes are changed quickly [#583](https://github.com/mapbox/mapbox-plugins-android/pull/583)
