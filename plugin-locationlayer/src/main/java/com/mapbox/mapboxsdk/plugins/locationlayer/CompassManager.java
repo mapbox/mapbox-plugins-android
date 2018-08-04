@@ -38,6 +38,10 @@ class CompassManager implements SensorEventListener {
   // Not all devices have a compassSensor
   @Nullable
   private Sensor compassSensor;
+  @Nullable
+  private Sensor gravitySensor;
+  @Nullable
+  private Sensor magneticFieldSensor;
 
   private float[] truncatedRotationVectorValue = new float[4];
   private float[] rotationMatrix = new float[9];
@@ -47,6 +51,12 @@ class CompassManager implements SensorEventListener {
 
   // CompassManager data
   private long compassUpdateNextTimestamp;
+
+  private float[] grav = new float[3];
+  private float[] mag = new float[3];
+
+  //filtering coefficient 0 < ALPHA < 1
+  static final float ALPHA = 0.45f;
 
   /**
    * Construct a new instance of the this class. A internal compass listeners needed to separate it
@@ -60,8 +70,17 @@ class CompassManager implements SensorEventListener {
     if (compassSensor == null) {
       Timber.d(
         "Rotation vector sensor not supported on device, falling back to orientation.");
-      compassSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+      if (isGyroscopeAvailable()) {
+        compassSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+      } else {
+        gravitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        magneticFieldSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+      }
     }
+  }
+
+  private boolean isGyroscopeAvailable() {
+    return sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null;
   }
 
   void addCompassListener(@NonNull CompassListener compassListener) {
@@ -81,7 +100,12 @@ class CompassManager implements SensorEventListener {
   void onStart() {
     if (isSensorAvailable()) {
       // Does nothing if the sensors already registered.
-      sensorManager.registerListener(this, compassSensor, SENSOR_DELAY_MICROS);
+      if (compassSensor != null) {
+        sensorManager.registerListener(this, compassSensor, SENSOR_DELAY_MICROS);
+      }else {
+        sensorManager.registerListener(this, gravitySensor, SENSOR_DELAY_MICROS);
+        sensorManager.registerListener(this, magneticFieldSensor, SENSOR_DELAY_MICROS);
+      }
     }
   }
 
@@ -114,6 +138,12 @@ class CompassManager implements SensorEventListener {
       compassUpdateNextTimestamp = currentTime + LocationLayerConstants.COMPASS_UPDATE_RATE_MS;
     } else if (event.sensor.getType() == Sensor.TYPE_ORIENTATION) {
       notifyCompassChangeListeners((event.values[0] + 360) % 360);
+    } else if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+      grav = lowPass(getRotationVectorFromSensorEvent(event), grav);
+      updateOrientation();
+    } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+      mag = lowPass(getRotationVectorFromSensorEvent(event), mag);
+      updateOrientation();
     }
   }
 
@@ -129,7 +159,12 @@ class CompassManager implements SensorEventListener {
 
   @SuppressWarnings("SuspiciousNameCombination")
   private void updateOrientation() {
-    SensorManager.getRotationMatrixFromVector(rotationMatrix, rotationVectorValue);
+    if (rotationVectorValue != null) {
+      SensorManager.getRotationMatrixFromVector(rotationMatrix, rotationVectorValue);
+    } else {
+      // Get rotation matrix given the gravity and geomagnetic matrices
+      SensorManager.getRotationMatrix(rotationMatrix, null, grav, mag);
+    }
 
     final int worldAxisForDeviceAxisX;
     final int worldAxisForDeviceAxisY;
@@ -173,6 +208,21 @@ class CompassManager implements SensorEventListener {
       compassListener.onCompassChanged(heading);
     }
     lastHeading = heading;
+  }
+
+  /**
+   * Helper function, that filters input, considering previous values
+   *
+   * @param input  array of float, that contains new data
+   * @param output array of float, that contains previous state
+   * @return float filtered array of float
+   */
+  protected float[] lowPass(float[] input, float[] output) {
+    if (output == null) return input;
+    for (int i = 0; i < input.length; i++) {
+      output[i] = output[i] + ALPHA * (input[i] - output[i]);
+    }
+    return output;
   }
 
   int getLastAccuracy() {
