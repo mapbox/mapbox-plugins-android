@@ -34,7 +34,6 @@ public class ManualLocationUpdatesActivity extends AppCompatActivity implements 
 
   private LocationLayerPlugin locationLayerPlugin;
   private LocationEngine locationEngine;
-  private MapboxMap mapboxMap;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -65,12 +64,11 @@ public class ManualLocationUpdatesActivity extends AppCompatActivity implements 
   @Override
   @SuppressWarnings( {"MissingPermission"})
   public void onMapReady(MapboxMap mapboxMap) {
-    this.mapboxMap = mapboxMap;
     locationEngine = new LocationEngineProvider(this).obtainBestLocationEngineAvailable();
     locationEngine.addLocationEngineListener(this);
     locationEngine.setPriority(LocationEnginePriority.HIGH_ACCURACY);
     locationEngine.activate();
-    locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap, null);
+    locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap);
     locationLayerPlugin.setRenderMode(RenderMode.NORMAL);
     getLifecycle().addObserver(locationLayerPlugin);
   }
@@ -92,6 +90,7 @@ public class ManualLocationUpdatesActivity extends AppCompatActivity implements 
   }
 
   @Override
+  @SuppressWarnings( {"MissingPermission"})
   protected void onStart() {
     super.onStart();
     mapView.onStart();

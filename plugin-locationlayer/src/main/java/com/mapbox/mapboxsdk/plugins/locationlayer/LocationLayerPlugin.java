@@ -140,6 +140,46 @@ public final class LocationLayerPlugin implements LifecycleObserver {
 
   /**
    * Construct a LocationLayerPlugin
+   * <p>
+   * <strong>Note</strong>: This constructor will initialize and use an internal {@link LocationEngine}.
+   * </p>
+   *
+   * @param mapView        the MapView to apply the LocationLayerPlugin to
+   * @param mapboxMap      the MapboxMap to apply the LocationLayerPlugin with
+   * @param options        to customize the user location icons inside your apps
+   * @since 0.8.0
+   */
+  public LocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap,
+                             @NonNull LocationLayerOptions options) {
+    this.mapboxMap = mapboxMap;
+    this.mapView = mapView;
+    this.options = options;
+    initializeLocationEngine();
+    initialize();
+  }
+
+  /**
+   * Construct a LocationLayerPlugin
+   *
+   * <p>
+   * <strong>Note</strong>: This constructor will initialize and use an internal {@link LocationEngine}.
+   * </p>
+   *
+   * @param mapView   the MapView to apply the LocationLayerPlugin to
+   * @param mapboxMap the MapboxMap to apply the LocationLayerPlugin with
+   * @since 0.8.0
+   */
+  public LocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap,
+                             @StyleRes int styleRes) {
+    this.mapboxMap = mapboxMap;
+    this.mapView = mapView;
+    this.options = LocationLayerOptions.createFromAttributes(mapView.getContext(), styleRes);
+    initializeLocationEngine();
+    initialize();
+  }
+
+  /**
+   * Construct a LocationLayerPlugin
    *
    * @param mapView        the MapView to apply the LocationLayerPlugin to
    * @param mapboxMap      the MapboxMap to apply the LocationLayerPlugin with
