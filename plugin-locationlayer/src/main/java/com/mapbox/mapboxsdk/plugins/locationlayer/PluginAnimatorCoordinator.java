@@ -65,7 +65,7 @@ final class PluginAnimatorCoordinator {
                        boolean isGpsNorth) {
     if (previousLocation == null) {
       previousLocation = newLocation;
-      locationUpdateTimestamp = SystemClock.elapsedRealtime();
+      locationUpdateTimestamp = SystemClock.elapsedRealtime() - TRANSITION_ANIMATION_DURATION_MS;
     }
 
     LatLng previousLayerLatLng = getPreviousLayerLatLng();
