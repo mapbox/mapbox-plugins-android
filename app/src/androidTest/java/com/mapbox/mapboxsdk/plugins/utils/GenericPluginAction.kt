@@ -25,6 +25,7 @@ class GenericPluginAction<T>(private val mapView: MapView, private val mapboxMap
     val plugin = pluginProvider.providePlugin(mapView, mapboxMap, view.context)
 
     // ensuring that the asynchronous renderer has time to render data we want to test
+    uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
     while (!pluginProvider.isPluginDataReady(plugin, mapboxMap)) {
       uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
     }

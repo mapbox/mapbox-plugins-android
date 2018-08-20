@@ -37,6 +37,7 @@ import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TestName
 import org.junit.runner.RunWith
 import timber.log.Timber
 
@@ -46,7 +47,11 @@ class LocationLayerTest {
 
   @Rule
   @JvmField
-  val rule = ActivityTestRule(SingleActivity::class.java)
+  val activityRule = ActivityTestRule(SingleActivity::class.java)
+
+  @Rule
+  @JvmField
+  val nameRule = TestName()
 
   @Rule
   @JvmField
@@ -65,9 +70,9 @@ class LocationLayerTest {
 
   @Before
   fun beforeTest() {
-    Timber.e("@Before: register idle resource")
+    Timber.e("@Before: ${nameRule.methodName} - register idle resource")
     // If idlingResource is null, throw Kotlin exception
-    idlingResource = OnMapReadyIdlingResource(rule.activity)
+    idlingResource = OnMapReadyIdlingResource(activityRule.activity)
     styleChangeIdlingResource = StyleChangeIdlingResource()
     IdlingRegistry.getInstance().register(idlingResource)
     IdlingRegistry.getInstance().register(styleChangeIdlingResource)
@@ -340,12 +345,12 @@ class LocationLayerTest {
 
   @After
   fun afterTest() {
-    Timber.e("@After: unregister idle resource")
+    Timber.e("@After: ${nameRule.methodName} - unregister idle resource")
     IdlingRegistry.getInstance().unregister(idlingResource)
     IdlingRegistry.getInstance().unregister(styleChangeIdlingResource)
   }
 
   private fun executePluginTest(listener: GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin>) {
-    onView(withId(android.R.id.content)).perform(GenericPluginAction(idlingResource.mapView, mapboxMap, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity), listener))
+    onView(withId(android.R.id.content)).perform(GenericPluginAction(idlingResource.mapView, mapboxMap, PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity), listener))
   }
 }
