@@ -21,7 +21,6 @@ import com.mapbox.android.core.location.LocationEnginePriority;
 import com.mapbox.android.core.location.LocationEngineProvider;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.constants.Style;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
@@ -63,7 +62,7 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
   private static final String SAVED_STATE_RENDER = "saved_state_render";
 
   @CameraMode.Mode
-  private int cameraMode = CameraMode.NONE;
+  private int cameraMode = CameraMode.TRACKING;
 
   @RenderMode.Mode
   private int renderMode = RenderMode.NORMAL;
@@ -184,8 +183,12 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     super.onStart();
     mapView.onStart();
     if (locationEngine != null) {
-      locationEngine.requestLocationUpdates();
       locationEngine.addLocationEngineListener(this);
+      if (locationEngine.isConnected()) {
+        locationEngine.requestLocationUpdates();
+      } else {
+        locationEngine.activate();
+      }
     }
   }
 
@@ -242,9 +245,7 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
 
   @Override
   public void onLocationChanged(Location location) {
-    mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-      new LatLng(location.getLatitude(), location.getLongitude()), 16));
-    locationEngine.removeLocationEngineListener(this);
+    // no impl
   }
 
   @Override
