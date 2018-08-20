@@ -94,7 +94,7 @@ final class LocationLayer implements PluginAnimator.OnLayerAnimationsValuesChang
   private Feature locationFeature;
   private GeoJsonSource locationSource;
 
-  private boolean isHidden;
+  private boolean isHidden = true;
 
   LocationLayer(MapView mapView, MapboxMap mapboxMap, LocationLayerOptions options) {
     this.mapboxMap = mapboxMap;
@@ -304,9 +304,7 @@ final class LocationLayer implements PluginAnimator.OnLayerAnimationsValuesChang
   @SuppressLint("Range")
   private void generateLocationFeature(LocationLayerOptions options) {
     if (locationFeature == null) {
-      locationFeature = Feature.fromGeometry(
-        Point.fromLngLat(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY)
-      );
+      locationFeature = Feature.fromGeometry(Point.fromLngLat(0.0, 0.0));
       locationFeature.addNumberProperty(PROPERTY_GPS_BEARING, 0f);
       locationFeature.addNumberProperty(PROPERTY_COMPASS_BEARING, 0f);
       locationFeature.addBooleanProperty(PROPERTY_LOCATION_STALE, options.enableStaleState());

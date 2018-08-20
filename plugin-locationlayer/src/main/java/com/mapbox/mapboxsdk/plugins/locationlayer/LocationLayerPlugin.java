@@ -647,7 +647,6 @@ public final class LocationLayerPlugin implements LifecycleObserver {
           locationEngine.requestLocationUpdates();
         }
       }
-      locationLayer.show();
       setCameraMode(locationLayerCamera.getCameraMode());
       setLastLocation();
       setLastCompassHeading();
@@ -742,6 +741,10 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     } else if (!isLocationLayerStarted) {
       lastLocation = location;
       return;
+    }
+
+    if (isEnabled && isPluginStarted) {
+      locationLayer.show();
     }
 
     if (!fromLastLocation) {

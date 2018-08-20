@@ -7,7 +7,6 @@ import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerOptions
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 
 class PluginGenerationUtil {
   companion object {
@@ -37,8 +36,7 @@ class PluginGenerationUtil {
         }
 
         override fun isPluginDataReady(plugin: LocationLayerPlugin, mapboxMap: MapboxMap): Boolean {
-          val source = mapboxMap.getSource("mapbox-location-source")
-          return source != null && (source as GeoJsonSource).querySourceFeatures(null).isNotEmpty()
+          return mapboxMap.getSource("mapbox-location-source") != null
         }
       }
     }

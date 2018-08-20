@@ -40,7 +40,7 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import org.hamcrest.CoreMatchers.*
 import org.junit.*
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotEquals
+import org.junit.rules.TestName
 import org.junit.runner.RunWith
 import timber.log.Timber
 
@@ -53,7 +53,11 @@ class LocationLayerPluginTest {
 
   @Rule
   @JvmField
-  val rule = ActivityTestRule(SingleFragmentActivity::class.java, true, true)
+  val activityRule = ActivityTestRule(SingleFragmentActivity::class.java, true, true)
+
+  @Rule
+  @JvmField
+  val nameRule = TestName()
 
   @Rule
   @JvmField
@@ -77,9 +81,9 @@ class LocationLayerPluginTest {
     val options = MapboxMapOptions()
       .camera(CameraPosition.Builder().zoom(2.0).build()) // to match plugins min zoom
     fragment = SupportMapFragment.newInstance(options)
-    rule.activity.setFragment(fragment)
+    activityRule.activity.setFragment(fragment)
 
-    Timber.e("@Before: register idle resource")
+    Timber.e("@Before: ${nameRule.methodName} - register idle resource")
     // If idlingResource is null, throw Kotlin exception
     idlingResource = OnMapFragmentReadyIdlingResource(fragment)
     styleChangeIdlingResource = StyleChangeIdlingResource()
@@ -103,7 +107,7 @@ class LocationLayerPluginTest {
       }
     }
 
-    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, true))
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity, true))
   }
 
   @Test
@@ -128,7 +132,7 @@ class LocationLayerPluginTest {
         // changing the style just before instantiating the plugin
         mapboxMap.setStyleUrl(Style.LIGHT)
         val plugin =
-          PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, null, false)
+          PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity, false, null, null, false)
             .providePlugin(mapView, mapboxMap, context)
         plugin.forceLocationUpdate(location)
         return plugin
@@ -191,7 +195,7 @@ class LocationLayerPluginTest {
       .enableStaleState(false)
       .build()
     executePluginTest(pluginAction,
-      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, options))
+      PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity, false, null, options))
   }
 
   @Test
@@ -227,7 +231,7 @@ class LocationLayerPluginTest {
       .bearingName("custom-bearing-bitmap")
       .build()
     executePluginTest(pluginAction,
-      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, options))
+      PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity, false, null, options))
   }
 
   @Test
@@ -236,6 +240,7 @@ class LocationLayerPluginTest {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
                                          uiController: UiController, context: Context) {
         plugin.renderMode = RenderMode.GPS
+        plugin.forceLocationUpdate(location)
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
         val foregroundDrawable = ContextCompat.getDrawable(context, R.drawable.ic_media_play)
         mapboxMap.addImageFromDrawable("custom-foreground-bitmap", foregroundDrawable!!)
@@ -251,7 +256,7 @@ class LocationLayerPluginTest {
       .gpsName("custom-gps-bitmap")
       .build()
     executePluginTest(pluginAction,
-      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, options))
+      PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity, false, null, options))
   }
 
   @Test
@@ -260,6 +265,7 @@ class LocationLayerPluginTest {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
                                          uiController: UiController, context: Context) {
         plugin.renderMode = RenderMode.GPS
+        plugin.forceLocationUpdate(location)
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
 
         val foregroundId = mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].getStringProperty(PROPERTY_FOREGROUND_ICON)
@@ -278,7 +284,7 @@ class LocationLayerPluginTest {
       .gpsName("custom-gps-bitmap")
       .build()
     executePluginTest(pluginAction,
-      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, options))
+      PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity, false, null, options))
   }
 
   @Test
@@ -287,6 +293,7 @@ class LocationLayerPluginTest {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
                                          uiController: UiController, context: Context) {
         plugin.renderMode = RenderMode.GPS
+        plugin.forceLocationUpdate(location)
         uiController.loopMainThreadForAtLeast(MAP_RENDER_DELAY)
 
         val foregroundId = mapboxMap.querySourceFeatures(LOCATION_SOURCE)[0].getStringProperty(PROPERTY_FOREGROUND_ICON)
@@ -304,7 +311,7 @@ class LocationLayerPluginTest {
       .gpsName("custom-gps-bitmap")
       .build()
     executePluginTest(pluginAction,
-      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, options))
+      PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity, false, null, options))
   }
 
   @Test
@@ -333,7 +340,7 @@ class LocationLayerPluginTest {
       .staleStateTimeout(200)
       .build()
     executePluginTest(pluginAction,
-      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, options, false))
+      PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity, false, null, options, false))
   }
 
   @Test
@@ -358,7 +365,7 @@ class LocationLayerPluginTest {
       }
     }
     executePluginTest(pluginAction,
-      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+      PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity))
   }
 
   @Test
@@ -383,7 +390,7 @@ class LocationLayerPluginTest {
       .accuracyColor(color)
       .build()
     executePluginTest(pluginAction,
-      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, options))
+      PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity, false, null, options))
   }
 
   @Test
@@ -464,7 +471,7 @@ class LocationLayerPluginTest {
       }
     }
     executePluginTest(pluginAction,
-      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, null, false))
+      PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity, false, null, null, false))
   }
 
   @Test
@@ -485,7 +492,7 @@ class LocationLayerPluginTest {
       }
     }
     executePluginTest(pluginAction,
-      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, null, false))
+      PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity, false, null, null, false))
   }
 
   @Test
@@ -506,7 +513,7 @@ class LocationLayerPluginTest {
       }
     }
     executePluginTest(pluginAction,
-      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, null, false))
+      PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity, false, null, null, false))
   }
 
   @Test
@@ -526,7 +533,7 @@ class LocationLayerPluginTest {
       }
     }
     executePluginTest(pluginAction,
-      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, null, false))
+      PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity, false, null, null, false))
   }
 
   @Test
@@ -547,7 +554,7 @@ class LocationLayerPluginTest {
       }
     }
     executePluginTest(pluginAction,
-      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, null, false))
+      PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity, false, null, null, false))
   }
 
   @Test
@@ -571,7 +578,7 @@ class LocationLayerPluginTest {
       }
     }
     executePluginTest(pluginAction,
-      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, null, false))
+      PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity, false, null, null, false))
   }
 
   @Test
@@ -603,7 +610,7 @@ class LocationLayerPluginTest {
       }
     }
     executePluginTest(pluginAction,
-      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, null, false))
+      PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity, false, null, null, false))
   }
 
   @Test
@@ -624,7 +631,7 @@ class LocationLayerPluginTest {
       }
     }
     executePluginTest(pluginAction,
-      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+      PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity))
 
     // Waiting for style to finish loading while pushing updates
     onView(withId(R.id.content)).check(matches(isDisplayed()))
@@ -645,7 +652,7 @@ class LocationLayerPluginTest {
       }
     }
     executePluginTest(pluginAction,
-      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+      PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity))
 
     // Waiting for style to finish loading while pushing updates
     onView(withId(R.id.content)).check(matches(isDisplayed()))
@@ -671,7 +678,7 @@ class LocationLayerPluginTest {
       override fun providePlugin(mapView: MapView, mapboxMap: MapboxMap, context: Context): LocationLayerPlugin {
         // changing the style just before instantiating the plugin
         styleChangeIdlingResource.waitForStyle(mapView, mapboxMap, MAPBOX_HEAVY_STYLE)
-        return PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, null, false)
+        return PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity, false, null, null, false)
           .providePlugin(mapView, mapboxMap, context)
       }
 
@@ -702,7 +709,7 @@ class LocationLayerPluginTest {
       }
     }
 
-    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity))
   }
 
   @Test
@@ -729,7 +736,7 @@ class LocationLayerPluginTest {
       }
     }
 
-    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity))
   }
 
   @Test
@@ -759,7 +766,7 @@ class LocationLayerPluginTest {
       }
     }
 
-    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity))
   }
 
   @Test
@@ -790,7 +797,7 @@ class LocationLayerPluginTest {
       }
     }
 
-    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity))
   }
 
   @Test
@@ -807,7 +814,7 @@ class LocationLayerPluginTest {
       }
     }
 
-    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity))
   }
 
   @Test
@@ -824,7 +831,7 @@ class LocationLayerPluginTest {
       }
     }
 
-    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity))
   }
 
   @Test
@@ -840,7 +847,7 @@ class LocationLayerPluginTest {
       }
     }
 
-    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity))
   }
 
   @Test
@@ -859,7 +866,7 @@ class LocationLayerPluginTest {
       }
     }
 
-    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity))
   }
 
   @Test
@@ -885,7 +892,7 @@ class LocationLayerPluginTest {
     }
 
     executePluginTest(pluginAction,
-      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, null, false))
+      PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity, false, null, null, false))
   }
 
   @Test
@@ -904,7 +911,7 @@ class LocationLayerPluginTest {
       }
     }
 
-    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity))
   }
 
   @Test
@@ -921,7 +928,7 @@ class LocationLayerPluginTest {
       }
     }
 
-    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity))
   }
 
   @Test
@@ -937,7 +944,7 @@ class LocationLayerPluginTest {
       }
     }
 
-    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity))
   }
 
   @Test
@@ -956,7 +963,7 @@ class LocationLayerPluginTest {
       }
     }
 
-    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity))
   }
 
   @Test
@@ -981,7 +988,7 @@ class LocationLayerPluginTest {
     }
 
     executePluginTest(pluginAction,
-      PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity, false, null, null, false))
+      PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity, false, null, null, false))
   }
 
   @Test
@@ -1000,7 +1007,7 @@ class LocationLayerPluginTest {
       }
     }
 
-    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity))
   }
 
   @Test
@@ -1022,18 +1029,18 @@ class LocationLayerPluginTest {
       }
     }
 
-    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity))
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity))
   }
 
   @After
   fun afterTest() {
-    Timber.e("@After: unregister idle resource")
+    Timber.e("@After: ${nameRule.methodName} - unregister idle resource")
     IdlingRegistry.getInstance().unregister(idlingResource)
     IdlingRegistry.getInstance().unregister(styleChangeIdlingResource)
   }
 
   private fun executePluginTest(listener: GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin>,
-                                pluginProvider: GenericPluginAction.PluginProvider<LocationLayerPlugin> = PluginGenerationUtil.getLocationLayerPluginProvider(rule.activity)) {
+                                pluginProvider: GenericPluginAction.PluginProvider<LocationLayerPlugin> = PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity)) {
     onView(withId(R.id.content)).perform(GenericPluginAction(fragment.view as MapView, mapboxMap, pluginProvider, listener))
   }
 }
