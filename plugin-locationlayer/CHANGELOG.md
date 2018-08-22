@@ -2,6 +2,9 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### 0.7.2 - August 22, 2018
+- Maps SDK bump to 6.4.0 [#615](https://github.com/mapbox/mapbox-plugins-android/pull/615)
+
 ### 0.7.1 - July 26, 2018
 - Request location updates for AndroidLocationEngine [#602](https://github.com/mapbox/mapbox-plugins-android/pull/602)
 
