@@ -1,6 +1,5 @@
 package com.mapbox.mapboxsdk.plugins.locationlayer;
 
-import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -52,10 +51,9 @@ class CompassManager implements SensorEventListener {
    * Construct a new instance of the this class. A internal compass listeners needed to separate it
    * from the cleared list of public listeners.
    */
-  CompassManager(@NonNull Context context) {
-    windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-    sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-
+  CompassManager(WindowManager windowManager, SensorManager sensorManager) {
+    this.windowManager = windowManager;
+    this.sensorManager = sensorManager;
     compassSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
     if (compassSensor == null) {
       Timber.d(
