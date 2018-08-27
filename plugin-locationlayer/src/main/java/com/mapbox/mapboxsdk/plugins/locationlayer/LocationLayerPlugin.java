@@ -496,13 +496,15 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   }
 
   /**
-   * Return the last known compass bearing accuracy of the location layer plugin.
+   * Return the last known {@link CompassManager} accuracy status of the location layer plugin.
+   *
+   * The last known accuracy of the compass sensor, one of SensorManager.SENSOR_STATUS_*
    *
    * @return the last know compass accuracy bearing
    * @since 0.8.0
    */
-  public float getLastKnownCompassAccuracyBearing() {
-    return compassManager.getLastAccuracy();
+  public float getLastKnownCompassAccuracyStatus() {
+    return compassManager.getLastAccuracySensorStatus();
   }
 
   /**
