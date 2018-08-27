@@ -106,7 +106,7 @@ final class LocationLayer implements PluginAnimator.OnLayerAnimationsValuesChang
 
   void initializeComponents(LocationLayerOptions options) {
     addLocationSource();
-    addLayers();
+    addLayers(options.layerBelow());
     applyStyle(options);
 
     if (isHidden) {
@@ -200,11 +200,11 @@ final class LocationLayer implements PluginAnimator.OnLayerAnimationsValuesChang
     }
   }
 
-  private void addLayers() {
-    addSymbolLayer(SHADOW_LAYER, BACKGROUND_LAYER);
+  private void addLayers(String idBelowLayer) {
+    addSymbolLayer(BEARING_LAYER, idBelowLayer);
+    addSymbolLayer(FOREGROUND_LAYER, BEARING_LAYER);
     addSymbolLayer(BACKGROUND_LAYER, FOREGROUND_LAYER);
-    addSymbolLayer(FOREGROUND_LAYER, null);
-    addSymbolLayer(BEARING_LAYER, null);
+    addSymbolLayer(SHADOW_LAYER, BACKGROUND_LAYER);
     addAccuracyLayer();
   }
 
@@ -256,12 +256,8 @@ final class LocationLayer implements PluginAnimator.OnLayerAnimationsValuesChang
     addLayerToMap(locationAccuracyLayer, BACKGROUND_LAYER);
   }
 
-  private void addLayerToMap(Layer layer, @Nullable String idBelowLayer) {
-    if (idBelowLayer == null) {
-      mapboxMap.addLayer(layer);
-    } else {
-      mapboxMap.addLayerBelow(layer, idBelowLayer);
-    }
+  private void addLayerToMap(Layer layer, @NonNull String idBelowLayer) {
+    mapboxMap.addLayerBelow(layer, idBelowLayer);
     layerMap.add(layer.getId());
   }
 

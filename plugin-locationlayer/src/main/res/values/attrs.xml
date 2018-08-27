@@ -30,6 +30,9 @@
     <attr name="mapbox_iconPaddingRight" format="integer"/>
     <attr name="mapbox_iconPaddingBottom" format="integer"/>
 
+    <!-- Map layer configuration -->
+    <attr name="mapbox_layer_below" format="string"/>
+    
     <!-- Map zoom levels -->
     <attr name="mapbox_maxZoom" format="float"/>
     <attr name="mapbox_minZoom" format="float"/>
