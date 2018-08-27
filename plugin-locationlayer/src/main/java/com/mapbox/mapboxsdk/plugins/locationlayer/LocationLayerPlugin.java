@@ -4,12 +4,15 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
+import android.content.Context;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 import android.support.annotation.StyleRes;
 import android.support.v7.app.AppCompatDelegate;
+import android.view.WindowManager;
 
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineListener;
@@ -493,6 +496,16 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   }
 
   /**
+   * Return the last known compass bearing accuracy of the location layer plugin.
+   *
+   * @return the last know compass accuracy bearing
+   * @since 0.8.0
+   */
+  public float getLastKnownCompassAccuracyBearing() {
+    return compassManager.getLastAccuracy();
+  }
+
+  /**
    * Add a compass listener to get heading updates every second. Once the first listener gets added,
    * the sensor gets initiated and starts returning values.
    *
@@ -690,7 +703,10 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     pluginAnimatorCoordinator.addLayerListener(locationLayer);
     pluginAnimatorCoordinator.addCameraListener(locationLayerCamera);
 
-    compassManager = new CompassManager(mapView.getContext());
+    Context context = mapView.getContext();
+    WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+    SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+    compassManager = new CompassManager(windowManager, sensorManager);
     compassManager.addCompassListener(compassListener);
     staleStateManager = new StaleStateManager(onLocationStaleListener, options.staleStateTimeout());
 
