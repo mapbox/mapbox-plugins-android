@@ -27,7 +27,8 @@ ext {
       lifecycleExtensions: '1.1.1',
       lifecycleLiveData  : '1.1.1',
       room               : '1.1.0',
-      androidArchCore    : '1.1.0'
+      androidArchCore    : '1.1.0',
+      robolectric        : '3.8'
   ]
 
   pluginVersion = [
@@ -94,6 +95,8 @@ ext {
       junit                  : "junit:junit:${version.junit}",
       mockito                : "org.mockito:mockito-inline:${version.mockito}",
       androidArchCore        : "android.arch.core:core-testing:${version.androidArchCore}",
+      robolectric            : "org.robolectric:robolectric:${version.robolectric}",
+      kotlin                 : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${pluginVersion.kotlin}",
 
       // errorprone
       errorprone             : "com.google.errorprone:error_prone_core:${version.errorprone}"
