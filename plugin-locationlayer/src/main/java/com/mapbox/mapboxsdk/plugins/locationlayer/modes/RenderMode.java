@@ -2,6 +2,7 @@ package com.mapbox.mapboxsdk.plugins.locationlayer.modes;
 
 import android.support.annotation.IntDef;
 
+import com.mapbox.mapboxsdk.plugins.locationlayer.CompassEngine;
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin;
 
 import java.lang.annotation.Retention;
@@ -39,7 +40,7 @@ public final class RenderMode {
 
   /**
    * Tracking the user location with bearing considered
-   * from a {@link com.mapbox.mapboxsdk.plugins.locationlayer.CompassManager}.
+   * from a {@link CompassEngine}.
    *
    * @since 0.1.0
    */

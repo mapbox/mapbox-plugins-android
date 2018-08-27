@@ -40,6 +40,7 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import org.hamcrest.CoreMatchers.*
 import org.junit.*
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.rules.TestName
 import org.junit.runner.RunWith
 import timber.log.Timber
@@ -1056,6 +1057,18 @@ class LocationLayerPluginTest {
         assertEquals(location.bearing.toDouble(), mapboxMap.cameraPosition.bearing, 0.1)
         assertEquals(location.latitude, mapboxMap.cameraPosition.target.latitude, 0.1)
         assertEquals(location.longitude, mapboxMap.cameraPosition.target.longitude, 0.1)
+      }
+    }
+
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity))
+  }
+
+  @Test
+  fun onPluginInitialized_defaultCompassEngineIsProvided() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        assertTrue(plugin.compassEngine is LocationLayerCompassEngine)
       }
     }
 
