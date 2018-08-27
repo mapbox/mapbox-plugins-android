@@ -35,10 +35,10 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR
 final class PluginAnimatorCoordinator {
 
   @SuppressLint("UseSparseArrays")
-  private final Map<Integer, PluginAnimator> animatorMap = new HashMap<>();
+  final Map<Integer, PluginAnimator> animatorMap = new HashMap<>();
 
-  private final List<PluginAnimator.OnLayerAnimationsValuesChangeListener> layerListeners = new ArrayList<>();
-  private final List<PluginAnimator.OnCameraAnimationsValuesChangeListener> cameraListeners = new ArrayList<>();
+  final List<PluginAnimator.OnLayerAnimationsValuesChangeListener> layerListeners = new ArrayList<>();
+  final List<PluginAnimator.OnCameraAnimationsValuesChangeListener> cameraListeners = new ArrayList<>();
 
   private Location previousLocation;
   private float previousAccuracyRadius = -1;
