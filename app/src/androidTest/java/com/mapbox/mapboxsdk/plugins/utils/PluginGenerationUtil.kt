@@ -19,13 +19,17 @@ class PluginGenerationUtil {
       return object : GenericPluginAction.PluginProvider<LocationLayerPlugin> {
         override fun providePlugin(mapView: MapView, mapboxMap: MapboxMap, context: Context): LocationLayerPlugin {
           val plugin = if (useDefaultEngine) {
-            LocationLayerPlugin(mapView, mapboxMap)
+              if (options != null) {
+                  LocationLayerPlugin(mapView, mapboxMap, options)
+              } else {
+                  LocationLayerPlugin(mapView, mapboxMap)
+              }
           } else {
-            if (options != null) {
-              LocationLayerPlugin(mapView, mapboxMap, engine, options)
-            } else {
-              LocationLayerPlugin(mapView, mapboxMap, engine)
-            }
+              if (options != null) {
+                  LocationLayerPlugin(mapView, mapboxMap, engine, options)
+              } else {
+                  LocationLayerPlugin(mapView, mapboxMap, engine)
+              }
           }
 
           if (registerLifecycleObserver) {

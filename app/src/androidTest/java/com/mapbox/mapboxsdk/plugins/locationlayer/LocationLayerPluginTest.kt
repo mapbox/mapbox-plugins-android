@@ -111,6 +111,36 @@ class LocationLayerPluginTest {
   }
 
   @Test
+  fun locationLayerPlugin_initializesLocationEngineCorrectlyWhenOnesNotProvidedButHasOptions() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+
+        val locationEngine = plugin.locationEngine
+        val pluginOptions = plugin.locationLayerOptions
+
+        assertThat(locationEngine, notNullValue())
+        assertThat(pluginOptions, notNullValue())
+
+        uiController.loopMainThreadForAtLeast(MAP_CONNECTION_DELAY)
+        assertThat(locationEngine?.isConnected, `is`(true))
+        assertThat(pluginOptions?.accuracyAlpha(), `is`(.5f))
+        assertThat(pluginOptions?.accuracyColor(), `is`(Color.BLUE))
+      }
+    }
+
+    val options = LocationLayerOptions.builder(fragment.activity)
+            .staleStateTimeout(200)
+            .enableStaleState(false)
+            .accuracyAlpha(.5f)
+            .accuracyColor(Color.BLUE)
+            .build()
+
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(
+            activityRule.activity, true, null, options))
+  }
+
+  @Test
   fun settingMapStyleImmediatelyBeforeLoadingPlugin_doesStillLoadLayersProperly() {
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
