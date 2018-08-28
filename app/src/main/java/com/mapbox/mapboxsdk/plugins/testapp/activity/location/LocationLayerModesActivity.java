@@ -116,8 +116,10 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     } else {
       padding = new int[] {0, 250, 0, 0};
     }
+
     LocationLayerOptions options = LocationLayerOptions.builder(this)
       .padding(padding)
+      .layerBelow("waterway-label")
       .build();
     locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine, options);
     locationLayerPlugin.addOnLocationClickListener(this);

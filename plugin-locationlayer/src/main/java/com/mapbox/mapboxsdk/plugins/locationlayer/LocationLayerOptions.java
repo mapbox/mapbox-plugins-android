@@ -173,6 +173,9 @@ public abstract class LocationLayerOptions implements Parcelable {
     builder.maxZoom(maxZoom);
     builder.minZoom(minZoom);
 
+    builder.layerBelow(
+      typedArray.getString(R.styleable.mapbox_LocationLayer_mapbox_layer_below));
+
     float minScale = typedArray.getFloat(
       R.styleable.mapbox_LocationLayer_mapbox_minZoomIconScale, MIN_ZOOM_ICON_SCALE_DEFAULT);
     float maxScale = typedArray.getFloat(
@@ -550,6 +553,15 @@ public abstract class LocationLayerOptions implements Parcelable {
   public abstract float trackingMultiFingerMoveThreshold();
 
   /**
+   * Get the id of the layer to add the location layer below to.
+   *
+   * @return the id of the layer to add the location layer below to
+   * @since 0.8.0
+   */
+  @Nullable
+  public abstract String layerBelow();
+
+  /**
    * Builder class for constructing a new instance of {@link LocationLayerOptions}.
    *
    * @since 0.4.0
@@ -890,6 +902,14 @@ public abstract class LocationLayerOptions implements Parcelable {
      * @since 0.5.0
      */
     public abstract Builder trackingMultiFingerMoveThreshold(float moveThreshold);
+
+    /**
+     * Sets the id of the layer to add the location layer above to.
+     *
+     * @param layerBelow the id of the layer to add the location layer above to
+     * @since 0.8.0
+     */
+    public abstract Builder layerBelow(@Nullable String layerBelow);
 
     abstract LocationLayerOptions autoBuild();
 
