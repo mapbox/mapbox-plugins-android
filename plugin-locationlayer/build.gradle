@@ -42,11 +42,6 @@ android {
 dependencies {
   implementation dependenciesList.mapboxMapSdk
 
-  // AutoValues
-  annotationProcessor dependenciesList.autoValuesParcel
-  annotationProcessor dependenciesList.autoValue
-  compileOnly dependenciesList.autoValue
-
   // Timber
   implementation dependenciesList.timber
 
