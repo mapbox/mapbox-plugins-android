@@ -42,5 +42,7 @@
     <attr name="mapbox_trackingInitialMoveThreshold" format="dimension"/>
     <attr name="mapbox_trackingMultiFingerMoveThreshold" format="dimension"/>
 
+    <attr name="mapbox_smoothLocationUpdateAnimation" format="boolean"/>
+
   </declare-styleable>
 </resources>

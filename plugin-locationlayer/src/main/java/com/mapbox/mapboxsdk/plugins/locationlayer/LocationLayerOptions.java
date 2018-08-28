@@ -180,6 +180,9 @@ public abstract class LocationLayerOptions implements Parcelable {
     builder.minZoomIconScale(minScale);
     builder.maxZoomIconScale(maxScale);
 
+    builder.smoothLocationUpdateAnimation(
+      typedArray.getBoolean(R.styleable.mapbox_LocationLayer_mapbox_smoothLocationUpdateAnimation, true));
+
     typedArray.recycle();
 
     return builder.build();
@@ -550,6 +553,15 @@ public abstract class LocationLayerOptions implements Parcelable {
   public abstract float trackingMultiFingerMoveThreshold();
 
   /**
+   * Enable or disable smooth location update animation. When disabled, once location update is provided,
+   * the location icon and the camera position, if tracking is engaged,
+   * will be moved to the target position immediately.
+   *
+   * @return true if smooth location update animation should be enabled, false otherwise.
+   */
+  public abstract boolean smoothLocationUpdateAnimation();
+
+  /**
    * Builder class for constructing a new instance of {@link LocationLayerOptions}.
    *
    * @since 0.4.0
@@ -890,6 +902,17 @@ public abstract class LocationLayerOptions implements Parcelable {
      * @since 0.5.0
      */
     public abstract Builder trackingMultiFingerMoveThreshold(float moveThreshold);
+
+    /**
+     * Sets whether smooth location update animation should be enabled. When disabled, once location update is provided,
+     * the location icon and the camera position, if tracking is engaged,
+     * will be moved to the target position immediately.
+     * <p>
+     * Smooth location update animation is enabled by default.
+     *
+     * @param enabled true if smooth location update animation should be enabled, false otherwise.
+     */
+    public abstract Builder smoothLocationUpdateAnimation(boolean enabled);
 
     abstract LocationLayerOptions autoBuild();
 

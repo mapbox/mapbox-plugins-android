@@ -118,6 +118,7 @@ public class LocationLayerModesActivity extends AppCompatActivity implements OnM
     }
     LocationLayerOptions options = LocationLayerOptions.builder(this)
       .padding(padding)
+      .smoothLocationUpdateAnimation(false)
       .build();
     locationLayerPlugin = new LocationLayerPlugin(mapView, mapboxMap, locationEngine, options);
     locationLayerPlugin.addOnLocationClickListener(this);

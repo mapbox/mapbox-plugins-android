@@ -309,6 +309,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     }
     staleStateManager.setDelayTime(options.staleStateTimeout());
     updateMapWithOptions(options);
+    pluginAnimatorCoordinator.setOptions(options);
   }
 
   /**
@@ -702,6 +703,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     pluginAnimatorCoordinator = new PluginAnimatorCoordinator();
     pluginAnimatorCoordinator.addLayerListener(locationLayer);
     pluginAnimatorCoordinator.addCameraListener(locationLayerCamera);
+    pluginAnimatorCoordinator.setOptions(options);
 
     Context context = mapView.getContext();
     WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);

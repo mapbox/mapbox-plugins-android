@@ -40,6 +40,8 @@ final class PluginAnimatorCoordinator {
   private final List<PluginAnimator.OnLayerAnimationsValuesChangeListener> layerListeners = new ArrayList<>();
   private final List<PluginAnimator.OnCameraAnimationsValuesChangeListener> cameraListeners = new ArrayList<>();
 
+  private boolean smoothLocationAnimation;
+
   private Location previousLocation;
   private float previousAccuracyRadius = -1;
   private float previousCompassBearing = -1;
@@ -222,7 +224,7 @@ final class PluginAnimatorCoordinator {
     locationUpdateTimestamp = SystemClock.elapsedRealtime();
 
     long animationDuration;
-    if (previousUpdateTimeStamp == 0) {
+    if (previousUpdateTimeStamp == 0 || !smoothLocationAnimation) {
       animationDuration = 0;
     } else {
       animationDuration = (long) ((locationUpdateTimestamp - previousUpdateTimeStamp) * 1.1f)
@@ -371,5 +373,13 @@ final class PluginAnimatorCoordinator {
       animator.removeAllListeners();
       animatorMap.put(animatorType, null);
     }
+  }
+
+  void setOptions(LocationLayerOptions options) {
+    setSmoothLocationAnimation(options.smoothLocationUpdateAnimation());
+  }
+
+  private void setSmoothLocationAnimation(boolean smoothLocationAnimation) {
+    this.smoothLocationAnimation = smoothLocationAnimation;
   }
 }
