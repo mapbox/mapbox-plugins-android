@@ -47,6 +47,17 @@ final class LocationLayerCamera implements PluginAnimator.OnCameraAnimationsValu
     initializeOptions(options);
   }
 
+  // Package private for testing purposes
+  LocationLayerCamera(MapboxMap mapboxMap,
+                      MoveGestureDetector moveGestureDetector,
+                      OnCameraTrackingChangedListener internalCameraTrackingChangedListener,
+                      OnCameraMoveInvalidateListener onCameraMoveInvalidateListener) {
+    this.mapboxMap = mapboxMap;
+    this.moveGestureDetector = moveGestureDetector;
+    this.internalCameraTrackingChangedListener = internalCameraTrackingChangedListener;
+    this.onCameraMoveInvalidateListener = onCameraMoveInvalidateListener;
+  }
+
   void initializeOptions(LocationLayerOptions options) {
     this.options = options;
   }
