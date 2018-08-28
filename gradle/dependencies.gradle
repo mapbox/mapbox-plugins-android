@@ -71,7 +71,6 @@ ext {
       // architecture
       lifecycleExtensions    : "android.arch.lifecycle:extensions:${version.lifecycleExtensions}",
       lifecycleCompiler      : "android.arch.lifecycle:compiler:${version.lifecycleCompiler}",
-      lifecycleLiveData      : "android.arch.lifecycle:livedata:${version.lifecycleLiveData}",
       roomRuntime            : "android.arch.persistence.room:runtime:${version.room}",
       roomCompiler           : "android.arch.persistence.room:compiler:${version.room}",
 
