@@ -40,7 +40,6 @@ android {
 }
 
 dependencies {
-  implementation dependenciesList.lifecycleLiveData
   implementation dependenciesList.mapboxMapSdk
 
   // AutoValues
