@@ -64,6 +64,9 @@ configurations.all { config ->
 }
 
 dependencies {
+  // Kotlin
+  implementation dependenciesList.kotlin
+
   // Mapbox
   implementation dependenciesList.mapboxMapSdk
   implementation dependenciesList.mapboxGeocoding
@@ -73,7 +76,7 @@ dependencies {
   implementation dependenciesList.roomRuntime
   kapt dependenciesList.roomCompiler
 
-  // LOST
+  // Google Play Services
   implementation dependenciesList.playLocation
 
   // Support libraries
@@ -120,3 +123,4 @@ dependencies {
 
 apply from: "${rootDir}/gradle/checkstyle.gradle"
 apply from: "${rootDir}/gradle/generate-token.gradle"
+apply plugin: 'kotlin-android-extensions'
