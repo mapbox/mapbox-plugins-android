@@ -21,7 +21,7 @@ import timber.log.Timber;
  *
  * @since 0.1.0
  */
-class CompassManager implements SensorEventListener {
+class LocationLayerCompassEngine implements CompassEngine, SensorEventListener {
 
   // The rate sensor events will be delivered at. As the Android documentation states, this is only
   // a hint to the system and the events might actually be received faster or slower then this
@@ -58,7 +58,7 @@ class CompassManager implements SensorEventListener {
    * Construct a new instance of the this class. A internal compass listeners needed to separate it
    * from the cleared list of public listeners.
    */
-  CompassManager(WindowManager windowManager, SensorManager sensorManager) {
+  LocationLayerCompassEngine(WindowManager windowManager, SensorManager sensorManager) {
     this.windowManager = windowManager;
     this.sensorManager = sensorManager;
     compassSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
@@ -74,33 +74,39 @@ class CompassManager implements SensorEventListener {
     }
   }
 
-  void addCompassListener(@NonNull CompassListener compassListener) {
+  @Override
+  public void addCompassListener(@NonNull CompassListener compassListener) {
     if (compassListeners.isEmpty()) {
       onStart();
     }
     compassListeners.add(compassListener);
   }
 
-  void removeCompassListener(@NonNull CompassListener compassListener) {
+  @Override
+  public void removeCompassListener(@NonNull CompassListener compassListener) {
     compassListeners.remove(compassListener);
     if (compassListeners.isEmpty()) {
       onStop();
     }
   }
 
-  int getLastAccuracySensorStatus() {
+  @Override
+  public int getLastAccuracySensorStatus() {
     return lastAccuracySensorStatus;
   }
 
-  float getLastHeading() {
+  @Override
+  public float getLastHeading() {
     return lastHeading;
   }
 
-  void onStart() {
+  @Override
+  public void onStart() {
     registerSensorListeners();
   }
 
-  void onStop() {
+  @Override
+  public void onStop() {
     unregisterSensorListeners();
   }
 

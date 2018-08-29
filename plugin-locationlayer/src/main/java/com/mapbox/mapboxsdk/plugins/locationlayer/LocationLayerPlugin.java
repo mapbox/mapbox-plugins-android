@@ -73,7 +73,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   private final MapView mapView;
   private LocationLayerOptions options;
   private LocationEngine locationEngine;
-  private CompassManager compassManager;
+  private CompassEngine compassEngine;
   private boolean usingInternalLocationEngine;
 
   private LocationLayer locationLayer;
@@ -144,9 +144,9 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    * <strong>Note</strong>: This constructor will initialize and use an internal {@link LocationEngine}.
    * </p>
    *
-   * @param mapView        the MapView to apply the LocationLayerPlugin to
-   * @param mapboxMap      the MapboxMap to apply the LocationLayerPlugin with
-   * @param options        to customize the user location icons inside your apps
+   * @param mapView   the MapView to apply the LocationLayerPlugin to
+   * @param mapboxMap the MapboxMap to apply the LocationLayerPlugin with
+   * @param options   to customize the user location icons inside your apps
    * @since 0.8.0
    */
   public LocationLayerPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap,
@@ -160,7 +160,6 @@ public final class LocationLayerPlugin implements LifecycleObserver {
 
   /**
    * Construct a LocationLayerPlugin
-   *
    * <p>
    * <strong>Note</strong>: This constructor will initialize and use an internal {@link LocationEngine}.
    * </p>
@@ -520,6 +519,29 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   }
 
   /**
+   * Sets the compass engine used to provide compass heading values.
+   *
+   * @param compassEngine to be used
+   * @since 0.8.0
+   */
+  public void setCompassEngine(@NonNull CompassEngine compassEngine) {
+    this.compassEngine.removeCompassListener(compassListener);
+    this.compassEngine = compassEngine;
+    compassEngine.addCompassListener(compassListener);
+  }
+
+  /**
+   * Returns the compass engine used to provide compass heading values.
+   *
+   * @return compass engine currently being used
+   * @since 0.8.0
+   */
+  @NonNull
+  public CompassEngine getCompassEngine() {
+    return compassEngine;
+  }
+
+  /**
    * Get the last know location of the location layer plugin.
    *
    * @return the last known location
@@ -536,15 +558,15 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   }
 
   /**
-   * Return the last known {@link CompassManager} accuracy status of the location layer plugin.
-   *
+   * Return the last known {@link CompassEngine} accuracy status of the location layer plugin.
+   * <p>
    * The last known accuracy of the compass sensor, one of SensorManager.SENSOR_STATUS_*
    *
    * @return the last know compass accuracy bearing
    * @since 0.8.0
    */
   public float getLastKnownCompassAccuracyStatus() {
-    return compassManager.getLastAccuracySensorStatus();
+    return compassEngine.getLastAccuracySensorStatus();
   }
 
   /**
@@ -556,7 +578,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    * @since 0.2.0
    */
   public void addCompassListener(@NonNull CompassListener compassListener) {
-    compassManager.addCompassListener(compassListener);
+    compassEngine.addCompassListener(compassListener);
   }
 
   /**
@@ -566,7 +588,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
    *                        list.
    */
   public void removeCompassListener(@NonNull CompassListener compassListener) {
-    compassManager.removeCompassListener(compassListener);
+    compassEngine.removeCompassListener(compassListener);
   }
 
   /**
@@ -678,7 +700,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   }
 
   @SuppressLint("MissingPermission")
-  void onLocationLayerStart() {
+  private void onLocationLayerStart() {
     if (!isPluginStarted) {
       return;
     }
@@ -692,7 +714,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
       if (options.enableStaleState()) {
         staleStateManager.onStart();
       }
-      compassManager.onStart();
+      compassEngine.onStart();
     }
 
     if (isEnabled) {
@@ -708,7 +730,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     }
   }
 
-  void onLocationLayerStop() {
+  private void onLocationLayerStop() {
     if (!isLocationLayerStarted || !isPluginStarted) {
       return;
     }
@@ -716,7 +738,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     isLocationLayerStarted = false;
     locationLayer.hide();
     staleStateManager.onStop();
-    compassManager.onStop();
+    compassEngine.onStop();
     pluginAnimatorCoordinator.cancelAllAnimations();
     if (locationEngine != null) {
       if (usingInternalLocationEngine) {
@@ -751,8 +773,8 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     Context context = mapView.getContext();
     WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
     SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-    compassManager = new CompassManager(windowManager, sensorManager);
-    compassManager.addCompassListener(compassListener);
+    compassEngine = new LocationLayerCompassEngine(windowManager, sensorManager);
+    compassEngine.addCompassListener(compassListener);
     staleStateManager = new StaleStateManager(onLocationStaleListener, options.staleStateTimeout());
 
     updateMapWithOptions(options);
@@ -832,7 +854,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   }
 
   private void setLastCompassHeading() {
-    updateCompassHeading(compassManager.getLastHeading());
+    updateCompassHeading(compassEngine.getLastHeading());
   }
 
   @SuppressLint("MissingPermission")

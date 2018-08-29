@@ -17,9 +17,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CompassManagerTest {
+public class CompassEngineTest {
 
-    private CompassManager compassManager;
+    private LocationLayerCompassEngine compassEngine;
 
     @Mock
     private WindowManager windowManager;
@@ -29,26 +29,26 @@ public class CompassManagerTest {
 
     @Before
     public void setUp() throws Exception {
-        compassManager = new CompassManager(windowManager, sensorManager);
+        compassEngine = new LocationLayerCompassEngine(windowManager, sensorManager);
     }
 
     @Test
-    public void lastKnownCompassAccuracyStatusDefault() {
-        assertEquals("Last accuracy should match", compassManager.getLastAccuracySensorStatus(), 0);
+    public void lastKnownCompassBearingAccuracyDefault() {
+        assertEquals("Last accuracy should match", compassEngine.getLastAccuracySensorStatus(), 0);
     }
 
     @Test
     public void lastKnownCompassAccuracyStatusValue() {
         Sensor sensor = mock(Sensor.class);
-        compassManager.onAccuracyChanged(sensor, 2);
-        assertEquals("Last accuracy should match", compassManager.getLastAccuracySensorStatus(), 2);
+        compassEngine.onAccuracyChanged(sensor, 2);
+        assertEquals("Last accuracy should match", compassEngine.getLastAccuracySensorStatus(), 2);
     }
 
     @Test
     public void whenGyroscopeIsNull_fallbackToGravity() {
         SensorManager sensorManager = mock(SensorManager.class);
         when(sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)).thenReturn(null);
-        new CompassManager(windowManager, sensorManager);
+        new LocationLayerCompassEngine(windowManager, sensorManager);
 
         verify(sensorManager, times(1)).getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
@@ -57,7 +57,7 @@ public class CompassManagerTest {
     public void whenGyroscopeIsNull_fallbackToMagneticField() {
         SensorManager sensorManager = mock(SensorManager.class);
         when(sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)).thenReturn(null);
-        new CompassManager(windowManager, sensorManager);
+        new LocationLayerCompassEngine(windowManager, sensorManager);
 
         verify(sensorManager, times(1)).getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
     }
