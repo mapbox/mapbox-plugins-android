@@ -677,19 +677,23 @@ public final class LocationLayerPlugin implements LifecycleObserver {
   }
 
   /**
-   * Required to place inside your activities {@code onStart} method. You'll also most likely want
-   * to check that this Location Layer plugin instance inside your activity is null or not.
+   * You must call this method from the parent's Activity#onStart() or Fragment#onStart()
    *
    * @since 0.1.0
    */
   @OnLifecycleEvent(Lifecycle.Event.ON_START)
   public void onStart() {
+    if (mapView.isDestroyed()) {
+      Timber.e("You are calling plugins #onStart after the map was destroyed. Re-create the plugin before using it.");
+      return;
+    }
+
     isPluginStarted = true;
     onLocationLayerStart();
   }
 
   /**
-   * Required to place inside your activities {@code onStop} method.
+   * You must call this method from the parent's Activity#onStop() or Fragment#onStop().
    *
    * @since 0.1.0
    */
