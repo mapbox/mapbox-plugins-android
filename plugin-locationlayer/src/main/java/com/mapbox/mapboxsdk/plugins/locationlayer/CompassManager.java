@@ -29,6 +29,8 @@ class CompassManager implements SensorEventListener {
   // ourselves rather than using one of the provided constants which deliver updates too quickly for
   // our use case. The default is set to 100ms
   private static final int SENSOR_DELAY_MICROS = 100 * 1000;
+  // Filtering coefficient 0 < ALPHA < 1
+  private static final float ALPHA = 0.45f;
 
   private final WindowManager windowManager;
   private final SensorManager sensorManager;
@@ -37,15 +39,20 @@ class CompassManager implements SensorEventListener {
   // Not all devices have a compassSensor
   @Nullable
   private Sensor compassSensor;
+  @Nullable
+  private Sensor gravitySensor;
+  @Nullable
+  private Sensor magneticFieldSensor;
 
   private float[] truncatedRotationVectorValue = new float[4];
   private float[] rotationMatrix = new float[9];
   private float[] rotationVectorValue;
   private float lastHeading;
-  private int lastAccuracy;
+  private int lastAccuracySensorStatus;
 
-  // CompassManager data
   private long compassUpdateNextTimestamp;
+  private float[] gravityValues = new float[3];
+  private float[] magneticValues = new float[3];
 
   /**
    * Construct a new instance of the this class. A internal compass listeners needed to separate it
@@ -56,9 +63,14 @@ class CompassManager implements SensorEventListener {
     this.sensorManager = sensorManager;
     compassSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
     if (compassSensor == null) {
-      Timber.d(
-        "Rotation vector sensor not supported on device, falling back to orientation.");
-      compassSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+      if (isGyroscopeAvailable()) {
+        Timber.d("Rotation vector sensor not supported on device, falling back to orientation.");
+        compassSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+      } else {
+        Timber.d("Rotation vector sensor not supported on device, falling back to accelerometer and magnetic field.");
+        gravitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        magneticFieldSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+      }
     }
   }
 
@@ -76,21 +88,20 @@ class CompassManager implements SensorEventListener {
     }
   }
 
+  int getLastAccuracySensorStatus() {
+    return lastAccuracySensorStatus;
+  }
+
+  float getLastHeading() {
+    return lastHeading;
+  }
+
   void onStart() {
-    if (isSensorAvailable()) {
-      // Does nothing if the sensors already registered.
-      sensorManager.registerListener(this, compassSensor, SENSOR_DELAY_MICROS);
-    }
+    registerSensorListeners();
   }
 
   void onStop() {
-    if (isSensorAvailable()) {
-      sensorManager.unregisterListener(this, compassSensor);
-    }
-  }
-
-  boolean isSensorAvailable() {
-    return compassSensor != null;
+    unregisterSensorListeners();
   }
 
   @Override
@@ -100,7 +111,7 @@ class CompassManager implements SensorEventListener {
     if (currentTime < compassUpdateNextTimestamp) {
       return;
     }
-    if (lastAccuracy == SensorManager.SENSOR_STATUS_UNRELIABLE) {
+    if (lastAccuracySensorStatus == SensorManager.SENSOR_STATUS_UNRELIABLE) {
       Timber.d("Compass sensor is unreliable, device calibration is needed.");
       return;
     }
@@ -112,22 +123,37 @@ class CompassManager implements SensorEventListener {
       compassUpdateNextTimestamp = currentTime + LocationLayerConstants.COMPASS_UPDATE_RATE_MS;
     } else if (event.sensor.getType() == Sensor.TYPE_ORIENTATION) {
       notifyCompassChangeListeners((event.values[0] + 360) % 360);
+    } else if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+      gravityValues = lowPassFilter(getRotationVectorFromSensorEvent(event), gravityValues);
+      updateOrientation();
+    } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+      magneticValues = lowPassFilter(getRotationVectorFromSensorEvent(event), magneticValues);
+      updateOrientation();
     }
   }
 
   @Override
   public void onAccuracyChanged(Sensor sensor, int accuracy) {
-    if (lastAccuracy != accuracy) {
+    if (lastAccuracySensorStatus != accuracy) {
       for (CompassListener compassListener : compassListeners) {
         compassListener.onCompassAccuracyChange(accuracy);
       }
-      lastAccuracy = accuracy;
+      lastAccuracySensorStatus = accuracy;
     }
+  }
+
+  private boolean isGyroscopeAvailable() {
+    return sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null;
   }
 
   @SuppressWarnings("SuspiciousNameCombination")
   private void updateOrientation() {
-    SensorManager.getRotationMatrixFromVector(rotationMatrix, rotationVectorValue);
+    if (rotationVectorValue != null) {
+      SensorManager.getRotationMatrixFromVector(rotationMatrix, rotationVectorValue);
+    } else {
+      // Get rotation matrix given the gravity and geomagnetic matrices
+      SensorManager.getRotationMatrix(rotationMatrix, null, gravityValues, magneticValues);
+    }
 
     final int worldAxisForDeviceAxisX;
     final int worldAxisForDeviceAxisY;
@@ -173,12 +199,44 @@ class CompassManager implements SensorEventListener {
     lastHeading = heading;
   }
 
-  int getLastAccuracy() {
-    return lastAccuracy;
+  private void registerSensorListeners() {
+    if (isCompassSensorAvailable()) {
+      // Does nothing if the sensors already registered.
+      sensorManager.registerListener(this, compassSensor, SENSOR_DELAY_MICROS);
+    } else {
+      sensorManager.registerListener(this, gravitySensor, SENSOR_DELAY_MICROS);
+      sensorManager.registerListener(this, magneticFieldSensor, SENSOR_DELAY_MICROS);
+    }
   }
 
-  float getLastHeading() {
-    return lastHeading;
+  private void unregisterSensorListeners() {
+    if (isCompassSensorAvailable()) {
+      sensorManager.unregisterListener(this, compassSensor);
+    } else {
+      sensorManager.unregisterListener(this, gravitySensor);
+      sensorManager.unregisterListener(this, magneticFieldSensor);
+    }
+  }
+
+  private boolean isCompassSensorAvailable() {
+    return compassSensor != null;
+  }
+
+  /**
+   * Helper function, that filters newValues, considering previous values
+   *
+   * @param newValues      array of float, that contains new data
+   * @param smoothedValues array of float, that contains previous state
+   * @return float filtered array of float
+   */
+  private float[] lowPassFilter(float[] newValues, float[] smoothedValues) {
+    if (smoothedValues == null) {
+      return newValues;
+    }
+    for (int i = 0; i < newValues.length; i++) {
+      smoothedValues[i] = smoothedValues[i] + ALPHA * (newValues[i] - smoothedValues[i]);
+    }
+    return smoothedValues;
   }
 
   /**
@@ -189,7 +247,7 @@ class CompassManager implements SensorEventListener {
    * @return the events rotation vector, potentially truncated
    */
   @NonNull
-  float[] getRotationVectorFromSensorEvent(@NonNull SensorEvent event) {
+  private float[] getRotationVectorFromSensorEvent(@NonNull SensorEvent event) {
     if (event.values.length > 4) {
       // On some Samsung devices SensorManager.getRotationMatrixFromVector
       // appears to throw an exception if rotation vector has length > 4.
