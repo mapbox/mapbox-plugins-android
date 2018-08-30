@@ -1,4 +1,4 @@
-include ':app'
+include ':app', ':plugin-scale-widget'
 include ':plugin-traffic'
 include ':plugin-locationlayer'
 include ':plugin-building'
