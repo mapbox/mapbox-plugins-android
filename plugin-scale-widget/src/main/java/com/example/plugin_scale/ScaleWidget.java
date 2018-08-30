@@ -20,6 +20,36 @@ public class ScaleWidget extends LinearLayout {
   private View scaleSize;
   private final int[] scales = {10, 50, 100, 250, 500, 750, 1000, 5000, 10000,100000};
 
+  private final static int[][] scaleMetricTable =
+    { {1, 2},
+      {2, 2},
+      {4, 2},
+      {10, 2},
+      {20, 2},
+      {50, 2},
+      {75, 3},
+      {100, 2},
+      {150, 2},
+      {200, 2},
+      {300, 3},
+      {500, 2},
+      {1000, 2},
+      {1500, 2},
+      {3000, 3},
+      {5000, 2},
+      {10000, 2},
+      {20000, 2},
+      {30000, 3},
+      {50000, 2},
+      {100000, 2},
+      {200000, 2},
+      {300000, 3},
+      {400000, 2},
+      {500000, 2},
+      {600000, 3},
+      {800000, 2}
+    };
+
   public ScaleWidget(Context context) {
     this(context, null);
   }
@@ -30,13 +60,6 @@ public class ScaleWidget extends LinearLayout {
 
   public ScaleWidget(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    initializeView();
-  }
-
-  private void initializeView() {
-    inflate(getContext(), R.layout.layout, this);
-    textView = findViewById(R.id.text_view);
-    scaleSize = findViewById(R.id.scale_size);
   }
 
   public void setMetersPerPixel(double metersPerPixel, int screenWidth) {
@@ -51,28 +74,65 @@ public class ScaleWidget extends LinearLayout {
     double max = screenWidth * .8;
     double min = screenWidth * .5;
 
-
+    int [][]scales = scaleMetricTable;
     int scale = -1;
-    for (int currScale : scales) {
+    int numBars = 0;
+    for (int i = 0; i < scales.length; i++) {
+      int currScale = scales[i][0];
+
       double pixels = currScale / metersPerPixel;
       if (pixels <= max) {
         scale = currScale;
+        numBars = scales[i][1];
         if (pixels >= min) {
           break;
         }
       }
     }
 
+    updateScaleWidget(metersPerPixel, scale, numBars);
+  }
+
+
+  private void updateScaleWidget(double metersPerPixel, int scale, int numBars) {
+
     int pixels = scale / ((int) metersPerPixel);
+
+    if (textView == null) {
+      inflate(getContext(), R.layout.layout, this);
+
+      textView = findViewById(R.id.text_view);
+      scaleSize = findViewById(R.id.scale_size);
+
+//      scaleSize = new View(getContext());
+//      addView(scaleSize);
+//      scaleSize.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+//
+//      textView = new TextView(getContext());
+//      addView(textView);
+//      textView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+    }
+
+
+//    scaleSize = new View(getContext());
+//    scaleSize.setBackgroundColor(getResources().getColor(R.color.mapbox_blue));
+//
+//    LayoutParams layoutParams = (LayoutParams) scaleSize.getLayoutParams();
+//    layoutParams.width = pixels;
+//    layoutParams.height = 4;
+//    scaleSize.setLayoutParams(layoutParams);
+//
+//    textView = new TextView(getContext());
+//    textView.setText("" + scale + " m");
+
     scaleSize.getLayoutParams().width = pixels;
     LayoutParams layoutParams = (LayoutParams) scaleSize.getLayoutParams();
     layoutParams.width = pixels;
 
     scaleSize.setLayoutParams(layoutParams);
     textView.setText("" + scale + " m");
+
   }
-
-
 
 
   /**
