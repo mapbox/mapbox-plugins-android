@@ -11,6 +11,8 @@ import com.mapbox.mapboxsdk.plugins.testapp.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import timber.log.Timber;
 
 public class ScaleWidgetActivity extends AppCompatActivity implements OnMapReadyCallback {
   @BindView(R.id.mapView)
@@ -31,7 +33,15 @@ public class ScaleWidgetActivity extends AppCompatActivity implements OnMapReady
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
-    scaleWidgetPlugin = new ScaleWidgetPlugin();
+    this.scaleWidgetPlugin = new ScaleWidgetPlugin(mapView, mapboxMap);
+  }
+  
+  @OnClick(R.id.fabScaleWidget)
+  public void onScaleFabClicked() {
+    if (mapboxMap != null) {
+      scaleWidgetPlugin.setEnabled(!scaleWidgetPlugin.isEnabled());
+      Timber.e("Traffic plugin is enabled :%s", scaleWidgetPlugin.isEnabled());
+    }
   }
 
 

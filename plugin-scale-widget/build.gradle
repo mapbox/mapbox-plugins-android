@@ -15,6 +15,10 @@ android {
 
     }
 
+    configurations {
+        javadocDeps
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -25,10 +29,16 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation dependenciesList.mapboxMapSdk
+    implementation dependenciesList.supportAppcompatV7
 
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    testImplementation 'junit:junit:4.12'
+
+    // Unit testing
+    testImplementation dependenciesList.junit
+    testImplementation dependenciesList.mockito
+
+    javadocDeps dependenciesList.mapboxMapSdk
+
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
