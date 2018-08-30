@@ -2,6 +2,7 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 
 import com.example.plugin_scale.ScaleWidgetPlugin;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -33,9 +34,15 @@ public class ScaleWidgetActivity extends AppCompatActivity implements OnMapReady
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
-    this.scaleWidgetPlugin = new ScaleWidgetPlugin(mapView, mapboxMap);
+    this.scaleWidgetPlugin = new ScaleWidgetPlugin(mapView, mapboxMap, getScreenWidth());
   }
-  
+
+  private int getScreenWidth() {
+    DisplayMetrics displayMetrics = new DisplayMetrics();
+    getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+    return displayMetrics.widthPixels;
+  }
+
   @OnClick(R.id.fabScaleWidget)
   public void onScaleFabClicked() {
     if (mapboxMap != null) {

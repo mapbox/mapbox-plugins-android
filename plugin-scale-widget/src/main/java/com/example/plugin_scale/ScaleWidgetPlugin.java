@@ -21,13 +21,15 @@ public class ScaleWidgetPlugin implements MapView.OnMapChangedListener {
   private Projection projection;
   private MapView mapView;
   private boolean enabled;
+  private int screenWidth;
 
-  public ScaleWidgetPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
+  public ScaleWidgetPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, int screenWidth) {
     this.mapView = mapView;
     this.mapboxMap = mapboxMap;
     this.projection = mapboxMap.getProjection();
     this.scaleWidget = new ScaleWidget(mapView.getContext());
     this.mapView.addView(scaleWidget);
+    this.screenWidth = screenWidth;
   }
 
   /**
@@ -70,7 +72,7 @@ public class ScaleWidgetPlugin implements MapView.OnMapChangedListener {
     if (change == MapView.REGION_DID_CHANGE || change == MapView.REGION_DID_CHANGE_ANIMATED) {
       CameraPosition cameraPosition = mapboxMap.getCameraPosition();
       double metersPerPixel = projection.getMetersPerPixelAtLatitude(cameraPosition.target.getLatitude());
-      scaleWidget.setMetersPerPixel(projection.getMetersPerPixelAtLatitude(metersPerPixel));
+      scaleWidget.setMetersPerPixel(projection.getMetersPerPixelAtLatitude(metersPerPixel), screenWidth);
     }
   }
 }
