@@ -119,6 +119,7 @@ dependencies {
   implementation project(':plugin-places')
   implementation project(':plugin-offline')
   implementation project(':plugin-localization')
+  implementation project(':plugin-scalewidget')
 }
 
 apply from: "${rootDir}/gradle/checkstyle.gradle"

@@ -1,0 +1,47 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion androidVersions.compileSdkVersion
+    buildToolsVersion androidVersions.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion androidVersions.minSdkVersion
+        targetSdkVersion androidVersions.targetSdkVersion
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    configurations {
+        javadocDeps
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
+    }
+
+}
+
+dependencies {
+
+    implementation dependenciesList.supportAppcompatV7
+    implementation dependenciesList.mapboxMapSdk
+    implementation dependenciesList.timber
+
+    javadocDeps dependenciesList.mapboxMapSdk
+
+    // Unit testing
+    testImplementation dependenciesList.junit
+    testImplementation dependenciesList.mockito
+}
+
+apply from: "${rootDir}/gradle/javadoc.gradle"
+apply from: "${rootDir}/gradle/publish.gradle"
+apply from: "${rootDir}/gradle/checkstyle.gradle"
+apply from: "${rootDir}/gradle/jacoco.gradle"

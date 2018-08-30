@@ -26,6 +26,7 @@
   <string name="title_localization">Localization Plugin</string>
   <string name="title_offline_ui_components">Offline Ui Components</string>
   <string name="title_location_fragment">Location Fragment</string>
+  <string name="title_scale">Scale Plugin</string>
 
   <!-- Descriptions -->
   <string name="description_traffic">Add Traffic layers to any Mapbox basemap.</string>
@@ -42,6 +43,8 @@
   <string name="description_localization">Automatically localize the map labels into the device\'s set language.</string>
   <string name="description_offline_ui_components">Shows off the UI components included in the offline plugin.</string>
   <string name="description_location_fragment">Show current location in the Fragment</string>
+  <string name="description_scale">Add Scale widget to any Mapbox map.</string>
+
 
   <!-- Buttons -->
   <string name="button_location_mode_none">None</string>
