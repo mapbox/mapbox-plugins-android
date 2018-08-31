@@ -68,8 +68,6 @@ public class ScaleWidget extends LinearLayout {
     }
     this.metersPerPixel = metersPerPixel;
     Log.d(">>>","Setting meters per pixel %s" + metersPerPixel);
-//    textView.setText(String.format(Locale.getDefault(),"Scale %s",metersPerPixel));
-
 
     double max = screenWidth * .8;
     double min = screenWidth * .5;
@@ -93,47 +91,24 @@ public class ScaleWidget extends LinearLayout {
     updateScaleWidget(metersPerPixel, scale, numBars);
   }
 
-
   private void updateScaleWidget(double metersPerPixel, int scale, int numBars) {
-
-    int pixels = scale / ((int) metersPerPixel);
+    double pixels = scale / metersPerPixel;
 
     if (textView == null) {
       inflate(getContext(), R.layout.layout, this);
 
       textView = findViewById(R.id.text_view);
       scaleSize = findViewById(R.id.scale_size);
-
-//      scaleSize = new View(getContext());
-//      addView(scaleSize);
-//      scaleSize.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-//
-//      textView = new TextView(getContext());
-//      addView(textView);
-//      textView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
     }
 
+    scaleSize.getLayoutParams().width = (int) pixels;
 
-//    scaleSize = new View(getContext());
-//    scaleSize.setBackgroundColor(getResources().getColor(R.color.mapbox_blue));
-//
-//    LayoutParams layoutParams = (LayoutParams) scaleSize.getLayoutParams();
-//    layoutParams.width = pixels;
-//    layoutParams.height = 4;
-//    scaleSize.setLayoutParams(layoutParams);
-//
-//    textView = new TextView(getContext());
-//    textView.setText("" + scale + " m");
-
-    scaleSize.getLayoutParams().width = pixels;
-    LayoutParams layoutParams = (LayoutParams) scaleSize.getLayoutParams();
-    layoutParams.width = pixels;
-
-    scaleSize.setLayoutParams(layoutParams);
+    if (scale < 1) {
+      textView.setText("");
+      return;
+    }
     textView.setText("" + scale + " m");
-
   }
-
 
   /**
    * Helper class to determine the user measuring system.
