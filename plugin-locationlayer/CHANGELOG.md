@@ -2,6 +2,20 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### 0.8.0 - August 31, 2018
+- Remove auto value [#633](https://github.com/mapbox/mapbox-plugins-android/pull/633)
+- Fix LocationLayerPlugin's leaks when used in a fragment [#636](https://github.com/mapbox/mapbox-plugins-android/pull/636)
+- Add getter and setter for CompassEngine interface [#626](https://github.com/mapbox/mapbox-plugins-android/pull/626)
+- Add fallback compass sensors for devices without a gyroscope [#627](https://github.com/mapbox/mapbox-plugins-android/pull/627)
+- Add LocationLayer unit tests [#631](https://github.com/mapbox/mapbox-plugins-android/pull/631)
+- Adding new location layer plugin constructor for options and default engine [#618](https://github.com/mapbox/mapbox-plugins-android/pull/618)
+- Remove unused LiveData dependency for LocationLayerPlugin [#632](https://github.com/mapbox/mapbox-plugins-android/pull/632)
+- Allow adding location layer plugin below a certain layer [#628](https://github.com/mapbox/mapbox-plugins-android/pull/628)
+- PluginAnimatorCoordinator unit tests [#630](https://github.com/mapbox/mapbox-plugins-android/pull/630)
+- When camera is in a tracking mode, animate instead of snapping on the first location fix [#620](https://github.com/mapbox/mapbox-plugins-android/pull/620)
+- Add unit tests for LocationLayerCamera [#629](https://github.com/mapbox/mapbox-plugins-android/pull/629)
+- Expose bearing compass accuracy [#625](https://github.com/mapbox/mapbox-plugins-android/pull/625)
+
 ### 0.7.2 - August 22, 2018
 - Maps SDK bump to 6.4.0 [#615](https://github.com/mapbox/mapbox-plugins-android/pull/615)
 
