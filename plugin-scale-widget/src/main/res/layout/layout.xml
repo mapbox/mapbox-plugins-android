@@ -1,18 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/scale_widget"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="32dp">
+    android:layout_height="wrap_content"
+    android:layout_margin="32dp"
+    android:columnCount="4">
+
     <TextView
+        android:id="@+id/text_view0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/text_view"
-        android:text="100 m"/>
+        android:text="0 m" />
+
+    <TextView
+        android:id="@+id/text_view1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="clip_horizontal|right"
+        android:text="100 m" />
+
+    <TextView
+        android:id="@+id/text_view2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="clip_horizontal|right"
+        android:text="200 m" />
+
+    <TextView
+        android:id="@+id/text_view3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="clip_horizontal|right"
+        android:text="300 m" />
+
+    <View
+        android:id="@+id/scale_size0"
+        android:layout_width="0px"
+        android:layout_height="4dp"
+        android:background="@color/mapbox_blue" />
+
+    <View
+        android:id="@+id/scale_size1"
+        android:layout_width="200px"
+        android:layout_height="4dp"
+        android:background="@color/mapbox_blue" />
+
     <View
         android:layout_width="200px"
         android:layout_height="4dp"
-        android:id="@+id/scale_size"
-        android:background="@color/mapbox_blue"/>
-</LinearLayout>
+        android:id="@+id/scale_size2"
+        android:background="#ffffff"/>
+
+    <View
+        android:id="@+id/scale_size3"
+        android:layout_width="200px"
+        android:layout_height="4dp"
+        android:background="@color/mapbox_blue" />
+
+</GridLayout>
+

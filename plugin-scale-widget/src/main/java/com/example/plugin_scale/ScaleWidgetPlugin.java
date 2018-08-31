@@ -27,8 +27,6 @@ public class ScaleWidgetPlugin implements MapView.OnMapChangedListener {
     this.mapView = mapView;
     this.mapboxMap = mapboxMap;
     this.projection = mapboxMap.getProjection();
-    this.scaleWidget = new ScaleWidget(mapView.getContext());
-    this.mapView.addView(scaleWidget);
     this.screenWidth = screenWidth;
   }
 
@@ -51,25 +49,35 @@ public class ScaleWidgetPlugin implements MapView.OnMapChangedListener {
    */
   @UiThread
   public void setEnabled(boolean enabled) {
-    if(this.enabled==enabled){
+    if(this.enabled == enabled){
       // already in correct state
       return;
     }
     this.enabled = enabled;
-    scaleWidget.setVisibility(enabled ? View.VISIBLE : View.GONE);
+
+    if (this.enabled && scaleWidget == null) {
+      this.scaleWidget = new ScaleWidget(mapView.getContext());
+      this.mapView.addView(scaleWidget);
+    } else {
+      scaleWidget.setVisibility(enabled ? View.VISIBLE : View.GONE);
+    }
+
     if (enabled) {
+      Timber.e(">>>>>> ENABLED >>>");
       mapView.addOnMapChangedListener(this);
       // trigger initial update
       onMapChanged(MapView.REGION_DID_CHANGE);
     } else {
+      Timber.e(">>>>>> DISABLED >>>");
       mapView.removeOnMapChangedListener(this);
     }
   }
 
   @Override
   public void onMapChanged(int change) {
-    Timber.e("OnMapChange %s", change);
     if (change == MapView.REGION_DID_CHANGE || change == MapView.REGION_DID_CHANGE_ANIMATED) {
+      Timber.e(">>>>>> OnMapChange %s", change);
+
       CameraPosition cameraPosition = mapboxMap.getCameraPosition();
       double metersPerPixel = projection.getMetersPerPixelAtLatitude(cameraPosition.target.getLatitude());
       scaleWidget.setMetersPerPixel(metersPerPixel, screenWidth);

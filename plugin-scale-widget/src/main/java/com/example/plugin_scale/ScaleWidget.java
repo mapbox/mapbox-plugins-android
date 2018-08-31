@@ -3,21 +3,27 @@ package com.example.plugin_scale;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
+
 import android.view.View;
-import android.widget.LinearLayout;
+
+import android.widget.GridLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.Locale;
 
+import timber.log.Timber;
+
 /**
  * The scale widget is a visually representation of the scale plugin.
  */
-public class ScaleWidget extends LinearLayout {
+public class ScaleWidget extends GridLayout {
 
   private double metersPerPixel;
-  private TextView textView;
-  private View scaleSize;
+
+  private TextView scaleTexts[];
+  private View scaleBars[];
+
 
   private final static int[][] scaleMetricTable =
     { {1, 2},
@@ -61,54 +67,78 @@ public class ScaleWidget extends LinearLayout {
 
   public ScaleWidget(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
+    init();
+  }
+
+  private void init() {
+    inflate(getContext(), R.layout.layout, this);
+
+    scaleBars  = new View[]{
+      findViewById(R.id.scale_size1),
+      findViewById(R.id.scale_size2),
+      findViewById(R.id.scale_size3)};
+
+    scaleTexts =  new TextView[]{
+      findViewById(R.id.text_view0),
+      findViewById(R.id.text_view1),
+      findViewById(R.id.text_view2),
+      findViewById(R.id.text_view3)};
   }
 
   public void setMetersPerPixel(double metersPerPixel, int screenWidth) {
+
     if (this.metersPerPixel == metersPerPixel) {
       return;
     }
-    this.metersPerPixel = metersPerPixel;
-    Log.d(">>>","Setting meters per pixel %s" + metersPerPixel);
 
-    double max = screenWidth * .8;
-    double min = screenWidth * .5;
+    this.metersPerPixel = metersPerPixel;
+    double max = screenWidth * .8 * metersPerPixel;
+    double min = screenWidth * .5 * metersPerPixel;
+
+    Timber.e(">>>> screenWidth=%s metersPerPixel=%s", screenWidth, metersPerPixel);
 
     int [][]scales = scaleMetricTable;
     int scale = -1;
     int numBars = 0;
     for (int i = 0; i < scales.length; i++) {
       int currScale = scales[i][0];
-
-      double pixels = currScale / metersPerPixel;
-      if (pixels <= max) {
+      if (currScale <= max) {
         scale = currScale;
         numBars = scales[i][1];
-        if (pixels >= min) {
+        if (currScale >= min) {
           break;
         }
       }
     }
+    Timber.e(">>>> MIN= %s MAX=%S scale=%s numBars=%s", min, max, scale, numBars);
 
     updateScaleWidget(metersPerPixel, scale, numBars);
   }
 
   private void updateScaleWidget(double metersPerPixel, int scale, int numBars) {
-    double pixels = scale / metersPerPixel;
-
-    if (textView == null) {
-      inflate(getContext(), R.layout.layout, this);
-
-      textView = findViewById(R.id.text_view);
-      scaleSize = findViewById(R.id.scale_size);
-    }
-
-    scaleSize.getLayoutParams().width = (int) pixels;
 
     if (scale < 1) {
-      textView.setText("");
+      // textView.setText("");
       return;
     }
-    textView.setText("" + scale + " m");
+
+    double pixels =  ((double)scale) / metersPerPixel;
+    getLayoutParams().width = (int)(pixels);
+
+    // scaleTexts[0].setText("0 m");
+    int scalePerBar = scale / numBars;
+    int pixelsPerBar = (int) ((double)scalePerBar / metersPerPixel);
+    Timber.e(">>>> UPDATE SCALE scalePerBar=%s pixelsPerBar=%s numBars=%s", scalePerBar, pixelsPerBar, numBars);
+    for (int i = 0, curScale = scalePerBar; i < numBars; i++, curScale += scalePerBar) {
+       scaleBars[i].getLayoutParams().width = pixelsPerBar;
+       scaleTexts[i+1].setText("" + curScale + " m");
+
+      Timber.e(">>>>Setting scale i=%s curScale=%s", i, curScale);
+    }
+    if (numBars == 2) {
+      scaleBars[2].getLayoutParams().width = 0;
+      scaleTexts[3].setText("");
+    }
   }
 
   /**
