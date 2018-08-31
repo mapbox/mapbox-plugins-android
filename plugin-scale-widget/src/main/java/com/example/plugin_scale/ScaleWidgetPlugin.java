@@ -72,7 +72,7 @@ public class ScaleWidgetPlugin implements MapView.OnMapChangedListener {
     if (change == MapView.REGION_DID_CHANGE || change == MapView.REGION_DID_CHANGE_ANIMATED) {
       CameraPosition cameraPosition = mapboxMap.getCameraPosition();
       double metersPerPixel = projection.getMetersPerPixelAtLatitude(cameraPosition.target.getLatitude());
-      scaleWidget.setMetersPerPixel(projection.getMetersPerPixelAtLatitude(metersPerPixel), screenWidth);
+      scaleWidget.setMetersPerPixel(metersPerPixel, screenWidth);
     }
   }
 }
