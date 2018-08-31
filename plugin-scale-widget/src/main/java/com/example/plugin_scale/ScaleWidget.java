@@ -18,7 +18,6 @@ public class ScaleWidget extends LinearLayout {
   private double metersPerPixel;
   private TextView textView;
   private View scaleSize;
-  private final int[] scales = {10, 50, 100, 250, 500, 750, 1000, 5000, 10000,100000};
 
   private final static int[][] scaleMetricTable =
     { {1, 2},
@@ -47,7 +46,9 @@ public class ScaleWidget extends LinearLayout {
       {400000, 2},
       {500000, 2},
       {600000, 3},
-      {800000, 2}
+      {800000, 2},
+      {1000000, 2},
+      {10000000, 2},
     };
 
   public ScaleWidget(Context context) {
