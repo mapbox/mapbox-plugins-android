@@ -168,6 +168,10 @@ final class LocationLayer implements PluginAnimator.OnLayerAnimationsValuesChang
     }
   }
 
+  boolean isHidden() {
+    return isHidden;
+  }
+
   void updateForegroundOffset(double tilt) {
     JsonArray foregroundJsonArray = new JsonArray();
     foregroundJsonArray.add(0f);
