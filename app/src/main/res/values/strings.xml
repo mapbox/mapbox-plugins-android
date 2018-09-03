@@ -10,6 +10,7 @@
   <string name="category_places">Places</string>
   <string name="category_offline">Offline</string>
   <string name="category_localization">Localization</string>
+  <string name="category_annotation">Annotations</string>
 
   <!-- Titles -->
   <string name="title_traffic">Traffic Plugin</string>
@@ -26,6 +27,7 @@
   <string name="title_localization">Localization Plugin</string>
   <string name="title_offline_ui_components">Offline Ui Components</string>
   <string name="title_location_fragment">Location Fragment</string>
+  <string name="title_marker">Symbol plugin</string>
 
   <!-- Descriptions -->
   <string name="description_traffic">Add Traffic layers to any Mapbox basemap.</string>
@@ -42,6 +44,7 @@
   <string name="description_localization">Automatically localize the map labels into the device\'s set language.</string>
   <string name="description_offline_ui_components">Shows off the UI components included in the offline plugin.</string>
   <string name="description_location_fragment">Show current location in the Fragment</string>
+  <string name="description_marker">Show symbols on a map</string>
 
   <!-- Buttons -->
   <string name="button_location_mode_none">None</string>

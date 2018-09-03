@@ -1,0 +1,363 @@
+package com.mapbox.mapboxsdk.plugins.annotation;
+
+import android.support.test.runner.AndroidJUnit4;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.plugins.testapp.activity.BuildingActivity;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import timber.log.Timber;
+
+import static com.mapbox.mapboxsdk.plugins.annotation.MapboxMapAction.invoke;
+import static com.mapbox.mapboxsdk.style.layers.Property.ICON_ANCHOR_CENTER;
+import static com.mapbox.mapboxsdk.style.layers.Property.TEXT_ANCHOR_CENTER;
+import static com.mapbox.mapboxsdk.style.layers.Property.TEXT_JUSTIFY_LEFT;
+import static com.mapbox.mapboxsdk.style.layers.Property.TEXT_TRANSFORM_NONE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+/**
+ * Basic smoke tests for Symbol
+ */
+@RunWith(AndroidJUnit4.class)
+public class SymbolTest extends BaseActivityTest {
+
+  private Symbol symbol;
+
+  @Override
+  protected Class getActivityClass() {
+    return BuildingActivity.class;
+  }
+
+  private void setupSymbol() {
+    Timber.i("Retrieving layer");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      SymbolManager symbolManager = new SymbolManager(mapboxMap);
+      symbol = symbolManager.createSymbol(new LatLng());
+    });
+  }
+
+  @Test
+  public void testIconSize() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("icon-size");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setIconSize(0.3f);
+      assertEquals((Float) symbol.getIconSize(), (Float) 0.3f);
+    });
+  }
+
+  @Test
+  public void testIconImage() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("icon-image");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setIconImage("undefined");
+      assertEquals((String) symbol.getIconImage(), (String) "undefined");
+    });
+  }
+
+  @Test
+  public void testIconRotate() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("icon-rotate");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setIconRotate(0.3f);
+      assertEquals((Float) symbol.getIconRotate(), (Float) 0.3f);
+    });
+  }
+
+  @Test
+  public void testIconOffset() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("icon-offset");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setIconOffset(new Float[] {0f, 0f});
+      assertEquals((Float[]) symbol.getIconOffset(), (Float[]) new Float[] {0f, 0f});
+    });
+  }
+
+  @Test
+  public void testIconAnchor() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("icon-anchor");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setIconAnchor(ICON_ANCHOR_CENTER);
+      assertEquals((String) symbol.getIconAnchor(), (String) ICON_ANCHOR_CENTER);
+    });
+  }
+
+  @Test
+  public void testTextField() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("text-field");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setTextField("");
+      assertEquals((String) symbol.getTextField(), (String) "");
+    });
+  }
+
+  @Test
+  public void testTextFont() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("text-font");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setTextFont(new String[]{"Open Sans Regular", "Arial Unicode MS Regular"});
+      assertEquals((String[]) symbol.getTextFont(), (String[]) new String[]{"Open Sans Regular", "Arial Unicode MS Regular"});
+    });
+  }
+
+  @Test
+  public void testTextSize() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("text-size");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setTextSize(0.3f);
+      assertEquals((Float) symbol.getTextSize(), (Float) 0.3f);
+    });
+  }
+
+  @Test
+  public void testTextMaxWidth() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("text-max-width");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setTextMaxWidth(0.3f);
+      assertEquals((Float) symbol.getTextMaxWidth(), (Float) 0.3f);
+    });
+  }
+
+  @Test
+  public void testTextLetterSpacing() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("text-letter-spacing");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setTextLetterSpacing(0.3f);
+      assertEquals((Float) symbol.getTextLetterSpacing(), (Float) 0.3f);
+    });
+  }
+
+  @Test
+  public void testTextJustify() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("text-justify");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setTextJustify(TEXT_JUSTIFY_LEFT);
+      assertEquals((String) symbol.getTextJustify(), (String) TEXT_JUSTIFY_LEFT);
+    });
+  }
+
+  @Test
+  public void testTextAnchor() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("text-anchor");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setTextAnchor(TEXT_ANCHOR_CENTER);
+      assertEquals((String) symbol.getTextAnchor(), (String) TEXT_ANCHOR_CENTER);
+    });
+  }
+
+  @Test
+  public void testTextRotate() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("text-rotate");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setTextRotate(0.3f);
+      assertEquals((Float) symbol.getTextRotate(), (Float) 0.3f);
+    });
+  }
+
+  @Test
+  public void testTextTransform() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("text-transform");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setTextTransform(TEXT_TRANSFORM_NONE);
+      assertEquals((String) symbol.getTextTransform(), (String) TEXT_TRANSFORM_NONE);
+    });
+  }
+
+  @Test
+  public void testTextOffset() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("text-offset");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setTextOffset(new Float[] {0f, 0f});
+      assertEquals((Float[]) symbol.getTextOffset(), (Float[]) new Float[] {0f, 0f});
+    });
+  }
+
+  @Test
+  public void testIconOpacity() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("icon-opacity");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setIconOpacity(0.3f);
+      assertEquals((Float) symbol.getIconOpacity(), (Float) 0.3f);
+    });
+  }
+
+  @Test
+  public void testIconColor() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("icon-color");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setIconColor("rgba(0, 0, 0, 1)");
+      assertEquals((String) symbol.getIconColor(), (String) "rgba(0, 0, 0, 1)");
+    });
+  }
+
+  @Test
+  public void testIconHaloColor() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("icon-halo-color");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setIconHaloColor("rgba(0, 0, 0, 1)");
+      assertEquals((String) symbol.getIconHaloColor(), (String) "rgba(0, 0, 0, 1)");
+    });
+  }
+
+  @Test
+  public void testIconHaloWidth() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("icon-halo-width");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setIconHaloWidth(0.3f);
+      assertEquals((Float) symbol.getIconHaloWidth(), (Float) 0.3f);
+    });
+  }
+
+  @Test
+  public void testIconHaloBlur() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("icon-halo-blur");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setIconHaloBlur(0.3f);
+      assertEquals((Float) symbol.getIconHaloBlur(), (Float) 0.3f);
+    });
+  }
+
+  @Test
+  public void testTextOpacity() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("text-opacity");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setTextOpacity(0.3f);
+      assertEquals((Float) symbol.getTextOpacity(), (Float) 0.3f);
+    });
+  }
+
+  @Test
+  public void testTextColor() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("text-color");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setTextColor("rgba(0, 0, 0, 1)");
+      assertEquals((String) symbol.getTextColor(), (String) "rgba(0, 0, 0, 1)");
+    });
+  }
+
+  @Test
+  public void testTextHaloColor() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("text-halo-color");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setTextHaloColor("rgba(0, 0, 0, 1)");
+      assertEquals((String) symbol.getTextHaloColor(), (String) "rgba(0, 0, 0, 1)");
+    });
+  }
+
+  @Test
+  public void testTextHaloWidth() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("text-halo-width");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setTextHaloWidth(0.3f);
+      assertEquals((Float) symbol.getTextHaloWidth(), (Float) 0.3f);
+    });
+  }
+
+  @Test
+  public void testTextHaloBlur() {
+    validateTestSetup();
+    setupSymbol();
+    Timber.i("text-halo-blur");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setTextHaloBlur(0.3f);
+      assertEquals((Float) symbol.getTextHaloBlur(), (Float) 0.3f);
+    });
+  }
+}
