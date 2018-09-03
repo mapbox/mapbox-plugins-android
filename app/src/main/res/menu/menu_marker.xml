@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+            android:id="@+id/menu_action_icon"
+            android:title="Change icon to coffee"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/menu_action_rotation"
+            android:title="Set icon rotation to 45"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/menu_action_anchor"
+            android:title="Set icon anchor bottom"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/menu_action_opacity"
+            android:title="Set icon opacity to 0.5f"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/menu_action_offset"
+            android:title="Offset icon by 10, 20"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/menu_action_text"
+            android:title="Add text"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/menu_action_text_color"
+            android:title="Set text color to white"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/menu_action_text_size"
+            android:title="Set text size"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/menu_action_text_anchor"
+            android:title="Set text anchor top"
+            app:showAsAction="never"/>
+</menu>

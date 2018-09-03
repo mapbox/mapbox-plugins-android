@@ -180,6 +180,17 @@
             android:name="android.support.PARENT_ACTIVITY"
             android:value=".activity.FeatureOverviewActivity" />
     </activity>
+    <activity
+            android:name=".activity.annotation.SymbolActivity"
+            android:description="@string/description_marker"
+            android:label="@string/title_marker">
+      <meta-data
+              android:name="@string/category"
+              android:value="@string/category_annotation" />
+      <meta-data
+              android:name="android.support.PARENT_ACTIVITY"
+              android:value=".activity.FeatureOverviewActivity" />
+    </activity>
 
     <service
       android:name="com.mapbox.mapboxsdk.plugins.offline.offline.OfflineDownloadService"
