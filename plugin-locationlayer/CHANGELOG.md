@@ -2,6 +2,9 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### 0.8.1 - September 4, 2018
+- Prevent from showing the location layer on every location update [#641](https://github.com/mapbox/mapbox-plugins-android/pull/641)
+
 ### 0.8.0 - August 31, 2018
 - Remove auto value [#633](https://github.com/mapbox/mapbox-plugins-android/pull/633)
 - Fix LocationLayerPlugin's leaks when used in a fragment [#636](https://github.com/mapbox/mapbox-plugins-android/pull/636)
