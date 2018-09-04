@@ -830,9 +830,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
       return;
     }
 
-    if (isEnabled && isPluginStarted) {
-      locationLayer.show();
-    }
+    showLocationLayerIfHidden();
 
     if (!fromLastLocation) {
       staleStateManager.updateLatestLocationTime();
@@ -842,6 +840,13 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     pluginAnimatorCoordinator.feedNewLocation(location, currentCameraPosition, isGpsNorth);
     updateAccuracyRadius(location, false);
     lastLocation = location;
+  }
+
+  private void showLocationLayerIfHidden() {
+    boolean isLocationLayerHidden = locationLayer.isHidden();
+    if (isEnabled && isPluginStarted && isLocationLayerHidden) {
+      locationLayer.show();
+    }
   }
 
   private void updateCompassHeading(float heading) {
