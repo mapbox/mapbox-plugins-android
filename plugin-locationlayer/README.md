@@ -17,7 +17,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.8.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.8.1'
 }
 ```
 
