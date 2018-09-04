@@ -31,7 +31,7 @@ jobs:
           command: make checkstyle
       - run:
           name: Run unit-test and generate Jacoco test report
-          command: ./gradlew jacocoTestReport
+          command: ./gradlew createDebugUnitTestCoverageReport
       - run:
           name: Sonarcloud upload
           command: make sonarqube
