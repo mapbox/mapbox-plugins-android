@@ -11,6 +11,7 @@
   <string name="category_offline">Offline</string>
   <string name="category_localization">Localization</string>
   <string name="category_annotation">Annotations</string>
+  <string name="category_markerview">View synchronisation</string>
 
   <!-- Titles -->
   <string name="title_traffic">Traffic Plugin</string>
@@ -28,6 +29,7 @@
   <string name="title_offline_ui_components">Offline Ui Components</string>
   <string name="title_location_fragment">Location Fragment</string>
   <string name="title_marker">Symbol plugin</string>
+  <string name="title_markerview">MarkerView plugin</string>
 
   <!-- Descriptions -->
   <string name="description_traffic">Add Traffic layers to any Mapbox basemap.</string>
@@ -45,6 +47,7 @@
   <string name="description_offline_ui_components">Shows off the UI components included in the offline plugin.</string>
   <string name="description_location_fragment">Show current location in the Fragment</string>
   <string name="description_marker">Show symbols on a map</string>
+  <string name="description_markerview">Synchronise a view on a map</string>
 
   <!-- Buttons -->
   <string name="button_location_mode_none">None</string>
