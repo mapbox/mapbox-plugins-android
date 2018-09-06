@@ -120,6 +120,7 @@ dependencies {
   implementation project(':plugin-offline')
   implementation project(':plugin-localization')
   implementation project(':plugin-annotation')
+  implementation project(':plugin-markerview')
 }
 
 apply from: "${rootDir}/gradle/checkstyle.gradle"
