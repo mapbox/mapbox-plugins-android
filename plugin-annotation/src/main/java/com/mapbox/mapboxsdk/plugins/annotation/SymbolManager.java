@@ -1,8 +1,11 @@
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+import android.graphics.PointF;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.VisibleForTesting;
+import android.support.v4.util.LongSparseArray;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -78,8 +81,11 @@ public class SymbolManager {
   private GeoJsonSource geoJsonSource;
   private SymbolLayer symbolLayer;
 
+  // callback listeners
+  private OnSymbolClickListener symbolClickListener;
+
   // internal data set
-  private final List<Symbol> symbolList = new ArrayList<>();
+  private final LongSparseArray<Symbol> symbols = new LongSparseArray<>();
   private final List<Feature> features = new ArrayList<>();
   private long currentMarkerId;
 
@@ -110,6 +116,7 @@ public class SymbolManager {
     this.symbolLayer = symbolLayer;
     mapboxMap.addSource(geoJsonSource);
     mapboxMap.addLayer(symbolLayer);
+    mapboxMap.addOnMapClickListener(new MapClickResolver(mapboxMap));
   }
 
   /**
@@ -122,8 +129,8 @@ public class SymbolManager {
   public Symbol createSymbol(@NonNull LatLng latLng) {
     Symbol symbol = new Symbol(this, currentMarkerId);
     symbol.setLatLng(latLng);
+    symbols.put(currentMarkerId, symbol);
     currentMarkerId++;
-    symbolList.add(symbol);
     return symbol;
   }
 
@@ -134,7 +141,7 @@ public class SymbolManager {
    */
   @UiThread
   public void deleteSymbol(@NonNull Symbol symbol) {
-    symbolList.remove(symbol);
+    symbols.remove(symbol.getId());
     updateSource();
   }
 
@@ -144,8 +151,8 @@ public class SymbolManager {
    * @return list of symbols
    */
   @UiThread
-  public List<Symbol> getSymbols() {
-    return symbolList;
+  public LongSparseArray<Symbol> getSymbols() {
+    return symbols;
   }
 
   /**
@@ -154,43 +161,58 @@ public class SymbolManager {
   public void updateSource() {
     // todo move feature creation to a background thread?
     features.clear();
-    for (Symbol symbol : symbolList) {
+    Symbol symbol;
+    for (int i = 0; i < symbols.size(); i++) {
+      symbol = symbols.valueAt(i);
       features.add(Feature.fromGeometry(symbol.getGeometry(), symbol.getFeature()));
     }
     geoJsonSource.setGeoJson(FeatureCollection.fromFeatures(features));
   }
 
+  /**
+   * Set a callback to be invoked when a symbol has been clicked.
+   * <p>
+   * To unset, use a null argument.
+   * </p>
+   *
+   * @param symbolClickListener the callback to be invoked when a symbol is clicked, or null to unset
+   */
+  public void setOnSymbolClickListener(@Nullable OnSymbolClickListener symbolClickListener) {
+    this.symbolClickListener = symbolClickListener;
+  }
+
   private static PropertyValue<?>[] getLayerDefinition() {
-    return new PropertyValue[]{
-     iconSize(get("icon-size")),
-     iconImage(get("icon-image")),
-     iconRotate(get("icon-rotate")),
-     iconOffset(get("icon-offset")),
-     iconAnchor(get("icon-anchor")),
-     textField(get("text-field")),
-     textFont(get("text-font")),
-     textSize(get("text-size")),
-     textMaxWidth(get("text-max-width")),
-     textLetterSpacing(get("text-letter-spacing")),
-     textJustify(get("text-justify")),
-     textAnchor(get("text-anchor")),
-     textRotate(get("text-rotate")),
-     textTransform(get("text-transform")),
-     textOffset(get("text-offset")),
-     iconOpacity(get("icon-opacity")),
-     iconColor(get("icon-color")),
-     iconHaloColor(get("icon-halo-color")),
-     iconHaloWidth(get("icon-halo-width")),
-     iconHaloBlur(get("icon-halo-blur")),
-     textOpacity(get("text-opacity")),
-     textColor(get("text-color")),
-     textHaloColor(get("text-halo-color")),
-     textHaloWidth(get("text-halo-width")),
-     textHaloBlur(get("text-halo-blur")),
+    return new PropertyValue[] {
+      iconSize(get("icon-size")),
+      iconImage(get("icon-image")),
+      iconRotate(get("icon-rotate")),
+      iconOffset(get("icon-offset")),
+      iconAnchor(get("icon-anchor")),
+      textField(get("text-field")),
+      textFont(get("text-font")),
+      textSize(get("text-size")),
+      textMaxWidth(get("text-max-width")),
+      textLetterSpacing(get("text-letter-spacing")),
+      textJustify(get("text-justify")),
+      textAnchor(get("text-anchor")),
+      textRotate(get("text-rotate")),
+      textTransform(get("text-transform")),
+      textOffset(get("text-offset")),
+      iconOpacity(get("icon-opacity")),
+      iconColor(get("icon-color")),
+      iconHaloColor(get("icon-halo-color")),
+      iconHaloWidth(get("icon-halo-width")),
+      iconHaloBlur(get("icon-halo-blur")),
+      textOpacity(get("text-opacity")),
+      textColor(get("text-color")),
+      textHaloColor(get("text-halo-color")),
+      textHaloWidth(get("text-halo-width")),
+      textHaloBlur(get("text-halo-blur")),
     };
   }
 
   // Property accessors
+
   /**
    * Get the SymbolPlacement property
    *
@@ -639,6 +661,35 @@ public class SymbolManager {
    */
   public void setTextTranslateAnchor(String value) {
     symbolLayer.setProperties(textTranslateAnchor(value));
+  }
+
+  /**
+   * Inner class for transforming map click events into symbol clicks
+   */
+  private class MapClickResolver implements MapboxMap.OnMapClickListener {
+
+    private MapboxMap mapboxMap;
+
+    private MapClickResolver(MapboxMap mapboxMap) {
+      this.mapboxMap = mapboxMap;
+    }
+
+    @Override
+    public void onMapClick(@NonNull LatLng point) {
+      if (symbolClickListener == null) {
+        return;
+      }
+
+      PointF screenLocation = mapboxMap.getProjection().toScreenLocation(point);
+      List<Feature> features = mapboxMap.queryRenderedFeatures(screenLocation, ID_GEOJSON_LAYER);
+      if (!features.isEmpty()) {
+        long symbolId = features.get(0).getProperty(Symbol.ID_KEY).getAsLong();
+        Symbol symbol = symbols.get(symbolId);
+        if (symbol != null) {
+          symbolClickListener.onSymbolClick(symbols.get(symbolId));
+        }
+      }
+    }
   }
 
 }
