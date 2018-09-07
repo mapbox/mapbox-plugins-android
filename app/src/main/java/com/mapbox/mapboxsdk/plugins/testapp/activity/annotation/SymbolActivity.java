@@ -8,11 +8,13 @@ import android.view.MenuItem;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolClickListener;
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
+import timber.log.Timber;
 
 import java.util.Random;
 
@@ -21,11 +23,10 @@ import java.util.Random;
  */
 public class SymbolActivity extends AppCompatActivity {
 
+  private final Random random = new Random();
   private static final String MAKI_ICON_AIRPORT = "airport-15";
   private static final String MAKI_ICON_CAR = "car-15";
   private static final String MAKI_ICON_CAFE = "cafe-15";
-
-  private final Random random = new Random();
 
   private MapView mapView;
   private Symbol symbol;
@@ -41,6 +42,8 @@ public class SymbolActivity extends AppCompatActivity {
 
       // create symbol manager
       SymbolManager symbolManager = new SymbolManager(mapboxMap);
+      symbolManager.setOnSymbolClickListener(symbol -> Timber.e("Symbol clicked with id: %s", symbol.getId()));
+
       // set non data driven properties
       symbolManager.setIconAllowOverlap(true);
       symbolManager.setTextAllowOverlap(true);
@@ -50,16 +53,16 @@ public class SymbolActivity extends AppCompatActivity {
       symbol.setIconImage(MAKI_ICON_AIRPORT);
       symbol.setIconSize(1.2f);
 
-      // random add symbols across the globe
+      // random add symbols accross the globe
       Symbol currentSymbol;
-      for (int i = 0; i < 20; i++) {
+      for (int i = 0; i < 25; i++) {
         currentSymbol = symbolManager.createSymbol(createRandomLatLng());
         currentSymbol.setIconImage(MAKI_ICON_CAR);
       }
     });
   }
 
-  private LatLng createRandomLatLng() {
+  private LatLng createRandomLatLng(){
     return new LatLng((random.nextDouble() * -180.0) + 90.0,
       (random.nextDouble() * -360.0) + 180.0);
   }
@@ -86,9 +89,9 @@ public class SymbolActivity extends AppCompatActivity {
       symbol.setIconOffset(new Float[] {10.0f, 20.0f});
     } else if (item.getItemId() == R.id.menu_action_text_anchor) {
       symbol.setTextAnchor(Property.TEXT_ANCHOR_TOP);
-    } else if (item.getItemId() == R.id.menu_action_text_color) {
+    }else if (item.getItemId() ==  R.id.menu_action_text_color) {
       symbol.setTextColor(PropertyFactory.colorToRgbaString(Color.WHITE));
-    } else if (item.getItemId() == R.id.menu_action_text_size) {
+    }else if(item.getItemId() ==  R.id.menu_action_text_size) {
       symbol.setTextSize(22f);
     } else {
       return super.onOptionsItemSelected(item);

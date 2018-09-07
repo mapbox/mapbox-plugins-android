@@ -49,6 +49,15 @@ public class Symbol {
   }
 
   /**
+   * Get the symbol id.
+   *
+   * @return the symbol id
+   */
+  public long getId() {
+    return jsonObject.get(ID_KEY).getAsLong();
+  }
+
+  /**
    * Set the LatLng of the symbol, which represents the location of the symbol on the map
    *
    * @param latLng the location of the symbol in a longitude and latitude pair
