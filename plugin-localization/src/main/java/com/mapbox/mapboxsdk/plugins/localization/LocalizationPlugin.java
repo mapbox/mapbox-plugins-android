@@ -1,20 +1,23 @@
 package com.mapbox.mapboxsdk.plugins.localization;
 
 import android.support.annotation.NonNull;
-
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.plugins.localization.MapLocale.Languages;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.Layer;
+import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.Source;
 import com.mapbox.mapboxsdk.style.sources.VectorSource;
+import timber.log.Timber;
 
 import java.util.List;
 import java.util.Locale;
 
+import static com.mapbox.mapboxsdk.style.expressions.Expression.raw;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
 
 /**
@@ -27,6 +30,20 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
  */
 public final class LocalizationPlugin implements MapView.OnMapChangedListener {
 
+  // expression syntax
+  private static final String EXPRESSION_REGEX = "\\bname_.{2}";
+
+  // faulty step expression workaround
+  private static final String STEP_REGEX = "\\[\"zoom\"], ";
+  private static final String STEP_TEMPLATE = "[\"zoom\"], %s, ";
+
+  // legacy token syntax
+  private static final String TOKEN_TEMPLATE = "{%s}";
+  private static final String TOKEN_REGEX = "[{]((name).*?)[}]";
+  private static final String TOKEN_NAME = "{name";
+  private static final String TOKEN_ABBR = "{abbr}";
+
+  // configuration
   private final MapboxMap mapboxMap;
   private MapLocale mapLocale;
 
@@ -91,6 +108,7 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
     setMapLanguage(checkMapLocalNonNull(locale));
   }
 
+
   /**
    * You can pass in a {@link MapLocale} directly into this method which uses the language defined
    * in it to represent the language found on the map.
@@ -104,17 +122,37 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
     for (Source source : mapboxMap.getSources()) {
       if (sourceIsFromMapbox(source)) {
         for (Layer layer : layers) {
-          if (layerHasAdjustableTextField(layer)) {
-            String textField = ((SymbolLayer) layer).getTextField().getValue();
-            if (textField != null
-              && (textField.contains("{name") || textField.contains("{abbr}"))) {
-              textField = textField.replaceAll("[{]((name).*?)[}]",
-                String.format("{%s}", mapLocale.getMapLanguage()));
-              layer.setProperties(textField(textField));
+          if (layer instanceof SymbolLayer) {
+            PropertyValue<?> textFieldProperty = ((SymbolLayer) layer).getTextField();
+            if (textFieldProperty.isExpression()) {
+              convertExpression(mapLocale, layer, textFieldProperty);
+            } else {
+              convertToken(mapLocale, layer, textFieldProperty);
             }
           }
         }
       }
+    }
+  }
+
+  private void convertToken(@NonNull MapLocale mapLocale, Layer layer, PropertyValue<?> textFieldProperty) {
+    String text = (String) textFieldProperty.getValue();
+    if (text != null && (text.contains(TOKEN_NAME) || text.contains(TOKEN_ABBR))) {
+      layer.setProperties(textField(text.replaceAll(
+        TOKEN_REGEX, String.format(TOKEN_TEMPLATE, mapLocale.getMapLanguage())
+      )));
+    }
+  }
+
+  private void convertExpression(@NonNull MapLocale mapLocale, Layer layer, PropertyValue<?> textFieldProperty) {
+    Expression textFieldExpression = textFieldProperty.getExpression();
+    if (textFieldExpression != null) {
+      String text = textFieldExpression.toString().replaceAll(EXPRESSION_REGEX, mapLocale.getMapLanguage());
+      if (text.startsWith("[\"step") && textFieldExpression.toArray().length % 2 == 0) {
+        // got an invalid step expression from core, we need to add an additional name_x into step
+        text = text.replaceAll(STEP_REGEX, String.format(STEP_TEMPLATE, mapLocale.getMapLanguage()));
+      }
+      layer.setProperties(textField(raw(text)));
     }
   }
 
@@ -199,8 +237,15 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
    * @return true if the layer has a textField eligible for translation, false if not.
    */
   private boolean layerHasAdjustableTextField(Layer singleLayer) {
-    return singleLayer instanceof SymbolLayer && (((SymbolLayer) singleLayer).getTextField() != null
-      && (((SymbolLayer) singleLayer).getTextField().getValue() != null
-      && !(((SymbolLayer) singleLayer).getTextField().getValue().isEmpty())));
+    if (singleLayer instanceof SymbolLayer) {
+      PropertyValue<String> textField = ((SymbolLayer) singleLayer).getTextField();
+      if (textField != null) {
+        Timber.e("TextField is not null: %s - %s", textField.getValue(), textField.getExpression());
+        return true;
+      } else {
+        Timber.e("TextField is NULL");
+      }
+    }
+    return false;
   }
 }
