@@ -19,11 +19,11 @@ public class Symbol {
   /**
    * Create a symbol.
    *
-   * @param symbolManager the symbol manager created and managing the symbol
+   * @param manager the symbol manager created and managing the symbol
    * @param id            the id of the symbol
    */
-  Symbol(SymbolManager symbolManager, long id) {
-    this.symbolManager = symbolManager;
+  Symbol(SymbolManager manager, long id) {
+    this.symbolManager = manager;
     this.jsonObject.addProperty(ID_KEY, id);
   }
 
@@ -46,6 +46,15 @@ public class Symbol {
    */
   JsonObject getFeature() {
     return jsonObject;
+  }
+
+  /**
+   * Get the symbol id.
+   *
+   * @return the symbol id
+   */
+  public long getId() {
+    return jsonObject.get(ID_KEY).getAsLong();
   }
 
   /**

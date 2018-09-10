@@ -182,8 +182,41 @@
     </activity>
     <activity
             android:name=".activity.annotation.SymbolActivity"
-            android:description="@string/description_marker"
-            android:label="@string/title_marker">
+            android:description="@string/description_symbol"
+            android:label="@string/title_symbol">
+      <meta-data
+              android:name="@string/category"
+              android:value="@string/category_annotation" />
+      <meta-data
+              android:name="android.support.PARENT_ACTIVITY"
+              android:value=".activity.FeatureOverviewActivity" />
+    </activity>
+    <activity
+            android:name=".activity.annotation.FillActivity"
+            android:description="@string/description_fill"
+            android:label="@string/title_fill">
+      <meta-data
+              android:name="@string/category"
+              android:value="@string/category_annotation" />
+      <meta-data
+              android:name="android.support.PARENT_ACTIVITY"
+              android:value=".activity.FeatureOverviewActivity" />
+    </activity>
+    <activity
+            android:name=".activity.annotation.CircleActivity"
+            android:description="@string/description_circle"
+            android:label="@string/title_circle">
+      <meta-data
+              android:name="@string/category"
+              android:value="@string/category_annotation" />
+      <meta-data
+              android:name="android.support.PARENT_ACTIVITY"
+              android:value=".activity.FeatureOverviewActivity" />
+    </activity>
+    <activity
+            android:name=".activity.annotation.LineActivity"
+            android:description="@string/description_line"
+            android:label="@string/title_line">
       <meta-data
               android:name="@string/category"
               android:value="@string/category_annotation" />

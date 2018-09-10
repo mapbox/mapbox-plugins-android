@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 public class SymbolManagerTest {
@@ -28,16 +29,14 @@ public class SymbolManagerTest {
   @Test
   public void testAddSymbol() {
     final Symbol symbol = symbolManager.createSymbol(new LatLng(12, 34));
-    assertEquals(symbolManager.getSymbols(), new ArrayList<Symbol>() {{
-      add(symbol);
-    }});
+    assertEquals(symbolManager.getSymbols().get(0), symbol);
   }
 
   @Test
   public void testDeleteSymbol() {
     Symbol symbol = symbolManager.createSymbol(new LatLng(12, 34));
     symbolManager.deleteSymbol(symbol);
-    assertEquals(symbolManager.getSymbols(), new ArrayList<Symbol>());
+    assertTrue(symbolManager.getSymbols().size() == 0);
   }
 
   @Test

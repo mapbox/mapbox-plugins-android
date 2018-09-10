@@ -10,7 +10,7 @@
   <string name="category_places">Places</string>
   <string name="category_offline">Offline</string>
   <string name="category_localization">Localization</string>
-  <string name="category_annotation">Annotations</string>
+  <string name="category_annotation">Annotation plugin</string>
   <string name="category_markerview">View synchronisation</string>
 
   <!-- Titles -->
@@ -28,7 +28,10 @@
   <string name="title_localization">Localization Plugin</string>
   <string name="title_offline_ui_components">Offline Ui Components</string>
   <string name="title_location_fragment">Location Fragment</string>
-  <string name="title_marker">Symbol plugin</string>
+  <string name="title_symbol">Symbol</string>
+  <string name="title_fill">Fill</string>
+  <string name="title_circle">Circle</string>
+  <string name="title_line">Line</string>
   <string name="title_markerview">MarkerView plugin</string>
 
   <!-- Descriptions -->
@@ -46,7 +49,10 @@
   <string name="description_localization">Automatically localize the map labels into the device\'s set language.</string>
   <string name="description_offline_ui_components">Shows off the UI components included in the offline plugin.</string>
   <string name="description_location_fragment">Show current location in the Fragment</string>
-  <string name="description_marker">Show symbols on a map</string>
+  <string name="description_symbol">Show symbols on a map</string>
+  <string name="description_line">Show lines on a map</string>
+  <string name="description_fill">Show fills on a map</string>
+  <string name="description_circle">Show circles on a map</string>
   <string name="description_markerview">Synchronise a view on a map</string>
 
   <!-- Buttons -->
