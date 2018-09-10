@@ -1,8 +1,10 @@
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 import android.support.annotation.VisibleForTesting;
+import android.support.v4.util.LongSparseArray;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -75,13 +77,18 @@ public class SymbolManager {
   public static final String ID_GEOJSON_LAYER = "mapbox-android-symbol-layer";
 
   // map integration components
+  private MapboxMap mapboxMap;
   private GeoJsonSource geoJsonSource;
-  private SymbolLayer symbolLayer;
+  private SymbolLayer layer;
+
+  // callback listeners
+  private List<OnSymbolClickListener> symbolClickListeners = new ArrayList<>();
+  private final MapClickResolver mapClickResolver;
 
   // internal data set
-  private final List<Symbol> symbolList = new ArrayList<>();
+  private final LongSparseArray<Symbol> symbols = new LongSparseArray<>();
   private final List<Feature> features = new ArrayList<>();
-  private long currentMarkerId;
+  private long currentId;
 
   /**
    * Create a symbol manager, used to manage symbols.
@@ -102,14 +109,25 @@ public class SymbolManager {
    *
    * @param mapboxMap     the map object to add symbols to
    * @param geoJsonSource the geojson source to add symbols to
-   * @param symbolLayer   the sybol layer to visualise symbols with
+   * @param layer         the symbol layer to visualise Symbols with
    */
   @VisibleForTesting
-  public SymbolManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, SymbolLayer symbolLayer) {
+  public SymbolManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, SymbolLayer layer) {
+    this.mapboxMap = mapboxMap;
     this.geoJsonSource = geoJsonSource;
-    this.symbolLayer = symbolLayer;
+    this.layer = layer;
     mapboxMap.addSource(geoJsonSource);
-    mapboxMap.addLayer(symbolLayer);
+    mapboxMap.addLayer(layer);
+    mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
+  }
+
+  /**
+   * Cleanup symbol manager, used to clear listeners
+   */
+  @UiThread
+  public void onDestroy() {
+    mapboxMap.removeOnMapClickListener(mapClickResolver);
+    symbolClickListeners.clear();
   }
 
   /**
@@ -120,10 +138,10 @@ public class SymbolManager {
    */
   @UiThread
   public Symbol createSymbol(@NonNull LatLng latLng) {
-    Symbol symbol = new Symbol(this, currentMarkerId);
+    Symbol symbol = new Symbol(this, currentId);
     symbol.setLatLng(latLng);
-    currentMarkerId++;
-    symbolList.add(symbol);
+    symbols.put(currentId, symbol);
+    currentId++;
     return symbol;
   }
 
@@ -134,7 +152,7 @@ public class SymbolManager {
    */
   @UiThread
   public void deleteSymbol(@NonNull Symbol symbol) {
-    symbolList.remove(symbol);
+    symbols.remove(symbol.getId());
     updateSource();
   }
 
@@ -144,8 +162,8 @@ public class SymbolManager {
    * @return list of symbols
    */
   @UiThread
-  public List<Symbol> getSymbols() {
-    return symbolList;
+  public LongSparseArray<Symbol> getSymbols() {
+    return symbols;
   }
 
   /**
@@ -154,10 +172,34 @@ public class SymbolManager {
   public void updateSource() {
     // todo move feature creation to a background thread?
     features.clear();
-    for (Symbol symbol : symbolList) {
+    Symbol symbol;
+    for (int i = 0; i < symbols.size(); i++) {
+      symbol = symbols.valueAt(i);
       features.add(Feature.fromGeometry(symbol.getGeometry(), symbol.getFeature()));
     }
     geoJsonSource.setGeoJson(FeatureCollection.fromFeatures(features));
+  }
+
+  /**
+   * Add a callback to be invoked when a symbol has been clicked.
+   *
+   * @param listener the callback to be invoked when a symbol is clicked
+   */
+  @UiThread
+  public void addOnSymbolClickListener(@NonNull OnSymbolClickListener listener) {
+    symbolClickListeners.add(listener);
+  }
+
+  /**
+   * Remove a previously added callback that was to be invoked when symbol has been clicked.
+   *
+   * @param listener the callback to be removed
+   */
+  @UiThread
+  public void removeOnSymbolClickListener(@NonNull OnSymbolClickListener listener) {
+    if (symbolClickListeners.contains(listener)) {
+      symbolClickListeners.remove(listener);
+    }
   }
 
   private static PropertyValue<?>[] getLayerDefinition() {
@@ -197,7 +239,7 @@ public class SymbolManager {
    * @return property wrapper value around String
    */
   public String getSymbolPlacement() {
-    return symbolLayer.getSymbolPlacement().value;
+    return layer.getSymbolPlacement().value;
   }
 
   /**
@@ -206,7 +248,7 @@ public class SymbolManager {
    * @param value property wrapper value around String
    */
   public void setSymbolPlacement(String value) {
-    symbolLayer.setProperties(symbolPlacement(value));
+    layer.setProperties(symbolPlacement(value));
   }
 
   /**
@@ -215,7 +257,7 @@ public class SymbolManager {
    * @return property wrapper value around Float
    */
   public Float getSymbolSpacing() {
-    return symbolLayer.getSymbolSpacing().value;
+    return layer.getSymbolSpacing().value;
   }
 
   /**
@@ -224,7 +266,7 @@ public class SymbolManager {
    * @param value property wrapper value around Float
    */
   public void setSymbolSpacing(Float value) {
-    symbolLayer.setProperties(symbolSpacing(value));
+    layer.setProperties(symbolSpacing(value));
   }
 
   /**
@@ -233,7 +275,7 @@ public class SymbolManager {
    * @return property wrapper value around Boolean
    */
   public Boolean getSymbolAvoidEdges() {
-    return symbolLayer.getSymbolAvoidEdges().value;
+    return layer.getSymbolAvoidEdges().value;
   }
 
   /**
@@ -242,7 +284,7 @@ public class SymbolManager {
    * @param value property wrapper value around Boolean
    */
   public void setSymbolAvoidEdges(Boolean value) {
-    symbolLayer.setProperties(symbolAvoidEdges(value));
+    layer.setProperties(symbolAvoidEdges(value));
   }
 
   /**
@@ -251,7 +293,7 @@ public class SymbolManager {
    * @return property wrapper value around Boolean
    */
   public Boolean getIconAllowOverlap() {
-    return symbolLayer.getIconAllowOverlap().value;
+    return layer.getIconAllowOverlap().value;
   }
 
   /**
@@ -260,7 +302,7 @@ public class SymbolManager {
    * @param value property wrapper value around Boolean
    */
   public void setIconAllowOverlap(Boolean value) {
-    symbolLayer.setProperties(iconAllowOverlap(value));
+    layer.setProperties(iconAllowOverlap(value));
   }
 
   /**
@@ -269,7 +311,7 @@ public class SymbolManager {
    * @return property wrapper value around Boolean
    */
   public Boolean getIconIgnorePlacement() {
-    return symbolLayer.getIconIgnorePlacement().value;
+    return layer.getIconIgnorePlacement().value;
   }
 
   /**
@@ -278,7 +320,7 @@ public class SymbolManager {
    * @param value property wrapper value around Boolean
    */
   public void setIconIgnorePlacement(Boolean value) {
-    symbolLayer.setProperties(iconIgnorePlacement(value));
+    layer.setProperties(iconIgnorePlacement(value));
   }
 
   /**
@@ -287,7 +329,7 @@ public class SymbolManager {
    * @return property wrapper value around Boolean
    */
   public Boolean getIconOptional() {
-    return symbolLayer.getIconOptional().value;
+    return layer.getIconOptional().value;
   }
 
   /**
@@ -296,7 +338,7 @@ public class SymbolManager {
    * @param value property wrapper value around Boolean
    */
   public void setIconOptional(Boolean value) {
-    symbolLayer.setProperties(iconOptional(value));
+    layer.setProperties(iconOptional(value));
   }
 
   /**
@@ -305,7 +347,7 @@ public class SymbolManager {
    * @return property wrapper value around String
    */
   public String getIconRotationAlignment() {
-    return symbolLayer.getIconRotationAlignment().value;
+    return layer.getIconRotationAlignment().value;
   }
 
   /**
@@ -314,7 +356,7 @@ public class SymbolManager {
    * @param value property wrapper value around String
    */
   public void setIconRotationAlignment(String value) {
-    symbolLayer.setProperties(iconRotationAlignment(value));
+    layer.setProperties(iconRotationAlignment(value));
   }
 
   /**
@@ -323,7 +365,7 @@ public class SymbolManager {
    * @return property wrapper value around String
    */
   public String getIconTextFit() {
-    return symbolLayer.getIconTextFit().value;
+    return layer.getIconTextFit().value;
   }
 
   /**
@@ -332,7 +374,7 @@ public class SymbolManager {
    * @param value property wrapper value around String
    */
   public void setIconTextFit(String value) {
-    symbolLayer.setProperties(iconTextFit(value));
+    layer.setProperties(iconTextFit(value));
   }
 
   /**
@@ -341,7 +383,7 @@ public class SymbolManager {
    * @return property wrapper value around Float[]
    */
   public Float[] getIconTextFitPadding() {
-    return symbolLayer.getIconTextFitPadding().value;
+    return layer.getIconTextFitPadding().value;
   }
 
   /**
@@ -350,7 +392,7 @@ public class SymbolManager {
    * @param value property wrapper value around Float[]
    */
   public void setIconTextFitPadding(Float[] value) {
-    symbolLayer.setProperties(iconTextFitPadding(value));
+    layer.setProperties(iconTextFitPadding(value));
   }
 
   /**
@@ -359,7 +401,7 @@ public class SymbolManager {
    * @return property wrapper value around Float
    */
   public Float getIconPadding() {
-    return symbolLayer.getIconPadding().value;
+    return layer.getIconPadding().value;
   }
 
   /**
@@ -368,7 +410,7 @@ public class SymbolManager {
    * @param value property wrapper value around Float
    */
   public void setIconPadding(Float value) {
-    symbolLayer.setProperties(iconPadding(value));
+    layer.setProperties(iconPadding(value));
   }
 
   /**
@@ -377,7 +419,7 @@ public class SymbolManager {
    * @return property wrapper value around Boolean
    */
   public Boolean getIconKeepUpright() {
-    return symbolLayer.getIconKeepUpright().value;
+    return layer.getIconKeepUpright().value;
   }
 
   /**
@@ -386,7 +428,7 @@ public class SymbolManager {
    * @param value property wrapper value around Boolean
    */
   public void setIconKeepUpright(Boolean value) {
-    symbolLayer.setProperties(iconKeepUpright(value));
+    layer.setProperties(iconKeepUpright(value));
   }
 
   /**
@@ -395,7 +437,7 @@ public class SymbolManager {
    * @return property wrapper value around String
    */
   public String getIconPitchAlignment() {
-    return symbolLayer.getIconPitchAlignment().value;
+    return layer.getIconPitchAlignment().value;
   }
 
   /**
@@ -404,7 +446,7 @@ public class SymbolManager {
    * @param value property wrapper value around String
    */
   public void setIconPitchAlignment(String value) {
-    symbolLayer.setProperties(iconPitchAlignment(value));
+    layer.setProperties(iconPitchAlignment(value));
   }
 
   /**
@@ -413,7 +455,7 @@ public class SymbolManager {
    * @return property wrapper value around String
    */
   public String getTextPitchAlignment() {
-    return symbolLayer.getTextPitchAlignment().value;
+    return layer.getTextPitchAlignment().value;
   }
 
   /**
@@ -422,7 +464,7 @@ public class SymbolManager {
    * @param value property wrapper value around String
    */
   public void setTextPitchAlignment(String value) {
-    symbolLayer.setProperties(textPitchAlignment(value));
+    layer.setProperties(textPitchAlignment(value));
   }
 
   /**
@@ -431,7 +473,7 @@ public class SymbolManager {
    * @return property wrapper value around String
    */
   public String getTextRotationAlignment() {
-    return symbolLayer.getTextRotationAlignment().value;
+    return layer.getTextRotationAlignment().value;
   }
 
   /**
@@ -440,7 +482,7 @@ public class SymbolManager {
    * @param value property wrapper value around String
    */
   public void setTextRotationAlignment(String value) {
-    symbolLayer.setProperties(textRotationAlignment(value));
+    layer.setProperties(textRotationAlignment(value));
   }
 
   /**
@@ -449,7 +491,7 @@ public class SymbolManager {
    * @return property wrapper value around Float
    */
   public Float getTextLineHeight() {
-    return symbolLayer.getTextLineHeight().value;
+    return layer.getTextLineHeight().value;
   }
 
   /**
@@ -458,7 +500,7 @@ public class SymbolManager {
    * @param value property wrapper value around Float
    */
   public void setTextLineHeight(Float value) {
-    symbolLayer.setProperties(textLineHeight(value));
+    layer.setProperties(textLineHeight(value));
   }
 
   /**
@@ -467,7 +509,7 @@ public class SymbolManager {
    * @return property wrapper value around Float
    */
   public Float getTextMaxAngle() {
-    return symbolLayer.getTextMaxAngle().value;
+    return layer.getTextMaxAngle().value;
   }
 
   /**
@@ -476,7 +518,7 @@ public class SymbolManager {
    * @param value property wrapper value around Float
    */
   public void setTextMaxAngle(Float value) {
-    symbolLayer.setProperties(textMaxAngle(value));
+    layer.setProperties(textMaxAngle(value));
   }
 
   /**
@@ -485,7 +527,7 @@ public class SymbolManager {
    * @return property wrapper value around Float
    */
   public Float getTextPadding() {
-    return symbolLayer.getTextPadding().value;
+    return layer.getTextPadding().value;
   }
 
   /**
@@ -494,7 +536,7 @@ public class SymbolManager {
    * @param value property wrapper value around Float
    */
   public void setTextPadding(Float value) {
-    symbolLayer.setProperties(textPadding(value));
+    layer.setProperties(textPadding(value));
   }
 
   /**
@@ -503,7 +545,7 @@ public class SymbolManager {
    * @return property wrapper value around Boolean
    */
   public Boolean getTextKeepUpright() {
-    return symbolLayer.getTextKeepUpright().value;
+    return layer.getTextKeepUpright().value;
   }
 
   /**
@@ -512,7 +554,7 @@ public class SymbolManager {
    * @param value property wrapper value around Boolean
    */
   public void setTextKeepUpright(Boolean value) {
-    symbolLayer.setProperties(textKeepUpright(value));
+    layer.setProperties(textKeepUpright(value));
   }
 
   /**
@@ -521,7 +563,7 @@ public class SymbolManager {
    * @return property wrapper value around Boolean
    */
   public Boolean getTextAllowOverlap() {
-    return symbolLayer.getTextAllowOverlap().value;
+    return layer.getTextAllowOverlap().value;
   }
 
   /**
@@ -530,7 +572,7 @@ public class SymbolManager {
    * @param value property wrapper value around Boolean
    */
   public void setTextAllowOverlap(Boolean value) {
-    symbolLayer.setProperties(textAllowOverlap(value));
+    layer.setProperties(textAllowOverlap(value));
   }
 
   /**
@@ -539,7 +581,7 @@ public class SymbolManager {
    * @return property wrapper value around Boolean
    */
   public Boolean getTextIgnorePlacement() {
-    return symbolLayer.getTextIgnorePlacement().value;
+    return layer.getTextIgnorePlacement().value;
   }
 
   /**
@@ -548,7 +590,7 @@ public class SymbolManager {
    * @param value property wrapper value around Boolean
    */
   public void setTextIgnorePlacement(Boolean value) {
-    symbolLayer.setProperties(textIgnorePlacement(value));
+    layer.setProperties(textIgnorePlacement(value));
   }
 
   /**
@@ -557,7 +599,7 @@ public class SymbolManager {
    * @return property wrapper value around Boolean
    */
   public Boolean getTextOptional() {
-    return symbolLayer.getTextOptional().value;
+    return layer.getTextOptional().value;
   }
 
   /**
@@ -566,7 +608,7 @@ public class SymbolManager {
    * @param value property wrapper value around Boolean
    */
   public void setTextOptional(Boolean value) {
-    symbolLayer.setProperties(textOptional(value));
+    layer.setProperties(textOptional(value));
   }
 
   /**
@@ -575,7 +617,7 @@ public class SymbolManager {
    * @return property wrapper value around Float[]
    */
   public Float[] getIconTranslate() {
-    return symbolLayer.getIconTranslate().value;
+    return layer.getIconTranslate().value;
   }
 
   /**
@@ -584,7 +626,7 @@ public class SymbolManager {
    * @param value property wrapper value around Float[]
    */
   public void setIconTranslate(Float[] value) {
-    symbolLayer.setProperties(iconTranslate(value));
+    layer.setProperties(iconTranslate(value));
   }
 
   /**
@@ -593,7 +635,7 @@ public class SymbolManager {
    * @return property wrapper value around String
    */
   public String getIconTranslateAnchor() {
-    return symbolLayer.getIconTranslateAnchor().value;
+    return layer.getIconTranslateAnchor().value;
   }
 
   /**
@@ -602,7 +644,7 @@ public class SymbolManager {
    * @param value property wrapper value around String
    */
   public void setIconTranslateAnchor(String value) {
-    symbolLayer.setProperties(iconTranslateAnchor(value));
+    layer.setProperties(iconTranslateAnchor(value));
   }
 
   /**
@@ -611,7 +653,7 @@ public class SymbolManager {
    * @return property wrapper value around Float[]
    */
   public Float[] getTextTranslate() {
-    return symbolLayer.getTextTranslate().value;
+    return layer.getTextTranslate().value;
   }
 
   /**
@@ -620,7 +662,7 @@ public class SymbolManager {
    * @param value property wrapper value around Float[]
    */
   public void setTextTranslate(Float[] value) {
-    symbolLayer.setProperties(textTranslate(value));
+    layer.setProperties(textTranslate(value));
   }
 
   /**
@@ -629,7 +671,7 @@ public class SymbolManager {
    * @return property wrapper value around String
    */
   public String getTextTranslateAnchor() {
-    return symbolLayer.getTextTranslateAnchor().value;
+    return layer.getTextTranslateAnchor().value;
   }
 
   /**
@@ -638,7 +680,38 @@ public class SymbolManager {
    * @param value property wrapper value around String
    */
   public void setTextTranslateAnchor(String value) {
-    symbolLayer.setProperties(textTranslateAnchor(value));
+    layer.setProperties(textTranslateAnchor(value));
+  }
+
+  /**
+   * Inner class for transforming map click events into symbol clicks
+   */
+  private class MapClickResolver implements MapboxMap.OnMapClickListener {
+
+    private MapboxMap mapboxMap;
+
+    private MapClickResolver(MapboxMap mapboxMap) {
+      this.mapboxMap = mapboxMap;
+    }
+
+    @Override
+    public void onMapClick(@NonNull LatLng point) {
+      if (symbolClickListeners.isEmpty()) {
+        return;
+      }
+
+      PointF screenLocation = mapboxMap.getProjection().toScreenLocation(point);
+      List<Feature> features = mapboxMap.queryRenderedFeatures(screenLocation, ID_GEOJSON_LAYER);
+      if (!features.isEmpty()) {
+        long symbolId = features.get(0).getProperty(Symbol.ID_KEY).getAsLong();
+        Symbol symbol = symbols.get(symbolId);
+        if (symbol != null) {
+          for (OnSymbolClickListener listener : symbolClickListeners) {
+            listener.onSymbolClick(symbol);
+          }
+        }
+      }
+    }
   }
 
 }
