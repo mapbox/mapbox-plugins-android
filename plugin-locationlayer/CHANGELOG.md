@@ -2,6 +2,9 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### 0.8.2 - September 12, 2018
+ - Maps SDK bump to 6.5.0 [#634](https://github.com/mapbox/mapbox-plugins-android/pull/634)
+
 ### 0.8.1 - September 4, 2018
 - Prevent from showing the location layer on every location update [#641](https://github.com/mapbox/mapbox-plugins-android/pull/641)
 

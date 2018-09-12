@@ -2,6 +2,12 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### 0.6.0 - September 12, 2018
+ - Problem with option 'country' [#554](https://github.com/mapbox/mapbox-plugins-android/pull/554)
+ - Update ProGuard to support built-in shrinker of Gradle Plugin [#582](https://github.com/mapbox/mapbox-plugins-android/pull/582)
+ - Fix for disappearing places picker marker [#584](https://github.com/mapbox/mapbox-plugins-android/pull/584)
+ - Maps SDK bump to 6.5.0 [#634](https://github.com/mapbox/mapbox-plugins-android/pull/634)
+
 ### 0.5.0 - May 23, 2018
 - Updates the Map SDK to 6.1.3 [#531](https://github.com/mapbox/mapbox-plugins-android/pull/531)
 
