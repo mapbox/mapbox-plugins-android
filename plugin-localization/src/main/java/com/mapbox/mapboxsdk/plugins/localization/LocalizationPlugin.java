@@ -1,12 +1,17 @@
 package com.mapbox.mapboxsdk.plugins.localization;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.plugins.localization.MapLocale.Languages;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.Source;
@@ -105,22 +110,64 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
       if (sourceIsFromMapbox(source)) {
         for (Layer layer : layers) {
           if (layerHasAdjustableTextField(layer)) {
-            String textField = ((SymbolLayer) layer).getTextField().getValue();
-            if (textField != null
-              && (textField.contains("{name") || textField.contains("{abbr}"))) {
-              textField = textField.replaceAll("[{]((name).*?)[}]",
-                String.format("{%s}", mapLocale.getMapLanguage()));
-              layer.setProperties(textField(textField));
-            }
+            transformTextFieldValues(layer);
+          } else if (layerHasAdjustableExpressionTextField(layer)) {
+            transformExpressionTextFieldValue(layer);
           }
         }
       }
     }
   }
 
-  /*
-   * Camera bounding box
-   */
+  private void transformTextFieldValues(Layer layer) {
+    String textField = ((SymbolLayer) layer).getTextField().getValue();
+    if (textField != null
+      && (textField.contains("{name") || textField.contains("{abbr}"))) {
+      textField = textField.replaceAll("[{]((name).*?)[}]",
+        String.format("{%s}", mapLocale.getMapLanguage()));
+      layer.setProperties(textField(textField));
+    }
+  }
+
+  // TODO Finish transforming expression
+  private void transformExpressionTextFieldValue(Layer layer) {
+    SymbolLayer textLayer = (SymbolLayer) layer;
+    int position;
+    for (position = 0; position < textLayer.getTextField().getExpression().toArray().length; position++) {
+      if (textLayer.getTextField().getExpression().toArray()[position] instanceof String
+        && textLayer.getTextField().getExpression().toArray()[position].toString().contains("{name")) {
+        break;
+      }
+    }
+    System.out.println(textLayer.getId());
+//    Object[] expressionArray = textLayer.getTextField().getExpression().toArray();
+
+    String s = textLayer.getTextField().getExpression().toString();
+    System.out.println(s);
+    s = s.replaceAll("[{]((name).*?)[}]", String.format("[\"get\", \"{%s}\"]", mapLocale.getMapLanguage()));
+//    s = s.replace(", ,", ",[\"literal\", \"\"],");
+
+
+    s = s.replace("{ref}", "[\"get\", \"{ref}\"]");
+    s = s.replace("{abbr}", "[\"get\", \"{abbr}\"]");
+    s = s.replace("{code}", "[\"get\", \"{code}\"]");
+    System.out.println(s);
+
+    Gson gson = new Gson();
+    JsonArray jsonArray = gson.fromJson(s, JsonArray.class);
+
+
+//    expressionArray[position] = mapLocale.getMapLanguage();
+    System.out.println(jsonArray.toString());
+
+
+    textLayer.setProperties(textField(Expression.Converter.convert(jsonArray)));
+  }
+
+
+  //
+  // Camera bounding box
+  //
 
   /**
    * Adjust the map's camera position so that the entire countries boarders are within the viewport.
@@ -164,9 +211,9 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
     mapboxMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
   }
 
-  /*
-   * Supporting methods
-   */
+  //
+  // Supporting methods
+  //
 
   private MapLocale checkMapLocalNonNull(Locale locale) {
     MapLocale mapLocale = MapLocale.getMapLocale(locale);
@@ -185,22 +232,56 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
    * @return true if the source is from the Mapbox Streets vector source, false if it's not.
    */
   private boolean sourceIsFromMapbox(Source singleSource) {
-    return singleSource instanceof VectorSource
-      && ((VectorSource) singleSource).getUrl().substring(0, 9).equals("mapbox://")
-      && (((VectorSource) singleSource).getUrl().contains("mapbox.mapbox-streets-v7")
-      || ((VectorSource) singleSource).getUrl().contains("mapbox.mapbox-streets-v6"));
+    String url = ((VectorSource) singleSource).getUrl();
+
+    return url != null
+      && (url.substring(0, 9).equals("mapbox://")
+      && url.contains("mapbox.mapbox-streets-v8")
+      || url.contains("mapbox.mapbox-streets-v7")
+      || url.contains("mapbox.mapbox-streets-v6"));
   }
 
   /**
    * Checks whether a single map layer has a textField that could potentially be localized to the
    * device's language.
    *
-   * @param singleLayer an individual layer from the map
+   * @param layer an individual layer from the map style
    * @return true if the layer has a textField eligible for translation, false if not.
    */
-  private boolean layerHasAdjustableTextField(Layer singleLayer) {
-    return singleLayer instanceof SymbolLayer && (((SymbolLayer) singleLayer).getTextField() != null
-      && (((SymbolLayer) singleLayer).getTextField().getValue() != null
-      && !(((SymbolLayer) singleLayer).getTextField().getValue().isEmpty())));
+  private boolean layerHasAdjustableTextField(Layer layer) {
+    // Check that the layers a symbol layer
+    SymbolLayer textLayer = isSymbolLayer(layer);
+    if (textLayer == null) {
+      return false;
+    }
+
+    return textLayer.getTextField() != null && textLayer.getTextField().getValue() != null
+      && !TextUtils.isEmpty(textLayer.getTextField().getValue());
+  }
+
+  private boolean layerHasAdjustableExpressionTextField(Layer layer) {
+    // Check that the layers a symbol layer
+    SymbolLayer textLayer = isSymbolLayer(layer);
+    if (textLayer == null) {
+      return false;
+    }
+
+    return textLayer.getTextField() != null && textLayer.getTextField().isExpression();
+  }
+
+  /**
+   * Checks that the layer is an instance of a symbol layer and if so, returns the layer as an
+   * instance of {@link SymbolLayer}.
+   *
+   * @param layer an individual layer from the map style
+   * @return true if the layer is an instance of a symbol layer
+   */
+  @Nullable
+  private SymbolLayer isSymbolLayer(Layer layer) {
+    if (layer instanceof SymbolLayer) {
+      return (SymbolLayer) layer;
+    } else {
+      return null;
+    }
   }
 }
