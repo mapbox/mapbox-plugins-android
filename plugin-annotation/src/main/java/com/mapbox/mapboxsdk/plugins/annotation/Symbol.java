@@ -1,17 +1,22 @@
+// This file is generated.
+
 package com.mapbox.mapboxsdk.plugins.annotation;
 
 import android.support.annotation.UiThread;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.mapbox.geojson.Geometry;
-import com.mapbox.geojson.Point;
+import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.style.layers.Property;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @UiThread
 public class Symbol {
 
   public static final String ID_KEY = "id-symbol";
-
+  //public static final String Z_INDEX = "z-index";
   private final SymbolManager symbolManager;
   private final JsonObject jsonObject = new JsonObject();
   private Geometry geometry;
@@ -25,6 +30,7 @@ public class Symbol {
   Symbol(SymbolManager manager, long id) {
     this.symbolManager = manager;
     this.jsonObject.addProperty(ID_KEY, id);
+    //this.jsonObject.addProperty(Z_INDEX, 0);
   }
 
   /**
@@ -67,6 +73,31 @@ public class Symbol {
     symbolManager.updateSource();
   }
 
+  ///**
+  // * Set the z-index of a symbol.
+  // * <p>
+  // * If a symbol z-index is higher as another symbol it will be rendered above it.
+  // * </p>
+  // * <p>
+  // * Default value is 0.
+  // * </p>
+  // *
+  // * @param index the z-index value
+  // */
+  //public void setZIndex(int index) {
+  //  jsonObject.addProperty(Z_INDEX, index);
+  //  symbolManager.updateSource();
+  //}
+
+  ///**
+  // * Get the z-index of a symbol.
+  // *
+  // * @return the z-index value, 0 if not set
+  // */
+  //public int getZIndex() {
+  //  return jsonObject.get(Z_INDEX).getAsInt();
+  //}
+
   // Property accessors
   /**
    * Get the IconSize property
@@ -80,7 +111,7 @@ public class Symbol {
   /**
    * Set the IconSize property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setIconSize(Float value) {
     jsonObject.addProperty("icon-size", value);
@@ -99,7 +130,7 @@ public class Symbol {
   /**
    * Set the IconImage property
    *
-   * @return property wrapper value around String
+   * @param value constant property value for String
    */
   public void setIconImage(String value) {
     jsonObject.addProperty("icon-image", value);
@@ -118,7 +149,7 @@ public class Symbol {
   /**
    * Set the IconRotate property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setIconRotate(Float value) {
     jsonObject.addProperty("icon-rotate", value);
@@ -142,7 +173,7 @@ public class Symbol {
   /**
    * Set the IconOffset property
    *
-   * @return property wrapper value around Float[]
+   * @param value constant property value for Float[]
    */
   public void setIconOffset(Float[] value) {
     JsonArray jsonArray = new JsonArray();
@@ -165,9 +196,9 @@ public class Symbol {
   /**
    * Set the IconAnchor property
    *
-   * @return property wrapper value around String
+   * @param value constant property value for String
    */
-  public void setIconAnchor(String value) {
+  public void setIconAnchor(@Property.ICON_ANCHOR String value) {
     jsonObject.addProperty("icon-anchor", value);
     symbolManager.updateSource();
   }
@@ -184,7 +215,7 @@ public class Symbol {
   /**
    * Set the TextField property
    *
-   * @return property wrapper value around String
+   * @param value constant property value for String
    */
   public void setTextField(String value) {
     jsonObject.addProperty("text-field", value);
@@ -208,7 +239,7 @@ public class Symbol {
   /**
    * Set the TextFont property
    *
-   * @return property wrapper value around String[]
+   * @param value constant property value for String[]
    */
   public void setTextFont(String[] value) {
     JsonArray jsonArray = new JsonArray();
@@ -231,7 +262,7 @@ public class Symbol {
   /**
    * Set the TextSize property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setTextSize(Float value) {
     jsonObject.addProperty("text-size", value);
@@ -250,7 +281,7 @@ public class Symbol {
   /**
    * Set the TextMaxWidth property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setTextMaxWidth(Float value) {
     jsonObject.addProperty("text-max-width", value);
@@ -269,7 +300,7 @@ public class Symbol {
   /**
    * Set the TextLetterSpacing property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setTextLetterSpacing(Float value) {
     jsonObject.addProperty("text-letter-spacing", value);
@@ -288,9 +319,9 @@ public class Symbol {
   /**
    * Set the TextJustify property
    *
-   * @return property wrapper value around String
+   * @param value constant property value for String
    */
-  public void setTextJustify(String value) {
+  public void setTextJustify(@Property.TEXT_JUSTIFY String value) {
     jsonObject.addProperty("text-justify", value);
     symbolManager.updateSource();
   }
@@ -307,9 +338,9 @@ public class Symbol {
   /**
    * Set the TextAnchor property
    *
-   * @return property wrapper value around String
+   * @param value constant property value for String
    */
-  public void setTextAnchor(String value) {
+  public void setTextAnchor(@Property.TEXT_ANCHOR String value) {
     jsonObject.addProperty("text-anchor", value);
     symbolManager.updateSource();
   }
@@ -326,7 +357,7 @@ public class Symbol {
   /**
    * Set the TextRotate property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setTextRotate(Float value) {
     jsonObject.addProperty("text-rotate", value);
@@ -345,9 +376,9 @@ public class Symbol {
   /**
    * Set the TextTransform property
    *
-   * @return property wrapper value around String
+   * @param value constant property value for String
    */
-  public void setTextTransform(String value) {
+  public void setTextTransform(@Property.TEXT_TRANSFORM String value) {
     jsonObject.addProperty("text-transform", value);
     symbolManager.updateSource();
   }
@@ -369,7 +400,7 @@ public class Symbol {
   /**
    * Set the TextOffset property
    *
-   * @return property wrapper value around Float[]
+   * @param value constant property value for Float[]
    */
   public void setTextOffset(Float[] value) {
     JsonArray jsonArray = new JsonArray();
@@ -392,7 +423,7 @@ public class Symbol {
   /**
    * Set the IconOpacity property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setIconOpacity(Float value) {
     jsonObject.addProperty("icon-opacity", value);
@@ -411,7 +442,7 @@ public class Symbol {
   /**
    * Set the IconColor property
    *
-   * @return property wrapper value around String
+   * @param value constant property value for String
    */
   public void setIconColor(String value) {
     jsonObject.addProperty("icon-color", value);
@@ -430,7 +461,7 @@ public class Symbol {
   /**
    * Set the IconHaloColor property
    *
-   * @return property wrapper value around String
+   * @param value constant property value for String
    */
   public void setIconHaloColor(String value) {
     jsonObject.addProperty("icon-halo-color", value);
@@ -449,7 +480,7 @@ public class Symbol {
   /**
    * Set the IconHaloWidth property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setIconHaloWidth(Float value) {
     jsonObject.addProperty("icon-halo-width", value);
@@ -468,7 +499,7 @@ public class Symbol {
   /**
    * Set the IconHaloBlur property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setIconHaloBlur(Float value) {
     jsonObject.addProperty("icon-halo-blur", value);
@@ -487,7 +518,7 @@ public class Symbol {
   /**
    * Set the TextOpacity property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setTextOpacity(Float value) {
     jsonObject.addProperty("text-opacity", value);
@@ -506,7 +537,7 @@ public class Symbol {
   /**
    * Set the TextColor property
    *
-   * @return property wrapper value around String
+   * @param value constant property value for String
    */
   public void setTextColor(String value) {
     jsonObject.addProperty("text-color", value);
@@ -525,7 +556,7 @@ public class Symbol {
   /**
    * Set the TextHaloColor property
    *
-   * @return property wrapper value around String
+   * @param value constant property value for String
    */
   public void setTextHaloColor(String value) {
     jsonObject.addProperty("text-halo-color", value);
@@ -544,7 +575,7 @@ public class Symbol {
   /**
    * Set the TextHaloWidth property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setTextHaloWidth(Float value) {
     jsonObject.addProperty("text-halo-width", value);
@@ -563,7 +594,7 @@ public class Symbol {
   /**
    * Set the TextHaloBlur property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setTextHaloBlur(Float value) {
     jsonObject.addProperty("text-halo-blur", value);

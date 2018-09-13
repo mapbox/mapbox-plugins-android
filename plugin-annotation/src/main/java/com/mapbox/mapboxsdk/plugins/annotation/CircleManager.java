@@ -1,7 +1,10 @@
+// This file is generated.
+
 package com.mapbox.mapboxsdk.plugins.annotation;
 
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.util.LongSparseArray;
@@ -9,25 +12,19 @@ import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.style.layers.CircleLayer;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
+import com.mapbox.mapboxsdk.style.layers.CircleLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleBlur;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleOpacity;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circlePitchAlignment;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circlePitchScale;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleRadius;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeOpacity;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeWidth;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleTranslate;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleTranslateAnchor;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
+//import static com.mapbox.mapboxsdk.annotations.symbol.Symbol.Z_INDEX;
 
 /**
  * The circle manager allows to add circles to a map.
@@ -165,13 +162,13 @@ public class CircleManager {
 
   private static PropertyValue<?>[] getLayerDefinition() {
     return new PropertyValue[]{
-     circleRadius(get("circle-radius")),
-     circleColor(get("circle-color")),
-     circleBlur(get("circle-blur")),
-     circleOpacity(get("circle-opacity")),
-     circleStrokeWidth(get("circle-stroke-width")),
-     circleStrokeColor(get("circle-stroke-color")),
-     circleStrokeOpacity(get("circle-stroke-opacity")),
+      circleRadius(get("circle-radius")),
+      circleColor(get("circle-color")),
+      circleBlur(get("circle-blur")),
+      circleOpacity(get("circle-opacity")),
+      circleStrokeWidth(get("circle-stroke-width")),
+      circleStrokeColor(get("circle-stroke-color")),
+      circleStrokeOpacity(get("circle-stroke-opacity")),
     };
   }
 
@@ -190,7 +187,7 @@ public class CircleManager {
    *
    * @param value property wrapper value around Float[]
    */
-  public void setCircleTranslate(Float[] value) {
+  public void setCircleTranslate( Float[] value) {
     layer.setProperties(circleTranslate(value));
   }
 
@@ -208,7 +205,7 @@ public class CircleManager {
    *
    * @param value property wrapper value around String
    */
-  public void setCircleTranslateAnchor(String value) {
+  public void setCircleTranslateAnchor(@Property.CIRCLE_TRANSLATE_ANCHOR String value) {
     layer.setProperties(circleTranslateAnchor(value));
   }
 
@@ -226,7 +223,7 @@ public class CircleManager {
    *
    * @param value property wrapper value around String
    */
-  public void setCirclePitchScale(String value) {
+  public void setCirclePitchScale(@Property.CIRCLE_PITCH_SCALE String value) {
     layer.setProperties(circlePitchScale(value));
   }
 
@@ -244,7 +241,7 @@ public class CircleManager {
    *
    * @param value property wrapper value around String
    */
-  public void setCirclePitchAlignment(String value) {
+  public void setCirclePitchAlignment(@Property.CIRCLE_PITCH_ALIGNMENT String value) {
     layer.setProperties(circlePitchAlignment(value));
   }
 
@@ -278,5 +275,4 @@ public class CircleManager {
       }
     }
   }
-
 }

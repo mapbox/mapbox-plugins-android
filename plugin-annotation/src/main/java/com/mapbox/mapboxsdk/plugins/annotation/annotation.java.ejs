@@ -1,0 +1,203 @@
+<%
+  const type = locals.type;
+  const properties = locals.properties;
+  const doc = locals.doc;
+-%>
+// This file is generated.
+
+package com.mapbox.mapboxsdk.plugins.annotation;
+
+import android.support.annotation.UiThread;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.mapbox.geojson.*;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.style.layers.Property;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@UiThread
+public class <%- camelize(type) %> {
+
+  public static final String ID_KEY = "id-<%- type %>";
+<% if (type === "symbol") { -%>
+  //public static final String Z_INDEX = "z-index";
+<% } -%>
+  private final <%- camelize(type) %>Manager <%- type %>Manager;
+  private final JsonObject jsonObject = new JsonObject();
+  private Geometry geometry;
+
+  /**
+   * Create a <%- type %>.
+   *
+   * @param manager the <%- type %> manager created and managing the <%- type %>
+   * @param id            the id of the <%- type %>
+   */
+  <%- camelize(type) %>(<%- camelize(type) %>Manager manager, long id) {
+    this.<%- type %>Manager = manager;
+    this.jsonObject.addProperty(ID_KEY, id);
+<% if (type === "symbol") { -%>
+    //this.jsonObject.addProperty(Z_INDEX, 0);
+<% } -%>
+  }
+
+  /**
+   * Get the <%- type %> geometry.
+   *
+   * @return the <%- type %> geometry
+   */
+  Geometry getGeometry() {
+    if (geometry == null) {
+      throw new IllegalStateException();
+    }
+    return geometry;
+  }
+
+  /**
+   * Get the <%- type %> feature properties.
+   *
+   * @return the <%- type %> feature properties
+   */
+  JsonObject getFeature() {
+    return jsonObject;
+  }
+
+  /**
+   * Get the <%- type %> id.
+   *
+   * @return the <%- type %> id
+   */
+  public long getId() {
+    return jsonObject.get(ID_KEY).getAsLong();
+  }
+<% if (type === "circle" || type === "symbol") { -%>
+
+  /**
+   * Set the LatLng of the <%- type %>, which represents the location of the <%- type %> on the map
+   *
+   * @param latLng the location of the <%- type %> in a longitude and latitude pair
+   */
+  public void setLatLng(LatLng latLng) {
+    geometry = Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
+    <%- type %>Manager.updateSource();
+  }
+<% } else if (type === "line") { -%>
+
+  /**
+   * Set a list of LatLng for the line, which represents the locations of the line on the map
+   *
+   * @param latLngs a list of the locations of the line in a longitude and latitude pairs
+   */
+  public void setLatLngs(List<LatLng> latLngs) {
+    List<Point>points = new ArrayList<>();
+    for (LatLng latLng : latLngs) {
+      points.add(Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude()));
+    }
+    geometry = LineString.fromLngLats(points);
+    lineManager.updateSource();
+  }
+<% } else { -%>
+
+  /**
+   * Set a list of lists of LatLng for the fill, which represents the locations of the fill on the map
+   *
+   * @param latLngs a list of a lists of the locations of the line in a longitude and latitude pairs
+   */
+  public void setLatLngs(List<List<LatLng>> latLngs) {
+    List<List<Point>> points = new ArrayList<>();
+    for (List<LatLng> innerLatLngs : latLngs) {
+      List<Point>innerList = new ArrayList<>();
+      for (LatLng latLng : innerLatLngs) {
+        innerList.add(Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude()));
+      }
+      points.add(innerList);
+    }
+    geometry = Polygon.fromLngLats(points);
+    fillManager.updateSource();
+  }
+<% } -%>
+<% if (type === "symbol") { -%>
+
+  ///**
+  // * Set the z-index of a symbol.
+  // * <p>
+  // * If a symbol z-index is higher as another symbol it will be rendered above it.
+  // * </p>
+  // * <p>
+  // * Default value is 0.
+  // * </p>
+  // *
+  // * @param index the z-index value
+  // */
+  //public void setZIndex(int index) {
+  //  jsonObject.addProperty(Z_INDEX, index);
+  //  symbolManager.updateSource();
+  //}
+
+  ///**
+  // * Get the z-index of a symbol.
+  // *
+  // * @return the z-index value, 0 if not set
+  // */
+  //public int getZIndex() {
+  //  return jsonObject.get(Z_INDEX).getAsInt();
+  //}
+<% } -%>
+
+  // Property accessors
+<% for (const property of properties) { -%>
+<% if (supportsPropertyFunction(property)) { -%>
+<% if (propertyType(property).endsWith("[]")) { -%>
+  /**
+   * Get the <%- camelize(property.name) %> property
+   *
+   * @return property wrapper value around <%- propertyType(property) %>
+   */
+  public <%- propertyType(property) %> get<%- camelize(property.name) %>() {
+    JsonArray jsonArray = jsonObject.getAsJsonArray("<%-property.name %>");
+    <%- propertyType(property) %> value = new <%- propertyType(property).substring(0, propertyType(property).length-1) %>jsonArray.size()];
+    for (int i = 0; i < jsonArray.size(); i++) {
+      value[i] = jsonArray.get(i).getAs<%- propertyType(property).substring(0, propertyType(property).length-2) %>();
+    }
+    return value;
+  }
+
+  /**
+   * Set the <%- camelize(property.name) %> property
+   *
+   * @param value constant property value for <%- propertyType(property) %>
+   */
+  public void set<%- camelize(property.name) %>(<%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), " ") %><%- propertyType(property) %> value) {
+    JsonArray jsonArray = new JsonArray();
+    for (<%- propertyType(property).substring(0, propertyType(property).length-2) %> element : value) {
+      jsonArray.add(element);
+    }
+    jsonObject.add("<%-property.name %>", jsonArray);
+    <%- type %>Manager.updateSource();
+  }
+
+<% } else { -%>
+  /**
+   * Get the <%- camelize(property.name) %> property
+   *
+   * @return property wrapper value around <%- propertyType(property) %>
+   */
+  public <%- propertyType(property) %> get<%- camelize(property.name) %>() {
+    return jsonObject.get("<%- property.name %>").getAs<%- propertyType(property) %>();
+  }
+
+  /**
+   * Set the <%- camelize(property.name) %> property
+   *
+   * @param value constant property value for <%- propertyType(property) %>
+   */
+  public void set<%- camelize(property.name) %>(<%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), " ") %><%- propertyType(property) %> value) {
+    jsonObject.addProperty("<%- property.name %>", value);
+    <%- type %>Manager.updateSource();
+  }
+
+<% } -%>
+<% } -%>
+<% } -%>
+}

@@ -1,11 +1,13 @@
+// This file is generated.
+
 package com.mapbox.mapboxsdk.plugins.annotation;
 
 import android.support.annotation.UiThread;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.mapbox.geojson.Geometry;
-import com.mapbox.geojson.Point;
-import com.mapbox.geojson.Polygon;
+import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +16,6 @@ import java.util.List;
 public class Fill {
 
   public static final String ID_KEY = "id-fill";
-
   private final FillManager fillManager;
   private final JsonObject jsonObject = new JsonObject();
   private Geometry geometry;
@@ -23,7 +24,7 @@ public class Fill {
    * Create a fill.
    *
    * @param manager the fill manager created and managing the fill
-   * @param id      the id of the fill
+   * @param id            the id of the fill
    */
   Fill(FillManager manager, long id) {
     this.fillManager = manager;
@@ -68,7 +69,7 @@ public class Fill {
   public void setLatLngs(List<List<LatLng>> latLngs) {
     List<List<Point>> points = new ArrayList<>();
     for (List<LatLng> innerLatLngs : latLngs) {
-      List<Point> innerList = new ArrayList<>();
+      List<Point>innerList = new ArrayList<>();
       for (LatLng latLng : innerLatLngs) {
         innerList.add(Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude()));
       }
@@ -79,7 +80,6 @@ public class Fill {
   }
 
   // Property accessors
-
   /**
    * Get the FillOpacity property
    *
@@ -92,7 +92,7 @@ public class Fill {
   /**
    * Set the FillOpacity property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setFillOpacity(Float value) {
     jsonObject.addProperty("fill-opacity", value);
@@ -111,7 +111,7 @@ public class Fill {
   /**
    * Set the FillColor property
    *
-   * @return property wrapper value around String
+   * @param value constant property value for String
    */
   public void setFillColor(String value) {
     jsonObject.addProperty("fill-color", value);
@@ -130,7 +130,7 @@ public class Fill {
   /**
    * Set the FillOutlineColor property
    *
-   * @return property wrapper value around String
+   * @param value constant property value for String
    */
   public void setFillOutlineColor(String value) {
     jsonObject.addProperty("fill-outline-color", value);
@@ -149,7 +149,7 @@ public class Fill {
   /**
    * Set the FillPattern property
    *
-   * @return property wrapper value around String
+   * @param value constant property value for String
    */
   public void setFillPattern(String value) {
     jsonObject.addProperty("fill-pattern", value);

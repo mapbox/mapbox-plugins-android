@@ -1,0 +1,283 @@
+<%
+  const type = locals.type;
+  const properties = locals.properties;
+  const doc = locals.doc;
+-%>
+// This file is generated.
+
+package com.mapbox.mapboxsdk.plugins.annotation;
+
+import android.graphics.PointF;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
+import android.support.annotation.VisibleForTesting;
+import android.support.v4.util.LongSparseArray;
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.style.layers.PropertyValue;
+import com.mapbox.mapboxsdk.style.layers.<%- camelize(type) %>Layer;
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.style.layers.Property;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
+//import static com.mapbox.mapboxsdk.annotations.symbol.Symbol.Z_INDEX;
+
+/**
+ * The <%- type %> manager allows to add <%- type %>s to a map.
+ */
+public class <%- camelize(type) %>Manager {
+
+  public static final String ID_GEOJSON_SOURCE = "mapbox-android-<%- type %>-source";
+  public static final String ID_GEOJSON_LAYER = "mapbox-android-<%- type %>-layer";
+
+  // map integration components
+  private MapboxMap mapboxMap;
+  private GeoJsonSource geoJsonSource;
+  private <%- camelize(type) %>Layer layer;
+
+  // callback listeners
+  private List<On<%- camelize(type) %>ClickListener> <%- type %>ClickListeners = new ArrayList<>();
+  private final MapClickResolver mapClickResolver;
+
+  // internal data set
+  private final LongSparseArray<<%- camelize(type) %>> <%- type %>s = new LongSparseArray<>();
+  private final List<Feature> features = new ArrayList<>();
+  private long currentId;
+<% if (type === "symbol") { -%>
+
+  //private final SymbolComparator symbolComparator = new SymbolComparator();
+<% } -%>
+
+  /**
+   * Create a <%- type %> manager, used to manage <%- type %>s.
+   *
+   * @param mapboxMap the map object to add <%- type %>s to
+   */
+  @UiThread
+  public <%- camelize(type) %>Manager(@NonNull MapboxMap mapboxMap) {
+    this(mapboxMap, new GeoJsonSource(ID_GEOJSON_SOURCE), new <%- camelize(type) %>Layer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE)
+      .withProperties(
+        getLayerDefinition()
+      )
+    );
+  }
+
+  /**
+   * Create a <%- type %> manager, used to manage <%- type %>s.
+   *
+   * @param mapboxMap     the map object to add <%- type %>s to
+   * @param geoJsonSource the geojson source to add <%- type %>s to
+   * @param layer         the <%- type %> layer to visualise <%- camelize(type) %>s with
+   */
+  @VisibleForTesting
+  public <%- camelize(type) %>Manager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, <%- camelize(type) %>Layer layer) {
+    this.mapboxMap = mapboxMap;
+    this.geoJsonSource = geoJsonSource;
+    this.layer = layer;
+    mapboxMap.addSource(geoJsonSource);
+    mapboxMap.addLayer(layer);
+    mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
+  }
+
+  /**
+   * Cleanup <%- type %> manager, used to clear listeners
+   */
+  @UiThread
+  public void onDestroy() {
+    mapboxMap.removeOnMapClickListener(mapClickResolver);
+    <%- type %>ClickListeners.clear();
+  }
+<% if (type === "circle" || type === "symbol") { -%>
+
+  /**
+   * Create a <%- type %> on the map from a LatLng coordinate.
+   *
+   * @param latLng place to layout the <%- type %> on the map
+   * @return the newly created <%- type %>
+   */
+  @UiThread
+  public <%- camelize(type) %> create<%- camelize(type) %>(@NonNull LatLng latLng) {
+    <%- camelize(type) %> <%- type %> = new <%- camelize(type) %>(this, currentId);
+    <%- type %>.setLatLng(latLng);
+    <%- type %>s.put(currentId, <%- type %>);
+    currentId++;
+    return <%- type %>;
+  }
+<% } else if (type === "line") { -%>
+
+  /**
+   * Create a <%- type %> on the map from a LatLng coordinate.
+   *
+   * @param latLngs places to layout the <%- type %> on the map
+   * @return the newly created <%- type %>
+   */
+  @UiThread
+  public <%- camelize(type) %> create<%- camelize(type) %>(@NonNull List<LatLng> latLngs) {
+    <%- camelize(type) %> <%- type %> = new <%- camelize(type) %>(this, currentId);
+    <%- type %>.setLatLngs(latLngs);
+    <%- type %>s.put(currentId, <%- type %>);
+    currentId++;
+    return <%- type %>;
+  }
+<% } else { -%>
+
+  /**
+   * Create a <%- type %> on the map from a LatLng coordinate.
+   *
+   * @param latLngs places to layout the <%- type %> on the map
+   * @return the newly created <%- type %>
+   */
+  @UiThread
+  public <%- camelize(type) %> create<%- camelize(type) %>(@NonNull List<List<LatLng>> latLngs) {
+    <%- camelize(type) %> <%- type %> = new <%- camelize(type) %>(this, currentId);
+    <%- type %>.setLatLngs(latLngs);
+    <%- type %>s.put(currentId, <%- type %>);
+    currentId++;
+    return <%- type %>;
+  }
+<% } -%>
+
+  /**
+   * Delete a <%- type %> from the map.
+   *
+   * @param <%- type %> to be deleted
+   */
+  @UiThread
+  public void delete<%- camelize(type) %>(@NonNull <%- camelize(type) %> <%- type %>) {
+    <%- type %>s.remove(<%- type %>.getId());
+    updateSource();
+  }
+
+  /**
+   * Get a list of current <%- type %>s.
+   *
+   * @return list of <%- type %>s
+   */
+  @UiThread
+  public LongSparseArray<<%- camelize(type) %>> get<%- camelize(type) %>s() {
+    return <%- type %>s;
+  }
+
+  /**
+   * Trigger an update to the underlying source
+   */
+  public void updateSource() {
+    // todo move feature creation to a background thread?
+    features.clear();
+    <%- camelize(type) %> <%- type %>;
+    for (int i = 0; i < <%- type %>s.size(); i++) {
+      <%- type %> = <%- type %>s.valueAt(i);
+      features.add(Feature.fromGeometry(<%- type %>.getGeometry(), <%- type %>.getFeature()));
+    }
+<% if (type === "symbol") { -%>
+    //Collections.sort(features, symbolComparator);
+<% } -%>
+    geoJsonSource.setGeoJson(FeatureCollection.fromFeatures(features));
+  }
+
+  /**
+   * Add a callback to be invoked when a <%- type %> has been clicked.
+   *
+   * @param listener the callback to be invoked when a <%- type %> is clicked
+   */
+  @UiThread
+  public void addOn<%- camelize(type) %>ClickListener(@NonNull On<%- camelize(type) %>ClickListener listener) {
+    <%- type %>ClickListeners.add(listener);
+  }
+
+  /**
+   * Remove a previously added callback that was to be invoked when <%- type %> has been clicked.
+   *
+   * @param listener the callback to be removed
+   */
+  @UiThread
+  public void removeOn<%- camelize(type) %>ClickListener(@NonNull On<%- camelize(type) %>ClickListener listener) {
+    if (<%- type %>ClickListeners.contains(listener)) {
+      <%- type %>ClickListeners.remove(listener);
+    }
+  }
+
+  private static PropertyValue<?>[] getLayerDefinition() {
+    return new PropertyValue[]{
+<% for (const property of properties) { -%>
+<% if (supportsPropertyFunction(property) && property.name !== "fill-pattern" && property.name !== "line-pattern") { -%>
+      <%- camelizeWithLeadingLowercase(property.name) %>(get("<%- property.name %>")),
+<% } -%><% } -%>
+<% if (type === "symbol") { -%>
+      //symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE)
+<% } -%>
+    };
+  }
+
+  // Property accessors
+<% for (const property of properties) { -%>
+<% if (!supportsPropertyFunction(property) && property.name !== "line-gradient" && property.name !== "symbol-z-order") { -%>
+  /**
+   * Get the <%- camelize(property.name) %> property
+   *
+   * @return property wrapper value around <%- propertyType(property) %>
+   */
+  public <%- propertyType(property) %> get<%- camelize(property.name) %>() {
+    return layer.get<%- camelize(property.name) %>().value;
+  }
+
+  /**
+   * Set the <%- camelize(property.name) %> property
+   *
+   * @param value property wrapper value around <%- propertyType(property) %>
+   */
+  public void set<%- camelize(property.name) %>(<%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), "") %> <%- propertyType(property) %> value) {
+    layer.setProperties(<%- camelizeWithLeadingLowercase(property.name) %>(value));
+  }
+
+<% } -%>
+<% } -%>
+  /**
+   * Inner class for transforming map click events into <%- type %> clicks
+   */
+  private class MapClickResolver implements MapboxMap.OnMapClickListener {
+
+    private MapboxMap mapboxMap;
+
+    private MapClickResolver(MapboxMap mapboxMap) {
+      this.mapboxMap = mapboxMap;
+    }
+
+    @Override
+    public void onMapClick(@NonNull LatLng point) {
+      if (<%- type %>ClickListeners.isEmpty()) {
+        return;
+      }
+
+      PointF screenLocation = mapboxMap.getProjection().toScreenLocation(point);
+      List<Feature> features = mapboxMap.queryRenderedFeatures(screenLocation, ID_GEOJSON_LAYER);
+      if (!features.isEmpty()) {
+        long <%- type %>Id = features.get(0).getProperty(<%- camelize(type) %>.ID_KEY).getAsLong();
+        <%- camelize(type) %> <%- type %> = <%- type %>s.get(<%- type %>Id);
+        if (<%- type %> != null) {
+          for (On<%- camelize(type) %>ClickListener listener : <%- type %>ClickListeners) {
+            listener.on<%- camelize(type) %>Click(<%- type %>);
+          }
+        }
+      }
+    }
+  }
+<% if (type === "symbol") { -%>
+
+  //private class SymbolComparator implements Comparator<Feature> {
+  //  @Override
+  //  public int compare(Feature left, Feature right) {
+  //    return right.getProperty(Z_INDEX).getAsInt() - left.getProperty(Z_INDEX).getAsInt();
+  //  }
+  //}
+<% } -%>
+}

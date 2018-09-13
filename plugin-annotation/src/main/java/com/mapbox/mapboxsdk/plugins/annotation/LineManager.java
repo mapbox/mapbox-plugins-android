@@ -1,7 +1,10 @@
+// This file is generated.
+
 package com.mapbox.mapboxsdk.plugins.annotation;
 
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.util.LongSparseArray;
@@ -9,27 +12,19 @@ import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
+import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineBlur;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineCap;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineDasharray;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineGapWidth;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineJoin;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineMiterLimit;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineOffset;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineOpacity;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineRoundLimit;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineTranslate;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineTranslateAnchor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
+//import static com.mapbox.mapboxsdk.annotations.symbol.Symbol.Z_INDEX;
 
 /**
  * The line manager allows to add lines to a map.
@@ -167,13 +162,13 @@ public class LineManager {
 
   private static PropertyValue<?>[] getLayerDefinition() {
     return new PropertyValue[]{
-     lineJoin(get("line-join")),
-     lineOpacity(get("line-opacity")),
-     lineColor(get("line-color")),
-     lineWidth(get("line-width")),
-     lineGapWidth(get("line-gap-width")),
-     lineOffset(get("line-offset")),
-     lineBlur(get("line-blur")),
+      lineJoin(get("line-join")),
+      lineOpacity(get("line-opacity")),
+      lineColor(get("line-color")),
+      lineWidth(get("line-width")),
+      lineGapWidth(get("line-gap-width")),
+      lineOffset(get("line-offset")),
+      lineBlur(get("line-blur")),
     };
   }
 
@@ -192,7 +187,7 @@ public class LineManager {
    *
    * @param value property wrapper value around String
    */
-  public void setLineCap(String value) {
+  public void setLineCap(@Property.LINE_CAP String value) {
     layer.setProperties(lineCap(value));
   }
 
@@ -210,7 +205,7 @@ public class LineManager {
    *
    * @param value property wrapper value around Float
    */
-  public void setLineMiterLimit(Float value) {
+  public void setLineMiterLimit( Float value) {
     layer.setProperties(lineMiterLimit(value));
   }
 
@@ -228,7 +223,7 @@ public class LineManager {
    *
    * @param value property wrapper value around Float
    */
-  public void setLineRoundLimit(Float value) {
+  public void setLineRoundLimit( Float value) {
     layer.setProperties(lineRoundLimit(value));
   }
 
@@ -246,7 +241,7 @@ public class LineManager {
    *
    * @param value property wrapper value around Float[]
    */
-  public void setLineTranslate(Float[] value) {
+  public void setLineTranslate( Float[] value) {
     layer.setProperties(lineTranslate(value));
   }
 
@@ -264,7 +259,7 @@ public class LineManager {
    *
    * @param value property wrapper value around String
    */
-  public void setLineTranslateAnchor(String value) {
+  public void setLineTranslateAnchor(@Property.LINE_TRANSLATE_ANCHOR String value) {
     layer.setProperties(lineTranslateAnchor(value));
   }
 
@@ -282,7 +277,7 @@ public class LineManager {
    *
    * @param value property wrapper value around Float[]
    */
-  public void setLineDasharray(Float[] value) {
+  public void setLineDasharray( Float[] value) {
     layer.setProperties(lineDasharray(value));
   }
 
@@ -316,5 +311,4 @@ public class LineManager {
       }
     }
   }
-
 }
