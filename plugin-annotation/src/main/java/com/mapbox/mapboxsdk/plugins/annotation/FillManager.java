@@ -1,7 +1,10 @@
+// This file is generated.
+
 package com.mapbox.mapboxsdk.plugins.annotation;
 
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.util.LongSparseArray;
@@ -9,20 +12,19 @@ import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.style.layers.FillLayer;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
+import com.mapbox.mapboxsdk.style.layers.FillLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillAntialias;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillOpacity;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillOutlineColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillTranslate;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillTranslateAnchor;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
+//import static com.mapbox.mapboxsdk.annotations.symbol.Symbol.Z_INDEX;
 
 /**
  * The fill manager allows to add fills to a map.
@@ -160,9 +162,9 @@ public class FillManager {
 
   private static PropertyValue<?>[] getLayerDefinition() {
     return new PropertyValue[]{
-     fillOpacity(get("fill-opacity")),
-     fillColor(get("fill-color")),
-     fillOutlineColor(get("fill-outline-color")),
+      fillOpacity(get("fill-opacity")),
+      fillColor(get("fill-color")),
+      fillOutlineColor(get("fill-outline-color")),
     };
   }
 
@@ -181,7 +183,7 @@ public class FillManager {
    *
    * @param value property wrapper value around Boolean
    */
-  public void setFillAntialias(Boolean value) {
+  public void setFillAntialias( Boolean value) {
     layer.setProperties(fillAntialias(value));
   }
 
@@ -199,7 +201,7 @@ public class FillManager {
    *
    * @param value property wrapper value around Float[]
    */
-  public void setFillTranslate(Float[] value) {
+  public void setFillTranslate( Float[] value) {
     layer.setProperties(fillTranslate(value));
   }
 
@@ -217,7 +219,7 @@ public class FillManager {
    *
    * @param value property wrapper value around String
    */
-  public void setFillTranslateAnchor(String value) {
+  public void setFillTranslateAnchor(@Property.FILL_TRANSLATE_ANCHOR String value) {
     layer.setProperties(fillTranslateAnchor(value));
   }
 
@@ -251,5 +253,4 @@ public class FillManager {
       }
     }
   }
-
 }

@@ -1,16 +1,21 @@
+// This file is generated.
+
 package com.mapbox.mapboxsdk.plugins.annotation;
 
 import android.support.annotation.UiThread;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.mapbox.geojson.Geometry;
-import com.mapbox.geojson.Point;
+import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.style.layers.Property;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @UiThread
 public class Circle {
 
   public static final String ID_KEY = "id-circle";
-
   private final CircleManager circleManager;
   private final JsonObject jsonObject = new JsonObject();
   private Geometry geometry;
@@ -79,7 +84,7 @@ public class Circle {
   /**
    * Set the CircleRadius property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setCircleRadius(Float value) {
     jsonObject.addProperty("circle-radius", value);
@@ -98,7 +103,7 @@ public class Circle {
   /**
    * Set the CircleColor property
    *
-   * @return property wrapper value around String
+   * @param value constant property value for String
    */
   public void setCircleColor(String value) {
     jsonObject.addProperty("circle-color", value);
@@ -117,7 +122,7 @@ public class Circle {
   /**
    * Set the CircleBlur property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setCircleBlur(Float value) {
     jsonObject.addProperty("circle-blur", value);
@@ -136,7 +141,7 @@ public class Circle {
   /**
    * Set the CircleOpacity property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setCircleOpacity(Float value) {
     jsonObject.addProperty("circle-opacity", value);
@@ -155,7 +160,7 @@ public class Circle {
   /**
    * Set the CircleStrokeWidth property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setCircleStrokeWidth(Float value) {
     jsonObject.addProperty("circle-stroke-width", value);
@@ -174,7 +179,7 @@ public class Circle {
   /**
    * Set the CircleStrokeColor property
    *
-   * @return property wrapper value around String
+   * @param value constant property value for String
    */
   public void setCircleStrokeColor(String value) {
     jsonObject.addProperty("circle-stroke-color", value);
@@ -193,7 +198,7 @@ public class Circle {
   /**
    * Set the CircleStrokeOpacity property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setCircleStrokeOpacity(Float value) {
     jsonObject.addProperty("circle-stroke-opacity", value);

@@ -1,11 +1,13 @@
+// This file is generated.
+
 package com.mapbox.mapboxsdk.plugins.annotation;
 
 import android.support.annotation.UiThread;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.mapbox.geojson.Geometry;
-import com.mapbox.geojson.LineString;
-import com.mapbox.geojson.Point;
+import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +16,6 @@ import java.util.List;
 public class Line {
 
   public static final String ID_KEY = "id-line";
-
   private final LineManager lineManager;
   private final JsonObject jsonObject = new JsonObject();
   private Geometry geometry;
@@ -23,7 +24,7 @@ public class Line {
    * Create a line.
    *
    * @param manager the line manager created and managing the line
-   * @param id      the id of the line
+   * @param id            the id of the line
    */
   Line(LineManager manager, long id) {
     this.lineManager = manager;
@@ -66,7 +67,7 @@ public class Line {
    * @param latLngs a list of the locations of the line in a longitude and latitude pairs
    */
   public void setLatLngs(List<LatLng> latLngs) {
-    List<Point> points = new ArrayList<>();
+    List<Point>points = new ArrayList<>();
     for (LatLng latLng : latLngs) {
       points.add(Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude()));
     }
@@ -75,7 +76,6 @@ public class Line {
   }
 
   // Property accessors
-
   /**
    * Get the LineJoin property
    *
@@ -88,9 +88,9 @@ public class Line {
   /**
    * Set the LineJoin property
    *
-   * @return property wrapper value around String
+   * @param value constant property value for String
    */
-  public void setLineJoin(String value) {
+  public void setLineJoin(@Property.LINE_JOIN String value) {
     jsonObject.addProperty("line-join", value);
     lineManager.updateSource();
   }
@@ -107,7 +107,7 @@ public class Line {
   /**
    * Set the LineOpacity property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setLineOpacity(Float value) {
     jsonObject.addProperty("line-opacity", value);
@@ -126,7 +126,7 @@ public class Line {
   /**
    * Set the LineColor property
    *
-   * @return property wrapper value around String
+   * @param value constant property value for String
    */
   public void setLineColor(String value) {
     jsonObject.addProperty("line-color", value);
@@ -145,7 +145,7 @@ public class Line {
   /**
    * Set the LineWidth property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setLineWidth(Float value) {
     jsonObject.addProperty("line-width", value);
@@ -164,7 +164,7 @@ public class Line {
   /**
    * Set the LineGapWidth property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setLineGapWidth(Float value) {
     jsonObject.addProperty("line-gap-width", value);
@@ -183,7 +183,7 @@ public class Line {
   /**
    * Set the LineOffset property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setLineOffset(Float value) {
     jsonObject.addProperty("line-offset", value);
@@ -202,7 +202,7 @@ public class Line {
   /**
    * Set the LineBlur property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
   public void setLineBlur(Float value) {
     jsonObject.addProperty("line-blur", value);
@@ -221,7 +221,7 @@ public class Line {
   /**
    * Set the LinePattern property
    *
-   * @return property wrapper value around String
+   * @param value constant property value for String
    */
   public void setLinePattern(String value) {
     jsonObject.addProperty("line-pattern", value);

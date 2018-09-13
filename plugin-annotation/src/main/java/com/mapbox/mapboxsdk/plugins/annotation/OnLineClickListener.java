@@ -1,3 +1,5 @@
+// This file is generated.
+
 package com.mapbox.mapboxsdk.plugins.annotation;
 
 /**

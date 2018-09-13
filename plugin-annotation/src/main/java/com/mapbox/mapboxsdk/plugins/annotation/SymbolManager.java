@@ -1,7 +1,10 @@
+// This file is generated.
+
 package com.mapbox.mapboxsdk.plugins.annotation;
 
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.util.LongSparseArray;
@@ -12,61 +15,16 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAnchor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconHaloBlur;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconHaloColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconHaloWidth;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconKeepUpright;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOpacity;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOptional;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconPadding;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconPitchAlignment;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotate;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconRotationAlignment;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconTextFit;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconTextFitPadding;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconTranslate;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconTranslateAnchor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.symbolAvoidEdges;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.symbolPlacement;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.symbolSpacing;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textAllowOverlap;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textAnchor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textFont;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textHaloBlur;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textHaloColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textHaloWidth;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textIgnorePlacement;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textJustify;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textKeepUpright;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textLetterSpacing;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textLineHeight;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textMaxAngle;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textMaxWidth;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textOffset;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textOpacity;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textOptional;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textPadding;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textPitchAlignment;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textRotate;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textRotationAlignment;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textSize;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textTransform;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textTranslate;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textTranslateAnchor;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
+//import static com.mapbox.mapboxsdk.annotations.symbol.Symbol.Z_INDEX;
 
 /**
  * The symbol manager allows to add symbols to a map.
@@ -89,6 +47,8 @@ public class SymbolManager {
   private final LongSparseArray<Symbol> symbols = new LongSparseArray<>();
   private final List<Feature> features = new ArrayList<>();
   private long currentId;
+
+  //private final SymbolComparator symbolComparator = new SymbolComparator();
 
   /**
    * Create a symbol manager, used to manage symbols.
@@ -177,6 +137,7 @@ public class SymbolManager {
       symbol = symbols.valueAt(i);
       features.add(Feature.fromGeometry(symbol.getGeometry(), symbol.getFeature()));
     }
+    //Collections.sort(features, symbolComparator);
     geoJsonSource.setGeoJson(FeatureCollection.fromFeatures(features));
   }
 
@@ -204,31 +165,32 @@ public class SymbolManager {
 
   private static PropertyValue<?>[] getLayerDefinition() {
     return new PropertyValue[]{
-     iconSize(get("icon-size")),
-     iconImage(get("icon-image")),
-     iconRotate(get("icon-rotate")),
-     iconOffset(get("icon-offset")),
-     iconAnchor(get("icon-anchor")),
-     textField(get("text-field")),
-     textFont(get("text-font")),
-     textSize(get("text-size")),
-     textMaxWidth(get("text-max-width")),
-     textLetterSpacing(get("text-letter-spacing")),
-     textJustify(get("text-justify")),
-     textAnchor(get("text-anchor")),
-     textRotate(get("text-rotate")),
-     textTransform(get("text-transform")),
-     textOffset(get("text-offset")),
-     iconOpacity(get("icon-opacity")),
-     iconColor(get("icon-color")),
-     iconHaloColor(get("icon-halo-color")),
-     iconHaloWidth(get("icon-halo-width")),
-     iconHaloBlur(get("icon-halo-blur")),
-     textOpacity(get("text-opacity")),
-     textColor(get("text-color")),
-     textHaloColor(get("text-halo-color")),
-     textHaloWidth(get("text-halo-width")),
-     textHaloBlur(get("text-halo-blur")),
+      iconSize(get("icon-size")),
+      iconImage(get("icon-image")),
+      iconRotate(get("icon-rotate")),
+      iconOffset(get("icon-offset")),
+      iconAnchor(get("icon-anchor")),
+      textField(get("text-field")),
+      textFont(get("text-font")),
+      textSize(get("text-size")),
+      textMaxWidth(get("text-max-width")),
+      textLetterSpacing(get("text-letter-spacing")),
+      textJustify(get("text-justify")),
+      textAnchor(get("text-anchor")),
+      textRotate(get("text-rotate")),
+      textTransform(get("text-transform")),
+      textOffset(get("text-offset")),
+      iconOpacity(get("icon-opacity")),
+      iconColor(get("icon-color")),
+      iconHaloColor(get("icon-halo-color")),
+      iconHaloWidth(get("icon-halo-width")),
+      iconHaloBlur(get("icon-halo-blur")),
+      textOpacity(get("text-opacity")),
+      textColor(get("text-color")),
+      textHaloColor(get("text-halo-color")),
+      textHaloWidth(get("text-halo-width")),
+      textHaloBlur(get("text-halo-blur")),
+      //symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE)
     };
   }
 
@@ -247,7 +209,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around String
    */
-  public void setSymbolPlacement(String value) {
+  public void setSymbolPlacement(@Property.SYMBOL_PLACEMENT String value) {
     layer.setProperties(symbolPlacement(value));
   }
 
@@ -265,7 +227,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Float
    */
-  public void setSymbolSpacing(Float value) {
+  public void setSymbolSpacing( Float value) {
     layer.setProperties(symbolSpacing(value));
   }
 
@@ -283,7 +245,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Boolean
    */
-  public void setSymbolAvoidEdges(Boolean value) {
+  public void setSymbolAvoidEdges( Boolean value) {
     layer.setProperties(symbolAvoidEdges(value));
   }
 
@@ -301,7 +263,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Boolean
    */
-  public void setIconAllowOverlap(Boolean value) {
+  public void setIconAllowOverlap( Boolean value) {
     layer.setProperties(iconAllowOverlap(value));
   }
 
@@ -319,7 +281,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Boolean
    */
-  public void setIconIgnorePlacement(Boolean value) {
+  public void setIconIgnorePlacement( Boolean value) {
     layer.setProperties(iconIgnorePlacement(value));
   }
 
@@ -337,7 +299,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Boolean
    */
-  public void setIconOptional(Boolean value) {
+  public void setIconOptional( Boolean value) {
     layer.setProperties(iconOptional(value));
   }
 
@@ -355,7 +317,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around String
    */
-  public void setIconRotationAlignment(String value) {
+  public void setIconRotationAlignment(@Property.ICON_ROTATION_ALIGNMENT String value) {
     layer.setProperties(iconRotationAlignment(value));
   }
 
@@ -373,7 +335,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around String
    */
-  public void setIconTextFit(String value) {
+  public void setIconTextFit(@Property.ICON_TEXT_FIT String value) {
     layer.setProperties(iconTextFit(value));
   }
 
@@ -391,7 +353,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Float[]
    */
-  public void setIconTextFitPadding(Float[] value) {
+  public void setIconTextFitPadding( Float[] value) {
     layer.setProperties(iconTextFitPadding(value));
   }
 
@@ -409,7 +371,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Float
    */
-  public void setIconPadding(Float value) {
+  public void setIconPadding( Float value) {
     layer.setProperties(iconPadding(value));
   }
 
@@ -427,7 +389,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Boolean
    */
-  public void setIconKeepUpright(Boolean value) {
+  public void setIconKeepUpright( Boolean value) {
     layer.setProperties(iconKeepUpright(value));
   }
 
@@ -445,7 +407,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around String
    */
-  public void setIconPitchAlignment(String value) {
+  public void setIconPitchAlignment(@Property.ICON_PITCH_ALIGNMENT String value) {
     layer.setProperties(iconPitchAlignment(value));
   }
 
@@ -463,7 +425,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around String
    */
-  public void setTextPitchAlignment(String value) {
+  public void setTextPitchAlignment(@Property.TEXT_PITCH_ALIGNMENT String value) {
     layer.setProperties(textPitchAlignment(value));
   }
 
@@ -481,7 +443,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around String
    */
-  public void setTextRotationAlignment(String value) {
+  public void setTextRotationAlignment(@Property.TEXT_ROTATION_ALIGNMENT String value) {
     layer.setProperties(textRotationAlignment(value));
   }
 
@@ -499,7 +461,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Float
    */
-  public void setTextLineHeight(Float value) {
+  public void setTextLineHeight( Float value) {
     layer.setProperties(textLineHeight(value));
   }
 
@@ -517,7 +479,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Float
    */
-  public void setTextMaxAngle(Float value) {
+  public void setTextMaxAngle( Float value) {
     layer.setProperties(textMaxAngle(value));
   }
 
@@ -535,7 +497,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Float
    */
-  public void setTextPadding(Float value) {
+  public void setTextPadding( Float value) {
     layer.setProperties(textPadding(value));
   }
 
@@ -553,7 +515,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Boolean
    */
-  public void setTextKeepUpright(Boolean value) {
+  public void setTextKeepUpright( Boolean value) {
     layer.setProperties(textKeepUpright(value));
   }
 
@@ -571,7 +533,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Boolean
    */
-  public void setTextAllowOverlap(Boolean value) {
+  public void setTextAllowOverlap( Boolean value) {
     layer.setProperties(textAllowOverlap(value));
   }
 
@@ -589,7 +551,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Boolean
    */
-  public void setTextIgnorePlacement(Boolean value) {
+  public void setTextIgnorePlacement( Boolean value) {
     layer.setProperties(textIgnorePlacement(value));
   }
 
@@ -607,7 +569,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Boolean
    */
-  public void setTextOptional(Boolean value) {
+  public void setTextOptional( Boolean value) {
     layer.setProperties(textOptional(value));
   }
 
@@ -625,7 +587,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Float[]
    */
-  public void setIconTranslate(Float[] value) {
+  public void setIconTranslate( Float[] value) {
     layer.setProperties(iconTranslate(value));
   }
 
@@ -643,7 +605,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around String
    */
-  public void setIconTranslateAnchor(String value) {
+  public void setIconTranslateAnchor(@Property.ICON_TRANSLATE_ANCHOR String value) {
     layer.setProperties(iconTranslateAnchor(value));
   }
 
@@ -661,7 +623,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Float[]
    */
-  public void setTextTranslate(Float[] value) {
+  public void setTextTranslate( Float[] value) {
     layer.setProperties(textTranslate(value));
   }
 
@@ -679,7 +641,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around String
    */
-  public void setTextTranslateAnchor(String value) {
+  public void setTextTranslateAnchor(@Property.TEXT_TRANSLATE_ANCHOR String value) {
     layer.setProperties(textTranslateAnchor(value));
   }
 
@@ -714,4 +676,10 @@ public class SymbolManager {
     }
   }
 
+  //private class SymbolComparator implements Comparator<Feature> {
+  //  @Override
+  //  public int compare(Feature left, Feature right) {
+  //    return right.getProperty(Z_INDEX).getAsInt() - left.getProperty(Z_INDEX).getAsInt();
+  //  }
+  //}
 }

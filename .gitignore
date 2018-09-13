@@ -10,3 +10,8 @@ build/
 
 ### Python ###
 *.pyc
+
+
+### Code gen annotation plugin ###
+plugin-annotation/scripts/code-gen.list
+plugin-annotation/scripts/node_modules/
