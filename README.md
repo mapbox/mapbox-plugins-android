@@ -9,7 +9,6 @@
   <a href="https://circleci.com/gh/mapbox/mapbox-plugins-android">
     <img src="https://circleci.com/gh/mapbox/mapbox-plugins-android.svg?style=shield&circle-token=:circle-token">
   </a>
-  <!--<a href="https://sonarcloud.io/dashboard?id=mapbox-java-services"><img src="https://sonarcloud.io/api/badges/gate?key=mapbox-java-services"/></a>-->
 </p>
 <br>
 
