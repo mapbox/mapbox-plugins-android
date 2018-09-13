@@ -5,12 +5,6 @@ MBGL_ANDROID_PLUGINS += offline;plugin-offline
 MBGL_ANDROID_PLUGINS += places;plugin-places
 MBGL_ANDROID_PLUGINS += localization;plugin-localization
 
-sonarqube:
-	./gradlew test
-	./gradlew lint
-	./gradlew jacocoTestReport
-	./gradlew sonarqube
-
 checkstyle:
 	./gradlew checkstyle
 
