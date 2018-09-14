@@ -52,11 +52,21 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
    */
   @UiThread
   public <%- camelize(type) %>Manager(@NonNull MapboxMap mapboxMap) {
+    this(mapboxMap, null);
+  }
+
+  /**
+   * Create a <%- type %> manager, used to manage <%- type %>s.
+   *
+   * @param mapboxMap the map object to add <%- type %>s to
+   * @param belowLayerId the id of the layer above the circle layer
+   */
+  @UiThread
+  public <%- camelize(type) %>Manager(@NonNull MapboxMap mapboxMap, @Nullable String belowLayerId) {
     this(mapboxMap, new GeoJsonSource(ID_GEOJSON_SOURCE), new <%- camelize(type) %>Layer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE)
       .withProperties(
         getLayerDefinition()
-      )
-    );
+      ), belowLayerId);
   }
 
   /**
@@ -67,11 +77,25 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
    * @param layer         the <%- type %> layer to visualise <%- camelize(type) %>s with
    */
   @VisibleForTesting
-  public <%- camelize(type) %>Manager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, <%- camelize(type) %>Layer layer) {
+  public <%- camelize(type) %>Manager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull <%- camelize(type) %>Layer layer, @Nullable String belowLayerId) {
     super(mapboxMap, geoJsonSource);
-    this.layer = layer;
-    mapboxMap.addLayer(layer);
+    initLayer(layer, belowLayerId);
     mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
+  }
+
+  /**
+   * Initialise the layer on the map.
+   *
+   * @param layer the layer to be added
+   * @param belowLayerId the id of the layer above the circle layer
+   */
+  private void initLayer(@NonNull <%- camelize(type) %>Layer layer, @Nullable String belowLayerId) {
+    this.layer = layer;
+    if (belowLayerId == null) {
+      mapboxMap.addLayer(layer);
+    } else {
+      mapboxMap.addLayerBelow(layer, belowLayerId);
+    }
   }
 
   /**

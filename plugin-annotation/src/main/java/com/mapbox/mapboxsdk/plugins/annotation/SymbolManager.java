@@ -45,11 +45,21 @@ public class SymbolManager extends AnnotationManager<Symbol, OnSymbolClickListen
    */
   @UiThread
   public SymbolManager(@NonNull MapboxMap mapboxMap) {
+    this(mapboxMap, null);
+  }
+
+  /**
+   * Create a symbol manager, used to manage symbols.
+   *
+   * @param mapboxMap the map object to add symbols to
+   * @param belowLayerId the id of the layer above the circle layer
+   */
+  @UiThread
+  public SymbolManager(@NonNull MapboxMap mapboxMap, @Nullable String belowLayerId) {
     this(mapboxMap, new GeoJsonSource(ID_GEOJSON_SOURCE), new SymbolLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE)
       .withProperties(
         getLayerDefinition()
-      )
-    );
+      ), belowLayerId);
   }
 
   /**
@@ -60,11 +70,25 @@ public class SymbolManager extends AnnotationManager<Symbol, OnSymbolClickListen
    * @param layer         the symbol layer to visualise Symbols with
    */
   @VisibleForTesting
-  public SymbolManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, SymbolLayer layer) {
+  public SymbolManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull SymbolLayer layer, @Nullable String belowLayerId) {
     super(mapboxMap, geoJsonSource);
-    this.layer = layer;
-    mapboxMap.addLayer(layer);
+    initLayer(layer, belowLayerId);
     mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
+  }
+
+  /**
+   * Initialise the layer on the map.
+   *
+   * @param layer the layer to be added
+   * @param belowLayerId the id of the layer above the circle layer
+   */
+  private void initLayer(@NonNull SymbolLayer layer, @Nullable String belowLayerId) {
+    this.layer = layer;
+    if (belowLayerId == null) {
+      mapboxMap.addLayer(layer);
+    } else {
+      mapboxMap.addLayerBelow(layer, belowLayerId);
+    }
   }
 
   /**

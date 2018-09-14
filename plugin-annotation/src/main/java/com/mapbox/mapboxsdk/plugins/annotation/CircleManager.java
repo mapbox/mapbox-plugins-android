@@ -44,11 +44,21 @@ public class CircleManager extends AnnotationManager<Circle, OnCircleClickListen
    */
   @UiThread
   public CircleManager(@NonNull MapboxMap mapboxMap) {
+    this(mapboxMap, null);
+  }
+
+  /**
+   * Create a circle manager, used to manage circles.
+   *
+   * @param mapboxMap the map object to add circles to
+   * @param belowLayerId the id of the layer above the circle layer
+   */
+  @UiThread
+  public CircleManager(@NonNull MapboxMap mapboxMap, @Nullable String belowLayerId) {
     this(mapboxMap, new GeoJsonSource(ID_GEOJSON_SOURCE), new CircleLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE)
       .withProperties(
         getLayerDefinition()
-      )
-    );
+      ), belowLayerId);
   }
 
   /**
@@ -59,11 +69,25 @@ public class CircleManager extends AnnotationManager<Circle, OnCircleClickListen
    * @param layer         the circle layer to visualise Circles with
    */
   @VisibleForTesting
-  public CircleManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, CircleLayer layer) {
+  public CircleManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull CircleLayer layer, @Nullable String belowLayerId) {
     super(mapboxMap, geoJsonSource);
-    this.layer = layer;
-    mapboxMap.addLayer(layer);
+    initLayer(layer, belowLayerId);
     mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
+  }
+
+  /**
+   * Initialise the layer on the map.
+   *
+   * @param layer the layer to be added
+   * @param belowLayerId the id of the layer above the circle layer
+   */
+  private void initLayer(@NonNull CircleLayer layer, @Nullable String belowLayerId) {
+    this.layer = layer;
+    if (belowLayerId == null) {
+      mapboxMap.addLayer(layer);
+    } else {
+      mapboxMap.addLayerBelow(layer, belowLayerId);
+    }
   }
 
   /**
