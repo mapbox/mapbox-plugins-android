@@ -32,7 +32,6 @@ global.unhyphenate = function (str) {
 };
 
 global.writeIfModified = function(filename, newContent) {
-  files.push(filename);
   try {
     const oldContent = fs.readFileSync(filename, 'utf8');
     if (oldContent == newContent) {
