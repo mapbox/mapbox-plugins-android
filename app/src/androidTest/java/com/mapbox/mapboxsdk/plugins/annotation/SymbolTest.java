@@ -1,19 +1,22 @@
+// This file is generated.
+
 package com.mapbox.mapboxsdk.plugins.annotation;
 
 import android.support.test.runner.AndroidJUnit4;
+
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.BuildingActivity;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import timber.log.Timber;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import static com.mapbox.mapboxsdk.plugins.annotation.MapboxMapAction.invoke;
-import static com.mapbox.mapboxsdk.style.layers.Property.ICON_ANCHOR_CENTER;
-import static com.mapbox.mapboxsdk.style.layers.Property.TEXT_ANCHOR_CENTER;
-import static com.mapbox.mapboxsdk.style.layers.Property.TEXT_JUSTIFY_LEFT;
-import static com.mapbox.mapboxsdk.style.layers.Property.TEXT_TRANSFORM_NONE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
+import static com.mapbox.mapboxsdk.style.layers.Property.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Basic smoke tests for Symbol

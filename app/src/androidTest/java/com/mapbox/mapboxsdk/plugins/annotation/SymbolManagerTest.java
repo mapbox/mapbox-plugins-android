@@ -1,22 +1,20 @@
+// This file is generated.
+
 package com.mapbox.mapboxsdk.plugins.annotation;
 
 import android.support.test.runner.AndroidJUnit4;
+
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.BuildingActivity;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import timber.log.Timber;
 
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import static com.mapbox.mapboxsdk.plugins.annotation.MapboxMapAction.invoke;
-import static com.mapbox.mapboxsdk.style.layers.Property.ICON_PITCH_ALIGNMENT_MAP;
-import static com.mapbox.mapboxsdk.style.layers.Property.ICON_ROTATION_ALIGNMENT_MAP;
-import static com.mapbox.mapboxsdk.style.layers.Property.ICON_TEXT_FIT_NONE;
-import static com.mapbox.mapboxsdk.style.layers.Property.ICON_TRANSLATE_ANCHOR_MAP;
-import static com.mapbox.mapboxsdk.style.layers.Property.SYMBOL_PLACEMENT_POINT;
-import static com.mapbox.mapboxsdk.style.layers.Property.TEXT_PITCH_ALIGNMENT_MAP;
-import static com.mapbox.mapboxsdk.style.layers.Property.TEXT_ROTATION_ALIGNMENT_MAP;
-import static com.mapbox.mapboxsdk.style.layers.Property.TEXT_TRANSLATE_ANCHOR_MAP;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
+import static com.mapbox.mapboxsdk.style.layers.Property.*;
 
 /**
  * Basic smoke tests for SymbolManager

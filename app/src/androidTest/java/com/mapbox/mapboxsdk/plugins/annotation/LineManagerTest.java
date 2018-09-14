@@ -1,16 +1,20 @@
+// This file is generated.
+
 package com.mapbox.mapboxsdk.plugins.annotation;
 
 import android.support.test.runner.AndroidJUnit4;
+
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.BuildingActivity;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import timber.log.Timber;
 
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import static com.mapbox.mapboxsdk.plugins.annotation.MapboxMapAction.invoke;
-import static com.mapbox.mapboxsdk.style.layers.Property.LINE_CAP_BUTT;
-import static com.mapbox.mapboxsdk.style.layers.Property.LINE_TRANSLATE_ANCHOR_MAP;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
+import static com.mapbox.mapboxsdk.style.layers.Property.*;
 
 /**
  * Basic smoke tests for LineManager
