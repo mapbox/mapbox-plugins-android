@@ -44,11 +44,21 @@ public class FillManager extends AnnotationManager<Fill, OnFillClickListener> {
    */
   @UiThread
   public FillManager(@NonNull MapboxMap mapboxMap) {
+    this(mapboxMap, null);
+  }
+
+  /**
+   * Create a fill manager, used to manage fills.
+   *
+   * @param mapboxMap the map object to add fills to
+   * @param belowLayerId the id of the layer above the circle layer
+   */
+  @UiThread
+  public FillManager(@NonNull MapboxMap mapboxMap, @Nullable String belowLayerId) {
     this(mapboxMap, new GeoJsonSource(ID_GEOJSON_SOURCE), new FillLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE)
       .withProperties(
         getLayerDefinition()
-      )
-    );
+      ), belowLayerId);
   }
 
   /**
@@ -59,11 +69,25 @@ public class FillManager extends AnnotationManager<Fill, OnFillClickListener> {
    * @param layer         the fill layer to visualise Fills with
    */
   @VisibleForTesting
-  public FillManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, FillLayer layer) {
+  public FillManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull FillLayer layer, @Nullable String belowLayerId) {
     super(mapboxMap, geoJsonSource);
-    this.layer = layer;
-    mapboxMap.addLayer(layer);
+    initLayer(layer, belowLayerId);
     mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
+  }
+
+  /**
+   * Initialise the layer on the map.
+   *
+   * @param layer the layer to be added
+   * @param belowLayerId the id of the layer above the circle layer
+   */
+  private void initLayer(@NonNull FillLayer layer, @Nullable String belowLayerId) {
+    this.layer = layer;
+    if (belowLayerId == null) {
+      mapboxMap.addLayer(layer);
+    } else {
+      mapboxMap.addLayerBelow(layer, belowLayerId);
+    }
   }
 
   /**

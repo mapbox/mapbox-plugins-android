@@ -44,11 +44,21 @@ public class LineManager extends AnnotationManager<Line, OnLineClickListener> {
    */
   @UiThread
   public LineManager(@NonNull MapboxMap mapboxMap) {
+    this(mapboxMap, null);
+  }
+
+  /**
+   * Create a line manager, used to manage lines.
+   *
+   * @param mapboxMap the map object to add lines to
+   * @param belowLayerId the id of the layer above the circle layer
+   */
+  @UiThread
+  public LineManager(@NonNull MapboxMap mapboxMap, @Nullable String belowLayerId) {
     this(mapboxMap, new GeoJsonSource(ID_GEOJSON_SOURCE), new LineLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE)
       .withProperties(
         getLayerDefinition()
-      )
-    );
+      ), belowLayerId);
   }
 
   /**
@@ -59,11 +69,25 @@ public class LineManager extends AnnotationManager<Line, OnLineClickListener> {
    * @param layer         the line layer to visualise Lines with
    */
   @VisibleForTesting
-  public LineManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, LineLayer layer) {
+  public LineManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull LineLayer layer, @Nullable String belowLayerId) {
     super(mapboxMap, geoJsonSource);
-    this.layer = layer;
-    mapboxMap.addLayer(layer);
+    initLayer(layer, belowLayerId);
     mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
+  }
+
+  /**
+   * Initialise the layer on the map.
+   *
+   * @param layer the layer to be added
+   * @param belowLayerId the id of the layer above the circle layer
+   */
+  private void initLayer(@NonNull LineLayer layer, @Nullable String belowLayerId) {
+    this.layer = layer;
+    if (belowLayerId == null) {
+      mapboxMap.addLayer(layer);
+    } else {
+      mapboxMap.addLayerBelow(layer, belowLayerId);
+    }
   }
 
   /**
