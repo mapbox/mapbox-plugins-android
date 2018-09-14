@@ -29,25 +29,13 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 /**
  * The symbol manager allows to add symbols to a map.
  */
-public class SymbolManager {
+public class SymbolManager extends AnnotationManager<Symbol, OnSymbolClickListener> {
 
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-symbol-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-symbol-layer";
 
-  // map integration components
-  private MapboxMap mapboxMap;
-  private GeoJsonSource geoJsonSource;
   private SymbolLayer layer;
-
-  // callback listeners
-  private List<OnSymbolClickListener> symbolClickListeners = new ArrayList<>();
   private final MapClickResolver mapClickResolver;
-
-  // internal data set
-  private final LongSparseArray<Symbol> symbols = new LongSparseArray<>();
-  private final List<Feature> features = new ArrayList<>();
-  private long currentId;
-
   //private final SymbolComparator symbolComparator = new SymbolComparator();
 
   /**
@@ -73,10 +61,8 @@ public class SymbolManager {
    */
   @VisibleForTesting
   public SymbolManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, SymbolLayer layer) {
-    this.mapboxMap = mapboxMap;
-    this.geoJsonSource = geoJsonSource;
+    super(mapboxMap, geoJsonSource);
     this.layer = layer;
-    mapboxMap.addSource(geoJsonSource);
     mapboxMap.addLayer(layer);
     mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
   }
@@ -86,8 +72,8 @@ public class SymbolManager {
    */
   @UiThread
   public void onDestroy() {
+    super.onDestroy();
     mapboxMap.removeOnMapClickListener(mapClickResolver);
-    symbolClickListeners.clear();
   }
 
   /**
@@ -100,67 +86,8 @@ public class SymbolManager {
   public Symbol createSymbol(@NonNull LatLng latLng) {
     Symbol symbol = new Symbol(this, currentId);
     symbol.setLatLng(latLng);
-    symbols.put(currentId, symbol);
-    currentId++;
+    add(symbol);
     return symbol;
-  }
-
-  /**
-   * Delete a symbol from the map.
-   *
-   * @param symbol to be deleted
-   */
-  @UiThread
-  public void deleteSymbol(@NonNull Symbol symbol) {
-    symbols.remove(symbol.getId());
-    updateSource();
-  }
-
-  /**
-   * Get a list of current symbols.
-   *
-   * @return list of symbols
-   */
-  @UiThread
-  public LongSparseArray<Symbol> getSymbols() {
-    return symbols;
-  }
-
-  /**
-   * Trigger an update to the underlying source
-   */
-  public void updateSource() {
-    // todo move feature creation to a background thread?
-    features.clear();
-    Symbol symbol;
-    for (int i = 0; i < symbols.size(); i++) {
-      symbol = symbols.valueAt(i);
-      features.add(Feature.fromGeometry(symbol.getGeometry(), symbol.getFeature()));
-    }
-    //Collections.sort(features, symbolComparator);
-    geoJsonSource.setGeoJson(FeatureCollection.fromFeatures(features));
-  }
-
-  /**
-   * Add a callback to be invoked when a symbol has been clicked.
-   *
-   * @param listener the callback to be invoked when a symbol is clicked
-   */
-  @UiThread
-  public void addOnSymbolClickListener(@NonNull OnSymbolClickListener listener) {
-    symbolClickListeners.add(listener);
-  }
-
-  /**
-   * Remove a previously added callback that was to be invoked when symbol has been clicked.
-   *
-   * @param listener the callback to be removed
-   */
-  @UiThread
-  public void removeOnSymbolClickListener(@NonNull OnSymbolClickListener listener) {
-    if (symbolClickListeners.contains(listener)) {
-      symbolClickListeners.remove(listener);
-    }
   }
 
   private static PropertyValue<?>[] getLayerDefinition() {
@@ -658,7 +585,7 @@ public class SymbolManager {
 
     @Override
     public void onMapClick(@NonNull LatLng point) {
-      if (symbolClickListeners.isEmpty()) {
+      if (clickListeners.isEmpty()) {
         return;
       }
 
@@ -666,9 +593,9 @@ public class SymbolManager {
       List<Feature> features = mapboxMap.queryRenderedFeatures(screenLocation, ID_GEOJSON_LAYER);
       if (!features.isEmpty()) {
         long symbolId = features.get(0).getProperty(Symbol.ID_KEY).getAsLong();
-        Symbol symbol = symbols.get(symbolId);
+        Symbol symbol = annotations.get(symbolId);
         if (symbol != null) {
-          for (OnSymbolClickListener listener : symbolClickListeners) {
+          for (OnSymbolClickListener listener : clickListeners) {
             listener.onSymbolClick(symbol);
           }
         }

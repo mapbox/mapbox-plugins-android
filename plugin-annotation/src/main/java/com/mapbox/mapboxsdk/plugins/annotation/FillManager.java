@@ -29,24 +29,13 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 /**
  * The fill manager allows to add fills to a map.
  */
-public class FillManager {
+public class FillManager extends AnnotationManager<Fill, OnFillClickListener> {
 
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-fill-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-fill-layer";
 
-  // map integration components
-  private MapboxMap mapboxMap;
-  private GeoJsonSource geoJsonSource;
   private FillLayer layer;
-
-  // callback listeners
-  private List<OnFillClickListener> fillClickListeners = new ArrayList<>();
   private final MapClickResolver mapClickResolver;
-
-  // internal data set
-  private final LongSparseArray<Fill> fills = new LongSparseArray<>();
-  private final List<Feature> features = new ArrayList<>();
-  private long currentId;
 
   /**
    * Create a fill manager, used to manage fills.
@@ -71,10 +60,8 @@ public class FillManager {
    */
   @VisibleForTesting
   public FillManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, FillLayer layer) {
-    this.mapboxMap = mapboxMap;
-    this.geoJsonSource = geoJsonSource;
+    super(mapboxMap, geoJsonSource);
     this.layer = layer;
-    mapboxMap.addSource(geoJsonSource);
     mapboxMap.addLayer(layer);
     mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
   }
@@ -84,8 +71,8 @@ public class FillManager {
    */
   @UiThread
   public void onDestroy() {
+    super.onDestroy();
     mapboxMap.removeOnMapClickListener(mapClickResolver);
-    fillClickListeners.clear();
   }
 
   /**
@@ -98,66 +85,8 @@ public class FillManager {
   public Fill createFill(@NonNull List<List<LatLng>> latLngs) {
     Fill fill = new Fill(this, currentId);
     fill.setLatLngs(latLngs);
-    fills.put(currentId, fill);
-    currentId++;
+    add(fill);
     return fill;
-  }
-
-  /**
-   * Delete a fill from the map.
-   *
-   * @param fill to be deleted
-   */
-  @UiThread
-  public void deleteFill(@NonNull Fill fill) {
-    fills.remove(fill.getId());
-    updateSource();
-  }
-
-  /**
-   * Get a list of current fills.
-   *
-   * @return list of fills
-   */
-  @UiThread
-  public LongSparseArray<Fill> getFills() {
-    return fills;
-  }
-
-  /**
-   * Trigger an update to the underlying source
-   */
-  public void updateSource() {
-    // todo move feature creation to a background thread?
-    features.clear();
-    Fill fill;
-    for (int i = 0; i < fills.size(); i++) {
-      fill = fills.valueAt(i);
-      features.add(Feature.fromGeometry(fill.getGeometry(), fill.getFeature()));
-    }
-    geoJsonSource.setGeoJson(FeatureCollection.fromFeatures(features));
-  }
-
-  /**
-   * Add a callback to be invoked when a fill has been clicked.
-   *
-   * @param listener the callback to be invoked when a fill is clicked
-   */
-  @UiThread
-  public void addOnFillClickListener(@NonNull OnFillClickListener listener) {
-    fillClickListeners.add(listener);
-  }
-
-  /**
-   * Remove a previously added callback that was to be invoked when fill has been clicked.
-   *
-   * @param listener the callback to be removed
-   */
-  @UiThread
-  public void removeOnFillClickListener(@NonNull OnFillClickListener listener) {
-    if (fillClickListeners.contains(listener)) {
-      fillClickListeners.remove(listener);
-    }
   }
 
   private static PropertyValue<?>[] getLayerDefinition() {
@@ -236,7 +165,7 @@ public class FillManager {
 
     @Override
     public void onMapClick(@NonNull LatLng point) {
-      if (fillClickListeners.isEmpty()) {
+      if (clickListeners.isEmpty()) {
         return;
       }
 
@@ -244,9 +173,9 @@ public class FillManager {
       List<Feature> features = mapboxMap.queryRenderedFeatures(screenLocation, ID_GEOJSON_LAYER);
       if (!features.isEmpty()) {
         long fillId = features.get(0).getProperty(Fill.ID_KEY).getAsLong();
-        Fill fill = fills.get(fillId);
+        Fill fill = annotations.get(fillId);
         if (fill != null) {
-          for (OnFillClickListener listener : fillClickListeners) {
+          for (OnFillClickListener listener : clickListeners) {
             listener.onFillClick(fill);
           }
         }

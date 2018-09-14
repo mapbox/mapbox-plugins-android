@@ -29,24 +29,13 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 /**
  * The line manager allows to add lines to a map.
  */
-public class LineManager {
+public class LineManager extends AnnotationManager<Line, OnLineClickListener> {
 
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-line-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-line-layer";
 
-  // map integration components
-  private MapboxMap mapboxMap;
-  private GeoJsonSource geoJsonSource;
   private LineLayer layer;
-
-  // callback listeners
-  private List<OnLineClickListener> lineClickListeners = new ArrayList<>();
   private final MapClickResolver mapClickResolver;
-
-  // internal data set
-  private final LongSparseArray<Line> lines = new LongSparseArray<>();
-  private final List<Feature> features = new ArrayList<>();
-  private long currentId;
 
   /**
    * Create a line manager, used to manage lines.
@@ -71,10 +60,8 @@ public class LineManager {
    */
   @VisibleForTesting
   public LineManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, LineLayer layer) {
-    this.mapboxMap = mapboxMap;
-    this.geoJsonSource = geoJsonSource;
+    super(mapboxMap, geoJsonSource);
     this.layer = layer;
-    mapboxMap.addSource(geoJsonSource);
     mapboxMap.addLayer(layer);
     mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
   }
@@ -84,8 +71,8 @@ public class LineManager {
    */
   @UiThread
   public void onDestroy() {
+    super.onDestroy();
     mapboxMap.removeOnMapClickListener(mapClickResolver);
-    lineClickListeners.clear();
   }
 
   /**
@@ -98,66 +85,8 @@ public class LineManager {
   public Line createLine(@NonNull List<LatLng> latLngs) {
     Line line = new Line(this, currentId);
     line.setLatLngs(latLngs);
-    lines.put(currentId, line);
-    currentId++;
+    add(line);
     return line;
-  }
-
-  /**
-   * Delete a line from the map.
-   *
-   * @param line to be deleted
-   */
-  @UiThread
-  public void deleteLine(@NonNull Line line) {
-    lines.remove(line.getId());
-    updateSource();
-  }
-
-  /**
-   * Get a list of current lines.
-   *
-   * @return list of lines
-   */
-  @UiThread
-  public LongSparseArray<Line> getLines() {
-    return lines;
-  }
-
-  /**
-   * Trigger an update to the underlying source
-   */
-  public void updateSource() {
-    // todo move feature creation to a background thread?
-    features.clear();
-    Line line;
-    for (int i = 0; i < lines.size(); i++) {
-      line = lines.valueAt(i);
-      features.add(Feature.fromGeometry(line.getGeometry(), line.getFeature()));
-    }
-    geoJsonSource.setGeoJson(FeatureCollection.fromFeatures(features));
-  }
-
-  /**
-   * Add a callback to be invoked when a line has been clicked.
-   *
-   * @param listener the callback to be invoked when a line is clicked
-   */
-  @UiThread
-  public void addOnLineClickListener(@NonNull OnLineClickListener listener) {
-    lineClickListeners.add(listener);
-  }
-
-  /**
-   * Remove a previously added callback that was to be invoked when line has been clicked.
-   *
-   * @param listener the callback to be removed
-   */
-  @UiThread
-  public void removeOnLineClickListener(@NonNull OnLineClickListener listener) {
-    if (lineClickListeners.contains(listener)) {
-      lineClickListeners.remove(listener);
-    }
   }
 
   private static PropertyValue<?>[] getLayerDefinition() {
@@ -294,7 +223,7 @@ public class LineManager {
 
     @Override
     public void onMapClick(@NonNull LatLng point) {
-      if (lineClickListeners.isEmpty()) {
+      if (clickListeners.isEmpty()) {
         return;
       }
 
@@ -302,9 +231,9 @@ public class LineManager {
       List<Feature> features = mapboxMap.queryRenderedFeatures(screenLocation, ID_GEOJSON_LAYER);
       if (!features.isEmpty()) {
         long lineId = features.get(0).getProperty(Line.ID_KEY).getAsLong();
-        Line line = lines.get(lineId);
+        Line line = annotations.get(lineId);
         if (line != null) {
-          for (OnLineClickListener listener : lineClickListeners) {
+          for (OnLineClickListener listener : clickListeners) {
             listener.onLineClick(line);
           }
         }

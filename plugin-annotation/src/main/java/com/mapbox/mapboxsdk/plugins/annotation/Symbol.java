@@ -13,13 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @UiThread
-public class Symbol {
+public class Symbol extends Annotation {
 
-  public static final String ID_KEY = "id-symbol";
   //public static final String Z_INDEX = "z-index";
   private final SymbolManager symbolManager;
-  private final JsonObject jsonObject = new JsonObject();
-  private Geometry geometry;
 
   /**
    * Create a symbol.
@@ -28,39 +25,16 @@ public class Symbol {
    * @param id            the id of the symbol
    */
   Symbol(SymbolManager manager, long id) {
+    super(id);
     this.symbolManager = manager;
-    this.jsonObject.addProperty(ID_KEY, id);
     //this.jsonObject.addProperty(Z_INDEX, 0);
   }
 
   /**
-   * Get the symbol geometry.
-   *
-   * @return the symbol geometry
+   * Called to update the underlying data source.
    */
-  Geometry getGeometry() {
-    if (geometry == null) {
-      throw new IllegalStateException();
-    }
-    return geometry;
-  }
-
-  /**
-   * Get the symbol feature properties.
-   *
-   * @return the symbol feature properties
-   */
-  JsonObject getFeature() {
-    return jsonObject;
-  }
-
-  /**
-   * Get the symbol id.
-   *
-   * @return the symbol id
-   */
-  public long getId() {
-    return jsonObject.get(ID_KEY).getAsLong();
+  public void update() {
+    symbolManager.updateSource();
   }
 
   /**

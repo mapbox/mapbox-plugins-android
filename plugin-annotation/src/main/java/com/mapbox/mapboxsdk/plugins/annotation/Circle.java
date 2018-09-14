@@ -13,12 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @UiThread
-public class Circle {
+public class Circle extends Annotation {
 
-  public static final String ID_KEY = "id-circle";
   private final CircleManager circleManager;
-  private final JsonObject jsonObject = new JsonObject();
-  private Geometry geometry;
 
   /**
    * Create a circle.
@@ -27,38 +24,15 @@ public class Circle {
    * @param id            the id of the circle
    */
   Circle(CircleManager manager, long id) {
+    super(id);
     this.circleManager = manager;
-    this.jsonObject.addProperty(ID_KEY, id);
   }
 
   /**
-   * Get the circle geometry.
-   *
-   * @return the circle geometry
+   * Called to update the underlying data source.
    */
-  Geometry getGeometry() {
-    if (geometry == null) {
-      throw new IllegalStateException();
-    }
-    return geometry;
-  }
-
-  /**
-   * Get the circle feature properties.
-   *
-   * @return the circle feature properties
-   */
-  JsonObject getFeature() {
-    return jsonObject;
-  }
-
-  /**
-   * Get the circle id.
-   *
-   * @return the circle id
-   */
-  public long getId() {
-    return jsonObject.get(ID_KEY).getAsLong();
+  public void update() {
+    circleManager.updateSource();
   }
 
   /**
