@@ -31,6 +31,18 @@ global.unhyphenate = function (str) {
  return str.replace(/-/g, " ");
 };
 
+global.geometryType = function (str) {
+ if (str === "symbol" || str === "circle") {
+   return "Point"
+ } else if (str === "line") {
+   return "LineString"
+ } else if (str === "fill") {
+   return "Polygon"
+ } else {
+   return "?"
+ }
+}
+
 global.writeIfModified = function(filename, newContent) {
   try {
     const oldContent = fs.readFileSync(filename, 'utf8');

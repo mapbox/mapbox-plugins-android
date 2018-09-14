@@ -13,12 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @UiThread
-public class Line {
+public class Line extends Annotation {
 
-  public static final String ID_KEY = "id-line";
   private final LineManager lineManager;
-  private final JsonObject jsonObject = new JsonObject();
-  private Geometry geometry;
 
   /**
    * Create a line.
@@ -27,38 +24,15 @@ public class Line {
    * @param id            the id of the line
    */
   Line(LineManager manager, long id) {
+    super(id);
     this.lineManager = manager;
-    this.jsonObject.addProperty(ID_KEY, id);
   }
 
   /**
-   * Get the line geometry.
-   *
-   * @return the line geometry
+   * Called to update the underlying data source.
    */
-  Geometry getGeometry() {
-    if (geometry == null) {
-      throw new IllegalStateException();
-    }
-    return geometry;
-  }
-
-  /**
-   * Get the line feature properties.
-   *
-   * @return the line feature properties
-   */
-  JsonObject getFeature() {
-    return jsonObject;
-  }
-
-  /**
-   * Get the line id.
-   *
-   * @return the line id
-   */
-  public long getId() {
-    return jsonObject.get(ID_KEY).getAsLong();
+  public void update() {
+    lineManager.updateSource();
   }
 
   /**

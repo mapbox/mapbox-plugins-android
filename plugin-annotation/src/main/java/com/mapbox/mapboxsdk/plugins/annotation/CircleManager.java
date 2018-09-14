@@ -29,24 +29,13 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 /**
  * The circle manager allows to add circles to a map.
  */
-public class CircleManager {
+public class CircleManager extends AnnotationManager<Circle, OnCircleClickListener> {
 
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-circle-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-circle-layer";
 
-  // map integration components
-  private MapboxMap mapboxMap;
-  private GeoJsonSource geoJsonSource;
   private CircleLayer layer;
-
-  // callback listeners
-  private List<OnCircleClickListener> circleClickListeners = new ArrayList<>();
   private final MapClickResolver mapClickResolver;
-
-  // internal data set
-  private final LongSparseArray<Circle> circles = new LongSparseArray<>();
-  private final List<Feature> features = new ArrayList<>();
-  private long currentId;
 
   /**
    * Create a circle manager, used to manage circles.
@@ -71,10 +60,8 @@ public class CircleManager {
    */
   @VisibleForTesting
   public CircleManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, CircleLayer layer) {
-    this.mapboxMap = mapboxMap;
-    this.geoJsonSource = geoJsonSource;
+    super(mapboxMap, geoJsonSource);
     this.layer = layer;
-    mapboxMap.addSource(geoJsonSource);
     mapboxMap.addLayer(layer);
     mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
   }
@@ -84,8 +71,8 @@ public class CircleManager {
    */
   @UiThread
   public void onDestroy() {
+    super.onDestroy();
     mapboxMap.removeOnMapClickListener(mapClickResolver);
-    circleClickListeners.clear();
   }
 
   /**
@@ -98,66 +85,8 @@ public class CircleManager {
   public Circle createCircle(@NonNull LatLng latLng) {
     Circle circle = new Circle(this, currentId);
     circle.setLatLng(latLng);
-    circles.put(currentId, circle);
-    currentId++;
+    add(circle);
     return circle;
-  }
-
-  /**
-   * Delete a circle from the map.
-   *
-   * @param circle to be deleted
-   */
-  @UiThread
-  public void deleteCircle(@NonNull Circle circle) {
-    circles.remove(circle.getId());
-    updateSource();
-  }
-
-  /**
-   * Get a list of current circles.
-   *
-   * @return list of circles
-   */
-  @UiThread
-  public LongSparseArray<Circle> getCircles() {
-    return circles;
-  }
-
-  /**
-   * Trigger an update to the underlying source
-   */
-  public void updateSource() {
-    // todo move feature creation to a background thread?
-    features.clear();
-    Circle circle;
-    for (int i = 0; i < circles.size(); i++) {
-      circle = circles.valueAt(i);
-      features.add(Feature.fromGeometry(circle.getGeometry(), circle.getFeature()));
-    }
-    geoJsonSource.setGeoJson(FeatureCollection.fromFeatures(features));
-  }
-
-  /**
-   * Add a callback to be invoked when a circle has been clicked.
-   *
-   * @param listener the callback to be invoked when a circle is clicked
-   */
-  @UiThread
-  public void addOnCircleClickListener(@NonNull OnCircleClickListener listener) {
-    circleClickListeners.add(listener);
-  }
-
-  /**
-   * Remove a previously added callback that was to be invoked when circle has been clicked.
-   *
-   * @param listener the callback to be removed
-   */
-  @UiThread
-  public void removeOnCircleClickListener(@NonNull OnCircleClickListener listener) {
-    if (circleClickListeners.contains(listener)) {
-      circleClickListeners.remove(listener);
-    }
   }
 
   private static PropertyValue<?>[] getLayerDefinition() {
@@ -258,7 +187,7 @@ public class CircleManager {
 
     @Override
     public void onMapClick(@NonNull LatLng point) {
-      if (circleClickListeners.isEmpty()) {
+      if (clickListeners.isEmpty()) {
         return;
       }
 
@@ -266,9 +195,9 @@ public class CircleManager {
       List<Feature> features = mapboxMap.queryRenderedFeatures(screenLocation, ID_GEOJSON_LAYER);
       if (!features.isEmpty()) {
         long circleId = features.get(0).getProperty(Circle.ID_KEY).getAsLong();
-        Circle circle = circles.get(circleId);
+        Circle circle = annotations.get(circleId);
         if (circle != null) {
-          for (OnCircleClickListener listener : circleClickListeners) {
+          for (OnCircleClickListener listener : clickListeners) {
             listener.onCircleClick(circle);
           }
         }

@@ -18,15 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @UiThread
-public class <%- camelize(type) %> {
+public class <%- camelize(type) %> extends Annotation {
 
-  public static final String ID_KEY = "id-<%- type %>";
 <% if (type === "symbol") { -%>
   //public static final String Z_INDEX = "z-index";
 <% } -%>
   private final <%- camelize(type) %>Manager <%- type %>Manager;
-  private final JsonObject jsonObject = new JsonObject();
-  private Geometry geometry;
 
   /**
    * Create a <%- type %>.
@@ -35,41 +32,18 @@ public class <%- camelize(type) %> {
    * @param id            the id of the <%- type %>
    */
   <%- camelize(type) %>(<%- camelize(type) %>Manager manager, long id) {
+    super(id);
     this.<%- type %>Manager = manager;
-    this.jsonObject.addProperty(ID_KEY, id);
 <% if (type === "symbol") { -%>
     //this.jsonObject.addProperty(Z_INDEX, 0);
 <% } -%>
   }
 
   /**
-   * Get the <%- type %> geometry.
-   *
-   * @return the <%- type %> geometry
+   * Called to update the underlying data source.
    */
-  Geometry getGeometry() {
-    if (geometry == null) {
-      throw new IllegalStateException();
-    }
-    return geometry;
-  }
-
-  /**
-   * Get the <%- type %> feature properties.
-   *
-   * @return the <%- type %> feature properties
-   */
-  JsonObject getFeature() {
-    return jsonObject;
-  }
-
-  /**
-   * Get the <%- type %> id.
-   *
-   * @return the <%- type %> id
-   */
-  public long getId() {
-    return jsonObject.get(ID_KEY).getAsLong();
+  public void update() {
+    <%- type %>Manager.updateSource();
   }
 <% if (type === "circle" || type === "symbol") { -%>
 

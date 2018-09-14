@@ -13,12 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @UiThread
-public class Fill {
+public class Fill extends Annotation {
 
-  public static final String ID_KEY = "id-fill";
   private final FillManager fillManager;
-  private final JsonObject jsonObject = new JsonObject();
-  private Geometry geometry;
 
   /**
    * Create a fill.
@@ -27,38 +24,15 @@ public class Fill {
    * @param id            the id of the fill
    */
   Fill(FillManager manager, long id) {
+    super(id);
     this.fillManager = manager;
-    this.jsonObject.addProperty(ID_KEY, id);
   }
 
   /**
-   * Get the fill geometry.
-   *
-   * @return the fill geometry
+   * Called to update the underlying data source.
    */
-  Geometry getGeometry() {
-    if (geometry == null) {
-      throw new IllegalStateException();
-    }
-    return geometry;
-  }
-
-  /**
-   * Get the fill feature properties.
-   *
-   * @return the fill feature properties
-   */
-  JsonObject getFeature() {
-    return jsonObject;
-  }
-
-  /**
-   * Get the fill id.
-   *
-   * @return the fill id
-   */
-  public long getId() {
-    return jsonObject.get(ID_KEY).getAsLong();
+  public void update() {
+    fillManager.updateSource();
   }
 
   /**
