@@ -1,0 +1,77 @@
+<%
+  const type = locals.type;
+  const properties = locals.properties;
+-%>
+// This file is generated.
+
+package com.mapbox.mapboxsdk.plugins.annotation;
+
+import android.support.test.runner.AndroidJUnit4;
+
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.plugins.testapp.activity.BuildingActivity;
+import timber.log.Timber;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import static com.mapbox.mapboxsdk.plugins.annotation.MapboxMapAction.invoke;
+import static org.junit.Assert.*;
+import static com.mapbox.mapboxsdk.style.layers.Property.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Basic smoke tests for <%- camelize(type) %>
+ */
+@RunWith(AndroidJUnit4.class)
+public class <%- camelize(type) %>Test extends BaseActivityTest {
+
+  private <%- camelize(type) %> <%- type %>;
+
+  @Override
+  protected Class getActivityClass() {
+    return BuildingActivity.class;
+  }
+
+  private void setupAnnotation() {
+    Timber.i("Retrieving layer");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      <%- camelize(type) %>Manager <%- type %>Manager = new <%- camelize(type) %>Manager(mapboxMap);
+<% if (type === "circle" || type === "symbol") { -%>
+      <%- type %> = <%- type %>Manager.create<%- camelize(type) %>(new LatLng());
+<% } else if (type === "line") { -%>
+      List<LatLng>latLngs = new ArrayList<>();
+      latLngs.add(new LatLng());
+      latLngs.add(new LatLng(1,1));
+      <%- type %> = <%- type %>Manager.create<%- camelize(type) %>(latLngs);
+<% } else { -%>
+      List<LatLng>innerLatLngs = new ArrayList<>();
+      innerLatLngs.add(new LatLng());
+      innerLatLngs.add(new LatLng(1,1));
+      innerLatLngs.add(new LatLng(-1,-1));
+      List<List<LatLng>>latLngs = new ArrayList<>();
+      latLngs.add(innerLatLngs);
+      <%- type %> = <%- type %>Manager.create<%- camelize(type) %>(latLngs);
+<% } -%>
+    });
+  }
+<% for (const property of properties) { -%>
+<% if (supportsPropertyFunction(property)) { -%>
+
+  @Test
+  public void test<%- camelize(property.name) %>() {
+    validateTestSetup();
+    setupAnnotation();
+    Timber.i("<%- property.name %>");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(<%- type %>);
+
+      <%- type %>.set<%- camelize(property.name) %>(<%- defaultValueJava(property) %>);
+      assertEquals((<%- propertyType(property) %>) <%- type %>.get<%- camelize(property.name) %>(), (<%- propertyType(property) %>) <%- defaultValueJava(property) %>);
+    });
+  }
+<% } -%>
+<% } -%>
+}

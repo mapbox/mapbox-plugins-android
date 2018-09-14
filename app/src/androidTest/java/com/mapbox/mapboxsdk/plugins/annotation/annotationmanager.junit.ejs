@@ -1,0 +1,59 @@
+<%
+  const type = locals.type;
+  const properties = locals.properties;
+-%>
+// This file is generated.
+
+package com.mapbox.mapboxsdk.plugins.annotation;
+
+import android.support.test.runner.AndroidJUnit4;
+
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.plugins.testapp.activity.BuildingActivity;
+import timber.log.Timber;
+
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import static com.mapbox.mapboxsdk.plugins.annotation.MapboxMapAction.invoke;
+import static org.junit.Assert.*;
+import static com.mapbox.mapboxsdk.style.layers.Property.*;
+
+/**
+ * Basic smoke tests for <%- camelize(type) %>Manager
+ */
+@RunWith(AndroidJUnit4.class)
+public class <%- camelize(type) %>ManagerTest extends BaseActivityTest {
+
+  private <%- camelize(type) %>Manager <%- type %>Manager;
+
+  @Override
+  protected Class getActivityClass() {
+    return BuildingActivity.class;
+  }
+
+  private void setup<%- camelize(type) %>Manager() {
+    Timber.i("Retrieving layer");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      <%- type %>Manager = new <%- camelize(type) %>Manager(mapboxMap);
+    });
+  }
+<% for (const property of properties) { -%>
+<% if (!supportsPropertyFunction(property) && property.name !== "line-gradient") { -%>
+
+  @Test
+  public void test<%- camelize(property.name) %>AsConstant() {
+    validateTestSetup();
+    setup<%- camelize(type) %>Manager();
+    Timber.i("<%- property.name %>");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(<%- type %>Manager);
+
+      <%- type %>Manager.set<%- camelize(property.name) %>(<%- defaultValueJava(property) %>);
+      assertEquals((<%- propertyType(property) %>) <%- type %>Manager.get<%- camelize(property.name) %>(), (<%- propertyType(property) %>) <%- defaultValueJava(property) %>);
+    });
+  }
+<% } -%>
+<% } -%>
+}

@@ -375,15 +375,15 @@ global.supportsPropertyFunction = function (property) {
 const annotationJava = ejs.compile(fs.readFileSync('../src/main/java/com/mapbox/mapboxsdk/plugins/annotation/annotation.java.ejs', 'utf8'), {strict: true});
 const annotationManagerJava = ejs.compile(fs.readFileSync('../src/main/java/com/mapbox/mapboxsdk/plugins/annotation/annotationManager.java.ejs', 'utf8'), {strict: true});
 const annotationClickListener =  ejs.compile(fs.readFileSync('../src/main/java/com/mapbox/mapboxsdk/plugins/annotation/annotationclicklistener.java.ejs', 'utf8'), {strict: true});
-//const annotationJavaUnitTests = ejs.compile(fs.readFileSync('../src/main/java/com/mapbox/mapboxsdk/plugins/annotation/annotation.junit.ejs', 'utf8'), {strict: true});
-//const annotationManagerJavaUnitTests = ejs.compile(fs.readFileSync('platform/android/MapboxGLAndroidSDKTestApp/src/androidTest/java/com/mapbox/mapboxsdk/testapp/annotations/annotationmanager.junit.ejs', 'utf8'), {strict: true});
+const annotationJavaUnitTests = ejs.compile(fs.readFileSync('../../app/src/androidTest/java/com/mapbox/mapboxsdk/plugins/annotation//annotation.junit.ejs', 'utf8'), {strict: true});
+const annotationManagerJavaUnitTests = ejs.compile(fs.readFileSync('../../app/src/androidTest/java/com/mapbox/mapboxsdk/plugins/annotation/annotationmanager.junit.ejs', 'utf8'), {strict: true});
 
 for (const layer of layers) {
   if(layer.type === "symbol" || layer.type === "circle" || layer.type === "fill" || layer.type === "line"){
       writeIfModified(`../src/main/java/com/mapbox/mapboxsdk/plugins/annotation/On${camelize(layer.type)}ClickListener.java`, annotationClickListener(layer));
       writeIfModified(`../src/main/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}.java`, annotationJava(layer));
       writeIfModified(`../src/main/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}Manager.java`, annotationManagerJava(layer));
-      //writeIfModified(`platform/android/MapboxGLAndroidSDKTestApp/src/androidTest/java/com/mapbox/mapboxsdk/testapp/annotations/${camelize(layer.type)}Test.java`, annotationJavaUnitTests(layer));
-      //writeIfModified(`platform/android/MapboxGLAndroidSDKTestApp/src/androidTest/java/com/mapbox/mapboxsdk/testapp/annotations/${camelize(layer.type)}ManagerTest.java`, annotationManagerJavaUnitTests(layer));
+      writeIfModified(`../../app/src/androidTest/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}Test.java`, annotationJavaUnitTests(layer));
+      writeIfModified(`../../app/src/androidTest/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}ManagerTest.java`, annotationManagerJavaUnitTests(layer));
   }
 }
