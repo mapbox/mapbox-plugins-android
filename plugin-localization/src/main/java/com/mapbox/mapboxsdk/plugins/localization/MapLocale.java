@@ -101,8 +101,8 @@ public final class MapLocale {
   public static final String KOREAN = "name_ko";
 
   @Retention(SOURCE)
-  @StringDef({LOCAL_NAME, ENGLISH, FRENCH, SIMPLIFIED_CHINESE, ARABIC, SPANISH, GERMAN, PORTUGUESE,
-      RUSSIAN, CHINESE, JAPANESE, KOREAN})
+  @StringDef( {LOCAL_NAME, ENGLISH, FRENCH, SIMPLIFIED_CHINESE, ARABIC, SPANISH, GERMAN, PORTUGUESE,
+    RUSSIAN, CHINESE, JAPANESE, KOREAN})
   public @interface Languages {
   }
 
@@ -180,6 +180,13 @@ public final class MapLocale {
     .include(new LatLng(53.56086, 73.557693))
     .include(new LatLng(15.775416, 134.773911)).build();
 
+  /**
+   * Russian Bounding box extraced from Open Street Map
+   */
+  static final LatLngBounds RUSSIA_BBOX = new LatLngBounds.Builder()
+    .include(new LatLng(81.856903, -168.997849))
+    .include(new LatLng(41.185902, 19.638861)).build();
+
   /*
    * Some MapLocales already defined (these match with the predefined ones in the Locale class)
    */
@@ -240,6 +247,11 @@ public final class MapLocale {
   public static final MapLocale CANADA_FRENCH = new MapLocale(FRENCH, CANADA_BBOX);
 
   /**
+   * Useful constant for country.
+   */
+  public static final MapLocale RUSSIA = new MapLocale(RUSSIAN, RUSSIA_BBOX);
+
+  /**
    * Maps out the Matching pair of {@link Locale} and {@link MapLocale}. In other words, if I have a
    * {@link Locale#CANADA}, this should be matched up with {@link MapLocale#CANADA}.
    */
@@ -258,6 +270,7 @@ public final class MapLocale {
     LOCALE_SET.put(Locale.KOREA, MapLocale.KOREA);
     LOCALE_SET.put(Locale.GERMANY, MapLocale.GERMANY);
     LOCALE_SET.put(Locale.FRANCE, MapLocale.FRANCE);
+    LOCALE_SET.put(new Locale("ru", "RU"), RUSSIA);
   }
 
   private final LatLngBounds countryBounds;
