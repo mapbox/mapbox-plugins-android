@@ -29,13 +29,12 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 /**
  * The fill manager allows to add fills to a map.
  */
-public class FillManager extends AnnotationManager<Fill, OnFillClickListener> {
+public class FillManager extends AnnotationManager<Fill, OnFillClickListener, OnFillLongClickListener> {
 
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-fill-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-fill-layer";
 
   private FillLayer layer;
-  private final MapClickResolver mapClickResolver;
 
   /**
    * Create a fill manager, used to manage fills.
@@ -72,7 +71,6 @@ public class FillManager extends AnnotationManager<Fill, OnFillClickListener> {
   public FillManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull FillLayer layer, @Nullable String belowLayerId) {
     super(mapboxMap, geoJsonSource);
     initLayer(layer, belowLayerId);
-    mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
   }
 
   /**
@@ -89,15 +87,27 @@ public class FillManager extends AnnotationManager<Fill, OnFillClickListener> {
       mapboxMap.addLayerBelow(layer, belowLayerId);
     }
   }
+  
+  /**
+   * Get the layer id of the annotation layer.
+   *
+   * @return the layer id
+   */
+  @Override
+  String getAnnotationLayerId() {
+    return ID_GEOJSON_LAYER;
+  }
 
   /**
-   * Cleanup fill manager, used to clear listeners
+   * Get the key of the id of the annotation.
+   *
+   * @return the key of the id of the annotation
    */
-  @UiThread
-  public void onDestroy() {
-    super.onDestroy();
-    mapboxMap.removeOnMapClickListener(mapClickResolver);
+  @Override
+  String getAnnotationIdKey() {
+    return Fill.ID_KEY;
   }
+
 
   /**
    * Create a fill on the map from a LatLng coordinate.
@@ -176,34 +186,5 @@ public class FillManager extends AnnotationManager<Fill, OnFillClickListener> {
     layer.setProperties(fillTranslateAnchor(value));
   }
 
-  /**
-   * Inner class for transforming map click events into fill clicks
-   */
-  private class MapClickResolver implements MapboxMap.OnMapClickListener {
 
-    private MapboxMap mapboxMap;
-
-    private MapClickResolver(MapboxMap mapboxMap) {
-      this.mapboxMap = mapboxMap;
-    }
-
-    @Override
-    public void onMapClick(@NonNull LatLng point) {
-      if (clickListeners.isEmpty()) {
-        return;
-      }
-
-      PointF screenLocation = mapboxMap.getProjection().toScreenLocation(point);
-      List<Feature> features = mapboxMap.queryRenderedFeatures(screenLocation, ID_GEOJSON_LAYER);
-      if (!features.isEmpty()) {
-        long fillId = features.get(0).getProperty(Fill.ID_KEY).getAsLong();
-        Fill fill = annotations.get(fillId);
-        if (fill != null) {
-          for (OnFillClickListener listener : clickListeners) {
-            listener.onFillClick(fill);
-          }
-        }
-      }
-    }
-  }
 }

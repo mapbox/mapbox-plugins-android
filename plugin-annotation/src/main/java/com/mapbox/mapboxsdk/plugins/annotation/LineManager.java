@@ -29,13 +29,12 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 /**
  * The line manager allows to add lines to a map.
  */
-public class LineManager extends AnnotationManager<Line, OnLineClickListener> {
+public class LineManager extends AnnotationManager<Line, OnLineClickListener, OnLineLongClickListener> {
 
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-line-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-line-layer";
 
   private LineLayer layer;
-  private final MapClickResolver mapClickResolver;
 
   /**
    * Create a line manager, used to manage lines.
@@ -72,7 +71,6 @@ public class LineManager extends AnnotationManager<Line, OnLineClickListener> {
   public LineManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull LineLayer layer, @Nullable String belowLayerId) {
     super(mapboxMap, geoJsonSource);
     initLayer(layer, belowLayerId);
-    mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
   }
 
   /**
@@ -89,15 +87,27 @@ public class LineManager extends AnnotationManager<Line, OnLineClickListener> {
       mapboxMap.addLayerBelow(layer, belowLayerId);
     }
   }
+  
+  /**
+   * Get the layer id of the annotation layer.
+   *
+   * @return the layer id
+   */
+  @Override
+  String getAnnotationLayerId() {
+    return ID_GEOJSON_LAYER;
+  }
 
   /**
-   * Cleanup line manager, used to clear listeners
+   * Get the key of the id of the annotation.
+   *
+   * @return the key of the id of the annotation
    */
-  @UiThread
-  public void onDestroy() {
-    super.onDestroy();
-    mapboxMap.removeOnMapClickListener(mapClickResolver);
+  @Override
+  String getAnnotationIdKey() {
+    return Line.ID_KEY;
   }
+
 
   /**
    * Create a line on the map from a LatLng coordinate.
@@ -234,34 +244,5 @@ public class LineManager extends AnnotationManager<Line, OnLineClickListener> {
     layer.setProperties(lineDasharray(value));
   }
 
-  /**
-   * Inner class for transforming map click events into line clicks
-   */
-  private class MapClickResolver implements MapboxMap.OnMapClickListener {
 
-    private MapboxMap mapboxMap;
-
-    private MapClickResolver(MapboxMap mapboxMap) {
-      this.mapboxMap = mapboxMap;
-    }
-
-    @Override
-    public void onMapClick(@NonNull LatLng point) {
-      if (clickListeners.isEmpty()) {
-        return;
-      }
-
-      PointF screenLocation = mapboxMap.getProjection().toScreenLocation(point);
-      List<Feature> features = mapboxMap.queryRenderedFeatures(screenLocation, ID_GEOJSON_LAYER);
-      if (!features.isEmpty()) {
-        long lineId = features.get(0).getProperty(Line.ID_KEY).getAsLong();
-        Line line = annotations.get(lineId);
-        if (line != null) {
-          for (OnLineClickListener listener : clickListeners) {
-            listener.onLineClick(line);
-          }
-        }
-      }
-    }
-  }
 }

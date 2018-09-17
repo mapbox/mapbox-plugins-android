@@ -3,11 +3,14 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity.annotation;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.plugins.annotation.Circle;
 import com.mapbox.mapboxsdk.plugins.annotation.CircleManager;
+import com.mapbox.mapboxsdk.plugins.annotation.OnCircleClickListener;
+import com.mapbox.mapboxsdk.plugins.annotation.OnCircleLongClickListener;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 
@@ -21,7 +24,7 @@ public class CircleActivity extends AppCompatActivity {
   private final Random random = new Random();
 
   private MapView mapView;
-  private Circle circle;
+  private CircleManager circleManager;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +36,18 @@ public class CircleActivity extends AppCompatActivity {
       mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
 
       // create circle manager
-      CircleManager circleManager = new CircleManager(mapboxMap);
-      // set non data driven properties
+      circleManager = new CircleManager(mapboxMap);
+      circleManager.addClickListener(circle -> Toast.makeText(CircleActivity.this,
+        String.format("Circle clicked %s", circle.getId()),
+        Toast.LENGTH_SHORT
+      ).show());
+      circleManager.addLongClickListener(circle -> Toast.makeText(CircleActivity.this,
+        String.format("Circle long clicked %s", circle.getId()),
+        Toast.LENGTH_SHORT
+      ).show());
 
-      // create a circle
-      circle = circleManager.createCircle(new LatLng(6.687337, 0.381457));
+      // create a fixed circle
+      Circle circle = circleManager.createCircle(new LatLng(6.687337, 0.381457));
       circle.setCircleColor(PropertyFactory.colorToRgbaString(Color.YELLOW));
       circle.setCircleRadius(12f);
 
@@ -90,6 +100,7 @@ public class CircleActivity extends AppCompatActivity {
   @Override
   protected void onDestroy() {
     super.onDestroy();
+    circleManager.onDestroy();
     mapView.onDestroy();
   }
 

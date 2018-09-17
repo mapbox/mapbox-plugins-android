@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolClickListener;
+import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolLongClickListener;
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
@@ -28,6 +31,7 @@ public class SymbolActivity extends AppCompatActivity {
   private final Random random = new Random();
 
   private MapView mapView;
+  private SymbolManager symbolManager;
   private Symbol symbol;
 
   @Override
@@ -40,7 +44,18 @@ public class SymbolActivity extends AppCompatActivity {
       mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
 
       // create symbol manager
-      SymbolManager symbolManager = new SymbolManager(mapboxMap);
+      symbolManager = new SymbolManager(mapboxMap);
+      symbolManager.addClickListener(symbol -> Toast.makeText(SymbolActivity.this,
+        String.format("Symbol clicked %s", symbol.getId()),
+        Toast.LENGTH_SHORT
+      ).show());
+      symbolManager.addLongClickListener(symbol -> {
+        Toast.makeText(SymbolActivity.this,
+          String.format("Symbol long clicked %s", symbol.getId()),
+          Toast.LENGTH_SHORT
+        ).show();
+      });
+
       // set non data driven properties
       symbolManager.setIconAllowOverlap(true);
       symbolManager.setTextAllowOverlap(true);
@@ -129,6 +144,7 @@ public class SymbolActivity extends AppCompatActivity {
   @Override
   protected void onDestroy() {
     super.onDestroy();
+    symbolManager.onDestroy();
     mapView.onDestroy();
   }
 

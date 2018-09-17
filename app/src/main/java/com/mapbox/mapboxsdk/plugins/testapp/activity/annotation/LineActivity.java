@@ -3,11 +3,14 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity.annotation;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.plugins.annotation.Line;
 import com.mapbox.mapboxsdk.plugins.annotation.LineManager;
+import com.mapbox.mapboxsdk.plugins.annotation.OnLineClickListener;
+import com.mapbox.mapboxsdk.plugins.annotation.OnLineLongClickListener;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 
@@ -23,7 +26,7 @@ public class LineActivity extends AppCompatActivity {
   private final Random random = new Random();
 
   private MapView mapView;
-  private Line line;
+  private LineManager lineManager;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -34,17 +37,22 @@ public class LineActivity extends AppCompatActivity {
     mapView.getMapAsync(mapboxMap -> {
       mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
 
-      // create line manager
-      // set non data driven properties
+      lineManager = new LineManager(mapboxMap);
+      lineManager.addClickListener(line -> Toast.makeText(LineActivity.this,
+        String.format("Line clicked %s", line.getId()),
+        Toast.LENGTH_SHORT
+      ).show());
+      lineManager.addLongClickListener(line -> Toast.makeText(LineActivity.this,
+        String.format("Line long clicked %s", line.getId()),
+        Toast.LENGTH_SHORT
+      ).show());
 
-      // create a line
+      // create a fixed line
       List<LatLng> latLngs = new ArrayList<>();
       latLngs.add(new LatLng(-2.178992, -4.375974));
       latLngs.add(new LatLng(-4.107888, -7.639772));
       latLngs.add(new LatLng(2.798737, -11.439207));
-
-      LineManager lineManager = new LineManager(mapboxMap);
-      line = lineManager.createLine(latLngs);
+      lineManager.createLine(latLngs);
 
       // random add lines across the globe
       Line currentLine;
@@ -99,6 +107,7 @@ public class LineActivity extends AppCompatActivity {
   @Override
   protected void onDestroy() {
     super.onDestroy();
+    lineManager.onDestroy();
     mapView.onDestroy();
   }
 
