@@ -29,13 +29,12 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 /**
  * The symbol manager allows to add symbols to a map.
  */
-public class SymbolManager extends AnnotationManager<Symbol, OnSymbolClickListener> {
+public class SymbolManager extends AnnotationManager<Symbol, OnSymbolClickListener, OnSymbolLongClickListener> {
 
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-symbol-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-symbol-layer";
 
   private SymbolLayer layer;
-  private final MapClickResolver mapClickResolver;
   //private final SymbolComparator symbolComparator = new SymbolComparator();
 
   /**
@@ -73,7 +72,6 @@ public class SymbolManager extends AnnotationManager<Symbol, OnSymbolClickListen
   public SymbolManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull SymbolLayer layer, @Nullable String belowLayerId) {
     super(mapboxMap, geoJsonSource);
     initLayer(layer, belowLayerId);
-    mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
   }
 
   /**
@@ -90,15 +88,27 @@ public class SymbolManager extends AnnotationManager<Symbol, OnSymbolClickListen
       mapboxMap.addLayerBelow(layer, belowLayerId);
     }
   }
+  
+  /**
+   * Get the layer id of the annotation layer.
+   *
+   * @return the layer id
+   */
+  @Override
+  String getAnnotationLayerId() {
+    return ID_GEOJSON_LAYER;
+  }
 
   /**
-   * Cleanup symbol manager, used to clear listeners
+   * Get the key of the id of the annotation.
+   *
+   * @return the key of the id of the annotation
    */
-  @UiThread
-  public void onDestroy() {
-    super.onDestroy();
-    mapboxMap.removeOnMapClickListener(mapClickResolver);
+  @Override
+  String getAnnotationIdKey() {
+    return Symbol.ID_KEY;
   }
+
 
   /**
    * Create a symbol on the map from a LatLng coordinate.
@@ -596,36 +606,7 @@ public class SymbolManager extends AnnotationManager<Symbol, OnSymbolClickListen
     layer.setProperties(textTranslateAnchor(value));
   }
 
-  /**
-   * Inner class for transforming map click events into symbol clicks
-   */
-  private class MapClickResolver implements MapboxMap.OnMapClickListener {
 
-    private MapboxMap mapboxMap;
-
-    private MapClickResolver(MapboxMap mapboxMap) {
-      this.mapboxMap = mapboxMap;
-    }
-
-    @Override
-    public void onMapClick(@NonNull LatLng point) {
-      if (clickListeners.isEmpty()) {
-        return;
-      }
-
-      PointF screenLocation = mapboxMap.getProjection().toScreenLocation(point);
-      List<Feature> features = mapboxMap.queryRenderedFeatures(screenLocation, ID_GEOJSON_LAYER);
-      if (!features.isEmpty()) {
-        long symbolId = features.get(0).getProperty(Symbol.ID_KEY).getAsLong();
-        Symbol symbol = annotations.get(symbolId);
-        if (symbol != null) {
-          for (OnSymbolClickListener listener : clickListeners) {
-            listener.onSymbolClick(symbol);
-          }
-        }
-      }
-    }
-  }
 
   //private class SymbolComparator implements Comparator<Feature> {
   //  @Override

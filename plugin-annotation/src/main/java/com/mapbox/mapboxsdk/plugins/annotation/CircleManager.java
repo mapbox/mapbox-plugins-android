@@ -29,13 +29,12 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 /**
  * The circle manager allows to add circles to a map.
  */
-public class CircleManager extends AnnotationManager<Circle, OnCircleClickListener> {
+public class CircleManager extends AnnotationManager<Circle, OnCircleClickListener, OnCircleLongClickListener> {
 
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-circle-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-circle-layer";
 
   private CircleLayer layer;
-  private final MapClickResolver mapClickResolver;
 
   /**
    * Create a circle manager, used to manage circles.
@@ -72,7 +71,6 @@ public class CircleManager extends AnnotationManager<Circle, OnCircleClickListen
   public CircleManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull CircleLayer layer, @Nullable String belowLayerId) {
     super(mapboxMap, geoJsonSource);
     initLayer(layer, belowLayerId);
-    mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
   }
 
   /**
@@ -89,15 +87,27 @@ public class CircleManager extends AnnotationManager<Circle, OnCircleClickListen
       mapboxMap.addLayerBelow(layer, belowLayerId);
     }
   }
+  
+  /**
+   * Get the layer id of the annotation layer.
+   *
+   * @return the layer id
+   */
+  @Override
+  String getAnnotationLayerId() {
+    return ID_GEOJSON_LAYER;
+  }
 
   /**
-   * Cleanup circle manager, used to clear listeners
+   * Get the key of the id of the annotation.
+   *
+   * @return the key of the id of the annotation
    */
-  @UiThread
-  public void onDestroy() {
-    super.onDestroy();
-    mapboxMap.removeOnMapClickListener(mapClickResolver);
+  @Override
+  String getAnnotationIdKey() {
+    return Circle.ID_KEY;
   }
+
 
   /**
    * Create a circle on the map from a LatLng coordinate.
@@ -198,34 +208,5 @@ public class CircleManager extends AnnotationManager<Circle, OnCircleClickListen
     layer.setProperties(circlePitchAlignment(value));
   }
 
-  /**
-   * Inner class for transforming map click events into circle clicks
-   */
-  private class MapClickResolver implements MapboxMap.OnMapClickListener {
 
-    private MapboxMap mapboxMap;
-
-    private MapClickResolver(MapboxMap mapboxMap) {
-      this.mapboxMap = mapboxMap;
-    }
-
-    @Override
-    public void onMapClick(@NonNull LatLng point) {
-      if (clickListeners.isEmpty()) {
-        return;
-      }
-
-      PointF screenLocation = mapboxMap.getProjection().toScreenLocation(point);
-      List<Feature> features = mapboxMap.queryRenderedFeatures(screenLocation, ID_GEOJSON_LAYER);
-      if (!features.isEmpty()) {
-        long circleId = features.get(0).getProperty(Circle.ID_KEY).getAsLong();
-        Circle circle = annotations.get(circleId);
-        if (circle != null) {
-          for (OnCircleClickListener listener : clickListeners) {
-            listener.onCircleClick(circle);
-          }
-        }
-      }
-    }
-  }
 }

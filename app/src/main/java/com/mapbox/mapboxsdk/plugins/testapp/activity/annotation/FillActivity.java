@@ -3,11 +3,14 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity.annotation;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.plugins.annotation.Fill;
 import com.mapbox.mapboxsdk.plugins.annotation.FillManager;
+import com.mapbox.mapboxsdk.plugins.annotation.OnFillClickListener;
+import com.mapbox.mapboxsdk.plugins.annotation.OnFillLongClickListener;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 
@@ -23,7 +26,7 @@ public class FillActivity extends AppCompatActivity {
   private final Random random = new Random();
 
   private MapView mapView;
-  private Fill fill;
+  private FillManager fillManager;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -34,16 +37,24 @@ public class FillActivity extends AppCompatActivity {
     mapView.getMapAsync(mapboxMap -> {
       mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
 
-      // create a fill
+      fillManager = new FillManager(mapboxMap);
+      fillManager.addClickListener(fill -> Toast.makeText(FillActivity.this,
+        String.format("Fill clicked %s", fill.getId()),
+        Toast.LENGTH_SHORT
+      ).show());
+      fillManager.addLongClickListener(fill -> Toast.makeText(FillActivity.this,
+        String.format("Fill long clicked %s", fill.getId()),
+        Toast.LENGTH_SHORT
+      ).show());
+
+      // create a fixed fill
       List<LatLng> innerLatLngs = new ArrayList<>();
       innerLatLngs.add(new LatLng(-10.733102, -3.363937));
       innerLatLngs.add(new LatLng(-19.716317, 1.754703));
       innerLatLngs.add(new LatLng(-21.085074, -15.747196));
       List<List<LatLng>> latLngs = new ArrayList<>();
       latLngs.add(innerLatLngs);
-
-      FillManager fillManager = new FillManager(mapboxMap);
-      fill = fillManager.createFill(latLngs);
+      Fill fill = fillManager.createFill(latLngs);
       fill.setFillColor(PropertyFactory.colorToRgbaString(Color.RED));
 
       // random add fills across the globe
@@ -103,6 +114,7 @@ public class FillActivity extends AppCompatActivity {
   @Override
   protected void onDestroy() {
     super.onDestroy();
+    fillManager.onDestroy();
     mapView.onDestroy();
   }
 

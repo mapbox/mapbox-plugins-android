@@ -42,6 +42,7 @@ public class <%- camelize(type) %> extends Annotation {
   /**
    * Called to update the underlying data source.
    */
+  @Override
   public void update() {
     <%- type %>Manager.updateSource();
   }

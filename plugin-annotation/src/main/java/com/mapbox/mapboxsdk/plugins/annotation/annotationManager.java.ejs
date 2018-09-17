@@ -34,13 +34,12 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 /**
  * The <%- type %> manager allows to add <%- type %>s to a map.
  */
-public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize(type) %>, On<%- camelize(type) %>ClickListener> {
+public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize(type) %>, On<%- camelize(type) %>ClickListener, On<%- camelize(type) %>LongClickListener> {
 
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-<%- type %>-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-<%- type %>-layer";
 
   private <%- camelize(type) %>Layer layer;
-  private final MapClickResolver mapClickResolver;
 <% if (type === "symbol") { -%>
   //private final SymbolComparator symbolComparator = new SymbolComparator();
 <% } -%>
@@ -80,7 +79,6 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
   public <%- camelize(type) %>Manager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull <%- camelize(type) %>Layer layer, @Nullable String belowLayerId) {
     super(mapboxMap, geoJsonSource);
     initLayer(layer, belowLayerId);
-    mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
   }
 
   /**
@@ -99,13 +97,25 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
   }
 
   /**
-   * Cleanup <%- type %> manager, used to clear listeners
+   * Get the layer id of the annotation layer.
+   *
+   * @return the layer id
    */
-  @UiThread
-  public void onDestroy() {
-    super.onDestroy();
-    mapboxMap.removeOnMapClickListener(mapClickResolver);
+  @Override
+  String getAnnotationLayerId() {
+    return ID_GEOJSON_LAYER;
   }
+
+  /**
+   * Get the key of the id of the annotation.
+   *
+   * @return the key of the id of the annotation
+   */
+  @Override
+  String getAnnotationIdKey() {
+    return <%- camelize(type) %>.ID_KEY;
+  }
+
 <% if (type === "circle" || type === "symbol") { -%>
 
   /**
@@ -188,36 +198,7 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
 
 <% } -%>
 <% } -%>
-  /**
-   * Inner class for transforming map click events into <%- type %> clicks
-   */
-  private class MapClickResolver implements MapboxMap.OnMapClickListener {
 
-    private MapboxMap mapboxMap;
-
-    private MapClickResolver(MapboxMap mapboxMap) {
-      this.mapboxMap = mapboxMap;
-    }
-
-    @Override
-    public void onMapClick(@NonNull LatLng point) {
-      if (clickListeners.isEmpty()) {
-        return;
-      }
-
-      PointF screenLocation = mapboxMap.getProjection().toScreenLocation(point);
-      List<Feature> features = mapboxMap.queryRenderedFeatures(screenLocation, ID_GEOJSON_LAYER);
-      if (!features.isEmpty()) {
-        long <%- type %>Id = features.get(0).getProperty(<%- camelize(type) %>.ID_KEY).getAsLong();
-        <%- camelize(type) %> <%- type %> = annotations.get(<%- type %>Id);
-        if (<%- type %> != null) {
-          for (On<%- camelize(type) %>ClickListener listener : clickListeners) {
-            listener.on<%- camelize(type) %>Click(<%- type %>);
-          }
-        }
-      }
-    }
-  }
 <% if (type === "symbol") { -%>
 
   //private class SymbolComparator implements Comparator<Feature> {

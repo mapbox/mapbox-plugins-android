@@ -10,13 +10,6 @@ package com.mapbox.mapboxsdk.plugins.annotation;
 /**
  * Interface definition for a callback to be invoked when a <%- type %> has been clicked.
  */
-public interface On<%- camelize(type) %>ClickListener {
-
-  /**
-   * Invoked when a <%- type %> has been clicked.
-   *
-   * @param <%- type %> that has been clicked
-   */
-  void on<%- camelize(type) %>Click(<%- camelize(type) %> <%- type %>);
+public interface On<%- camelize(type) %>ClickListener extends OnAnnotationClickListener<<%- camelize(type) %>>{
 
 }
