@@ -3,23 +3,20 @@ buildscript {
   apply plugin: 'jacoco'
 
   repositories {
-    google()
-    maven { url 'https://plugins.gradle.org/m2' }
     jcenter()
+    google()
   }
 
   dependencies {
     classpath pluginDependencies.gradle
-    classpath pluginDependencies.errorprone
     classpath pluginDependencies.kotlin
   }
 }
 
 allprojects {
   repositories {
-    google()
-    maven { url 'https://plugins.gradle.org/m2' }
     jcenter()
+    google()
 //    SNAPSHOT repository
 //    maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
   }
@@ -28,12 +25,7 @@ allprojects {
 subprojects {
   apply plugin: 'idea'
   apply plugin: 'jacoco'
-  apply plugin: 'net.ltgt.errorprone'
   apply from: "${rootDir}/gradle/dependencies.gradle"
-
-  dependencies {
-    errorprone dependenciesList.errorprone
-  }
 }
 
 task clean(type: Delete) {

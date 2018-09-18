@@ -17,7 +17,6 @@ ext {
       supportLib         : '27.1.1',
       constraintLayout   : '1.1.0',
       mockito            : '2.18.3',
-      errorprone         : '2.3.1',
       butterknife        : '8.8.1',
       leakCanary         : '1.6.1',
       timber             : '4.7.0',
@@ -34,7 +33,6 @@ ext {
   pluginVersion = [
       checkstyle: '8.10.1',
       jacoco    : '0.8.1',
-      errorprone: '0.0.14',
       gradle    : '3.1.0',
       kotlin    : '1.2.50',
       dokka     : '0.9.17'
@@ -95,15 +93,11 @@ ext {
       androidArchCore        : "android.arch.core:core-testing:${version.androidArchCore}",
       robolectric            : "org.robolectric:robolectric:${version.robolectric}",
       kotlin                 : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${pluginVersion.kotlin}",
-
-      // errorprone
-      errorprone             : "com.google.errorprone:error_prone_core:${version.errorprone}"
   ]
 
   pluginDependencies = [
       gradle    : "com.android.tools.build:gradle:${pluginVersion.gradle}",
       checkstyle: "com.puppycrawl.tools:checkstyle:${pluginVersion.checkstyle}",
-      errorprone: "net.ltgt.gradle:gradle-errorprone-plugin:${pluginVersion.errorprone}",
       kotlin    : "org.jetbrains.kotlin:kotlin-gradle-plugin:${pluginVersion.kotlin}",
       dokka     : "org.jetbrains.dokka:dokka-android-gradle-plugin:${pluginVersion.dokka}"
   ]
