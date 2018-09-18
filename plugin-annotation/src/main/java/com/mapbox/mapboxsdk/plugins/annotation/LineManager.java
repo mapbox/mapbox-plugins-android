@@ -87,7 +87,7 @@ public class LineManager extends AnnotationManager<Line, OnLineClickListener, On
       mapboxMap.addLayerBelow(layer, belowLayerId);
     }
   }
-  
+
   /**
    * Get the layer id of the annotation layer.
    *
@@ -121,6 +121,26 @@ public class LineManager extends AnnotationManager<Line, OnLineClickListener, On
     line.setLatLngs(latLngs);
     add(line);
     return line;
+  }
+
+  /**
+   * Create lines on the map from a list of lists of LatLng coordinates.
+   *
+   * @param latLngs places to layout the lines on the map
+   * @return a list of the newly created lines
+   */
+  @UiThread
+  public List<Line> createLines(@NonNull List<List<LatLng>> latLngs) {
+    List<Line> lines = new ArrayList<>();
+    Line line;
+    for (List<LatLng> latLng : latLngs) {
+      line = new Line(this, currentId);
+      line.setLatLngs(latLng, false);
+      lines.add(line);
+      add(line);
+    }
+    updateSource();
+    return lines;
   }
 
   private static PropertyValue<?>[] getLayerDefinition() {

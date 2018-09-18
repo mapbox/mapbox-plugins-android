@@ -55,11 +55,14 @@ public class LineActivity extends AppCompatActivity {
       lineManager.createLine(latLngs);
 
       // random add lines across the globe
-      Line currentLine;
+      List<List<LatLng>> lists = new ArrayList<>();
       for (int i = 0; i < 100; i++) {
-        currentLine = lineManager.createLine(createRandomLatLngs());
+        lists.add(createRandomLatLngs());
+      }
+      List<Line>lines = lineManager.createLines(lists);
+      for (Line line : lines) {
         int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
-        currentLine.setLineColor(PropertyFactory.colorToRgbaString(color));
+        line.setLineColor(PropertyFactory.colorToRgbaString(color));
       }
     });
   }

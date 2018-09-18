@@ -87,7 +87,7 @@ public class CircleManager extends AnnotationManager<Circle, OnCircleClickListen
       mapboxMap.addLayerBelow(layer, belowLayerId);
     }
   }
-  
+
   /**
    * Get the layer id of the annotation layer.
    *
@@ -121,6 +121,26 @@ public class CircleManager extends AnnotationManager<Circle, OnCircleClickListen
     circle.setLatLng(latLng);
     add(circle);
     return circle;
+  }
+
+  /**
+   * Create circles on the map from a list of LatLng coordinates.
+   *
+   * @param latLngs places to layout the circles on the map
+   * @return a list of the newly created circles
+   */
+  @UiThread
+  public List<Circle> createCircles(@NonNull List<LatLng> latLngs) {
+    List<Circle> circles = new ArrayList<>();
+    Circle circle;
+    for (LatLng latLng : latLngs) {
+      circle = new Circle(this, currentId);
+      circle.setLatLng(latLng, false);
+      circles.add(circle);
+      add(circle);
+    }
+    updateSource();
+    return circles;
   }
 
   private static PropertyValue<?>[] getLayerDefinition() {

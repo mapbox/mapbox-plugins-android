@@ -17,6 +17,8 @@ import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -66,9 +68,12 @@ public class SymbolActivity extends AppCompatActivity {
       symbol.setIconSize(1.2f);
 
       // random add symbols across the globe
-      Symbol currentSymbol;
+      List<LatLng> latLngList = new ArrayList<>();
       for (int i = 0; i < 20; i++) {
-        currentSymbol = symbolManager.createSymbol(createRandomLatLng());
+        latLngList.add(createRandomLatLng());
+      }
+      List<Symbol> symbols = symbolManager.createSymbols(latLngList);
+      for (Symbol currentSymbol : symbols) {
         currentSymbol.setIconImage(MAKI_ICON_CAR);
       }
     });

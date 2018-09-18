@@ -42,6 +42,16 @@ public class Fill extends Annotation {
    * @param latLngs a list of a lists of the locations of the line in a longitude and latitude pairs
    */
   public void setLatLngs(List<List<LatLng>> latLngs) {
+    setLatLngs(latLngs, true);
+  }
+
+  /**
+   * Set a list of lists of LatLng for the fill, which represents the locations of the fill on the map
+   *
+   * @param latLngs a list of a lists of the locations of the line in a longitude and latitude pairs
+   * @param updateSource flag to indicate the source instantly
+   */
+  public void setLatLngs(List<List<LatLng>> latLngs, boolean updateSource) {
     List<List<Point>> points = new ArrayList<>();
     for (List<LatLng> innerLatLngs : latLngs) {
       List<Point>innerList = new ArrayList<>();
@@ -51,7 +61,9 @@ public class Fill extends Annotation {
       points.add(innerList);
     }
     geometry = Polygon.fromLngLats(points);
-    fillManager.updateSource();
+    if (updateSource) {
+      fillManager.updateSource();
+    }
   }
 
   // Property accessors

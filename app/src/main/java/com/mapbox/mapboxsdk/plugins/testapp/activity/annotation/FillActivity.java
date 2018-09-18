@@ -58,9 +58,13 @@ public class FillActivity extends AppCompatActivity {
       fill.setFillColor(PropertyFactory.colorToRgbaString(Color.RED));
 
       // random add fills across the globe
-      Fill currentFill;
+      List<List<List<LatLng>>> latLngList = new ArrayList<>();
       for (int i = 0; i < 20; i++) {
-        currentFill = fillManager.createFill(createRandomLatLngs());
+        latLngList.add(createRandomLatLngs());
+      }
+
+      List<Fill> fills = fillManager.createFills(latLngList);
+      for (Fill currentFill : fills) {
         int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
         currentFill.setFillColor(PropertyFactory.colorToRgbaString(color));
       }
