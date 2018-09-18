@@ -25,19 +25,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
+import timber.log.Timber;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
-
-import timber.log.Timber;
 
 /**
  * Activity showing a RecyclerView with Activities generated from AndroidManifest.xml
@@ -56,19 +55,16 @@ public class FeatureOverviewActivity extends AppCompatActivity implements Permis
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_feature_overview);
 
-    recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+    recyclerView = findViewById(R.id.recyclerView);
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
     recyclerView.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener());
     recyclerView.setHasFixedSize(true);
 
-    ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-      @Override
-      public void onItemClicked(RecyclerView recyclerView, int position, View view) {
-        if (!sectionAdapter.isSectionHeaderPosition(position)) {
-          int itemPosition = sectionAdapter.getConvertedPosition(position);
-          Feature feature = features.get(itemPosition);
-          startFeature(feature);
-        }
+    ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView, position, view) -> {
+      if (!sectionAdapter.isSectionHeaderPosition(position)) {
+        int itemPosition = sectionAdapter.getConvertedPosition(position);
+        Feature feature = features.get(itemPosition);
+        startFeature(feature);
       }
     });
 
@@ -89,11 +85,11 @@ public class FeatureOverviewActivity extends AppCompatActivity implements Permis
 
   private void loadFeatures() {
     try {
-      new LoadFeatureTask().execute(
+      new LoadFeatureTask(this).execute(
         getPackageManager().getPackageInfo(getPackageName(),
           PackageManager.GET_ACTIVITIES | PackageManager.GET_META_DATA));
     } catch (PackageManager.NameNotFoundException exception) {
-      Timber.e("Could not resolve package info", exception);
+      Timber.e(exception, "Could not resolve package info");
     }
   }
 
@@ -150,37 +146,43 @@ public class FeatureOverviewActivity extends AppCompatActivity implements Permis
     outState.putParcelableArrayList(KEY_STATE_FEATURES, (ArrayList<Feature>) features);
   }
 
-  private class LoadFeatureTask extends AsyncTask<PackageInfo, Void, List<Feature>> {
+  private static class LoadFeatureTask extends AsyncTask<PackageInfo, Void, List<Feature>> {
+
+    private WeakReference<FeatureOverviewActivity> contextWeakReference;
+
+    LoadFeatureTask(FeatureOverviewActivity context) {
+      this.contextWeakReference = new WeakReference<>(context);
+    }
 
     @Override
     protected List<Feature> doInBackground(PackageInfo... params) {
       List<Feature> features = new ArrayList<>();
       PackageInfo app = params[0];
 
-      String packageName = getApplicationContext().getPackageName();
-      String metaDataKey = getString(R.string.category);
-      for (ActivityInfo info : app.activities) {
-        if (info.labelRes != 0 && info.name.startsWith(packageName)
-          && !info.name.equals(FeatureOverviewActivity.class.getName())) {
-          String label = getString(info.labelRes);
-          String description = resolveString(info.descriptionRes);
-          String category = resolveMetaData(info.metaData, metaDataKey);
-          if (category != null) {
-            features.add(new Feature(info.name, label, description, category));
+      Context context = contextWeakReference.get();
+      if (context != null) {
+        String packageName = context.getPackageName();
+        String metaDataKey = context.getResources().getString(R.string.category);
+        for (ActivityInfo info : app.activities) {
+          if (info.labelRes != 0 && info.name.startsWith(packageName)
+            && !info.name.equals(FeatureOverviewActivity.class.getName())) {
+            String label = context.getString(info.labelRes);
+            String description = resolveString(context, info.descriptionRes);
+            String category = resolveMetaData(info.metaData, metaDataKey);
+            if (category != null) {
+              features.add(new Feature(info.name, label, description, category));
+            }
           }
         }
       }
 
       if (!features.isEmpty()) {
-        Comparator<Feature> comparator = new Comparator<Feature>() {
-          @Override
-          public int compare(Feature lhs, Feature rhs) {
-            int result = lhs.getCategory().compareToIgnoreCase(rhs.getCategory());
-            if (result == 0) {
-              result = lhs.getLabel().compareToIgnoreCase(rhs.getLabel());
-            }
-            return result;
+        Comparator<Feature> comparator = (lhs, rhs) -> {
+          int result = lhs.getCategory().compareToIgnoreCase(rhs.getCategory());
+          if (result == 0) {
+            result = lhs.getLabel().compareToIgnoreCase(rhs.getLabel());
           }
+          return result;
         };
         Collections.sort(features, comparator);
       }
@@ -196,9 +198,9 @@ public class FeatureOverviewActivity extends AppCompatActivity implements Permis
       return category;
     }
 
-    private String resolveString(@StringRes int stringRes) {
+    private String resolveString(Context context, @StringRes int stringRes) {
       try {
-        return getString(stringRes);
+        return context.getString(stringRes);
       } catch (Resources.NotFoundException exception) {
         return "-";
       }
@@ -207,7 +209,10 @@ public class FeatureOverviewActivity extends AppCompatActivity implements Permis
     @Override
     protected void onPostExecute(List<Feature> features) {
       super.onPostExecute(features);
-      onFeaturesLoaded(features);
+      FeatureOverviewActivity activity = contextWeakReference.get();
+      if (activity != null) {
+        activity.onFeaturesLoaded(features);
+      }
     }
   }
 
@@ -291,9 +296,9 @@ public class FeatureOverviewActivity extends AppCompatActivity implements Permis
       ViewHolder(View view) {
         super(view);
         Typeface typeface = FontCache.get("Roboto-Regular.ttf", view.getContext());
-        labelView = (TextView) view.findViewById(R.id.nameView);
+        labelView = view.findViewById(R.id.nameView);
         labelView.setTypeface(typeface);
-        descriptionView = (TextView) view.findViewById(R.id.descriptionView);
+        descriptionView = view.findViewById(R.id.descriptionView);
         descriptionView.setTypeface(typeface);
       }
     }
@@ -302,14 +307,15 @@ public class FeatureOverviewActivity extends AppCompatActivity implements Permis
       this.features = features;
     }
 
+    @NonNull
     @Override
-    public FeatureAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public FeatureAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
       View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_feature, parent, false);
       return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
       holder.labelView.setText(features.get(position).getLabel());
       holder.descriptionView.setText(features.get(position).getDescription());
     }
@@ -388,8 +394,9 @@ public class FeatureOverviewActivity extends AppCompatActivity implements Permis
       });
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int typeView) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int typeView) {
       if (typeView == SECTION_TYPE) {
         final View view = LayoutInflater.from(context).inflate(sectionRes, parent, false);
         return new SectionViewHolder(view, textRes);
@@ -399,11 +406,12 @@ public class FeatureOverviewActivity extends AppCompatActivity implements Permis
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder sectionViewHolder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder sectionViewHolder, int position) {
       if (isSectionHeaderPosition(position)) {
         String cleanTitle = sections.get(position).title.toString().replace("_", " ");
         ((SectionViewHolder) sectionViewHolder).title.setText(cleanTitle);
       } else {
+        //noinspection unchecked
         adapter.onBindViewHolder(sectionViewHolder, getConvertedPosition(position));
       }
     }
@@ -418,14 +426,7 @@ public class FeatureOverviewActivity extends AppCompatActivity implements Permis
     void setSections(Section[] sections) {
       this.sections.clear();
 
-      Arrays.sort(sections, new Comparator<Section>() {
-        @Override
-        public int compare(Section section, Section section1) {
-          return (section.firstPosition == section1.firstPosition)
-            ? 0
-            : ((section.firstPosition < section1.firstPosition) ? -1 : 1);
-        }
-      });
+      Arrays.sort(sections, (section, section1) -> Integer.compare(section.firstPosition, section1.firstPosition));
 
       int offset = 0;
       for (Section section : sections) {
@@ -476,7 +477,7 @@ public class FeatureOverviewActivity extends AppCompatActivity implements Permis
 
     SectionViewHolder(@NonNull View view, @IdRes int textRes) {
       super(view);
-      title = (TextView) view.findViewById(textRes);
+      title = view.findViewById(textRes);
       title.setTypeface(FontCache.get("Roboto-Medium.ttf", view.getContext()));
     }
   }
@@ -486,7 +487,7 @@ public class FeatureOverviewActivity extends AppCompatActivity implements Permis
     int sectionedPosition;
     CharSequence title;
 
-    public Section(int firstPosition, CharSequence title) {
+    Section(int firstPosition, CharSequence title) {
       this.firstPosition = firstPosition;
       this.title = title;
     }
@@ -537,9 +538,8 @@ public class FeatureOverviewActivity extends AppCompatActivity implements Permis
       return support;
     }
 
-    ItemClickSupport setOnItemClickListener(OnItemClickListener listener) {
+    void setOnItemClickListener(OnItemClickListener listener) {
       onItemClickListener = listener;
-      return this;
     }
 
     interface OnItemClickListener {
