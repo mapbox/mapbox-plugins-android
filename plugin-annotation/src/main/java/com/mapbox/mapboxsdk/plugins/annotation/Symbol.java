@@ -44,8 +44,20 @@ public class Symbol extends Annotation {
    * @param latLng the location of the symbol in a longitude and latitude pair
    */
   public void setLatLng(LatLng latLng) {
+    setLatLng(latLng, true);
+  }
+
+  /**
+   * Set the LatLng of the symbol, which represents the location of the symbol on the map
+   *
+   * @param latLng the location of the symbol in a longitude and latitude pair
+   * @param updateSource flag to indicate the source instantly
+   */
+  public void setLatLng(LatLng latLng, boolean updateSource) {
     geometry = Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
-    symbolManager.updateSource();
+    if (updateSource) {
+       symbolManager.updateSource();
+    }
   }
 
   ///**

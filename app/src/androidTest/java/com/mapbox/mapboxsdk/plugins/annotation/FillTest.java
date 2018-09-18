@@ -5,8 +5,8 @@ package com.mapbox.mapboxsdk.plugins.annotation;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.plugins.testapp.activity.BuildingActivity;
 import com.mapbox.mapboxsdk.plugins.BaseActivityTest;
-import com.mapbox.mapboxsdk.plugins.testapp.activity.building.BuildingActivity;
 import timber.log.Timber;
 
 import org.junit.Test;
@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 
 import static com.mapbox.mapboxsdk.plugins.annotation.MapboxMapAction.invoke;
 import static org.junit.Assert.*;
+import static com.mapbox.mapboxsdk.style.layers.Property.*;
 
 import java.util.ArrayList;
 import java.util.List;

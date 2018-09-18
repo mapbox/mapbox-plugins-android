@@ -88,7 +88,7 @@ public class SymbolManager extends AnnotationManager<Symbol, OnSymbolClickListen
       mapboxMap.addLayerBelow(layer, belowLayerId);
     }
   }
-  
+
   /**
    * Get the layer id of the annotation layer.
    *
@@ -122,6 +122,26 @@ public class SymbolManager extends AnnotationManager<Symbol, OnSymbolClickListen
     symbol.setLatLng(latLng);
     add(symbol);
     return symbol;
+  }
+
+  /**
+   * Create symbols on the map from a list of LatLng coordinates.
+   *
+   * @param latLngs places to layout the symbols on the map
+   * @return a list of the newly created symbols
+   */
+  @UiThread
+  public List<Symbol> createSymbols(@NonNull List<LatLng> latLngs) {
+    List<Symbol> symbols = new ArrayList<>();
+    Symbol symbol;
+    for (LatLng latLng : latLngs) {
+      symbol = new Symbol(this, currentId);
+      symbol.setLatLng(latLng, false);
+      symbols.add(symbol);
+      add(symbol);
+    }
+    updateSource();
+    return symbols;
   }
 
   private static PropertyValue<?>[] getLayerDefinition() {

@@ -42,12 +42,24 @@ public class Line extends Annotation {
    * @param latLngs a list of the locations of the line in a longitude and latitude pairs
    */
   public void setLatLngs(List<LatLng> latLngs) {
+    setLatLngs(latLngs, true);
+  }
+
+  /**
+   * Set a list of LatLng for the line, which represents the locations of the line on the map
+   *
+   * @param latLngs a list of the locations of the line in a longitude and latitude pairs
+   * @param updateSource flag to indicate the source instantly
+   */
+  public void setLatLngs(List<LatLng> latLngs, boolean updateSource) {
     List<Point>points = new ArrayList<>();
     for (LatLng latLng : latLngs) {
       points.add(Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude()));
     }
     geometry = LineString.fromLngLats(points);
-    lineManager.updateSource();
+    if (updateSource) {
+      lineManager.updateSource();
+    }
   }
 
   // Property accessors

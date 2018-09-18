@@ -42,8 +42,20 @@ public class Circle extends Annotation {
    * @param latLng the location of the circle in a longitude and latitude pair
    */
   public void setLatLng(LatLng latLng) {
+    setLatLng(latLng, true);
+  }
+
+  /**
+   * Set the LatLng of the circle, which represents the location of the circle on the map
+   *
+   * @param latLng the location of the circle in a longitude and latitude pair
+   * @param updateSource flag to indicate the source instantly
+   */
+  public void setLatLng(LatLng latLng, boolean updateSource) {
     geometry = Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
-    circleManager.updateSource();
+    if (updateSource) {
+       circleManager.updateSource();
+    }
   }
 
   // Property accessors
