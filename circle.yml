@@ -33,6 +33,9 @@ jobs:
           name: Run unit-test and generate Jacoco test report
           command: ./gradlew jacocoTestReport
       - run:
+          name: Generate Activity Sanity tests
+          command: make generate-sanity-test
+      - run:
           name: Build testapp APK
           command: |
             ./gradlew accessToken
@@ -51,12 +54,6 @@ jobs:
             echo "${GCLOUD_SERVICE_ACCOUNT_JSON}" > secret.json
             gcloud auth activate-service-account --key-file secret.json --project mapbox-plugins-android-4e407
             rm secret.json
-      - run:
-          name: Run robo test on Firebase
-          no_output_timeout: 1200
-          shell: /bin/bash -euo pipefail
-          command: |
-            gcloud firebase test android run --type robo --app app/build/outputs/apk/debug/app-debug.apk --device-ids shamu --os-version-ids 22 --locales en --orientations portrait --timeout 5m
       - run:
           name: Run instrumentation tests on Firebase
           no_output_timeout: 1200

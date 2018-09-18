@@ -8,7 +8,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.plugins.testapp.activity.TrafficActivity;
+import com.mapbox.mapboxsdk.plugins.testapp.activity.traffic.TrafficActivity;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.plugins.utils.OnMapReadyIdlingResource;
