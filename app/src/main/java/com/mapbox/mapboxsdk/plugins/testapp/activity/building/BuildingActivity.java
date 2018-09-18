@@ -1,4 +1,4 @@
-package com.mapbox.mapboxsdk.plugins.testapp.activity;
+package com.mapbox.mapboxsdk.plugins.testapp.activity.building;
 
 import android.graphics.Color;
 import android.os.Bundle;

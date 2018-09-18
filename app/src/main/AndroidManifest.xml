@@ -44,7 +44,7 @@
         android:value=".activity.FeatureOverviewActivity"/>
     </activity>
     <activity
-      android:name=".activity.TrafficActivity"
+      android:name=".activity.traffic.TrafficActivity"
       android:description="@string/description_traffic"
       android:label="@string/title_traffic">
       <meta-data
@@ -55,7 +55,7 @@
         android:value=".activity.FeatureOverviewActivity"/>
     </activity>
     <activity
-      android:name=".activity.BuildingActivity"
+      android:name=".activity.building.BuildingActivity"
       android:description="@string/description_building"
       android:label="@string/title_building">
       <meta-data
@@ -159,7 +159,7 @@
         android:value=".activity.FeatureOverviewActivity"/>
     </activity>
     <activity
-      android:name=".activity.LocalizationActivity"
+      android:name=".activity.localization.LocalizationActivity"
       android:description="@string/description_localization"
       android:label="@string/title_localization">
       <meta-data

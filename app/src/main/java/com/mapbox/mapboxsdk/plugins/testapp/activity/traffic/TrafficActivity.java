@@ -1,4 +1,4 @@
-package com.mapbox.mapboxsdk.plugins.testapp.activity;
+package com.mapbox.mapboxsdk.plugins.testapp.activity.traffic;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;

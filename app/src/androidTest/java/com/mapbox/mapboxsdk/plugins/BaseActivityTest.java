@@ -1,4 +1,4 @@
-package com.mapbox.mapboxsdk.plugins.annotation;
+package com.mapbox.mapboxsdk.plugins;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,6 +11,8 @@ import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
+import com.mapbox.mapboxsdk.plugins.annotation.MapboxMapAction;
+import com.mapbox.mapboxsdk.plugins.annotation.WaitAction;
 import com.mapbox.mapboxsdk.plugins.utils.OnMapReadyIdlingResource;
 import junit.framework.Assert;
 import org.junit.After;

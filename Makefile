@@ -26,6 +26,9 @@ publish-local:
 	# This publishes to ~/.m2/repository/com/mapbox/mapboxsdk
 	export IS_LOCAL_DEVELOPMENT=true; ./gradlew uploadArchives
 
+generate-sanity-test:
+	npm install && node scripts/generate-activity-test.js
+
 #
 # individual Make commands
 #

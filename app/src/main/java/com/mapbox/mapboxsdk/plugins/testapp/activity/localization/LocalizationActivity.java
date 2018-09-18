@@ -1,4 +1,4 @@
-package com.mapbox.mapboxsdk.plugins.testapp.activity;
+package com.mapbox.mapboxsdk.plugins.testapp.activity.localization;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

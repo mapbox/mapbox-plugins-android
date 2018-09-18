@@ -12,6 +12,10 @@ build/
 *.pyc
 
 
+### Code gen activity sanity tests ###
+/node_modules
+app/src/androidTest/java/com/mapbox/mapboxsdk/plugins/gen
+
 ### Code gen annotation plugin ###
 plugin-annotation/scripts/code-gen.list
 plugin-annotation/scripts/node_modules/
