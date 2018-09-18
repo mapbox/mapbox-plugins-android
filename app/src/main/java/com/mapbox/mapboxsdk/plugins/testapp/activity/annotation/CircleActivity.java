@@ -14,6 +14,8 @@ import com.mapbox.mapboxsdk.plugins.annotation.OnCircleLongClickListener;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -52,9 +54,12 @@ public class CircleActivity extends AppCompatActivity {
       circle.setCircleRadius(12f);
 
       // random add circles across the globe
-      Circle currentCircle;
+      List<LatLng> latLngList = new ArrayList<>();
       for (int i = 0; i < 20; i++) {
-        currentCircle = circleManager.createCircle(createRandomLatLng());
+        latLngList.add(createRandomLatLng());
+      }
+      List<Circle> circles = circleManager.createCircles(latLngList);
+      for (Circle currentCircle : circles) {
         int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
         currentCircle.setCircleColor(PropertyFactory.colorToRgbaString(color));
         currentCircle.setCircleRadius(8f);

@@ -131,6 +131,26 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
     add(<%- type %>);
     return <%- type %>;
   }
+
+  /**
+   * Create <%- type %>s on the map from a list of LatLng coordinates.
+   *
+   * @param latLngs places to layout the <%- type %>s on the map
+   * @return a list of the newly created <%- type %>s
+   */
+  @UiThread
+  public List<<%- camelize(type) %>> create<%- camelize(type) %>s(@NonNull List<LatLng> latLngs) {
+    List<<%- camelize(type) %>> <%- type %>s = new ArrayList<>();
+    <%- camelize(type) %> <%- type %>;
+    for (LatLng latLng : latLngs) {
+      <%- type %> = new <%- camelize(type) %>(this, currentId);
+      <%- type %>.setLatLng(latLng, false);
+      <%- type %>s.add(<%- type %>);
+      add(<%- type %>);
+    }
+    updateSource();
+    return <%- type %>s;
+  }
 <% } else if (type === "line") { -%>
 
   /**
@@ -146,6 +166,26 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
     add(<%- type %>);
     return <%- type %>;
   }
+
+  /**
+   * Create lines on the map from a list of lists of LatLng coordinates.
+   *
+   * @param latLngs places to layout the lines on the map
+   * @return a list of the newly created lines
+   */
+  @UiThread
+  public List<Line> createLines(@NonNull List<List<LatLng>> latLngs) {
+    List<Line> lines = new ArrayList<>();
+    Line line;
+    for (List<LatLng> latLng : latLngs) {
+      line = new Line(this, currentId);
+      line.setLatLngs(latLng, false);
+      lines.add(line);
+      add(line);
+    }
+    updateSource();
+    return lines;
+  }
 <% } else { -%>
 
   /**
@@ -160,6 +200,26 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
     <%- type %>.setLatLngs(latLngs);
     add(<%- type %>);
     return <%- type %>;
+  }
+
+  /**
+   * Create fills on the map from a list of lists of lists of LatLng coordinates.
+   *
+   * @param latLngs places to layout the fills on the map
+   * @return a list of the newly created fills
+   */
+  @UiThread
+  public List<Fill> createFills(@NonNull List<List<List<LatLng>>> latLngs) {
+    List<Fill> fills = new ArrayList<>();
+    Fill fill;
+    for (List<List<LatLng>> latLng : latLngs) {
+      fill = new Fill(this, currentId);
+      fill.setLatLngs(latLng, false);
+      fills.add(fill);
+      add(fill);
+    }
+    updateSource();
+    return fills;
   }
 <% } -%>
 

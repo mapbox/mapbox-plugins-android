@@ -87,7 +87,7 @@ public class FillManager extends AnnotationManager<Fill, OnFillClickListener, On
       mapboxMap.addLayerBelow(layer, belowLayerId);
     }
   }
-  
+
   /**
    * Get the layer id of the annotation layer.
    *
@@ -121,6 +121,26 @@ public class FillManager extends AnnotationManager<Fill, OnFillClickListener, On
     fill.setLatLngs(latLngs);
     add(fill);
     return fill;
+  }
+
+  /**
+   * Create fills on the map from a list of lists of lists of LatLng coordinates.
+   *
+   * @param latLngs places to layout the fills on the map
+   * @return a list of the newly created fills
+   */
+  @UiThread
+  public List<Fill> createFills(@NonNull List<List<List<LatLng>>> latLngs) {
+    List<Fill> fills = new ArrayList<>();
+    Fill fill;
+    for (List<List<LatLng>> latLng : latLngs) {
+      fill = new Fill(this, currentId);
+      fill.setLatLngs(latLng, false);
+      fills.add(fill);
+      add(fill);
+    }
+    updateSource();
+    return fills;
   }
 
   private static PropertyValue<?>[] getLayerDefinition() {
