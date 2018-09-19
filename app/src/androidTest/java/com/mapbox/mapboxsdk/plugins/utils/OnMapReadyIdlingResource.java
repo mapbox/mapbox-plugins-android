@@ -18,14 +18,14 @@ public class OnMapReadyIdlingResource implements IdlingResource, OnMapReadyCallb
 
   public OnMapReadyIdlingResource(Activity activity) {
     new Handler(Looper.getMainLooper()).post(() -> {
-      try {
-        mapView = activity.findViewById(R.id.mapView);
-        if (mapView == null) {
-          mapView = activity.findViewById(R.id.map_view);
-        }
-        mapView.getMapAsync(this);
-      } catch (Exception err) {
-        throw new RuntimeException(err);
+      mapView = activity.findViewById(R.id.mapView);
+      if (mapView == null) {
+        // some activities have different MapView id
+        mapView = activity.findViewById(R.id.map_view);
+      }
+
+      if (mapView != null) {
+        mapView.getMapAsync(OnMapReadyIdlingResource.this);
       }
     });
   }

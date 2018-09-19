@@ -105,7 +105,12 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
    * @since 0.1.0
    */
   public void setMapLanguage(@NonNull Locale locale) {
-    setMapLanguage(checkMapLocalNonNull(locale));
+    MapLocale mapLocale = MapLocale.getMapLocale(locale);
+    if (mapLocale != null) {
+      setMapLanguage(mapLocale);
+    } else {
+      Timber.e("Couldn't match Locale %s to a MapLocale", locale.getDisplayName());
+    }
   }
 
 
@@ -181,7 +186,12 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
    * @since 0.1.0
    */
   public void setCameraToLocaleCountry(Locale locale) {
-    setCameraToLocaleCountry(checkMapLocalNonNull(locale));
+    MapLocale mapLocale = MapLocale.getMapLocale(locale);
+    if (mapLocale != null) {
+      setCameraToLocaleCountry(mapLocale);
+    } else {
+      Timber.e("Couldn't match Locale %s to a MapLocale", locale.getDisplayName());
+    }
   }
 
   /**
@@ -205,16 +215,6 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
   /*
    * Supporting methods
    */
-
-  private MapLocale checkMapLocalNonNull(Locale locale) {
-    MapLocale mapLocale = MapLocale.getMapLocale(locale);
-    if (mapLocale == null) {
-      throw new NullPointerException("Locale " + locale.toString() + " has no matching MapLocale ob"
-        + "ject. You need to create an instance of MapLocale and add it to the MapLocale Cache usin"
-        + "g the addMapLocale method.");
-    }
-    return mapLocale;
-  }
 
   /**
    * Checks whether the map's source is a source provided by Mapbox, rather than a custom source.
