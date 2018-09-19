@@ -389,7 +389,8 @@ const annotationManagerJava = ejs.compile(fs.readFileSync('../src/main/java/com/
 const annotationClickListener =  ejs.compile(fs.readFileSync('../src/main/java/com/mapbox/mapboxsdk/plugins/annotation/annotationclicklistener.java.ejs', 'utf8'), {strict: true});
 const annotationLongClickListener =  ejs.compile(fs.readFileSync('../src/main/java/com/mapbox/mapboxsdk/plugins/annotation/annotationlongclicklistener.java.ejs', 'utf8'), {strict: true});
 const annotationJavaUnitTests = ejs.compile(fs.readFileSync('../../app/src/androidTest/java/com/mapbox/mapboxsdk/plugins/annotation//annotation.junit.ejs', 'utf8'), {strict: true});
-const annotationManagerJavaUnitTests = ejs.compile(fs.readFileSync('../../app/src/androidTest/java/com/mapbox/mapboxsdk/plugins/annotation/annotationmanager.junit.ejs', 'utf8'), {strict: true});
+const annotationManagerJavaInstrumentationTests = ejs.compile(fs.readFileSync('../../app/src/androidTest/java/com/mapbox/mapboxsdk/plugins/annotation/annotationmanager.junit.ejs', 'utf8'), {strict: true});
+const annotationManagerJavaUnitTests = ejs.compile(fs.readFileSync('../src/test/java/com/mapbox/mapboxsdk/plugins/annotation/annotationmanager.junit.ejs', 'utf8'), {strict: true});
 
 for (const layer of layers) {
   if(layer.type === "symbol" || layer.type === "circle" || layer.type === "fill" || layer.type === "line"){
@@ -398,6 +399,7 @@ for (const layer of layers) {
       writeIfModified(`../src/main/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}.java`, annotationJava(layer));
       writeIfModified(`../src/main/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}Manager.java`, annotationManagerJava(layer));
       writeIfModified(`../../app/src/androidTest/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}Test.java`, annotationJavaUnitTests(layer));
-      writeIfModified(`../../app/src/androidTest/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}ManagerTest.java`, annotationManagerJavaUnitTests(layer));
+      writeIfModified(`../../app/src/androidTest/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}ManagerTest.java`, annotationManagerJavaInstrumentationTests(layer));
+      writeIfModified(`../src/test/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}ManagerTest.java`, annotationManagerJavaUnitTests(layer));
   }
 }

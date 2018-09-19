@@ -1,14 +1,17 @@
+// This file is generated.
+
 package com.mapbox.mapboxsdk.plugins.annotation;
 
-import com.mapbox.geojson.Point;
+import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
+import com.mapbox.mapboxsdk.style.layers.*;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -23,20 +26,30 @@ public class SymbolManagerTest {
 
   @Before
   public void beforeTest() {
-    symbolManager = new SymbolManager(mapboxMap, geoJsonSource, symbolLayer);
+    symbolManager = new SymbolManager(mapboxMap, geoJsonSource, symbolLayer, null);
   }
 
   @Test
   public void testAddSymbol() {
-    final Symbol symbol = symbolManager.createSymbol(new LatLng(12, 34));
-    assertEquals(symbolManager.getSymbols().get(0), symbol);
+    Symbol symbol = symbolManager.createSymbol(new LatLng());
+    assertEquals(symbolManager.getAnnotations().get(0), symbol);
+  }
+
+  @Test
+  public void addSymbols() {
+    List<LatLng> latLngList = new ArrayList<>();
+    latLngList.add(new LatLng());
+    latLngList.add(new LatLng(1, 1));
+    List<Symbol> symbols = symbolManager.createSymbols(latLngList);
+    assertTrue("Returned value size should match", symbols.size() == 2);
+    assertTrue("Annotations size should match", symbolManager.getAnnotations().size() == 2);
   }
 
   @Test
   public void testDeleteSymbol() {
-    Symbol symbol = symbolManager.createSymbol(new LatLng(12, 34));
-    symbolManager.deleteSymbol(symbol);
-    assertTrue(symbolManager.getSymbols().size() == 0);
+    Symbol symbol = symbolManager.createSymbol(new LatLng());
+    symbolManager.delete(symbol);
+    assertTrue(symbolManager.getAnnotations().size() == 0);
   }
 
   @Test
