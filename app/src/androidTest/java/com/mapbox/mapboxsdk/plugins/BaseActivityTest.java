@@ -49,9 +49,9 @@ public abstract class BaseActivityTest {
       Timber.e("Idling resource timed out. Couldn't not validate if map is ready.");
       throw new RuntimeException("Could not start test for " + getActivityClass().getSimpleName() + ".\n"
         + "The ViewHierarchy doesn't contain a view with resource id = android.R.id.content or \n"
-        + "the Activity doesn't contain an instance variable with a name equal to mapboxMap.\n"
+        + "the Activity doesn't contain an instance variable with a name equal to mapView.\n"
         + "You can resolve this issue by adding the requirements above or\n add "
-        + getActivityClass().getSimpleName() + " to the platform/android/scripts/exclude-activity-gen.json to blacklist"
+        + getActivityClass().getSimpleName() + " to the scripts/exclude-activity-gen.json to blacklist"
         + " the Activity from being generated.\n");
     }
   }
