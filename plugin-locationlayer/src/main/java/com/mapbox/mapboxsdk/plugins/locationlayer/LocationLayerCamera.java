@@ -2,6 +2,7 @@ package com.mapbox.mapboxsdk.plugins.locationlayer;
 
 import android.content.Context;
 import android.graphics.PointF;
+import android.support.annotation.VisibleForTesting;
 import android.view.MotionEvent;
 
 import com.mapbox.android.gestures.AndroidGesturesManager;
@@ -172,7 +173,8 @@ final class LocationLayerCamera implements PluginAnimator.OnCameraAnimationsValu
     }
   }
 
-  private MapboxMap.OnMoveListener onMoveListener = new MapboxMap.OnMoveListener() {
+  @VisibleForTesting
+  MapboxMap.OnMoveListener onMoveListener = new MapboxMap.OnMoveListener() {
     private boolean interrupt;
 
     @Override
@@ -192,7 +194,10 @@ final class LocationLayerCamera implements PluginAnimator.OnCameraAnimationsValu
         return;
       }
 
-      setCameraMode(CameraMode.NONE);
+      if (isBearingTracking() || isLocationTracking()) {
+        setCameraMode(CameraMode.NONE);
+        detector.interrupt();
+      }
     }
 
     @Override
