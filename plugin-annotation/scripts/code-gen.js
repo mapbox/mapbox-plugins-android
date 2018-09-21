@@ -383,14 +383,14 @@ global.supportsPropertyFunction = function (property) {
 };
 
 // Template processing //
-// Java + JNI Layers (Peer model)
-const annotationJava = ejs.compile(fs.readFileSync('plugin-annotation/src/main/java/com/mapbox/mapboxsdk/plugins/annotation/annotation.java.ejs', 'utf8'), {strict: true});
-const annotationManagerJava = ejs.compile(fs.readFileSync('plugin-annotation/src/main/java/com/mapbox/mapboxsdk/plugins/annotation/annotationManager.java.ejs', 'utf8'), {strict: true});
-const annotationClickListener =  ejs.compile(fs.readFileSync('plugin-annotation/src/main/java/com/mapbox/mapboxsdk/plugins/annotation/annotationclicklistener.java.ejs', 'utf8'), {strict: true});
-const annotationLongClickListener =  ejs.compile(fs.readFileSync('plugin-annotation/src/main/java/com/mapbox/mapboxsdk/plugins/annotation/annotationlongclicklistener.java.ejs', 'utf8'), {strict: true});
-const annotationJavaUnitTests = ejs.compile(fs.readFileSync('app/src/androidTest/java/com/mapbox/mapboxsdk/plugins/annotation//annotation.junit.ejs', 'utf8'), {strict: true});
-const annotationManagerJavaInstrumentationTests = ejs.compile(fs.readFileSync('app/src/androidTest/java/com/mapbox/mapboxsdk/plugins/annotation/annotationmanager.junit.ejs', 'utf8'), {strict: true});
-const annotationManagerJavaUnitTests = ejs.compile(fs.readFileSync('plugin-annotation/src/test/java/com/mapbox/mapboxsdk/plugins/annotation/annotationmanager.junit.ejs', 'utf8'), {strict: true});
+// Java
+const annotationJava = ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation.java.ejs', 'utf8'), {strict: true});
+const annotationManagerJava = ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation_manager.java.ejs', 'utf8'), {strict: true});
+const annotationClickListener =  ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation_click_listener.java.ejs', 'utf8'), {strict: true});
+const annotationLongClickListener =  ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation_long_click_listener.java.ejs', 'utf8'), {strict: true});
+const annotationJavaInstrumentationTests= ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation_instrumentation_test.junit.ejs', 'utf8'), {strict: true});
+const annotationManagerJavaInstrumentationTests = ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation_manager_instrumentation_test.junit.ejs', 'utf8'), {strict: true});
+const annotationManagerJavaUnitTests = ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation_manager_unit_test.junit.ejs', 'utf8'), {strict: true});
 
 for (const layer of layers) {
   if(layer.type === "symbol" || layer.type === "circle" || layer.type === "fill" || layer.type === "line"){
@@ -398,7 +398,7 @@ for (const layer of layers) {
       writeIfModified(`plugin-annotation/src/main/java/com/mapbox/mapboxsdk/plugins/annotation/On${camelize(layer.type)}LongClickListener.java`, annotationLongClickListener(layer));
       writeIfModified(`plugin-annotation/src/main/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}.java`, annotationJava(layer));
       writeIfModified(`plugin-annotation/src/main/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}Manager.java`, annotationManagerJava(layer));
-      writeIfModified(`app/src/androidTest/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}Test.java`, annotationJavaUnitTests(layer));
+      writeIfModified(`app/src/androidTest/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}Test.java`, annotationJavaInstrumentationTests(layer));
       writeIfModified(`app/src/androidTest/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}ManagerTest.java`, annotationManagerJavaInstrumentationTests(layer));
       writeIfModified(`plugin-annotation/src/test/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}ManagerTest.java`, annotationManagerJavaUnitTests(layer));
   }
