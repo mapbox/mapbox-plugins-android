@@ -29,6 +29,9 @@ publish-local:
 generate-sanity-test:
 	npm install && node scripts/generate-activity-test.js
 
+generate-annotation-code:
+	npm install && node plugin-annotation/scripts/code-gen.js
+
 #
 # individual Make commands
 #
