@@ -108,34 +108,31 @@ public class CircleManager extends AnnotationManager<Circle, OnCircleClickListen
     return Circle.ID_KEY;
   }
 
-
   /**
-   * Create a circle on the map from a LatLng coordinate.
+   * Create a circle on the map from a circle options.
    *
-   * @param latLng place to layout the circle on the map
+   * @param options the circle options to add to the map
    * @return the newly created circle
    */
   @UiThread
-  public Circle createCircle(@NonNull LatLng latLng) {
-    Circle circle = new Circle(this, currentId);
-    circle.setLatLng(latLng);
+  public Circle createCircle(@NonNull CircleOptions options) {
+    Circle circle = options.build(this, currentId);
     add(circle);
     return circle;
   }
 
   /**
-   * Create circles on the map from a list of LatLng coordinates.
+   * Create circles on the map from a list of option instances.
    *
-   * @param latLngs places to layout the circles on the map
+   * @param options the list of circle options to add to the map
    * @return a list of the newly created circles
    */
   @UiThread
-  public List<Circle> createCircles(@NonNull List<LatLng> latLngs) {
+  public List<Circle> createCircles(@NonNull List<CircleOptions> options) {
     List<Circle> circles = new ArrayList<>();
     Circle circle;
-    for (LatLng latLng : latLngs) {
-      circle = new Circle(this, currentId);
-      circle.setLatLng(latLng, false);
+    for (CircleOptions option : options) {
+      circle = option.build(this, currentId);
       circles.add(circle);
       add(circle);
     }

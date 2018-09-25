@@ -6,11 +6,17 @@ import com.mapbox.geojson.Geometry;
 public abstract class Annotation {
 
   public static final String ID_KEY = "id";
-  protected final JsonObject jsonObject = new JsonObject();
+  protected JsonObject jsonObject = new JsonObject();
   protected Geometry geometry;
 
   public Annotation(long id) {
     this.jsonObject.addProperty(ID_KEY, id);
+  }
+
+  public Annotation(long id, JsonObject jsonObject, Geometry geometry) {
+    this.jsonObject = jsonObject;
+    this.jsonObject.addProperty(ID_KEY, id);
+    this.geometry = geometry;
   }
 
   public void setGeometry(Geometry geometry){

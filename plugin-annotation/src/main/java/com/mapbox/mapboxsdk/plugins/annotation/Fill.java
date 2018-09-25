@@ -29,6 +29,19 @@ public class Fill extends Annotation {
   }
 
   /**
+   * Create a fill.
+   *
+   * @param manager the fill manager created and managing the fill
+   * @param id            the id of the fill
+   * @param jsonObject the features of the annotation
+   * @param geometry the geometry of the annotation
+   */
+  Fill(FillManager manager, long id, JsonObject jsonObject, Geometry geometry) {
+    super(id, jsonObject, geometry);
+    this.fillManager = manager;
+  }
+
+  /**
    * Called to update the underlying data source.
    */
   @Override

@@ -37,12 +37,12 @@ public class <%- camelize(type) %>ManagerTest {
   @Test
   public void testAdd<%- camelize(type) %>() {
 <% if (type === "circle" || type === "symbol") { -%>
-    <%- camelize(type) %> <%- type %> = <%- type %>Manager.create<%- camelize(type) %>(new LatLng());
+    <%- camelize(type) %> <%- type %> = <%- type %>Manager.create<%- camelize(type) %>(new <%- camelize(type) %>Options().withLatLng(new LatLng()));
 <% } else if (type === "line") { -%>
     List<LatLng>latLngs = new ArrayList<>();
     latLngs.add(new LatLng());
     latLngs.add(new LatLng(1,1));
-    <%- camelize(type) %> <%- type %> = <%- type %>Manager.create<%- camelize(type) %>(latLngs);
+    <%- camelize(type) %> <%- type %> = <%- type %>Manager.create<%- camelize(type) %>(new <%- camelize(type) %>Options().withLatLngs(latLngs));
 <% } else { -%>
     List<LatLng>innerLatLngs = new ArrayList<>();
     innerLatLngs.add(new LatLng());
@@ -50,7 +50,7 @@ public class <%- camelize(type) %>ManagerTest {
     innerLatLngs.add(new LatLng(-1,-1));
     List<List<LatLng>>latLngs = new ArrayList<>();
     latLngs.add(innerLatLngs);
-    <%- camelize(type) %> <%- type %> = <%- type %>Manager.create<%- camelize(type) %>(latLngs);
+    <%- camelize(type) %> <%- type %> = <%- type %>Manager.create<%- camelize(type) %>(new <%- camelize(type) %>Options().withLatLngs(latLngs));
 <% } -%>
     assertEquals(<%- type  %>Manager.getAnnotations().get(0), <%- type  %>);
   }
@@ -61,6 +61,10 @@ public class <%- camelize(type) %>ManagerTest {
     List<LatLng> latLngList = new ArrayList<>();
     latLngList.add(new LatLng());
     latLngList.add(new LatLng(1, 1));
+    List< <%- camelize(type) %>Options> options = new ArrayList<>();
+    for (LatLng latLng : latLngList) {
+      options.add(new  <%- camelize(type) %>Options().withLatLng(latLng));
+    }
 <% } else if (type === "line") { -%>
     List<List<LatLng>> latLngList = new ArrayList<>();
     latLngList.add(new ArrayList<LatLng>() {{
@@ -71,6 +75,10 @@ public class <%- camelize(type) %>ManagerTest {
       add(new LatLng(1, 1));
       add(new LatLng(2, 3));
     }});
+    List<LineOptions> options = new ArrayList<>();
+    for (List<LatLng> latLngs : latLngList) {
+      options.add(new LineOptions().withLatLngs(latLngs));
+    }
 <% } else { -%>
     List<List<LatLng>> latLngListOne = new ArrayList<>();
     latLngListOne.add(new ArrayList<LatLng>() {{
@@ -96,8 +104,12 @@ public class <%- camelize(type) %>ManagerTest {
       add(latLngListOne);
       add(latLngListTwo);
     }};
+    List<FillOptions> options = new ArrayList<>();
+    for (List<List<LatLng>> lists : latLngList) {
+      options.add(new FillOptions().withLatLngs(lists));
+    }
 <% } -%>
-    List<<%- camelize(type) %>> <%- type %>s = <%- type %>Manager.create<%- camelize(type) %>s(latLngList);
+    List<<%- camelize(type) %>> <%- type %>s = <%- type %>Manager.create<%- camelize(type) %>s(options);
     assertTrue("Returned value size should match", <%- type  %>s.size() == 2);
     assertTrue("Annotations size should match", <%- type  %>Manager.getAnnotations().size() == 2);
   }
@@ -105,12 +117,12 @@ public class <%- camelize(type) %>ManagerTest {
   @Test
   public void testDelete<%- camelize(type) %>() {
 <% if (type === "circle" || type === "symbol") { -%>
-    <%- camelize(type) %> <%- type %> = <%- type %>Manager.create<%- camelize(type) %>(new LatLng());
+    <%- camelize(type) %> <%- type %> = <%- type %>Manager.create<%- camelize(type) %>(new <%- camelize(type) %>Options().withLatLng(new LatLng()));
 <% } else if (type === "line") { -%>
     List<LatLng>latLngs = new ArrayList<>();
     latLngs.add(new LatLng());
     latLngs.add(new LatLng(1,1));
-    <%- camelize(type) %> <%- type %> = <%- type %>Manager.create<%- camelize(type) %>(latLngs);
+    <%- camelize(type) %> <%- type %> = <%- type %>Manager.create<%- camelize(type) %>(new <%- camelize(type) %>Options().withLatLngs(latLngs));
 <% } else { -%>
     List<LatLng>innerLatLngs = new ArrayList<>();
     innerLatLngs.add(new LatLng());
@@ -118,7 +130,7 @@ public class <%- camelize(type) %>ManagerTest {
     innerLatLngs.add(new LatLng(-1,-1));
     List<List<LatLng>>latLngs = new ArrayList<>();
     latLngs.add(innerLatLngs);
-    <%- camelize(type) %> <%- type %> = <%- type %>Manager.create<%- camelize(type) %>(latLngs);
+    <%- camelize(type) %> <%- type %> = <%- type %>Manager.create<%- camelize(type) %>(new <%- camelize(type) %>Options().withLatLngs(latLngs));
 <% } -%>
     <%- type  %>Manager.delete(<%- type  %>);
     assertTrue(<%- type  %>Manager.getAnnotations().size() == 0);
@@ -127,13 +139,13 @@ public class <%- camelize(type) %>ManagerTest {
   @Test
   public void testGeometry<%- camelize(type) %>() {
 <% if (type === "circle" || type === "symbol") { -%>
-    <%- camelize(type) %> <%- type %> = <%- type %>Manager.create<%- camelize(type) %>(new LatLng(12, 34));
+    <%- camelize(type) %> <%- type %> = <%- type %>Manager.create<%- camelize(type) %>(new <%- camelize(type) %>Options().withLatLng(new LatLng(12, 34)));
     assertEquals(<%- type  %>.getGeometry(), Point.fromLngLat(34, 12));
 <% } else if (type === "line") { -%>
     List<LatLng>latLngs = new ArrayList<>();
     latLngs.add(new LatLng());
     latLngs.add(new LatLng(1,1));
-    <%- camelize(type) %> <%- type %> = <%- type %>Manager.create<%- camelize(type) %>(latLngs);
+    <%- camelize(type) %> <%- type %> = <%- type %>Manager.create<%- camelize(type) %>(new <%- camelize(type) %>Options().withLatLngs(latLngs));
     assertEquals(line.getGeometry(), LineString.fromLngLats(new ArrayList<Point>() {{
       add(Point.fromLngLat(0, 0));
       add(Point.fromLngLat(1, 1));
@@ -145,7 +157,7 @@ public class <%- camelize(type) %>ManagerTest {
     innerLatLngs.add(new LatLng(-1,-1));
     List<List<LatLng>>latLngs = new ArrayList<>();
     latLngs.add(innerLatLngs);
-    Fill fill = fillManager.createFill(latLngs);
+    Fill fill = fillManager.createFill(new <%- camelize(type) %>Options().withLatLngs(latLngs));
     assertEquals(fill.getGeometry(), Polygon.fromLngLats(new ArrayList<List<Point>>() {{
       add(new ArrayList<Point>() {{
         add(Point.fromLngLat(0, 0));
@@ -159,14 +171,14 @@ public class <%- camelize(type) %>ManagerTest {
   @Test
   public void testFeatureId<%- camelize(type) %>() {
 <% if (type === "circle" || type === "symbol") { -%>
-    <%- camelize(type) %> <%- type %>Zero = <%- type %>Manager.create<%- camelize(type) %>(new LatLng());
-    <%- camelize(type) %> <%- type %>One = <%- type %>Manager.create<%- camelize(type) %>(new LatLng());
+    <%- camelize(type) %> <%- type %>Zero = <%- type %>Manager.create<%- camelize(type) %>(new <%- camelize(type) %>Options().withLatLng(new LatLng()));
+    <%- camelize(type) %> <%- type %>One = <%- type %>Manager.create<%- camelize(type) %>(new <%- camelize(type) %>Options().withLatLng(new LatLng()));
 <% } else if (type === "line") { -%>
     List<LatLng>latLngs = new ArrayList<>();
     latLngs.add(new LatLng());
     latLngs.add(new LatLng(1,1));
-    <%- camelize(type) %> <%- type %>Zero = <%- type %>Manager.create<%- camelize(type) %>(latLngs);
-    <%- camelize(type) %> <%- type %>One = <%- type %>Manager.create<%- camelize(type) %>(latLngs);
+    <%- camelize(type) %> <%- type %>Zero = <%- type %>Manager.create<%- camelize(type) %>(new <%- camelize(type) %>Options().withLatLngs(latLngs));
+    <%- camelize(type) %> <%- type %>One = <%- type %>Manager.create<%- camelize(type) %>(new <%- camelize(type) %>Options().withLatLngs(latLngs));
 <% } else { -%>
     List<LatLng>innerLatLngs = new ArrayList<>();
     innerLatLngs.add(new LatLng());
@@ -174,8 +186,8 @@ public class <%- camelize(type) %>ManagerTest {
     innerLatLngs.add(new LatLng(-1,-1));
     List<List<LatLng>>latLngs = new ArrayList<>();
     latLngs.add(innerLatLngs);
-    <%- camelize(type) %> <%- type %>Zero = <%- type %>Manager.create<%- camelize(type) %>(latLngs);
-    <%- camelize(type) %> <%- type %>One = <%- type %>Manager.create<%- camelize(type) %>(latLngs);
+    <%- camelize(type) %> <%- type %>Zero = <%- type %>Manager.create<%- camelize(type) %>(new <%- camelize(type) %>Options().withLatLngs(latLngs));
+    <%- camelize(type) %> <%- type %>One = <%- type %>Manager.create<%- camelize(type) %>(new <%- camelize(type) %>Options().withLatLngs(latLngs));
 <% } -%>
     assertEquals(<%- type  %>Zero.getFeature().get(<%- camelize(type) %>.ID_KEY).getAsLong(), 0);
     assertEquals(<%- type  %>One.getFeature().get(<%- camelize(type) %>.ID_KEY).getAsLong(), 1);

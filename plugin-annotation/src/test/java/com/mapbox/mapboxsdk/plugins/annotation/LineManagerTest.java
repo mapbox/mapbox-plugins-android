@@ -34,7 +34,7 @@ public class LineManagerTest {
     List<LatLng>latLngs = new ArrayList<>();
     latLngs.add(new LatLng());
     latLngs.add(new LatLng(1,1));
-    Line line = lineManager.createLine(latLngs);
+    Line line = lineManager.createLine(new LineOptions().withLatLngs(latLngs));
     assertEquals(lineManager.getAnnotations().get(0), line);
   }
 
@@ -49,7 +49,11 @@ public class LineManagerTest {
       add(new LatLng(1, 1));
       add(new LatLng(2, 3));
     }});
-    List<Line> lines = lineManager.createLines(latLngList);
+    List<LineOptions> options = new ArrayList<>();
+    for (List<LatLng> latLngs : latLngList) {
+      options.add(new LineOptions().withLatLngs(latLngs));
+    }
+    List<Line> lines = lineManager.createLines(options);
     assertTrue("Returned value size should match", lines.size() == 2);
     assertTrue("Annotations size should match", lineManager.getAnnotations().size() == 2);
   }
@@ -59,7 +63,7 @@ public class LineManagerTest {
     List<LatLng>latLngs = new ArrayList<>();
     latLngs.add(new LatLng());
     latLngs.add(new LatLng(1,1));
-    Line line = lineManager.createLine(latLngs);
+    Line line = lineManager.createLine(new LineOptions().withLatLngs(latLngs));
     lineManager.delete(line);
     assertTrue(lineManager.getAnnotations().size() == 0);
   }
@@ -69,7 +73,7 @@ public class LineManagerTest {
     List<LatLng>latLngs = new ArrayList<>();
     latLngs.add(new LatLng());
     latLngs.add(new LatLng(1,1));
-    Line line = lineManager.createLine(latLngs);
+    Line line = lineManager.createLine(new LineOptions().withLatLngs(latLngs));
     assertEquals(line.getGeometry(), LineString.fromLngLats(new ArrayList<Point>() {{
       add(Point.fromLngLat(0, 0));
       add(Point.fromLngLat(1, 1));
@@ -81,8 +85,8 @@ public class LineManagerTest {
     List<LatLng>latLngs = new ArrayList<>();
     latLngs.add(new LatLng());
     latLngs.add(new LatLng(1,1));
-    Line lineZero = lineManager.createLine(latLngs);
-    Line lineOne = lineManager.createLine(latLngs);
+    Line lineZero = lineManager.createLine(new LineOptions().withLatLngs(latLngs));
+    Line lineOne = lineManager.createLine(new LineOptions().withLatLngs(latLngs));
     assertEquals(lineZero.getFeature().get(Line.ID_KEY).getAsLong(), 0);
     assertEquals(lineOne.getFeature().get(Line.ID_KEY).getAsLong(), 1);
   }

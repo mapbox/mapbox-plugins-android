@@ -9,10 +9,7 @@ import android.widget.Toast;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolClickListener;
-import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolLongClickListener;
-import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
-import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
+import com.mapbox.mapboxsdk.plugins.annotation.*;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
@@ -63,19 +60,18 @@ public class SymbolActivity extends AppCompatActivity {
       symbolManager.setTextAllowOverlap(true);
 
       // create a symbol
-      symbol = symbolManager.createSymbol(new LatLng(6.687337, 0.381457));
-      symbol.setIconImage(MAKI_ICON_AIRPORT);
-      symbol.setIconSize(1.2f);
+      SymbolOptions symbolOptions = new SymbolOptions()
+        .withLatLng(new LatLng(6.687337, 0.381457))
+        .withIconImage(MAKI_ICON_AIRPORT)
+        .withIconSize(1.3f);
+      symbol = symbolManager.createSymbol(symbolOptions);
 
       // random add symbols across the globe
-      List<LatLng> latLngList = new ArrayList<>();
+      List<SymbolOptions> symbolOptionsList = new ArrayList<>();
       for (int i = 0; i < 20; i++) {
-        latLngList.add(createRandomLatLng());
+        symbolOptionsList.add(new SymbolOptions().withLatLng(createRandomLatLng()).withIconImage(MAKI_ICON_CAR));
       }
-      List<Symbol> symbols = symbolManager.createSymbols(latLngList);
-      for (Symbol currentSymbol : symbols) {
-        currentSymbol.setIconImage(MAKI_ICON_CAR);
-      }
+      symbolManager.createSymbols(symbolOptionsList);
     });
   }
 

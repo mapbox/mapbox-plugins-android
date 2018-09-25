@@ -7,10 +7,7 @@ import android.widget.Toast;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.plugins.annotation.Line;
-import com.mapbox.mapboxsdk.plugins.annotation.LineManager;
-import com.mapbox.mapboxsdk.plugins.annotation.OnLineClickListener;
-import com.mapbox.mapboxsdk.plugins.annotation.OnLineLongClickListener;
+import com.mapbox.mapboxsdk.plugins.annotation.*;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 
@@ -52,18 +49,24 @@ public class LineActivity extends AppCompatActivity {
       latLngs.add(new LatLng(-2.178992, -4.375974));
       latLngs.add(new LatLng(-4.107888, -7.639772));
       latLngs.add(new LatLng(2.798737, -11.439207));
-      lineManager.createLine(latLngs);
+      LineOptions lineOptions = new LineOptions()
+        .withLatLngs(latLngs)
+        .withLineColor(PropertyFactory.colorToRgbaString(Color.RED))
+        .withLineWidth(5.0f);
+      lineManager.createLine(lineOptions);
 
       // random add lines across the globe
       List<List<LatLng>> lists = new ArrayList<>();
       for (int i = 0; i < 100; i++) {
         lists.add(createRandomLatLngs());
       }
-      List<Line>lines = lineManager.createLines(lists);
-      for (Line line : lines) {
+
+      List<LineOptions> lineOptionsList = new ArrayList<>();
+      for (List<LatLng> list : lists) {
         int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
-        line.setLineColor(PropertyFactory.colorToRgbaString(color));
+        lineOptionsList.add(new LineOptions().withLatLngs(list).withLineColor(PropertyFactory.colorToRgbaString(color)));
       }
+      lineManager.createLines(lineOptionsList);
     });
   }
 

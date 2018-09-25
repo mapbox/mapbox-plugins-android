@@ -31,6 +31,20 @@ public class Symbol extends Annotation {
   }
 
   /**
+   * Create a symbol.
+   *
+   * @param manager the symbol manager created and managing the symbol
+   * @param id            the id of the symbol
+   * @param jsonObject the features of the annotation
+   * @param geometry the geometry of the annotation
+   */
+  Symbol(SymbolManager manager, long id, JsonObject jsonObject, Geometry geometry) {
+    super(id, jsonObject, geometry);
+    this.symbolManager = manager;
+    //this.jsonObject.addProperty(Z_INDEX, 0);
+  }
+
+  /**
    * Called to update the underlying data source.
    */
   @Override

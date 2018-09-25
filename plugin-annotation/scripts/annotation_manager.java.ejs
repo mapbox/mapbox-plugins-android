@@ -116,112 +116,37 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
     return <%- camelize(type) %>.ID_KEY;
   }
 
-<% if (type === "circle" || type === "symbol") { -%>
-
   /**
-   * Create a <%- type %> on the map from a LatLng coordinate.
+   * Create a <%- type %> on the map from a <%- type %> options.
    *
-   * @param latLng place to layout the <%- type %> on the map
+   * @param options the <%- type %> options to add to the map
    * @return the newly created <%- type %>
    */
   @UiThread
-  public <%- camelize(type) %> create<%- camelize(type) %>(@NonNull LatLng latLng) {
-    <%- camelize(type) %> <%- type %> = new <%- camelize(type) %>(this, currentId);
-    <%- type %>.setLatLng(latLng);
+  public <%- camelize(type) %> create<%- camelize(type) %>(@NonNull <%- camelize(type) %>Options options) {
+    <%- camelize(type) %> <%- type %> = options.build(this, currentId);
     add(<%- type %>);
     return <%- type %>;
   }
 
   /**
-   * Create <%- type %>s on the map from a list of LatLng coordinates.
+   * Create <%- type %>s on the map from a list of option instances.
    *
-   * @param latLngs places to layout the <%- type %>s on the map
+   * @param options the list of <%- type %> options to add to the map
    * @return a list of the newly created <%- type %>s
    */
   @UiThread
-  public List<<%- camelize(type) %>> create<%- camelize(type) %>s(@NonNull List<LatLng> latLngs) {
+  public List<<%- camelize(type) %>> create<%- camelize(type) %>s(@NonNull List<<%- camelize(type) %>Options> options) {
     List<<%- camelize(type) %>> <%- type %>s = new ArrayList<>();
     <%- camelize(type) %> <%- type %>;
-    for (LatLng latLng : latLngs) {
-      <%- type %> = new <%- camelize(type) %>(this, currentId);
-      <%- type %>.setLatLng(latLng, false);
+    for (<%- camelize(type) %>Options option : options) {
+      <%- type %> = option.build(this, currentId);
       <%- type %>s.add(<%- type %>);
       add(<%- type %>);
     }
     updateSource();
     return <%- type %>s;
   }
-<% } else if (type === "line") { -%>
-
-  /**
-   * Create a <%- type %> on the map from a LatLng coordinate.
-   *
-   * @param latLngs places to layout the <%- type %> on the map
-   * @return the newly created <%- type %>
-   */
-  @UiThread
-  public <%- camelize(type) %> create<%- camelize(type) %>(@NonNull List<LatLng> latLngs) {
-    <%- camelize(type) %> <%- type %> = new <%- camelize(type) %>(this, currentId);
-    <%- type %>.setLatLngs(latLngs);
-    add(<%- type %>);
-    return <%- type %>;
-  }
-
-  /**
-   * Create lines on the map from a list of lists of LatLng coordinates.
-   *
-   * @param latLngs places to layout the lines on the map
-   * @return a list of the newly created lines
-   */
-  @UiThread
-  public List<Line> createLines(@NonNull List<List<LatLng>> latLngs) {
-    List<Line> lines = new ArrayList<>();
-    Line line;
-    for (List<LatLng> latLng : latLngs) {
-      line = new Line(this, currentId);
-      line.setLatLngs(latLng, false);
-      lines.add(line);
-      add(line);
-    }
-    updateSource();
-    return lines;
-  }
-<% } else { -%>
-
-  /**
-   * Create a <%- type %> on the map from a LatLng coordinate.
-   *
-   * @param latLngs places to layout the <%- type %> on the map
-   * @return the newly created <%- type %>
-   */
-  @UiThread
-  public <%- camelize(type) %> create<%- camelize(type) %>(@NonNull List<List<LatLng>> latLngs) {
-    <%- camelize(type) %> <%- type %> = new <%- camelize(type) %>(this, currentId);
-    <%- type %>.setLatLngs(latLngs);
-    add(<%- type %>);
-    return <%- type %>;
-  }
-
-  /**
-   * Create fills on the map from a list of lists of lists of LatLng coordinates.
-   *
-   * @param latLngs places to layout the fills on the map
-   * @return a list of the newly created fills
-   */
-  @UiThread
-  public List<Fill> createFills(@NonNull List<List<List<LatLng>>> latLngs) {
-    List<Fill> fills = new ArrayList<>();
-    Fill fill;
-    for (List<List<LatLng>> latLng : latLngs) {
-      fill = new Fill(this, currentId);
-      fill.setLatLngs(latLng, false);
-      fills.add(fill);
-      add(fill);
-    }
-    updateSource();
-    return fills;
-  }
-<% } -%>
 
   private static PropertyValue<?>[] getLayerDefinition() {
     return new PropertyValue[]{

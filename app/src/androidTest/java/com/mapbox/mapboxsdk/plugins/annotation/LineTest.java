@@ -39,7 +39,7 @@ public class LineTest extends BaseActivityTest {
       List<LatLng>latLngs = new ArrayList<>();
       latLngs.add(new LatLng());
       latLngs.add(new LatLng(1,1));
-      line = lineManager.createLine(latLngs);
+      line = lineManager.createLine(new LineOptions().withLatLngs(latLngs));
     });
   }
 

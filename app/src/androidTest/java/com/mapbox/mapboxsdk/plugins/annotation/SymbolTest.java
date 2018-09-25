@@ -36,7 +36,7 @@ public class SymbolTest extends BaseActivityTest {
     Timber.i("Retrieving layer");
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       SymbolManager symbolManager = new SymbolManager(mapboxMap);
-      symbol = symbolManager.createSymbol(new LatLng());
+      symbol = symbolManager.createSymbol(new SymbolOptions().withLatLng(new LatLng()));
     });
   }
 

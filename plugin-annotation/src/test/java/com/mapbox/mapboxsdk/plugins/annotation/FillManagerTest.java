@@ -37,7 +37,7 @@ public class FillManagerTest {
     innerLatLngs.add(new LatLng(-1,-1));
     List<List<LatLng>>latLngs = new ArrayList<>();
     latLngs.add(innerLatLngs);
-    Fill fill = fillManager.createFill(latLngs);
+    Fill fill = fillManager.createFill(new FillOptions().withLatLngs(latLngs));
     assertEquals(fillManager.getAnnotations().get(0), fill);
   }
 
@@ -67,7 +67,11 @@ public class FillManagerTest {
       add(latLngListOne);
       add(latLngListTwo);
     }};
-    List<Fill> fills = fillManager.createFills(latLngList);
+    List<FillOptions> options = new ArrayList<>();
+    for (List<List<LatLng>> lists : latLngList) {
+      options.add(new FillOptions().withLatLngs(lists));
+    }
+    List<Fill> fills = fillManager.createFills(options);
     assertTrue("Returned value size should match", fills.size() == 2);
     assertTrue("Annotations size should match", fillManager.getAnnotations().size() == 2);
   }
@@ -80,7 +84,7 @@ public class FillManagerTest {
     innerLatLngs.add(new LatLng(-1,-1));
     List<List<LatLng>>latLngs = new ArrayList<>();
     latLngs.add(innerLatLngs);
-    Fill fill = fillManager.createFill(latLngs);
+    Fill fill = fillManager.createFill(new FillOptions().withLatLngs(latLngs));
     fillManager.delete(fill);
     assertTrue(fillManager.getAnnotations().size() == 0);
   }
@@ -93,7 +97,7 @@ public class FillManagerTest {
     innerLatLngs.add(new LatLng(-1,-1));
     List<List<LatLng>>latLngs = new ArrayList<>();
     latLngs.add(innerLatLngs);
-    Fill fill = fillManager.createFill(latLngs);
+    Fill fill = fillManager.createFill(new FillOptions().withLatLngs(latLngs));
     assertEquals(fill.getGeometry(), Polygon.fromLngLats(new ArrayList<List<Point>>() {{
       add(new ArrayList<Point>() {{
         add(Point.fromLngLat(0, 0));
@@ -111,8 +115,8 @@ public class FillManagerTest {
     innerLatLngs.add(new LatLng(-1,-1));
     List<List<LatLng>>latLngs = new ArrayList<>();
     latLngs.add(innerLatLngs);
-    Fill fillZero = fillManager.createFill(latLngs);
-    Fill fillOne = fillManager.createFill(latLngs);
+    Fill fillZero = fillManager.createFill(new FillOptions().withLatLngs(latLngs));
+    Fill fillOne = fillManager.createFill(new FillOptions().withLatLngs(latLngs));
     assertEquals(fillZero.getFeature().get(Fill.ID_KEY).getAsLong(), 0);
     assertEquals(fillOne.getFeature().get(Fill.ID_KEY).getAsLong(), 1);
   }

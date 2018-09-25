@@ -385,6 +385,7 @@ global.supportsPropertyFunction = function (property) {
 // Template processing //
 // Java
 const annotationJava = ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation.java.ejs', 'utf8'), {strict: true});
+const annotationOptionsJava = ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation_options.java.ejs', 'utf8'), {strict: true});
 const annotationManagerJava = ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation_manager.java.ejs', 'utf8'), {strict: true});
 const annotationClickListener =  ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation_click_listener.java.ejs', 'utf8'), {strict: true});
 const annotationLongClickListener =  ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation_long_click_listener.java.ejs', 'utf8'), {strict: true});
@@ -397,6 +398,7 @@ for (const layer of layers) {
       writeIfModified(`plugin-annotation/src/main/java/com/mapbox/mapboxsdk/plugins/annotation/On${camelize(layer.type)}ClickListener.java`, annotationClickListener(layer));
       writeIfModified(`plugin-annotation/src/main/java/com/mapbox/mapboxsdk/plugins/annotation/On${camelize(layer.type)}LongClickListener.java`, annotationLongClickListener(layer));
       writeIfModified(`plugin-annotation/src/main/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}.java`, annotationJava(layer));
+      writeIfModified(`plugin-annotation/src/main/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}Options.java`, annotationOptionsJava(layer));
       writeIfModified(`plugin-annotation/src/main/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}Manager.java`, annotationManagerJava(layer));
       writeIfModified(`app/src/androidTest/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}Test.java`, annotationJavaInstrumentationTests(layer));
       writeIfModified(`app/src/androidTest/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}ManagerTest.java`, annotationManagerJavaInstrumentationTests(layer));

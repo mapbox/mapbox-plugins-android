@@ -31,7 +31,7 @@ public class SymbolManagerTest {
 
   @Test
   public void testAddSymbol() {
-    Symbol symbol = symbolManager.createSymbol(new LatLng());
+    Symbol symbol = symbolManager.createSymbol(new SymbolOptions().withLatLng(new LatLng()));
     assertEquals(symbolManager.getAnnotations().get(0), symbol);
   }
 
@@ -40,28 +40,32 @@ public class SymbolManagerTest {
     List<LatLng> latLngList = new ArrayList<>();
     latLngList.add(new LatLng());
     latLngList.add(new LatLng(1, 1));
-    List<Symbol> symbols = symbolManager.createSymbols(latLngList);
+    List< SymbolOptions> options = new ArrayList<>();
+    for (LatLng latLng : latLngList) {
+      options.add(new  SymbolOptions().withLatLng(latLng));
+    }
+    List<Symbol> symbols = symbolManager.createSymbols(options);
     assertTrue("Returned value size should match", symbols.size() == 2);
     assertTrue("Annotations size should match", symbolManager.getAnnotations().size() == 2);
   }
 
   @Test
   public void testDeleteSymbol() {
-    Symbol symbol = symbolManager.createSymbol(new LatLng());
+    Symbol symbol = symbolManager.createSymbol(new SymbolOptions().withLatLng(new LatLng()));
     symbolManager.delete(symbol);
     assertTrue(symbolManager.getAnnotations().size() == 0);
   }
 
   @Test
   public void testGeometrySymbol() {
-    Symbol symbol = symbolManager.createSymbol(new LatLng(12, 34));
+    Symbol symbol = symbolManager.createSymbol(new SymbolOptions().withLatLng(new LatLng(12, 34)));
     assertEquals(symbol.getGeometry(), Point.fromLngLat(34, 12));
   }
 
   @Test
   public void testFeatureIdSymbol() {
-    Symbol symbolZero = symbolManager.createSymbol(new LatLng());
-    Symbol symbolOne = symbolManager.createSymbol(new LatLng());
+    Symbol symbolZero = symbolManager.createSymbol(new SymbolOptions().withLatLng(new LatLng()));
+    Symbol symbolOne = symbolManager.createSymbol(new SymbolOptions().withLatLng(new LatLng()));
     assertEquals(symbolZero.getFeature().get(Symbol.ID_KEY).getAsLong(), 0);
     assertEquals(symbolOne.getFeature().get(Symbol.ID_KEY).getAsLong(), 1);
   }
