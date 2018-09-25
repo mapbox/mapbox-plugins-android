@@ -126,7 +126,7 @@ public class FillOptions {
     return this;
   }
 
-  Fill build(FillManager fillManager, long id) {
+  Fill build(long id) {
     if (geometry == null) {
       throw new RuntimeException("geometry field is required");
     }
@@ -135,6 +135,6 @@ public class FillOptions {
     jsonObject.addProperty("fill-color", fillColor);
     jsonObject.addProperty("fill-outline-color", fillOutlineColor);
     jsonObject.addProperty("fill-pattern", fillPattern);
-    return new Fill(fillManager, id, jsonObject, geometry);
+    return new Fill(id, jsonObject, geometry);
   }
 }

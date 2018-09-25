@@ -124,8 +124,9 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
    */
   @UiThread
   public <%- camelize(type) %> create<%- camelize(type) %>(@NonNull <%- camelize(type) %>Options options) {
-    <%- camelize(type) %> <%- type %> = options.build(this, currentId);
+    <%- camelize(type) %> <%- type %> = options.build(currentId);
     add(<%- type %>);
+    updateSource();
     return <%- type %>;
   }
 
@@ -140,7 +141,7 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
     List<<%- camelize(type) %>> <%- type %>s = new ArrayList<>();
     <%- camelize(type) %> <%- type %>;
     for (<%- camelize(type) %>Options option : options) {
-      <%- type %> = option.build(this, currentId);
+      <%- type %> = option.build(currentId);
       <%- type %>s.add(<%- type %>);
       add(<%- type %>);
     }

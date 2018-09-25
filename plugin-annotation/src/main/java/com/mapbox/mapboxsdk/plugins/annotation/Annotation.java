@@ -37,6 +37,4 @@ public abstract class Annotation {
   JsonObject getFeature() {
     return jsonObject;
   }
-
-  abstract void update();
 }

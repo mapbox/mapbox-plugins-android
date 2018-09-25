@@ -15,38 +15,15 @@ import java.util.List;
 @UiThread
 public class Line extends Annotation {
 
-  private final LineManager lineManager;
-
   /**
    * Create a line.
    *
-   * @param manager the line manager created and managing the line
-   * @param id            the id of the line
-   */
-  Line(LineManager manager, long id) {
-    super(id);
-    this.lineManager = manager;
-  }
-
-  /**
-   * Create a line.
-   *
-   * @param manager the line manager created and managing the line
    * @param id            the id of the line
    * @param jsonObject the features of the annotation
    * @param geometry the geometry of the annotation
    */
-  Line(LineManager manager, long id, JsonObject jsonObject, Geometry geometry) {
+  Line(long id, JsonObject jsonObject, Geometry geometry) {
     super(id, jsonObject, geometry);
-    this.lineManager = manager;
-  }
-
-  /**
-   * Called to update the underlying data source.
-   */
-  @Override
-  public void update() {
-    lineManager.updateSource();
   }
 
   /**
@@ -55,24 +32,11 @@ public class Line extends Annotation {
    * @param latLngs a list of the locations of the line in a longitude and latitude pairs
    */
   public void setLatLngs(List<LatLng> latLngs) {
-    setLatLngs(latLngs, true);
-  }
-
-  /**
-   * Set a list of LatLng for the line, which represents the locations of the line on the map
-   *
-   * @param latLngs a list of the locations of the line in a longitude and latitude pairs
-   * @param updateSource flag to indicate the source instantly
-   */
-  public void setLatLngs(List<LatLng> latLngs, boolean updateSource) {
     List<Point>points = new ArrayList<>();
     for (LatLng latLng : latLngs) {
       points.add(Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude()));
     }
     geometry = LineString.fromLngLats(points);
-    if (updateSource) {
-      lineManager.updateSource();
-    }
   }
 
   // Property accessors
@@ -92,7 +56,6 @@ public class Line extends Annotation {
    */
   public void setLineJoin(@Property.LINE_JOIN String value) {
     jsonObject.addProperty("line-join", value);
-    lineManager.updateSource();
   }
 
   /**
@@ -111,7 +74,6 @@ public class Line extends Annotation {
    */
   public void setLineOpacity(Float value) {
     jsonObject.addProperty("line-opacity", value);
-    lineManager.updateSource();
   }
 
   /**
@@ -130,7 +92,6 @@ public class Line extends Annotation {
    */
   public void setLineColor(String value) {
     jsonObject.addProperty("line-color", value);
-    lineManager.updateSource();
   }
 
   /**
@@ -149,7 +110,6 @@ public class Line extends Annotation {
    */
   public void setLineWidth(Float value) {
     jsonObject.addProperty("line-width", value);
-    lineManager.updateSource();
   }
 
   /**
@@ -168,7 +128,6 @@ public class Line extends Annotation {
    */
   public void setLineGapWidth(Float value) {
     jsonObject.addProperty("line-gap-width", value);
-    lineManager.updateSource();
   }
 
   /**
@@ -187,7 +146,6 @@ public class Line extends Annotation {
    */
   public void setLineOffset(Float value) {
     jsonObject.addProperty("line-offset", value);
-    lineManager.updateSource();
   }
 
   /**
@@ -206,7 +164,6 @@ public class Line extends Annotation {
    */
   public void setLineBlur(Float value) {
     jsonObject.addProperty("line-blur", value);
-    lineManager.updateSource();
   }
 
   /**
@@ -225,7 +182,6 @@ public class Line extends Annotation {
    */
   public void setLinePattern(String value) {
     jsonObject.addProperty("line-pattern", value);
-    lineManager.updateSource();
   }
 
 }

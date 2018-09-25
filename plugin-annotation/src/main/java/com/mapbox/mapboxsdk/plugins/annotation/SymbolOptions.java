@@ -559,7 +559,7 @@ public class SymbolOptions {
     return this;
   }
 
-  Symbol build(SymbolManager symbolManager, long id) {
+  Symbol build(long id) {
     if (geometry == null) {
       throw new RuntimeException("geometry field is required");
     }
@@ -589,6 +589,6 @@ public class SymbolOptions {
     jsonObject.addProperty("text-halo-color", textHaloColor);
     jsonObject.addProperty("text-halo-width", textHaloWidth);
     jsonObject.addProperty("text-halo-blur", textHaloBlur);
-    return new Symbol(symbolManager, id, jsonObject, geometry);
+    return new Symbol(id, jsonObject, geometry);
   }
 }

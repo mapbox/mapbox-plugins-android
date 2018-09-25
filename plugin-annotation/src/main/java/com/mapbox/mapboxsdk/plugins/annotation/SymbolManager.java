@@ -117,8 +117,9 @@ public class SymbolManager extends AnnotationManager<Symbol, OnSymbolClickListen
    */
   @UiThread
   public Symbol createSymbol(@NonNull SymbolOptions options) {
-    Symbol symbol = options.build(this, currentId);
+    Symbol symbol = options.build(currentId);
     add(symbol);
+    updateSource();
     return symbol;
   }
 
@@ -133,7 +134,7 @@ public class SymbolManager extends AnnotationManager<Symbol, OnSymbolClickListen
     List<Symbol> symbols = new ArrayList<>();
     Symbol symbol;
     for (SymbolOptions option : options) {
-      symbol = option.build(this, currentId);
+      symbol = option.build(currentId);
       symbols.add(symbol);
       add(symbol);
     }

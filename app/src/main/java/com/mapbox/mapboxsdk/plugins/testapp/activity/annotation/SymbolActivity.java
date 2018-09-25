@@ -109,6 +109,7 @@ public class SymbolActivity extends AppCompatActivity {
     } else {
       return super.onOptionsItemSelected(item);
     }
+    symbolManager.update(symbol);
     return true;
   }
 

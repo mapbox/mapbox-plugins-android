@@ -206,7 +206,7 @@ public class LineOptions {
     return this;
   }
 
-  Line build(LineManager lineManager, long id) {
+  Line build(long id) {
     if (geometry == null) {
       throw new RuntimeException("geometry field is required");
     }
@@ -219,6 +219,6 @@ public class LineOptions {
     jsonObject.addProperty("line-offset", lineOffset);
     jsonObject.addProperty("line-blur", lineBlur);
     jsonObject.addProperty("line-pattern", linePattern);
-    return new Line(lineManager, id, jsonObject, geometry);
+    return new Line(id, jsonObject, geometry);
   }
 }
