@@ -116,8 +116,9 @@ public class CircleManager extends AnnotationManager<Circle, OnCircleClickListen
    */
   @UiThread
   public Circle createCircle(@NonNull CircleOptions options) {
-    Circle circle = options.build(this, currentId);
+    Circle circle = options.build(currentId);
     add(circle);
+    updateSource();
     return circle;
   }
 
@@ -132,7 +133,7 @@ public class CircleManager extends AnnotationManager<Circle, OnCircleClickListen
     List<Circle> circles = new ArrayList<>();
     Circle circle;
     for (CircleOptions option : options) {
-      circle = option.build(this, currentId);
+      circle = option.build(currentId);
       circles.add(circle);
       add(circle);
     }

@@ -23,44 +23,18 @@ public class <%- camelize(type) %> extends Annotation {
 <% if (type === "symbol") { -%>
   //public static final String Z_INDEX = "z-index";
 <% } -%>
-  private final <%- camelize(type) %>Manager <%- type %>Manager;
-
   /**
    * Create a <%- type %>.
    *
-   * @param manager the <%- type %> manager created and managing the <%- type %>
-   * @param id            the id of the <%- type %>
-   */
-  <%- camelize(type) %>(<%- camelize(type) %>Manager manager, long id) {
-    super(id);
-    this.<%- type %>Manager = manager;
-<% if (type === "symbol") { -%>
-    //this.jsonObject.addProperty(Z_INDEX, 0);
-<% } -%>
-  }
-
-  /**
-   * Create a <%- type %>.
-   *
-   * @param manager the <%- type %> manager created and managing the <%- type %>
    * @param id            the id of the <%- type %>
    * @param jsonObject the features of the annotation
    * @param geometry the geometry of the annotation
    */
-  <%- camelize(type) %>(<%- camelize(type) %>Manager manager, long id, JsonObject jsonObject, Geometry geometry) {
+  <%- camelize(type) %>(long id, JsonObject jsonObject, Geometry geometry) {
     super(id, jsonObject, geometry);
-    this.<%- type %>Manager = manager;
 <% if (type === "symbol") { -%>
     //this.jsonObject.addProperty(Z_INDEX, 0);
 <% } -%>
-  }
-
-  /**
-   * Called to update the underlying data source.
-   */
-  @Override
-  public void update() {
-    <%- type %>Manager.updateSource();
   }
 <% if (type === "circle" || type === "symbol") { -%>
 
@@ -70,20 +44,7 @@ public class <%- camelize(type) %> extends Annotation {
    * @param latLng the location of the <%- type %> in a longitude and latitude pair
    */
   public void setLatLng(LatLng latLng) {
-    setLatLng(latLng, true);
-  }
-
-  /**
-   * Set the LatLng of the <%- type %>, which represents the location of the <%- type %> on the map
-   *
-   * @param latLng the location of the <%- type %> in a longitude and latitude pair
-   * @param updateSource flag to indicate the source instantly
-   */
-  public void setLatLng(LatLng latLng, boolean updateSource) {
     geometry = Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
-    if (updateSource) {
-       <%- type %>Manager.updateSource();
-    }
   }
 <% } else if (type === "line") { -%>
 
@@ -93,24 +54,11 @@ public class <%- camelize(type) %> extends Annotation {
    * @param latLngs a list of the locations of the line in a longitude and latitude pairs
    */
   public void setLatLngs(List<LatLng> latLngs) {
-    setLatLngs(latLngs, true);
-  }
-
-  /**
-   * Set a list of LatLng for the line, which represents the locations of the line on the map
-   *
-   * @param latLngs a list of the locations of the line in a longitude and latitude pairs
-   * @param updateSource flag to indicate the source instantly
-   */
-  public void setLatLngs(List<LatLng> latLngs, boolean updateSource) {
     List<Point>points = new ArrayList<>();
     for (LatLng latLng : latLngs) {
       points.add(Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude()));
     }
     geometry = LineString.fromLngLats(points);
-    if (updateSource) {
-      lineManager.updateSource();
-    }
   }
 <% } else { -%>
 
@@ -120,16 +68,6 @@ public class <%- camelize(type) %> extends Annotation {
    * @param latLngs a list of a lists of the locations of the line in a longitude and latitude pairs
    */
   public void setLatLngs(List<List<LatLng>> latLngs) {
-    setLatLngs(latLngs, true);
-  }
-
-  /**
-   * Set a list of lists of LatLng for the fill, which represents the locations of the fill on the map
-   *
-   * @param latLngs a list of a lists of the locations of the line in a longitude and latitude pairs
-   * @param updateSource flag to indicate the source instantly
-   */
-  public void setLatLngs(List<List<LatLng>> latLngs, boolean updateSource) {
     List<List<Point>> points = new ArrayList<>();
     for (List<LatLng> innerLatLngs : latLngs) {
       List<Point>innerList = new ArrayList<>();
@@ -139,9 +77,6 @@ public class <%- camelize(type) %> extends Annotation {
       points.add(innerList);
     }
     geometry = Polygon.fromLngLats(points);
-    if (updateSource) {
-      fillManager.updateSource();
-    }
   }
 <% } -%>
 <% if (type === "symbol") { -%>
@@ -201,7 +136,6 @@ public class <%- camelize(type) %> extends Annotation {
       jsonArray.add(element);
     }
     jsonObject.add("<%-property.name %>", jsonArray);
-    <%- type %>Manager.updateSource();
   }
 
 <% } else { -%>
@@ -221,7 +155,6 @@ public class <%- camelize(type) %> extends Annotation {
    */
   public void set<%- camelize(property.name) %>(<%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), " ") %><%- propertyType(property) %> value) {
     jsonObject.addProperty("<%- property.name %>", value);
-    <%- type %>Manager.updateSource();
   }
 
 <% } -%>

@@ -116,8 +116,9 @@ public class LineManager extends AnnotationManager<Line, OnLineClickListener, On
    */
   @UiThread
   public Line createLine(@NonNull LineOptions options) {
-    Line line = options.build(this, currentId);
+    Line line = options.build(currentId);
     add(line);
+    updateSource();
     return line;
   }
 
@@ -132,7 +133,7 @@ public class LineManager extends AnnotationManager<Line, OnLineClickListener, On
     List<Line> lines = new ArrayList<>();
     Line line;
     for (LineOptions option : options) {
-      line = option.build(this, currentId);
+      line = option.build(currentId);
       lines.add(line);
       add(line);
     }
