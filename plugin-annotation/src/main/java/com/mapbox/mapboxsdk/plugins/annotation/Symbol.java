@@ -16,40 +16,16 @@ import java.util.List;
 public class Symbol extends Annotation {
 
   //public static final String Z_INDEX = "z-index";
-  private final SymbolManager symbolManager;
-
   /**
    * Create a symbol.
    *
-   * @param manager the symbol manager created and managing the symbol
-   * @param id            the id of the symbol
-   */
-  Symbol(SymbolManager manager, long id) {
-    super(id);
-    this.symbolManager = manager;
-    //this.jsonObject.addProperty(Z_INDEX, 0);
-  }
-
-  /**
-   * Create a symbol.
-   *
-   * @param manager the symbol manager created and managing the symbol
    * @param id            the id of the symbol
    * @param jsonObject the features of the annotation
    * @param geometry the geometry of the annotation
    */
-  Symbol(SymbolManager manager, long id, JsonObject jsonObject, Geometry geometry) {
+  Symbol(long id, JsonObject jsonObject, Geometry geometry) {
     super(id, jsonObject, geometry);
-    this.symbolManager = manager;
     //this.jsonObject.addProperty(Z_INDEX, 0);
-  }
-
-  /**
-   * Called to update the underlying data source.
-   */
-  @Override
-  public void update() {
-    symbolManager.updateSource();
   }
 
   /**
@@ -58,20 +34,7 @@ public class Symbol extends Annotation {
    * @param latLng the location of the symbol in a longitude and latitude pair
    */
   public void setLatLng(LatLng latLng) {
-    setLatLng(latLng, true);
-  }
-
-  /**
-   * Set the LatLng of the symbol, which represents the location of the symbol on the map
-   *
-   * @param latLng the location of the symbol in a longitude and latitude pair
-   * @param updateSource flag to indicate the source instantly
-   */
-  public void setLatLng(LatLng latLng, boolean updateSource) {
     geometry = Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
-    if (updateSource) {
-       symbolManager.updateSource();
-    }
   }
 
   ///**
@@ -116,7 +79,6 @@ public class Symbol extends Annotation {
    */
   public void setIconSize(Float value) {
     jsonObject.addProperty("icon-size", value);
-    symbolManager.updateSource();
   }
 
   /**
@@ -135,7 +97,6 @@ public class Symbol extends Annotation {
    */
   public void setIconImage(String value) {
     jsonObject.addProperty("icon-image", value);
-    symbolManager.updateSource();
   }
 
   /**
@@ -154,7 +115,6 @@ public class Symbol extends Annotation {
    */
   public void setIconRotate(Float value) {
     jsonObject.addProperty("icon-rotate", value);
-    symbolManager.updateSource();
   }
 
   /**
@@ -182,7 +142,6 @@ public class Symbol extends Annotation {
       jsonArray.add(element);
     }
     jsonObject.add("icon-offset", jsonArray);
-    symbolManager.updateSource();
   }
 
   /**
@@ -201,7 +160,6 @@ public class Symbol extends Annotation {
    */
   public void setIconAnchor(@Property.ICON_ANCHOR String value) {
     jsonObject.addProperty("icon-anchor", value);
-    symbolManager.updateSource();
   }
 
   /**
@@ -220,7 +178,6 @@ public class Symbol extends Annotation {
    */
   public void setTextField(String value) {
     jsonObject.addProperty("text-field", value);
-    symbolManager.updateSource();
   }
 
   /**
@@ -248,7 +205,6 @@ public class Symbol extends Annotation {
       jsonArray.add(element);
     }
     jsonObject.add("text-font", jsonArray);
-    symbolManager.updateSource();
   }
 
   /**
@@ -267,7 +223,6 @@ public class Symbol extends Annotation {
    */
   public void setTextSize(Float value) {
     jsonObject.addProperty("text-size", value);
-    symbolManager.updateSource();
   }
 
   /**
@@ -286,7 +241,6 @@ public class Symbol extends Annotation {
    */
   public void setTextMaxWidth(Float value) {
     jsonObject.addProperty("text-max-width", value);
-    symbolManager.updateSource();
   }
 
   /**
@@ -305,7 +259,6 @@ public class Symbol extends Annotation {
    */
   public void setTextLetterSpacing(Float value) {
     jsonObject.addProperty("text-letter-spacing", value);
-    symbolManager.updateSource();
   }
 
   /**
@@ -324,7 +277,6 @@ public class Symbol extends Annotation {
    */
   public void setTextJustify(@Property.TEXT_JUSTIFY String value) {
     jsonObject.addProperty("text-justify", value);
-    symbolManager.updateSource();
   }
 
   /**
@@ -343,7 +295,6 @@ public class Symbol extends Annotation {
    */
   public void setTextAnchor(@Property.TEXT_ANCHOR String value) {
     jsonObject.addProperty("text-anchor", value);
-    symbolManager.updateSource();
   }
 
   /**
@@ -362,7 +313,6 @@ public class Symbol extends Annotation {
    */
   public void setTextRotate(Float value) {
     jsonObject.addProperty("text-rotate", value);
-    symbolManager.updateSource();
   }
 
   /**
@@ -381,7 +331,6 @@ public class Symbol extends Annotation {
    */
   public void setTextTransform(@Property.TEXT_TRANSFORM String value) {
     jsonObject.addProperty("text-transform", value);
-    symbolManager.updateSource();
   }
 
   /**
@@ -409,7 +358,6 @@ public class Symbol extends Annotation {
       jsonArray.add(element);
     }
     jsonObject.add("text-offset", jsonArray);
-    symbolManager.updateSource();
   }
 
   /**
@@ -428,7 +376,6 @@ public class Symbol extends Annotation {
    */
   public void setIconOpacity(Float value) {
     jsonObject.addProperty("icon-opacity", value);
-    symbolManager.updateSource();
   }
 
   /**
@@ -447,7 +394,6 @@ public class Symbol extends Annotation {
    */
   public void setIconColor(String value) {
     jsonObject.addProperty("icon-color", value);
-    symbolManager.updateSource();
   }
 
   /**
@@ -466,7 +412,6 @@ public class Symbol extends Annotation {
    */
   public void setIconHaloColor(String value) {
     jsonObject.addProperty("icon-halo-color", value);
-    symbolManager.updateSource();
   }
 
   /**
@@ -485,7 +430,6 @@ public class Symbol extends Annotation {
    */
   public void setIconHaloWidth(Float value) {
     jsonObject.addProperty("icon-halo-width", value);
-    symbolManager.updateSource();
   }
 
   /**
@@ -504,7 +448,6 @@ public class Symbol extends Annotation {
    */
   public void setIconHaloBlur(Float value) {
     jsonObject.addProperty("icon-halo-blur", value);
-    symbolManager.updateSource();
   }
 
   /**
@@ -523,7 +466,6 @@ public class Symbol extends Annotation {
    */
   public void setTextOpacity(Float value) {
     jsonObject.addProperty("text-opacity", value);
-    symbolManager.updateSource();
   }
 
   /**
@@ -542,7 +484,6 @@ public class Symbol extends Annotation {
    */
   public void setTextColor(String value) {
     jsonObject.addProperty("text-color", value);
-    symbolManager.updateSource();
   }
 
   /**
@@ -561,7 +502,6 @@ public class Symbol extends Annotation {
    */
   public void setTextHaloColor(String value) {
     jsonObject.addProperty("text-halo-color", value);
-    symbolManager.updateSource();
   }
 
   /**
@@ -580,7 +520,6 @@ public class Symbol extends Annotation {
    */
   public void setTextHaloWidth(Float value) {
     jsonObject.addProperty("text-halo-width", value);
-    symbolManager.updateSource();
   }
 
   /**
@@ -599,7 +538,6 @@ public class Symbol extends Annotation {
    */
   public void setTextHaloBlur(Float value) {
     jsonObject.addProperty("text-halo-blur", value);
-    symbolManager.updateSource();
   }
 
 }

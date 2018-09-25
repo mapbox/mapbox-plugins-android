@@ -116,8 +116,9 @@ public class FillManager extends AnnotationManager<Fill, OnFillClickListener, On
    */
   @UiThread
   public Fill createFill(@NonNull FillOptions options) {
-    Fill fill = options.build(this, currentId);
+    Fill fill = options.build(currentId);
     add(fill);
+    updateSource();
     return fill;
   }
 
@@ -132,7 +133,7 @@ public class FillManager extends AnnotationManager<Fill, OnFillClickListener, On
     List<Fill> fills = new ArrayList<>();
     Fill fill;
     for (FillOptions option : options) {
-      fill = option.build(this, currentId);
+      fill = option.build(currentId);
       fills.add(fill);
       add(fill);
     }

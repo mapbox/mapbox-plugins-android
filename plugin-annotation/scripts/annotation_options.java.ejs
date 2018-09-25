@@ -106,7 +106,7 @@ public class <%- camelize(type) %>Options {
   }
 <% } -%>
 
-  <%- camelize(type) %> build(<%- camelize(type) %>Manager <%- type %>Manager, long id) {
+  <%- camelize(type) %> build(long id) {
     if (geometry == null) {
       throw new RuntimeException("geometry field is required");
     }
@@ -120,6 +120,6 @@ public class <%- camelize(type) %>Options {
 <% } -%>
 <% } -%>
 <% } -%>
-    return new <%- camelize(type) %>(<%- type %>Manager, id, jsonObject, geometry);
+    return new <%- camelize(type) %>(id, jsonObject, geometry);
   }
 }

@@ -14,6 +14,13 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Generic AnnotationManager, can be used to create annotation specific managers.
+ *
+ * @param <T> type of annotation
+ * @param <U> type of annotation click listener, depends on generic T
+ * @param <V> type of annotation long click listener, depends on generic T
+ */
 public abstract class AnnotationManager<
   T extends Annotation,
   U extends OnAnnotationClickListener<T>,
@@ -49,20 +56,61 @@ public abstract class AnnotationManager<
     return annotations;
   }
 
+  /**
+   * Adds an annotatiokn to the map.
+   *
+   * @param annotation annotation to be added
+   */
   @UiThread
-  void add(@NonNull T t) {
-    annotations.put(currentId, t);
+  void add(@NonNull T annotation) {
+    annotations.put(annotation.getId(), annotation);
     currentId++;
+  }
+
+  /**
+   * Adds annotations to the map.
+   *
+   * @param annotationList list of annotation to be added
+   */
+  @UiThread
+  void add(@NonNull List<T> annotationList) {
+    for (T annotation : annotationList) {
+      annotations.put(annotation.getId(), annotation);
+    }
   }
 
   /**
    * Delete an annotation from the map.
    *
-   * @param t annotation to be deleted
+   * @param annotation annotation to be deleted
    */
   @UiThread
-  public void delete(T t){
-    annotations.remove(t.getId());
+  public void delete(T annotation) {
+    annotations.remove(annotation.getId());
+    updateSource();
+  }
+
+  /**
+   * Update an annotation on the map.
+   *
+   * @param annotation annotation to be updated
+   */
+  @UiThread
+  public void update(T annotation) {
+    annotations.put(annotation.getId(), annotation);
+    updateSource();
+  }
+
+  /**
+   * Update annotations on the map.
+   *
+   * @param annotationList list of annotation to be updated
+   */
+  @UiThread
+  public void update(List<T> annotationList) {
+    for (T annotation : annotationList) {
+      annotations.put(annotation.getId(), annotation);
+    }
     updateSource();
   }
 
@@ -157,7 +205,7 @@ public abstract class AnnotationManager<
         return;
       }
 
-      T annotation= queryMapForFeatures(point);
+      T annotation = queryMapForFeatures(point);
       if (annotation != null) {
         for (U clickListener : clickListeners) {
           clickListener.onAnnotationClick(annotation);
@@ -171,7 +219,7 @@ public abstract class AnnotationManager<
         return;
       }
 
-      T annotation= queryMapForFeatures(point);
+      T annotation = queryMapForFeatures(point);
       if (annotation != null) {
         for (V clickListener : longClickListeners) {
           clickListener.onAnnotationLongClick(annotation);

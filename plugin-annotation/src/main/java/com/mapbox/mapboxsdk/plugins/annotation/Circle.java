@@ -15,38 +15,15 @@ import java.util.List;
 @UiThread
 public class Circle extends Annotation {
 
-  private final CircleManager circleManager;
-
   /**
    * Create a circle.
    *
-   * @param manager the circle manager created and managing the circle
-   * @param id            the id of the circle
-   */
-  Circle(CircleManager manager, long id) {
-    super(id);
-    this.circleManager = manager;
-  }
-
-  /**
-   * Create a circle.
-   *
-   * @param manager the circle manager created and managing the circle
    * @param id            the id of the circle
    * @param jsonObject the features of the annotation
    * @param geometry the geometry of the annotation
    */
-  Circle(CircleManager manager, long id, JsonObject jsonObject, Geometry geometry) {
+  Circle(long id, JsonObject jsonObject, Geometry geometry) {
     super(id, jsonObject, geometry);
-    this.circleManager = manager;
-  }
-
-  /**
-   * Called to update the underlying data source.
-   */
-  @Override
-  public void update() {
-    circleManager.updateSource();
   }
 
   /**
@@ -55,20 +32,7 @@ public class Circle extends Annotation {
    * @param latLng the location of the circle in a longitude and latitude pair
    */
   public void setLatLng(LatLng latLng) {
-    setLatLng(latLng, true);
-  }
-
-  /**
-   * Set the LatLng of the circle, which represents the location of the circle on the map
-   *
-   * @param latLng the location of the circle in a longitude and latitude pair
-   * @param updateSource flag to indicate the source instantly
-   */
-  public void setLatLng(LatLng latLng, boolean updateSource) {
     geometry = Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
-    if (updateSource) {
-       circleManager.updateSource();
-    }
   }
 
   // Property accessors
@@ -88,7 +52,6 @@ public class Circle extends Annotation {
    */
   public void setCircleRadius(Float value) {
     jsonObject.addProperty("circle-radius", value);
-    circleManager.updateSource();
   }
 
   /**
@@ -107,7 +70,6 @@ public class Circle extends Annotation {
    */
   public void setCircleColor(String value) {
     jsonObject.addProperty("circle-color", value);
-    circleManager.updateSource();
   }
 
   /**
@@ -126,7 +88,6 @@ public class Circle extends Annotation {
    */
   public void setCircleBlur(Float value) {
     jsonObject.addProperty("circle-blur", value);
-    circleManager.updateSource();
   }
 
   /**
@@ -145,7 +106,6 @@ public class Circle extends Annotation {
    */
   public void setCircleOpacity(Float value) {
     jsonObject.addProperty("circle-opacity", value);
-    circleManager.updateSource();
   }
 
   /**
@@ -164,7 +124,6 @@ public class Circle extends Annotation {
    */
   public void setCircleStrokeWidth(Float value) {
     jsonObject.addProperty("circle-stroke-width", value);
-    circleManager.updateSource();
   }
 
   /**
@@ -183,7 +142,6 @@ public class Circle extends Annotation {
    */
   public void setCircleStrokeColor(String value) {
     jsonObject.addProperty("circle-stroke-color", value);
-    circleManager.updateSource();
   }
 
   /**
@@ -202,7 +160,6 @@ public class Circle extends Annotation {
    */
   public void setCircleStrokeOpacity(Float value) {
     jsonObject.addProperty("circle-stroke-opacity", value);
-    circleManager.updateSource();
   }
 
 }

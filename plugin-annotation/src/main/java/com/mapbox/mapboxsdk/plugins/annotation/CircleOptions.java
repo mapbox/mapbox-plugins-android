@@ -181,7 +181,7 @@ public class CircleOptions {
     return this;
   }
 
-  Circle build(CircleManager circleManager, long id) {
+  Circle build(long id) {
     if (geometry == null) {
       throw new RuntimeException("geometry field is required");
     }
@@ -193,6 +193,6 @@ public class CircleOptions {
     jsonObject.addProperty("circle-stroke-width", circleStrokeWidth);
     jsonObject.addProperty("circle-stroke-color", circleStrokeColor);
     jsonObject.addProperty("circle-stroke-opacity", circleStrokeOpacity);
-    return new Circle(circleManager, id, jsonObject, geometry);
+    return new Circle(id, jsonObject, geometry);
   }
 }
