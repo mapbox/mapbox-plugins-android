@@ -1,0 +1,125 @@
+<%
+  const type = locals.type;
+  const properties = locals.properties;
+  const doc = locals.doc;
+-%>
+// This file is generated.
+
+package com.mapbox.mapboxsdk.plugins.annotation;
+
+import com.google.gson.*;
+import com.mapbox.geojson.Geometry;
+import com.mapbox.mapboxsdk.style.layers.Property;
+
+import com.mapbox.geojson.*;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.convertArray;
+
+/**
+ * Builder class from which a <%- type %> is created.
+ */
+public class <%- camelize(type) %>Options {
+
+  private Geometry geometry;
+<% for (const property of properties) { -%>
+<% if (supportsPropertyFunction(property)) { -%>
+  private <%- propertyType(property) %> <%- camelizeWithLeadingLowercase(property.name) %>;
+<% } -%>
+<% } -%>
+<% for (const property of properties) { -%>
+<% if (supportsPropertyFunction(property)) { -%>
+
+  /**
+   * Set <%- property.name %> to initialise the <%- type %> with.
+   *
+   * @param <%- camelizeWithLeadingLowercase(property.name) %> the <%- property.name %> value
+   * @return this
+   */
+  public <%- camelize(type) %>Options with<%- camelize(property.name) %>(<%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), " ") %><%- propertyType(property) %> <%- camelizeWithLeadingLowercase(property.name) %>) {
+    this.<%- camelizeWithLeadingLowercase(property.name) %> =  <%- camelizeWithLeadingLowercase(property.name) %>;
+    return this;
+  }
+
+  /**
+   * Get the current configured  <%- property.name %> for the <%- type %>
+   *
+   * @return <%- camelizeWithLeadingLowercase(property.name) %> value
+   */
+  public <%- propertyType(property) %> get<%- camelize(property.name) %>() {
+    return <%- camelizeWithLeadingLowercase(property.name) %>;
+  }
+<% } -%>
+<% } -%>
+
+
+<% if (type === "circle" || type === "symbol") { -%>
+
+  /**
+   * Set the LatLng of the <%- type %>, which represents the location of the <%- type %> on the map
+   *
+   * @param latLng the location of the <%- type %> in a longitude and latitude pair
+   * @return this
+   */
+  public <%- camelize(type) %>Options withLatLng(LatLng latLng) {
+    geometry = Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
+    return this;
+  }
+<% } else if (type === "line") { -%>
+
+  /**
+   * Set a list of LatLng for the line, which represents the locations of the line on the map
+   *
+   * @param latLngs a list of the locations of the line in a longitude and latitude pairs
+   * @return this
+   */
+  public <%- camelize(type) %>Options withLatLngs(List<LatLng> latLngs) {
+    List<Point>points = new ArrayList<>();
+    for (LatLng latLng : latLngs) {
+      points.add(Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude()));
+    }
+    geometry = LineString.fromLngLats(points);
+    return this;
+  }
+<% } else { -%>
+
+  /**
+   * Set a list of lists of LatLng for the fill, which represents the locations of the fill on the map
+   *
+   * @param latLngs a list of a lists of the locations of the line in a longitude and latitude pairs
+   * @return this
+   */
+  public <%- camelize(type) %>Options withLatLngs(List<List<LatLng>> latLngs) {
+    List<List<Point>> points = new ArrayList<>();
+    for (List<LatLng> innerLatLngs : latLngs) {
+      List<Point>innerList = new ArrayList<>();
+      for (LatLng latLng : innerLatLngs) {
+        innerList.add(Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude()));
+      }
+      points.add(innerList);
+    }
+    geometry = Polygon.fromLngLats(points);
+    return this;
+  }
+<% } -%>
+
+  <%- camelize(type) %> build(<%- camelize(type) %>Manager <%- type %>Manager, long id) {
+    if (geometry == null) {
+      throw new RuntimeException("geometry field is required");
+    }
+    JsonObject jsonObject = new JsonObject();
+<% for (const property of properties) { -%>
+<% if (supportsPropertyFunction(property)) { -%>
+<% if (propertyType(property).endsWith("[]")) { -%>
+    jsonObject.add("<%- property.name %>", convertArray(<%- camelizeWithLeadingLowercase(property.name) %>));
+<% } else { -%>
+    jsonObject.addProperty("<%- property.name %>", <%- camelizeWithLeadingLowercase(property.name) %>);
+<% } -%>
+<% } -%>
+<% } -%>
+    return new <%- camelize(type) %>(<%- type %>Manager, id, jsonObject, geometry);
+  }
+}

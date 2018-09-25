@@ -108,34 +108,31 @@ public class FillManager extends AnnotationManager<Fill, OnFillClickListener, On
     return Fill.ID_KEY;
   }
 
-
   /**
-   * Create a fill on the map from a LatLng coordinate.
+   * Create a fill on the map from a fill options.
    *
-   * @param latLngs places to layout the fill on the map
+   * @param options the fill options to add to the map
    * @return the newly created fill
    */
   @UiThread
-  public Fill createFill(@NonNull List<List<LatLng>> latLngs) {
-    Fill fill = new Fill(this, currentId);
-    fill.setLatLngs(latLngs);
+  public Fill createFill(@NonNull FillOptions options) {
+    Fill fill = options.build(this, currentId);
     add(fill);
     return fill;
   }
 
   /**
-   * Create fills on the map from a list of lists of lists of LatLng coordinates.
+   * Create fills on the map from a list of option instances.
    *
-   * @param latLngs places to layout the fills on the map
+   * @param options the list of fill options to add to the map
    * @return a list of the newly created fills
    */
   @UiThread
-  public List<Fill> createFills(@NonNull List<List<List<LatLng>>> latLngs) {
+  public List<Fill> createFills(@NonNull List<FillOptions> options) {
     List<Fill> fills = new ArrayList<>();
     Fill fill;
-    for (List<List<LatLng>> latLng : latLngs) {
-      fill = new Fill(this, currentId);
-      fill.setLatLngs(latLng, false);
+    for (FillOptions option : options) {
+      fill = option.build(this, currentId);
       fills.add(fill);
       add(fill);
     }

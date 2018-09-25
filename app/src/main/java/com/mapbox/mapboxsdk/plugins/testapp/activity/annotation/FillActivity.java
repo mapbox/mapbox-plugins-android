@@ -7,10 +7,7 @@ import android.widget.Toast;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.plugins.annotation.Fill;
-import com.mapbox.mapboxsdk.plugins.annotation.FillManager;
-import com.mapbox.mapboxsdk.plugins.annotation.OnFillClickListener;
-import com.mapbox.mapboxsdk.plugins.annotation.OnFillLongClickListener;
+import com.mapbox.mapboxsdk.plugins.annotation.*;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 
@@ -54,20 +51,22 @@ public class FillActivity extends AppCompatActivity {
       innerLatLngs.add(new LatLng(-21.085074, -15.747196));
       List<List<LatLng>> latLngs = new ArrayList<>();
       latLngs.add(innerLatLngs);
-      Fill fill = fillManager.createFill(latLngs);
-      fill.setFillColor(PropertyFactory.colorToRgbaString(Color.RED));
+
+      FillOptions fillOptions = new FillOptions()
+        .withLatLngs(latLngs)
+        .withFillColor(PropertyFactory.colorToRgbaString(Color.RED));
+      fillManager.createFill(fillOptions);
 
       // random add fills across the globe
-      List<List<List<LatLng>>> latLngList = new ArrayList<>();
+      List<FillOptions> fillOptionsList = new ArrayList<>();
       for (int i = 0; i < 20; i++) {
-        latLngList.add(createRandomLatLngs());
-      }
-
-      List<Fill> fills = fillManager.createFills(latLngList);
-      for (Fill currentFill : fills) {
         int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
-        currentFill.setFillColor(PropertyFactory.colorToRgbaString(color));
+        fillOptionsList.add(new FillOptions()
+          .withLatLngs(createRandomLatLngs())
+          .withFillColor(PropertyFactory.colorToRgbaString(color))
+        );
       }
+      fillManager.createFills(fillOptionsList);
     });
   }
 

@@ -108,34 +108,31 @@ public class LineManager extends AnnotationManager<Line, OnLineClickListener, On
     return Line.ID_KEY;
   }
 
-
   /**
-   * Create a line on the map from a LatLng coordinate.
+   * Create a line on the map from a line options.
    *
-   * @param latLngs places to layout the line on the map
+   * @param options the line options to add to the map
    * @return the newly created line
    */
   @UiThread
-  public Line createLine(@NonNull List<LatLng> latLngs) {
-    Line line = new Line(this, currentId);
-    line.setLatLngs(latLngs);
+  public Line createLine(@NonNull LineOptions options) {
+    Line line = options.build(this, currentId);
     add(line);
     return line;
   }
 
   /**
-   * Create lines on the map from a list of lists of LatLng coordinates.
+   * Create lines on the map from a list of option instances.
    *
-   * @param latLngs places to layout the lines on the map
+   * @param options the list of line options to add to the map
    * @return a list of the newly created lines
    */
   @UiThread
-  public List<Line> createLines(@NonNull List<List<LatLng>> latLngs) {
+  public List<Line> createLines(@NonNull List<LineOptions> options) {
     List<Line> lines = new ArrayList<>();
     Line line;
-    for (List<LatLng> latLng : latLngs) {
-      line = new Line(this, currentId);
-      line.setLatLngs(latLng, false);
+    for (LineOptions option : options) {
+      line = option.build(this, currentId);
       lines.add(line);
       add(line);
     }

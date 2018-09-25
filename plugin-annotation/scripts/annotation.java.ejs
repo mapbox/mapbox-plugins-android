@@ -40,6 +40,22 @@ public class <%- camelize(type) %> extends Annotation {
   }
 
   /**
+   * Create a <%- type %>.
+   *
+   * @param manager the <%- type %> manager created and managing the <%- type %>
+   * @param id            the id of the <%- type %>
+   * @param jsonObject the features of the annotation
+   * @param geometry the geometry of the annotation
+   */
+  <%- camelize(type) %>(<%- camelize(type) %>Manager manager, long id, JsonObject jsonObject, Geometry geometry) {
+    super(id, jsonObject, geometry);
+    this.<%- type %>Manager = manager;
+<% if (type === "symbol") { -%>
+    //this.jsonObject.addProperty(Z_INDEX, 0);
+<% } -%>
+  }
+
+  /**
    * Called to update the underlying data source.
    */
   @Override

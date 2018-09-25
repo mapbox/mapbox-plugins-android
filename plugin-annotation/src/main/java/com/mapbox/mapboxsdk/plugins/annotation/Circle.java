@@ -29,6 +29,19 @@ public class Circle extends Annotation {
   }
 
   /**
+   * Create a circle.
+   *
+   * @param manager the circle manager created and managing the circle
+   * @param id            the id of the circle
+   * @param jsonObject the features of the annotation
+   * @param geometry the geometry of the annotation
+   */
+  Circle(CircleManager manager, long id, JsonObject jsonObject, Geometry geometry) {
+    super(id, jsonObject, geometry);
+    this.circleManager = manager;
+  }
+
+  /**
    * Called to update the underlying data source.
    */
   @Override

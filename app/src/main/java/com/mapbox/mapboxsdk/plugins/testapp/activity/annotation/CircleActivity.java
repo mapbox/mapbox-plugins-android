@@ -7,10 +7,7 @@ import android.widget.Toast;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.plugins.annotation.Circle;
-import com.mapbox.mapboxsdk.plugins.annotation.CircleManager;
-import com.mapbox.mapboxsdk.plugins.annotation.OnCircleClickListener;
-import com.mapbox.mapboxsdk.plugins.annotation.OnCircleLongClickListener;
+import com.mapbox.mapboxsdk.plugins.annotation.*;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 
@@ -49,21 +46,23 @@ public class CircleActivity extends AppCompatActivity {
       ).show());
 
       // create a fixed circle
-      Circle circle = circleManager.createCircle(new LatLng(6.687337, 0.381457));
-      circle.setCircleColor(PropertyFactory.colorToRgbaString(Color.YELLOW));
-      circle.setCircleRadius(12f);
+      CircleOptions circleOptions = new CircleOptions()
+        .withLatLng(new LatLng(6.687337, 0.381457))
+        .withCircleColor(PropertyFactory.colorToRgbaString(Color.YELLOW))
+        .withCircleRadius(12f);
+      circleManager.createCircle(circleOptions);
 
       // random add circles across the globe
-      List<LatLng> latLngList = new ArrayList<>();
+      List<CircleOptions> circleOptionsList = new ArrayList<>();
       for (int i = 0; i < 20; i++) {
-        latLngList.add(createRandomLatLng());
-      }
-      List<Circle> circles = circleManager.createCircles(latLngList);
-      for (Circle currentCircle : circles) {
         int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
-        currentCircle.setCircleColor(PropertyFactory.colorToRgbaString(color));
-        currentCircle.setCircleRadius(8f);
+        circleOptionsList.add(new CircleOptions()
+          .withLatLng(createRandomLatLng())
+          .withCircleColor(PropertyFactory.colorToRgbaString(color))
+          .withCircleRadius(8f)
+        );
       }
+      circleManager.createCircles(circleOptionsList);
     });
   }
 

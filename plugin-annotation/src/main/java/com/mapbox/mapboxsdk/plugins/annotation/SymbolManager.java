@@ -109,34 +109,31 @@ public class SymbolManager extends AnnotationManager<Symbol, OnSymbolClickListen
     return Symbol.ID_KEY;
   }
 
-
   /**
-   * Create a symbol on the map from a LatLng coordinate.
+   * Create a symbol on the map from a symbol options.
    *
-   * @param latLng place to layout the symbol on the map
+   * @param options the symbol options to add to the map
    * @return the newly created symbol
    */
   @UiThread
-  public Symbol createSymbol(@NonNull LatLng latLng) {
-    Symbol symbol = new Symbol(this, currentId);
-    symbol.setLatLng(latLng);
+  public Symbol createSymbol(@NonNull SymbolOptions options) {
+    Symbol symbol = options.build(this, currentId);
     add(symbol);
     return symbol;
   }
 
   /**
-   * Create symbols on the map from a list of LatLng coordinates.
+   * Create symbols on the map from a list of option instances.
    *
-   * @param latLngs places to layout the symbols on the map
+   * @param options the list of symbol options to add to the map
    * @return a list of the newly created symbols
    */
   @UiThread
-  public List<Symbol> createSymbols(@NonNull List<LatLng> latLngs) {
+  public List<Symbol> createSymbols(@NonNull List<SymbolOptions> options) {
     List<Symbol> symbols = new ArrayList<>();
     Symbol symbol;
-    for (LatLng latLng : latLngs) {
-      symbol = new Symbol(this, currentId);
-      symbol.setLatLng(latLng, false);
+    for (SymbolOptions option : options) {
+      symbol = option.build(this, currentId);
       symbols.add(symbol);
       add(symbol);
     }

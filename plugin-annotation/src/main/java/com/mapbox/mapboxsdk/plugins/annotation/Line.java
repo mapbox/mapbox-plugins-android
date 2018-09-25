@@ -29,6 +29,19 @@ public class Line extends Annotation {
   }
 
   /**
+   * Create a line.
+   *
+   * @param manager the line manager created and managing the line
+   * @param id            the id of the line
+   * @param jsonObject the features of the annotation
+   * @param geometry the geometry of the annotation
+   */
+  Line(LineManager manager, long id, JsonObject jsonObject, Geometry geometry) {
+    super(id, jsonObject, geometry);
+    this.lineManager = manager;
+  }
+
+  /**
    * Called to update the underlying data source.
    */
   @Override
