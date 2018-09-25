@@ -68,7 +68,10 @@ dependencies {
   implementation dependenciesList.kotlin
 
   // Mapbox
-  implementation dependenciesList.mapboxMapSdk
+  implementation(dependenciesList.mapboxMapSdk, {
+    exclude group: 'android.arch.lifecycle'
+    exclude group: 'com.google.android.gms'
+  })
   implementation dependenciesList.mapboxGeocoding
 
   // Architecture
