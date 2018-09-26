@@ -18,11 +18,13 @@ import java.util.List;
  * Generic AnnotationManager, can be used to create annotation specific managers.
  *
  * @param <T> type of annotation
+ * @param <S> type of options for building the annotation, depends on generic T
  * @param <U> type of annotation click listener, depends on generic T
  * @param <V> type of annotation long click listener, depends on generic T
  */
 public abstract class AnnotationManager<
   T extends Annotation,
+  S extends Options<T>,
   U extends OnAnnotationClickListener<T>,
   V extends OnAnnotationLongClickListener<T>> {
 
@@ -57,26 +59,38 @@ public abstract class AnnotationManager<
   }
 
   /**
-   * Adds an annotatiokn to the map.
+   * Create an annotation on the map
    *
-   * @param annotation annotation to be added
+   * @param options the annotation options defining the annotation to build
+   * @return the build annotation
    */
   @UiThread
-  void add(@NonNull T annotation) {
-    annotations.put(annotation.getId(), annotation);
+  public T create(S options) {
+    T t = options.build(currentId);
+    annotations.put(t.getId(), t);
     currentId++;
+    updateSource();
+    return t;
   }
 
   /**
-   * Adds annotations to the map.
+   * Create a list of annotations on the map.
    *
-   * @param annotationList list of annotation to be added
+   * @param optionsList the list of annotation options defining the list of annotations to build
+   * @return the list of build annotations
    */
   @UiThread
-  void add(@NonNull List<T> annotationList) {
-    for (T annotation : annotationList) {
+  public List<T> create(List<S> optionsList) {
+    List<T> annotationList = new ArrayList<>();
+    T annotation;
+    for (S options : optionsList) {
+      annotation = options.build(currentId);
+      annotationList.add(annotation);
       annotations.put(annotation.getId(), annotation);
+      currentId++;
     }
+    updateSource();
+    return annotationList;
   }
 
   /**
@@ -87,6 +101,19 @@ public abstract class AnnotationManager<
   @UiThread
   public void delete(T annotation) {
     annotations.remove(annotation.getId());
+    updateSource();
+  }
+
+  /**
+   * Deletes annotations from the map.
+   *
+   * @param annotationList the list of annotations to be deleted
+   */
+  @UiThread
+  public void delete(List<T> annotationList) {
+    for (T annotation : annotationList) {
+      annotations.remove(annotation.getId());
+    }
     updateSource();
   }
 

@@ -29,7 +29,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 /**
  * The symbol manager allows to add symbols to a map.
  */
-public class SymbolManager extends AnnotationManager<Symbol, OnSymbolClickListener, OnSymbolLongClickListener> {
+public class SymbolManager extends AnnotationManager<Symbol, SymbolOptions, OnSymbolClickListener, OnSymbolLongClickListener> {
 
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-symbol-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-symbol-layer";
@@ -107,39 +107,6 @@ public class SymbolManager extends AnnotationManager<Symbol, OnSymbolClickListen
   @Override
   String getAnnotationIdKey() {
     return Symbol.ID_KEY;
-  }
-
-  /**
-   * Create a symbol on the map from a symbol options.
-   *
-   * @param options the symbol options to add to the map
-   * @return the newly created symbol
-   */
-  @UiThread
-  public Symbol createSymbol(@NonNull SymbolOptions options) {
-    Symbol symbol = options.build(currentId);
-    add(symbol);
-    updateSource();
-    return symbol;
-  }
-
-  /**
-   * Create symbols on the map from a list of option instances.
-   *
-   * @param options the list of symbol options to add to the map
-   * @return a list of the newly created symbols
-   */
-  @UiThread
-  public List<Symbol> createSymbols(@NonNull List<SymbolOptions> options) {
-    List<Symbol> symbols = new ArrayList<>();
-    Symbol symbol;
-    for (SymbolOptions option : options) {
-      symbol = option.build(currentId);
-      symbols.add(symbol);
-      add(symbol);
-    }
-    updateSource();
-    return symbols;
   }
 
   private static PropertyValue<?>[] getLayerDefinition() {

@@ -31,7 +31,7 @@ public class CircleManagerTest {
 
   @Test
   public void testAddCircle() {
-    Circle circle = circleManager.createCircle(new CircleOptions().withLatLng(new LatLng()));
+    Circle circle = circleManager.create(new CircleOptions().withLatLng(new LatLng()));
     assertEquals(circleManager.getAnnotations().get(0), circle);
   }
 
@@ -44,28 +44,28 @@ public class CircleManagerTest {
     for (LatLng latLng : latLngList) {
       options.add(new  CircleOptions().withLatLng(latLng));
     }
-    List<Circle> circles = circleManager.createCircles(options);
+    List<Circle> circles = circleManager.create(options);
     assertTrue("Returned value size should match", circles.size() == 2);
     assertTrue("Annotations size should match", circleManager.getAnnotations().size() == 2);
   }
 
   @Test
   public void testDeleteCircle() {
-    Circle circle = circleManager.createCircle(new CircleOptions().withLatLng(new LatLng()));
+    Circle circle = circleManager.create(new CircleOptions().withLatLng(new LatLng()));
     circleManager.delete(circle);
     assertTrue(circleManager.getAnnotations().size() == 0);
   }
 
   @Test
   public void testGeometryCircle() {
-    Circle circle = circleManager.createCircle(new CircleOptions().withLatLng(new LatLng(12, 34)));
+    Circle circle = circleManager.create(new CircleOptions().withLatLng(new LatLng(12, 34)));
     assertEquals(circle.getGeometry(), Point.fromLngLat(34, 12));
   }
 
   @Test
   public void testFeatureIdCircle() {
-    Circle circleZero = circleManager.createCircle(new CircleOptions().withLatLng(new LatLng()));
-    Circle circleOne = circleManager.createCircle(new CircleOptions().withLatLng(new LatLng()));
+    Circle circleZero = circleManager.create(new CircleOptions().withLatLng(new LatLng()));
+    Circle circleOne = circleManager.create(new CircleOptions().withLatLng(new LatLng()));
     assertEquals(circleZero.getFeature().get(Circle.ID_KEY).getAsLong(), 0);
     assertEquals(circleOne.getFeature().get(Circle.ID_KEY).getAsLong(), 1);
   }

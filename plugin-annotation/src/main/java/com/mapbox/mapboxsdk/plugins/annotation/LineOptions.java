@@ -17,7 +17,7 @@ import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.convertArray;
 /**
  * Builder class from which a line is created.
  */
-public class LineOptions {
+public class LineOptions extends Options<Line> {
 
   private Geometry geometry;
   private String lineJoin;
@@ -189,8 +189,6 @@ public class LineOptions {
     return linePattern;
   }
 
-
-
   /**
    * Set a list of LatLng for the line, which represents the locations of the line on the map
    *
@@ -206,6 +204,7 @@ public class LineOptions {
     return this;
   }
 
+  @Override
   Line build(long id) {
     if (geometry == null) {
       throw new RuntimeException("geometry field is required");

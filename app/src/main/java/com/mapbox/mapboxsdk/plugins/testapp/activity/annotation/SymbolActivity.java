@@ -64,14 +64,14 @@ public class SymbolActivity extends AppCompatActivity {
         .withLatLng(new LatLng(6.687337, 0.381457))
         .withIconImage(MAKI_ICON_AIRPORT)
         .withIconSize(1.3f);
-      symbol = symbolManager.createSymbol(symbolOptions);
+      symbol = symbolManager.create(symbolOptions);
 
       // random add symbols across the globe
       List<SymbolOptions> symbolOptionsList = new ArrayList<>();
       for (int i = 0; i < 20; i++) {
         symbolOptionsList.add(new SymbolOptions().withLatLng(createRandomLatLng()).withIconImage(MAKI_ICON_CAR));
       }
-      symbolManager.createSymbols(symbolOptionsList);
+      symbolManager.create(symbolOptionsList);
     });
   }
 

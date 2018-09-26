@@ -17,7 +17,7 @@ import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.convertArray;
 /**
  * Builder class from which a symbol is created.
  */
-public class SymbolOptions {
+public class SymbolOptions extends Options<Symbol> {
 
   private Geometry geometry;
   private Float iconSize;
@@ -546,8 +546,6 @@ public class SymbolOptions {
     return textHaloBlur;
   }
 
-
-
   /**
    * Set the LatLng of the symbol, which represents the location of the symbol on the map
    *
@@ -559,6 +557,7 @@ public class SymbolOptions {
     return this;
   }
 
+  @Override
   Symbol build(long id) {
     if (geometry == null) {
       throw new RuntimeException("geometry field is required");

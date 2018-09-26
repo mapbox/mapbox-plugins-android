@@ -42,7 +42,7 @@ public class FillTest extends BaseActivityTest {
       innerLatLngs.add(new LatLng(-1,-1));
       List<List<LatLng>>latLngs = new ArrayList<>();
       latLngs.add(innerLatLngs);
-      fill = fillManager.createFill(new FillOptions().withLatLngs(latLngs));
+      fill = fillManager.create(new FillOptions().withLatLngs(latLngs));
     });
   }
 

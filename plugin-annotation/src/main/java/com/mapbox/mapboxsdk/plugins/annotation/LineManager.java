@@ -29,7 +29,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 /**
  * The line manager allows to add lines to a map.
  */
-public class LineManager extends AnnotationManager<Line, OnLineClickListener, OnLineLongClickListener> {
+public class LineManager extends AnnotationManager<Line, LineOptions, OnLineClickListener, OnLineLongClickListener> {
 
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-line-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-line-layer";
@@ -106,39 +106,6 @@ public class LineManager extends AnnotationManager<Line, OnLineClickListener, On
   @Override
   String getAnnotationIdKey() {
     return Line.ID_KEY;
-  }
-
-  /**
-   * Create a line on the map from a line options.
-   *
-   * @param options the line options to add to the map
-   * @return the newly created line
-   */
-  @UiThread
-  public Line createLine(@NonNull LineOptions options) {
-    Line line = options.build(currentId);
-    add(line);
-    updateSource();
-    return line;
-  }
-
-  /**
-   * Create lines on the map from a list of option instances.
-   *
-   * @param options the list of line options to add to the map
-   * @return a list of the newly created lines
-   */
-  @UiThread
-  public List<Line> createLines(@NonNull List<LineOptions> options) {
-    List<Line> lines = new ArrayList<>();
-    Line line;
-    for (LineOptions option : options) {
-      line = option.build(currentId);
-      lines.add(line);
-      add(line);
-    }
-    updateSource();
-    return lines;
   }
 
   private static PropertyValue<?>[] getLayerDefinition() {

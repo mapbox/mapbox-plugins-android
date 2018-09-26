@@ -34,7 +34,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 /**
  * The <%- type %> manager allows to add <%- type %>s to a map.
  */
-public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize(type) %>, On<%- camelize(type) %>ClickListener, On<%- camelize(type) %>LongClickListener> {
+public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize(type) %>, <%- camelize(type) %>Options, On<%- camelize(type) %>ClickListener, On<%- camelize(type) %>LongClickListener> {
 
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-<%- type %>-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-<%- type %>-layer";
@@ -114,39 +114,6 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
   @Override
   String getAnnotationIdKey() {
     return <%- camelize(type) %>.ID_KEY;
-  }
-
-  /**
-   * Create a <%- type %> on the map from a <%- type %> options.
-   *
-   * @param options the <%- type %> options to add to the map
-   * @return the newly created <%- type %>
-   */
-  @UiThread
-  public <%- camelize(type) %> create<%- camelize(type) %>(@NonNull <%- camelize(type) %>Options options) {
-    <%- camelize(type) %> <%- type %> = options.build(currentId);
-    add(<%- type %>);
-    updateSource();
-    return <%- type %>;
-  }
-
-  /**
-   * Create <%- type %>s on the map from a list of option instances.
-   *
-   * @param options the list of <%- type %> options to add to the map
-   * @return a list of the newly created <%- type %>s
-   */
-  @UiThread
-  public List<<%- camelize(type) %>> create<%- camelize(type) %>s(@NonNull List<<%- camelize(type) %>Options> options) {
-    List<<%- camelize(type) %>> <%- type %>s = new ArrayList<>();
-    <%- camelize(type) %> <%- type %>;
-    for (<%- camelize(type) %>Options option : options) {
-      <%- type %> = option.build(currentId);
-      <%- type %>s.add(<%- type %>);
-      add(<%- type %>);
-    }
-    updateSource();
-    return <%- type %>s;
   }
 
   private static PropertyValue<?>[] getLayerDefinition() {

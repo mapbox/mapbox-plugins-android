@@ -17,7 +17,7 @@ import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.convertArray;
 /**
  * Builder class from which a circle is created.
  */
-public class CircleOptions {
+public class CircleOptions extends Options<Circle> {
 
   private Geometry geometry;
   private Float circleRadius;
@@ -168,8 +168,6 @@ public class CircleOptions {
     return circleStrokeOpacity;
   }
 
-
-
   /**
    * Set the LatLng of the circle, which represents the location of the circle on the map
    *
@@ -181,6 +179,7 @@ public class CircleOptions {
     return this;
   }
 
+  @Override
   Circle build(long id) {
     if (geometry == null) {
       throw new RuntimeException("geometry field is required");

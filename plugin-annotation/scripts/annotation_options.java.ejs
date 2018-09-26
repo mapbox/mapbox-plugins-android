@@ -22,7 +22,7 @@ import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.convertArray;
 /**
  * Builder class from which a <%- type %> is created.
  */
-public class <%- camelize(type) %>Options {
+public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>> {
 
   private Geometry geometry;
 <% for (const property of properties) { -%>
@@ -54,8 +54,6 @@ public class <%- camelize(type) %>Options {
   }
 <% } -%>
 <% } -%>
-
-
 <% if (type === "circle" || type === "symbol") { -%>
 
   /**
@@ -106,6 +104,7 @@ public class <%- camelize(type) %>Options {
   }
 <% } -%>
 
+  @Override
   <%- camelize(type) %> build(long id) {
     if (geometry == null) {
       throw new RuntimeException("geometry field is required");
