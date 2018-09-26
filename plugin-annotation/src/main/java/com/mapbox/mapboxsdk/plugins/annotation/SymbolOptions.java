@@ -557,6 +557,17 @@ public class SymbolOptions extends Options<Symbol> {
     return this;
   }
 
+  /**
+   * Set the geometry of the symbol, which represents the location of the symbol on the map
+   *
+   * @param geometry the location of the symbol
+   * @return this
+   */
+  public SymbolOptions withGeometry(Point geometry) {
+    this.geometry = geometry;
+    return this;
+  }
+
   @Override
   Symbol build(long id) {
     if (geometry == null) {

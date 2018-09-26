@@ -46,6 +46,18 @@ public class Fill extends Annotation {
     geometry = Polygon.fromLngLats(points);
   }
 
+  /**
+   * Set the Geometry of the fill, which represents the location of the fill on the map
+   * <p>
+   * To update the fill on the map use {@link FillManager#update(Annotation)}.
+   * <p>
+   *
+   * @param geometry the geometry of the fill
+   */
+  public void setGeometry(Polygon geometry) {
+    this.geometry = geometry;
+  }
+
   // Property accessors
   /**
    * Get the FillOpacity property

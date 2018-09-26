@@ -124,6 +124,17 @@ public class FillOptions extends Options<Fill> {
     return this;
   }
 
+  /**
+   * Set the geometry of the fill, which represents the location of the fill on the map
+   *
+   * @param geometry the location of the fill
+   * @return this
+   */
+  public FillOptions withGeometry(Polygon geometry) {
+    this.geometry = geometry;
+    return this;
+  }
+
   @Override
   Fill build(long id) {
     if (geometry == null) {

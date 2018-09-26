@@ -38,6 +38,18 @@ public class Circle extends Annotation {
     geometry = Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
   }
 
+  /**
+   * Set the Geometry of the circle, which represents the location of the circle on the map
+   * <p>
+   * To update the circle on the map use {@link CircleManager#update(Annotation)}.
+   * <p>
+   *
+   * @param geometry the geometry of the circle
+   */
+  public void setGeometry(Point geometry) {
+    this.geometry = geometry;
+  }
+
   // Property accessors
   /**
    * Get the CircleRadius property

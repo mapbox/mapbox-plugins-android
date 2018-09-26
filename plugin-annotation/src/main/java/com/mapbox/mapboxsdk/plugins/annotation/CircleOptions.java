@@ -179,6 +179,17 @@ public class CircleOptions extends Options<Circle> {
     return this;
   }
 
+  /**
+   * Set the geometry of the circle, which represents the location of the circle on the map
+   *
+   * @param geometry the location of the circle
+   * @return this
+   */
+  public CircleOptions withGeometry(Point geometry) {
+    this.geometry = geometry;
+    return this;
+  }
+
   @Override
   Circle build(long id) {
     if (geometry == null) {

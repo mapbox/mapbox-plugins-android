@@ -88,6 +88,46 @@ public class <%- camelize(type) %> extends Annotation {
     geometry = Polygon.fromLngLats(points);
   }
 <% } -%>
+<% if (type === "circle" || type === "symbol") { -%>
+
+  /**
+   * Set the Geometry of the <%- type %>, which represents the location of the <%- type %> on the map
+   * <p>
+   * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
+   * <p>
+   *
+   * @param geometry the geometry of the <%- type %>
+   */
+  public void setGeometry(Point geometry) {
+    this.geometry = geometry;
+  }
+<% } else if (type === "line") { -%>
+
+  /**
+   * Set the Geometry of the <%- type %>, which represents the location of the <%- type %> on the map
+   * <p>
+   * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
+   * <p>
+   *
+   * @param geometry the geometry of the <%- type %>
+   */
+  public void setGeometry(LineString geometry) {
+    this.geometry = geometry;
+  }
+<% } else { -%>
+
+  /**
+   * Set the Geometry of the <%- type %>, which represents the location of the <%- type %> on the map
+   * <p>
+   * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
+   * <p>
+   *
+   * @param geometry the geometry of the <%- type %>
+   */
+  public void setGeometry(Polygon geometry) {
+    this.geometry = geometry;
+  }
+<% } -%>
 <% if (type === "symbol") { -%>
 
   ///**

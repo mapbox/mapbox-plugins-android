@@ -66,6 +66,17 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
     geometry = Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
     return this;
   }
+
+  /**
+   * Set the geometry of the <%- type %>, which represents the location of the <%- type %> on the map
+   *
+   * @param geometry the location of the <%- type %>
+   * @return this
+   */
+  public <%- camelize(type) %>Options withGeometry(Point geometry) {
+    this.geometry = geometry;
+    return this;
+  }
 <% } else if (type === "line") { -%>
 
   /**
@@ -80,6 +91,17 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
       points.add(Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude()));
     }
     geometry = LineString.fromLngLats(points);
+    return this;
+  }
+
+  /**
+   * Set the geometry of the <%- type %>, which represents the location of the <%- type %> on the map
+   *
+   * @param geometry the location of the <%- type %>
+   * @return this
+   */
+  public <%- camelize(type) %>Options withGeometry(LineString geometry) {
+    this.geometry = geometry;
     return this;
   }
 <% } else { -%>
@@ -100,6 +122,17 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
       points.add(innerList);
     }
     geometry = Polygon.fromLngLats(points);
+    return this;
+  }
+
+  /**
+   * Set the geometry of the <%- type %>, which represents the location of the <%- type %> on the map
+   *
+   * @param geometry the location of the <%- type %>
+   * @return this
+   */
+  public <%- camelize(type) %>Options withGeometry(Polygon geometry) {
+    this.geometry = geometry;
     return this;
   }
 <% } -%>
