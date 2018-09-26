@@ -29,7 +29,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 /**
  * The circle manager allows to add circles to a map.
  */
-public class CircleManager extends AnnotationManager<Circle, OnCircleClickListener, OnCircleLongClickListener> {
+public class CircleManager extends AnnotationManager<Circle, CircleOptions, OnCircleClickListener, OnCircleLongClickListener> {
 
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-circle-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-circle-layer";
@@ -106,39 +106,6 @@ public class CircleManager extends AnnotationManager<Circle, OnCircleClickListen
   @Override
   String getAnnotationIdKey() {
     return Circle.ID_KEY;
-  }
-
-  /**
-   * Create a circle on the map from a circle options.
-   *
-   * @param options the circle options to add to the map
-   * @return the newly created circle
-   */
-  @UiThread
-  public Circle createCircle(@NonNull CircleOptions options) {
-    Circle circle = options.build(currentId);
-    add(circle);
-    updateSource();
-    return circle;
-  }
-
-  /**
-   * Create circles on the map from a list of option instances.
-   *
-   * @param options the list of circle options to add to the map
-   * @return a list of the newly created circles
-   */
-  @UiThread
-  public List<Circle> createCircles(@NonNull List<CircleOptions> options) {
-    List<Circle> circles = new ArrayList<>();
-    Circle circle;
-    for (CircleOptions option : options) {
-      circle = option.build(currentId);
-      circles.add(circle);
-      add(circle);
-    }
-    updateSource();
-    return circles;
   }
 
   private static PropertyValue<?>[] getLayerDefinition() {

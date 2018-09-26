@@ -17,7 +17,7 @@ import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.convertArray;
 /**
  * Builder class from which a fill is created.
  */
-public class FillOptions {
+public class FillOptions extends Options<Fill> {
 
   private Geometry geometry;
   private Float fillOpacity;
@@ -105,8 +105,6 @@ public class FillOptions {
     return fillPattern;
   }
 
-
-
   /**
    * Set a list of lists of LatLng for the fill, which represents the locations of the fill on the map
    *
@@ -126,6 +124,7 @@ public class FillOptions {
     return this;
   }
 
+  @Override
   Fill build(long id) {
     if (geometry == null) {
       throw new RuntimeException("geometry field is required");

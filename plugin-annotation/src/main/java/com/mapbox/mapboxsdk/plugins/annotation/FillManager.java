@@ -29,7 +29,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 /**
  * The fill manager allows to add fills to a map.
  */
-public class FillManager extends AnnotationManager<Fill, OnFillClickListener, OnFillLongClickListener> {
+public class FillManager extends AnnotationManager<Fill, FillOptions, OnFillClickListener, OnFillLongClickListener> {
 
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-fill-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-fill-layer";
@@ -106,39 +106,6 @@ public class FillManager extends AnnotationManager<Fill, OnFillClickListener, On
   @Override
   String getAnnotationIdKey() {
     return Fill.ID_KEY;
-  }
-
-  /**
-   * Create a fill on the map from a fill options.
-   *
-   * @param options the fill options to add to the map
-   * @return the newly created fill
-   */
-  @UiThread
-  public Fill createFill(@NonNull FillOptions options) {
-    Fill fill = options.build(currentId);
-    add(fill);
-    updateSource();
-    return fill;
-  }
-
-  /**
-   * Create fills on the map from a list of option instances.
-   *
-   * @param options the list of fill options to add to the map
-   * @return a list of the newly created fills
-   */
-  @UiThread
-  public List<Fill> createFills(@NonNull List<FillOptions> options) {
-    List<Fill> fills = new ArrayList<>();
-    Fill fill;
-    for (FillOptions option : options) {
-      fill = option.build(currentId);
-      fills.add(fill);
-      add(fill);
-    }
-    updateSource();
-    return fills;
   }
 
   private static PropertyValue<?>[] getLayerDefinition() {

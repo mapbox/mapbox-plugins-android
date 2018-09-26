@@ -55,7 +55,7 @@ public class FillActivity extends AppCompatActivity {
       FillOptions fillOptions = new FillOptions()
         .withLatLngs(latLngs)
         .withFillColor(PropertyFactory.colorToRgbaString(Color.RED));
-      fillManager.createFill(fillOptions);
+      fillManager.create(fillOptions);
 
       // random add fills across the globe
       List<FillOptions> fillOptionsList = new ArrayList<>();
@@ -66,7 +66,7 @@ public class FillActivity extends AppCompatActivity {
           .withFillColor(PropertyFactory.colorToRgbaString(color))
         );
       }
-      fillManager.createFills(fillOptionsList);
+      fillManager.create(fillOptionsList);
     });
   }
 

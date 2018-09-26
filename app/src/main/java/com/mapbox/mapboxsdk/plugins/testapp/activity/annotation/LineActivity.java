@@ -53,7 +53,7 @@ public class LineActivity extends AppCompatActivity {
         .withLatLngs(latLngs)
         .withLineColor(PropertyFactory.colorToRgbaString(Color.RED))
         .withLineWidth(5.0f);
-      lineManager.createLine(lineOptions);
+      lineManager.create(lineOptions);
 
       // random add lines across the globe
       List<List<LatLng>> lists = new ArrayList<>();
@@ -66,7 +66,7 @@ public class LineActivity extends AppCompatActivity {
         int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
         lineOptionsList.add(new LineOptions().withLatLngs(list).withLineColor(PropertyFactory.colorToRgbaString(color)));
       }
-      lineManager.createLines(lineOptionsList);
+      lineManager.create(lineOptionsList);
     });
   }
 

@@ -50,7 +50,7 @@ public class CircleActivity extends AppCompatActivity {
         .withLatLng(new LatLng(6.687337, 0.381457))
         .withCircleColor(PropertyFactory.colorToRgbaString(Color.YELLOW))
         .withCircleRadius(12f);
-      circleManager.createCircle(circleOptions);
+      circleManager.create(circleOptions);
 
       // random add circles across the globe
       List<CircleOptions> circleOptionsList = new ArrayList<>();
@@ -62,7 +62,7 @@ public class CircleActivity extends AppCompatActivity {
           .withCircleRadius(8f)
         );
       }
-      circleManager.createCircles(circleOptionsList);
+      circleManager.create(circleOptionsList);
     });
   }
 

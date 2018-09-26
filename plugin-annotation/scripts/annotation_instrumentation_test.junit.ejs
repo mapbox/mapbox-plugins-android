@@ -41,12 +41,12 @@ public class <%- camelize(type) %>Test extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       <%- camelize(type) %>Manager <%- type %>Manager = new <%- camelize(type) %>Manager(mapboxMap);
 <% if (type === "circle" || type === "symbol") { -%>
-      <%- type %> = <%- type %>Manager.create<%- camelize(type) %>(new <%- camelize(type) %>Options().withLatLng(new LatLng()));
+      <%- type %> = <%- type %>Manager.create(new <%- camelize(type) %>Options().withLatLng(new LatLng()));
 <% } else if (type === "line") { -%>
       List<LatLng>latLngs = new ArrayList<>();
       latLngs.add(new LatLng());
       latLngs.add(new LatLng(1,1));
-      <%- type %> = <%- type %>Manager.create<%- camelize(type) %>(new <%- camelize(type) %>Options().withLatLngs(latLngs));
+      <%- type %> = <%- type %>Manager.create(new <%- camelize(type) %>Options().withLatLngs(latLngs));
 <% } else { -%>
       List<LatLng>innerLatLngs = new ArrayList<>();
       innerLatLngs.add(new LatLng());
@@ -54,7 +54,7 @@ public class <%- camelize(type) %>Test extends BaseActivityTest {
       innerLatLngs.add(new LatLng(-1,-1));
       List<List<LatLng>>latLngs = new ArrayList<>();
       latLngs.add(innerLatLngs);
-      <%- type %> = <%- type %>Manager.create<%- camelize(type) %>(new <%- camelize(type) %>Options().withLatLngs(latLngs));
+      <%- type %> = <%- type %>Manager.create(new <%- camelize(type) %>Options().withLatLngs(latLngs));
 <% } -%>
     });
   }
