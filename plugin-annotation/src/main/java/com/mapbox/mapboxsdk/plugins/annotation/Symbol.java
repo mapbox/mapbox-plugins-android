@@ -30,6 +30,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the LatLng of the symbol, which represents the location of the symbol on the map
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param latLng the location of the symbol in a longitude and latitude pair
    */
@@ -74,6 +77,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the IconSize property
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
@@ -92,6 +98,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the IconImage property
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for String
    */
@@ -110,6 +119,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the IconRotate property
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
@@ -132,8 +144,10 @@ public class Symbol extends Annotation {
   }
 
   /**
-   * Set the IconOffset property
-   *
+   * Set the IconOffset property.
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    * @param value constant property value for Float[]
    */
   public void setIconOffset(Float[] value) {
@@ -155,6 +169,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the IconAnchor property
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for String
    */
@@ -173,6 +190,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the TextField property
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for String
    */
@@ -195,8 +215,10 @@ public class Symbol extends Annotation {
   }
 
   /**
-   * Set the TextFont property
-   *
+   * Set the TextFont property.
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    * @param value constant property value for String[]
    */
   public void setTextFont(String[] value) {
@@ -218,6 +240,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the TextSize property
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
@@ -236,6 +261,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the TextMaxWidth property
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
@@ -254,6 +282,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the TextLetterSpacing property
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
@@ -272,6 +303,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the TextJustify property
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for String
    */
@@ -290,6 +324,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the TextAnchor property
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for String
    */
@@ -308,6 +345,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the TextRotate property
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
@@ -326,6 +366,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the TextTransform property
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for String
    */
@@ -348,8 +391,10 @@ public class Symbol extends Annotation {
   }
 
   /**
-   * Set the TextOffset property
-   *
+   * Set the TextOffset property.
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    * @param value constant property value for Float[]
    */
   public void setTextOffset(Float[] value) {
@@ -371,6 +416,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the IconOpacity property
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
@@ -389,6 +437,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the IconColor property
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for String
    */
@@ -407,6 +458,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the IconHaloColor property
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for String
    */
@@ -425,6 +479,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the IconHaloWidth property
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
@@ -443,6 +500,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the IconHaloBlur property
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
@@ -461,6 +521,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the TextOpacity property
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
@@ -479,6 +542,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the TextColor property
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for String
    */
@@ -497,6 +563,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the TextHaloColor property
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for String
    */
@@ -515,6 +584,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the TextHaloWidth property
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
@@ -533,6 +605,9 @@ public class Symbol extends Annotation {
 
   /**
    * Set the TextHaloBlur property
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
