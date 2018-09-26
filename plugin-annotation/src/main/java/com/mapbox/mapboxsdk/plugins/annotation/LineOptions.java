@@ -204,6 +204,17 @@ public class LineOptions extends Options<Line> {
     return this;
   }
 
+  /**
+   * Set the geometry of the line, which represents the location of the line on the map
+   *
+   * @param geometry the location of the line
+   * @return this
+   */
+  public LineOptions withGeometry(LineString geometry) {
+    this.geometry = geometry;
+    return this;
+  }
+
   @Override
   Line build(long id) {
     if (geometry == null) {

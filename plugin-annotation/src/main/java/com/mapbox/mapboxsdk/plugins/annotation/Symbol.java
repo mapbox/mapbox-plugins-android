@@ -40,6 +40,18 @@ public class Symbol extends Annotation {
     geometry = Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
   }
 
+  /**
+   * Set the Geometry of the symbol, which represents the location of the symbol on the map
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
+   *
+   * @param geometry the geometry of the symbol
+   */
+  public void setGeometry(Point geometry) {
+    this.geometry = geometry;
+  }
+
   ///**
   // * Set the z-index of a symbol.
   // * <p>

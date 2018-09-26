@@ -42,6 +42,18 @@ public class Line extends Annotation {
     geometry = LineString.fromLngLats(points);
   }
 
+  /**
+   * Set the Geometry of the line, which represents the location of the line on the map
+   * <p>
+   * To update the line on the map use {@link LineManager#update(Annotation)}.
+   * <p>
+   *
+   * @param geometry the geometry of the line
+   */
+  public void setGeometry(LineString geometry) {
+    this.geometry = geometry;
+  }
+
   // Property accessors
   /**
    * Get the LineJoin property
