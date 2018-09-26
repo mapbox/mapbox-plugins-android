@@ -28,6 +28,9 @@ public class Fill extends Annotation {
 
   /**
    * Set a list of lists of LatLng for the fill, which represents the locations of the fill on the map
+   * <p>
+   * To update the fill on the map use {@link FillManager#update(Annotation)}.
+   * <p>
    *
    * @param latLngs a list of a lists of the locations of the line in a longitude and latitude pairs
    */
@@ -55,6 +58,9 @@ public class Fill extends Annotation {
 
   /**
    * Set the FillOpacity property
+   * <p>
+   * To update the fill on the map use {@link FillManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
@@ -73,6 +79,9 @@ public class Fill extends Annotation {
 
   /**
    * Set the FillColor property
+   * <p>
+   * To update the fill on the map use {@link FillManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for String
    */
@@ -91,6 +100,9 @@ public class Fill extends Annotation {
 
   /**
    * Set the FillOutlineColor property
+   * <p>
+   * To update the fill on the map use {@link FillManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for String
    */
@@ -109,6 +121,9 @@ public class Fill extends Annotation {
 
   /**
    * Set the FillPattern property
+   * <p>
+   * To update the fill on the map use {@link FillManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for String
    */

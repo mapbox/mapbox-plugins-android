@@ -40,6 +40,9 @@ public class <%- camelize(type) %> extends Annotation {
 
   /**
    * Set the LatLng of the <%- type %>, which represents the location of the <%- type %> on the map
+   * <p>
+   * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
+   * <p>
    *
    * @param latLng the location of the <%- type %> in a longitude and latitude pair
    */
@@ -50,6 +53,9 @@ public class <%- camelize(type) %> extends Annotation {
 
   /**
    * Set a list of LatLng for the line, which represents the locations of the line on the map
+   * <p>
+   * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
+   * <p>
    *
    * @param latLngs a list of the locations of the line in a longitude and latitude pairs
    */
@@ -64,6 +70,9 @@ public class <%- camelize(type) %> extends Annotation {
 
   /**
    * Set a list of lists of LatLng for the fill, which represents the locations of the fill on the map
+   * <p>
+   * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
+   * <p>
    *
    * @param latLngs a list of a lists of the locations of the line in a longitude and latitude pairs
    */
@@ -126,8 +135,10 @@ public class <%- camelize(type) %> extends Annotation {
   }
 
   /**
-   * Set the <%- camelize(property.name) %> property
-   *
+   * Set the <%- camelize(property.name) %> property.
+   * <p>
+   * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
+   * <p>
    * @param value constant property value for <%- propertyType(property) %>
    */
   public void set<%- camelize(property.name) %>(<%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), " ") %><%- propertyType(property) %> value) {
@@ -150,6 +161,9 @@ public class <%- camelize(type) %> extends Annotation {
 
   /**
    * Set the <%- camelize(property.name) %> property
+   * <p>
+   * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for <%- propertyType(property) %>
    */

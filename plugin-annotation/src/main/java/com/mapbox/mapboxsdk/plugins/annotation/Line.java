@@ -28,6 +28,9 @@ public class Line extends Annotation {
 
   /**
    * Set a list of LatLng for the line, which represents the locations of the line on the map
+   * <p>
+   * To update the line on the map use {@link LineManager#update(Annotation)}.
+   * <p>
    *
    * @param latLngs a list of the locations of the line in a longitude and latitude pairs
    */
@@ -51,6 +54,9 @@ public class Line extends Annotation {
 
   /**
    * Set the LineJoin property
+   * <p>
+   * To update the line on the map use {@link LineManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for String
    */
@@ -69,6 +75,9 @@ public class Line extends Annotation {
 
   /**
    * Set the LineOpacity property
+   * <p>
+   * To update the line on the map use {@link LineManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
@@ -87,6 +96,9 @@ public class Line extends Annotation {
 
   /**
    * Set the LineColor property
+   * <p>
+   * To update the line on the map use {@link LineManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for String
    */
@@ -105,6 +117,9 @@ public class Line extends Annotation {
 
   /**
    * Set the LineWidth property
+   * <p>
+   * To update the line on the map use {@link LineManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
@@ -123,6 +138,9 @@ public class Line extends Annotation {
 
   /**
    * Set the LineGapWidth property
+   * <p>
+   * To update the line on the map use {@link LineManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
@@ -141,6 +159,9 @@ public class Line extends Annotation {
 
   /**
    * Set the LineOffset property
+   * <p>
+   * To update the line on the map use {@link LineManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
@@ -159,6 +180,9 @@ public class Line extends Annotation {
 
   /**
    * Set the LineBlur property
+   * <p>
+   * To update the line on the map use {@link LineManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
@@ -177,6 +201,9 @@ public class Line extends Annotation {
 
   /**
    * Set the LinePattern property
+   * <p>
+   * To update the line on the map use {@link LineManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for String
    */

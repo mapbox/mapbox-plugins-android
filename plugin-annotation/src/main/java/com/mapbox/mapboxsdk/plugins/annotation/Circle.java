@@ -28,6 +28,9 @@ public class Circle extends Annotation {
 
   /**
    * Set the LatLng of the circle, which represents the location of the circle on the map
+   * <p>
+   * To update the circle on the map use {@link CircleManager#update(Annotation)}.
+   * <p>
    *
    * @param latLng the location of the circle in a longitude and latitude pair
    */
@@ -47,6 +50,9 @@ public class Circle extends Annotation {
 
   /**
    * Set the CircleRadius property
+   * <p>
+   * To update the circle on the map use {@link CircleManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
@@ -65,6 +71,9 @@ public class Circle extends Annotation {
 
   /**
    * Set the CircleColor property
+   * <p>
+   * To update the circle on the map use {@link CircleManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for String
    */
@@ -83,6 +92,9 @@ public class Circle extends Annotation {
 
   /**
    * Set the CircleBlur property
+   * <p>
+   * To update the circle on the map use {@link CircleManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
@@ -101,6 +113,9 @@ public class Circle extends Annotation {
 
   /**
    * Set the CircleOpacity property
+   * <p>
+   * To update the circle on the map use {@link CircleManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
@@ -119,6 +134,9 @@ public class Circle extends Annotation {
 
   /**
    * Set the CircleStrokeWidth property
+   * <p>
+   * To update the circle on the map use {@link CircleManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
@@ -137,6 +155,9 @@ public class Circle extends Annotation {
 
   /**
    * Set the CircleStrokeColor property
+   * <p>
+   * To update the circle on the map use {@link CircleManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for String
    */
@@ -155,6 +176,9 @@ public class Circle extends Annotation {
 
   /**
    * Set the CircleStrokeOpacity property
+   * <p>
+   * To update the circle on the map use {@link CircleManager#update(Annotation)}.
+   * <p>
    *
    * @param value constant property value for Float
    */
