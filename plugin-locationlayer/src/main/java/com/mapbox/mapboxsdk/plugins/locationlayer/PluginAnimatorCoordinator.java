@@ -44,6 +44,7 @@ final class PluginAnimatorCoordinator {
   private float previousAccuracyRadius = -1;
   private float previousCompassBearing = -1;
   private long locationUpdateTimestamp = -1;
+  private float durationMultiplier;
 
   void addLayerListener(PluginAnimator.OnLayerAnimationsValuesChangeListener listener) {
     layerListeners.add(listener);
@@ -225,8 +226,8 @@ final class PluginAnimatorCoordinator {
     if (previousUpdateTimeStamp == 0) {
       animationDuration = 0;
     } else {
-      animationDuration = (long) ((locationUpdateTimestamp - previousUpdateTimeStamp) * 1.1f)
-      /*make animation slightly longer*/;
+      animationDuration = (long) ((locationUpdateTimestamp - previousUpdateTimeStamp) * durationMultiplier)
+      /* make animation slightly longer with durationMultiplier, defaults to 1.1f */;
     }
 
     animationDuration = Math.min(animationDuration, MAX_ANIMATION_DURATION_MS);
@@ -371,5 +372,9 @@ final class PluginAnimatorCoordinator {
       animator.removeAllListeners();
       animatorMap.put(animatorType, null);
     }
+  }
+
+  void setTrackingAnimationDurationMultiplier(float trackingAnimationDurationMultiplier) {
+    this.durationMultiplier = trackingAnimationDurationMultiplier;
   }
 }

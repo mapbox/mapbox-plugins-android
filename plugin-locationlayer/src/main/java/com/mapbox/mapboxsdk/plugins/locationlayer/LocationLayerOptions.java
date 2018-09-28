@@ -75,6 +75,11 @@ public class LocationLayerOptions implements Parcelable {
    */
   private static final long STALE_STATE_DELAY_MS = 30000;
 
+  /**
+   * Default animation duration multiplier
+   */
+  private static final float TRACKING_ANIMATION_DURATION_MULTIPLIER_DEFAULT = 1.1f;
+
   private float accuracyAlpha;
   private int accuracyColor;
   private int backgroundDrawableStale;
@@ -105,6 +110,7 @@ public class LocationLayerOptions implements Parcelable {
   private float trackingInitialMoveThreshold;
   private float trackingMultiFingerMoveThreshold;
   private String layerBelow;
+  private float trackingAnimationDurationMultiplier;
 
   public LocationLayerOptions(
     float accuracyAlpha,
@@ -136,7 +142,8 @@ public class LocationLayerOptions implements Parcelable {
     float minZoomIconScale,
     float trackingInitialMoveThreshold,
     float trackingMultiFingerMoveThreshold,
-    String layerBelow) {
+    String layerBelow,
+    float trackingAnimationDurationMultiplier) {
     this.accuracyAlpha = accuracyAlpha;
     this.accuracyColor = accuracyColor;
     this.backgroundDrawableStale = backgroundDrawableStale;
@@ -170,6 +177,7 @@ public class LocationLayerOptions implements Parcelable {
     this.trackingInitialMoveThreshold = trackingInitialMoveThreshold;
     this.trackingMultiFingerMoveThreshold = trackingMultiFingerMoveThreshold;
     this.layerBelow = layerBelow;
+    this.trackingAnimationDurationMultiplier = trackingAnimationDurationMultiplier;
   }
 
   /**
@@ -288,6 +296,11 @@ public class LocationLayerOptions implements Parcelable {
     builder.minZoomIconScale(minScale);
     builder.maxZoomIconScale(maxScale);
 
+    float trackingAnimationDurationMultiplier = typedArray.getFloat(
+      R.styleable.mapbox_LocationLayer_mapbox_trackingAnimationDurationMultiplier,
+      TRACKING_ANIMATION_DURATION_MULTIPLIER_DEFAULT
+    );
+    builder.trackingAnimationDurationMultiplier(trackingAnimationDurationMultiplier);
     typedArray.recycle();
 
     return builder.build();
@@ -715,6 +728,16 @@ public class LocationLayerOptions implements Parcelable {
     return layerBelow;
   }
 
+  /**
+   * Get the tracking animation duration multiplier.
+   *
+   * @return tracking animation duration multiplier
+   * @since 0.9.0
+   */
+  public float trackingAnimationDurationMultiplier() {
+    return trackingAnimationDurationMultiplier;
+  }
+
   @Override
   public String toString() {
     return "LocationLayerOptions{"
@@ -748,6 +771,7 @@ public class LocationLayerOptions implements Parcelable {
       + "trackingInitialMoveThreshold=" + trackingInitialMoveThreshold + ", "
       + "trackingMultiFingerMoveThreshold=" + trackingMultiFingerMoveThreshold + ", "
       + "layerBelow=" + layerBelow
+      + "trackingAnimationDurationMultiplier=" + trackingAnimationDurationMultiplier
       + "}";
   }
 
@@ -799,7 +823,9 @@ public class LocationLayerOptions implements Parcelable {
         == Float.floatToIntBits(that.trackingInitialMoveThreshold()))
         && (Float.floatToIntBits(this.trackingMultiFingerMoveThreshold)
         == Float.floatToIntBits(that.trackingMultiFingerMoveThreshold()))
-        && layerBelow.equals(that.layerBelow));
+        && layerBelow.equals(that.layerBelow))
+        && (Float.floatToIntBits(this.trackingAnimationDurationMultiplier)
+        == Float.floatToIntBits(that.trackingAnimationDurationMultiplier()));
     }
     return false;
   }
@@ -865,52 +891,55 @@ public class LocationLayerOptions implements Parcelable {
     h$ ^= Float.floatToIntBits(trackingInitialMoveThreshold);
     h$ *= 1000003;
     h$ ^= Float.floatToIntBits(trackingMultiFingerMoveThreshold);
+    h$ *= 1000003;
+    h$ ^= Float.floatToIntBits(trackingAnimationDurationMultiplier);
     return h$;
   }
 
   public static final Parcelable.Creator<LocationLayerOptions> CREATOR =
     new Parcelable.Creator<LocationLayerOptions>() {
-    @Override
-    public LocationLayerOptions createFromParcel(Parcel in) {
-      return new LocationLayerOptions(
-        in.readFloat(),
-        in.readInt(),
-        in.readInt(),
-        in.readInt() == 0 ? in.readString() : null,
-        in.readInt(),
-        in.readInt() == 0 ? in.readString() : null,
-        in.readInt(),
-        in.readInt() == 0 ? in.readString() : null,
-        in.readInt(),
-        in.readInt() == 0 ? in.readString() : null,
-        in.readInt(),
-        in.readInt() == 0 ? in.readString() : null,
-        in.readInt(),
-        in.readInt() == 0 ? in.readString() : null,
-        in.readInt() == 0 ? in.readInt() : null,
-        in.readInt() == 0 ? in.readInt() : null,
-        in.readInt() == 0 ? in.readInt() : null,
-        in.readInt() == 0 ? in.readInt() : null,
-        in.readInt() == 0 ? in.readInt() : null,
-        in.readFloat(),
-        in.readInt() == 1,
-        in.readLong(),
-        in.createIntArray(),
-        in.readDouble(),
-        in.readDouble(),
-        in.readFloat(),
-        in.readFloat(),
-        in.readFloat(),
-        in.readFloat(),
-        in.readString()
-      );
-    }
+      @Override
+      public LocationLayerOptions createFromParcel(Parcel in) {
+        return new LocationLayerOptions(
+          in.readFloat(),
+          in.readInt(),
+          in.readInt(),
+          in.readInt() == 0 ? in.readString() : null,
+          in.readInt(),
+          in.readInt() == 0 ? in.readString() : null,
+          in.readInt(),
+          in.readInt() == 0 ? in.readString() : null,
+          in.readInt(),
+          in.readInt() == 0 ? in.readString() : null,
+          in.readInt(),
+          in.readInt() == 0 ? in.readString() : null,
+          in.readInt(),
+          in.readInt() == 0 ? in.readString() : null,
+          in.readInt() == 0 ? in.readInt() : null,
+          in.readInt() == 0 ? in.readInt() : null,
+          in.readInt() == 0 ? in.readInt() : null,
+          in.readInt() == 0 ? in.readInt() : null,
+          in.readInt() == 0 ? in.readInt() : null,
+          in.readFloat(),
+          in.readInt() == 1,
+          in.readLong(),
+          in.createIntArray(),
+          in.readDouble(),
+          in.readDouble(),
+          in.readFloat(),
+          in.readFloat(),
+          in.readFloat(),
+          in.readFloat(),
+          in.readString(),
+          in.readFloat()
+        );
+      }
 
-    @Override
-    public LocationLayerOptions[] newArray(int size) {
-      return new LocationLayerOptions[size];
-    }
-  };
+      @Override
+      public LocationLayerOptions[] newArray(int size) {
+        return new LocationLayerOptions[size];
+      }
+    };
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
@@ -999,6 +1028,7 @@ public class LocationLayerOptions implements Parcelable {
     dest.writeFloat(trackingInitialMoveThreshold());
     dest.writeFloat(trackingMultiFingerMoveThreshold());
     dest.writeString(layerBelow());
+    dest.writeFloat(trackingAnimationDurationMultiplier);
   }
 
   @Override
@@ -1064,6 +1094,7 @@ public class LocationLayerOptions implements Parcelable {
     private Float trackingInitialMoveThreshold;
     private Float trackingMultiFingerMoveThreshold;
     private String layerBelow;
+    private Float trackingAnimationDurationMultiplier;
 
     Builder() {
     }
@@ -1099,6 +1130,7 @@ public class LocationLayerOptions implements Parcelable {
       this.trackingInitialMoveThreshold = source.trackingInitialMoveThreshold();
       this.trackingMultiFingerMoveThreshold = source.trackingMultiFingerMoveThreshold();
       this.layerBelow = source.layerBelow();
+      this.trackingAnimationDurationMultiplier = source.trackingAnimationDurationMultiplier();
     }
 
     /**
@@ -1534,6 +1566,17 @@ public class LocationLayerOptions implements Parcelable {
       return this;
     }
 
+    /**
+     * Sets the tracking animation duration multiplier.
+     *
+     * @param trackingAnimationDurationMultiplier the tracking animation duration multiplier
+     * @since 0.9.0
+     */
+    public LocationLayerOptions.Builder trackingAnimationDurationMultiplier(float trackingAnimationDurationMultiplier) {
+      this.trackingAnimationDurationMultiplier = trackingAnimationDurationMultiplier;
+      return this;
+    }
+
     LocationLayerOptions autoBuild() {
       String missing = "";
       if (this.accuracyAlpha == null) {
@@ -1590,6 +1633,9 @@ public class LocationLayerOptions implements Parcelable {
       if (this.trackingMultiFingerMoveThreshold == null) {
         missing += " trackingMultiFingerMoveThreshold";
       }
+      if (this.trackingAnimationDurationMultiplier == null) {
+        missing += " trackingAnimationDurationMultiplier";
+      }
       if (!missing.isEmpty()) {
         throw new IllegalStateException("Missing required properties:" + missing);
       }
@@ -1623,7 +1669,8 @@ public class LocationLayerOptions implements Parcelable {
         this.minZoomIconScale,
         this.trackingInitialMoveThreshold,
         this.trackingMultiFingerMoveThreshold,
-        this.layerBelow);
+        this.layerBelow,
+        this.trackingAnimationDurationMultiplier);
     }
   }
 }
