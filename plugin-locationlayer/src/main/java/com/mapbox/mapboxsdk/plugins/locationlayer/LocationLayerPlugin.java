@@ -346,6 +346,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     if (!options.enableStaleState()) {
       staleStateManager.onStop();
     }
+    pluginAnimatorCoordinator.setTrackingAnimationDurationMultiplier(options.trackingAnimationDurationMultiplier());
     staleStateManager.setDelayTime(options.staleStateTimeout());
     updateMapWithOptions(options);
   }
@@ -771,6 +772,7 @@ public final class LocationLayerPlugin implements LifecycleObserver {
     locationLayerCamera = new LocationLayerCamera(
       mapView.getContext(), mapboxMap, cameraTrackingChangedListener, options, onCameraMoveInvalidateListener);
     pluginAnimatorCoordinator = new PluginAnimatorCoordinator();
+    pluginAnimatorCoordinator.setTrackingAnimationDurationMultiplier(options.trackingAnimationDurationMultiplier());
     pluginAnimatorCoordinator.addLayerListener(locationLayer);
     pluginAnimatorCoordinator.addCameraListener(locationLayerCamera);
 

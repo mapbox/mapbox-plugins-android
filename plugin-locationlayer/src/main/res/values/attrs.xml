@@ -44,6 +44,7 @@
     <!-- Camera tracking settings -->
     <attr name="mapbox_trackingInitialMoveThreshold" format="dimension"/>
     <attr name="mapbox_trackingMultiFingerMoveThreshold" format="dimension"/>
+    <attr name="mapbox_trackingAnimationDurationMultiplier" format="float"/>
 
   </declare-styleable>
 </resources>
