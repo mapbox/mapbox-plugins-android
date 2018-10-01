@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### 0.9.0 - October 1, 2018
+ - Add animation duration multiplier configuration [#704](https://github.com/mapbox/mapbox-plugins-android/pull/704)
+ - Don't invalidate camera mode if unnecessary for gestures initiated changes [#694](https://github.com/mapbox/mapbox-plugins-android/pull/694)
+
 ### 0.8.2 - September 12, 2018
  - Maps SDK bump to 6.5.0 [#634](https://github.com/mapbox/mapbox-plugins-android/pull/634)
 
