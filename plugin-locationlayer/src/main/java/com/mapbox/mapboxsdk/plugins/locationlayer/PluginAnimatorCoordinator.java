@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.animation.LinearInterpolator;
 
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -21,6 +22,7 @@ import java.util.Map;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.ACCURACY_RADIUS_ANIMATION_DURATION;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.COMPASS_UPDATE_RATE_MS;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.MAX_ANIMATION_DURATION_MS;
+import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.INSTANT_LOCATION_TRANSITION_THRESHOLD;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.TRANSITION_ANIMATION_DURATION_MS;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_CAMERA_COMPASS_BEARING;
 import static com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.ANIMATOR_CAMERA_GPS_BEARING;
@@ -82,7 +84,9 @@ final class PluginAnimatorCoordinator {
     updateLayerAnimators(previousLayerLatLng, targetLatLng, previousLayerBearing, targetLayerBearing);
     updateCameraAnimators(previousCameraLatLng, previousCameraBearing, targetLatLng, targetCameraBearing);
 
-    playLocationAnimators(getAnimationDuration());
+    boolean snap = immediateAnimation(previousCameraLatLng, targetLatLng, currentCameraPosition.zoom)
+      || immediateAnimation(previousLayerLatLng, targetLatLng, currentCameraPosition.zoom);
+    playLocationAnimators(snap ? 0 : getAnimationDuration());
 
     previousLocation = newLocation;
   }
@@ -289,32 +293,34 @@ final class PluginAnimatorCoordinator {
     locationAnimators.add(animatorMap.get(ANIMATOR_CAMERA_GPS_BEARING));
     AnimatorSet locationAnimatorSet = new AnimatorSet();
     locationAnimatorSet.playTogether(locationAnimators);
-    locationAnimatorSet.setInterpolator(new LinearInterpolator());
+    locationAnimatorSet.setInterpolator(new FastOutSlowInInterpolator());
     locationAnimatorSet.setDuration(duration);
     locationAnimatorSet.start();
   }
 
   void resetAllCameraAnimations(CameraPosition currentCameraPosition, boolean isGpsNorth) {
     resetCameraCompassAnimation(currentCameraPosition);
-    resetCameraLocationAnimations(currentCameraPosition, isGpsNorth);
-    playCameraLocationAnimators(TRANSITION_ANIMATION_DURATION_MS);
+    boolean snap = resetCameraLocationAnimations(currentCameraPosition, isGpsNorth);
+    playCameraLocationAnimators(snap ? 0 : TRANSITION_ANIMATION_DURATION_MS);
   }
 
-  private void resetCameraLocationAnimations(CameraPosition currentCameraPosition, boolean isGpsNorth) {
-    resetCameraLatLngAnimation(currentCameraPosition);
+  private boolean resetCameraLocationAnimations(CameraPosition currentCameraPosition, boolean isGpsNorth) {
     resetCameraGpsBearingAnimation(currentCameraPosition, isGpsNorth);
+    return resetCameraLatLngAnimation(currentCameraPosition);
   }
 
-  private void resetCameraLatLngAnimation(CameraPosition currentCameraPosition) {
+  private boolean resetCameraLatLngAnimation(CameraPosition currentCameraPosition) {
     CameraLatLngAnimator animator = (CameraLatLngAnimator) animatorMap.get(ANIMATOR_CAMERA_LATLNG);
     if (animator == null) {
-      return;
+      return false;
     }
 
     LatLng currentTarget = animator.getTarget();
     LatLng previousCameraTarget = currentCameraPosition.target;
     createNewAnimator(ANIMATOR_CAMERA_LATLNG,
       new CameraLatLngAnimator(previousCameraTarget, currentTarget, cameraListeners));
+
+    return immediateAnimation(previousCameraTarget, currentTarget, currentCameraPosition.zoom);
   }
 
   private void resetCameraGpsBearingAnimation(CameraPosition currentCameraPosition, boolean isGpsNorth) {
@@ -376,5 +382,14 @@ final class PluginAnimatorCoordinator {
 
   void setTrackingAnimationDurationMultiplier(float trackingAnimationDurationMultiplier) {
     this.durationMultiplier = trackingAnimationDurationMultiplier;
+  }
+
+  private boolean immediateAnimation(LatLng current, LatLng target, double zoom) {
+    // TODO: 02/10/2018 calculate the value based on the projection
+    double distance = current.distanceTo(target);
+    if (zoom > 10) {
+      distance *= zoom;
+    }
+    return distance > INSTANT_LOCATION_TRANSITION_THRESHOLD;
   }
 }

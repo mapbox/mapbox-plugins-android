@@ -1064,6 +1064,30 @@ class LocationLayerPluginTest {
   }
 
   @Test
+  fun cameraPositionSnappedToTargetIfExceedsThreshold() {
+    val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
+      override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
+                                         uiController: UiController, context: Context) {
+        val target = LatLng(51.0, 17.0)
+        assertTrue(target.distanceTo(LatLng(location)) > LocationLayerConstants.INSTANT_LOCATION_TRANSITION_THRESHOLD)
+
+        plugin.cameraMode = CameraMode.NONE
+        plugin.forceLocationUpdate(location)
+        plugin.isLocationLayerEnabled = true
+        mapboxMap.moveCamera(CameraUpdateFactory.newLatLng(target))
+        mapboxMap.moveCamera(CameraUpdateFactory.bearingTo(90.0))
+        plugin.cameraMode = CameraMode.TRACKING_GPS
+
+        assertEquals(location.bearing.toDouble(), mapboxMap.cameraPosition.bearing, 0.1)
+        assertEquals(location.latitude, mapboxMap.cameraPosition.target.latitude, 0.1)
+        assertEquals(location.longitude, mapboxMap.cameraPosition.target.longitude, 0.1)
+      }
+    }
+
+    executePluginTest(pluginAction, PluginGenerationUtil.getLocationLayerPluginProvider(activityRule.activity))
+  }
+
+  @Test
   fun onPluginInitialized_defaultCompassEngineIsProvided() {
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
