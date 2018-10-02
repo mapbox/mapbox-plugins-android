@@ -2,12 +2,15 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### 0.10.0 - October 2, 2018
+- Move camera and puck immediately when starting to track and displacement is big [#709](https://github.com/mapbox/mapbox-plugins-android/pull/709)
+
 ### 0.9.0 - October 1, 2018
- - Add animation duration multiplier configuration [#704](https://github.com/mapbox/mapbox-plugins-android/pull/704)
- - Don't invalidate camera mode if unnecessary for gestures initiated changes [#694](https://github.com/mapbox/mapbox-plugins-android/pull/694)
+- Add animation duration multiplier configuration [#704](https://github.com/mapbox/mapbox-plugins-android/pull/704)
+- Don't invalidate camera mode if unnecessary for gestures initiated changes [#694](https://github.com/mapbox/mapbox-plugins-android/pull/694)
 
 ### 0.8.2 - September 12, 2018
- - Maps SDK bump to 6.5.0 [#634](https://github.com/mapbox/mapbox-plugins-android/pull/634)
+- Maps SDK bump to 6.5.0 [#634](https://github.com/mapbox/mapbox-plugins-android/pull/634)
 
 ### 0.8.1 - September 4, 2018
 - Prevent from showing the location layer on every location update [#641](https://github.com/mapbox/mapbox-plugins-android/pull/641)
