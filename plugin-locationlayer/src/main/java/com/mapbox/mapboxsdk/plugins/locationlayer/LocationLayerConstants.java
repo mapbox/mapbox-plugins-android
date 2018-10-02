@@ -25,6 +25,9 @@ final class LocationLayerConstants {
   // Default animation duration for tilting while tracking.
   static final long DEFAULT_TRACKING_TILT_ANIMATION_DURATION = 1250;
 
+  // Threshold value to perform immediate camera/layer position update.
+  static final double INSTANT_LOCATION_TRANSITION_THRESHOLD = 500_000;
+
   // Sources
   static final String LOCATION_SOURCE = "mapbox-location-source";
   static final String PROPERTY_GPS_BEARING = "mapbox-property-gps-bearing";
