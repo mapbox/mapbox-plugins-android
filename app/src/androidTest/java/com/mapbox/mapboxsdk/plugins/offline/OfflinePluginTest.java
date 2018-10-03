@@ -48,7 +48,7 @@ import static org.junit.Assert.assertThat;
     assertThat(options.size(), equalTo(0));
 
     // Initiate the offline download and ensure the active download list has one item
-    onView(withId(R.id.fab_start_download)).perform(click());
+    onView(withId(R.id.fabStartDownload)).perform(click());
     options = plugin.getActiveDownloads();
     assertThat(options.size(), equalTo(1));
   }

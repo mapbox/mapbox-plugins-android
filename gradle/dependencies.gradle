@@ -17,7 +17,6 @@ ext {
       supportLib         : '27.1.1',
       constraintLayout   : '1.1.0',
       mockito            : '2.18.3',
-      butterknife        : '8.8.1',
       leakCanary         : '1.6.1',
       timber             : '4.7.0',
       testRunner         : '1.0.2',
@@ -51,10 +50,6 @@ ext {
       autoValue              : "com.google.auto.value:auto-value:${version.autoValue}",
       autoValuesParcel       : "com.ryanharter.auto.value:auto-value-parcel:${version.autoValueParcel}",
       autoValuesParcelAdapter: "com.ryanharter.auto.value:auto-value-parcel-adapter:${version.autoValueParcel}",
-
-      // butterknife
-      butterKnife            : "com.jakewharton:butterknife:${version.butterknife}",
-      butterKnifeProcessor   : "com.jakewharton:butterknife-compiler:${version.butterknife}",
 
       // support
       supportAnnotation      : "com.android.support:support-annotations:${version.supportLib}",
