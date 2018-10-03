@@ -121,6 +121,7 @@ dependencies {
   implementation project(':plugin-localization')
   implementation project(':plugin-annotation')
   implementation project(':plugin-markerview')
+  implementation project(':ktx-mapbox-maps')
 }
 
 apply from: "${rootDir}/gradle/checkstyle.gradle"
