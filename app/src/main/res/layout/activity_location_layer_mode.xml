@@ -7,7 +7,7 @@
   android:layout_height="match_parent">
 
   <com.mapbox.mapboxsdk.maps.MapView
-    android:id="@+id/map_view"
+    android:id="@+id/mapView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="0dp"
@@ -33,7 +33,7 @@
     tools:layout_constraintRight_creator="1">
 
     <TextView
-      android:id="@+id/tv_mode"
+      android:id="@+id/textViewMode"
       android:layout_width="0dp"
       android:layout_height="match_parent"
       android:layout_weight=".75"
@@ -44,7 +44,7 @@
       android:text="@string/mode"/>
 
     <Button
-      android:id="@+id/button_location_mode"
+      android:id="@+id/buttonLocationMode"
       style="?android:attr/buttonBarButtonStyle"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
@@ -54,7 +54,7 @@
       android:textColor="@android:color/white"/>
 
     <TextView
-      android:id="@+id/tv_tracking"
+      android:id="@+id/textViewTracking"
       android:layout_width="0dp"
       android:layout_height="match_parent"
       android:layout_weight=".85"
@@ -65,7 +65,7 @@
       android:text="@string/tracking"/>
 
     <Button
-      android:id="@+id/button_location_tracking"
+      android:id="@+id/buttonLocationTracking"
       style="?android:attr/buttonBarButtonStyle"
       android:layout_width="0dp"
       android:layout_height="wrap_content"

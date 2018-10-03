@@ -12,7 +12,7 @@
         android:orientation="vertical">
 
         <com.mapbox.mapboxsdk.maps.MapView
-            android:id="@+id/map_view"
+            android:id="@+id/mapView"
             android:layout_width="match_parent"
             android:layout_height="224dp"
             app:mapbox_uiAttribution="false"
@@ -20,13 +20,13 @@
             app:mapbox_uiLogo="false"/>
 
         <android.support.v4.widget.NestedScrollView
-            android:id="@+id/bottom_sheet"
+            android:id="@+id/bottomSheet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
-                android:id="@+id/barview"
+                android:id="@+id/barView"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:background="@color/colorPrimary"
@@ -38,7 +38,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/region_state"
+                        android:id="@+id/regionState"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
@@ -51,7 +51,7 @@
                         android:textStyle="bold"/>
 
                     <ProgressBar
-                        android:id="@+id/region_state_progress"
+                        android:id="@+id/regionStateProgress"
                         style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/region_name"
+                    android:id="@+id/regionName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
@@ -95,7 +95,7 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/region_style_url"
+                android:id="@+id/regionStyleUrl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
@@ -109,7 +109,7 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/region_lat_lng_bounds"
+                android:id="@+id/regionLatLngBounds"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
@@ -123,7 +123,7 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/region_min_zoom"
+                android:id="@+id/regionMinZoom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"/>
@@ -136,7 +136,7 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/region_max_zoom"
+                android:id="@+id/regionMaxZoom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"/>
@@ -145,12 +145,12 @@
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_delete"
-        app:layout_anchor="@+id/barview"
-        app:layout_anchorGravity="bottom|end"/>
+            android:id="@+id/fabDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:srcCompat="@drawable/ic_delete"
+            app:layout_anchor="@+id/barView"
+            app:layout_anchorGravity="bottom|end"/>
 
 </android.support.design.widget.CoordinatorLayout>

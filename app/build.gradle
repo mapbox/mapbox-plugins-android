@@ -107,8 +107,6 @@ dependencies {
 
   // Square crew
   implementation dependenciesList.timber
-  implementation dependenciesList.butterKnife
-  kapt dependenciesList.butterKnifeProcessor
 
   // Leak canary
   debugImplementation dependenciesList.leakCanaryDebug

@@ -24,7 +24,7 @@ fun MapboxMap.queryRenderedFeatures(location: Location, layerId: String): List<F
 }
 
 fun MapboxMap.isLayerVisible(layerId: String): Boolean {
-  return this.getLayer(layerId)?.visibility?.value?.equals(Property.VISIBLE)!!
+  return this.getLayer(layerId)?.visibility?.value?.equals(Property.VISIBLE) == true
 }
 
 class MapboxTestingUtils {

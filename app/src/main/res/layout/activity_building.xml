@@ -8,10 +8,10 @@
   android:orientation="vertical">
 
   <com.mapbox.mapboxsdk.maps.MapView
-    android:id="@+id/map_view"
+    android:id="@+id/mapView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_above="@+id/seekbar_wrapper"
+    android:layout_above="@+id/seekbarWrapper"
     app:mapbox_cameraTargetLat="51.505300"
     app:mapbox_cameraTargetLng="-0.075073"
     app:mapbox_cameraTilt="60"
@@ -23,7 +23,7 @@
     android:id="@+id/fabBuilding"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_above="@id/seekbar_wrapper"
+    android:layout_above="@id/seekbarWrapper"
     android:layout_alignParentRight="true"
     android:layout_gravity="end|bottom"
     android:layout_margin="16dp"
@@ -32,7 +32,7 @@
     app:backgroundTint="@color/colorPrimary"/>
 
   <LinearLayout
-    android:id="@id/seekbar_wrapper"
+    android:id="@id/seekbarWrapper"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"

@@ -20,7 +20,7 @@
   </com.mapbox.mapboxsdk.maps.MapView>
 
   <android.support.design.widget.FloatingActionButton
-    android:id="@+id/localize_fab"
+    android:id="@+id/fabLocalize"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginBottom="16dp"
@@ -33,7 +33,7 @@
     app:layout_constraintEnd_toEndOf="parent"/>
 
   <android.support.design.widget.FloatingActionButton
-    android:id="@+id/change_map_style"
+    android:id="@+id/fabStyles"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
@@ -43,12 +43,12 @@
     android:tint="@android:color/white"
     app:backgroundTint="@color/colorAccent"
     app:fabSize="normal"
-    app:layout_constraintBottom_toTopOf="@+id/camera_localization"
+    app:layout_constraintBottom_toTopOf="@+id/fabLocalize"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintRight_toRightOf="parent"/>
 
   <android.support.design.widget.FloatingActionButton
-    android:id="@+id/camera_localization"
+    android:id="@+id/fabCamera"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
@@ -58,7 +58,7 @@
     android:tint="@android:color/white"
     app:backgroundTint="@color/colorAccent"
     app:fabSize="normal"
-    app:layout_constraintBottom_toTopOf="@+id/localize_fab"
+    app:layout_constraintBottom_toTopOf="@+id/fabLocalize"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintRight_toRightOf="parent"/>
 
