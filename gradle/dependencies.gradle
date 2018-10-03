@@ -27,7 +27,10 @@ ext {
       lifecycleLiveData  : '1.1.1',
       room               : '1.1.0',
       androidArchCore    : '1.1.0',
-      robolectric        : '3.8'
+      robolectric        : '3.8',
+      assertJ            : '3.11.1',
+      mockk              : '1.8.9',
+      junit5             : '5.2.0',
   ]
 
   pluginVersion = [
@@ -35,7 +38,8 @@ ext {
       jacoco    : '0.8.1',
       gradle    : '3.2.0',
       kotlin    : '1.2.51',
-      dokka     : '0.9.17'
+      dokka     : '0.9.17',
+      junit5    : '1.2.0.0',
   ]
 
   dependenciesList = [
@@ -92,13 +96,19 @@ ext {
       mockito                : "org.mockito:mockito-inline:${version.mockito}",
       androidArchCore        : "android.arch.core:core-testing:${version.androidArchCore}",
       robolectric            : "org.robolectric:robolectric:${version.robolectric}",
+      assertJ                : "org.assertj:assertj-core:${version.assertJ}",
+      mockk                  : "io.mockk:mockk:${version.mockk}",
       kotlin                 : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${pluginVersion.kotlin}",
+      junit5Api              : "org.junit.jupiter:junit-jupiter-api:${version.junit5}",
+      junit5Engine           : "org.junit.jupiter:junit-jupiter-engine:${version.junit5}",
+      junit5Params           : "org.junit.jupiter:junit-jupiter-params:${version.junit5}",
   ]
 
   pluginDependencies = [
       gradle    : "com.android.tools.build:gradle:${pluginVersion.gradle}",
       checkstyle: "com.puppycrawl.tools:checkstyle:${pluginVersion.checkstyle}",
       kotlin    : "org.jetbrains.kotlin:kotlin-gradle-plugin:${pluginVersion.kotlin}",
-      dokka     : "org.jetbrains.dokka:dokka-android-gradle-plugin:${pluginVersion.dokka}"
+      dokka     : "org.jetbrains.dokka:dokka-android-gradle-plugin:${pluginVersion.dokka}",
+      junit5    : "de.mannodermaus.gradle.plugins:android-junit5:${pluginVersion.junit5}",
   ]
 }

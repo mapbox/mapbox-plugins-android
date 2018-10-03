@@ -8,7 +8,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng
  *
  * @return the latitude longitude pair
  */
-inline fun LatLng.toPoint(): Point {
+fun LatLng.toPoint(): Point {
     return Point.fromLngLat(this.longitude, this.latitude);
 }
 
@@ -17,6 +17,6 @@ inline fun LatLng.toPoint(): Point {
  *
  * @return the point from the latitude longitude pair
  */
-inline fun Point.toLatLng(): LatLng {
+fun Point.toLatLng(): LatLng {
     return LatLng(this.latitude(), this.longitude())
 }

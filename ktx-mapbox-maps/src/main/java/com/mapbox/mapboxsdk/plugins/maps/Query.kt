@@ -14,8 +14,7 @@ import com.mapbox.mapboxsdk.style.expressions.Expression
  * @param layerIds    optionally - only query these layers
  * @return the list of feature
  */
-inline fun MapboxMap.queryRenderedFeatures(latLng: LatLng,
-                                           vararg layerIds: String): List<Feature> {
+fun MapboxMap.queryRenderedFeatures(latLng: LatLng, vararg layerIds: String): List<Feature> {
     return this.queryRenderedFeatures(latLng, null, *layerIds)
 }
 
@@ -27,9 +26,7 @@ inline fun MapboxMap.queryRenderedFeatures(latLng: LatLng,
  * @param layerIds    optionally - only query these layers
  * @return the list of feature
  */
-inline fun MapboxMap.queryRenderedFeatures(latLng: LatLng,
-                                           filter: Expression?,
-                                           vararg layerIds: String): List<Feature> {
+fun MapboxMap.queryRenderedFeatures(latLng: LatLng, filter: Expression?, vararg layerIds: String): List<Feature> {
     return this.queryRenderedFeatures(this.projection.toScreenLocation(latLng), filter, *layerIds)
 }
 
@@ -40,8 +37,7 @@ inline fun MapboxMap.queryRenderedFeatures(latLng: LatLng,
  * @param layerIds     optionally - only query these layers
  * @return the list of feature
  */
-inline fun MapboxMap.queryRenderedFeatures(latLngBounds: LatLngBounds,
-                                           vararg layerIds: String): List<Feature> {
+fun MapboxMap.queryRenderedFeatures(latLngBounds: LatLngBounds, vararg layerIds: String): List<Feature> {
     return this.queryRenderedFeatures(latLngBounds, null, *layerIds)
 }
 
@@ -52,11 +48,10 @@ inline fun MapboxMap.queryRenderedFeatures(latLngBounds: LatLngBounds,
  * @param layerIds     optionally - only query these layers
  * @return the list of feature
  */
-inline fun MapboxMap.queryRenderedFeatures(latLngBounds: LatLngBounds,
-                                           filter: Expression?,
-                                           vararg layerIds: String): List<Feature> {
+fun MapboxMap.queryRenderedFeatures(latLngBounds: LatLngBounds, filter: Expression?,
+                                    vararg layerIds: String): List<Feature> {
     val topRight = this.projection.toScreenLocation(latLngBounds.northEast)
     val bottomLeft = this.projection.toScreenLocation(latLngBounds.southWest)
-    val rectF = RectF(bottomLeft.x, topRight.y, topRight.x, bottomLeft.y)
+    val rectF = this.projection.toScreenLocation(topRight, bottomLeft)
     return this.queryRenderedFeatures(rectF, filter, *layerIds)
 }

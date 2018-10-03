@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: "de.mannodermaus.android-junit5"
 
 android {
     compileSdkVersion androidVersions.compileSdkVersion
@@ -8,7 +9,6 @@ android {
     defaultConfig {
         minSdkVersion androidVersions.minSdkVersion
         targetSdkVersion androidVersions.targetSdkVersion
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     configurations {
@@ -20,11 +20,8 @@ android {
     }
 
     testOptions {
-        unitTests.returnDefaultValues true
-        unitTests.all {
-            jacoco {
-                includeNoLocationClasses true
-            }
+        junitPlatform {
+            unitTests.returnDefaultValues = true
         }
     }
 
@@ -38,10 +35,12 @@ dependencies {
     implementation dependenciesList.kotlin
     implementation dependenciesList.mapboxMapSdk
     javadocDeps dependenciesList.mapboxMapSdk
-    testImplementation dependenciesList.junit
-    testImplementation dependenciesList.mockito
-    testImplementation dependenciesList.robolectric
     testImplementation dependenciesList.kotlin
+    testImplementation dependenciesList.assertJ
+    testImplementation dependenciesList.mockk
+    testImplementation dependenciesList.junit5Api
+    testRuntimeOnly dependenciesList.junit5Engine
+    testImplementation dependenciesList.junit5Params
 }
 
 apply from: "${rootDir}/gradle/javadoc.gradle"

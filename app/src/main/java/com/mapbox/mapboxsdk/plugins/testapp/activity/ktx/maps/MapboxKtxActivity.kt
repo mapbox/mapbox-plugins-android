@@ -6,11 +6,12 @@ import android.widget.Toast
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
+import com.mapbox.mapboxsdk.plugins.maps.moveCamera
 import com.mapbox.mapboxsdk.plugins.maps.queryRenderedFeatures
 import com.mapbox.mapboxsdk.plugins.testapp.R
 import kotlinx.android.synthetic.main.activity_maps_ktx.*
 
-class MapboxKtxActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.OnMapClickListener {
+class MapboxKtxActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.OnMapClickListener, MapboxMap.OnMapLongClickListener {
 
     private var mapboxMap: MapboxMap? = null
 
@@ -24,6 +25,7 @@ class MapboxKtxActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.OnM
     override fun onMapReady(mapboxMap: MapboxMap?) {
         this.mapboxMap = mapboxMap
         mapboxMap?.addOnMapClickListener(this)
+        mapboxMap?.addOnMapLongClickListener(this)
     }
 
     override fun onMapClick(point: LatLng) {
@@ -31,6 +33,10 @@ class MapboxKtxActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.OnM
         features?.first().let {
             Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun onMapLongClick(point: LatLng) {
+        mapboxMap?.moveCamera(point, 12.0, 45.0, 60.0)
     }
 
     public override fun onResume() {
@@ -60,7 +66,7 @@ class MapboxKtxActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.OnM
 
     override fun onDestroy() {
         super.onDestroy()
-        mapboxMap?.removeOnMapClickListener (this)
+        mapboxMap?.removeOnMapClickListener(this)
         mapView.onDestroy()
     }
 

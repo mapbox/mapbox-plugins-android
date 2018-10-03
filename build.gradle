@@ -10,6 +10,7 @@ buildscript {
   dependencies {
     classpath pluginDependencies.gradle
     classpath pluginDependencies.kotlin
+    classpath pluginDependencies.junit5
   }
 }
 
