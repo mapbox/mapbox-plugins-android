@@ -11,6 +11,7 @@
   <string name="category_offline">Offline</string>
   <string name="category_localization">Localization</string>
   <string name="category_annotation">Annotation plugin</string>
+  <string name="category_ktx">Kotlin extension functions</string>
   <string name="category_markerview">View synchronisation</string>
 
   <!-- Titles -->
@@ -33,6 +34,7 @@
   <string name="title_circle">Circle</string>
   <string name="title_line">Line</string>
   <string name="title_markerview">MarkerView plugin</string>
+  <string name="title_ktx">Mapbox Maps KTX</string>
 
   <!-- Descriptions -->
   <string name="description_traffic">Add Traffic layers to any Mapbox basemap.</string>
@@ -54,6 +56,7 @@
   <string name="description_fill">Show fills on a map</string>
   <string name="description_circle">Show circles on a map</string>
   <string name="description_markerview">Synchronise a view on a map</string>
+  <string name="description_ktx">Test Mapbox Maps SDK for Android Kotlin extension functions</string>
 
   <!-- Buttons -->
   <string name="button_location_mode_none">None</string>
