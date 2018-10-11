@@ -24,7 +24,6 @@ import java.util.List;
 
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
-//import static com.mapbox.mapboxsdk.annotations.symbol.Symbol.Z_INDEX;
 
 /**
  * The line manager allows to add lines to a map.
@@ -228,6 +227,5 @@ public class LineManager extends AnnotationManager<Line, LineOptions, OnLineClic
   public void setLineDasharray( Float[] value) {
     layer.setProperties(lineDasharray(value));
   }
-
 
 }

@@ -30,6 +30,9 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
   private <%- propertyType(property) %> <%- camelizeWithLeadingLowercase(property.name) %>;
 <% } -%>
 <% } -%>
+<% if (type === "symbol") { -%>
+  private int zIndex;
+<% } -%>
 <% for (const property of properties) { -%>
 <% if (supportsPropertyFunction(property)) { -%>
 
@@ -136,6 +139,31 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
     return this;
   }
 <% } -%>
+<% if (type === "symbol") { -%>
+
+  /**
+   * Set the zIndex of the symbol, which represents the place of the symbol on the map inside a layer.
+   * <p>
+   * A higher value brings the symbol to the front.
+   * </p>
+   *
+   * @param zIndex the z index
+   * @return this
+   */
+  public SymbolOptions withZIndex(int zIndex) {
+    this.zIndex = zIndex;
+    return this;
+  }
+
+  /**
+   * Get the zIndex of the symbol, which represents the place of the symbol on the map inside a layer.
+   *
+   * @return the z index
+   */
+  public int getZIndex() {
+    return zIndex;
+  }
+<% } -%>
 
   @Override
   <%- camelize(type) %> build(long id) {
@@ -151,6 +179,9 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
     jsonObject.addProperty("<%- property.name %>", <%- camelizeWithLeadingLowercase(property.name) %>);
 <% } -%>
 <% } -%>
+<% } -%>
+<% if (type === "symbol") { -%>
+    jsonObject.addProperty(Symbol.Z_INDEX, zIndex);
 <% } -%>
     return new <%- camelize(type) %>(id, jsonObject, geometry);
   }

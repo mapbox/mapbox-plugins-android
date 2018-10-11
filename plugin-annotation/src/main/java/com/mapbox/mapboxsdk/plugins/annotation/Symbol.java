@@ -15,7 +15,8 @@ import java.util.List;
 @UiThread
 public class Symbol extends Annotation {
 
-  //public static final String Z_INDEX = "z-index";
+  public static final String Z_INDEX = "z-index";
+
   /**
    * Create a symbol.
    *
@@ -25,7 +26,6 @@ public class Symbol extends Annotation {
    */
   Symbol(long id, JsonObject jsonObject, Geometry geometry) {
     super(id, jsonObject, geometry);
-    //this.jsonObject.addProperty(Z_INDEX, 0);
   }
 
   /**
@@ -52,30 +52,29 @@ public class Symbol extends Annotation {
     this.geometry = geometry;
   }
 
-  ///**
-  // * Set the z-index of a symbol.
-  // * <p>
-  // * If a symbol z-index is higher as another symbol it will be rendered above it.
-  // * </p>
-  // * <p>
-  // * Default value is 0.
-  // * </p>
-  // *
-  // * @param index the z-index value
-  // */
-  //public void setZIndex(int index) {
-  //  jsonObject.addProperty(Z_INDEX, index);
-  //  symbolManager.updateSource();
-  //}
+  /**
+   * Set the z-index of a symbol.
+   * <p>
+   * If a symbol z-index is higher as another symbol it will be rendered above it.
+   * </p>
+   * <p>
+   * Default value is 0.
+   * </p>
+   *
+   * @param index the z-index value
+   */
+  public void setZIndex(int index) {
+    jsonObject.addProperty(Z_INDEX, index);
+  }
 
-  ///**
-  // * Get the z-index of a symbol.
-  // *
-  // * @return the z-index value, 0 if not set
-  // */
-  //public int getZIndex() {
-  //  return jsonObject.get(Z_INDEX).getAsInt();
-  //}
+  /**
+   * Get the z-index of a symbol.
+   *
+   * @return the z-index value, 0 if not set
+   */
+  public int getZIndex() {
+    return jsonObject.get(Z_INDEX).getAsInt();
+  }
 
   // Property accessors
   /**

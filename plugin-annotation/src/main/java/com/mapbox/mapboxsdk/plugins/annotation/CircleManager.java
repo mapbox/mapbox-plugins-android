@@ -24,7 +24,6 @@ import java.util.List;
 
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
-//import static com.mapbox.mapboxsdk.annotations.symbol.Symbol.Z_INDEX;
 
 /**
  * The circle manager allows to add circles to a map.
@@ -192,6 +191,5 @@ public class CircleManager extends AnnotationManager<Circle, CircleOptions, OnCi
   public void setCirclePitchAlignment(@Property.CIRCLE_PITCH_ALIGNMENT String value) {
     layer.setProperties(circlePitchAlignment(value));
   }
-
 
 }
