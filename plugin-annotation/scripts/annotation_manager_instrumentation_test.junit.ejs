@@ -40,7 +40,7 @@ public class <%- camelize(type) %>ManagerTest extends BaseActivityTest {
     });
   }
 <% for (const property of properties) { -%>
-<% if (!supportsPropertyFunction(property) && property.name !== "line-gradient") { -%>
+<% if (!supportsPropertyFunction(property) && property.name !== "line-gradient" && property.name !== "symbol-z-order") { -%>
 
   @Test
   public void test<%- camelize(property.name) %>AsConstant() {

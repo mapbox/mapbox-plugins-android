@@ -29,7 +29,6 @@ import java.util.List;
 
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
-//import static com.mapbox.mapboxsdk.annotations.symbol.Symbol.Z_INDEX;
 
 /**
  * The <%- type %> manager allows to add <%- type %>s to a map.
@@ -40,9 +39,6 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
   public static final String ID_GEOJSON_LAYER = "mapbox-android-<%- type %>-layer";
 
   private <%- camelize(type) %>Layer layer;
-<% if (type === "symbol") { -%>
-  //private final SymbolComparator symbolComparator = new SymbolComparator();
-<% } -%>
 
   /**
    * Create a <%- type %> manager, used to manage <%- type %>s.
@@ -77,7 +73,11 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
    */
   @VisibleForTesting
   public <%- camelize(type) %>Manager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull <%- camelize(type) %>Layer layer, @Nullable String belowLayerId) {
+<% if (type === "symbol") { -%>
+    super(mapboxMap, geoJsonSource, new SymbolComparator());
+<% } else { -%>
     super(mapboxMap, geoJsonSource);
+<% } -%>
     initLayer(layer, belowLayerId);
   }
 
@@ -123,7 +123,7 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
       <%- camelizeWithLeadingLowercase(property.name) %>(get("<%- property.name %>")),
 <% } -%><% } -%>
 <% if (type === "symbol") { -%>
-      //symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE)
+      symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE)
 <% } -%>
     };
   }
@@ -150,15 +150,5 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
   }
 
 <% } -%>
-<% } -%>
-
-<% if (type === "symbol") { -%>
-
-  //private class SymbolComparator implements Comparator<Feature> {
-  //  @Override
-  //  public int compare(Feature left, Feature right) {
-  //    return right.getProperty(Z_INDEX).getAsInt() - left.getProperty(Z_INDEX).getAsInt();
-  //  }
-  //}
 <% } -%>
 }
