@@ -3,6 +3,7 @@
 package com.mapbox.mapboxsdk.plugins.annotation;
 
 import android.support.annotation.ColorInt;
+import android.graphics.PointF;
 import android.support.annotation.UiThread;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

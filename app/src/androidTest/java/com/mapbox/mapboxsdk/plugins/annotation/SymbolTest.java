@@ -2,6 +2,7 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+import android.graphics.PointF;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -88,8 +89,8 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setIconOffset(new Float[] {0f, 0f});
-      assertEquals((Float[]) symbol.getIconOffset(), (Float[]) new Float[] {0f, 0f});
+      symbol.setIconOffset(new PointF(1.0f, 1.0f));
+      assertEquals(symbol.getIconOffset(), new PointF(1.0f, 1.0f));
     });
   }
 
@@ -231,8 +232,8 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setTextOffset(new Float[] {0f, 0f});
-      assertEquals((Float[]) symbol.getTextOffset(), (Float[]) new Float[] {0f, 0f});
+      symbol.setTextOffset(new PointF(1.0f, 1.0f));
+      assertEquals(symbol.getTextOffset(), new PointF(1.0f, 1.0f));
     });
   }
 

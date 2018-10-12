@@ -6,6 +6,7 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+import android.graphics.PointF;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -61,7 +62,21 @@ public class <%- camelize(type) %>Test extends BaseActivityTest {
   }
 <% for (const property of properties) { -%>
 <% if (supportsPropertyFunction(property)) { -%>
-<% if (property.type == 'color') { -%>
+<% if (propertyType(property).endsWith("Float[]")) { -%>
+
+  @Test
+  public void test<%- camelize(property.name) %>() {
+    validateTestSetup();
+    setupAnnotation();
+    Timber.i("<%- property.name %>");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(<%- type %>);
+
+      <%- type %>.set<%- camelize(property.name) %>(new PointF(1.0f, 1.0f));
+      assertEquals(<%- type %>.get<%- camelize(property.name) %>(), new PointF(1.0f, 1.0f));
+    });
+  }
+<% } else if (property.type == 'color') { -%>
 
   @Test
   public void test<%- camelize(property.name) %>() {
