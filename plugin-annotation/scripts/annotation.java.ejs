@@ -7,12 +7,14 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+import android.support.annotation.ColorInt;
 import android.support.annotation.UiThread;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -188,8 +190,31 @@ public class <%- camelize(type) %> extends Annotation {
     }
     jsonObject.add("<%-property.name %>", jsonArray);
   }
+<% } else if (property.type == 'color') { -%>
 
+  /**
+   * Get the <%- camelize(property.name) %> property
+   *
+   * @return color value for <%- propertyType(property) %>
+   */
+  @ColorInt
+  public int get<%- camelize(property.name) %>() {
+    return ColorUtils.rgbaToColor(jsonObject.get("<%- property.name %>").getAs<%- propertyType(property) %>());
+  }
+
+  /**
+   * Set the <%- camelize(property.name) %> property
+   * <p>
+   * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
+   * <p>
+   *
+   * @param color value for <%- propertyType(property) %>
+   */
+  public void set<%- camelize(property.name) %>(@ColorInt int color) {
+    jsonObject.addProperty("<%- property.name %>", ColorUtils.colorToRgbaString(color));
+  }
 <% } else { -%>
+
   /**
    * Get the <%- camelize(property.name) %> property
    *
@@ -210,7 +235,6 @@ public class <%- camelize(type) %> extends Annotation {
   public void set<%- camelize(property.name) %>(<%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), " ") %><%- propertyType(property) %> value) {
     jsonObject.addProperty("<%- property.name %>", value);
   }
-
 <% } -%>
 <% } -%>
 <% } -%>

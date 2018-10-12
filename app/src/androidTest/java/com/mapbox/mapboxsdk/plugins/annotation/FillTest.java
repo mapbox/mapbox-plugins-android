@@ -7,6 +7,7 @@ import android.support.test.runner.AndroidJUnit4;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.BaseActivityTest;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.building.BuildingActivity;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 import timber.log.Timber;
 
 import org.junit.Test;
@@ -67,8 +68,8 @@ public class FillTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(fill);
 
-      fill.setFillColor("rgba(0, 0, 0, 1)");
-      assertEquals((String) fill.getFillColor(), (String) "rgba(0, 0, 0, 1)");
+      fill.setFillColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      assertEquals(fill.getFillColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
     });
   }
 
@@ -80,8 +81,8 @@ public class FillTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(fill);
 
-      fill.setFillOutlineColor("rgba(0, 0, 0, 1)");
-      assertEquals((String) fill.getFillOutlineColor(), (String) "rgba(0, 0, 0, 1)");
+      fill.setFillOutlineColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      assertEquals(fill.getFillOutlineColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
     });
   }
 

@@ -7,6 +7,7 @@ import android.support.test.runner.AndroidJUnit4;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.BaseActivityTest;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.building.BuildingActivity;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 import timber.log.Timber;
 
 import org.junit.Test;
@@ -77,8 +78,8 @@ public class LineTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(line);
 
-      line.setLineColor("rgba(0, 0, 0, 1)");
-      assertEquals((String) line.getLineColor(), (String) "rgba(0, 0, 0, 1)");
+      line.setLineColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      assertEquals(line.getLineColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
     });
   }
 

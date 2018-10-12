@@ -7,6 +7,7 @@ import android.support.test.runner.AndroidJUnit4;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.BaseActivityTest;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.building.BuildingActivity;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 import timber.log.Timber;
 
 import org.junit.Test;
@@ -256,8 +257,8 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setIconColor("rgba(0, 0, 0, 1)");
-      assertEquals((String) symbol.getIconColor(), (String) "rgba(0, 0, 0, 1)");
+      symbol.setIconColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      assertEquals(symbol.getIconColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
     });
   }
 
@@ -269,8 +270,8 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setIconHaloColor("rgba(0, 0, 0, 1)");
-      assertEquals((String) symbol.getIconHaloColor(), (String) "rgba(0, 0, 0, 1)");
+      symbol.setIconHaloColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      assertEquals(symbol.getIconHaloColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
     });
   }
 
@@ -321,8 +322,8 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setTextColor("rgba(0, 0, 0, 1)");
-      assertEquals((String) symbol.getTextColor(), (String) "rgba(0, 0, 0, 1)");
+      symbol.setTextColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      assertEquals(symbol.getTextColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
     });
   }
 
@@ -334,8 +335,8 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setTextHaloColor("rgba(0, 0, 0, 1)");
-      assertEquals((String) symbol.getTextHaloColor(), (String) "rgba(0, 0, 0, 1)");
+      symbol.setTextHaloColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      assertEquals(symbol.getTextHaloColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
     });
   }
 

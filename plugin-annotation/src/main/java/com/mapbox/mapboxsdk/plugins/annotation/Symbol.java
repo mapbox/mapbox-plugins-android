@@ -2,12 +2,14 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+import android.support.annotation.ColorInt;
 import android.support.annotation.UiThread;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +80,7 @@ public class Symbol extends Annotation {
   //}
 
   // Property accessors
+
   /**
    * Get the IconSize property
    *
@@ -140,7 +143,6 @@ public class Symbol extends Annotation {
   public void setIconRotate(Float value) {
     jsonObject.addProperty("icon-rotate", value);
   }
-
   /**
    * Get the IconOffset property
    *
@@ -211,7 +213,6 @@ public class Symbol extends Annotation {
   public void setTextField(String value) {
     jsonObject.addProperty("text-field", value);
   }
-
   /**
    * Get the TextFont property
    *
@@ -387,7 +388,6 @@ public class Symbol extends Annotation {
   public void setTextTransform(@Property.TEXT_TRANSFORM String value) {
     jsonObject.addProperty("text-transform", value);
   }
-
   /**
    * Get the TextOffset property
    *
@@ -441,10 +441,11 @@ public class Symbol extends Annotation {
   /**
    * Get the IconColor property
    *
-   * @return property wrapper value around String
+   * @return color value for String
    */
-  public String getIconColor() {
-    return jsonObject.get("icon-color").getAsString();
+  @ColorInt
+  public int getIconColor() {
+    return ColorUtils.rgbaToColor(jsonObject.get("icon-color").getAsString());
   }
 
   /**
@@ -453,19 +454,20 @@ public class Symbol extends Annotation {
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
    *
-   * @param value constant property value for String
+   * @param color value for String
    */
-  public void setIconColor(String value) {
-    jsonObject.addProperty("icon-color", value);
+  public void setIconColor(@ColorInt int color) {
+    jsonObject.addProperty("icon-color", ColorUtils.colorToRgbaString(color));
   }
 
   /**
    * Get the IconHaloColor property
    *
-   * @return property wrapper value around String
+   * @return color value for String
    */
-  public String getIconHaloColor() {
-    return jsonObject.get("icon-halo-color").getAsString();
+  @ColorInt
+  public int getIconHaloColor() {
+    return ColorUtils.rgbaToColor(jsonObject.get("icon-halo-color").getAsString());
   }
 
   /**
@@ -474,10 +476,10 @@ public class Symbol extends Annotation {
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
    *
-   * @param value constant property value for String
+   * @param color value for String
    */
-  public void setIconHaloColor(String value) {
-    jsonObject.addProperty("icon-halo-color", value);
+  public void setIconHaloColor(@ColorInt int color) {
+    jsonObject.addProperty("icon-halo-color", ColorUtils.colorToRgbaString(color));
   }
 
   /**
@@ -546,10 +548,11 @@ public class Symbol extends Annotation {
   /**
    * Get the TextColor property
    *
-   * @return property wrapper value around String
+   * @return color value for String
    */
-  public String getTextColor() {
-    return jsonObject.get("text-color").getAsString();
+  @ColorInt
+  public int getTextColor() {
+    return ColorUtils.rgbaToColor(jsonObject.get("text-color").getAsString());
   }
 
   /**
@@ -558,19 +561,20 @@ public class Symbol extends Annotation {
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
    *
-   * @param value constant property value for String
+   * @param color value for String
    */
-  public void setTextColor(String value) {
-    jsonObject.addProperty("text-color", value);
+  public void setTextColor(@ColorInt int color) {
+    jsonObject.addProperty("text-color", ColorUtils.colorToRgbaString(color));
   }
 
   /**
    * Get the TextHaloColor property
    *
-   * @return property wrapper value around String
+   * @return color value for String
    */
-  public String getTextHaloColor() {
-    return jsonObject.get("text-halo-color").getAsString();
+  @ColorInt
+  public int getTextHaloColor() {
+    return ColorUtils.rgbaToColor(jsonObject.get("text-halo-color").getAsString());
   }
 
   /**
@@ -579,10 +583,10 @@ public class Symbol extends Annotation {
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
    *
-   * @param value constant property value for String
+   * @param color value for String
    */
-  public void setTextHaloColor(String value) {
-    jsonObject.addProperty("text-halo-color", value);
+  public void setTextHaloColor(@ColorInt int color) {
+    jsonObject.addProperty("text-halo-color", ColorUtils.colorToRgbaString(color));
   }
 
   /**
@@ -626,5 +630,4 @@ public class Symbol extends Annotation {
   public void setTextHaloBlur(Float value) {
     jsonObject.addProperty("text-halo-blur", value);
   }
-
 }

@@ -103,7 +103,7 @@ public class SymbolActivity extends AppCompatActivity {
     } else if (item.getItemId() == R.id.menu_action_text_anchor) {
       symbol.setTextAnchor(Property.TEXT_ANCHOR_TOP);
     } else if (item.getItemId() == R.id.menu_action_text_color) {
-      symbol.setTextColor(PropertyFactory.colorToRgbaString(Color.WHITE));
+      symbol.setTextColor(Color.WHITE);
     } else if (item.getItemId() == R.id.menu_action_text_size) {
       symbol.setTextSize(22f);
     } else {
