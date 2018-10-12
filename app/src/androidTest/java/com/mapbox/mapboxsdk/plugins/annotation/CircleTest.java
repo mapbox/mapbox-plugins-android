@@ -7,6 +7,7 @@ import android.support.test.runner.AndroidJUnit4;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.BaseActivityTest;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.building.BuildingActivity;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 import timber.log.Timber;
 
 import org.junit.Test;
@@ -61,8 +62,8 @@ public class CircleTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(circle);
 
-      circle.setCircleColor("rgba(0, 0, 0, 1)");
-      assertEquals((String) circle.getCircleColor(), (String) "rgba(0, 0, 0, 1)");
+      circle.setCircleColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      assertEquals(circle.getCircleColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
     });
   }
 
@@ -113,8 +114,8 @@ public class CircleTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(circle);
 
-      circle.setCircleStrokeColor("rgba(0, 0, 0, 1)");
-      assertEquals((String) circle.getCircleStrokeColor(), (String) "rgba(0, 0, 0, 1)");
+      circle.setCircleStrokeColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      assertEquals(circle.getCircleStrokeColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
     });
   }
 

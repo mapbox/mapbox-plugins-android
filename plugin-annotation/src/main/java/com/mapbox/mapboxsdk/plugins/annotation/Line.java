@@ -2,12 +2,14 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+import android.support.annotation.ColorInt;
 import android.support.annotation.UiThread;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +57,7 @@ public class Line extends Annotation {
   }
 
   // Property accessors
+
   /**
    * Get the LineJoin property
    *
@@ -100,10 +103,11 @@ public class Line extends Annotation {
   /**
    * Get the LineColor property
    *
-   * @return property wrapper value around String
+   * @return color value for String
    */
-  public String getLineColor() {
-    return jsonObject.get("line-color").getAsString();
+  @ColorInt
+  public int getLineColor() {
+    return ColorUtils.rgbaToColor(jsonObject.get("line-color").getAsString());
   }
 
   /**
@@ -112,10 +116,10 @@ public class Line extends Annotation {
    * To update the line on the map use {@link LineManager#update(Annotation)}.
    * <p>
    *
-   * @param value constant property value for String
+   * @param color value for String
    */
-  public void setLineColor(String value) {
-    jsonObject.addProperty("line-color", value);
+  public void setLineColor(@ColorInt int color) {
+    jsonObject.addProperty("line-color", ColorUtils.colorToRgbaString(color));
   }
 
   /**
@@ -222,5 +226,4 @@ public class Line extends Annotation {
   public void setLinePattern(String value) {
     jsonObject.addProperty("line-pattern", value);
   }
-
 }
