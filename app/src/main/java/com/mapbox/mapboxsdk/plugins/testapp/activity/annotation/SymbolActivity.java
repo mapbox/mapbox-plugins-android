@@ -1,6 +1,7 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.annotation;
 
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -111,7 +112,7 @@ public class SymbolActivity extends AppCompatActivity {
     } else if (item.getItemId() == R.id.menu_action_opacity) {
       symbol.setIconOpacity(0.5f);
     } else if (item.getItemId() == R.id.menu_action_offset) {
-      symbol.setIconOffset(new Float[] {10.0f, 20.0f});
+      symbol.setIconOffset(new PointF(10.0f, 20.0f));
     } else if (item.getItemId() == R.id.menu_action_text_anchor) {
       symbol.setTextAnchor(Property.TEXT_ANCHOR_TOP);
     } else if (item.getItemId() == R.id.menu_action_text_color) {

@@ -3,6 +3,7 @@
 package com.mapbox.mapboxsdk.plugins.annotation;
 
 import android.support.annotation.ColorInt;
+import android.graphics.PointF;
 import android.support.annotation.UiThread;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -142,18 +143,15 @@ public class Symbol extends Annotation {
   public void setIconRotate(Float value) {
     jsonObject.addProperty("icon-rotate", value);
   }
+
   /**
    * Get the IconOffset property
    *
-   * @return property wrapper value around Float[]
+   * @return PointF value for Float[]
    */
-  public Float[] getIconOffset() {
+  public PointF getIconOffset() {
     JsonArray jsonArray = jsonObject.getAsJsonArray("icon-offset");
-    Float[] value = new Float[jsonArray.size()];
-    for (int i = 0; i < jsonArray.size(); i++) {
-      value[i] = jsonArray.get(i).getAsFloat();
-    }
-    return value;
+    return new PointF(jsonArray.get(0).getAsFloat(), jsonArray.get(1).getAsFloat());
   }
 
   /**
@@ -161,13 +159,12 @@ public class Symbol extends Annotation {
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
-   * @param value constant property value for Float[]
+   * @param pointF value for Float[]
    */
-  public void setIconOffset(Float[] value) {
+  public void setIconOffset(PointF pointF) {
     JsonArray jsonArray = new JsonArray();
-    for (Float element : value) {
-      jsonArray.add(element);
-    }
+    jsonArray.add(pointF.x);
+    jsonArray.add(pointF.y);
     jsonObject.add("icon-offset", jsonArray);
   }
 
@@ -212,6 +209,7 @@ public class Symbol extends Annotation {
   public void setTextField(String value) {
     jsonObject.addProperty("text-field", value);
   }
+
   /**
    * Get the TextFont property
    *
@@ -387,18 +385,15 @@ public class Symbol extends Annotation {
   public void setTextTransform(@Property.TEXT_TRANSFORM String value) {
     jsonObject.addProperty("text-transform", value);
   }
+
   /**
    * Get the TextOffset property
    *
-   * @return property wrapper value around Float[]
+   * @return PointF value for Float[]
    */
-  public Float[] getTextOffset() {
+  public PointF getTextOffset() {
     JsonArray jsonArray = jsonObject.getAsJsonArray("text-offset");
-    Float[] value = new Float[jsonArray.size()];
-    for (int i = 0; i < jsonArray.size(); i++) {
-      value[i] = jsonArray.get(i).getAsFloat();
-    }
-    return value;
+    return new PointF(jsonArray.get(0).getAsFloat(), jsonArray.get(1).getAsFloat());
   }
 
   /**
@@ -406,13 +401,12 @@ public class Symbol extends Annotation {
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
-   * @param value constant property value for Float[]
+   * @param pointF value for Float[]
    */
-  public void setTextOffset(Float[] value) {
+  public void setTextOffset(PointF pointF) {
     JsonArray jsonArray = new JsonArray();
-    for (Float element : value) {
-      jsonArray.add(element);
-    }
+    jsonArray.add(pointF.x);
+    jsonArray.add(pointF.y);
     jsonObject.add("text-offset", jsonArray);
   }
 
