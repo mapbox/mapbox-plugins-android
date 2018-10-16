@@ -46,7 +46,7 @@ public class OfflineDownloadService extends Service {
   private MapSnapshotter mapSnapshotter;
   NotificationManagerCompat notificationManager;
   NotificationCompat.Builder notificationBuilder;
-  OfflineDownloadStateReceiver broadcastReciever;
+  OfflineDownloadStateReceiver broadcastReceiver;
 
   // map offline regions to requests, ids are received with onStartCommand, these match serviceId
   // in OfflineDownloadOptions
@@ -63,8 +63,9 @@ public class OfflineDownloadService extends Service {
     }
 
     // Register the broadcast receiver needed for updating APIs in the OfflinePlugin class.
+    broadcastReceiver = new OfflineDownloadStateReceiver();
     IntentFilter filter = new IntentFilter(OfflineConstants.ACTION_OFFLINE);
-    getApplicationContext().registerReceiver(broadcastReciever, filter);
+    getApplicationContext().registerReceiver(broadcastReceiver, filter);
   }
 
   /**
@@ -262,8 +263,8 @@ public class OfflineDownloadService extends Service {
     if (mapSnapshotter != null) {
       mapSnapshotter.cancel();
     }
-    if (broadcastReciever != null) {
-      getApplicationContext().unregisterReceiver(broadcastReciever);
+    if (broadcastReceiver != null) {
+      getApplicationContext().unregisterReceiver(broadcastReceiver);
     }
   }
 
