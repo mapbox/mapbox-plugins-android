@@ -112,6 +112,7 @@ public class FillManager extends AnnotationManager<Fill, FillOptions, OnFillClic
       fillOpacity(get("fill-opacity")),
       fillColor(get("fill-color")),
       fillOutlineColor(get("fill-outline-color")),
+      fillPattern(get("fill-pattern")),
     };
   }
 
