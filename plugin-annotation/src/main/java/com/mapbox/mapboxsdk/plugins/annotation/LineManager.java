@@ -116,6 +116,7 @@ public class LineManager extends AnnotationManager<Line, LineOptions, OnLineClic
       lineGapWidth(get("line-gap-width")),
       lineOffset(get("line-offset")),
       lineBlur(get("line-blur")),
+      linePattern(get("line-pattern")),
     };
   }
 

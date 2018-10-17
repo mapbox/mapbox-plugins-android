@@ -119,7 +119,7 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
   private static PropertyValue<?>[] getLayerDefinition() {
     return new PropertyValue[]{
 <% for (const property of properties) { -%>
-<% if (supportsPropertyFunction(property) && property.name !== "fill-pattern" && property.name !== "line-pattern") { -%>
+<% if (supportsPropertyFunction(property)) { -%>
       <%- camelizeWithLeadingLowercase(property.name) %>(get("<%- property.name %>")),
 <% } -%><% } -%>
 <% if (type === "symbol") { -%>
