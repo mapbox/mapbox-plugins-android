@@ -3,8 +3,8 @@ buildscript {
   apply plugin: 'jacoco'
 
   repositories {
-    jcenter()
     google()
+    jcenter()
     maven {   url "https://maven.google.com"   }
   }
 
@@ -16,8 +16,8 @@ buildscript {
 
 allprojects {
   repositories {
-    jcenter()
     google()
+    jcenter()
 //    SNAPSHOT repository
 //    maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
   }
