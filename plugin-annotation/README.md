@@ -16,7 +16,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation:0.1.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation:0.2.0'
 }
 ```
 
@@ -33,7 +33,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation:0.2.0-SNAPSHOT'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation:0.3.0-SNAPSHOT'
 }
 ```
 
