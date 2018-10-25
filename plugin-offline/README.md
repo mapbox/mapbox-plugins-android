@@ -39,7 +39,7 @@ dependencies {
 
 ## Offline plugin examples
 
-- In this repo's test app: [Offline download](https://github.com/mapbox/mapbox-plugins-android/blob/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/offline/OfflineDownloadActivity.java), [Downloaded region overview](https://github.com/mapbox/mapbox-plugins-android/blob/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/offline/OfflineRegionDetailActivity.java), [List downloaded regions](https://github.com/mapbox/mapbox-plugins-android/blob/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/offline/OfflineRegionListActivity.java)
+- [In this repo's test app](https://github.com/mapbox/mapbox-plugins-android/tree/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/offline)
 
 ## Help and Usage
 
