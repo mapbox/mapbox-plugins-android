@@ -6,6 +6,8 @@ The places plugin is the easiest and most powerful way to take advantage of [Map
 
 ## Getting Started
 
+[More documentation about the plugin can be found here](https://www.mapbox.com/android-docs/plugins/overview/places/)
+
 To use the places plugin, you include it in your `build.gradle` file.
 
 ```
