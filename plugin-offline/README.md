@@ -4,6 +4,8 @@ The offline plugin automatically does the downloading and managment of map tiles
 
 ## Getting Started
 
+[More documentation about the plugin can be found here](https://www.mapbox.com/android-docs/plugins/overview/offline)
+
 To use the offline plugin you include it in your `build.gradle` file.
 
 ```
