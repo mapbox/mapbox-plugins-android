@@ -2,6 +2,9 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### 0.11.0 - October 25, 2018
+- Deprecating LocationLayerPlugin [#729](https://github.com/mapbox/mapbox-plugins-android/pull/729)
+
 ### 0.10.0 - October 2, 2018
 - Move camera and puck immediately when starting to track and displacement is big [#709](https://github.com/mapbox/mapbox-plugins-android/pull/709)
 
