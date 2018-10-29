@@ -24,7 +24,6 @@ import java.util.List;
 
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
-//import static com.mapbox.mapboxsdk.annotations.symbol.Symbol.Z_INDEX;
 
 /**
  * The symbol manager allows to add symbols to a map.
@@ -35,7 +34,6 @@ public class SymbolManager extends AnnotationManager<Symbol, SymbolOptions, OnSy
   public static final String ID_GEOJSON_LAYER = "mapbox-android-symbol-layer";
 
   private SymbolLayer layer;
-  //private final SymbolComparator symbolComparator = new SymbolComparator();
 
   /**
    * Create a symbol manager, used to manage symbols.
@@ -70,7 +68,7 @@ public class SymbolManager extends AnnotationManager<Symbol, SymbolOptions, OnSy
    */
   @VisibleForTesting
   public SymbolManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull SymbolLayer layer, @Nullable String belowLayerId) {
-    super(mapboxMap, geoJsonSource);
+    super(mapboxMap, geoJsonSource, new SymbolComparator());
     initLayer(layer, belowLayerId);
   }
 
@@ -136,7 +134,7 @@ public class SymbolManager extends AnnotationManager<Symbol, SymbolOptions, OnSy
       textHaloColor(get("text-halo-color")),
       textHaloWidth(get("text-halo-width")),
       textHaloBlur(get("text-halo-blur")),
-      //symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE)
+      symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE)
     };
   }
 
@@ -591,12 +589,4 @@ public class SymbolManager extends AnnotationManager<Symbol, SymbolOptions, OnSy
     layer.setProperties(textTranslateAnchor(value));
   }
 
-
-
-  //private class SymbolComparator implements Comparator<Feature> {
-  //  @Override
-  //  public int compare(Feature left, Feature right) {
-  //    return right.getProperty(Z_INDEX).getAsInt() - left.getProperty(Z_INDEX).getAsInt();
-  //  }
-  //}
 }

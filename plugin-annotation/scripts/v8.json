@@ -70,12 +70,12 @@
     },
     "sprite": {
       "type": "string",
-      "doc": "A base URL for retrieving the sprite image and metadata. The extensions `.png`, `.json` and scale factor `@2x.png` will be automatically appended. This property is required if any layer uses the `background-pattern`, `fill-pattern`, `line-pattern`, `fill-extrusion-pattern`, or `icon-image` properties.",
+      "doc": "A base URL for retrieving the sprite image and metadata. The extensions `.png`, `.json` and scale factor `@2x.png` will be automatically appended. This property is required if any layer uses the `background-pattern`, `fill-pattern`, `line-pattern`, `fill-extrusion-pattern`, or `icon-image` properties. The URL must be absolute, containing the [scheme, authority and path components](https://en.wikipedia.org/wiki/URL#Syntax).",
       "example": "mapbox://sprites/mapbox/bright-v8"
     },
     "glyphs": {
       "type": "string",
-      "doc": "A URL template for loading signed-distance-field glyph sets in PBF format. The URL must include `{fontstack}` and `{range}` tokens. This property is required if any layer uses the `text-field` layout property.",
+      "doc": "A URL template for loading signed-distance-field glyph sets in PBF format. The URL must include `{fontstack}` and `{range}` tokens. This property is required if any layer uses the `text-field` layout property. The URL must be absolute, containing the [scheme, authority and path components](https://en.wikipedia.org/wiki/URL#Syntax).",
       "example": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf"
     },
     "transition": {
@@ -581,7 +581,7 @@
     },
     "filter": {
       "type": "filter",
-      "doc": "A expression specifying conditions on source features. Only features that match the filter are displayed. The `feature-state` expression is not supported in filter expressions."
+      "doc": "A expression specifying conditions on source features. Only features that match the filter are displayed. Zoom expressions in filters are only evaluated at integer zoom levels. The `feature-state` expression is not supported in filter expressions."
     },
     "layout": {
       "type": "layout",
@@ -894,7 +894,10 @@
           "macos": "0.1.0"
         },
         "`line-center` value": {
-          "js": "0.47.0"
+          "js": "0.47.0",
+          "android": "6.4.0",
+          "ios": "4.3.0",
+          "macos": "0.10.0"
         },
         "data-driven styling": {}
       },
@@ -944,6 +947,32 @@
           "android": "2.0.1",
           "ios": "2.0.0",
           "macos": "0.1.0"
+        },
+        "data-driven styling": {}
+      },
+      "expression": {
+        "interpolated": false,
+        "parameters": [
+          "zoom"
+        ]
+      },
+      "property-type": "data-constant"
+    },
+    "symbol-z-order": {
+      "type": "enum",
+      "values": {
+        "viewport-y": {
+          "doc": "Symbols will be sorted by their y-position relative to the viewport."
+        },
+        "source": {
+          "doc": "Symbols will be rendered in the same order as the source data with no sorting applied."
+        }
+      },
+      "default": "viewport-y",
+      "doc": "Controls the order in which overlapping symbols in the same layer are rendered",
+      "sdk-support": {
+        "basic functionality": {
+          "js": "0.49.0"
         },
         "data-driven styling": {}
       },
@@ -2525,6 +2554,7 @@
         "sdk-support": {
           "basic functionality": {
             "js": "0.45.0",
+            "android": "6.5.0",
             "ios": "4.2.0",
             "macos": "0.9.0"
           }
@@ -3008,6 +3038,7 @@
           },
           "collator": {
             "js": "0.45.0",
+            "android": "6.5.0",
             "ios": "4.2.0",
             "macos": "0.9.0"
           }
@@ -3025,6 +3056,7 @@
           },
           "collator": {
             "js": "0.45.0",
+            "android": "6.5.0",
             "ios": "4.2.0",
             "macos": "0.9.0"
           }
@@ -3042,6 +3074,7 @@
           },
           "collator": {
             "js": "0.45.0",
+            "android": "6.5.0",
             "ios": "4.2.0",
             "macos": "0.9.0"
           }
@@ -3059,6 +3092,7 @@
           },
           "collator": {
             "js": "0.45.0",
+            "android": "6.5.0",
             "ios": "4.2.0",
             "macos": "0.9.0"
           }
@@ -3076,6 +3110,7 @@
           },
           "collator": {
             "js": "0.45.0",
+            "android": "6.5.0",
             "ios": "4.2.0",
             "macos": "0.9.0"
           }
@@ -3093,6 +3128,7 @@
           },
           "collator": {
             "js": "0.45.0",
+            "android": "6.5.0",
             "ios": "4.2.0",
             "macos": "0.9.0"
           }
@@ -3163,7 +3199,7 @@
         }
       },
       "concat": {
-        "doc": "Returns a `string` consisting of the concatenation of the inputs. If any inputs are `formatted`, returns a `formatted` with default formatting options for all unformatted inputs.",
+        "doc": "Returns a `string` consisting of the concatenation of the inputs. Each input is converted to a string as if by `to-string`.",
         "group": "String",
         "sdk-support": {
           "basic functionality": {
@@ -3180,6 +3216,7 @@
         "sdk-support": {
           "basic functionality": {
             "js": "0.45.0",
+            "android": "6.5.0",
             "ios": "4.2.0",
             "macos": "0.9.0"
           }
@@ -3501,7 +3538,10 @@
           "macos": "0.1.0"
         },
         "data-driven styling": {
-          "js": "0.46.0"
+          "js": "0.49.0",
+          "android": "6.5.0",
+          "macos": "0.11.0",
+          "ios": "4.4.0"
         }
       },
       "expression": {
@@ -3643,7 +3683,12 @@
           "ios": "3.6.0",
           "macos": "0.5.0"
         },
-        "data-driven styling": {}
+        "data-driven styling": {
+          "js": "0.49.0",
+          "android": "6.5.0",
+          "macos": "0.11.0",
+          "ios": "4.4.0"
+        }
       },
       "expression": {
         "interpolated": false,
@@ -3718,6 +3763,22 @@
         ]
       },
       "property-type": "data-driven"
+    },
+    "fill-extrusion-vertical-gradient": {
+      "type": "boolean",
+      "default": true,
+      "doc": "Whether to apply a vertical gradient to the sides of a fill-extrusion layer. If true, sides will be shaded slightly darker farther down.",
+      "transition": false,
+      "sdk-support": {
+        "basic functionality": {
+          "js": "0.50.0"
+        }
+      },
+      "expression": {
+        "interpolated": false,
+        "parameters": ["zoom"]
+      },
+      "property-type": "data-constant"
     }
   },
   "paint_line": {
@@ -4010,7 +4071,10 @@
           "macos": "0.1.0"
         },
         "data-driven styling": {
-          "js": "0.46.0"
+          "js": "0.49.0",
+          "android": "6.5.0",
+          "macos": "0.11.0",
+          "ios": "4.4.0"
         }
       },
       "expression": {
@@ -4042,7 +4106,10 @@
       ],
       "sdk-support": {
         "basic functionality": {
-          "js": "0.45.0"
+          "js": "0.45.0",
+          "android": "6.5.0",
+          "ios": "4.4.0",
+          "macos": "0.11.0"
         },
         "data-driven styling": {}
       },

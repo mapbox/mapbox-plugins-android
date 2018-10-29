@@ -2,6 +2,11 @@
 
 ![location-plugin](https://user-images.githubusercontent.com/4394910/28844322-1c52a672-76b9-11e7-904a-fcf6f51c1481.gif)
 
+## Deprecation
+The location layer plugin is no longer maintained and the whole functionality as well as the future development has been moved to the Mapbox Maps SDK for Android and usage doesn't require any additional dependencies.
+
+Follow [`LocationComponent` documentation](https://www.mapbox.com/android-docs/maps/overview/location-component/) for more information.
+
 ## Getting Started
 
 To use the location layer plugin, you include it in your `build.gradle` file.
@@ -41,9 +46,10 @@ dependencies {
 
 ## Location layer examples
 
-- In this repo's test app
-  - [beginner example](https://github.com/mapbox/mapbox-plugins-android/blob/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/location/LocationLayerMapChangeActivity.java)
-  - [advanced example](https://github.com/mapbox/mapbox-plugins-android/blob/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/location/LocationLayerModesActivity.java)
+- In this repo's test app:
+  - [beginner example](https://github.com/mapbox/mapbox-plugins-android/blob/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/location/LocationLayerMapChangeActivity.kt)
+  - [advanced example](https://github.com/mapbox/mapbox-plugins-android/blob/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/location/kt)
+  - [all examples](https://github.com/mapbox/mapbox-plugins-android/tree/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/location)
 - [In the Mapbox Android Demo app](https://github.com/mapbox/mapbox-android-demo/blob/master/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/plugins/LocationPluginActivity.java) – (Don't have the app? [Download it on Google Play](https://play.google.com/store/apps/details?id=com.mapbox.mapboxandroiddemo).)
 
 ## Help and Usage

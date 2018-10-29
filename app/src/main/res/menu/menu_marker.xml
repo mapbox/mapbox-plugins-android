@@ -37,4 +37,8 @@
             android:id="@+id/menu_action_text_anchor"
             android:title="Set text anchor top"
             app:showAsAction="never"/>
+    <item
+            android:id="@+id/menu_action_z_index"
+            android:title="Change Z index"
+            app:showAsAction="never"/>
 </menu>

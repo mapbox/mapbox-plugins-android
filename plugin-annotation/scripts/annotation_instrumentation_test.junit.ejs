@@ -6,11 +6,13 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+import android.graphics.PointF;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.BaseActivityTest;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.building.BuildingActivity;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 import timber.log.Timber;
 
 import org.junit.Test;
@@ -60,6 +62,35 @@ public class <%- camelize(type) %>Test extends BaseActivityTest {
   }
 <% for (const property of properties) { -%>
 <% if (supportsPropertyFunction(property)) { -%>
+<% if (propertyType(property).endsWith("Float[]")) { -%>
+
+  @Test
+  public void test<%- camelize(property.name) %>() {
+    validateTestSetup();
+    setupAnnotation();
+    Timber.i("<%- property.name %>");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(<%- type %>);
+
+      <%- type %>.set<%- camelize(property.name) %>(new PointF(1.0f, 1.0f));
+      assertEquals(<%- type %>.get<%- camelize(property.name) %>(), new PointF(1.0f, 1.0f));
+    });
+  }
+<% } else if (property.type == 'color') { -%>
+
+  @Test
+  public void test<%- camelize(property.name) %>() {
+    validateTestSetup();
+    setupAnnotation();
+    Timber.i("<%- property.name %>");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(<%- type %>);
+
+      <%- type %>.set<%- camelize(property.name) %>(ColorUtils.rgbaToColor(<%- defaultValueJava(property) %>));
+      assertEquals(<%- type %>.get<%- camelize(property.name) %>(), ColorUtils.rgbaToColor(<%- defaultValueJava(property) %>));
+    });
+  }
+<% } else { -%>
 
   @Test
   public void test<%- camelize(property.name) %>() {
@@ -73,6 +104,7 @@ public class <%- camelize(type) %>Test extends BaseActivityTest {
       assertEquals((<%- propertyType(property) %>) <%- type %>.get<%- camelize(property.name) %>(), (<%- propertyType(property) %>) <%- defaultValueJava(property) %>);
     });
   }
+<% } -%>
 <% } -%>
 <% } -%>
 }

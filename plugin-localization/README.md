@@ -5,6 +5,8 @@
 
 ## Getting Started
 
+[More documentation about the plugin can be found here](https://www.mapbox.com/android-docs/plugins/overview/localization/)
+
 To use the localization plugin, you include it in your `build.gradle` file.
 
 ```gradle
@@ -42,7 +44,7 @@ dependencies {
 
 ## Localization examples
 
-- [In this repo's test app](https://github.com/mapbox/mapbox-plugins-android/blob/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/LocalizationActivity.java)
+- [In this repo's test app](https://github.com/mapbox/mapbox-plugins-android/blob/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/localization/LocalizationActivity.kt)
 
 - [In the Mapbox Android demo app](https://github.com/mapbox/mapbox-android-demo/blob/master/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/plugins/LocalizationPluginActivity.java) – (Don't have the app? [Download it on Google Play](https://play.google.com/store/apps/details?id=com.mapbox.mapboxandroiddemo).)
 

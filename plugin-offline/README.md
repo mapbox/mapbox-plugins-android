@@ -4,6 +4,8 @@ The offline plugin automatically does the downloading and managment of map tiles
 
 ## Getting Started
 
+[More documentation about the plugin can be found here](https://www.mapbox.com/android-docs/plugins/overview/offline)
+
 To use the offline plugin you include it in your `build.gradle` file.
 
 ```
@@ -39,7 +41,7 @@ dependencies {
 
 ## Offline plugin examples
 
-- In this repo's test app: [Offline download](https://github.com/mapbox/mapbox-plugins-android/blob/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/offline/OfflineDownloadActivity.java), [Downloaded region overview](https://github.com/mapbox/mapbox-plugins-android/blob/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/offline/OfflineRegionDetailActivity.java), [List downloaded regions](https://github.com/mapbox/mapbox-plugins-android/blob/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/offline/OfflineRegionListActivity.java)
+- [In this repo's test app](https://github.com/mapbox/mapbox-plugins-android/tree/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/offline)
 
 ## Help and Usage
 

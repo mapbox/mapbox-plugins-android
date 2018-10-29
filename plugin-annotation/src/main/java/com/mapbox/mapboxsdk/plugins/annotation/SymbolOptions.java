@@ -45,6 +45,7 @@ public class SymbolOptions extends Options<Symbol> {
   private String textHaloColor;
   private Float textHaloWidth;
   private Float textHaloBlur;
+  private int zIndex;
 
   /**
    * Set icon-size to initialise the symbol with.
@@ -568,6 +569,29 @@ public class SymbolOptions extends Options<Symbol> {
     return this;
   }
 
+  /**
+   * Set the zIndex of the symbol, which represents the place of the symbol on the map inside a layer.
+   * <p>
+   * A higher value brings the symbol to the front.
+   * </p>
+   *
+   * @param zIndex the z index
+   * @return this
+   */
+  public SymbolOptions withZIndex(int zIndex) {
+    this.zIndex = zIndex;
+    return this;
+  }
+
+  /**
+   * Get the zIndex of the symbol, which represents the place of the symbol on the map inside a layer.
+   *
+   * @return the z index
+   */
+  public int getZIndex() {
+    return zIndex;
+  }
+
   @Override
   Symbol build(long id) {
     if (geometry == null) {
@@ -599,6 +623,7 @@ public class SymbolOptions extends Options<Symbol> {
     jsonObject.addProperty("text-halo-color", textHaloColor);
     jsonObject.addProperty("text-halo-width", textHaloWidth);
     jsonObject.addProperty("text-halo-blur", textHaloBlur);
+    jsonObject.addProperty(Symbol.Z_INDEX, zIndex);
     return new Symbol(id, jsonObject, geometry);
   }
 }

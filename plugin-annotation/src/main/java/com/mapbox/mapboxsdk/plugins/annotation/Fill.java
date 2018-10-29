@@ -2,12 +2,15 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+import android.support.annotation.ColorInt;
+import android.graphics.PointF;
 import android.support.annotation.UiThread;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +62,7 @@ public class Fill extends Annotation {
   }
 
   // Property accessors
+
   /**
    * Get the FillOpacity property
    *
@@ -83,10 +87,11 @@ public class Fill extends Annotation {
   /**
    * Get the FillColor property
    *
-   * @return property wrapper value around String
+   * @return color value for String
    */
-  public String getFillColor() {
-    return jsonObject.get("fill-color").getAsString();
+  @ColorInt
+  public int getFillColor() {
+    return ColorUtils.rgbaToColor(jsonObject.get("fill-color").getAsString());
   }
 
   /**
@@ -95,19 +100,20 @@ public class Fill extends Annotation {
    * To update the fill on the map use {@link FillManager#update(Annotation)}.
    * <p>
    *
-   * @param value constant property value for String
+   * @param color value for String
    */
-  public void setFillColor(String value) {
-    jsonObject.addProperty("fill-color", value);
+  public void setFillColor(@ColorInt int color) {
+    jsonObject.addProperty("fill-color", ColorUtils.colorToRgbaString(color));
   }
 
   /**
    * Get the FillOutlineColor property
    *
-   * @return property wrapper value around String
+   * @return color value for String
    */
-  public String getFillOutlineColor() {
-    return jsonObject.get("fill-outline-color").getAsString();
+  @ColorInt
+  public int getFillOutlineColor() {
+    return ColorUtils.rgbaToColor(jsonObject.get("fill-outline-color").getAsString());
   }
 
   /**
@@ -116,10 +122,10 @@ public class Fill extends Annotation {
    * To update the fill on the map use {@link FillManager#update(Annotation)}.
    * <p>
    *
-   * @param value constant property value for String
+   * @param color value for String
    */
-  public void setFillOutlineColor(String value) {
-    jsonObject.addProperty("fill-outline-color", value);
+  public void setFillOutlineColor(@ColorInt int color) {
+    jsonObject.addProperty("fill-outline-color", ColorUtils.colorToRgbaString(color));
   }
 
   /**
@@ -142,5 +148,4 @@ public class Fill extends Annotation {
   public void setFillPattern(String value) {
     jsonObject.addProperty("fill-pattern", value);
   }
-
 }

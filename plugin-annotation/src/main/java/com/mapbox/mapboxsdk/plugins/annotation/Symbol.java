@@ -2,12 +2,15 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+import android.support.annotation.ColorInt;
+import android.graphics.PointF;
 import android.support.annotation.UiThread;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +18,8 @@ import java.util.List;
 @UiThread
 public class Symbol extends Annotation {
 
-  //public static final String Z_INDEX = "z-index";
+  public static final String Z_INDEX = "z-index";
+
   /**
    * Create a symbol.
    *
@@ -25,7 +29,6 @@ public class Symbol extends Annotation {
    */
   Symbol(long id, JsonObject jsonObject, Geometry geometry) {
     super(id, jsonObject, geometry);
-    //this.jsonObject.addProperty(Z_INDEX, 0);
   }
 
   /**
@@ -52,32 +55,32 @@ public class Symbol extends Annotation {
     this.geometry = geometry;
   }
 
-  ///**
-  // * Set the z-index of a symbol.
-  // * <p>
-  // * If a symbol z-index is higher as another symbol it will be rendered above it.
-  // * </p>
-  // * <p>
-  // * Default value is 0.
-  // * </p>
-  // *
-  // * @param index the z-index value
-  // */
-  //public void setZIndex(int index) {
-  //  jsonObject.addProperty(Z_INDEX, index);
-  //  symbolManager.updateSource();
-  //}
+  /**
+   * Set the z-index of a symbol.
+   * <p>
+   * If a symbol z-index is higher as another symbol it will be rendered above it.
+   * </p>
+   * <p>
+   * Default value is 0.
+   * </p>
+   *
+   * @param index the z-index value
+   */
+  public void setZIndex(int index) {
+    jsonObject.addProperty(Z_INDEX, index);
+  }
 
-  ///**
-  // * Get the z-index of a symbol.
-  // *
-  // * @return the z-index value, 0 if not set
-  // */
-  //public int getZIndex() {
-  //  return jsonObject.get(Z_INDEX).getAsInt();
-  //}
+  /**
+   * Get the z-index of a symbol.
+   *
+   * @return the z-index value, 0 if not set
+   */
+  public int getZIndex() {
+    return jsonObject.get(Z_INDEX).getAsInt();
+  }
 
   // Property accessors
+
   /**
    * Get the IconSize property
    *
@@ -144,15 +147,11 @@ public class Symbol extends Annotation {
   /**
    * Get the IconOffset property
    *
-   * @return property wrapper value around Float[]
+   * @return PointF value for Float[]
    */
-  public Float[] getIconOffset() {
+  public PointF getIconOffset() {
     JsonArray jsonArray = jsonObject.getAsJsonArray("icon-offset");
-    Float[] value = new Float[jsonArray.size()];
-    for (int i = 0; i < jsonArray.size(); i++) {
-      value[i] = jsonArray.get(i).getAsFloat();
-    }
-    return value;
+    return new PointF(jsonArray.get(0).getAsFloat(), jsonArray.get(1).getAsFloat());
   }
 
   /**
@@ -160,13 +159,12 @@ public class Symbol extends Annotation {
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
-   * @param value constant property value for Float[]
+   * @param pointF value for Float[]
    */
-  public void setIconOffset(Float[] value) {
+  public void setIconOffset(PointF pointF) {
     JsonArray jsonArray = new JsonArray();
-    for (Float element : value) {
-      jsonArray.add(element);
-    }
+    jsonArray.add(pointF.x);
+    jsonArray.add(pointF.y);
     jsonObject.add("icon-offset", jsonArray);
   }
 
@@ -391,15 +389,11 @@ public class Symbol extends Annotation {
   /**
    * Get the TextOffset property
    *
-   * @return property wrapper value around Float[]
+   * @return PointF value for Float[]
    */
-  public Float[] getTextOffset() {
+  public PointF getTextOffset() {
     JsonArray jsonArray = jsonObject.getAsJsonArray("text-offset");
-    Float[] value = new Float[jsonArray.size()];
-    for (int i = 0; i < jsonArray.size(); i++) {
-      value[i] = jsonArray.get(i).getAsFloat();
-    }
-    return value;
+    return new PointF(jsonArray.get(0).getAsFloat(), jsonArray.get(1).getAsFloat());
   }
 
   /**
@@ -407,13 +401,12 @@ public class Symbol extends Annotation {
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
-   * @param value constant property value for Float[]
+   * @param pointF value for Float[]
    */
-  public void setTextOffset(Float[] value) {
+  public void setTextOffset(PointF pointF) {
     JsonArray jsonArray = new JsonArray();
-    for (Float element : value) {
-      jsonArray.add(element);
-    }
+    jsonArray.add(pointF.x);
+    jsonArray.add(pointF.y);
     jsonObject.add("text-offset", jsonArray);
   }
 
@@ -441,10 +434,11 @@ public class Symbol extends Annotation {
   /**
    * Get the IconColor property
    *
-   * @return property wrapper value around String
+   * @return color value for String
    */
-  public String getIconColor() {
-    return jsonObject.get("icon-color").getAsString();
+  @ColorInt
+  public int getIconColor() {
+    return ColorUtils.rgbaToColor(jsonObject.get("icon-color").getAsString());
   }
 
   /**
@@ -453,19 +447,20 @@ public class Symbol extends Annotation {
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
    *
-   * @param value constant property value for String
+   * @param color value for String
    */
-  public void setIconColor(String value) {
-    jsonObject.addProperty("icon-color", value);
+  public void setIconColor(@ColorInt int color) {
+    jsonObject.addProperty("icon-color", ColorUtils.colorToRgbaString(color));
   }
 
   /**
    * Get the IconHaloColor property
    *
-   * @return property wrapper value around String
+   * @return color value for String
    */
-  public String getIconHaloColor() {
-    return jsonObject.get("icon-halo-color").getAsString();
+  @ColorInt
+  public int getIconHaloColor() {
+    return ColorUtils.rgbaToColor(jsonObject.get("icon-halo-color").getAsString());
   }
 
   /**
@@ -474,10 +469,10 @@ public class Symbol extends Annotation {
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
    *
-   * @param value constant property value for String
+   * @param color value for String
    */
-  public void setIconHaloColor(String value) {
-    jsonObject.addProperty("icon-halo-color", value);
+  public void setIconHaloColor(@ColorInt int color) {
+    jsonObject.addProperty("icon-halo-color", ColorUtils.colorToRgbaString(color));
   }
 
   /**
@@ -546,10 +541,11 @@ public class Symbol extends Annotation {
   /**
    * Get the TextColor property
    *
-   * @return property wrapper value around String
+   * @return color value for String
    */
-  public String getTextColor() {
-    return jsonObject.get("text-color").getAsString();
+  @ColorInt
+  public int getTextColor() {
+    return ColorUtils.rgbaToColor(jsonObject.get("text-color").getAsString());
   }
 
   /**
@@ -558,19 +554,20 @@ public class Symbol extends Annotation {
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
    *
-   * @param value constant property value for String
+   * @param color value for String
    */
-  public void setTextColor(String value) {
-    jsonObject.addProperty("text-color", value);
+  public void setTextColor(@ColorInt int color) {
+    jsonObject.addProperty("text-color", ColorUtils.colorToRgbaString(color));
   }
 
   /**
    * Get the TextHaloColor property
    *
-   * @return property wrapper value around String
+   * @return color value for String
    */
-  public String getTextHaloColor() {
-    return jsonObject.get("text-halo-color").getAsString();
+  @ColorInt
+  public int getTextHaloColor() {
+    return ColorUtils.rgbaToColor(jsonObject.get("text-halo-color").getAsString());
   }
 
   /**
@@ -579,10 +576,10 @@ public class Symbol extends Annotation {
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
    *
-   * @param value constant property value for String
+   * @param color value for String
    */
-  public void setTextHaloColor(String value) {
-    jsonObject.addProperty("text-halo-color", value);
+  public void setTextHaloColor(@ColorInt int color) {
+    jsonObject.addProperty("text-halo-color", ColorUtils.colorToRgbaString(color));
   }
 
   /**
@@ -626,5 +623,4 @@ public class Symbol extends Annotation {
   public void setTextHaloBlur(Float value) {
     jsonObject.addProperty("text-halo-blur", value);
   }
-
 }

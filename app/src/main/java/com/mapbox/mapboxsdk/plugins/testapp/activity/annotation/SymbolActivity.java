@@ -1,6 +1,7 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.annotation;
 
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -13,6 +14,7 @@ import com.mapbox.mapboxsdk.plugins.annotation.*;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,7 @@ public class SymbolActivity extends AppCompatActivity {
   private static final String MAKI_ICON_AIRPORT = "airport-15";
   private static final String MAKI_ICON_CAR = "car-15";
   private static final String MAKI_ICON_CAFE = "cafe-15";
+  private static final String MAKI_ICON_CIRCLE = "circle-15";
 
   private final Random random = new Random();
 
@@ -63,8 +66,18 @@ public class SymbolActivity extends AppCompatActivity {
       SymbolOptions symbolOptions = new SymbolOptions()
         .withLatLng(new LatLng(6.687337, 0.381457))
         .withIconImage(MAKI_ICON_AIRPORT)
-        .withIconSize(1.3f);
+        .withIconSize(1.3f)
+        .withZIndex(10);
       symbol = symbolManager.create(symbolOptions);
+
+      // create nearby symbols
+      SymbolOptions nearbyOptions = new SymbolOptions()
+        .withLatLng(new LatLng(6.626384, 0.367099))
+        .withIconImage(MAKI_ICON_CIRCLE)
+        .withIconColor(PropertyFactory.colorToRgbaString(Color.YELLOW))
+        .withIconSize(2.5f)
+        .withZIndex(5);
+      symbolManager.create(nearbyOptions);
 
       // random add symbols across the globe
       List<SymbolOptions> symbolOptionsList = new ArrayList<>();
@@ -99,13 +112,15 @@ public class SymbolActivity extends AppCompatActivity {
     } else if (item.getItemId() == R.id.menu_action_opacity) {
       symbol.setIconOpacity(0.5f);
     } else if (item.getItemId() == R.id.menu_action_offset) {
-      symbol.setIconOffset(new Float[] {10.0f, 20.0f});
+      symbol.setIconOffset(new PointF(10.0f, 20.0f));
     } else if (item.getItemId() == R.id.menu_action_text_anchor) {
       symbol.setTextAnchor(Property.TEXT_ANCHOR_TOP);
     } else if (item.getItemId() == R.id.menu_action_text_color) {
-      symbol.setTextColor(PropertyFactory.colorToRgbaString(Color.WHITE));
+      symbol.setTextColor(Color.WHITE);
     } else if (item.getItemId() == R.id.menu_action_text_size) {
       symbol.setTextSize(22f);
+    }else if(item.getItemId() == R.id.menu_action_z_index){
+      symbol.setZIndex(0);
     } else {
       return super.onOptionsItemSelected(item);
     }

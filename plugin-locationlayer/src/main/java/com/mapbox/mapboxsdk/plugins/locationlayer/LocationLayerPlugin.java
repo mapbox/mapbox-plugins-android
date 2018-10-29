@@ -66,7 +66,12 @@ import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.
  * You can adjust the zoom range with {@link LocationLayerOptions#maxZoom()} and {@link LocationLayerOptions#minZoom()}.
  *
  * @since 0.1.0
+ * @deprecated LocationLayerPlugin is no longer maintained and the whole functionality
+ * as well as the future development has been moved to the Mapbox Maps SDK for Android
+ * and usage doesn't require any additional dependencies.
+ * Follow <a href="https://www.mapbox.com/android-docs/maps/overview/location-component/">LocationComponent documentation</a> for more information.
  */
+@Deprecated
 public final class LocationLayerPlugin implements LifecycleObserver {
 
   private final MapboxMap mapboxMap;

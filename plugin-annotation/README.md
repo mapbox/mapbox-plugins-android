@@ -4,6 +4,8 @@
 
 ## Getting Started
 
+[More documentation about the plugin can be found here](https://www.mapbox.com/android-docs/plugins/overview/annotation/)
+
 To use the annotation plugin you include it in your `build.gradle` file.
 
 ```
@@ -16,7 +18,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation:0.1.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation:0.2.0'
 }
 ```
 
@@ -33,7 +35,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation:0.2.0-SNAPSHOT'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation:0.3.0-SNAPSHOT'
 }
 ```
 

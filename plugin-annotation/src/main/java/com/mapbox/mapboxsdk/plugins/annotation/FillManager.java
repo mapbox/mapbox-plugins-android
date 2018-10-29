@@ -24,7 +24,6 @@ import java.util.List;
 
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
-//import static com.mapbox.mapboxsdk.annotations.symbol.Symbol.Z_INDEX;
 
 /**
  * The fill manager allows to add fills to a map.
@@ -113,6 +112,7 @@ public class FillManager extends AnnotationManager<Fill, FillOptions, OnFillClic
       fillOpacity(get("fill-opacity")),
       fillColor(get("fill-color")),
       fillOutlineColor(get("fill-outline-color")),
+      fillPattern(get("fill-pattern")),
     };
   }
 
@@ -170,6 +170,5 @@ public class FillManager extends AnnotationManager<Fill, FillOptions, OnFillClic
   public void setFillTranslateAnchor(@Property.FILL_TRANSLATE_ANCHOR String value) {
     layer.setProperties(fillTranslateAnchor(value));
   }
-
 
 }

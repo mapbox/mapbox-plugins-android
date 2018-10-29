@@ -12,6 +12,8 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -38,11 +40,18 @@ public abstract class AnnotationManager<
 
   private final GeoJsonSource geoJsonSource;
   private final MapClickResolver mapClickResolver;
+  private final Comparator<Feature> comparator;
 
   @UiThread
   protected AnnotationManager(MapboxMap mapboxMap, GeoJsonSource geoJsonSource) {
+    this(mapboxMap, geoJsonSource, null);
+  }
+
+  @UiThread
+  protected AnnotationManager(MapboxMap mapboxMap, GeoJsonSource geoJsonSource, Comparator<Feature> comparator) {
     this.mapboxMap = mapboxMap;
     this.geoJsonSource = geoJsonSource;
+    this.comparator = comparator;
     mapboxMap.addSource(geoJsonSource);
     mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
     mapboxMap.addOnMapLongClickListener(mapClickResolver);
@@ -152,7 +161,10 @@ public abstract class AnnotationManager<
       t = annotations.valueAt(i);
       features.add(Feature.fromGeometry(t.getGeometry(), t.getFeature()));
     }
-    //Collections.sort(features, symbolComparator);
+
+    if(comparator != null) {
+      Collections.sort(features, comparator);
+    }
     geoJsonSource.setGeoJson(FeatureCollection.fromFeatures(features));
   }
 

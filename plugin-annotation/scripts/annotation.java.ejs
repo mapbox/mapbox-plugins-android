@@ -7,22 +7,26 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+import android.support.annotation.ColorInt;
+import android.graphics.PointF;
 import android.support.annotation.UiThread;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @UiThread
 public class <%- camelize(type) %> extends Annotation {
-
 <% if (type === "symbol") { -%>
-  //public static final String Z_INDEX = "z-index";
+
+  public static final String Z_INDEX = "z-index";
 <% } -%>
+
   /**
    * Create a <%- type %>.
    *
@@ -32,9 +36,6 @@ public class <%- camelize(type) %> extends Annotation {
    */
   <%- camelize(type) %>(long id, JsonObject jsonObject, Geometry geometry) {
     super(id, jsonObject, geometry);
-<% if (type === "symbol") { -%>
-    //this.jsonObject.addProperty(Z_INDEX, 0);
-<% } -%>
   }
 <% if (type === "circle" || type === "symbol") { -%>
 
@@ -130,36 +131,62 @@ public class <%- camelize(type) %> extends Annotation {
 <% } -%>
 <% if (type === "symbol") { -%>
 
-  ///**
-  // * Set the z-index of a symbol.
-  // * <p>
-  // * If a symbol z-index is higher as another symbol it will be rendered above it.
-  // * </p>
-  // * <p>
-  // * Default value is 0.
-  // * </p>
-  // *
-  // * @param index the z-index value
-  // */
-  //public void setZIndex(int index) {
-  //  jsonObject.addProperty(Z_INDEX, index);
-  //  symbolManager.updateSource();
-  //}
+  /**
+   * Set the z-index of a symbol.
+   * <p>
+   * If a symbol z-index is higher as another symbol it will be rendered above it.
+   * </p>
+   * <p>
+   * Default value is 0.
+   * </p>
+   *
+   * @param index the z-index value
+   */
+  public void setZIndex(int index) {
+    jsonObject.addProperty(Z_INDEX, index);
+  }
 
-  ///**
-  // * Get the z-index of a symbol.
-  // *
-  // * @return the z-index value, 0 if not set
-  // */
-  //public int getZIndex() {
-  //  return jsonObject.get(Z_INDEX).getAsInt();
-  //}
+  /**
+   * Get the z-index of a symbol.
+   *
+   * @return the z-index value, 0 if not set
+   */
+  public int getZIndex() {
+    return jsonObject.get(Z_INDEX).getAsInt();
+  }
 <% } -%>
 
   // Property accessors
 <% for (const property of properties) { -%>
 <% if (supportsPropertyFunction(property)) { -%>
 <% if (propertyType(property).endsWith("[]")) { -%>
+<% if (propertyType(property).endsWith("Float[]")) { -%>
+
+  /**
+   * Get the <%- camelize(property.name) %> property
+   *
+   * @return PointF value for <%- propertyType(property) %>
+   */
+  public PointF get<%- camelize(property.name) %>() {
+    JsonArray jsonArray = jsonObject.getAsJsonArray("<%-property.name %>");
+    return new PointF(jsonArray.get(0).getAsFloat(), jsonArray.get(1).getAsFloat());
+  }
+
+  /**
+   * Set the <%- camelize(property.name) %> property.
+   * <p>
+   * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
+   * <p>
+   * @param pointF value for <%- propertyType(property) %>
+   */
+  public void set<%- camelize(property.name) %>(PointF pointF) {
+    JsonArray jsonArray = new JsonArray();
+    jsonArray.add(pointF.x);
+    jsonArray.add(pointF.y);
+    jsonObject.add("<%-property.name %>", jsonArray);
+  }
+<% } else { -%>
+
   /**
    * Get the <%- camelize(property.name) %> property
    *
@@ -188,8 +215,32 @@ public class <%- camelize(type) %> extends Annotation {
     }
     jsonObject.add("<%-property.name %>", jsonArray);
   }
+<% } -%>
+<% } else if (property.type == 'color') { -%>
 
+  /**
+   * Get the <%- camelize(property.name) %> property
+   *
+   * @return color value for <%- propertyType(property) %>
+   */
+  @ColorInt
+  public int get<%- camelize(property.name) %>() {
+    return ColorUtils.rgbaToColor(jsonObject.get("<%- property.name %>").getAs<%- propertyType(property) %>());
+  }
+
+  /**
+   * Set the <%- camelize(property.name) %> property
+   * <p>
+   * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
+   * <p>
+   *
+   * @param color value for <%- propertyType(property) %>
+   */
+  public void set<%- camelize(property.name) %>(@ColorInt int color) {
+    jsonObject.addProperty("<%- property.name %>", ColorUtils.colorToRgbaString(color));
+  }
 <% } else { -%>
+
   /**
    * Get the <%- camelize(property.name) %> property
    *
@@ -210,7 +261,6 @@ public class <%- camelize(type) %> extends Annotation {
   public void set<%- camelize(property.name) %>(<%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), " ") %><%- propertyType(property) %> value) {
     jsonObject.addProperty("<%- property.name %>", value);
   }
-
 <% } -%>
 <% } -%>
 <% } -%>
