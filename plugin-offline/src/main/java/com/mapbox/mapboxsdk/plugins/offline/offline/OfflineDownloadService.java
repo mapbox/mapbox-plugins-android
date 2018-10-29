@@ -110,7 +110,6 @@ public class OfflineDownloadService extends Service {
       createDownload(offlineDownload);
     } else if (OfflineConstants.ACTION_CANCEL_DOWNLOAD.equals(intentAction)) {
       cancelDownload(offlineDownload);
-      stopSelf(offlineDownload.uuid().intValue());
     }
   }
 
@@ -153,8 +152,11 @@ public class OfflineDownloadService extends Service {
     createMapSnapshot(offlineDownload.definition(), new MapSnapshotter.SnapshotReadyCallback() {
       @Override
       public void onSnapshotReady(MapSnapshot snapshot) {
-        notificationBuilder.setLargeIcon(snapshot.getBitmap());
-        notificationManager.notify(offlineDownload.uuid().intValue(), notificationBuilder.build());
+        final int regionId = offlineDownload.uuid().intValue();
+        if (regionLongSparseArray.get(regionId) != null) {
+          notificationBuilder.setLargeIcon(snapshot.getBitmap());
+          notificationManager.notify(regionId, notificationBuilder.build());
+        }
       }
     });
   }
@@ -175,22 +177,34 @@ public class OfflineDownloadService extends Service {
   private void cancelDownload(final OfflineDownloadOptions offlineDownload) {
     int serviceId = offlineDownload.uuid().intValue();
     OfflineRegion offlineRegion = regionLongSparseArray.get(serviceId);
-    offlineRegion.setDownloadState(OfflineRegion.STATE_INACTIVE);
-    offlineRegion.setObserver(null);
-    offlineRegion.delete(new OfflineRegion.OfflineRegionDeleteCallback() {
-      @Override
-      public void onDelete() {
-        // no-op
-      }
+    if (offlineRegion != null) {
+      offlineRegion.setDownloadState(OfflineRegion.STATE_INACTIVE);
+      offlineRegion.setObserver(null);
+      offlineRegion.delete(new OfflineRegion.OfflineRegionDeleteCallback() {
+        @Override
+        public void onDelete() {
+          // no-op
+        }
 
-      @Override
-      public void onError(String error) {
-        OfflineDownloadStateReceiver.dispatchErrorBroadcast(getApplicationContext(), offlineDownload, error);
-      }
-    });
+        @Override
+        public void onError(String error) {
+          OfflineDownloadStateReceiver.dispatchErrorBroadcast(getApplicationContext(), offlineDownload, error);
+        }
+      });
+    }
     OfflineDownloadStateReceiver.dispatchCancelBroadcast(getApplicationContext(), offlineDownload);
-    notificationManager.cancel(serviceId);
-    stopSelf(serviceId);
+    removeOfflineRegion(serviceId);
+  }
+
+  private synchronized void removeOfflineRegion(int regionId) {
+    if (notificationBuilder != null) {
+      notificationManager.cancel(regionId);
+    }
+    regionLongSparseArray.remove(regionId);
+    if (regionLongSparseArray.size() == 0) {
+      stopForeground(true);
+    }
+    stopSelf(regionId);
   }
 
   void launchDownload(final OfflineDownloadOptions offlineDownload, final OfflineRegion offlineRegion) {
@@ -231,14 +245,10 @@ public class OfflineDownloadService extends Service {
    * @since 0.1.0
    */
   void finishDownload(OfflineDownloadOptions offlineDownload, OfflineRegion offlineRegion) {
-    if (notificationBuilder != null) {
-      notificationManager.cancel(offlineDownload.uuid().intValue());
-    }
     OfflineDownloadStateReceiver.dispatchSuccessBroadcast(this, offlineDownload);
     offlineRegion.setDownloadState(OfflineRegion.STATE_INACTIVE);
     offlineRegion.setObserver(null);
-    regionLongSparseArray.remove(offlineDownload.uuid().intValue());
-    stopSelf(offlineDownload.uuid().intValue());
+    removeOfflineRegion(offlineDownload.uuid().intValue());
   }
 
   void progressDownload(OfflineDownloadOptions offlineDownload, OfflineRegionStatus status) {
@@ -248,7 +258,7 @@ public class OfflineDownloadService extends Service {
 
     offlineDownload = offlineDownload.toBuilder().progress(percentage).build();
 
-    if (percentage % 2 == 0) {
+    if (percentage % 2 == 0 && regionLongSparseArray.get(offlineDownload.uuid().intValue()) != null) {
       OfflineDownloadStateReceiver.dispatchProgressChanged(this, offlineDownload, percentage);
       if (notificationBuilder != null) {
         notificationBuilder.setProgress(100, percentage, false);
