@@ -11,6 +11,7 @@ import android.support.v4.util.LongSparseArray;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.FillLayer;
@@ -28,7 +29,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 /**
  * The fill manager allows to add fills to a map.
  */
-public class FillManager extends AnnotationManager<Fill, FillOptions, OnFillClickListener, OnFillLongClickListener> {
+public class FillManager extends AnnotationManager<Fill, FillOptions, OnFillDragListener, OnFillClickListener, OnFillLongClickListener> {
 
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-fill-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-fill-layer";
@@ -41,8 +42,8 @@ public class FillManager extends AnnotationManager<Fill, FillOptions, OnFillClic
    * @param mapboxMap the map object to add fills to
    */
   @UiThread
-  public FillManager(@NonNull MapboxMap mapboxMap) {
-    this(mapboxMap, null);
+  public FillManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
+    this(mapView, mapboxMap, null);
   }
 
   /**
@@ -52,11 +53,11 @@ public class FillManager extends AnnotationManager<Fill, FillOptions, OnFillClic
    * @param belowLayerId the id of the layer above the circle layer
    */
   @UiThread
-  public FillManager(@NonNull MapboxMap mapboxMap, @Nullable String belowLayerId) {
+  public FillManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @Nullable String belowLayerId) {
     this(mapboxMap, new GeoJsonSource(ID_GEOJSON_SOURCE), new FillLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE)
       .withProperties(
         getLayerDefinition()
-      ), belowLayerId);
+      ), belowLayerId, new DraggableAnnotationController<>(mapView, mapboxMap));
   }
 
   /**
@@ -67,8 +68,8 @@ public class FillManager extends AnnotationManager<Fill, FillOptions, OnFillClic
    * @param layer         the fill layer to visualise Fills with
    */
   @VisibleForTesting
-  public FillManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull FillLayer layer, @Nullable String belowLayerId) {
-    super(mapboxMap, geoJsonSource);
+  public FillManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull FillLayer layer, @Nullable String belowLayerId, DraggableAnnotationController<Fill, OnFillDragListener> draggableAnnotationController) {
+    super(mapboxMap, geoJsonSource, null, draggableAnnotationController);
     initLayer(layer, belowLayerId);
   }
 

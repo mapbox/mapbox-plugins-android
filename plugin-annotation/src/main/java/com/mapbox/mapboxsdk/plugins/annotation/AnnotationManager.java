@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.util.LongSparseArray;
+
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -21,12 +22,14 @@ import java.util.List;
  *
  * @param <T> type of annotation
  * @param <S> type of options for building the annotation, depends on generic T
+ * @param <D> type of annotation drag listener, depends on generic T
  * @param <U> type of annotation click listener, depends on generic T
  * @param <V> type of annotation long click listener, depends on generic T
  */
-public abstract class AnnotationManager<
+abstract class AnnotationManager<
   T extends Annotation,
   S extends Options<T>,
+  D extends OnAnnotationDragListener<T>,
   U extends OnAnnotationClickListener<T>,
   V extends OnAnnotationLongClickListener<T>> {
 
@@ -34,6 +37,8 @@ public abstract class AnnotationManager<
   protected final LongSparseArray<T> annotations = new LongSparseArray<>();
   protected final List<Feature> features = new ArrayList<>();
 
+  private final DraggableAnnotationController<T, D> draggableAnnotationController;
+  private final List<D> dragListeners = new ArrayList<>();
   private final List<U> clickListeners = new ArrayList<>();
   private final List<V> longClickListeners = new ArrayList<>();
   protected long currentId;
@@ -43,18 +48,17 @@ public abstract class AnnotationManager<
   private final Comparator<Feature> comparator;
 
   @UiThread
-  protected AnnotationManager(MapboxMap mapboxMap, GeoJsonSource geoJsonSource) {
-    this(mapboxMap, geoJsonSource, null);
-  }
-
-  @UiThread
-  protected AnnotationManager(MapboxMap mapboxMap, GeoJsonSource geoJsonSource, Comparator<Feature> comparator) {
+  protected AnnotationManager(MapboxMap mapboxMap,
+                              GeoJsonSource geoJsonSource, Comparator<Feature> comparator,
+                              DraggableAnnotationController<T, D> draggableAnnotationController) {
     this.mapboxMap = mapboxMap;
     this.geoJsonSource = geoJsonSource;
     this.comparator = comparator;
     mapboxMap.addSource(geoJsonSource);
-    mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
+    mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver());
     mapboxMap.addOnMapLongClickListener(mapClickResolver);
+    this.draggableAnnotationController = draggableAnnotationController;
+    draggableAnnotationController.injectAnnotationManager(this);
   }
 
   /**
@@ -154,6 +158,11 @@ public abstract class AnnotationManager<
    * Trigger an update to the underlying source
    */
   public void updateSource() {
+    draggableAnnotationController.onSourceUpdated();
+    internalUpdateSource();
+  }
+
+  void internalUpdateSource() {
     // todo move feature creation to a background thread?
     features.clear();
     T t;
@@ -162,10 +171,32 @@ public abstract class AnnotationManager<
       features.add(Feature.fromGeometry(t.getGeometry(), t.getFeature()));
     }
 
-    if(comparator != null) {
+    if (comparator != null) {
       Collections.sort(features, comparator);
     }
     geoJsonSource.setGeoJson(FeatureCollection.fromFeatures(features));
+  }
+
+  /**
+   * Add a callback to be invoked when an annotation is dragged.
+   *
+   * @param d the callback to be invoked when an annotation is dragged
+   */
+  @UiThread
+  public void addDragListener(@NonNull D d) {
+    dragListeners.add(d);
+  }
+
+  /**
+   * Remove a previously added callback that was to be invoked when an annotation has been dragged.
+   *
+   * @param d the callback to be removed
+   */
+  @UiThread
+  public void removeClickListener(@NonNull D d) {
+    if (dragListeners.contains(d)) {
+      dragListeners.remove(d);
+    }
   }
 
   /**
@@ -219,6 +250,7 @@ public abstract class AnnotationManager<
   public void onDestroy() {
     mapboxMap.removeOnMapClickListener(mapClickResolver);
     mapboxMap.removeOnMapLongClickListener(mapClickResolver);
+    dragListeners.clear();
     clickListeners.clear();
     longClickListeners.clear();
   }
@@ -227,16 +259,14 @@ public abstract class AnnotationManager<
 
   abstract String getAnnotationIdKey();
 
+  List<D> getDragListeners() {
+    return dragListeners;
+  }
+
   /**
    * Inner class for transforming map click events into annotation clicks
    */
   private class MapClickResolver implements MapboxMap.OnMapClickListener, MapboxMap.OnMapLongClickListener {
-
-    private MapboxMap mapboxMap;
-
-    private MapClickResolver(MapboxMap mapboxMap) {
-      this.mapboxMap = mapboxMap;
-    }
 
     @Override
     public void onMapClick(@NonNull LatLng point) {
@@ -265,16 +295,20 @@ public abstract class AnnotationManager<
         }
       }
     }
+  }
 
-    @Nullable
-    private T queryMapForFeatures(@NonNull LatLng point) {
-      PointF screenLocation = mapboxMap.getProjection().toScreenLocation(point);
-      List<Feature> features = mapboxMap.queryRenderedFeatures(screenLocation, getAnnotationLayerId());
-      if (!features.isEmpty()) {
-        long id = features.get(0).getProperty(getAnnotationIdKey()).getAsLong();
-        return annotations.get(id);
-      }
-      return null;
+  @Nullable
+  private T queryMapForFeatures(@NonNull LatLng point) {
+    return queryMapForFeatures(mapboxMap.getProjection().toScreenLocation(point));
+  }
+
+  @Nullable
+  T queryMapForFeatures(@NonNull PointF point) {
+    List<Feature> features = mapboxMap.queryRenderedFeatures(point, getAnnotationLayerId());
+    if (!features.isEmpty()) {
+      long id = features.get(0).getProperty(getAnnotationIdKey()).getAsLong();
+      return annotations.get(id);
     }
+    return null;
   }
 }

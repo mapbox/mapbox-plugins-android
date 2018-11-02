@@ -37,7 +37,7 @@ public class LineTest extends BaseActivityTest {
   private void setupAnnotation() {
     Timber.i("Retrieving layer");
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      LineManager lineManager = new LineManager(mapboxMap);
+      LineManager lineManager = new LineManager(((BuildingActivity) rule.getActivity()).getMapView(), mapboxMap);
       List<LatLng>latLngs = new ArrayList<>();
       latLngs.add(new LatLng());
       latLngs.add(new LatLng(1,1));

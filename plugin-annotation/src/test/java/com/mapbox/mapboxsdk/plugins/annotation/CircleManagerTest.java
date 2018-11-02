@@ -13,12 +13,12 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.mockito.Mockito.mock;
 
 public class CircleManagerTest {
 
+  private DraggableAnnotationController<Circle, OnCircleDragListener> draggableAnnotationController = mock(DraggableAnnotationController.class);
   private MapboxMap mapboxMap = mock(MapboxMap.class);
   private GeoJsonSource geoJsonSource = mock(GeoJsonSource.class);
   private CircleLayer circleLayer = mock(CircleLayer.class);
@@ -26,7 +26,7 @@ public class CircleManagerTest {
 
   @Before
   public void beforeTest() {
-    circleManager = new CircleManager(mapboxMap, geoJsonSource, circleLayer, null);
+    circleManager = new CircleManager(mapboxMap, geoJsonSource, circleLayer, null, draggableAnnotationController);
   }
 
   @Test
@@ -68,5 +68,16 @@ public class CircleManagerTest {
     Circle circleOne = circleManager.create(new CircleOptions().withLatLng(new LatLng()));
     assertEquals(circleZero.getFeature().get(Circle.ID_KEY).getAsLong(), 0);
     assertEquals(circleOne.getFeature().get(Circle.ID_KEY).getAsLong(), 1);
+  }
+
+  @Test
+  public void testCircleDraggableFlag() {
+    Circle circleZero = circleManager.create(new CircleOptions().withLatLng(new LatLng()));
+
+    assertFalse(circleZero.isDraggable());
+    circleZero.setDraggable(true);
+    assertTrue(circleZero.isDraggable());
+    circleZero.setDraggable(false);
+    assertFalse(circleZero.isDraggable());
   }
 }

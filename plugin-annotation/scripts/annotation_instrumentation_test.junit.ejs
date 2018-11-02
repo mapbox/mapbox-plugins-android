@@ -41,7 +41,7 @@ public class <%- camelize(type) %>Test extends BaseActivityTest {
   private void setupAnnotation() {
     Timber.i("Retrieving layer");
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      <%- camelize(type) %>Manager <%- type %>Manager = new <%- camelize(type) %>Manager(mapboxMap);
+      <%- camelize(type) %>Manager <%- type %>Manager = new <%- camelize(type) %>Manager(((BuildingActivity) rule.getActivity()).getMapView(), mapboxMap);
 <% if (type === "circle" || type === "symbol") { -%>
       <%- type %> = <%- type %>Manager.create(new <%- camelize(type) %>Options().withLatLng(new LatLng()));
 <% } else if (type === "line") { -%>

@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.SeekBar
 
 import com.mapbox.mapboxsdk.constants.Style
+import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.plugins.building.BuildingPlugin
@@ -26,10 +27,12 @@ class BuildingActivity : AppCompatActivity(), OnMapReadyCallback {
     private var mapboxMap: MapboxMap? = null
     private var buildingPlugin: BuildingPlugin? = null
     private var isEnabled: Boolean = false
+    lateinit var mapView: MapView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_building)
+        this.mapView = findViewById(R.id.mapView)
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
 

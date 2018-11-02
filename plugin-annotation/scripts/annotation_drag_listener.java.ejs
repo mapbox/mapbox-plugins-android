@@ -1,0 +1,15 @@
+<%
+  const type = locals.type;
+  const properties = locals.properties;
+  const doc = locals.doc;
+-%>
+// This file is generated.
+
+package com.mapbox.mapboxsdk.plugins.annotation;
+
+/**
+ * Interface definition for a callback to be invoked when a <%- type %> is dragged.
+ */
+public interface On<%- camelize(type) %>DragListener extends OnAnnotationDragListener<<%- camelize(type) %>>{
+
+}

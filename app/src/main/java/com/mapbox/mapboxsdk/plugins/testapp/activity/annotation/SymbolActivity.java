@@ -6,18 +6,24 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
+
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.plugins.annotation.*;
+import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolDragListener;
+import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
-import com.mapbox.mapboxsdk.utils.ColorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -40,23 +46,25 @@ public class SymbolActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_annotation);
+
+    TextView draggableInfoTv = findViewById(R.id.draggable_position_tv);
+
     mapView = findViewById(R.id.mapView);
     mapView.onCreate(savedInstanceState);
     mapView.getMapAsync(mapboxMap -> {
       mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
 
       // create symbol manager
-      symbolManager = new SymbolManager(mapboxMap);
+      symbolManager = new SymbolManager(mapView, mapboxMap);
       symbolManager.addClickListener(symbol -> Toast.makeText(SymbolActivity.this,
         String.format("Symbol clicked %s", symbol.getId()),
         Toast.LENGTH_SHORT
       ).show());
-      symbolManager.addLongClickListener(symbol -> {
+      symbolManager.addLongClickListener(symbol ->
         Toast.makeText(SymbolActivity.this,
           String.format("Symbol long clicked %s", symbol.getId()),
           Toast.LENGTH_SHORT
-        ).show();
-      });
+        ).show());
 
       // set non data driven properties
       symbolManager.setIconAllowOverlap(true);
@@ -85,6 +93,27 @@ public class SymbolActivity extends AppCompatActivity {
         symbolOptionsList.add(new SymbolOptions().withLatLng(createRandomLatLng()).withIconImage(MAKI_ICON_CAR));
       }
       symbolManager.create(symbolOptionsList);
+
+      symbolManager.addDragListener(new OnSymbolDragListener() {
+        @Override
+        public void onAnnotationDragStarted(Symbol annotation) {
+          draggableInfoTv.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onAnnotationDrag(Symbol annotation) {
+          draggableInfoTv.setText(String.format(
+            Locale.US,
+            "ID: %s\nLatLng:%f, %f",
+            annotation.getId(),
+            annotation.getLatLng().getLatitude(), annotation.getLatLng().getLongitude()));
+        }
+
+        @Override
+        public void onAnnotationDragFinished(Symbol annotation) {
+          draggableInfoTv.setVisibility(View.GONE);
+        }
+      });
     });
   }
 
@@ -95,13 +124,18 @@ public class SymbolActivity extends AppCompatActivity {
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.menu_marker, menu);
+    getMenuInflater().inflate(R.menu.menu_symbol, menu);
     return true;
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == R.id.menu_action_icon) {
+    if (item.getItemId() == R.id.menu_action_draggable) {
+      for (int i = 0; i < symbolManager.getAnnotations().size(); i++) {
+        Symbol symbol = symbolManager.getAnnotations().get(i);
+        symbol.setDraggable(!symbol.isDraggable());
+      }
+    } else if (item.getItemId() == R.id.menu_action_icon) {
       symbol.setIconImage(MAKI_ICON_CAFE);
     } else if (item.getItemId() == R.id.menu_action_rotation) {
       symbol.setIconRotate(45.0f);
@@ -119,7 +153,7 @@ public class SymbolActivity extends AppCompatActivity {
       symbol.setTextColor(Color.WHITE);
     } else if (item.getItemId() == R.id.menu_action_text_size) {
       symbol.setTextSize(22f);
-    }else if(item.getItemId() == R.id.menu_action_z_index){
+    } else if (item.getItemId() == R.id.menu_action_z_index) {
       symbol.setZIndex(0);
     } else {
       return super.onOptionsItemSelected(item);

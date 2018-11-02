@@ -11,9 +11,16 @@ import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import com.mapbox.android.gestures.MoveDistancesObject;
+import com.mapbox.mapboxsdk.maps.Projection;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.mapbox.mapboxsdk.constants.GeometryConstants.MAX_MERCATOR_LATITUDE;
+import static com.mapbox.mapboxsdk.constants.GeometryConstants.MIN_MERCATOR_LATITUDE;
 
 @UiThread
 public class Line extends Annotation {
@@ -46,6 +53,21 @@ public class Line extends Annotation {
   }
 
   /**
+   * Get a list of LatLng for the line, which represents the locations of the line on the map
+   *
+   * @return a list of the locations of the line in a latitude and longitude pairs
+   */
+  @NonNull
+  public List<LatLng> getLatLngs() {
+    LineString lineString = (LineString) geometry;
+    List<LatLng> latLngs = new ArrayList<>();
+    for (Point point: lineString.coordinates()) {
+      latLngs.add(new LatLng(point.latitude(), point.longitude()));
+    }
+    return latLngs;
+  }
+
+  /**
    * Set the Geometry of the line, which represents the location of the line on the map
    * <p>
    * To update the line on the map use {@link LineManager#update(Annotation)}.
@@ -55,6 +77,15 @@ public class Line extends Annotation {
    */
   public void setGeometry(LineString geometry) {
     this.geometry = geometry;
+  }
+
+  /**
+   * Get the Geometry of the line, which represents the location of the line on the map
+   *
+   * @return geometry the geometry of the line
+   */
+  public LineString getGeometry() {
+    return ((LineString) geometry);
   }
 
   // Property accessors
@@ -226,5 +257,26 @@ public class Line extends Annotation {
    */
   public void setLinePattern(String value) {
     jsonObject.addProperty("line-pattern", value);
+  }
+
+  @Override
+  @Nullable
+  Geometry getOffsetGeometry(@NonNull Projection projection, @NonNull MoveDistancesObject moveDistancesObject,
+                             float touchAreaShiftX, float touchAreaShiftY) {
+    List<Point> originalPoints = ((LineString) getGeometry()).coordinates();
+    List<Point> resultingPoints = new ArrayList<>(originalPoints.size());
+    for (Point jsonPoint : originalPoints) {
+      PointF pointF = projection.toScreenLocation(new LatLng(jsonPoint.latitude(), jsonPoint.longitude()));
+      pointF.x -= moveDistancesObject.getDistanceXSinceLast();
+      pointF.y -= moveDistancesObject.getDistanceYSinceLast();
+
+      LatLng latLng = projection.fromScreenLocation(pointF);
+      if (latLng.getLatitude() > MAX_MERCATOR_LATITUDE || latLng.getLatitude() < MIN_MERCATOR_LATITUDE) {
+        return null;
+      }
+      resultingPoints.add(Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude()));
+    }
+
+    return LineString.fromLngLats(resultingPoints);
   }
 }

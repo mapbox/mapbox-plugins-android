@@ -37,7 +37,7 @@ public class CircleTest extends BaseActivityTest {
   private void setupAnnotation() {
     Timber.i("Retrieving layer");
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      CircleManager circleManager = new CircleManager(mapboxMap);
+      CircleManager circleManager = new CircleManager(((BuildingActivity) rule.getActivity()).getMapView(), mapboxMap);
       circle = circleManager.create(new CircleOptions().withLatLng(new LatLng()));
     });
   }
