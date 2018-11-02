@@ -3,6 +3,8 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity.annotation;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -34,7 +36,7 @@ public class FillActivity extends AppCompatActivity {
     mapView.getMapAsync(mapboxMap -> {
       mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
 
-      fillManager = new FillManager(mapboxMap);
+      fillManager = new FillManager(mapView, mapboxMap);
       fillManager.addClickListener(fill -> Toast.makeText(FillActivity.this,
         String.format("Fill clicked %s", fill.getId()),
         Toast.LENGTH_SHORT
@@ -49,6 +51,7 @@ public class FillActivity extends AppCompatActivity {
       innerLatLngs.add(new LatLng(-10.733102, -3.363937));
       innerLatLngs.add(new LatLng(-19.716317, 1.754703));
       innerLatLngs.add(new LatLng(-21.085074, -15.747196));
+      innerLatLngs.add(new LatLng(-10.733102, -3.363937));
       List<List<LatLng>> latLngs = new ArrayList<>();
       latLngs.add(innerLatLngs);
 
@@ -72,17 +75,37 @@ public class FillActivity extends AppCompatActivity {
 
   private List<List<LatLng>> createRandomLatLngs() {
     List<LatLng> latLngs = new ArrayList<>();
+    LatLng firstLast = new LatLng((random.nextDouble() * -180.0) + 90.0,
+      (random.nextDouble() * -360.0) + 180.0);
+    latLngs.add(firstLast);
     for (int i = 0; i < random.nextInt(10); i++) {
       latLngs.add(new LatLng((random.nextDouble() * -180.0) + 90.0,
         (random.nextDouble() * -360.0) + 180.0));
     }
-    return new ArrayList<List<LatLng>>() {
-      {
-        add(latLngs);
-      }
-    };
+    latLngs.add(firstLast);
+
+    List<List<LatLng>> resulting = new ArrayList<>();
+    resulting.add(latLngs);
+    return resulting;
   }
 
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_fill, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.menu_action_draggable) {
+      for (int i = 0; i < fillManager.getAnnotations().size(); i++) {
+        Fill fill = fillManager.getAnnotations().get(i);
+        fill.setDraggable(!fill.isDraggable());
+      }
+      return true;
+    }
+    return false;
+  }
 
   @Override
   protected void onStart() {

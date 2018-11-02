@@ -18,12 +18,12 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.mockito.Mockito.mock;
 
 public class <%- camelize(type) %>ManagerTest {
 
+  private DraggableAnnotationController<<%- camelize(type) %>, On<%- camelize(type) %>DragListener> draggableAnnotationController = mock(DraggableAnnotationController.class);
   private MapboxMap mapboxMap = mock(MapboxMap.class);
   private GeoJsonSource geoJsonSource = mock(GeoJsonSource.class);
   private <%- camelize(type) %>Layer <%- type  %>Layer = mock(<%- camelize(type) %>Layer.class);
@@ -31,7 +31,7 @@ public class <%- camelize(type) %>ManagerTest {
 
   @Before
   public void beforeTest() {
-    <%- type  %>Manager = new <%- camelize(type) %>Manager(mapboxMap, geoJsonSource, <%- type  %>Layer, null);
+    <%- type  %>Manager = new <%- camelize(type) %>Manager(mapboxMap, geoJsonSource, <%- type  %>Layer, null, draggableAnnotationController);
   }
 
   @Test
@@ -191,5 +191,31 @@ public class <%- camelize(type) %>ManagerTest {
 <% } -%>
     assertEquals(<%- type  %>Zero.getFeature().get(<%- camelize(type) %>.ID_KEY).getAsLong(), 0);
     assertEquals(<%- type  %>One.getFeature().get(<%- camelize(type) %>.ID_KEY).getAsLong(), 1);
+  }
+
+  @Test
+  public void test<%- camelize(type) %>DraggableFlag() {
+<% if (type === "circle" || type === "symbol") { -%>
+    <%- camelize(type) %> <%- type %>Zero = <%- type %>Manager.create(new <%- camelize(type) %>Options().withLatLng(new LatLng()));
+<% } else if (type === "line") { -%>
+    List<LatLng>latLngs = new ArrayList<>();
+    latLngs.add(new LatLng());
+    latLngs.add(new LatLng(1,1));
+    <%- camelize(type) %> <%- type %>Zero = <%- type %>Manager.create(new <%- camelize(type) %>Options().withLatLngs(latLngs));
+<% } else { -%>
+    List<LatLng>innerLatLngs = new ArrayList<>();
+    innerLatLngs.add(new LatLng());
+    innerLatLngs.add(new LatLng(1,1));
+    innerLatLngs.add(new LatLng(-1,-1));
+    List<List<LatLng>>latLngs = new ArrayList<>();
+    latLngs.add(innerLatLngs);
+    <%- camelize(type) %> <%- type %>Zero = <%- type %>Manager.create(new <%- camelize(type) %>Options().withLatLngs(latLngs));
+<% } -%>
+
+    assertFalse(<%- type %>Zero.isDraggable());
+    <%- type %>Zero.setDraggable(true);
+    assertTrue(<%- type %>Zero.isDraggable());
+    <%- type %>Zero.setDraggable(false);
+    assertFalse(<%- type %>Zero.isDraggable());
   }
 }

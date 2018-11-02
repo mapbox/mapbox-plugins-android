@@ -36,7 +36,7 @@ public class <%- camelize(type) %>ManagerTest extends BaseActivityTest {
   private void setup<%- camelize(type) %>Manager() {
     Timber.i("Retrieving layer");
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      <%- type %>Manager = new <%- camelize(type) %>Manager(mapboxMap);
+      <%- type %>Manager = new <%- camelize(type) %>Manager(((BuildingActivity) rule.getActivity()).getMapView(), mapboxMap);
     });
   }
 <% for (const property of properties) { -%>

@@ -11,9 +11,16 @@ import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import com.mapbox.android.gestures.MoveDistancesObject;
+import com.mapbox.mapboxsdk.maps.Projection;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.mapbox.mapboxsdk.constants.GeometryConstants.MAX_MERCATOR_LATITUDE;
+import static com.mapbox.mapboxsdk.constants.GeometryConstants.MIN_MERCATOR_LATITUDE;
 
 @UiThread
 public class Symbol extends Annotation {
@@ -37,10 +44,21 @@ public class Symbol extends Annotation {
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
    *
-   * @param latLng the location of the symbol in a longitude and latitude pair
+   * @param latLng the location of the symbol in a latitude and longitude pair
    */
   public void setLatLng(LatLng latLng) {
     geometry = Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
+  }
+
+  /**
+   * Get the LatLng of the symbol, which represents the location of the symbol on the map
+   *
+   * @return the location of the symbol
+   */
+  @NonNull
+  public LatLng getLatLng() {
+    Point point = (Point) geometry;
+    return new LatLng(point.latitude(), point.longitude());
   }
 
   /**
@@ -53,6 +71,15 @@ public class Symbol extends Annotation {
    */
   public void setGeometry(Point geometry) {
     this.geometry = geometry;
+  }
+
+  /**
+   * Get the Geometry of the symbol, which represents the location of the symbol on the map
+   *
+   * @return the geometry of the symbol
+   */
+  public Point getGeometry() {
+    return ((Point) geometry);
   }
 
   /**
@@ -622,5 +649,22 @@ public class Symbol extends Annotation {
    */
   public void setTextHaloBlur(Float value) {
     jsonObject.addProperty("text-halo-blur", value);
+  }
+
+  @Override
+  @Nullable
+  Geometry getOffsetGeometry(@NonNull Projection projection, @NonNull MoveDistancesObject moveDistancesObject,
+                             float touchAreaShiftX, float touchAreaShiftY) {
+    PointF pointF = new PointF(
+      moveDistancesObject.getCurrentX() - touchAreaShiftX,
+      moveDistancesObject.getCurrentY() - touchAreaShiftY
+    );
+
+    LatLng latLng = projection.fromScreenLocation(pointF);
+    if (latLng.getLatitude() > MAX_MERCATOR_LATITUDE || latLng.getLatitude() < MIN_MERCATOR_LATITUDE) {
+      return null;
+    }
+
+    return Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
   }
 }

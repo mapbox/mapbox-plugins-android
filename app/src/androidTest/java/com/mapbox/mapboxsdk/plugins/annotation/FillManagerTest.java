@@ -32,7 +32,7 @@ public class FillManagerTest extends BaseActivityTest {
   private void setupFillManager() {
     Timber.i("Retrieving layer");
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      fillManager = new FillManager(mapboxMap);
+      fillManager = new FillManager(((BuildingActivity) rule.getActivity()).getMapView(), mapboxMap);
     });
   }
 

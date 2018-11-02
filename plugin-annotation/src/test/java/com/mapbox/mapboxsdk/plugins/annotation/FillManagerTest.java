@@ -13,12 +13,12 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.mockito.Mockito.mock;
 
 public class FillManagerTest {
 
+  private DraggableAnnotationController<Fill, OnFillDragListener> draggableAnnotationController = mock(DraggableAnnotationController.class);
   private MapboxMap mapboxMap = mock(MapboxMap.class);
   private GeoJsonSource geoJsonSource = mock(GeoJsonSource.class);
   private FillLayer fillLayer = mock(FillLayer.class);
@@ -26,7 +26,7 @@ public class FillManagerTest {
 
   @Before
   public void beforeTest() {
-    fillManager = new FillManager(mapboxMap, geoJsonSource, fillLayer, null);
+    fillManager = new FillManager(mapboxMap, geoJsonSource, fillLayer, null, draggableAnnotationController);
   }
 
   @Test
@@ -119,5 +119,22 @@ public class FillManagerTest {
     Fill fillOne = fillManager.create(new FillOptions().withLatLngs(latLngs));
     assertEquals(fillZero.getFeature().get(Fill.ID_KEY).getAsLong(), 0);
     assertEquals(fillOne.getFeature().get(Fill.ID_KEY).getAsLong(), 1);
+  }
+
+  @Test
+  public void testFillDraggableFlag() {
+    List<LatLng>innerLatLngs = new ArrayList<>();
+    innerLatLngs.add(new LatLng());
+    innerLatLngs.add(new LatLng(1,1));
+    innerLatLngs.add(new LatLng(-1,-1));
+    List<List<LatLng>>latLngs = new ArrayList<>();
+    latLngs.add(innerLatLngs);
+    Fill fillZero = fillManager.create(new FillOptions().withLatLngs(latLngs));
+
+    assertFalse(fillZero.isDraggable());
+    fillZero.setDraggable(true);
+    assertTrue(fillZero.isDraggable());
+    fillZero.setDraggable(false);
+    assertFalse(fillZero.isDraggable());
   }
 }

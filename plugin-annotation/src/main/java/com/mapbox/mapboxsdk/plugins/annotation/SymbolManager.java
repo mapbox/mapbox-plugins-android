@@ -11,6 +11,7 @@ import android.support.v4.util.LongSparseArray;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
@@ -28,7 +29,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 /**
  * The symbol manager allows to add symbols to a map.
  */
-public class SymbolManager extends AnnotationManager<Symbol, SymbolOptions, OnSymbolClickListener, OnSymbolLongClickListener> {
+public class SymbolManager extends AnnotationManager<Symbol, SymbolOptions, OnSymbolDragListener, OnSymbolClickListener, OnSymbolLongClickListener> {
 
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-symbol-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-symbol-layer";
@@ -41,8 +42,8 @@ public class SymbolManager extends AnnotationManager<Symbol, SymbolOptions, OnSy
    * @param mapboxMap the map object to add symbols to
    */
   @UiThread
-  public SymbolManager(@NonNull MapboxMap mapboxMap) {
-    this(mapboxMap, null);
+  public SymbolManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
+    this(mapView, mapboxMap, null);
   }
 
   /**
@@ -52,11 +53,11 @@ public class SymbolManager extends AnnotationManager<Symbol, SymbolOptions, OnSy
    * @param belowLayerId the id of the layer above the circle layer
    */
   @UiThread
-  public SymbolManager(@NonNull MapboxMap mapboxMap, @Nullable String belowLayerId) {
+  public SymbolManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @Nullable String belowLayerId) {
     this(mapboxMap, new GeoJsonSource(ID_GEOJSON_SOURCE), new SymbolLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE)
       .withProperties(
         getLayerDefinition()
-      ), belowLayerId);
+      ), belowLayerId, new DraggableAnnotationController<>(mapView, mapboxMap));
   }
 
   /**
@@ -67,8 +68,8 @@ public class SymbolManager extends AnnotationManager<Symbol, SymbolOptions, OnSy
    * @param layer         the symbol layer to visualise Symbols with
    */
   @VisibleForTesting
-  public SymbolManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull SymbolLayer layer, @Nullable String belowLayerId) {
-    super(mapboxMap, geoJsonSource, new SymbolComparator());
+  public SymbolManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull SymbolLayer layer, @Nullable String belowLayerId, DraggableAnnotationController<Symbol, OnSymbolDragListener> draggableAnnotationController) {
+    super(mapboxMap, geoJsonSource, new SymbolComparator(), draggableAnnotationController);
     initLayer(layer, belowLayerId);
   }
 

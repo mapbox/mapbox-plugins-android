@@ -13,12 +13,12 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.mockito.Mockito.mock;
 
 public class SymbolManagerTest {
 
+  private DraggableAnnotationController<Symbol, OnSymbolDragListener> draggableAnnotationController = mock(DraggableAnnotationController.class);
   private MapboxMap mapboxMap = mock(MapboxMap.class);
   private GeoJsonSource geoJsonSource = mock(GeoJsonSource.class);
   private SymbolLayer symbolLayer = mock(SymbolLayer.class);
@@ -26,7 +26,7 @@ public class SymbolManagerTest {
 
   @Before
   public void beforeTest() {
-    symbolManager = new SymbolManager(mapboxMap, geoJsonSource, symbolLayer, null);
+    symbolManager = new SymbolManager(mapboxMap, geoJsonSource, symbolLayer, null, draggableAnnotationController);
   }
 
   @Test
@@ -68,5 +68,16 @@ public class SymbolManagerTest {
     Symbol symbolOne = symbolManager.create(new SymbolOptions().withLatLng(new LatLng()));
     assertEquals(symbolZero.getFeature().get(Symbol.ID_KEY).getAsLong(), 0);
     assertEquals(symbolOne.getFeature().get(Symbol.ID_KEY).getAsLong(), 1);
+  }
+
+  @Test
+  public void testSymbolDraggableFlag() {
+    Symbol symbolZero = symbolManager.create(new SymbolOptions().withLatLng(new LatLng()));
+
+    assertFalse(symbolZero.isDraggable());
+    symbolZero.setDraggable(true);
+    assertTrue(symbolZero.isDraggable());
+    symbolZero.setDraggable(false);
+    assertFalse(symbolZero.isDraggable());
   }
 }

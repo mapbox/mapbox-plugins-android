@@ -11,6 +11,7 @@ import android.support.v4.util.LongSparseArray;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
@@ -28,7 +29,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 /**
  * The line manager allows to add lines to a map.
  */
-public class LineManager extends AnnotationManager<Line, LineOptions, OnLineClickListener, OnLineLongClickListener> {
+public class LineManager extends AnnotationManager<Line, LineOptions, OnLineDragListener, OnLineClickListener, OnLineLongClickListener> {
 
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-line-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-line-layer";
@@ -41,8 +42,8 @@ public class LineManager extends AnnotationManager<Line, LineOptions, OnLineClic
    * @param mapboxMap the map object to add lines to
    */
   @UiThread
-  public LineManager(@NonNull MapboxMap mapboxMap) {
-    this(mapboxMap, null);
+  public LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
+    this(mapView, mapboxMap, null);
   }
 
   /**
@@ -52,11 +53,11 @@ public class LineManager extends AnnotationManager<Line, LineOptions, OnLineClic
    * @param belowLayerId the id of the layer above the circle layer
    */
   @UiThread
-  public LineManager(@NonNull MapboxMap mapboxMap, @Nullable String belowLayerId) {
+  public LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @Nullable String belowLayerId) {
     this(mapboxMap, new GeoJsonSource(ID_GEOJSON_SOURCE), new LineLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE)
       .withProperties(
         getLayerDefinition()
-      ), belowLayerId);
+      ), belowLayerId, new DraggableAnnotationController<>(mapView, mapboxMap));
   }
 
   /**
@@ -67,8 +68,8 @@ public class LineManager extends AnnotationManager<Line, LineOptions, OnLineClic
    * @param layer         the line layer to visualise Lines with
    */
   @VisibleForTesting
-  public LineManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull LineLayer layer, @Nullable String belowLayerId) {
-    super(mapboxMap, geoJsonSource);
+  public LineManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull LineLayer layer, @Nullable String belowLayerId, DraggableAnnotationController<Line, OnLineDragListener> draggableAnnotationController) {
+    super(mapboxMap, geoJsonSource, null, draggableAnnotationController);
     initLayer(layer, belowLayerId);
   }
 

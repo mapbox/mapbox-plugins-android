@@ -37,7 +37,7 @@ public class FillTest extends BaseActivityTest {
   private void setupAnnotation() {
     Timber.i("Retrieving layer");
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      FillManager fillManager = new FillManager(mapboxMap);
+      FillManager fillManager = new FillManager(((BuildingActivity) rule.getActivity()).getMapView(), mapboxMap);
       List<LatLng>innerLatLngs = new ArrayList<>();
       innerLatLngs.add(new LatLng());
       innerLatLngs.add(new LatLng(1,1));

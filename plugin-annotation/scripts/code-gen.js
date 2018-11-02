@@ -387,6 +387,7 @@ global.supportsPropertyFunction = function (property) {
 const annotationJava = ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation.java.ejs', 'utf8'), {strict: true});
 const annotationOptionsJava = ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation_options.java.ejs', 'utf8'), {strict: true});
 const annotationManagerJava = ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation_manager.java.ejs', 'utf8'), {strict: true});
+const annotationDragListener =  ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation_drag_listener.java.ejs', 'utf8'), {strict: true});
 const annotationClickListener =  ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation_click_listener.java.ejs', 'utf8'), {strict: true});
 const annotationLongClickListener =  ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation_long_click_listener.java.ejs', 'utf8'), {strict: true});
 const annotationJavaInstrumentationTests= ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation_instrumentation_test.junit.ejs', 'utf8'), {strict: true});
@@ -395,6 +396,7 @@ const annotationManagerJavaUnitTests = ejs.compile(fs.readFileSync('plugin-annot
 
 for (const layer of layers) {
   if(layer.type === "symbol" || layer.type === "circle" || layer.type === "fill" || layer.type === "line"){
+      writeIfModified(`plugin-annotation/src/main/java/com/mapbox/mapboxsdk/plugins/annotation/On${camelize(layer.type)}DragListener.java`, annotationDragListener(layer));
       writeIfModified(`plugin-annotation/src/main/java/com/mapbox/mapboxsdk/plugins/annotation/On${camelize(layer.type)}ClickListener.java`, annotationClickListener(layer));
       writeIfModified(`plugin-annotation/src/main/java/com/mapbox/mapboxsdk/plugins/annotation/On${camelize(layer.type)}LongClickListener.java`, annotationLongClickListener(layer));
       writeIfModified(`plugin-annotation/src/main/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}.java`, annotationJava(layer));

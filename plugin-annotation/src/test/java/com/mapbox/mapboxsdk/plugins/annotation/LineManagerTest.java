@@ -13,12 +13,12 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.mockito.Mockito.mock;
 
 public class LineManagerTest {
 
+  private DraggableAnnotationController<Line, OnLineDragListener> draggableAnnotationController = mock(DraggableAnnotationController.class);
   private MapboxMap mapboxMap = mock(MapboxMap.class);
   private GeoJsonSource geoJsonSource = mock(GeoJsonSource.class);
   private LineLayer lineLayer = mock(LineLayer.class);
@@ -26,7 +26,7 @@ public class LineManagerTest {
 
   @Before
   public void beforeTest() {
-    lineManager = new LineManager(mapboxMap, geoJsonSource, lineLayer, null);
+    lineManager = new LineManager(mapboxMap, geoJsonSource, lineLayer, null, draggableAnnotationController);
   }
 
   @Test
@@ -89,5 +89,19 @@ public class LineManagerTest {
     Line lineOne = lineManager.create(new LineOptions().withLatLngs(latLngs));
     assertEquals(lineZero.getFeature().get(Line.ID_KEY).getAsLong(), 0);
     assertEquals(lineOne.getFeature().get(Line.ID_KEY).getAsLong(), 1);
+  }
+
+  @Test
+  public void testLineDraggableFlag() {
+    List<LatLng>latLngs = new ArrayList<>();
+    latLngs.add(new LatLng());
+    latLngs.add(new LatLng(1,1));
+    Line lineZero = lineManager.create(new LineOptions().withLatLngs(latLngs));
+
+    assertFalse(lineZero.isDraggable());
+    lineZero.setDraggable(true);
+    assertTrue(lineZero.isDraggable());
+    lineZero.setDraggable(false);
+    assertFalse(lineZero.isDraggable());
   }
 }
