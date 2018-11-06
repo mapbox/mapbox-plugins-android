@@ -1,6 +1,5 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.offline
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -34,7 +33,8 @@ class OfflineRegionListActivity : AppCompatActivity(), AdapterView.OnItemClickLi
         setContentView(R.layout.activity_offline_region_list)
 
         val listView = findViewById<ListView>(R.id.listView)
-        listView.adapter = OfflineRegionAdapter()
+        adapter = OfflineRegionAdapter()
+        listView.adapter = adapter
         listView.emptyView = findViewById(android.R.id.empty)
         listView.onItemClickListener = this
     }
