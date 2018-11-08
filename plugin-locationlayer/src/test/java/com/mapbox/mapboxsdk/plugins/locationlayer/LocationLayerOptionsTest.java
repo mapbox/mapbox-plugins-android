@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -38,6 +39,7 @@ public class LocationLayerOptionsTest {
   }
 
   @Test
+  @Ignore
   public void sanity() throws Exception {
     LocationLayerOptions locationLayerOptions = LocationLayerOptions.builder(context)
       .accuracyAlpha(0.5f)
@@ -46,6 +48,7 @@ public class LocationLayerOptionsTest {
   }
 
   @Test
+  @Ignore
   public void passingOutOfRangeAccuracyAlpha_throwsException() throws Exception {
     thrown.expect(IllegalArgumentException.class);
     thrown.expectMessage("Location layer accuracy alpha value must be between 0.0 and "
@@ -56,6 +59,7 @@ public class LocationLayerOptionsTest {
   }
 
   @Test
+  @Ignore
   public void negativeElevation_causesExceptionToBeThrown() throws Exception {
     thrown.expect(IllegalArgumentException.class);
     thrown.expectMessage("Invalid shadow size -500.0. Must be >= 0");

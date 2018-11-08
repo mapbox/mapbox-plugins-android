@@ -4,5 +4,10 @@
   "OfflineRegionListActivity",
   "OfflineUiComponentsActivity",
   "AutocompleteFragmentActivity",
-  "PickerLauncherActivity"
+  "PickerLauncherActivity",
+  "CompassListenerActivity",
+  "LocationLayerFragmentActivity",
+  "LocationLayerMapChangeActivity",
+  "LocationLayerModesActivity",
+  "ManualLocationUpdatesActivity"
 ]

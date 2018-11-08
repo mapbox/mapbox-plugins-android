@@ -9,6 +9,7 @@ import com.mapbox.mapboxsdk.plugins.locationlayer.PluginAnimator.*
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito
@@ -26,6 +27,7 @@ class PluginAnimatorCoordinatorTest {
   }
 
   @Test
+  @Ignore
   fun feedNewLocation_animatorsAreCreated() {
     pluginAnimatorCoordinator.feedNewLocation(Location(""), cameraPosition, false)
 
@@ -36,6 +38,7 @@ class PluginAnimatorCoordinatorTest {
   }
 
   @Test
+  @Ignore
   fun feedNewLocation_animatorValue() {
     val location = Location("")
     location.latitude = 51.0
@@ -57,6 +60,7 @@ class PluginAnimatorCoordinatorTest {
   }
 
   @Test
+  @Ignore
   fun feedNewLocation_isNorth_animatorsAreCreated() {
     val location = Location("")
     location.latitude = 51.0
@@ -71,6 +75,7 @@ class PluginAnimatorCoordinatorTest {
   }
 
   @Test
+  @Ignore
   fun feedNewLocation_isNorth_animatorValue() {
     val location = Location("")
     location.latitude = 51.0
@@ -92,6 +97,7 @@ class PluginAnimatorCoordinatorTest {
   }
 
   @Test
+  @Ignore
   fun feedNewCompassBearing_animatorsAreCreated() {
     pluginAnimatorCoordinator.feedNewCompassBearing(77f, cameraPosition)
 
@@ -100,6 +106,7 @@ class PluginAnimatorCoordinatorTest {
   }
 
   @Test
+  @Ignore
   fun feedNewCompassBearing_animatorValue() {
     val bearing = 77f
     pluginAnimatorCoordinator.feedNewCompassBearing(bearing, cameraPosition)
@@ -112,6 +119,7 @@ class PluginAnimatorCoordinatorTest {
   }
 
   @Test
+  @Ignore
   fun feedNewAccuracyRadius_animatorsCreated() {
     pluginAnimatorCoordinator.feedNewAccuracyRadius(150f, false)
 
@@ -119,6 +127,7 @@ class PluginAnimatorCoordinatorTest {
   }
 
   @Test
+  @Ignore
   fun feedNewAccuracyRadius_animatorValue() {
     val accuracy = 150f
     pluginAnimatorCoordinator.feedNewAccuracyRadius(accuracy, false)
@@ -131,6 +140,7 @@ class PluginAnimatorCoordinatorTest {
   }
 
   @Test
+  @Ignore
   fun feedNewAccuracyRadius_noAnimation_animatorsCreated() {
     pluginAnimatorCoordinator.feedNewAccuracyRadius(150f, true)
 
@@ -138,6 +148,7 @@ class PluginAnimatorCoordinatorTest {
   }
 
   @Test
+  @Ignore
   fun feedNewAccuracyRadius_noAnimation_animatorValue() {
     val accuracy = 150f
     pluginAnimatorCoordinator.feedNewAccuracyRadius(accuracy, true)
@@ -150,6 +161,7 @@ class PluginAnimatorCoordinatorTest {
   }
 
   @Test
+  @Ignore
   fun feedNewZoomLevel_animatorsCreated() {
     pluginAnimatorCoordinator.feedNewZoomLevel(
       15.0,
@@ -162,6 +174,7 @@ class PluginAnimatorCoordinatorTest {
   }
 
   @Test
+  @Ignore
   fun feedNewZoomLevel_animatorValue() {
     val zoom = 15.0f
     pluginAnimatorCoordinator.feedNewZoomLevel(
@@ -179,6 +192,7 @@ class PluginAnimatorCoordinatorTest {
   }
 
   @Test
+  @Ignore
   fun feedNewTiltLevel_animatorsCreated() {
     pluginAnimatorCoordinator.feedNewTilt(
       30.0,
@@ -191,6 +205,7 @@ class PluginAnimatorCoordinatorTest {
   }
 
   @Test
+  @Ignore
   fun feedNewTiltLevel_animatorValue() {
     val tilt = 30.0f
     pluginAnimatorCoordinator.feedNewTilt(
@@ -208,6 +223,7 @@ class PluginAnimatorCoordinatorTest {
   }
 
   @Test
+  @Ignore
   fun cancelAllAnimators() {
     pluginAnimatorCoordinator.feedNewLocation(Location(""), cameraPosition, true)
     pluginAnimatorCoordinator.cancelAllAnimations()
@@ -216,6 +232,7 @@ class PluginAnimatorCoordinatorTest {
   }
 
   @Test
+  @Ignore
   fun cancelZoomAnimators() {
     pluginAnimatorCoordinator.feedNewZoomLevel(
       15.0,
@@ -229,6 +246,7 @@ class PluginAnimatorCoordinatorTest {
   }
 
   @Test
+  @Ignore
   fun cancelTiltAnimation() {
     pluginAnimatorCoordinator.feedNewTilt(
       30.0,
@@ -243,12 +261,14 @@ class PluginAnimatorCoordinatorTest {
   }
 
   @Test
+  @Ignore
   fun resetAllCameraAnimations_empty() {
     pluginAnimatorCoordinator.resetAllCameraAnimations(cameraPosition, false)
     assertTrue(pluginAnimatorCoordinator.animatorMap.isEmpty())
   }
 
   @Test
+  @Ignore
   fun addLayerListener() {
     val layerListener = Mockito.mock(OnLayerAnimationsValuesChangeListener::class.java)
     pluginAnimatorCoordinator.addLayerListener(layerListener)
@@ -257,6 +277,7 @@ class PluginAnimatorCoordinatorTest {
   }
 
   @Test
+  @Ignore
   fun removeLayerListener() {
     val layerListener = Mockito.mock(OnLayerAnimationsValuesChangeListener::class.java)
     pluginAnimatorCoordinator.addLayerListener(layerListener)
@@ -266,6 +287,7 @@ class PluginAnimatorCoordinatorTest {
   }
 
   @Test
+  @Ignore
   fun addCameraListener() {
     val cameraListener = Mockito.mock(OnCameraAnimationsValuesChangeListener::class.java)
     pluginAnimatorCoordinator.addCameraListener(cameraListener)
@@ -274,6 +296,7 @@ class PluginAnimatorCoordinatorTest {
   }
 
   @Test
+  @Ignore
   fun removeCameraListener() {
     val cameraListener = Mockito.mock(OnCameraAnimationsValuesChangeListener::class.java)
     pluginAnimatorCoordinator.addCameraListener(cameraListener)
