@@ -6,6 +6,7 @@ import android.support.annotation.ColorInt;
 import android.graphics.PointF;
 import android.support.annotation.UiThread;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -25,6 +26,8 @@ import static com.mapbox.mapboxsdk.constants.GeometryConstants.MIN_MERCATOR_LATI
 @UiThread
 public class Line extends Annotation {
 
+  private final AnnotationManager<?, Line, ?, ?, ?, ?> annotationManager;
+
   /**
    * Create a line.
    *
@@ -32,8 +35,37 @@ public class Line extends Annotation {
    * @param jsonObject the features of the annotation
    * @param geometry the geometry of the annotation
    */
-  Line(long id, JsonObject jsonObject, Geometry geometry) {
+  Line(long id, AnnotationManager<?, Line, ?, ?, ?, ?> annotationManager, JsonObject jsonObject, Geometry geometry) {
     super(id, jsonObject, geometry);
+    this.annotationManager = annotationManager;
+  }
+
+  @Override
+  void setUsedDataDrivenProperties() {
+    if (!(jsonObject.get("line-join") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("line-join");
+    }
+    if (!(jsonObject.get("line-opacity") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("line-opacity");
+    }
+    if (!(jsonObject.get("line-color") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("line-color");
+    }
+    if (!(jsonObject.get("line-width") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("line-width");
+    }
+    if (!(jsonObject.get("line-gap-width") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("line-gap-width");
+    }
+    if (!(jsonObject.get("line-offset") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("line-offset");
+    }
+    if (!(jsonObject.get("line-blur") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("line-blur");
+    }
+    if (!(jsonObject.get("line-pattern") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("line-pattern");
+    }
   }
 
   /**

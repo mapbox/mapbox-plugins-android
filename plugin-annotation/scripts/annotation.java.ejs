@@ -11,6 +11,7 @@ import android.support.annotation.ColorInt;
 import android.graphics.PointF;
 import android.support.annotation.UiThread;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -29,9 +30,11 @@ import static com.mapbox.mapboxsdk.constants.GeometryConstants.MIN_MERCATOR_LATI
 
 @UiThread
 public class <%- camelize(type) %> extends Annotation {
+
+  private final AnnotationManager<?, <%- camelize(type) %>, ?, ?, ?, ?> annotationManager;
 <% if (type === "symbol") { -%>
 
-  public static final String Z_INDEX = "z-index";
+  static final String Z_INDEX = "z-index";
 <% } -%>
 
   /**
@@ -41,8 +44,25 @@ public class <%- camelize(type) %> extends Annotation {
    * @param jsonObject the features of the annotation
    * @param geometry the geometry of the annotation
    */
-  <%- camelize(type) %>(long id, JsonObject jsonObject, Geometry geometry) {
+  <%- camelize(type) %>(long id, AnnotationManager<?, <%- camelize(type) %>, ?, ?, ?, ?> annotationManager, JsonObject jsonObject, Geometry geometry) {
     super(id, jsonObject, geometry);
+    this.annotationManager = annotationManager;
+  }
+
+  @Override
+  void setUsedDataDrivenProperties() {
+<% for (const property of properties) { -%>
+<% if (supportsPropertyFunction(property)) { -%>
+    if (!(jsonObject.get("<%- property.name %>") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("<%- property.name %>");
+    }
+<% } -%>
+<% } -%>
+<% if (type === "symbol") { -%>
+    if (!(jsonObject.get(Z_INDEX) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(Z_INDEX);
+    }
+<% } -%>
   }
 <% if (type === "circle" || type === "symbol") { -%>
 

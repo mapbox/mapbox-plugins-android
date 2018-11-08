@@ -216,7 +216,7 @@ public class LineOptions extends Options<Line> {
   }
 
   @Override
-  Line build(long id) {
+  Line build(long id, AnnotationManager<?, Line, ?, ?, ?, ?> annotationManager) {
     if (geometry == null) {
       throw new RuntimeException("geometry field is required");
     }
@@ -229,6 +229,6 @@ public class LineOptions extends Options<Line> {
     jsonObject.addProperty("line-offset", lineOffset);
     jsonObject.addProperty("line-blur", lineBlur);
     jsonObject.addProperty("line-pattern", linePattern);
-    return new Line(id, jsonObject, geometry);
+    return new Line(id, annotationManager, jsonObject, geometry);
   }
 }

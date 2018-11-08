@@ -67,4 +67,6 @@ public abstract class Annotation {
   @Nullable
   abstract Geometry getOffsetGeometry(@NonNull Projection projection, @NonNull MoveDistancesObject moveDistancesObject,
                                       float touchAreaShiftX, float touchAreaShiftY);
+
+  abstract void setUsedDataDrivenProperties();
 }

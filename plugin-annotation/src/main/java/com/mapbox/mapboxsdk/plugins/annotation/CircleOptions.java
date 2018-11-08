@@ -191,7 +191,7 @@ public class CircleOptions extends Options<Circle> {
   }
 
   @Override
-  Circle build(long id) {
+  Circle build(long id, AnnotationManager<?, Circle, ?, ?, ?, ?> annotationManager) {
     if (geometry == null) {
       throw new RuntimeException("geometry field is required");
     }
@@ -203,6 +203,6 @@ public class CircleOptions extends Options<Circle> {
     jsonObject.addProperty("circle-stroke-width", circleStrokeWidth);
     jsonObject.addProperty("circle-stroke-color", circleStrokeColor);
     jsonObject.addProperty("circle-stroke-opacity", circleStrokeOpacity);
-    return new Circle(id, jsonObject, geometry);
+    return new Circle(id, annotationManager, jsonObject, geometry);
   }
 }

@@ -16,7 +16,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 
 final class DraggableAnnotationController<T extends Annotation, D extends OnAnnotationDragListener<T>> {
   private final MapboxMap mapboxMap;
-  private AnnotationManager<T, ?, D, ?, ?> annotationManager;
+  private AnnotationManager<?, T, ?, D, ?, ?> annotationManager;
 
   private final int touchAreaShiftX;
   private final int touchAreaShiftY;
@@ -54,7 +54,7 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
     });
   }
 
-  void injectAnnotationManager(AnnotationManager<T, ?, D, ?, ?> annotationManager) {
+  void injectAnnotationManager(AnnotationManager<?, T, ?, D, ?, ?> annotationManager) {
     this.annotationManager = annotationManager;
   }
 

@@ -6,6 +6,7 @@ import android.support.annotation.ColorInt;
 import android.graphics.PointF;
 import android.support.annotation.UiThread;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -25,7 +26,9 @@ import static com.mapbox.mapboxsdk.constants.GeometryConstants.MIN_MERCATOR_LATI
 @UiThread
 public class Symbol extends Annotation {
 
-  public static final String Z_INDEX = "z-index";
+  private final AnnotationManager<?, Symbol, ?, ?, ?, ?> annotationManager;
+
+  static final String Z_INDEX = "z-index";
 
   /**
    * Create a symbol.
@@ -34,8 +37,91 @@ public class Symbol extends Annotation {
    * @param jsonObject the features of the annotation
    * @param geometry the geometry of the annotation
    */
-  Symbol(long id, JsonObject jsonObject, Geometry geometry) {
+  Symbol(long id, AnnotationManager<?, Symbol, ?, ?, ?, ?> annotationManager, JsonObject jsonObject, Geometry geometry) {
     super(id, jsonObject, geometry);
+    this.annotationManager = annotationManager;
+  }
+
+  @Override
+  void setUsedDataDrivenProperties() {
+    if (!(jsonObject.get("icon-size") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("icon-size");
+    }
+    if (!(jsonObject.get("icon-image") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("icon-image");
+    }
+    if (!(jsonObject.get("icon-rotate") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("icon-rotate");
+    }
+    if (!(jsonObject.get("icon-offset") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("icon-offset");
+    }
+    if (!(jsonObject.get("icon-anchor") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("icon-anchor");
+    }
+    if (!(jsonObject.get("text-field") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("text-field");
+    }
+    if (!(jsonObject.get("text-font") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("text-font");
+    }
+    if (!(jsonObject.get("text-size") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("text-size");
+    }
+    if (!(jsonObject.get("text-max-width") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("text-max-width");
+    }
+    if (!(jsonObject.get("text-letter-spacing") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("text-letter-spacing");
+    }
+    if (!(jsonObject.get("text-justify") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("text-justify");
+    }
+    if (!(jsonObject.get("text-anchor") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("text-anchor");
+    }
+    if (!(jsonObject.get("text-rotate") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("text-rotate");
+    }
+    if (!(jsonObject.get("text-transform") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("text-transform");
+    }
+    if (!(jsonObject.get("text-offset") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("text-offset");
+    }
+    if (!(jsonObject.get("icon-opacity") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("icon-opacity");
+    }
+    if (!(jsonObject.get("icon-color") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("icon-color");
+    }
+    if (!(jsonObject.get("icon-halo-color") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("icon-halo-color");
+    }
+    if (!(jsonObject.get("icon-halo-width") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("icon-halo-width");
+    }
+    if (!(jsonObject.get("icon-halo-blur") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("icon-halo-blur");
+    }
+    if (!(jsonObject.get("text-opacity") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("text-opacity");
+    }
+    if (!(jsonObject.get("text-color") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("text-color");
+    }
+    if (!(jsonObject.get("text-halo-color") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("text-halo-color");
+    }
+    if (!(jsonObject.get("text-halo-width") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("text-halo-width");
+    }
+    if (!(jsonObject.get("text-halo-blur") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("text-halo-blur");
+    }
+    if (!(jsonObject.get(Z_INDEX) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(Z_INDEX);
+    }
   }
 
   /**

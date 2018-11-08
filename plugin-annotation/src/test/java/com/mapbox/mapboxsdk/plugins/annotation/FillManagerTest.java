@@ -13,8 +13,12 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
+import static com.mapbox.mapboxsdk.style.layers.Property.*;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 import static junit.framework.Assert.*;
-import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.*;
 
 public class FillManagerTest {
 
@@ -137,4 +141,78 @@ public class FillManagerTest {
     fillZero.setDraggable(false);
     assertFalse(fillZero.isDraggable());
   }
+
+
+  @Test
+  public void testFillOpacityLayerProperty() {
+    verify(fillLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(fillOpacity(get("fill-opacity")))));
+
+    List<LatLng>innerLatLngs = new ArrayList<>();
+    innerLatLngs.add(new LatLng());
+    innerLatLngs.add(new LatLng(1,1));
+    innerLatLngs.add(new LatLng(-1,-1));
+    List<List<LatLng>>latLngs = new ArrayList<>();
+    latLngs.add(innerLatLngs);
+    FillOptions options = new FillOptions().withLatLngs(latLngs).withFillOpacity(0.3f);
+    fillManager.create(options);
+    verify(fillLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(fillOpacity(get("fill-opacity")))));
+
+    fillManager.create(options);
+    verify(fillLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(fillOpacity(get("fill-opacity")))));
+  }
+
+  @Test
+  public void testFillColorLayerProperty() {
+    verify(fillLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(fillColor(get("fill-color")))));
+
+    List<LatLng>innerLatLngs = new ArrayList<>();
+    innerLatLngs.add(new LatLng());
+    innerLatLngs.add(new LatLng(1,1));
+    innerLatLngs.add(new LatLng(-1,-1));
+    List<List<LatLng>>latLngs = new ArrayList<>();
+    latLngs.add(innerLatLngs);
+    FillOptions options = new FillOptions().withLatLngs(latLngs).withFillColor("rgba(0, 0, 0, 1)");
+    fillManager.create(options);
+    verify(fillLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(fillColor(get("fill-color")))));
+
+    fillManager.create(options);
+    verify(fillLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(fillColor(get("fill-color")))));
+  }
+
+  @Test
+  public void testFillOutlineColorLayerProperty() {
+    verify(fillLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(fillOutlineColor(get("fill-outline-color")))));
+
+    List<LatLng>innerLatLngs = new ArrayList<>();
+    innerLatLngs.add(new LatLng());
+    innerLatLngs.add(new LatLng(1,1));
+    innerLatLngs.add(new LatLng(-1,-1));
+    List<List<LatLng>>latLngs = new ArrayList<>();
+    latLngs.add(innerLatLngs);
+    FillOptions options = new FillOptions().withLatLngs(latLngs).withFillOutlineColor("rgba(0, 0, 0, 1)");
+    fillManager.create(options);
+    verify(fillLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(fillOutlineColor(get("fill-outline-color")))));
+
+    fillManager.create(options);
+    verify(fillLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(fillOutlineColor(get("fill-outline-color")))));
+  }
+
+  @Test
+  public void testFillPatternLayerProperty() {
+    verify(fillLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(fillPattern(get("fill-pattern")))));
+
+    List<LatLng>innerLatLngs = new ArrayList<>();
+    innerLatLngs.add(new LatLng());
+    innerLatLngs.add(new LatLng(1,1));
+    innerLatLngs.add(new LatLng(-1,-1));
+    List<List<LatLng>>latLngs = new ArrayList<>();
+    latLngs.add(innerLatLngs);
+    FillOptions options = new FillOptions().withLatLngs(latLngs).withFillPattern("pedestrian-polygon");
+    fillManager.create(options);
+    verify(fillLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(fillPattern(get("fill-pattern")))));
+
+    fillManager.create(options);
+    verify(fillLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(fillPattern(get("fill-pattern")))));
+  }
+
 }

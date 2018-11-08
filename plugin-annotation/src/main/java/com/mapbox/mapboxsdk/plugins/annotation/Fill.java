@@ -6,6 +6,7 @@ import android.support.annotation.ColorInt;
 import android.graphics.PointF;
 import android.support.annotation.UiThread;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -25,6 +26,8 @@ import static com.mapbox.mapboxsdk.constants.GeometryConstants.MIN_MERCATOR_LATI
 @UiThread
 public class Fill extends Annotation {
 
+  private final AnnotationManager<?, Fill, ?, ?, ?, ?> annotationManager;
+
   /**
    * Create a fill.
    *
@@ -32,8 +35,25 @@ public class Fill extends Annotation {
    * @param jsonObject the features of the annotation
    * @param geometry the geometry of the annotation
    */
-  Fill(long id, JsonObject jsonObject, Geometry geometry) {
+  Fill(long id, AnnotationManager<?, Fill, ?, ?, ?, ?> annotationManager, JsonObject jsonObject, Geometry geometry) {
     super(id, jsonObject, geometry);
+    this.annotationManager = annotationManager;
+  }
+
+  @Override
+  void setUsedDataDrivenProperties() {
+    if (!(jsonObject.get("fill-opacity") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("fill-opacity");
+    }
+    if (!(jsonObject.get("fill-color") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("fill-color");
+    }
+    if (!(jsonObject.get("fill-outline-color") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("fill-outline-color");
+    }
+    if (!(jsonObject.get("fill-pattern") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("fill-pattern");
+    }
   }
 
   /**
