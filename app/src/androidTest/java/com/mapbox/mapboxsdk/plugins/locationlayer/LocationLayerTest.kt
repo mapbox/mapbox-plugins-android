@@ -31,12 +31,9 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.Matchers.equalTo
-import org.junit.After
+import org.junit.*
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThat
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
 import org.junit.rules.TestName
 import org.junit.runner.RunWith
 import timber.log.Timber
@@ -85,6 +82,7 @@ class LocationLayerTest {
   //
 
   @Test
+  @Ignore
   fun renderModeNormal_sourceDoesGetAdded() {
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
@@ -102,6 +100,7 @@ class LocationLayerTest {
   //
 
   @Test
+  @Ignore
   fun renderModeNormal_trackingNormalLayersDoGetAdded() {
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
@@ -120,6 +119,7 @@ class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   fun renderModeCompass_bearingLayersDoGetAdded() {
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
@@ -138,6 +138,7 @@ class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   fun renderModeGps_navigationLayersDoGetAdded() {
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
@@ -156,6 +157,7 @@ class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   fun dontShowPuckWhenRenderModeSetAndPluginDisabled() {
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
@@ -175,6 +177,7 @@ class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   fun whenLocationLayerPluginDisabled_doesSetAllLayersToVisibilityNone() {
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
@@ -196,6 +199,7 @@ class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   fun onMapChange_locationLayerLayersDoGetRedrawn() {
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
@@ -228,6 +232,7 @@ class LocationLayerTest {
 //
 
   @Test
+  @Ignore
   fun whenStyleChanged_continuesUsingStaleIcons() {
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
@@ -249,6 +254,7 @@ class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   fun whenStyleChanged_staleStateChanges() {
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
@@ -267,6 +273,7 @@ class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   fun whenStyleChanged_layerVisibilityUpdates() {
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
@@ -288,6 +295,7 @@ class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   fun accuracy_visibleWithNewLocation() {
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
@@ -306,6 +314,7 @@ class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   fun accuracy_visibleWhenCameraEased() {
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
@@ -325,6 +334,7 @@ class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   fun accuracy_visibleWhenCameraMoved() {
     val pluginAction = object : GenericPluginAction.OnPerformGenericPluginAction<LocationLayerPlugin> {
       override fun onGenericPluginAction(plugin: LocationLayerPlugin, mapboxMap: MapboxMap,
