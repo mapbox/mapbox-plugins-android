@@ -136,7 +136,7 @@ public class FillOptions extends Options<Fill> {
   }
 
   @Override
-  Fill build(long id) {
+  Fill build(long id, AnnotationManager<?, Fill, ?, ?, ?, ?> annotationManager) {
     if (geometry == null) {
       throw new RuntimeException("geometry field is required");
     }
@@ -145,6 +145,6 @@ public class FillOptions extends Options<Fill> {
     jsonObject.addProperty("fill-color", fillColor);
     jsonObject.addProperty("fill-outline-color", fillOutlineColor);
     jsonObject.addProperty("fill-pattern", fillPattern);
-    return new Fill(id, jsonObject, geometry);
+    return new Fill(id, annotationManager, jsonObject, geometry);
   }
 }

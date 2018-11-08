@@ -18,8 +18,12 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
+import static com.mapbox.mapboxsdk.style.layers.Property.*;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 import static junit.framework.Assert.*;
-import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.*;
 
 public class <%- camelize(type) %>ManagerTest {
 
@@ -218,4 +222,50 @@ public class <%- camelize(type) %>ManagerTest {
     <%- type %>Zero.setDraggable(false);
     assertFalse(<%- type %>Zero.isDraggable());
   }
+
+<% for (const property of properties) { -%>
+<% if (supportsPropertyFunction(property)) { -%>
+
+  @Test
+  public void test<%- camelize(property.name) %>LayerProperty() {
+    verify(<%- type  %>Layer, times(0)).setProperties(argThat(new PropertyValueMatcher(<%- camelizeWithLeadingLowercase(property.name) %>(get("<%- property.name %>")))));
+
+<% if (type === "circle" || type === "symbol") { -%>
+    <%- camelize(type) %>Options options = new <%- camelize(type) %>Options().withLatLng(new LatLng()).with<%- camelize(property.name) %>(<%- defaultValueJava(property) %>);
+<% } else if (type === "line") { -%>
+    List<LatLng>latLngs = new ArrayList<>();
+    latLngs.add(new LatLng());
+    latLngs.add(new LatLng(1,1));
+    <%- camelize(type) %>Options options = new <%- camelize(type) %>Options().withLatLngs(latLngs).with<%- camelize(property.name) %>(<%- defaultValueJava(property) %>);
+<% } else { -%>
+    List<LatLng>innerLatLngs = new ArrayList<>();
+    innerLatLngs.add(new LatLng());
+    innerLatLngs.add(new LatLng(1,1));
+    innerLatLngs.add(new LatLng(-1,-1));
+    List<List<LatLng>>latLngs = new ArrayList<>();
+    latLngs.add(innerLatLngs);
+    <%- camelize(type) %>Options options = new <%- camelize(type) %>Options().withLatLngs(latLngs).with<%- camelize(property.name) %>(<%- defaultValueJava(property) %>);
+<% } -%>
+    <%- type  %>Manager.create(options);
+    verify(<%- type  %>Layer, times(1)).setProperties(argThat(new PropertyValueMatcher(<%- camelizeWithLeadingLowercase(property.name) %>(get("<%- property.name %>")))));
+
+    <%- type  %>Manager.create(options);
+    verify(<%- type  %>Layer, times(1)).setProperties(argThat(new PropertyValueMatcher(<%- camelizeWithLeadingLowercase(property.name) %>(get("<%- property.name %>")))));
+  }
+<% } -%>
+<% } -%>
+
+<% if (type === "symbol") { -%>
+  @Test
+  public void testSymbolZOrderLayerProperty() {
+    verify(<%- type  %>Layer, times(0)).setProperties(argThat(new PropertyValueMatcher(symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE))));
+
+    <%- camelize(type) %>Options options = new <%- camelize(type) %>Options().withLatLng(new LatLng());
+    <%- type  %>Manager.create(options);
+    verify(<%- type  %>Layer, times(1)).setProperties(argThat(new PropertyValueMatcher(symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE))));
+
+    <%- type  %>Manager.create(options);
+    verify(<%- type  %>Layer, times(1)).setProperties(argThat(new PropertyValueMatcher(symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE))));
+  }
+<% } -%>
 }

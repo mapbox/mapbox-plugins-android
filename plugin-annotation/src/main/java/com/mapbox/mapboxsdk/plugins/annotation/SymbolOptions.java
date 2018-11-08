@@ -593,7 +593,7 @@ public class SymbolOptions extends Options<Symbol> {
   }
 
   @Override
-  Symbol build(long id) {
+  Symbol build(long id, AnnotationManager<?, Symbol, ?, ?, ?, ?> annotationManager) {
     if (geometry == null) {
       throw new RuntimeException("geometry field is required");
     }
@@ -624,6 +624,6 @@ public class SymbolOptions extends Options<Symbol> {
     jsonObject.addProperty("text-halo-width", textHaloWidth);
     jsonObject.addProperty("text-halo-blur", textHaloBlur);
     jsonObject.addProperty(Symbol.Z_INDEX, zIndex);
-    return new Symbol(id, jsonObject, geometry);
+    return new Symbol(id, annotationManager, jsonObject, geometry);
   }
 }

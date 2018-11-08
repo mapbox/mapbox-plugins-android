@@ -1,25 +1,34 @@
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.JsonArray;
 
 class ConvertUtils {
+
+  @Nullable
   static JsonArray convertArray(Float[] value) {
-    JsonArray jsonArray = new JsonArray();
     if (value != null) {
+      JsonArray jsonArray = new JsonArray();
       for (Float element : value) {
         jsonArray.add(element);
       }
+      return jsonArray;
+    } else {
+      return null;
     }
-    return jsonArray;
   }
 
+  @Nullable
   static JsonArray convertArray(String[] value) {
-    JsonArray jsonArray = new JsonArray();
     if (value != null) {
+      JsonArray jsonArray = new JsonArray();
       for (String element : value) {
         jsonArray.add(element);
       }
+      return jsonArray;
+    } else {
+      return null;
     }
-    return jsonArray;
   }
 }

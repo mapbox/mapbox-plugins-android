@@ -10,12 +10,15 @@ import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Generic AnnotationManager, can be used to create annotation specific managers.
@@ -27,6 +30,7 @@ import java.util.List;
  * @param <V> type of annotation long click listener, depends on generic T
  */
 abstract class AnnotationManager<
+  L extends Layer,
   T extends Annotation,
   S extends Options<T>,
   D extends OnAnnotationDragListener<T>,
@@ -36,6 +40,7 @@ abstract class AnnotationManager<
   protected final MapboxMap mapboxMap;
   protected final LongSparseArray<T> annotations = new LongSparseArray<>();
   protected final List<Feature> features = new ArrayList<>();
+  protected final Map<String, Boolean> propertyUsageMap = new HashMap<>();
 
   private final DraggableAnnotationController<T, D> draggableAnnotationController;
   private final List<D> dragListeners = new ArrayList<>();
@@ -43,14 +48,17 @@ abstract class AnnotationManager<
   private final List<V> longClickListeners = new ArrayList<>();
   protected long currentId;
 
+  protected final L layer;
   private final GeoJsonSource geoJsonSource;
   private final MapClickResolver mapClickResolver;
   private final Comparator<Feature> comparator;
 
   @UiThread
   protected AnnotationManager(MapboxMap mapboxMap,
-                              GeoJsonSource geoJsonSource, Comparator<Feature> comparator,
-                              DraggableAnnotationController<T, D> draggableAnnotationController) {
+                              L layer, GeoJsonSource geoJsonSource, Comparator<Feature> comparator,
+                              DraggableAnnotationController<T, D> draggableAnnotationController,
+                              String belowLayerId) {
+    this.layer = layer;
     this.mapboxMap = mapboxMap;
     this.geoJsonSource = geoJsonSource;
     this.comparator = comparator;
@@ -59,6 +67,12 @@ abstract class AnnotationManager<
     mapboxMap.addOnMapLongClickListener(mapClickResolver);
     this.draggableAnnotationController = draggableAnnotationController;
     draggableAnnotationController.injectAnnotationManager(this);
+
+    if (belowLayerId == null) {
+      mapboxMap.addLayer(layer);
+    } else {
+      mapboxMap.addLayerBelow(layer, belowLayerId);
+    }
   }
 
   /**
@@ -79,7 +93,7 @@ abstract class AnnotationManager<
    */
   @UiThread
   public T create(S options) {
-    T t = options.build(currentId);
+    T t = options.build(currentId, this);
     annotations.put(t.getId(), t);
     currentId++;
     updateSource();
@@ -97,7 +111,7 @@ abstract class AnnotationManager<
     List<T> annotationList = new ArrayList<>();
     T annotation;
     for (S options : optionsList) {
-      annotation = options.build(currentId);
+      annotation = options.build(currentId, this);
       annotationList.add(annotation);
       annotations.put(annotation.getId(), annotation);
       currentId++;
@@ -169,6 +183,7 @@ abstract class AnnotationManager<
     for (int i = 0; i < annotations.size(); i++) {
       t = annotations.valueAt(i);
       features.add(Feature.fromGeometry(t.getGeometry(), t.getFeature()));
+      t.setUsedDataDrivenProperties();
     }
 
     if (comparator != null) {
@@ -176,6 +191,15 @@ abstract class AnnotationManager<
     }
     geoJsonSource.setGeoJson(FeatureCollection.fromFeatures(features));
   }
+
+  void enableDataDrivenProperty(@NonNull String property) {
+    if (propertyUsageMap.get(property).equals(false)) {
+      propertyUsageMap.put(property, true);
+      setDataDrivenPropertyIsUsed(property);
+    }
+  }
+
+  protected abstract void setDataDrivenPropertyIsUsed(@NonNull String property);
 
   /**
    * Add a callback to be invoked when an annotation is dragged.
@@ -194,9 +218,7 @@ abstract class AnnotationManager<
    */
   @UiThread
   public void removeClickListener(@NonNull D d) {
-    if (dragListeners.contains(d)) {
-      dragListeners.remove(d);
-    }
+    dragListeners.remove(d);
   }
 
   /**
@@ -216,9 +238,7 @@ abstract class AnnotationManager<
    */
   @UiThread
   public void removeClickListener(@NonNull U u) {
-    if (clickListeners.contains(u)) {
-      clickListeners.remove(u);
-    }
+    clickListeners.remove(u);
   }
 
   /**
@@ -238,9 +258,7 @@ abstract class AnnotationManager<
    */
   @UiThread
   public void removeLongClickListener(@NonNull V v) {
-    if (longClickListeners.contains(v)) {
-      longClickListeners.remove(v);
-    }
+    longClickListeners.remove(v);
   }
 
   /**

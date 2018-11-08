@@ -7,15 +7,10 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
-import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.VisibleForTesting;
-import android.support.v4.util.LongSparseArray;
-import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
@@ -23,23 +18,17 @@ import com.mapbox.mapboxsdk.style.layers.<%- camelize(type) %>Layer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
+import static com.mapbox.mapboxsdk.plugins.annotation.Symbol.Z_INDEX;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 
 /**
  * The <%- type %> manager allows to add <%- type %>s to a map.
  */
-public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize(type) %>, <%- camelize(type) %>Options, On<%- camelize(type) %>DragListener, On<%- camelize(type) %>ClickListener, On<%- camelize(type) %>LongClickListener> {
+public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize(type) %>Layer, <%- camelize(type) %>, <%- camelize(type) %>Options, On<%- camelize(type) %>DragListener, On<%- camelize(type) %>ClickListener, On<%- camelize(type) %>LongClickListener> {
 
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-<%- type %>-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-<%- type %>-layer";
-
-  private <%- camelize(type) %>Layer layer;
 
   /**
    * Create a <%- type %> manager, used to manage <%- type %>s.
@@ -59,10 +48,8 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
    */
   @UiThread
   public <%- camelize(type) %>Manager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @Nullable String belowLayerId) {
-    this(mapboxMap, new GeoJsonSource(ID_GEOJSON_SOURCE), new <%- camelize(type) %>Layer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE)
-      .withProperties(
-        getLayerDefinition()
-      ), belowLayerId, new DraggableAnnotationController<>(mapView, mapboxMap));
+    this(mapboxMap, new GeoJsonSource(ID_GEOJSON_SOURCE), new <%- camelize(type) %>Layer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE),
+    belowLayerId, new DraggableAnnotationController<>(mapView, mapboxMap));
   }
 
   /**
@@ -75,25 +62,39 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
   @VisibleForTesting
   public <%- camelize(type) %>Manager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull <%- camelize(type) %>Layer layer, @Nullable String belowLayerId, DraggableAnnotationController<<%- camelize(type) %>, On<%- camelize(type) %>DragListener> draggableAnnotationController) {
 <% if (type === "symbol") { -%>
-    super(mapboxMap, geoJsonSource, new SymbolComparator(), draggableAnnotationController);
+    super(mapboxMap, layer, geoJsonSource, new SymbolComparator(), draggableAnnotationController, belowLayerId);
 <% } else { -%>
-    super(mapboxMap, geoJsonSource, null, draggableAnnotationController);
+    super(mapboxMap, layer, geoJsonSource, null, draggableAnnotationController, belowLayerId);
 <% } -%>
-    initLayer(layer, belowLayerId);
+    initializeDataDrivenPropertyMap();
   }
 
-  /**
-   * Initialise the layer on the map.
-   *
-   * @param layer the layer to be added
-   * @param belowLayerId the id of the layer above the circle layer
-   */
-  private void initLayer(@NonNull <%- camelize(type) %>Layer layer, @Nullable String belowLayerId) {
-    this.layer = layer;
-    if (belowLayerId == null) {
-      mapboxMap.addLayer(layer);
-    } else {
-      mapboxMap.addLayerBelow(layer, belowLayerId);
+  private void initializeDataDrivenPropertyMap() {
+<% for (const property of properties) { -%>
+<% if (supportsPropertyFunction(property)) { -%>
+    propertyUsageMap.put("<%- property.name %>", false);
+<% } -%>
+<% } -%>
+<% if (type === "symbol") { -%>
+    propertyUsageMap.put(Z_INDEX, false);
+<% } -%>
+  }
+
+  @Override
+  protected void setDataDrivenPropertyIsUsed(@NonNull String property) {
+    switch (property) {
+<% for (const property of properties) { -%>
+<% if (supportsPropertyFunction(property)) { -%>
+      case "<%- property.name %>":
+        layer.setProperties(<%- camelizeWithLeadingLowercase(property.name) %>(get("<%- property.name %>")));
+        break;
+<% } -%>
+<% } -%>
+<% if (type === "symbol") { -%>
+      case Z_INDEX:
+        layer.setProperties(symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE));
+        break;
+<% } -%>
     }
   }
 
@@ -115,18 +116,6 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
   @Override
   String getAnnotationIdKey() {
     return <%- camelize(type) %>.ID_KEY;
-  }
-
-  private static PropertyValue<?>[] getLayerDefinition() {
-    return new PropertyValue[]{
-<% for (const property of properties) { -%>
-<% if (supportsPropertyFunction(property)) { -%>
-      <%- camelizeWithLeadingLowercase(property.name) %>(get("<%- property.name %>")),
-<% } -%><% } -%>
-<% if (type === "symbol") { -%>
-      symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE)
-<% } -%>
-    };
   }
 
   // Property accessors

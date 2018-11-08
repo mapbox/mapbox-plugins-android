@@ -6,6 +6,7 @@ import android.support.annotation.ColorInt;
 import android.graphics.PointF;
 import android.support.annotation.UiThread;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -25,6 +26,8 @@ import static com.mapbox.mapboxsdk.constants.GeometryConstants.MIN_MERCATOR_LATI
 @UiThread
 public class Circle extends Annotation {
 
+  private final AnnotationManager<?, Circle, ?, ?, ?, ?> annotationManager;
+
   /**
    * Create a circle.
    *
@@ -32,8 +35,34 @@ public class Circle extends Annotation {
    * @param jsonObject the features of the annotation
    * @param geometry the geometry of the annotation
    */
-  Circle(long id, JsonObject jsonObject, Geometry geometry) {
+  Circle(long id, AnnotationManager<?, Circle, ?, ?, ?, ?> annotationManager, JsonObject jsonObject, Geometry geometry) {
     super(id, jsonObject, geometry);
+    this.annotationManager = annotationManager;
+  }
+
+  @Override
+  void setUsedDataDrivenProperties() {
+    if (!(jsonObject.get("circle-radius") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("circle-radius");
+    }
+    if (!(jsonObject.get("circle-color") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("circle-color");
+    }
+    if (!(jsonObject.get("circle-blur") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("circle-blur");
+    }
+    if (!(jsonObject.get("circle-opacity") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("circle-opacity");
+    }
+    if (!(jsonObject.get("circle-stroke-width") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("circle-stroke-width");
+    }
+    if (!(jsonObject.get("circle-stroke-color") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("circle-stroke-color");
+    }
+    if (!(jsonObject.get("circle-stroke-opacity") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("circle-stroke-opacity");
+    }
   }
 
   /**

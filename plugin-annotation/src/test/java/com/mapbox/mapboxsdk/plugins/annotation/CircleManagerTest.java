@@ -13,8 +13,12 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
+import static com.mapbox.mapboxsdk.style.layers.Property.*;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 import static junit.framework.Assert.*;
-import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.*;
 
 public class CircleManagerTest {
 
@@ -80,4 +84,90 @@ public class CircleManagerTest {
     circleZero.setDraggable(false);
     assertFalse(circleZero.isDraggable());
   }
+
+
+  @Test
+  public void testCircleRadiusLayerProperty() {
+    verify(circleLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(circleRadius(get("circle-radius")))));
+
+    CircleOptions options = new CircleOptions().withLatLng(new LatLng()).withCircleRadius(0.3f);
+    circleManager.create(options);
+    verify(circleLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(circleRadius(get("circle-radius")))));
+
+    circleManager.create(options);
+    verify(circleLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(circleRadius(get("circle-radius")))));
+  }
+
+  @Test
+  public void testCircleColorLayerProperty() {
+    verify(circleLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(circleColor(get("circle-color")))));
+
+    CircleOptions options = new CircleOptions().withLatLng(new LatLng()).withCircleColor("rgba(0, 0, 0, 1)");
+    circleManager.create(options);
+    verify(circleLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(circleColor(get("circle-color")))));
+
+    circleManager.create(options);
+    verify(circleLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(circleColor(get("circle-color")))));
+  }
+
+  @Test
+  public void testCircleBlurLayerProperty() {
+    verify(circleLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(circleBlur(get("circle-blur")))));
+
+    CircleOptions options = new CircleOptions().withLatLng(new LatLng()).withCircleBlur(0.3f);
+    circleManager.create(options);
+    verify(circleLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(circleBlur(get("circle-blur")))));
+
+    circleManager.create(options);
+    verify(circleLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(circleBlur(get("circle-blur")))));
+  }
+
+  @Test
+  public void testCircleOpacityLayerProperty() {
+    verify(circleLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(circleOpacity(get("circle-opacity")))));
+
+    CircleOptions options = new CircleOptions().withLatLng(new LatLng()).withCircleOpacity(0.3f);
+    circleManager.create(options);
+    verify(circleLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(circleOpacity(get("circle-opacity")))));
+
+    circleManager.create(options);
+    verify(circleLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(circleOpacity(get("circle-opacity")))));
+  }
+
+  @Test
+  public void testCircleStrokeWidthLayerProperty() {
+    verify(circleLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(circleStrokeWidth(get("circle-stroke-width")))));
+
+    CircleOptions options = new CircleOptions().withLatLng(new LatLng()).withCircleStrokeWidth(0.3f);
+    circleManager.create(options);
+    verify(circleLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(circleStrokeWidth(get("circle-stroke-width")))));
+
+    circleManager.create(options);
+    verify(circleLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(circleStrokeWidth(get("circle-stroke-width")))));
+  }
+
+  @Test
+  public void testCircleStrokeColorLayerProperty() {
+    verify(circleLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(circleStrokeColor(get("circle-stroke-color")))));
+
+    CircleOptions options = new CircleOptions().withLatLng(new LatLng()).withCircleStrokeColor("rgba(0, 0, 0, 1)");
+    circleManager.create(options);
+    verify(circleLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(circleStrokeColor(get("circle-stroke-color")))));
+
+    circleManager.create(options);
+    verify(circleLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(circleStrokeColor(get("circle-stroke-color")))));
+  }
+
+  @Test
+  public void testCircleStrokeOpacityLayerProperty() {
+    verify(circleLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(circleStrokeOpacity(get("circle-stroke-opacity")))));
+
+    CircleOptions options = new CircleOptions().withLatLng(new LatLng()).withCircleStrokeOpacity(0.3f);
+    circleManager.create(options);
+    verify(circleLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(circleStrokeOpacity(get("circle-stroke-opacity")))));
+
+    circleManager.create(options);
+    verify(circleLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(circleStrokeOpacity(get("circle-stroke-opacity")))));
+  }
+
 }

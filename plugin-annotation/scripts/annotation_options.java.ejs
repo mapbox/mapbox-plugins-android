@@ -166,7 +166,7 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
 <% } -%>
 
   @Override
-  <%- camelize(type) %> build(long id) {
+  <%- camelize(type) %> build(long id, AnnotationManager<?, <%- camelize(type) %>, ?, ?, ?, ?> annotationManager) {
     if (geometry == null) {
       throw new RuntimeException("geometry field is required");
     }
@@ -183,6 +183,6 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
 <% if (type === "symbol") { -%>
     jsonObject.addProperty(Symbol.Z_INDEX, zIndex);
 <% } -%>
-    return new <%- camelize(type) %>(id, jsonObject, geometry);
+    return new <%- camelize(type) %>(id, annotationManager, jsonObject, geometry);
   }
 }
