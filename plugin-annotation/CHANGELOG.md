@@ -2,6 +2,11 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### 0.3.0 - November 9, 2018
+- Mapbox maps SDK for Android v6.7.0 [#728](https://github.com/mapbox/mapbox-plugins-android/pull/728)
+- Draggable annotations [#753](https://github.com/mapbox/mapbox-plugins-android/pull/753)
+- Set layer properties expressions only on utilized properties [#762](https://github.com/mapbox/mapbox-plugins-android/pull/762)
+
 ### 0.2.0 - October 25, 2018
 - Expose below layer ID configuration [#677](https://github.com/mapbox/mapbox-plugins-android/pull/677)
 - Add long click listeners to annotation manager [#685](https://github.com/mapbox/mapbox-plugins-android/pull/685)
