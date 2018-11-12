@@ -24,6 +24,7 @@ import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.convertArray;
  */
 public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>> {
 
+  private boolean isDraggable;
   private Geometry geometry;
 <% for (const property of properties) { -%>
 <% if (supportsPropertyFunction(property)) { -%>
@@ -165,6 +166,26 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
   }
 <% } -%>
 
+  /**
+   * Returns whether this <%- type %> is draggable, meaning it can be dragged across the screen when touched and moved.
+   *
+   * @return draggable when touched
+   */
+  public boolean isDraggable() {
+    return isDraggable;
+  }
+
+  /**
+   * Set whether this <%- type %> should be draggable,
+   * meaning it can be dragged across the screen when touched and moved.
+   *
+   * @param draggable should be draggable
+   */
+  public <%- camelize(type) %>Options setDraggable(boolean draggable) {
+    isDraggable = draggable;
+    return this;
+  }
+
   @Override
   <%- camelize(type) %> build(long id, AnnotationManager<?, <%- camelize(type) %>, ?, ?, ?, ?> annotationManager) {
     if (geometry == null) {
@@ -183,6 +204,8 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
 <% if (type === "symbol") { -%>
     jsonObject.addProperty(Symbol.Z_INDEX, zIndex);
 <% } -%>
-    return new <%- camelize(type) %>(id, annotationManager, jsonObject, geometry);
+    <%- camelize(type) %> <%- type %> = new <%- camelize(type) %>(id, annotationManager, jsonObject, geometry);
+    <%- type %>.setDraggable(isDraggable);
+    return <%- type %>;
   }
 }

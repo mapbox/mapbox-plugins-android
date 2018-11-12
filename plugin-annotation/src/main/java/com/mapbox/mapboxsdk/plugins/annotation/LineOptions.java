@@ -19,6 +19,7 @@ import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.convertArray;
  */
 public class LineOptions extends Options<Line> {
 
+  private boolean isDraggable;
   private Geometry geometry;
   private String lineJoin;
   private Float lineOpacity;
@@ -215,6 +216,26 @@ public class LineOptions extends Options<Line> {
     return this;
   }
 
+  /**
+   * Returns whether this line is draggable, meaning it can be dragged across the screen when touched and moved.
+   *
+   * @return draggable when touched
+   */
+  public boolean isDraggable() {
+    return isDraggable;
+  }
+
+  /**
+   * Set whether this line should be draggable,
+   * meaning it can be dragged across the screen when touched and moved.
+   *
+   * @param draggable should be draggable
+   */
+  public LineOptions setDraggable(boolean draggable) {
+    isDraggable = draggable;
+    return this;
+  }
+
   @Override
   Line build(long id, AnnotationManager<?, Line, ?, ?, ?, ?> annotationManager) {
     if (geometry == null) {
@@ -229,6 +250,8 @@ public class LineOptions extends Options<Line> {
     jsonObject.addProperty("line-offset", lineOffset);
     jsonObject.addProperty("line-blur", lineBlur);
     jsonObject.addProperty("line-pattern", linePattern);
-    return new Line(id, annotationManager, jsonObject, geometry);
+    Line line = new Line(id, annotationManager, jsonObject, geometry);
+    line.setDraggable(isDraggable);
+    return line;
   }
 }

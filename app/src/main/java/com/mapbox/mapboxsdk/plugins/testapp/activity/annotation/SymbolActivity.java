@@ -75,7 +75,8 @@ public class SymbolActivity extends AppCompatActivity {
         .withLatLng(new LatLng(6.687337, 0.381457))
         .withIconImage(MAKI_ICON_AIRPORT)
         .withIconSize(1.3f)
-        .withZIndex(10);
+        .withZIndex(10)
+        .setDraggable(true);
       symbol = symbolManager.create(symbolOptions);
 
       // create nearby symbols
@@ -84,13 +85,14 @@ public class SymbolActivity extends AppCompatActivity {
         .withIconImage(MAKI_ICON_CIRCLE)
         .withIconColor(PropertyFactory.colorToRgbaString(Color.YELLOW))
         .withIconSize(2.5f)
-        .withZIndex(5);
+        .withZIndex(5)
+        .setDraggable(true);
       symbolManager.create(nearbyOptions);
 
       // random add symbols across the globe
       List<SymbolOptions> symbolOptionsList = new ArrayList<>();
       for (int i = 0; i < 20; i++) {
-        symbolOptionsList.add(new SymbolOptions().withLatLng(createRandomLatLng()).withIconImage(MAKI_ICON_CAR));
+        symbolOptionsList.add(new SymbolOptions().withLatLng(createRandomLatLng()).withIconImage(MAKI_ICON_CAR).setDraggable(true));
       }
       symbolManager.create(symbolOptionsList);
 

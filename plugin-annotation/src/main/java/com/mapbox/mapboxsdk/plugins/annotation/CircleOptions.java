@@ -19,6 +19,7 @@ import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.convertArray;
  */
 public class CircleOptions extends Options<Circle> {
 
+  private boolean isDraggable;
   private Geometry geometry;
   private Float circleRadius;
   private String circleColor;
@@ -190,6 +191,26 @@ public class CircleOptions extends Options<Circle> {
     return this;
   }
 
+  /**
+   * Returns whether this circle is draggable, meaning it can be dragged across the screen when touched and moved.
+   *
+   * @return draggable when touched
+   */
+  public boolean isDraggable() {
+    return isDraggable;
+  }
+
+  /**
+   * Set whether this circle should be draggable,
+   * meaning it can be dragged across the screen when touched and moved.
+   *
+   * @param draggable should be draggable
+   */
+  public CircleOptions setDraggable(boolean draggable) {
+    isDraggable = draggable;
+    return this;
+  }
+
   @Override
   Circle build(long id, AnnotationManager<?, Circle, ?, ?, ?, ?> annotationManager) {
     if (geometry == null) {
@@ -203,6 +224,8 @@ public class CircleOptions extends Options<Circle> {
     jsonObject.addProperty("circle-stroke-width", circleStrokeWidth);
     jsonObject.addProperty("circle-stroke-color", circleStrokeColor);
     jsonObject.addProperty("circle-stroke-opacity", circleStrokeOpacity);
-    return new Circle(id, annotationManager, jsonObject, geometry);
+    Circle circle = new Circle(id, annotationManager, jsonObject, geometry);
+    circle.setDraggable(isDraggable);
+    return circle;
   }
 }
