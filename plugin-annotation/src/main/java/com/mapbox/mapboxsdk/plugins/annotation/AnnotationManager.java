@@ -29,7 +29,7 @@ import java.util.Map;
  * @param <U> type of annotation click listener, depends on generic T
  * @param <V> type of annotation long click listener, depends on generic T
  */
-abstract class AnnotationManager<
+public abstract class AnnotationManager<
   L extends Layer,
   T extends Annotation,
   S extends Options<T>,
