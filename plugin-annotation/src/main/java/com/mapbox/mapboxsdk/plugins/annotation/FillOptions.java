@@ -19,6 +19,7 @@ import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.convertArray;
  */
 public class FillOptions extends Options<Fill> {
 
+  private boolean isDraggable;
   private Geometry geometry;
   private Float fillOpacity;
   private String fillColor;
@@ -135,6 +136,26 @@ public class FillOptions extends Options<Fill> {
     return this;
   }
 
+  /**
+   * Returns whether this fill is draggable, meaning it can be dragged across the screen when touched and moved.
+   *
+   * @return draggable when touched
+   */
+  public boolean isDraggable() {
+    return isDraggable;
+  }
+
+  /**
+   * Set whether this fill should be draggable,
+   * meaning it can be dragged across the screen when touched and moved.
+   *
+   * @param draggable should be draggable
+   */
+  public FillOptions setDraggable(boolean draggable) {
+    isDraggable = draggable;
+    return this;
+  }
+
   @Override
   Fill build(long id, AnnotationManager<?, Fill, ?, ?, ?, ?> annotationManager) {
     if (geometry == null) {
@@ -145,6 +166,8 @@ public class FillOptions extends Options<Fill> {
     jsonObject.addProperty("fill-color", fillColor);
     jsonObject.addProperty("fill-outline-color", fillOutlineColor);
     jsonObject.addProperty("fill-pattern", fillPattern);
-    return new Fill(id, annotationManager, jsonObject, geometry);
+    Fill fill = new Fill(id, annotationManager, jsonObject, geometry);
+    fill.setDraggable(isDraggable);
+    return fill;
   }
 }

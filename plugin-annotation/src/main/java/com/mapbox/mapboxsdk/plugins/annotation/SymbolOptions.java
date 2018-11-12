@@ -19,6 +19,7 @@ import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.convertArray;
  */
 public class SymbolOptions extends Options<Symbol> {
 
+  private boolean isDraggable;
   private Geometry geometry;
   private Float iconSize;
   private String iconImage;
@@ -592,6 +593,26 @@ public class SymbolOptions extends Options<Symbol> {
     return zIndex;
   }
 
+  /**
+   * Returns whether this symbol is draggable, meaning it can be dragged across the screen when touched and moved.
+   *
+   * @return draggable when touched
+   */
+  public boolean isDraggable() {
+    return isDraggable;
+  }
+
+  /**
+   * Set whether this symbol should be draggable,
+   * meaning it can be dragged across the screen when touched and moved.
+   *
+   * @param draggable should be draggable
+   */
+  public SymbolOptions setDraggable(boolean draggable) {
+    isDraggable = draggable;
+    return this;
+  }
+
   @Override
   Symbol build(long id, AnnotationManager<?, Symbol, ?, ?, ?, ?> annotationManager) {
     if (geometry == null) {
@@ -624,6 +645,8 @@ public class SymbolOptions extends Options<Symbol> {
     jsonObject.addProperty("text-halo-width", textHaloWidth);
     jsonObject.addProperty("text-halo-blur", textHaloBlur);
     jsonObject.addProperty(Symbol.Z_INDEX, zIndex);
-    return new Symbol(id, annotationManager, jsonObject, geometry);
+    Symbol symbol = new Symbol(id, annotationManager, jsonObject, geometry);
+    symbol.setDraggable(isDraggable);
+    return symbol;
   }
 }
