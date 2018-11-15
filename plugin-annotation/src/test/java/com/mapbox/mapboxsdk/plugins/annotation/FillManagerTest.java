@@ -7,12 +7,16 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.*;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
+import android.graphics.PointF;
 
+import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.convertArray;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.layers.Property.*;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
@@ -39,10 +43,40 @@ public class FillManagerTest {
     innerLatLngs.add(new LatLng());
     innerLatLngs.add(new LatLng(1,1));
     innerLatLngs.add(new LatLng(-1,-1));
+    innerLatLngs.add(new LatLng());
     List<List<LatLng>>latLngs = new ArrayList<>();
     latLngs.add(innerLatLngs);
     Fill fill = fillManager.create(new FillOptions().withLatLngs(latLngs));
     assertEquals(fillManager.getAnnotations().get(0), fill);
+  }
+
+  @Test
+  public void addFillFromFeatureCollection() {
+    List<Point> innerPoints = new ArrayList<>();
+    innerPoints.add(Point.fromLngLat(0, 0));
+    innerPoints.add(Point.fromLngLat(1, 1));
+    innerPoints.add(Point.fromLngLat(-1, -1));
+    innerPoints.add(Point.fromLngLat(0, 0));
+    List<List<Point>> points = new ArrayList<>();
+    points.add(innerPoints);
+    Geometry geometry = Polygon.fromLngLats(points);
+
+    Feature feature = Feature.fromGeometry(geometry);
+    feature.addNumberProperty("fill-opacity", 0.3f);
+    feature.addStringProperty("fill-color", "rgba(0, 0, 0, 1)");
+    feature.addStringProperty("fill-outline-color", "rgba(0, 0, 0, 1)");
+    feature.addStringProperty("fill-pattern", "pedestrian-polygon");
+    feature.addBooleanProperty("is-draggable", true);
+
+    List<Fill> fills = fillManager.create(FeatureCollection.fromFeature(feature));
+    Fill fill = fills.get(0);
+
+    assertEquals(fill.geometry, geometry);
+    assertEquals(fill.getFillOpacity(), 0.3f);
+    assertEquals(fill.getFillColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    assertEquals(fill.getFillOutlineColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    assertEquals(fill.getFillPattern(), "pedestrian-polygon");
+    assertTrue(fill.isDraggable());
   }
 
   @Test

@@ -11,12 +11,17 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.VisibleForTesting;
+
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.<%- camelize(type) %>Layer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.mapbox.mapboxsdk.plugins.annotation.Symbol.Z_INDEX;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
@@ -67,6 +72,46 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
     super(mapboxMap, layer, geoJsonSource, null, draggableAnnotationController, belowLayerId);
 <% } -%>
     initializeDataDrivenPropertyMap();
+  }
+
+  /**
+   * Create a list of <%- type %>s on the map.
+   * <p>
+   * <%- camelize(type) %>s are going to be created only for features with a matching geometry.
+   * <p>
+   * You can inspect a full list of supported feature properties in {@link <%- camelize(type) %>Options#fromFeature(Feature)}.
+   *
+   * @param json the GeoJSON defining the list of <%- type %>s to build
+   * @return the list of built <%- type %>s
+   */
+  @UiThread
+  public List<<%- camelize(type) %>> create(@NonNull String json) {
+    return create(FeatureCollection.fromJson(json));
+  }
+
+  /**
+   * Create a list of <%- type %>s on the map.
+   * <p>
+   * <%- camelize(type) %>s are going to be created only for features with a matching geometry.
+   * <p>
+   * You can inspect a full list of supported feature properties in {@link <%- camelize(type) %>Options#fromFeature(Feature)}.
+   *
+   * @param featureCollection the featureCollection defining the list of <%- type %>s to build
+   * @return the list of built <%- type %>s
+   */
+  @UiThread
+  public List<<%- camelize(type) %>> create(@NonNull FeatureCollection featureCollection) {
+    List<Feature> features = featureCollection.features();
+    List<<%- camelize(type) %>Options> options = new ArrayList<>();
+    if (features != null) {
+      for (Feature feature : features) {
+        <%- camelize(type) %>Options option = <%- camelize(type) %>Options.fromFeature(feature);
+        if (option != null) {
+          options.add(option);
+        }
+      }
+    }
+    return create(options);
   }
 
   private void initializeDataDrivenPropertyMap() {

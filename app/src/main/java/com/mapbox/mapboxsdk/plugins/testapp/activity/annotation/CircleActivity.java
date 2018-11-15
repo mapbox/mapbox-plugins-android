@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -17,8 +18,10 @@ import com.mapbox.mapboxsdk.plugins.annotation.CircleManager;
 import com.mapbox.mapboxsdk.plugins.annotation.CircleOptions;
 import com.mapbox.mapboxsdk.plugins.annotation.OnCircleDragListener;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
+import com.mapbox.mapboxsdk.plugins.testapp.Utils;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -77,6 +80,12 @@ public class CircleActivity extends AppCompatActivity {
         );
       }
       circleManager.create(circleOptionsList);
+
+      try {
+        circleManager.create(Utils.INSTANCE.loadStringFromAssets(this, "annotations.json"));
+      } catch (IOException e) {
+        throw new RuntimeException("Unable to parse annotations.json");
+      }
 
       circleManager.addDragListener(new OnCircleDragListener() {
         @Override

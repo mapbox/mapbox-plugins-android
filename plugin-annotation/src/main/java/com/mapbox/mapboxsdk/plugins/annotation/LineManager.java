@@ -6,12 +6,17 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.VisibleForTesting;
+
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.mapbox.mapboxsdk.plugins.annotation.Symbol.Z_INDEX;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
@@ -58,6 +63,46 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
   public LineManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull LineLayer layer, @Nullable String belowLayerId, DraggableAnnotationController<Line, OnLineDragListener> draggableAnnotationController) {
     super(mapboxMap, layer, geoJsonSource, null, draggableAnnotationController, belowLayerId);
     initializeDataDrivenPropertyMap();
+  }
+
+  /**
+   * Create a list of lines on the map.
+   * <p>
+   * Lines are going to be created only for features with a matching geometry.
+   * <p>
+   * You can inspect a full list of supported feature properties in {@link LineOptions#fromFeature(Feature)}.
+   *
+   * @param json the GeoJSON defining the list of lines to build
+   * @return the list of built lines
+   */
+  @UiThread
+  public List<Line> create(@NonNull String json) {
+    return create(FeatureCollection.fromJson(json));
+  }
+
+  /**
+   * Create a list of lines on the map.
+   * <p>
+   * Lines are going to be created only for features with a matching geometry.
+   * <p>
+   * You can inspect a full list of supported feature properties in {@link LineOptions#fromFeature(Feature)}.
+   *
+   * @param featureCollection the featureCollection defining the list of lines to build
+   * @return the list of built lines
+   */
+  @UiThread
+  public List<Line> create(@NonNull FeatureCollection featureCollection) {
+    List<Feature> features = featureCollection.features();
+    List<LineOptions> options = new ArrayList<>();
+    if (features != null) {
+      for (Feature feature : features) {
+        LineOptions option = LineOptions.fromFeature(feature);
+        if (option != null) {
+          options.add(option);
+        }
+      }
+    }
+    return create(options);
   }
 
   private void initializeDataDrivenPropertyMap() {

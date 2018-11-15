@@ -31,4 +31,30 @@ class ConvertUtils {
       return null;
     }
   }
+
+  @Nullable
+  static Float[] toFloatArray(JsonArray jsonArray) {
+    if (jsonArray != null) {
+      Float[] array = new Float[jsonArray.size()];
+      for (int i = 0; i < jsonArray.size(); i++) {
+        array[i] = jsonArray.get(i).getAsFloat();
+      }
+      return array;
+    } else {
+      return null;
+    }
+  }
+
+  @Nullable
+  static String[] toStringArray(JsonArray jsonArray) {
+    if (jsonArray != null) {
+      String[] array = new String[jsonArray.size()];
+      for (int i = 0; i < jsonArray.size(); i++) {
+        array[i] = jsonArray.get(i).getAsString();
+      }
+      return array;
+    } else {
+      return null;
+    }
+  }
 }
