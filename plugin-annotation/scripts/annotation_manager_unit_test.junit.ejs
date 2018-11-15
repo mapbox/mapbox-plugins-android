@@ -12,12 +12,16 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.*;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
+import android.graphics.PointF;
 
+import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.convertArray;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.layers.Property.*;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
@@ -52,11 +56,76 @@ public class <%- camelize(type) %>ManagerTest {
     innerLatLngs.add(new LatLng());
     innerLatLngs.add(new LatLng(1,1));
     innerLatLngs.add(new LatLng(-1,-1));
+    innerLatLngs.add(new LatLng());
     List<List<LatLng>>latLngs = new ArrayList<>();
     latLngs.add(innerLatLngs);
     <%- camelize(type) %> <%- type %> = <%- type %>Manager.create(new <%- camelize(type) %>Options().withLatLngs(latLngs));
 <% } -%>
     assertEquals(<%- type  %>Manager.getAnnotations().get(0), <%- type  %>);
+  }
+
+  @Test
+  public void add<%- camelize(type) %>FromFeatureCollection() {
+<% if (type === "circle" || type === "symbol") { -%>
+    Geometry geometry = Point.fromLngLat(10, 10);
+<% } else if (type === "line") { -%>
+    List<Point> points = new ArrayList<>();
+    points.add(Point.fromLngLat(0, 0));
+    points.add(Point.fromLngLat(1, 1));
+    Geometry geometry = LineString.fromLngLats(points);
+<% } else { -%>
+    List<Point> innerPoints = new ArrayList<>();
+    innerPoints.add(Point.fromLngLat(0, 0));
+    innerPoints.add(Point.fromLngLat(1, 1));
+    innerPoints.add(Point.fromLngLat(-1, -1));
+    innerPoints.add(Point.fromLngLat(0, 0));
+    List<List<Point>> points = new ArrayList<>();
+    points.add(innerPoints);
+    Geometry geometry = Polygon.fromLngLats(points);
+<% } -%>
+
+    Feature feature = Feature.fromGeometry(geometry);
+<% for (const property of properties) { -%>
+<% if (supportsPropertyFunction(property)) { -%>
+<% if (propertyType(property).endsWith("[]")) { -%>
+    feature.addProperty("<%- property.name %>", convertArray(<%- defaultValueJava(property) %>));
+<% } else if (propertyType(property) === "Float") { -%>
+    feature.addNumberProperty("<%- property.name %>", <%- defaultValueJava(property) %>);
+<% } else { -%>
+    feature.add<%- propertyType(property) -%>Property("<%- property.name %>", <%- defaultValueJava(property) %>);
+<% } -%>
+<% } -%>
+<% } -%>
+<% if (type === "symbol") { -%>
+    feature.addNumberProperty("z-index", 2);
+<% } -%>
+    feature.addBooleanProperty("is-draggable", true);
+
+    List<<%- camelize(type) %>> <%- type %>s = <%- type %>Manager.create(FeatureCollection.fromFeature(feature));
+    <%- camelize(type) %> <%- type %> = <%- type %>s.get(0);
+
+    assertEquals(<%- type %>.geometry, geometry);
+<% for (const property of properties) { -%>
+<% if (supportsPropertyFunction(property)) { -%>
+<% if (propertyType(property).endsWith("[]")) { -%>
+<% if (propertyType(property).endsWith("Float[]")) { -%>
+    PointF <%- camelizeWithLeadingLowercase(property.name) %>Expected = new PointF(<%- defaultValueJava(property) %>[0], <%- defaultValueJava(property) %>[1]);
+    assertEquals(<%- camelizeWithLeadingLowercase(property.name) %>Expected.x, <%- type %>.get<%- camelize(property.name) %>().x);
+    assertEquals(<%- camelizeWithLeadingLowercase(property.name) %>Expected.y, <%- type %>.get<%- camelize(property.name) %>().y);
+<% } else { -%>
+    assertTrue(Arrays.equals(<%- type %>.get<%- camelize(property.name) %>(), <%- defaultValueJava(property) %>));
+<% } -%>
+<% } else if (property.type == 'color') { -%>
+    assertEquals(<%- type %>.get<%- camelize(property.name) %>(), ColorUtils.rgbaToColor(<%- defaultValueJava(property) %>));
+<% } else { -%>
+    assertEquals(<%- type %>.get<%- camelize(property.name) %>(), <%- defaultValueJava(property) %>);
+<% } -%>
+<% } -%>
+<% } -%>
+<% if (type === "symbol") { -%>
+    assertEquals(<%- type %>.getZIndex(), 2);
+<% } -%>
+    assertTrue(<%- type %>.isDraggable());
   }
 
   @Test

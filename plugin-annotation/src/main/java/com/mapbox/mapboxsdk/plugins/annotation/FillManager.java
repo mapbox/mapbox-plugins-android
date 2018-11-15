@@ -6,12 +6,17 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.VisibleForTesting;
+
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.FillLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.mapbox.mapboxsdk.plugins.annotation.Symbol.Z_INDEX;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
@@ -58,6 +63,46 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
   public FillManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull FillLayer layer, @Nullable String belowLayerId, DraggableAnnotationController<Fill, OnFillDragListener> draggableAnnotationController) {
     super(mapboxMap, layer, geoJsonSource, null, draggableAnnotationController, belowLayerId);
     initializeDataDrivenPropertyMap();
+  }
+
+  /**
+   * Create a list of fills on the map.
+   * <p>
+   * Fills are going to be created only for features with a matching geometry.
+   * <p>
+   * You can inspect a full list of supported feature properties in {@link FillOptions#fromFeature(Feature)}.
+   *
+   * @param json the GeoJSON defining the list of fills to build
+   * @return the list of built fills
+   */
+  @UiThread
+  public List<Fill> create(@NonNull String json) {
+    return create(FeatureCollection.fromJson(json));
+  }
+
+  /**
+   * Create a list of fills on the map.
+   * <p>
+   * Fills are going to be created only for features with a matching geometry.
+   * <p>
+   * You can inspect a full list of supported feature properties in {@link FillOptions#fromFeature(Feature)}.
+   *
+   * @param featureCollection the featureCollection defining the list of fills to build
+   * @return the list of built fills
+   */
+  @UiThread
+  public List<Fill> create(@NonNull FeatureCollection featureCollection) {
+    List<Feature> features = featureCollection.features();
+    List<FillOptions> options = new ArrayList<>();
+    if (features != null) {
+      for (Feature feature : features) {
+        FillOptions option = FillOptions.fromFeature(feature);
+        if (option != null) {
+          options.add(option);
+        }
+      }
+    }
+    return create(options);
   }
 
   private void initializeDataDrivenPropertyMap() {

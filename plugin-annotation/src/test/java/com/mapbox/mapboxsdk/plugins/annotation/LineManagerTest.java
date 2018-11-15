@@ -7,12 +7,16 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.*;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
+import android.graphics.PointF;
 
+import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.convertArray;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.layers.Property.*;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
@@ -40,6 +44,39 @@ public class LineManagerTest {
     latLngs.add(new LatLng(1,1));
     Line line = lineManager.create(new LineOptions().withLatLngs(latLngs));
     assertEquals(lineManager.getAnnotations().get(0), line);
+  }
+
+  @Test
+  public void addLineFromFeatureCollection() {
+    List<Point> points = new ArrayList<>();
+    points.add(Point.fromLngLat(0, 0));
+    points.add(Point.fromLngLat(1, 1));
+    Geometry geometry = LineString.fromLngLats(points);
+
+    Feature feature = Feature.fromGeometry(geometry);
+    feature.addStringProperty("line-join", LINE_JOIN_BEVEL);
+    feature.addNumberProperty("line-opacity", 0.3f);
+    feature.addStringProperty("line-color", "rgba(0, 0, 0, 1)");
+    feature.addNumberProperty("line-width", 0.3f);
+    feature.addNumberProperty("line-gap-width", 0.3f);
+    feature.addNumberProperty("line-offset", 0.3f);
+    feature.addNumberProperty("line-blur", 0.3f);
+    feature.addStringProperty("line-pattern", "pedestrian-polygon");
+    feature.addBooleanProperty("is-draggable", true);
+
+    List<Line> lines = lineManager.create(FeatureCollection.fromFeature(feature));
+    Line line = lines.get(0);
+
+    assertEquals(line.geometry, geometry);
+    assertEquals(line.getLineJoin(), LINE_JOIN_BEVEL);
+    assertEquals(line.getLineOpacity(), 0.3f);
+    assertEquals(line.getLineColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    assertEquals(line.getLineWidth(), 0.3f);
+    assertEquals(line.getLineGapWidth(), 0.3f);
+    assertEquals(line.getLineOffset(), 0.3f);
+    assertEquals(line.getLineBlur(), 0.3f);
+    assertEquals(line.getLinePattern(), "pedestrian-polygon");
+    assertTrue(line.isDraggable());
   }
 
   @Test

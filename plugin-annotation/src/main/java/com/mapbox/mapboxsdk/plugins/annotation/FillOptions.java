@@ -2,6 +2,9 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.google.gson.*;
 import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.style.layers.Property;
@@ -13,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.convertArray;
+import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.toFloatArray;
+import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.toStringArray;
 
 /**
  * Builder class from which a fill is created.
@@ -169,5 +174,48 @@ public class FillOptions extends Options<Fill> {
     Fill fill = new Fill(id, annotationManager, jsonObject, geometry);
     fill.setDraggable(isDraggable);
     return fill;
+  }
+
+  /**
+   * Creates FillOptions out of a Feature.
+   * <p>
+   * All supported properties are:<br>
+   * "fill-opacity" - Float<br>
+   * "fill-color" - String<br>
+   * "fill-outline-color" - String<br>
+   * "fill-pattern" - String<br>
+   * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
+   * <p>
+   * Out of spec properties:<br>
+   * "is-draggable" - Boolean, true if the fill should be draggable, false otherwise
+   *
+   * @param feature feature to be converted
+   */
+  @Nullable
+  static FillOptions fromFeature(@NonNull Feature feature) {
+    if (feature.geometry() == null) {
+      throw new RuntimeException("geometry field is required");
+    }
+    if (!(feature.geometry() instanceof Polygon)) {      return null;
+    }
+
+    FillOptions options = new FillOptions();
+    options.geometry = feature.geometry();
+    if (feature.hasProperty("fill-opacity")) {
+      options.fillOpacity = feature.getProperty("fill-opacity").getAsFloat();
+    }
+    if (feature.hasProperty("fill-color")) {
+      options.fillColor = feature.getProperty("fill-color").getAsString();
+    }
+    if (feature.hasProperty("fill-outline-color")) {
+      options.fillOutlineColor = feature.getProperty("fill-outline-color").getAsString();
+    }
+    if (feature.hasProperty("fill-pattern")) {
+      options.fillPattern = feature.getProperty("fill-pattern").getAsString();
+    }
+    if (feature.hasProperty("is-draggable")) {
+      options.isDraggable = feature.getProperty("is-draggable").getAsBoolean();
+    }
+    return options;
   }
 }

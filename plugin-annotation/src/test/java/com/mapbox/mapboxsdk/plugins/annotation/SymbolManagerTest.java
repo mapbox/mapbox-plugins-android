@@ -7,12 +7,16 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.*;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
+import android.graphics.PointF;
 
+import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.convertArray;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.layers.Property.*;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
@@ -37,6 +41,76 @@ public class SymbolManagerTest {
   public void testAddSymbol() {
     Symbol symbol = symbolManager.create(new SymbolOptions().withLatLng(new LatLng()));
     assertEquals(symbolManager.getAnnotations().get(0), symbol);
+  }
+
+  @Test
+  public void addSymbolFromFeatureCollection() {
+    Geometry geometry = Point.fromLngLat(10, 10);
+
+    Feature feature = Feature.fromGeometry(geometry);
+    feature.addNumberProperty("icon-size", 0.3f);
+    feature.addStringProperty("icon-image", "undefined");
+    feature.addNumberProperty("icon-rotate", 0.3f);
+    feature.addProperty("icon-offset", convertArray(new Float[] {0f, 0f}));
+    feature.addStringProperty("icon-anchor", ICON_ANCHOR_CENTER);
+    feature.addStringProperty("text-field", "");
+    feature.addProperty("text-font", convertArray(new String[]{"Open Sans Regular", "Arial Unicode MS Regular"}));
+    feature.addNumberProperty("text-size", 0.3f);
+    feature.addNumberProperty("text-max-width", 0.3f);
+    feature.addNumberProperty("text-letter-spacing", 0.3f);
+    feature.addStringProperty("text-justify", TEXT_JUSTIFY_LEFT);
+    feature.addStringProperty("text-anchor", TEXT_ANCHOR_CENTER);
+    feature.addNumberProperty("text-rotate", 0.3f);
+    feature.addStringProperty("text-transform", TEXT_TRANSFORM_NONE);
+    feature.addProperty("text-offset", convertArray(new Float[] {0f, 0f}));
+    feature.addNumberProperty("icon-opacity", 0.3f);
+    feature.addStringProperty("icon-color", "rgba(0, 0, 0, 1)");
+    feature.addStringProperty("icon-halo-color", "rgba(0, 0, 0, 1)");
+    feature.addNumberProperty("icon-halo-width", 0.3f);
+    feature.addNumberProperty("icon-halo-blur", 0.3f);
+    feature.addNumberProperty("text-opacity", 0.3f);
+    feature.addStringProperty("text-color", "rgba(0, 0, 0, 1)");
+    feature.addStringProperty("text-halo-color", "rgba(0, 0, 0, 1)");
+    feature.addNumberProperty("text-halo-width", 0.3f);
+    feature.addNumberProperty("text-halo-blur", 0.3f);
+    feature.addNumberProperty("z-index", 2);
+    feature.addBooleanProperty("is-draggable", true);
+
+    List<Symbol> symbols = symbolManager.create(FeatureCollection.fromFeature(feature));
+    Symbol symbol = symbols.get(0);
+
+    assertEquals(symbol.geometry, geometry);
+    assertEquals(symbol.getIconSize(), 0.3f);
+    assertEquals(symbol.getIconImage(), "undefined");
+    assertEquals(symbol.getIconRotate(), 0.3f);
+    PointF iconOffsetExpected = new PointF(new Float[] {0f, 0f}[0], new Float[] {0f, 0f}[1]);
+    assertEquals(iconOffsetExpected.x, symbol.getIconOffset().x);
+    assertEquals(iconOffsetExpected.y, symbol.getIconOffset().y);
+    assertEquals(symbol.getIconAnchor(), ICON_ANCHOR_CENTER);
+    assertEquals(symbol.getTextField(), "");
+    assertTrue(Arrays.equals(symbol.getTextFont(), new String[]{"Open Sans Regular", "Arial Unicode MS Regular"}));
+    assertEquals(symbol.getTextSize(), 0.3f);
+    assertEquals(symbol.getTextMaxWidth(), 0.3f);
+    assertEquals(symbol.getTextLetterSpacing(), 0.3f);
+    assertEquals(symbol.getTextJustify(), TEXT_JUSTIFY_LEFT);
+    assertEquals(symbol.getTextAnchor(), TEXT_ANCHOR_CENTER);
+    assertEquals(symbol.getTextRotate(), 0.3f);
+    assertEquals(symbol.getTextTransform(), TEXT_TRANSFORM_NONE);
+    PointF textOffsetExpected = new PointF(new Float[] {0f, 0f}[0], new Float[] {0f, 0f}[1]);
+    assertEquals(textOffsetExpected.x, symbol.getTextOffset().x);
+    assertEquals(textOffsetExpected.y, symbol.getTextOffset().y);
+    assertEquals(symbol.getIconOpacity(), 0.3f);
+    assertEquals(symbol.getIconColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    assertEquals(symbol.getIconHaloColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    assertEquals(symbol.getIconHaloWidth(), 0.3f);
+    assertEquals(symbol.getIconHaloBlur(), 0.3f);
+    assertEquals(symbol.getTextOpacity(), 0.3f);
+    assertEquals(symbol.getTextColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    assertEquals(symbol.getTextHaloColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    assertEquals(symbol.getTextHaloWidth(), 0.3f);
+    assertEquals(symbol.getTextHaloBlur(), 0.3f);
+    assertEquals(symbol.getZIndex(), 2);
+    assertTrue(symbol.isDraggable());
   }
 
   @Test

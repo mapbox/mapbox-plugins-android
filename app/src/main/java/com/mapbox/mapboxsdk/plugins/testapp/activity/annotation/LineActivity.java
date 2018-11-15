@@ -6,13 +6,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.plugins.annotation.*;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
+import com.mapbox.mapboxsdk.plugins.testapp.Utils;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -69,6 +73,12 @@ public class LineActivity extends AppCompatActivity {
         lineOptionsList.add(new LineOptions().withLatLngs(list).withLineColor(PropertyFactory.colorToRgbaString(color)));
       }
       lineManager.create(lineOptionsList);
+
+      try {
+        lineManager.create(Utils.INSTANCE.loadStringFromAssets(this, "annotations.json"));
+      } catch (IOException e) {
+        throw new RuntimeException("Unable to parse annotations.json");
+      }
     });
   }
 

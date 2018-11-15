@@ -109,9 +109,8 @@ public abstract class AnnotationManager<
   @UiThread
   public List<T> create(List<S> optionsList) {
     List<T> annotationList = new ArrayList<>();
-    T annotation;
     for (S options : optionsList) {
-      annotation = options.build(currentId, this);
+      T annotation = options.build(currentId, this);
       annotationList.add(annotation);
       annotations.put(annotation.getId(), annotation);
       currentId++;

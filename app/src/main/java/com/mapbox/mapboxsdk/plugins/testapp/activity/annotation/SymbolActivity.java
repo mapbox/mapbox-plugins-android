@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -18,9 +21,11 @@ import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
+import com.mapbox.mapboxsdk.plugins.testapp.Utils;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -92,9 +97,16 @@ public class SymbolActivity extends AppCompatActivity {
       // random add symbols across the globe
       List<SymbolOptions> symbolOptionsList = new ArrayList<>();
       for (int i = 0; i < 20; i++) {
-        symbolOptionsList.add(new SymbolOptions().withLatLng(createRandomLatLng()).withIconImage(MAKI_ICON_CAR).setDraggable(true));
+        symbolOptionsList.add(new SymbolOptions().withLatLng(createRandomLatLng()).withIconImage(MAKI_ICON_CAR)
+          .setDraggable(true));
       }
       symbolManager.create(symbolOptionsList);
+
+      try {
+        symbolManager.create(FeatureCollection.fromJson(Utils.INSTANCE.loadStringFromAssets(this, "annotations.json")));
+      } catch (IOException e) {
+        throw new RuntimeException("Unable to parse annotations.json");
+      }
 
       symbolManager.addDragListener(new OnSymbolDragListener() {
         @Override
@@ -137,30 +149,32 @@ public class SymbolActivity extends AppCompatActivity {
         Symbol symbol = symbolManager.getAnnotations().get(i);
         symbol.setDraggable(!symbol.isDraggable());
       }
-    } else if (item.getItemId() == R.id.menu_action_icon) {
-      symbol.setIconImage(MAKI_ICON_CAFE);
-    } else if (item.getItemId() == R.id.menu_action_rotation) {
-      symbol.setIconRotate(45.0f);
-    } else if (item.getItemId() == R.id.menu_action_text) {
-      symbol.setTextField("Hello world!");
-    } else if (item.getItemId() == R.id.menu_action_anchor) {
-      symbol.setIconAnchor(Property.ICON_ANCHOR_BOTTOM);
-    } else if (item.getItemId() == R.id.menu_action_opacity) {
-      symbol.setIconOpacity(0.5f);
-    } else if (item.getItemId() == R.id.menu_action_offset) {
-      symbol.setIconOffset(new PointF(10.0f, 20.0f));
-    } else if (item.getItemId() == R.id.menu_action_text_anchor) {
-      symbol.setTextAnchor(Property.TEXT_ANCHOR_TOP);
-    } else if (item.getItemId() == R.id.menu_action_text_color) {
-      symbol.setTextColor(Color.WHITE);
-    } else if (item.getItemId() == R.id.menu_action_text_size) {
-      symbol.setTextSize(22f);
-    } else if (item.getItemId() == R.id.menu_action_z_index) {
-      symbol.setZIndex(0);
     } else {
-      return super.onOptionsItemSelected(item);
+      if (item.getItemId() == R.id.menu_action_icon) {
+        symbol.setIconImage(MAKI_ICON_CAFE);
+      } else if (item.getItemId() == R.id.menu_action_rotation) {
+        symbol.setIconRotate(45.0f);
+      } else if (item.getItemId() == R.id.menu_action_text) {
+        symbol.setTextField("Hello world!");
+      } else if (item.getItemId() == R.id.menu_action_anchor) {
+        symbol.setIconAnchor(Property.ICON_ANCHOR_BOTTOM);
+      } else if (item.getItemId() == R.id.menu_action_opacity) {
+        symbol.setIconOpacity(0.5f);
+      } else if (item.getItemId() == R.id.menu_action_offset) {
+        symbol.setIconOffset(new PointF(10.0f, 20.0f));
+      } else if (item.getItemId() == R.id.menu_action_text_anchor) {
+        symbol.setTextAnchor(Property.TEXT_ANCHOR_TOP);
+      } else if (item.getItemId() == R.id.menu_action_text_color) {
+        symbol.setTextColor(Color.WHITE);
+      } else if (item.getItemId() == R.id.menu_action_text_size) {
+        symbol.setTextSize(22f);
+      } else if (item.getItemId() == R.id.menu_action_z_index) {
+        symbol.setZIndex(0);
+      } else {
+        return super.onOptionsItemSelected(item);
+      }
+      symbolManager.update(symbol);
     }
-    symbolManager.update(symbol);
     return true;
   }
 

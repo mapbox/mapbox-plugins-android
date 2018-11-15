@@ -7,12 +7,16 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.*;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
+import android.graphics.PointF;
 
+import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.convertArray;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.layers.Property.*;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
@@ -37,6 +41,34 @@ public class CircleManagerTest {
   public void testAddCircle() {
     Circle circle = circleManager.create(new CircleOptions().withLatLng(new LatLng()));
     assertEquals(circleManager.getAnnotations().get(0), circle);
+  }
+
+  @Test
+  public void addCircleFromFeatureCollection() {
+    Geometry geometry = Point.fromLngLat(10, 10);
+
+    Feature feature = Feature.fromGeometry(geometry);
+    feature.addNumberProperty("circle-radius", 0.3f);
+    feature.addStringProperty("circle-color", "rgba(0, 0, 0, 1)");
+    feature.addNumberProperty("circle-blur", 0.3f);
+    feature.addNumberProperty("circle-opacity", 0.3f);
+    feature.addNumberProperty("circle-stroke-width", 0.3f);
+    feature.addStringProperty("circle-stroke-color", "rgba(0, 0, 0, 1)");
+    feature.addNumberProperty("circle-stroke-opacity", 0.3f);
+    feature.addBooleanProperty("is-draggable", true);
+
+    List<Circle> circles = circleManager.create(FeatureCollection.fromFeature(feature));
+    Circle circle = circles.get(0);
+
+    assertEquals(circle.geometry, geometry);
+    assertEquals(circle.getCircleRadius(), 0.3f);
+    assertEquals(circle.getCircleColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    assertEquals(circle.getCircleBlur(), 0.3f);
+    assertEquals(circle.getCircleOpacity(), 0.3f);
+    assertEquals(circle.getCircleStrokeWidth(), 0.3f);
+    assertEquals(circle.getCircleStrokeColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    assertEquals(circle.getCircleStrokeOpacity(), 0.3f);
+    assertTrue(circle.isDraggable());
   }
 
   @Test

@@ -2,6 +2,9 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.google.gson.*;
 import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.style.layers.Property;
@@ -13,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.convertArray;
+import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.toFloatArray;
+import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.toStringArray;
 
 /**
  * Builder class from which a line is created.
@@ -253,5 +258,65 @@ public class LineOptions extends Options<Line> {
     Line line = new Line(id, annotationManager, jsonObject, geometry);
     line.setDraggable(isDraggable);
     return line;
+  }
+
+  /**
+   * Creates LineOptions out of a Feature.
+   * <p>
+   * All supported properties are:<br>
+   * "line-join" - String<br>
+   * "line-opacity" - Float<br>
+   * "line-color" - String<br>
+   * "line-width" - Float<br>
+   * "line-gap-width" - Float<br>
+   * "line-offset" - Float<br>
+   * "line-blur" - Float<br>
+   * "line-pattern" - String<br>
+   * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
+   * <p>
+   * Out of spec properties:<br>
+   * "is-draggable" - Boolean, true if the line should be draggable, false otherwise
+   *
+   * @param feature feature to be converted
+   */
+  @Nullable
+  static LineOptions fromFeature(@NonNull Feature feature) {
+    if (feature.geometry() == null) {
+      throw new RuntimeException("geometry field is required");
+    }
+    if (!(feature.geometry() instanceof LineString)) {
+      return null;
+    }
+
+    LineOptions options = new LineOptions();
+    options.geometry = feature.geometry();
+    if (feature.hasProperty("line-join")) {
+      options.lineJoin = feature.getProperty("line-join").getAsString();
+    }
+    if (feature.hasProperty("line-opacity")) {
+      options.lineOpacity = feature.getProperty("line-opacity").getAsFloat();
+    }
+    if (feature.hasProperty("line-color")) {
+      options.lineColor = feature.getProperty("line-color").getAsString();
+    }
+    if (feature.hasProperty("line-width")) {
+      options.lineWidth = feature.getProperty("line-width").getAsFloat();
+    }
+    if (feature.hasProperty("line-gap-width")) {
+      options.lineGapWidth = feature.getProperty("line-gap-width").getAsFloat();
+    }
+    if (feature.hasProperty("line-offset")) {
+      options.lineOffset = feature.getProperty("line-offset").getAsFloat();
+    }
+    if (feature.hasProperty("line-blur")) {
+      options.lineBlur = feature.getProperty("line-blur").getAsFloat();
+    }
+    if (feature.hasProperty("line-pattern")) {
+      options.linePattern = feature.getProperty("line-pattern").getAsString();
+    }
+    if (feature.hasProperty("is-draggable")) {
+      options.isDraggable = feature.getProperty("is-draggable").getAsBoolean();
+    }
+    return options;
   }
 }
