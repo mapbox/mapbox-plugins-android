@@ -45,4 +45,8 @@
             android:id="@+id/menu_action_z_index"
             android:title="Change Z index"
             app:showAsAction="never"/>
+    <item
+            android:id="@+id/menu_action_filter"
+            android:title="Filter"
+            app:showAsAction="never"/>
 </menu>

@@ -5,6 +5,7 @@ package com.mapbox.mapboxsdk.plugins.annotation;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.*;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
@@ -267,4 +268,16 @@ public class LineManagerTest {
     verify(lineLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(linePattern(get("line-pattern")))));
   }
 
+
+  @Test
+  public void testLineLayerFilter() {
+    Expression expression = Expression.eq(Expression.get("test"), "selected");
+    verify(lineLayer, times(0)).setFilter(expression);
+
+    lineManager.setFilter(expression);
+    verify(lineLayer, times(1)).setFilter(expression);
+
+    when(lineLayer.getFilter()).thenReturn(expression);
+    assertEquals(expression, lineManager.getFilter());
+  }
 }

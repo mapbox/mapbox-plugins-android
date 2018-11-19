@@ -11,6 +11,7 @@ import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
@@ -689,4 +690,22 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
     layer.setProperties(textTranslateAnchor(value));
   }
 
+  /**
+   * Set filter on the managed symbols.
+   *
+   * @param expression expression
+   */
+  public void setFilter(@NonNull Expression expression) {
+    layer.setFilter(expression);
+  }
+
+  /**
+   * Get filter of the managed symbols.
+   *
+   * @return expression
+   */
+  @Nullable
+  public Expression getFilter() {
+    return layer.getFilter();
+  }
 }
