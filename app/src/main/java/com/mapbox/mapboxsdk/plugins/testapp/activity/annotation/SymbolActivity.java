@@ -10,9 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -22,6 +20,7 @@ import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.Utils;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 
@@ -30,6 +29,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+
+import static com.mapbox.mapboxsdk.style.expressions.Expression.eq;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.not;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.toNumber;
 
 /**
  * Activity showcasing adding symbols using the annotation plugin
@@ -148,6 +152,14 @@ public class SymbolActivity extends AppCompatActivity {
       for (int i = 0; i < symbolManager.getAnnotations().size(); i++) {
         Symbol symbol = symbolManager.getAnnotations().get(i);
         symbol.setDraggable(!symbol.isDraggable());
+      }
+    } else if (item.getItemId() == R.id.menu_action_filter) {
+      Expression expression = eq(toNumber(get("id")), symbol.getId());
+      Expression filter = symbolManager.getFilter();
+      if (filter != null && filter.equals(expression)) {
+        symbolManager.setFilter(not(eq(toNumber(get("id")), -1)));
+      } else {
+        symbolManager.setFilter(expression);
       }
     } else {
       if (item.getItemId() == R.id.menu_action_icon) {

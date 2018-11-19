@@ -5,6 +5,7 @@ package com.mapbox.mapboxsdk.plugins.annotation;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.*;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
@@ -470,5 +471,17 @@ public class SymbolManagerTest {
 
     symbolManager.create(options);
     verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE))));
+  }
+
+  @Test
+  public void testSymbolLayerFilter() {
+    Expression expression = Expression.eq(Expression.get("test"), "selected");
+    verify(symbolLayer, times(0)).setFilter(expression);
+
+    symbolManager.setFilter(expression);
+    verify(symbolLayer, times(1)).setFilter(expression);
+
+    when(symbolLayer.getFilter()).thenReturn(expression);
+    assertEquals(expression, symbolManager.getFilter());
   }
 }

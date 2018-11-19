@@ -5,6 +5,7 @@ package com.mapbox.mapboxsdk.plugins.annotation;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.*;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
@@ -202,4 +203,16 @@ public class CircleManagerTest {
     verify(circleLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(circleStrokeOpacity(get("circle-stroke-opacity")))));
   }
 
+
+  @Test
+  public void testCircleLayerFilter() {
+    Expression expression = Expression.eq(Expression.get("test"), "selected");
+    verify(circleLayer, times(0)).setFilter(expression);
+
+    circleManager.setFilter(expression);
+    verify(circleLayer, times(1)).setFilter(expression);
+
+    when(circleLayer.getFilter()).thenReturn(expression);
+    assertEquals(expression, circleManager.getFilter());
+  }
 }

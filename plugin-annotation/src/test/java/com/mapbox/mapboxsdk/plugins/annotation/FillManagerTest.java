@@ -5,6 +5,7 @@ package com.mapbox.mapboxsdk.plugins.annotation;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.*;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
@@ -249,4 +250,16 @@ public class FillManagerTest {
     verify(fillLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(fillPattern(get("fill-pattern")))));
   }
 
+
+  @Test
+  public void testFillLayerFilter() {
+    Expression expression = Expression.eq(Expression.get("test"), "selected");
+    verify(fillLayer, times(0)).setFilter(expression);
+
+    fillManager.setFilter(expression);
+    verify(fillLayer, times(1)).setFilter(expression);
+
+    when(fillLayer.getFilter()).thenReturn(expression);
+    assertEquals(expression, fillManager.getFilter());
+  }
 }
