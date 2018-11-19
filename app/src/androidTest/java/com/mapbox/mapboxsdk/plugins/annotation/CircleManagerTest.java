@@ -7,12 +7,14 @@ import android.support.test.runner.AndroidJUnit4;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.building.BuildingActivity;
 import com.mapbox.mapboxsdk.plugins.BaseActivityTest;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import timber.log.Timber;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static com.mapbox.mapboxsdk.plugins.annotation.MapboxMapAction.invoke;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.*;
 import static org.junit.Assert.*;
 import static com.mapbox.mapboxsdk.style.layers.Property.*;
 
@@ -37,6 +39,45 @@ public class CircleManagerTest extends BaseActivityTest {
   }
 
   @Test
+  public void testCircleRadiusAsExpression() {
+    validateTestSetup();
+    setupCircleManager();
+    Timber.i("circle-radius");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(circleManager);
+
+      circleManager.setCircleRadiusExpression(get("hello"));
+      assertEquals(circleManager.getCircleRadiusExpression(), number(get("hello")));
+    });
+  }
+
+  @Test
+  public void testCircleBlurAsExpression() {
+    validateTestSetup();
+    setupCircleManager();
+    Timber.i("circle-blur");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(circleManager);
+
+      circleManager.setCircleBlurExpression(get("hello"));
+      assertEquals(circleManager.getCircleBlurExpression(), number(get("hello")));
+    });
+  }
+
+  @Test
+  public void testCircleOpacityAsExpression() {
+    validateTestSetup();
+    setupCircleManager();
+    Timber.i("circle-opacity");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(circleManager);
+
+      circleManager.setCircleOpacityExpression(get("hello"));
+      assertEquals(circleManager.getCircleOpacityExpression(), number(get("hello")));
+    });
+  }
+
+  @Test
   public void testCircleTranslateAsConstant() {
     validateTestSetup();
     setupCircleManager();
@@ -45,7 +86,7 @@ public class CircleManagerTest extends BaseActivityTest {
       assertNotNull(circleManager);
 
       circleManager.setCircleTranslate(new Float[] {0f, 0f});
-      assertEquals((Float[]) circleManager.getCircleTranslate(), (Float[]) new Float[] {0f, 0f});
+      assertEquals(circleManager.getCircleTranslate(), (Float[]) new Float[] {0f, 0f});
     });
   }
 
@@ -58,7 +99,7 @@ public class CircleManagerTest extends BaseActivityTest {
       assertNotNull(circleManager);
 
       circleManager.setCircleTranslateAnchor(CIRCLE_TRANSLATE_ANCHOR_MAP);
-      assertEquals((String) circleManager.getCircleTranslateAnchor(), (String) CIRCLE_TRANSLATE_ANCHOR_MAP);
+      assertEquals(circleManager.getCircleTranslateAnchor(), (String) CIRCLE_TRANSLATE_ANCHOR_MAP);
     });
   }
 
@@ -71,7 +112,7 @@ public class CircleManagerTest extends BaseActivityTest {
       assertNotNull(circleManager);
 
       circleManager.setCirclePitchScale(CIRCLE_PITCH_SCALE_MAP);
-      assertEquals((String) circleManager.getCirclePitchScale(), (String) CIRCLE_PITCH_SCALE_MAP);
+      assertEquals(circleManager.getCirclePitchScale(), (String) CIRCLE_PITCH_SCALE_MAP);
     });
   }
 
@@ -84,7 +125,33 @@ public class CircleManagerTest extends BaseActivityTest {
       assertNotNull(circleManager);
 
       circleManager.setCirclePitchAlignment(CIRCLE_PITCH_ALIGNMENT_MAP);
-      assertEquals((String) circleManager.getCirclePitchAlignment(), (String) CIRCLE_PITCH_ALIGNMENT_MAP);
+      assertEquals(circleManager.getCirclePitchAlignment(), (String) CIRCLE_PITCH_ALIGNMENT_MAP);
+    });
+  }
+
+  @Test
+  public void testCircleStrokeWidthAsExpression() {
+    validateTestSetup();
+    setupCircleManager();
+    Timber.i("circle-stroke-width");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(circleManager);
+
+      circleManager.setCircleStrokeWidthExpression(get("hello"));
+      assertEquals(circleManager.getCircleStrokeWidthExpression(), number(get("hello")));
+    });
+  }
+
+  @Test
+  public void testCircleStrokeOpacityAsExpression() {
+    validateTestSetup();
+    setupCircleManager();
+    Timber.i("circle-stroke-opacity");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(circleManager);
+
+      circleManager.setCircleStrokeOpacityExpression(get("hello"));
+      assertEquals(circleManager.getCircleStrokeOpacityExpression(), number(get("hello")));
     });
   }
 }

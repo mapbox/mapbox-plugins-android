@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.VisibleForTesting;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
@@ -119,6 +120,98 @@ public class CircleManager extends AnnotationManager<CircleLayer, Circle, Circle
 
   // Property accessors
   /**
+   * Get the CircleRadius expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getCircleRadiusExpression() {
+    return layer.getCircleRadius().getExpression();
+  }
+
+  /**
+   * Set the CircleRadius expression.
+   * <p>
+   * this expression is applied to all circles used by this manager and overrides
+   * behaviour defined on a circle itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setCircleRadiusExpression(@NonNull Expression expression) {
+    layer.setProperties(circleRadius(expression));
+  }
+
+  /**
+   * Get the CircleColor expression
+   *
+   * @return property wrapper value around String
+   */
+  @Nullable
+  public Expression getCircleColorExpression() {
+    return layer.getCircleColor().getExpression();
+  }
+
+  /**
+   * Set the CircleColor expression.
+   * <p>
+   * this expression is applied to all circles used by this manager and overrides
+   * behaviour defined on a circle itself.
+   * </p>
+   *
+   * @param expression value for String
+   */
+  public void setCircleColorExpression(@NonNull Expression expression) {
+    layer.setProperties(circleColor(expression));
+  }
+
+  /**
+   * Get the CircleBlur expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getCircleBlurExpression() {
+    return layer.getCircleBlur().getExpression();
+  }
+
+  /**
+   * Set the CircleBlur expression.
+   * <p>
+   * this expression is applied to all circles used by this manager and overrides
+   * behaviour defined on a circle itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setCircleBlurExpression(@NonNull Expression expression) {
+    layer.setProperties(circleBlur(expression));
+  }
+
+  /**
+   * Get the CircleOpacity expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getCircleOpacityExpression() {
+    return layer.getCircleOpacity().getExpression();
+  }
+
+  /**
+   * Set the CircleOpacity expression.
+   * <p>
+   * this expression is applied to all circles used by this manager and overrides
+   * behaviour defined on a circle itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setCircleOpacityExpression(@NonNull Expression expression) {
+    layer.setProperties(circleOpacity(expression));
+  }
+
+  /**
    * Get the CircleTranslate property
    *
    * @return property wrapper value around Float[]
@@ -188,6 +281,75 @@ public class CircleManager extends AnnotationManager<CircleLayer, Circle, Circle
    */
   public void setCirclePitchAlignment(@Property.CIRCLE_PITCH_ALIGNMENT String value) {
     layer.setProperties(circlePitchAlignment(value));
+  }
+
+  /**
+   * Get the CircleStrokeWidth expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getCircleStrokeWidthExpression() {
+    return layer.getCircleStrokeWidth().getExpression();
+  }
+
+  /**
+   * Set the CircleStrokeWidth expression.
+   * <p>
+   * this expression is applied to all circles used by this manager and overrides
+   * behaviour defined on a circle itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setCircleStrokeWidthExpression(@NonNull Expression expression) {
+    layer.setProperties(circleStrokeWidth(expression));
+  }
+
+  /**
+   * Get the CircleStrokeColor expression
+   *
+   * @return property wrapper value around String
+   */
+  @Nullable
+  public Expression getCircleStrokeColorExpression() {
+    return layer.getCircleStrokeColor().getExpression();
+  }
+
+  /**
+   * Set the CircleStrokeColor expression.
+   * <p>
+   * this expression is applied to all circles used by this manager and overrides
+   * behaviour defined on a circle itself.
+   * </p>
+   *
+   * @param expression value for String
+   */
+  public void setCircleStrokeColorExpression(@NonNull Expression expression) {
+    layer.setProperties(circleStrokeColor(expression));
+  }
+
+  /**
+   * Get the CircleStrokeOpacity expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getCircleStrokeOpacityExpression() {
+    return layer.getCircleStrokeOpacity().getExpression();
+  }
+
+  /**
+   * Set the CircleStrokeOpacity expression.
+   * <p>
+   * this expression is applied to all circles used by this manager and overrides
+   * behaviour defined on a circle itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setCircleStrokeOpacityExpression(@NonNull Expression expression) {
+    layer.setProperties(circleStrokeOpacity(expression));
   }
 
 }

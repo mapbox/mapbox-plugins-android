@@ -11,12 +11,14 @@ import android.support.test.runner.AndroidJUnit4;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.building.BuildingActivity;
 import com.mapbox.mapboxsdk.plugins.BaseActivityTest;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import timber.log.Timber;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static com.mapbox.mapboxsdk.plugins.annotation.MapboxMapAction.invoke;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.*;
 import static org.junit.Assert.*;
 import static com.mapbox.mapboxsdk.style.layers.Property.*;
 
@@ -51,7 +53,21 @@ public class <%- camelize(type) %>ManagerTest extends BaseActivityTest {
       assertNotNull(<%- type %>Manager);
 
       <%- type %>Manager.set<%- camelize(property.name) %>(<%- defaultValueJava(property) %>);
-      assertEquals((<%- propertyType(property) %>) <%- type %>Manager.get<%- camelize(property.name) %>(), (<%- propertyType(property) %>) <%- defaultValueJava(property) %>);
+      assertEquals(<%- type %>Manager.get<%- camelize(property.name) %>(), (<%- propertyType(property) %>) <%- defaultValueJava(property) %>);
+    });
+  }
+<% } else if(property.type !== "color" && property.type !== "enum" && property.type !== "array" && property.type !== "formatted"){ -%>
+
+  @Test
+  public void test<%- camelize(property.name) %>AsExpression() {
+    validateTestSetup();
+    setup<%- camelize(type) %>Manager();
+    Timber.i("<%- property.name %>");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(<%- type %>Manager);
+
+      <%- type %>Manager.set<%- camelize(property.name) %>Expression(get("hello"));
+      assertEquals(<%- type %>Manager.get<%- camelize(property.name) %>Expression(), <%- propertyJavaExpressionType(property) %>(get("hello")));
     });
   }
 <% } -%>

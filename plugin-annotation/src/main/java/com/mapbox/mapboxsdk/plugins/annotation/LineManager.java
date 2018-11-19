@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.VisibleForTesting;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
@@ -141,6 +142,29 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
   }
 
   /**
+   * Get the LineJoin expression
+   *
+   * @return property wrapper value around String
+   */
+  @Nullable
+  public Expression getLineJoinExpression() {
+    return layer.getLineJoin().getExpression();
+  }
+
+  /**
+   * Set the LineJoin expression.
+   * <p>
+   * this expression is applied to all lines used by this manager and overrides
+   * behaviour defined on a line itself.
+   * </p>
+   *
+   * @param expression value for String
+   */
+  public void setLineJoinExpression(@NonNull Expression expression) {
+    layer.setProperties(lineJoin(expression));
+  }
+
+  /**
    * Get the LineMiterLimit property
    *
    * @return property wrapper value around Float
@@ -174,6 +198,52 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    */
   public void setLineRoundLimit( Float value) {
     layer.setProperties(lineRoundLimit(value));
+  }
+
+  /**
+   * Get the LineOpacity expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getLineOpacityExpression() {
+    return layer.getLineOpacity().getExpression();
+  }
+
+  /**
+   * Set the LineOpacity expression.
+   * <p>
+   * this expression is applied to all lines used by this manager and overrides
+   * behaviour defined on a line itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setLineOpacityExpression(@NonNull Expression expression) {
+    layer.setProperties(lineOpacity(expression));
+  }
+
+  /**
+   * Get the LineColor expression
+   *
+   * @return property wrapper value around String
+   */
+  @Nullable
+  public Expression getLineColorExpression() {
+    return layer.getLineColor().getExpression();
+  }
+
+  /**
+   * Set the LineColor expression.
+   * <p>
+   * this expression is applied to all lines used by this manager and overrides
+   * behaviour defined on a line itself.
+   * </p>
+   *
+   * @param expression value for String
+   */
+  public void setLineColorExpression(@NonNull Expression expression) {
+    layer.setProperties(lineColor(expression));
   }
 
   /**
@@ -213,6 +283,98 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
   }
 
   /**
+   * Get the LineWidth expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getLineWidthExpression() {
+    return layer.getLineWidth().getExpression();
+  }
+
+  /**
+   * Set the LineWidth expression.
+   * <p>
+   * this expression is applied to all lines used by this manager and overrides
+   * behaviour defined on a line itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setLineWidthExpression(@NonNull Expression expression) {
+    layer.setProperties(lineWidth(expression));
+  }
+
+  /**
+   * Get the LineGapWidth expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getLineGapWidthExpression() {
+    return layer.getLineGapWidth().getExpression();
+  }
+
+  /**
+   * Set the LineGapWidth expression.
+   * <p>
+   * this expression is applied to all lines used by this manager and overrides
+   * behaviour defined on a line itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setLineGapWidthExpression(@NonNull Expression expression) {
+    layer.setProperties(lineGapWidth(expression));
+  }
+
+  /**
+   * Get the LineOffset expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getLineOffsetExpression() {
+    return layer.getLineOffset().getExpression();
+  }
+
+  /**
+   * Set the LineOffset expression.
+   * <p>
+   * this expression is applied to all lines used by this manager and overrides
+   * behaviour defined on a line itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setLineOffsetExpression(@NonNull Expression expression) {
+    layer.setProperties(lineOffset(expression));
+  }
+
+  /**
+   * Get the LineBlur expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getLineBlurExpression() {
+    return layer.getLineBlur().getExpression();
+  }
+
+  /**
+   * Set the LineBlur expression.
+   * <p>
+   * this expression is applied to all lines used by this manager and overrides
+   * behaviour defined on a line itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setLineBlurExpression(@NonNull Expression expression) {
+    layer.setProperties(lineBlur(expression));
+  }
+
+  /**
    * Get the LineDasharray property
    *
    * @return property wrapper value around Float[]
@@ -228,6 +390,52 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    */
   public void setLineDasharray( Float[] value) {
     layer.setProperties(lineDasharray(value));
+  }
+
+  /**
+   * Get the LinePattern expression
+   *
+   * @return property wrapper value around String
+   */
+  @Nullable
+  public Expression getLinePatternExpression() {
+    return layer.getLinePattern().getExpression();
+  }
+
+  /**
+   * Set the LinePattern expression.
+   * <p>
+   * this expression is applied to all lines used by this manager and overrides
+   * behaviour defined on a line itself.
+   * </p>
+   *
+   * @param expression value for String
+   */
+  public void setLinePatternExpression(@NonNull Expression expression) {
+    layer.setProperties(linePattern(expression));
+  }
+
+  /**
+   * Get the LineGradient expression
+   *
+   * @return property wrapper value around String
+   */
+  @Nullable
+  public Expression getLineGradientExpression() {
+    return layer.getLineGradient().getExpression();
+  }
+
+  /**
+   * Set the LineGradient expression.
+   * <p>
+   * this expression is applied to all lines used by this manager and overrides
+   * behaviour defined on a line itself.
+   * </p>
+   *
+   * @param expression value for String
+   */
+  public void setLineGradientExpression(@NonNull Expression expression) {
+    layer.setProperties(lineGradient(expression));
   }
 
 }

@@ -7,12 +7,14 @@ import android.support.test.runner.AndroidJUnit4;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.building.BuildingActivity;
 import com.mapbox.mapboxsdk.plugins.BaseActivityTest;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import timber.log.Timber;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static com.mapbox.mapboxsdk.plugins.annotation.MapboxMapAction.invoke;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.*;
 import static org.junit.Assert.*;
 import static com.mapbox.mapboxsdk.style.layers.Property.*;
 
@@ -45,7 +47,20 @@ public class FillManagerTest extends BaseActivityTest {
       assertNotNull(fillManager);
 
       fillManager.setFillAntialias(true);
-      assertEquals((Boolean) fillManager.getFillAntialias(), (Boolean) true);
+      assertEquals(fillManager.getFillAntialias(), (Boolean) true);
+    });
+  }
+
+  @Test
+  public void testFillOpacityAsExpression() {
+    validateTestSetup();
+    setupFillManager();
+    Timber.i("fill-opacity");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(fillManager);
+
+      fillManager.setFillOpacityExpression(get("hello"));
+      assertEquals(fillManager.getFillOpacityExpression(), number(get("hello")));
     });
   }
 
@@ -58,7 +73,7 @@ public class FillManagerTest extends BaseActivityTest {
       assertNotNull(fillManager);
 
       fillManager.setFillTranslate(new Float[] {0f, 0f});
-      assertEquals((Float[]) fillManager.getFillTranslate(), (Float[]) new Float[] {0f, 0f});
+      assertEquals(fillManager.getFillTranslate(), (Float[]) new Float[] {0f, 0f});
     });
   }
 
@@ -71,7 +86,20 @@ public class FillManagerTest extends BaseActivityTest {
       assertNotNull(fillManager);
 
       fillManager.setFillTranslateAnchor(FILL_TRANSLATE_ANCHOR_MAP);
-      assertEquals((String) fillManager.getFillTranslateAnchor(), (String) FILL_TRANSLATE_ANCHOR_MAP);
+      assertEquals(fillManager.getFillTranslateAnchor(), (String) FILL_TRANSLATE_ANCHOR_MAP);
+    });
+  }
+
+  @Test
+  public void testFillPatternAsExpression() {
+    validateTestSetup();
+    setupFillManager();
+    Timber.i("fill-pattern");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(fillManager);
+
+      fillManager.setFillPatternExpression(get("hello"));
+      assertEquals(fillManager.getFillPatternExpression(), Expression.toString(get("hello")));
     });
   }
 }

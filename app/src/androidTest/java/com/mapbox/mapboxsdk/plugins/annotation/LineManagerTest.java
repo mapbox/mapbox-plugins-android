@@ -7,12 +7,14 @@ import android.support.test.runner.AndroidJUnit4;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.building.BuildingActivity;
 import com.mapbox.mapboxsdk.plugins.BaseActivityTest;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import timber.log.Timber;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static com.mapbox.mapboxsdk.plugins.annotation.MapboxMapAction.invoke;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.*;
 import static org.junit.Assert.*;
 import static com.mapbox.mapboxsdk.style.layers.Property.*;
 
@@ -45,7 +47,7 @@ public class LineManagerTest extends BaseActivityTest {
       assertNotNull(lineManager);
 
       lineManager.setLineCap(LINE_CAP_BUTT);
-      assertEquals((String) lineManager.getLineCap(), (String) LINE_CAP_BUTT);
+      assertEquals(lineManager.getLineCap(), (String) LINE_CAP_BUTT);
     });
   }
 
@@ -58,7 +60,7 @@ public class LineManagerTest extends BaseActivityTest {
       assertNotNull(lineManager);
 
       lineManager.setLineMiterLimit(0.3f);
-      assertEquals((Float) lineManager.getLineMiterLimit(), (Float) 0.3f);
+      assertEquals(lineManager.getLineMiterLimit(), (Float) 0.3f);
     });
   }
 
@@ -71,7 +73,20 @@ public class LineManagerTest extends BaseActivityTest {
       assertNotNull(lineManager);
 
       lineManager.setLineRoundLimit(0.3f);
-      assertEquals((Float) lineManager.getLineRoundLimit(), (Float) 0.3f);
+      assertEquals(lineManager.getLineRoundLimit(), (Float) 0.3f);
+    });
+  }
+
+  @Test
+  public void testLineOpacityAsExpression() {
+    validateTestSetup();
+    setupLineManager();
+    Timber.i("line-opacity");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(lineManager);
+
+      lineManager.setLineOpacityExpression(get("hello"));
+      assertEquals(lineManager.getLineOpacityExpression(), number(get("hello")));
     });
   }
 
@@ -84,7 +99,7 @@ public class LineManagerTest extends BaseActivityTest {
       assertNotNull(lineManager);
 
       lineManager.setLineTranslate(new Float[] {0f, 0f});
-      assertEquals((Float[]) lineManager.getLineTranslate(), (Float[]) new Float[] {0f, 0f});
+      assertEquals(lineManager.getLineTranslate(), (Float[]) new Float[] {0f, 0f});
     });
   }
 
@@ -97,7 +112,59 @@ public class LineManagerTest extends BaseActivityTest {
       assertNotNull(lineManager);
 
       lineManager.setLineTranslateAnchor(LINE_TRANSLATE_ANCHOR_MAP);
-      assertEquals((String) lineManager.getLineTranslateAnchor(), (String) LINE_TRANSLATE_ANCHOR_MAP);
+      assertEquals(lineManager.getLineTranslateAnchor(), (String) LINE_TRANSLATE_ANCHOR_MAP);
+    });
+  }
+
+  @Test
+  public void testLineWidthAsExpression() {
+    validateTestSetup();
+    setupLineManager();
+    Timber.i("line-width");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(lineManager);
+
+      lineManager.setLineWidthExpression(get("hello"));
+      assertEquals(lineManager.getLineWidthExpression(), number(get("hello")));
+    });
+  }
+
+  @Test
+  public void testLineGapWidthAsExpression() {
+    validateTestSetup();
+    setupLineManager();
+    Timber.i("line-gap-width");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(lineManager);
+
+      lineManager.setLineGapWidthExpression(get("hello"));
+      assertEquals(lineManager.getLineGapWidthExpression(), number(get("hello")));
+    });
+  }
+
+  @Test
+  public void testLineOffsetAsExpression() {
+    validateTestSetup();
+    setupLineManager();
+    Timber.i("line-offset");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(lineManager);
+
+      lineManager.setLineOffsetExpression(get("hello"));
+      assertEquals(lineManager.getLineOffsetExpression(), number(get("hello")));
+    });
+  }
+
+  @Test
+  public void testLineBlurAsExpression() {
+    validateTestSetup();
+    setupLineManager();
+    Timber.i("line-blur");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(lineManager);
+
+      lineManager.setLineBlurExpression(get("hello"));
+      assertEquals(lineManager.getLineBlurExpression(), number(get("hello")));
     });
   }
 
@@ -110,7 +177,20 @@ public class LineManagerTest extends BaseActivityTest {
       assertNotNull(lineManager);
 
       lineManager.setLineDasharray(new Float[] {});
-      assertEquals((Float[]) lineManager.getLineDasharray(), (Float[]) new Float[] {});
+      assertEquals(lineManager.getLineDasharray(), (Float[]) new Float[] {});
+    });
+  }
+
+  @Test
+  public void testLinePatternAsExpression() {
+    validateTestSetup();
+    setupLineManager();
+    Timber.i("line-pattern");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(lineManager);
+
+      lineManager.setLinePatternExpression(get("hello"));
+      assertEquals(lineManager.getLinePatternExpression(), Expression.toString(get("hello")));
     });
   }
 }

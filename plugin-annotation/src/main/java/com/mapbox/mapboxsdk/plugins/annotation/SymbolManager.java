@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.VisibleForTesting;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
@@ -249,6 +250,29 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
   }
 
   /**
+   * Get the SymbolZOrder expression
+   *
+   * @return property wrapper value around String
+   */
+  @Nullable
+  public Expression getSymbolZOrderExpression() {
+    return layer.getSymbolZOrder().getExpression();
+  }
+
+  /**
+   * Set the SymbolZOrder expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for String
+   */
+  public void setSymbolZOrderExpression(@NonNull Expression expression) {
+    layer.setProperties(symbolZOrder(expression));
+  }
+
+  /**
    * Get the IconAllowOverlap property
    *
    * @return property wrapper value around Boolean
@@ -321,6 +345,29 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
   }
 
   /**
+   * Get the IconSize expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getIconSizeExpression() {
+    return layer.getIconSize().getExpression();
+  }
+
+  /**
+   * Set the IconSize expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setIconSizeExpression(@NonNull Expression expression) {
+    layer.setProperties(iconSize(expression));
+  }
+
+  /**
    * Get the IconTextFit property
    *
    * @return property wrapper value around String
@@ -357,6 +404,52 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
   }
 
   /**
+   * Get the IconImage expression
+   *
+   * @return property wrapper value around String
+   */
+  @Nullable
+  public Expression getIconImageExpression() {
+    return layer.getIconImage().getExpression();
+  }
+
+  /**
+   * Set the IconImage expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for String
+   */
+  public void setIconImageExpression(@NonNull Expression expression) {
+    layer.setProperties(iconImage(expression));
+  }
+
+  /**
+   * Get the IconRotate expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getIconRotateExpression() {
+    return layer.getIconRotate().getExpression();
+  }
+
+  /**
+   * Set the IconRotate expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setIconRotateExpression(@NonNull Expression expression) {
+    layer.setProperties(iconRotate(expression));
+  }
+
+  /**
    * Get the IconPadding property
    *
    * @return property wrapper value around Float
@@ -390,6 +483,52 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setIconKeepUpright( Boolean value) {
     layer.setProperties(iconKeepUpright(value));
+  }
+
+  /**
+   * Get the IconOffset expression
+   *
+   * @return property wrapper value around Float[]
+   */
+  @Nullable
+  public Expression getIconOffsetExpression() {
+    return layer.getIconOffset().getExpression();
+  }
+
+  /**
+   * Set the IconOffset expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for Float[]
+   */
+  public void setIconOffsetExpression(@NonNull Expression expression) {
+    layer.setProperties(iconOffset(expression));
+  }
+
+  /**
+   * Get the IconAnchor expression
+   *
+   * @return property wrapper value around String
+   */
+  @Nullable
+  public Expression getIconAnchorExpression() {
+    return layer.getIconAnchor().getExpression();
+  }
+
+  /**
+   * Set the IconAnchor expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for String
+   */
+  public void setIconAnchorExpression(@NonNull Expression expression) {
+    layer.setProperties(iconAnchor(expression));
   }
 
   /**
@@ -447,6 +586,98 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
   }
 
   /**
+   * Get the TextField expression
+   *
+   * @return property wrapper value around String
+   */
+  @Nullable
+  public Expression getTextFieldExpression() {
+    return layer.getTextField().getExpression();
+  }
+
+  /**
+   * Set the TextField expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for String
+   */
+  public void setTextFieldExpression(@NonNull Expression expression) {
+    layer.setProperties(textField(expression));
+  }
+
+  /**
+   * Get the TextFont expression
+   *
+   * @return property wrapper value around String[]
+   */
+  @Nullable
+  public Expression getTextFontExpression() {
+    return layer.getTextFont().getExpression();
+  }
+
+  /**
+   * Set the TextFont expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for String[]
+   */
+  public void setTextFontExpression(@NonNull Expression expression) {
+    layer.setProperties(textFont(expression));
+  }
+
+  /**
+   * Get the TextSize expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getTextSizeExpression() {
+    return layer.getTextSize().getExpression();
+  }
+
+  /**
+   * Set the TextSize expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setTextSizeExpression(@NonNull Expression expression) {
+    layer.setProperties(textSize(expression));
+  }
+
+  /**
+   * Get the TextMaxWidth expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getTextMaxWidthExpression() {
+    return layer.getTextMaxWidth().getExpression();
+  }
+
+  /**
+   * Set the TextMaxWidth expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setTextMaxWidthExpression(@NonNull Expression expression) {
+    layer.setProperties(textMaxWidth(expression));
+  }
+
+  /**
    * Get the TextLineHeight property
    *
    * @return property wrapper value around Float
@@ -465,6 +696,75 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
   }
 
   /**
+   * Get the TextLetterSpacing expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getTextLetterSpacingExpression() {
+    return layer.getTextLetterSpacing().getExpression();
+  }
+
+  /**
+   * Set the TextLetterSpacing expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setTextLetterSpacingExpression(@NonNull Expression expression) {
+    layer.setProperties(textLetterSpacing(expression));
+  }
+
+  /**
+   * Get the TextJustify expression
+   *
+   * @return property wrapper value around String
+   */
+  @Nullable
+  public Expression getTextJustifyExpression() {
+    return layer.getTextJustify().getExpression();
+  }
+
+  /**
+   * Set the TextJustify expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for String
+   */
+  public void setTextJustifyExpression(@NonNull Expression expression) {
+    layer.setProperties(textJustify(expression));
+  }
+
+  /**
+   * Get the TextAnchor expression
+   *
+   * @return property wrapper value around String
+   */
+  @Nullable
+  public Expression getTextAnchorExpression() {
+    return layer.getTextAnchor().getExpression();
+  }
+
+  /**
+   * Set the TextAnchor expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for String
+   */
+  public void setTextAnchorExpression(@NonNull Expression expression) {
+    layer.setProperties(textAnchor(expression));
+  }
+
+  /**
    * Get the TextMaxAngle property
    *
    * @return property wrapper value around Float
@@ -480,6 +780,29 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setTextMaxAngle( Float value) {
     layer.setProperties(textMaxAngle(value));
+  }
+
+  /**
+   * Get the TextRotate expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getTextRotateExpression() {
+    return layer.getTextRotate().getExpression();
+  }
+
+  /**
+   * Set the TextRotate expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setTextRotateExpression(@NonNull Expression expression) {
+    layer.setProperties(textRotate(expression));
   }
 
   /**
@@ -516,6 +839,52 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setTextKeepUpright( Boolean value) {
     layer.setProperties(textKeepUpright(value));
+  }
+
+  /**
+   * Get the TextTransform expression
+   *
+   * @return property wrapper value around String
+   */
+  @Nullable
+  public Expression getTextTransformExpression() {
+    return layer.getTextTransform().getExpression();
+  }
+
+  /**
+   * Set the TextTransform expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for String
+   */
+  public void setTextTransformExpression(@NonNull Expression expression) {
+    layer.setProperties(textTransform(expression));
+  }
+
+  /**
+   * Get the TextOffset expression
+   *
+   * @return property wrapper value around Float[]
+   */
+  @Nullable
+  public Expression getTextOffsetExpression() {
+    return layer.getTextOffset().getExpression();
+  }
+
+  /**
+   * Set the TextOffset expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for Float[]
+   */
+  public void setTextOffsetExpression(@NonNull Expression expression) {
+    layer.setProperties(textOffset(expression));
   }
 
   /**
@@ -573,6 +942,121 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
   }
 
   /**
+   * Get the IconOpacity expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getIconOpacityExpression() {
+    return layer.getIconOpacity().getExpression();
+  }
+
+  /**
+   * Set the IconOpacity expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setIconOpacityExpression(@NonNull Expression expression) {
+    layer.setProperties(iconOpacity(expression));
+  }
+
+  /**
+   * Get the IconColor expression
+   *
+   * @return property wrapper value around String
+   */
+  @Nullable
+  public Expression getIconColorExpression() {
+    return layer.getIconColor().getExpression();
+  }
+
+  /**
+   * Set the IconColor expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for String
+   */
+  public void setIconColorExpression(@NonNull Expression expression) {
+    layer.setProperties(iconColor(expression));
+  }
+
+  /**
+   * Get the IconHaloColor expression
+   *
+   * @return property wrapper value around String
+   */
+  @Nullable
+  public Expression getIconHaloColorExpression() {
+    return layer.getIconHaloColor().getExpression();
+  }
+
+  /**
+   * Set the IconHaloColor expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for String
+   */
+  public void setIconHaloColorExpression(@NonNull Expression expression) {
+    layer.setProperties(iconHaloColor(expression));
+  }
+
+  /**
+   * Get the IconHaloWidth expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getIconHaloWidthExpression() {
+    return layer.getIconHaloWidth().getExpression();
+  }
+
+  /**
+   * Set the IconHaloWidth expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setIconHaloWidthExpression(@NonNull Expression expression) {
+    layer.setProperties(iconHaloWidth(expression));
+  }
+
+  /**
+   * Get the IconHaloBlur expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getIconHaloBlurExpression() {
+    return layer.getIconHaloBlur().getExpression();
+  }
+
+  /**
+   * Set the IconHaloBlur expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setIconHaloBlurExpression(@NonNull Expression expression) {
+    layer.setProperties(iconHaloBlur(expression));
+  }
+
+  /**
    * Get the IconTranslate property
    *
    * @return property wrapper value around Float[]
@@ -606,6 +1090,121 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setIconTranslateAnchor(@Property.ICON_TRANSLATE_ANCHOR String value) {
     layer.setProperties(iconTranslateAnchor(value));
+  }
+
+  /**
+   * Get the TextOpacity expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getTextOpacityExpression() {
+    return layer.getTextOpacity().getExpression();
+  }
+
+  /**
+   * Set the TextOpacity expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setTextOpacityExpression(@NonNull Expression expression) {
+    layer.setProperties(textOpacity(expression));
+  }
+
+  /**
+   * Get the TextColor expression
+   *
+   * @return property wrapper value around String
+   */
+  @Nullable
+  public Expression getTextColorExpression() {
+    return layer.getTextColor().getExpression();
+  }
+
+  /**
+   * Set the TextColor expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for String
+   */
+  public void setTextColorExpression(@NonNull Expression expression) {
+    layer.setProperties(textColor(expression));
+  }
+
+  /**
+   * Get the TextHaloColor expression
+   *
+   * @return property wrapper value around String
+   */
+  @Nullable
+  public Expression getTextHaloColorExpression() {
+    return layer.getTextHaloColor().getExpression();
+  }
+
+  /**
+   * Set the TextHaloColor expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for String
+   */
+  public void setTextHaloColorExpression(@NonNull Expression expression) {
+    layer.setProperties(textHaloColor(expression));
+  }
+
+  /**
+   * Get the TextHaloWidth expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getTextHaloWidthExpression() {
+    return layer.getTextHaloWidth().getExpression();
+  }
+
+  /**
+   * Set the TextHaloWidth expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setTextHaloWidthExpression(@NonNull Expression expression) {
+    layer.setProperties(textHaloWidth(expression));
+  }
+
+  /**
+   * Get the TextHaloBlur expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getTextHaloBlurExpression() {
+    return layer.getTextHaloBlur().getExpression();
+  }
+
+  /**
+   * Set the TextHaloBlur expression.
+   * <p>
+   * this expression is applied to all symbols used by this manager and overrides
+   * behaviour defined on a symbol itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setTextHaloBlurExpression(@NonNull Expression expression) {
+    layer.setProperties(textHaloBlur(expression));
   }
 
   /**

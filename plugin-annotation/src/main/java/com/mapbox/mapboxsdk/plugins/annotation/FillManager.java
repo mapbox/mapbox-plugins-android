@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.VisibleForTesting;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
@@ -125,6 +126,75 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
   }
 
   /**
+   * Get the FillOpacity expression
+   *
+   * @return property wrapper value around Float
+   */
+  @Nullable
+  public Expression getFillOpacityExpression() {
+    return layer.getFillOpacity().getExpression();
+  }
+
+  /**
+   * Set the FillOpacity expression.
+   * <p>
+   * this expression is applied to all fills used by this manager and overrides
+   * behaviour defined on a fill itself.
+   * </p>
+   *
+   * @param expression value for Float
+   */
+  public void setFillOpacityExpression(@NonNull Expression expression) {
+    layer.setProperties(fillOpacity(expression));
+  }
+
+  /**
+   * Get the FillColor expression
+   *
+   * @return property wrapper value around String
+   */
+  @Nullable
+  public Expression getFillColorExpression() {
+    return layer.getFillColor().getExpression();
+  }
+
+  /**
+   * Set the FillColor expression.
+   * <p>
+   * this expression is applied to all fills used by this manager and overrides
+   * behaviour defined on a fill itself.
+   * </p>
+   *
+   * @param expression value for String
+   */
+  public void setFillColorExpression(@NonNull Expression expression) {
+    layer.setProperties(fillColor(expression));
+  }
+
+  /**
+   * Get the FillOutlineColor expression
+   *
+   * @return property wrapper value around String
+   */
+  @Nullable
+  public Expression getFillOutlineColorExpression() {
+    return layer.getFillOutlineColor().getExpression();
+  }
+
+  /**
+   * Set the FillOutlineColor expression.
+   * <p>
+   * this expression is applied to all fills used by this manager and overrides
+   * behaviour defined on a fill itself.
+   * </p>
+   *
+   * @param expression value for String
+   */
+  public void setFillOutlineColorExpression(@NonNull Expression expression) {
+    layer.setProperties(fillOutlineColor(expression));
+  }
+
+  /**
    * Get the FillTranslate property
    *
    * @return property wrapper value around Float[]
@@ -158,6 +228,29 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
    */
   public void setFillTranslateAnchor(@Property.FILL_TRANSLATE_ANCHOR String value) {
     layer.setProperties(fillTranslateAnchor(value));
+  }
+
+  /**
+   * Get the FillPattern expression
+   *
+   * @return property wrapper value around String
+   */
+  @Nullable
+  public Expression getFillPatternExpression() {
+    return layer.getFillPattern().getExpression();
+  }
+
+  /**
+   * Set the FillPattern expression.
+   * <p>
+   * this expression is applied to all fills used by this manager and overrides
+   * behaviour defined on a fill itself.
+   * </p>
+   *
+   * @param expression value for String
+   */
+  public void setFillPatternExpression(@NonNull Expression expression) {
+    layer.setProperties(fillPattern(expression));
   }
 
 }

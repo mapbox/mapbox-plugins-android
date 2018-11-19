@@ -7,12 +7,14 @@ import android.support.test.runner.AndroidJUnit4;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.building.BuildingActivity;
 import com.mapbox.mapboxsdk.plugins.BaseActivityTest;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import timber.log.Timber;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static com.mapbox.mapboxsdk.plugins.annotation.MapboxMapAction.invoke;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.*;
 import static org.junit.Assert.*;
 import static com.mapbox.mapboxsdk.style.layers.Property.*;
 
@@ -45,7 +47,7 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setSymbolPlacement(SYMBOL_PLACEMENT_POINT);
-      assertEquals((String) symbolManager.getSymbolPlacement(), (String) SYMBOL_PLACEMENT_POINT);
+      assertEquals(symbolManager.getSymbolPlacement(), (String) SYMBOL_PLACEMENT_POINT);
     });
   }
 
@@ -58,7 +60,7 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setSymbolSpacing(0.3f);
-      assertEquals((Float) symbolManager.getSymbolSpacing(), (Float) 0.3f);
+      assertEquals(symbolManager.getSymbolSpacing(), (Float) 0.3f);
     });
   }
 
@@ -71,7 +73,7 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setSymbolAvoidEdges(true);
-      assertEquals((Boolean) symbolManager.getSymbolAvoidEdges(), (Boolean) true);
+      assertEquals(symbolManager.getSymbolAvoidEdges(), (Boolean) true);
     });
   }
 
@@ -84,7 +86,7 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setIconAllowOverlap(true);
-      assertEquals((Boolean) symbolManager.getIconAllowOverlap(), (Boolean) true);
+      assertEquals(symbolManager.getIconAllowOverlap(), (Boolean) true);
     });
   }
 
@@ -97,7 +99,7 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setIconIgnorePlacement(true);
-      assertEquals((Boolean) symbolManager.getIconIgnorePlacement(), (Boolean) true);
+      assertEquals(symbolManager.getIconIgnorePlacement(), (Boolean) true);
     });
   }
 
@@ -110,7 +112,7 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setIconOptional(true);
-      assertEquals((Boolean) symbolManager.getIconOptional(), (Boolean) true);
+      assertEquals(symbolManager.getIconOptional(), (Boolean) true);
     });
   }
 
@@ -123,7 +125,20 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setIconRotationAlignment(ICON_ROTATION_ALIGNMENT_MAP);
-      assertEquals((String) symbolManager.getIconRotationAlignment(), (String) ICON_ROTATION_ALIGNMENT_MAP);
+      assertEquals(symbolManager.getIconRotationAlignment(), (String) ICON_ROTATION_ALIGNMENT_MAP);
+    });
+  }
+
+  @Test
+  public void testIconSizeAsExpression() {
+    validateTestSetup();
+    setupSymbolManager();
+    Timber.i("icon-size");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbolManager);
+
+      symbolManager.setIconSizeExpression(get("hello"));
+      assertEquals(symbolManager.getIconSizeExpression(), number(get("hello")));
     });
   }
 
@@ -136,7 +151,7 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setIconTextFit(ICON_TEXT_FIT_NONE);
-      assertEquals((String) symbolManager.getIconTextFit(), (String) ICON_TEXT_FIT_NONE);
+      assertEquals(symbolManager.getIconTextFit(), (String) ICON_TEXT_FIT_NONE);
     });
   }
 
@@ -149,7 +164,33 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setIconTextFitPadding(new Float[] {0f, 0f, 0f, 0f});
-      assertEquals((Float[]) symbolManager.getIconTextFitPadding(), (Float[]) new Float[] {0f, 0f, 0f, 0f});
+      assertEquals(symbolManager.getIconTextFitPadding(), (Float[]) new Float[] {0f, 0f, 0f, 0f});
+    });
+  }
+
+  @Test
+  public void testIconImageAsExpression() {
+    validateTestSetup();
+    setupSymbolManager();
+    Timber.i("icon-image");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbolManager);
+
+      symbolManager.setIconImageExpression(get("hello"));
+      assertEquals(symbolManager.getIconImageExpression(), Expression.toString(get("hello")));
+    });
+  }
+
+  @Test
+  public void testIconRotateAsExpression() {
+    validateTestSetup();
+    setupSymbolManager();
+    Timber.i("icon-rotate");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbolManager);
+
+      symbolManager.setIconRotateExpression(get("hello"));
+      assertEquals(symbolManager.getIconRotateExpression(), number(get("hello")));
     });
   }
 
@@ -162,7 +203,7 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setIconPadding(0.3f);
-      assertEquals((Float) symbolManager.getIconPadding(), (Float) 0.3f);
+      assertEquals(symbolManager.getIconPadding(), (Float) 0.3f);
     });
   }
 
@@ -175,7 +216,7 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setIconKeepUpright(true);
-      assertEquals((Boolean) symbolManager.getIconKeepUpright(), (Boolean) true);
+      assertEquals(symbolManager.getIconKeepUpright(), (Boolean) true);
     });
   }
 
@@ -188,7 +229,7 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setIconPitchAlignment(ICON_PITCH_ALIGNMENT_MAP);
-      assertEquals((String) symbolManager.getIconPitchAlignment(), (String) ICON_PITCH_ALIGNMENT_MAP);
+      assertEquals(symbolManager.getIconPitchAlignment(), (String) ICON_PITCH_ALIGNMENT_MAP);
     });
   }
 
@@ -201,7 +242,7 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setTextPitchAlignment(TEXT_PITCH_ALIGNMENT_MAP);
-      assertEquals((String) symbolManager.getTextPitchAlignment(), (String) TEXT_PITCH_ALIGNMENT_MAP);
+      assertEquals(symbolManager.getTextPitchAlignment(), (String) TEXT_PITCH_ALIGNMENT_MAP);
     });
   }
 
@@ -214,7 +255,33 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setTextRotationAlignment(TEXT_ROTATION_ALIGNMENT_MAP);
-      assertEquals((String) symbolManager.getTextRotationAlignment(), (String) TEXT_ROTATION_ALIGNMENT_MAP);
+      assertEquals(symbolManager.getTextRotationAlignment(), (String) TEXT_ROTATION_ALIGNMENT_MAP);
+    });
+  }
+
+  @Test
+  public void testTextSizeAsExpression() {
+    validateTestSetup();
+    setupSymbolManager();
+    Timber.i("text-size");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbolManager);
+
+      symbolManager.setTextSizeExpression(get("hello"));
+      assertEquals(symbolManager.getTextSizeExpression(), number(get("hello")));
+    });
+  }
+
+  @Test
+  public void testTextMaxWidthAsExpression() {
+    validateTestSetup();
+    setupSymbolManager();
+    Timber.i("text-max-width");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbolManager);
+
+      symbolManager.setTextMaxWidthExpression(get("hello"));
+      assertEquals(symbolManager.getTextMaxWidthExpression(), number(get("hello")));
     });
   }
 
@@ -227,7 +294,20 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setTextLineHeight(0.3f);
-      assertEquals((Float) symbolManager.getTextLineHeight(), (Float) 0.3f);
+      assertEquals(symbolManager.getTextLineHeight(), (Float) 0.3f);
+    });
+  }
+
+  @Test
+  public void testTextLetterSpacingAsExpression() {
+    validateTestSetup();
+    setupSymbolManager();
+    Timber.i("text-letter-spacing");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbolManager);
+
+      symbolManager.setTextLetterSpacingExpression(get("hello"));
+      assertEquals(symbolManager.getTextLetterSpacingExpression(), number(get("hello")));
     });
   }
 
@@ -240,7 +320,20 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setTextMaxAngle(0.3f);
-      assertEquals((Float) symbolManager.getTextMaxAngle(), (Float) 0.3f);
+      assertEquals(symbolManager.getTextMaxAngle(), (Float) 0.3f);
+    });
+  }
+
+  @Test
+  public void testTextRotateAsExpression() {
+    validateTestSetup();
+    setupSymbolManager();
+    Timber.i("text-rotate");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbolManager);
+
+      symbolManager.setTextRotateExpression(get("hello"));
+      assertEquals(symbolManager.getTextRotateExpression(), number(get("hello")));
     });
   }
 
@@ -253,7 +346,7 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setTextPadding(0.3f);
-      assertEquals((Float) symbolManager.getTextPadding(), (Float) 0.3f);
+      assertEquals(symbolManager.getTextPadding(), (Float) 0.3f);
     });
   }
 
@@ -266,7 +359,7 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setTextKeepUpright(true);
-      assertEquals((Boolean) symbolManager.getTextKeepUpright(), (Boolean) true);
+      assertEquals(symbolManager.getTextKeepUpright(), (Boolean) true);
     });
   }
 
@@ -279,7 +372,7 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setTextAllowOverlap(true);
-      assertEquals((Boolean) symbolManager.getTextAllowOverlap(), (Boolean) true);
+      assertEquals(symbolManager.getTextAllowOverlap(), (Boolean) true);
     });
   }
 
@@ -292,7 +385,7 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setTextIgnorePlacement(true);
-      assertEquals((Boolean) symbolManager.getTextIgnorePlacement(), (Boolean) true);
+      assertEquals(symbolManager.getTextIgnorePlacement(), (Boolean) true);
     });
   }
 
@@ -305,7 +398,46 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setTextOptional(true);
-      assertEquals((Boolean) symbolManager.getTextOptional(), (Boolean) true);
+      assertEquals(symbolManager.getTextOptional(), (Boolean) true);
+    });
+  }
+
+  @Test
+  public void testIconOpacityAsExpression() {
+    validateTestSetup();
+    setupSymbolManager();
+    Timber.i("icon-opacity");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbolManager);
+
+      symbolManager.setIconOpacityExpression(get("hello"));
+      assertEquals(symbolManager.getIconOpacityExpression(), number(get("hello")));
+    });
+  }
+
+  @Test
+  public void testIconHaloWidthAsExpression() {
+    validateTestSetup();
+    setupSymbolManager();
+    Timber.i("icon-halo-width");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbolManager);
+
+      symbolManager.setIconHaloWidthExpression(get("hello"));
+      assertEquals(symbolManager.getIconHaloWidthExpression(), number(get("hello")));
+    });
+  }
+
+  @Test
+  public void testIconHaloBlurAsExpression() {
+    validateTestSetup();
+    setupSymbolManager();
+    Timber.i("icon-halo-blur");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbolManager);
+
+      symbolManager.setIconHaloBlurExpression(get("hello"));
+      assertEquals(symbolManager.getIconHaloBlurExpression(), number(get("hello")));
     });
   }
 
@@ -318,7 +450,7 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setIconTranslate(new Float[] {0f, 0f});
-      assertEquals((Float[]) symbolManager.getIconTranslate(), (Float[]) new Float[] {0f, 0f});
+      assertEquals(symbolManager.getIconTranslate(), (Float[]) new Float[] {0f, 0f});
     });
   }
 
@@ -331,7 +463,46 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setIconTranslateAnchor(ICON_TRANSLATE_ANCHOR_MAP);
-      assertEquals((String) symbolManager.getIconTranslateAnchor(), (String) ICON_TRANSLATE_ANCHOR_MAP);
+      assertEquals(symbolManager.getIconTranslateAnchor(), (String) ICON_TRANSLATE_ANCHOR_MAP);
+    });
+  }
+
+  @Test
+  public void testTextOpacityAsExpression() {
+    validateTestSetup();
+    setupSymbolManager();
+    Timber.i("text-opacity");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbolManager);
+
+      symbolManager.setTextOpacityExpression(get("hello"));
+      assertEquals(symbolManager.getTextOpacityExpression(), number(get("hello")));
+    });
+  }
+
+  @Test
+  public void testTextHaloWidthAsExpression() {
+    validateTestSetup();
+    setupSymbolManager();
+    Timber.i("text-halo-width");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbolManager);
+
+      symbolManager.setTextHaloWidthExpression(get("hello"));
+      assertEquals(symbolManager.getTextHaloWidthExpression(), number(get("hello")));
+    });
+  }
+
+  @Test
+  public void testTextHaloBlurAsExpression() {
+    validateTestSetup();
+    setupSymbolManager();
+    Timber.i("text-halo-blur");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbolManager);
+
+      symbolManager.setTextHaloBlurExpression(get("hello"));
+      assertEquals(symbolManager.getTextHaloBlurExpression(), number(get("hello")));
     });
   }
 
@@ -344,7 +515,7 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setTextTranslate(new Float[] {0f, 0f});
-      assertEquals((Float[]) symbolManager.getTextTranslate(), (Float[]) new Float[] {0f, 0f});
+      assertEquals(symbolManager.getTextTranslate(), (Float[]) new Float[] {0f, 0f});
     });
   }
 
@@ -357,7 +528,7 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertNotNull(symbolManager);
 
       symbolManager.setTextTranslateAnchor(TEXT_TRANSLATE_ANCHOR_MAP);
-      assertEquals((String) symbolManager.getTextTranslateAnchor(), (String) TEXT_TRANSLATE_ANCHOR_MAP);
+      assertEquals(symbolManager.getTextTranslateAnchor(), (String) TEXT_TRANSLATE_ANCHOR_MAP);
     });
   }
 }

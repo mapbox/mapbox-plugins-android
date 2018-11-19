@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.VisibleForTesting;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
@@ -137,6 +138,30 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
    */
   public void set<%- camelize(property.name) %>(<%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), "") %> <%- propertyType(property) %> value) {
     layer.setProperties(<%- camelizeWithLeadingLowercase(property.name) %>(value));
+  }
+
+<% } else {-%>
+  /**
+   * Get the <%- camelize(property.name) %> expression
+   *
+   * @return property wrapper value around <%- propertyType(property) %>
+   */
+  @Nullable
+  public Expression get<%- camelize(property.name) %>Expression() {
+    return layer.get<%- camelize(property.name) %>().getExpression();
+  }
+
+  /**
+   * Set the <%- camelize(property.name) %> expression.
+   * <p>
+   * this expression is applied to all <%- type %>s used by this manager and overrides
+   * behaviour defined on a <%- type %> itself.
+   * </p>
+   *
+   * @param expression value for <%- propertyType(property) %>
+   */
+  public void set<%- camelize(property.name) %>Expression(@NonNull Expression expression) {
+    layer.setProperties(<%- camelizeWithLeadingLowercase(property.name) %>(expression));
   }
 
 <% } -%>

@@ -139,6 +139,21 @@ global.propertyJavaType = function propertyType(property) {
    }
  }
 
+global.propertyJavaExpressionType = function propertyType(property) {
+   switch (property.type) {
+       case 'boolean':
+         return 'boolean';
+       case 'number':
+         return 'number';
+       case 'formatted':
+         return 'format'
+       case 'string':
+         return 'Expression.toString';
+       default:
+         throw new Error(`unknown type for ${property.name}`);
+   }
+ }
+
 global.propertyJNIType = function propertyJNIType(property) {
   switch (property.type) {
       case 'boolean':
