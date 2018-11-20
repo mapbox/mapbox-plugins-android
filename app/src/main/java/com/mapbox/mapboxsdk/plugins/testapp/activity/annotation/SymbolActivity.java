@@ -1,5 +1,8 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.annotation;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Bundle;
@@ -7,10 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -161,33 +166,84 @@ public class SymbolActivity extends AppCompatActivity {
       } else {
         symbolManager.setFilter(expression);
       }
+    } else if (item.getItemId() == R.id.menu_action_icon) {
+      symbol.setIconImage(MAKI_ICON_CAFE);
+    } else if (item.getItemId() == R.id.menu_action_rotation) {
+      symbol.setIconRotate(45.0f);
+    } else if (item.getItemId() == R.id.menu_action_text) {
+      symbol.setTextField("Hello world!");
+    } else if (item.getItemId() == R.id.menu_action_anchor) {
+      symbol.setIconAnchor(Property.ICON_ANCHOR_BOTTOM);
+    } else if (item.getItemId() == R.id.menu_action_opacity) {
+      symbol.setIconOpacity(0.5f);
+    } else if (item.getItemId() == R.id.menu_action_offset) {
+      symbol.setIconOffset(new PointF(10.0f, 20.0f));
+    } else if (item.getItemId() == R.id.menu_action_text_anchor) {
+      symbol.setTextAnchor(Property.TEXT_ANCHOR_TOP);
+    } else if (item.getItemId() == R.id.menu_action_text_color) {
+      symbol.setTextColor(Color.WHITE);
+    } else if (item.getItemId() == R.id.menu_action_text_size) {
+      symbol.setTextSize(22f);
+    } else if (item.getItemId() == R.id.menu_action_z_index) {
+      symbol.setZIndex(0);
+    } else if (item.getItemId() == R.id.menu_action_animate) {
+      resetSymbol();
+      easeSymbol(symbol, new LatLng(6.687337, 0.381457), 180);
+      return true;
     } else {
-      if (item.getItemId() == R.id.menu_action_icon) {
-        symbol.setIconImage(MAKI_ICON_CAFE);
-      } else if (item.getItemId() == R.id.menu_action_rotation) {
-        symbol.setIconRotate(45.0f);
-      } else if (item.getItemId() == R.id.menu_action_text) {
-        symbol.setTextField("Hello world!");
-      } else if (item.getItemId() == R.id.menu_action_anchor) {
-        symbol.setIconAnchor(Property.ICON_ANCHOR_BOTTOM);
-      } else if (item.getItemId() == R.id.menu_action_opacity) {
-        symbol.setIconOpacity(0.5f);
-      } else if (item.getItemId() == R.id.menu_action_offset) {
-        symbol.setIconOffset(new PointF(10.0f, 20.0f));
-      } else if (item.getItemId() == R.id.menu_action_text_anchor) {
-        symbol.setTextAnchor(Property.TEXT_ANCHOR_TOP);
-      } else if (item.getItemId() == R.id.menu_action_text_color) {
-        symbol.setTextColor(Color.WHITE);
-      } else if (item.getItemId() == R.id.menu_action_text_size) {
-        symbol.setTextSize(22f);
-      } else if (item.getItemId() == R.id.menu_action_z_index) {
-        symbol.setZIndex(0);
-      } else {
-        return super.onOptionsItemSelected(item);
-      }
-      symbolManager.update(symbol);
+      return super.onOptionsItemSelected(item);
     }
+
+    symbolManager.update(symbol);
     return true;
+  }
+
+  private void resetSymbol() {
+    symbol.setIconRotate(0.0f);
+    symbol.setGeometry(Point.fromLngLat(6.687337, 0.381457));
+    symbolManager.update(symbol);
+  }
+
+
+  private void easeSymbol(com.mapbox.mapboxsdk.plugins.annotation.Symbol symbol, final LatLng location, final float rotation) {
+    final LatLng originalPosition = symbol.getLatLng();
+    final float originalRotation = symbol.getIconRotate();
+    final boolean changeLocation = originalPosition.distanceTo(location) > 0;
+    final boolean changeRotation = originalRotation != rotation;
+    if (!changeLocation && !changeRotation) {
+      return;
+    }
+
+    ValueAnimator moveSymbol = ValueAnimator.ofFloat(0, 1).setDuration(5000);
+    moveSymbol.setInterpolator(new LinearInterpolator());
+    moveSymbol.addUpdateListener(animation -> {
+      if (symbolManager == null || symbolManager.getAnnotations().indexOfValue(symbol) < 0) {
+        return;
+      }
+      float fraction = (float) animation.getAnimatedValue();
+
+      if (changeLocation) {
+        double lat = ((location.getLatitude() - originalPosition.getLatitude()) * fraction) + originalPosition.getLatitude();
+        double lng = ((location.getLongitude() - originalPosition.getLongitude()) * fraction) + originalPosition.getLongitude();
+        symbol.setGeometry(Point.fromLngLat(lng, lat));
+      }
+
+      if (changeRotation) {
+        symbol.setIconRotate((rotation - originalRotation) * fraction + originalRotation);
+      }
+
+      symbolManager.update(symbol);
+    });
+    moveSymbol.addListener(new AnimatorListenerAdapter() {
+      @Override
+      public void onAnimationEnd(Animator animation) {
+        super.onAnimationEnd(animation);
+        resetSymbol();
+        easeSymbol(symbol, new LatLng(6.687337, 0.381457), 180);
+      }
+    });
+
+    moveSymbol.start();
   }
 
   @Override
