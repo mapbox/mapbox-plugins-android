@@ -25,7 +25,7 @@ import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.toStringArray
 public class FillOptions extends Options<Fill> {
 
   private boolean isDraggable;
-  private Geometry geometry;
+  private Polygon geometry;
   private Float fillOpacity;
   private String fillColor;
   private String fillOutlineColor;
@@ -200,7 +200,7 @@ public class FillOptions extends Options<Fill> {
     }
 
     FillOptions options = new FillOptions();
-    options.geometry = feature.geometry();
+    options.geometry = (Polygon) feature.geometry();
     if (feature.hasProperty("fill-opacity")) {
       options.fillOpacity = feature.getProperty("fill-opacity").getAsFloat();
     }

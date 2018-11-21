@@ -24,7 +24,7 @@ import static com.mapbox.mapboxsdk.constants.GeometryConstants.MAX_MERCATOR_LATI
 import static com.mapbox.mapboxsdk.constants.GeometryConstants.MIN_MERCATOR_LATITUDE;
 
 @UiThread
-public class Line extends Annotation {
+public class Line extends Annotation<LineString> {
 
   private final AnnotationManager<?, Line, ?, ?, ?, ?> annotationManager;
 
@@ -35,7 +35,7 @@ public class Line extends Annotation {
    * @param jsonObject the features of the annotation
    * @param geometry the geometry of the annotation
    */
-  Line(long id, AnnotationManager<?, Line, ?, ?, ?, ?> annotationManager, JsonObject jsonObject, Geometry geometry) {
+  Line(long id, AnnotationManager<?, Line, ?, ?, ?, ?> annotationManager, JsonObject jsonObject, LineString geometry) {
     super(id, jsonObject, geometry);
     this.annotationManager = annotationManager;
   }
@@ -97,27 +97,6 @@ public class Line extends Annotation {
       latLngs.add(new LatLng(point.latitude(), point.longitude()));
     }
     return latLngs;
-  }
-
-  /**
-   * Set the Geometry of the line, which represents the location of the line on the map
-   * <p>
-   * To update the line on the map use {@link LineManager#update(Annotation)}.
-   * <p>
-   *
-   * @param geometry the geometry of the line
-   */
-  public void setGeometry(LineString geometry) {
-    this.geometry = geometry;
-  }
-
-  /**
-   * Get the Geometry of the line, which represents the location of the line on the map
-   *
-   * @return geometry the geometry of the line
-   */
-  public LineString getGeometry() {
-    return ((LineString) geometry);
   }
 
   // Property accessors
@@ -295,7 +274,7 @@ public class Line extends Annotation {
   @Nullable
   Geometry getOffsetGeometry(@NonNull Projection projection, @NonNull MoveDistancesObject moveDistancesObject,
                              float touchAreaShiftX, float touchAreaShiftY) {
-    List<Point> originalPoints = ((LineString) getGeometry()).coordinates();
+    List<Point> originalPoints = geometry.coordinates();
     List<Point> resultingPoints = new ArrayList<>(originalPoints.size());
     for (Point jsonPoint : originalPoints) {
       PointF pointF = projection.toScreenLocation(new LatLng(jsonPoint.latitude(), jsonPoint.longitude()));

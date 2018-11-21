@@ -29,7 +29,7 @@ import static com.mapbox.mapboxsdk.constants.GeometryConstants.MAX_MERCATOR_LATI
 import static com.mapbox.mapboxsdk.constants.GeometryConstants.MIN_MERCATOR_LATITUDE;
 
 @UiThread
-public class <%- camelize(type) %> extends Annotation {
+public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>> {
 
   private final AnnotationManager<?, <%- camelize(type) %>, ?, ?, ?, ?> annotationManager;
 <% if (type === "symbol") { -%>
@@ -44,7 +44,7 @@ public class <%- camelize(type) %> extends Annotation {
    * @param jsonObject the features of the annotation
    * @param geometry the geometry of the annotation
    */
-  <%- camelize(type) %>(long id, AnnotationManager<?, <%- camelize(type) %>, ?, ?, ?, ?> annotationManager, JsonObject jsonObject, Geometry geometry) {
+  <%- camelize(type) %>(long id, AnnotationManager<?, <%- camelize(type) %>, ?, ?, ?, ?> annotationManager, JsonObject jsonObject, <%- geometryType(type) %> geometry) {
     super(id, jsonObject, geometry);
     this.annotationManager = annotationManager;
   }
@@ -85,8 +85,7 @@ public class <%- camelize(type) %> extends Annotation {
    */
   @NonNull
   public LatLng getLatLng() {
-    Point point = (Point) geometry;
-    return new LatLng(point.latitude(), point.longitude());
+    return new LatLng(geometry.latitude(), geometry.longitude());
   }
 <% } else if (type === "line") { -%>
 
@@ -162,73 +161,6 @@ public class <%- camelize(type) %> extends Annotation {
       }
     }
     return latLngs;
-  }
-<% } -%>
-<% if (type === "circle" || type === "symbol") { -%>
-
-  /**
-   * Set the Geometry of the <%- type %>, which represents the location of the <%- type %> on the map
-   * <p>
-   * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
-   * <p>
-   *
-   * @param geometry the geometry of the <%- type %>
-   */
-  public void setGeometry(Point geometry) {
-    this.geometry = geometry;
-  }
-
-  /**
-   * Get the Geometry of the <%- type %>, which represents the location of the <%- type %> on the map
-   *
-   * @return the geometry of the <%- type %>
-   */
-  public Point getGeometry() {
-    return ((Point) geometry);
-  }
-<% } else if (type === "line") { -%>
-
-  /**
-   * Set the Geometry of the <%- type %>, which represents the location of the <%- type %> on the map
-   * <p>
-   * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
-   * <p>
-   *
-   * @param geometry the geometry of the <%- type %>
-   */
-  public void setGeometry(LineString geometry) {
-    this.geometry = geometry;
-  }
-
-  /**
-   * Get the Geometry of the <%- type %>, which represents the location of the <%- type %> on the map
-   *
-   * @return geometry the geometry of the <%- type %>
-   */
-  public LineString getGeometry() {
-    return ((LineString) geometry);
-  }
-<% } else { -%>
-
-  /**
-   * Set the Geometry of the <%- type %>, which represents the location of the <%- type %> on the map
-   * <p>
-   * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
-   * <p>
-   *
-   * @param geometry the geometry of the <%- type %>
-   */
-  public void setGeometry(Polygon geometry) {
-    this.geometry = geometry;
-  }
-
-  /**
-   * Get the Geometry of the <%- type %>, which represents the location of the <%- type %> on the map
-   *
-   * @return the geometry of the <%- type %>
-   */
-  public Polygon getGeometry() {
-    return ((Polygon) geometry);
   }
 <% } -%>
 <% if (type === "symbol") { -%>
@@ -390,7 +322,7 @@ public class <%- camelize(type) %> extends Annotation {
   @Nullable
   Geometry getOffsetGeometry(@NonNull Projection projection, @NonNull MoveDistancesObject moveDistancesObject,
                              float touchAreaShiftX, float touchAreaShiftY) {
-    List<Point> originalPoints = ((LineString) getGeometry()).coordinates();
+    List<Point> originalPoints = geometry.coordinates();
     List<Point> resultingPoints = new ArrayList<>(originalPoints.size());
     for (Point jsonPoint : originalPoints) {
       PointF pointF = projection.toScreenLocation(new LatLng(jsonPoint.latitude(), jsonPoint.longitude()));
@@ -412,7 +344,7 @@ public class <%- camelize(type) %> extends Annotation {
   @Nullable
   Geometry getOffsetGeometry(@NonNull Projection projection, @NonNull MoveDistancesObject moveDistancesObject,
                              float touchAreaShiftX, float touchAreaShiftY) {
-    List<List<Point>> originalPoints = ((Polygon) getGeometry()).coordinates();
+    List<List<Point>> originalPoints = geometry.coordinates();
     if (originalPoints != null) {
       List<List<Point>> resultingPoints = new ArrayList<>(originalPoints.size());
       for (List<Point> points : originalPoints) {
