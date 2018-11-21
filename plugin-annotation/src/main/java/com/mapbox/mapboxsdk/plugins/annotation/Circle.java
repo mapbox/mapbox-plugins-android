@@ -24,7 +24,7 @@ import static com.mapbox.mapboxsdk.constants.GeometryConstants.MAX_MERCATOR_LATI
 import static com.mapbox.mapboxsdk.constants.GeometryConstants.MIN_MERCATOR_LATITUDE;
 
 @UiThread
-public class Circle extends Annotation {
+public class Circle extends Annotation<Point> {
 
   private final AnnotationManager<?, Circle, ?, ?, ?, ?> annotationManager;
 
@@ -35,7 +35,7 @@ public class Circle extends Annotation {
    * @param jsonObject the features of the annotation
    * @param geometry the geometry of the annotation
    */
-  Circle(long id, AnnotationManager<?, Circle, ?, ?, ?, ?> annotationManager, JsonObject jsonObject, Geometry geometry) {
+  Circle(long id, AnnotationManager<?, Circle, ?, ?, ?, ?> annotationManager, JsonObject jsonObject, Point geometry) {
     super(id, jsonObject, geometry);
     this.annotationManager = annotationManager;
   }
@@ -84,29 +84,7 @@ public class Circle extends Annotation {
    */
   @NonNull
   public LatLng getLatLng() {
-    Point point = (Point) geometry;
-    return new LatLng(point.latitude(), point.longitude());
-  }
-
-  /**
-   * Set the Geometry of the circle, which represents the location of the circle on the map
-   * <p>
-   * To update the circle on the map use {@link CircleManager#update(Annotation)}.
-   * <p>
-   *
-   * @param geometry the geometry of the circle
-   */
-  public void setGeometry(Point geometry) {
-    this.geometry = geometry;
-  }
-
-  /**
-   * Get the Geometry of the circle, which represents the location of the circle on the map
-   *
-   * @return the geometry of the circle
-   */
-  public Point getGeometry() {
-    return ((Point) geometry);
+    return new LatLng(geometry.latitude(), geometry.longitude());
   }
 
   // Property accessors

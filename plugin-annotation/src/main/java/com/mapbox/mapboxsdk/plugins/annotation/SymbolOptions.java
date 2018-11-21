@@ -25,7 +25,7 @@ import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.toStringArray
 public class SymbolOptions extends Options<Symbol> {
 
   private boolean isDraggable;
-  private Geometry geometry;
+  private Point geometry;
   private Float iconSize;
   private String iconImage;
   private Float iconRotate;
@@ -702,7 +702,7 @@ public class SymbolOptions extends Options<Symbol> {
     }
 
     SymbolOptions options = new SymbolOptions();
-    options.geometry = feature.geometry();
+    options.geometry = (Point) feature.geometry();
     if (feature.hasProperty("icon-size")) {
       options.iconSize = feature.getProperty("icon-size").getAsFloat();
     }

@@ -8,24 +8,35 @@ import com.mapbox.android.gestures.MoveDistancesObject;
 import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.maps.Projection;
 
-public abstract class Annotation {
+public abstract class Annotation<T extends Geometry> {
 
   static final String ID_KEY = "id";
   protected JsonObject jsonObject;
-  protected Geometry geometry;
+  protected T geometry;
   private boolean isDraggable;
 
-  Annotation(long id, JsonObject jsonObject, Geometry geometry) {
+  Annotation(long id, JsonObject jsonObject, T geometry) {
     this.jsonObject = jsonObject;
     this.jsonObject.addProperty(ID_KEY, id);
     this.geometry = geometry;
   }
 
-  void setGeometry(Geometry geometry) {
+  /**
+   * Set the geometry of an annotation, geometry type depends on the generic attribute.
+   *
+   * @param geometry an instance of a geometry type
+   */
+  public void setGeometry(T geometry) {
     this.geometry = geometry;
   }
 
-  Geometry getGeometry() {
+  /**
+   * Get the geometry of an annotation, type of geometry returned depends on the generic attribute.
+   *
+   * @return the geometry of the annotation
+   * @throws IllegalStateException if geometry hasn't been initialised
+   */
+  public T getGeometry() {
     if (geometry == null) {
       throw new IllegalStateException();
     }

@@ -24,7 +24,7 @@ import static com.mapbox.mapboxsdk.constants.GeometryConstants.MAX_MERCATOR_LATI
 import static com.mapbox.mapboxsdk.constants.GeometryConstants.MIN_MERCATOR_LATITUDE;
 
 @UiThread
-public class Fill extends Annotation {
+public class Fill extends Annotation<Polygon> {
 
   private final AnnotationManager<?, Fill, ?, ?, ?, ?> annotationManager;
 
@@ -35,7 +35,7 @@ public class Fill extends Annotation {
    * @param jsonObject the features of the annotation
    * @param geometry the geometry of the annotation
    */
-  Fill(long id, AnnotationManager<?, Fill, ?, ?, ?, ?> annotationManager, JsonObject jsonObject, Geometry geometry) {
+  Fill(long id, AnnotationManager<?, Fill, ?, ?, ?, ?> annotationManager, JsonObject jsonObject, Polygon geometry) {
     super(id, jsonObject, geometry);
     this.annotationManager = annotationManager;
   }
@@ -96,27 +96,6 @@ public class Fill extends Annotation {
       }
     }
     return latLngs;
-  }
-
-  /**
-   * Set the Geometry of the fill, which represents the location of the fill on the map
-   * <p>
-   * To update the fill on the map use {@link FillManager#update(Annotation)}.
-   * <p>
-   *
-   * @param geometry the geometry of the fill
-   */
-  public void setGeometry(Polygon geometry) {
-    this.geometry = geometry;
-  }
-
-  /**
-   * Get the Geometry of the fill, which represents the location of the fill on the map
-   *
-   * @return the geometry of the fill
-   */
-  public Polygon getGeometry() {
-    return ((Polygon) geometry);
   }
 
   // Property accessors
@@ -211,7 +190,7 @@ public class Fill extends Annotation {
   @Nullable
   Geometry getOffsetGeometry(@NonNull Projection projection, @NonNull MoveDistancesObject moveDistancesObject,
                              float touchAreaShiftX, float touchAreaShiftY) {
-    List<List<Point>> originalPoints = ((Polygon) getGeometry()).coordinates();
+    List<List<Point>> originalPoints = geometry.coordinates();
     if (originalPoints != null) {
       List<List<Point>> resultingPoints = new ArrayList<>(originalPoints.size());
       for (List<Point> points : originalPoints) {

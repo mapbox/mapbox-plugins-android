@@ -25,7 +25,7 @@ import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.toStringArray
 public class CircleOptions extends Options<Circle> {
 
   private boolean isDraggable;
-  private Geometry geometry;
+  private Point geometry;
   private Float circleRadius;
   private String circleColor;
   private Float circleBlur;
@@ -262,7 +262,7 @@ public class CircleOptions extends Options<Circle> {
     }
 
     CircleOptions options = new CircleOptions();
-    options.geometry = feature.geometry();
+    options.geometry = (Point) feature.geometry();
     if (feature.hasProperty("circle-radius")) {
       options.circleRadius = feature.getProperty("circle-radius").getAsFloat();
     }

@@ -30,7 +30,7 @@ import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.toStringArray
 public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>> {
 
   private boolean isDraggable;
-  private Geometry geometry;
+  private <%- geometryType(type) %> geometry;
 <% for (const property of properties) { -%>
 <% if (supportsPropertyFunction(property)) { -%>
   private <%- propertyType(property) %> <%- camelizeWithLeadingLowercase(property.name) %>;
@@ -82,7 +82,7 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
    * @param geometry the location of the <%- type %>
    * @return this
    */
-  public <%- camelize(type) %>Options withGeometry(Point geometry) {
+  public <%- camelize(type) %>Options withGeometry(<%- geometryType(type) %> geometry) {
     this.geometry = geometry;
     return this;
   }
@@ -248,7 +248,7 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
     }
 
     <%- camelize(type) %>Options options = new <%- camelize(type) %>Options();
-    options.geometry = feature.geometry();
+    options.geometry = (<%- geometryType(type) %>) feature.geometry();
 <% for (const property of properties) { -%>
 <% if (supportsPropertyFunction(property)) { -%>
 <% if (propertyType(property).endsWith("[]")) { -%>

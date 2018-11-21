@@ -25,7 +25,7 @@ import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.toStringArray
 public class LineOptions extends Options<Line> {
 
   private boolean isDraggable;
-  private Geometry geometry;
+  private LineString geometry;
   private String lineJoin;
   private Float lineOpacity;
   private String lineColor;
@@ -289,7 +289,7 @@ public class LineOptions extends Options<Line> {
     }
 
     LineOptions options = new LineOptions();
-    options.geometry = feature.geometry();
+    options.geometry = (LineString) feature.geometry();
     if (feature.hasProperty("line-join")) {
       options.lineJoin = feature.getProperty("line-join").getAsString();
     }
