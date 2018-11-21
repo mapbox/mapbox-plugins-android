@@ -1,7 +1,5 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.annotation;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.graphics.PointF;
@@ -13,7 +11,6 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -35,10 +32,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-import static com.mapbox.mapboxsdk.style.expressions.Expression.eq;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.not;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.toNumber;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.*;
 
 /**
  * Activity showcasing adding symbols using the annotation plugin
@@ -51,6 +45,7 @@ public class SymbolActivity extends AppCompatActivity {
   private static final String MAKI_ICON_CIRCLE = "circle-15";
 
   private final Random random = new Random();
+  private final List<ValueAnimator> animators = new ArrayList<>();
 
   private MapView mapView;
   private SymbolManager symbolManager;
@@ -204,8 +199,7 @@ public class SymbolActivity extends AppCompatActivity {
     symbolManager.update(symbol);
   }
 
-
-  private void easeSymbol(com.mapbox.mapboxsdk.plugins.annotation.Symbol symbol, final LatLng location, final float rotation) {
+  private void easeSymbol(Symbol symbol, final LatLng location, final float rotation) {
     final LatLng originalPosition = symbol.getLatLng();
     final float originalRotation = symbol.getIconRotate();
     final boolean changeLocation = originalPosition.distanceTo(location) > 0;
@@ -234,16 +228,9 @@ public class SymbolActivity extends AppCompatActivity {
 
       symbolManager.update(symbol);
     });
-    moveSymbol.addListener(new AnimatorListenerAdapter() {
-      @Override
-      public void onAnimationEnd(Animator animation) {
-        super.onAnimationEnd(animation);
-        resetSymbol();
-        easeSymbol(symbol, new LatLng(6.687337, 0.381457), 180);
-      }
-    });
 
     moveSymbol.start();
+    animators.add(moveSymbol);
   }
 
   @Override
@@ -267,6 +254,9 @@ public class SymbolActivity extends AppCompatActivity {
   @Override
   protected void onStop() {
     super.onStop();
+    for (ValueAnimator animator : animators) {
+      animator.cancel();
+    }
     mapView.onStop();
   }
 
