@@ -39,7 +39,6 @@ public abstract class AnnotationManager<
 
   protected final MapboxMap mapboxMap;
   protected final LongSparseArray<T> annotations = new LongSparseArray<>();
-  protected final List<Feature> features = new ArrayList<>();
   protected final Map<String, Boolean> propertyUsageMap = new HashMap<>();
 
   private final DraggableAnnotationController<T, D> draggableAnnotationController;
@@ -176,8 +175,7 @@ public abstract class AnnotationManager<
   }
 
   void internalUpdateSource() {
-    // todo move feature creation to a background thread?
-    features.clear();
+    List<Feature>features = new ArrayList<>();
     T t;
     for (int i = 0; i < annotations.size(); i++) {
       t = annotations.valueAt(i);
