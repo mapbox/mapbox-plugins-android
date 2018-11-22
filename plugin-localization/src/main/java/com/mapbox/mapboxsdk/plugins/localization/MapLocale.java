@@ -41,67 +41,67 @@ public final class MapLocale {
    */
 
   /**
-   * the name (or names) used locally for the place.
+   * The name (or names) used locally for the place.
    */
   public static final String LOCAL_NAME = "name";
 
   /**
-   * English (if available, otherwise same as name)
+   * English (if available)
    */
   public static final String ENGLISH = "name_en";
 
   /**
-   * French (if available, otherwise same as name_en)
+   * French (if available)
    */
   public static final String FRENCH = "name_fr";
 
   /**
-   * Arabic (if available, otherwise same as name)
+   * Arabic (if available)
    */
   public static final String ARABIC = "name_ar";
 
   /**
-   * Spanish (if available, otherwise same as name_en)
+   * Spanish (if available)
    */
   public static final String SPANISH = "name_es";
 
   /**
-   * German (if available, otherwise same as name_en)
+   * German (if available)
    */
   public static final String GERMAN = "name_de";
 
   /**
-   * Portuguese (if available, otherwise same as name_en)
+   * Portuguese (if available)
    */
   public static final String PORTUGUESE = "name_pt";
 
   /**
-   * Russian (if available, otherwise same as name)
+   * Russian (if available)
    */
   public static final String RUSSIAN = "name_ru";
 
   /**
-   * Chinese (if available, otherwise same as name)
+   * Chinese (if available)
    */
   public static final String CHINESE = "name_zh";
 
   /**
-   * Chinese (if available, otherwise same as name)
+   * Chinese (if available)
    */
   static final String CHINESE_V8 = "name_zh-Hant";
 
   /**
-   * Simplified Chinese (if available, otherwise same as name)
+   * Simplified Chinese (if available)
    */
   public static final String SIMPLIFIED_CHINESE = "name_zh-Hans";
 
   /**
-   * Japanese (if available, otherwise same as name)
+   * Japanese (if available)
    */
   public static final String JAPANESE = "name_ja";
 
   /**
-   * Korean (if available, otherwise same as name)
+   * Korean (if available)
    */
   public static final String KOREAN = "name_ko";
 
