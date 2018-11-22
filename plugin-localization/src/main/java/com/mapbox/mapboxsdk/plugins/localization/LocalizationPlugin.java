@@ -33,7 +33,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
 public final class LocalizationPlugin implements MapView.OnMapChangedListener {
 
   // expression syntax
-  private static final String EXPRESSION_REGEX = "\\bname_.{2}";
+  private static final String EXPRESSION_REGEX = "\\bname_.{2,7}\\b";
 
   private static final String EXPRESSION_V8_REGEX_BASE = "\\[\"get\", \"name_en\"], \\[\"get\", \"name\"]";
   private static final String EXPRESSION_V8_TEMPLATE_BASE = "[\"get\", \"name_en\"], [\"get\", \"name\"]";
