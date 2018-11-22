@@ -1,6 +1,7 @@
 package com.mapbox.mapboxsdk.plugins.localization;
 
 import android.support.annotation.NonNull;
+
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -12,10 +13,11 @@ import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.Source;
 import com.mapbox.mapboxsdk.style.sources.VectorSource;
-import timber.log.Timber;
 
 import java.util.List;
 import java.util.Locale;
+
+import timber.log.Timber;
 
 import static com.mapbox.mapboxsdk.style.expressions.Expression.raw;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
@@ -33,9 +35,37 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
   // expression syntax
   private static final String EXPRESSION_REGEX = "\\bname_.{2}";
 
+  private static final String EXPRESSION_V8_REGEX_BASE = "\\[\"get\", \"name_en\"], \\[\"get\", \"name\"]";
+  private static final String EXPRESSION_V8_TEMPLATE_BASE = "[\"get\", \"name_en\"], [\"get\", \"name\"]";
+  private static final String EXPRESSION_V8_REGEX_LOCALIZED =
+    "\\[\"match\", \"name_.{2,7}\", " +
+      "\"name_zh-Hant\", \\[\"coalesce\", " +
+      "\\[\"get\", \"name_zh-Hant\"], " +
+      "\\[\"get\", \"name_zh-Hans\"], " +
+      "\\[\"match\", \\[\"get\", \"name_script\"], \"Latin\", \\[\"get\", \"name\"], \\[\"get\", \"name_en\"]], " +
+      "\\[\"get\", \"name\"]], " +
+      "\\[\"coalesce\", " +
+      "\\[\"get\", \"name_.{2,7}\"], " +
+      "\\[\"match\", \\[\"get\", \"name_script\"], \"Latin\", \\[\"get\", \"name\"], \\[\"get\", \"name_en\"]], " +
+      "\\[\"get\", \"name\"]]" +
+      "]";
+
+  private static final String EXPRESSION_V8_TEMPLATE_LOCALIZED =
+    "[\"match\", \"%s\", " +
+      "\"name_zh-Hant\", [\"coalesce\", " +
+      "[\"get\", \"name_zh-Hant\"], " +
+      "[\"get\", \"name_zh-Hans\"], " +
+      "[\"match\", [\"get\", \"name_script\"], \"Latin\", [\"get\", \"name\"], [\"get\", \"name_en\"]], " +
+      "[\"get\", \"name\"]], " +
+      "[\"coalesce\", " +
+      "[\"get\", \"%s\"], " +
+      "[\"match\", [\"get\", \"name_script\"], \"Latin\", [\"get\", \"name\"], [\"get\", \"name_en\"]], " +
+      "[\"get\", \"name\"]]" +
+      "]";
+
   // faulty step expression workaround
   private static final String STEP_REGEX = "\\[\"zoom\"], ";
-  private static final String STEP_TEMPLATE = "[\"zoom\"], %s, ";
+  private static final String STEP_TEMPLATE = "[\"zoom\"], \"\", ";
 
   // legacy token syntax
   private static final String TOKEN_TEMPLATE = "{%s}";
@@ -113,7 +143,6 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
     }
   }
 
-
   /**
    * You can pass in a {@link MapLocale} directly into this method which uses the language defined
    * in it to represent the language found on the map.
@@ -126,11 +155,16 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
     List<Layer> layers = mapboxMap.getLayers();
     for (Source source : mapboxMap.getSources()) {
       if (sourceIsFromMapbox(source)) {
+        boolean isStreetsV8 = sourceIsStreetsV8(source);
         for (Layer layer : layers) {
           if (layer instanceof SymbolLayer) {
             PropertyValue<?> textFieldProperty = ((SymbolLayer) layer).getTextField();
             if (textFieldProperty.isExpression()) {
-              convertExpression(mapLocale, layer, textFieldProperty);
+              if (isStreetsV8) {
+                convertExpressionV8(mapLocale, layer, textFieldProperty);
+              } else {
+                convertExpression(mapLocale, layer, textFieldProperty);
+              }
             } else {
               convertToken(mapLocale, layer, textFieldProperty);
             }
@@ -155,9 +189,33 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
       String text = textFieldExpression.toString().replaceAll(EXPRESSION_REGEX, mapLocale.getMapLanguage());
       if (text.startsWith("[\"step") && textFieldExpression.toArray().length % 2 == 0) {
         // got an invalid step expression from core, we need to add an additional name_x into step
-        text = text.replaceAll(STEP_REGEX, String.format(STEP_TEMPLATE, mapLocale.getMapLanguage()));
+        text = text.replaceAll(STEP_REGEX, STEP_TEMPLATE);
       }
       layer.setProperties(textField(raw(text)));
+    }
+  }
+
+  private void convertExpressionV8(@NonNull MapLocale mapLocale, Layer layer, PropertyValue<?> textFieldProperty) {
+    Expression textFieldExpression = textFieldProperty.getExpression();
+    if (textFieldExpression != null) {
+      String stringExpression =
+        textFieldExpression.toString().replaceAll(EXPRESSION_V8_REGEX_LOCALIZED, EXPRESSION_V8_TEMPLATE_BASE);
+
+      String mapLanguage = mapLocale.getMapLanguage();
+
+      if (!mapLanguage.equals("name_en")) {
+        if (mapLanguage.equals(MapLocale.CHINESE)) {
+          // in streets v8 tiles chinese is declared as "name_zh-Hant" instead of "name_zh"
+          mapLanguage = MapLocale.CHINESE_V8;
+        }
+
+        stringExpression = stringExpression.replaceAll(EXPRESSION_V8_REGEX_BASE,
+          String.format(Locale.US,
+            EXPRESSION_V8_TEMPLATE_LOCALIZED,
+            mapLanguage,
+            mapLanguage));
+      }
+      layer.setProperties(textField(raw(stringExpression)));
     }
   }
 
@@ -226,26 +284,11 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
     return singleSource instanceof VectorSource
       && ((VectorSource) singleSource).getUrl().substring(0, 9).equals("mapbox://")
       && (((VectorSource) singleSource).getUrl().contains("mapbox.mapbox-streets-v7")
-      || ((VectorSource) singleSource).getUrl().contains("mapbox.mapbox-streets-v6"));
+      || ((VectorSource) singleSource).getUrl().contains("mapbox.mapbox-streets-v6")
+      || ((VectorSource) singleSource).getUrl().contains("mapbox.mapbox-streets-v8"));
   }
 
-  /**
-   * Checks whether a single map layer has a textField that could potentially be localized to the
-   * device's language.
-   *
-   * @param singleLayer an individual layer from the map
-   * @return true if the layer has a textField eligible for translation, false if not.
-   */
-  private boolean layerHasAdjustableTextField(Layer singleLayer) {
-    if (singleLayer instanceof SymbolLayer) {
-      PropertyValue<String> textField = ((SymbolLayer) singleLayer).getTextField();
-      if (textField != null) {
-        Timber.e("TextField is not null: %s - %s", textField.getValue(), textField.getExpression());
-        return true;
-      } else {
-        Timber.e("TextField is NULL");
-      }
-    }
-    return false;
+  private boolean sourceIsStreetsV8(Source source) {
+    return (((VectorSource) source).getUrl().contains("mapbox.mapbox-streets-v8"));
   }
 }
