@@ -5,14 +5,12 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.plugins.localization.LocalizationPlugin
 import com.mapbox.mapboxsdk.plugins.localization.MapLocale
 import com.mapbox.mapboxsdk.plugins.testapp.R
 import com.mapbox.mapboxsdk.plugins.testapp.Utils
-
 import kotlinx.android.synthetic.main.activity_localization.*
 
 class LocalizationActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -44,11 +42,11 @@ class LocalizationActivity : AppCompatActivity(), OnMapReadyCallback {
         fabCamera.setOnClickListener{
             val locale = nextMapLocale
             localizationPlugin?.setMapLanguage(locale)
-            localizationPlugin?.setCameraToLocaleCountry(locale)
+            localizationPlugin?.setCameraToLocaleCountry(locale, 25)
         }
 
         fabStyles.setOnClickListener{
-            mapboxMap?.setStyleUrl(Utils.nextStyle);
+            mapboxMap?.setStyleUrl(Utils.nextStyle)
         }
     }
 
@@ -144,6 +142,10 @@ class LocalizationActivity : AppCompatActivity(), OnMapReadyCallback {
                 localizationPlugin?.setMapLanguage(MapLocale.KOREAN)
                 return true
             }
+            R.id.local -> {
+                localizationPlugin?.setMapLanguage(MapLocale.LOCAL_NAME)
+                return true
+            }
             android.R.id.home -> {
                 finish()
                 return true
@@ -154,7 +156,7 @@ class LocalizationActivity : AppCompatActivity(), OnMapReadyCallback {
 
     companion object {
 
-        private val LOCALES = arrayOf(MapLocale.CANADA, MapLocale.GERMANY, MapLocale.CHINA, MapLocale.US, MapLocale.CANADA_FRENCH, MapLocale.ITALY, MapLocale.JAPAN, MapLocale.KOREA, MapLocale.FRANCE)
+        private val LOCALES = arrayOf(MapLocale.CANADA, MapLocale.GERMANY, MapLocale.CHINA, MapLocale.US, MapLocale.CANADA_FRENCH, MapLocale.JAPAN, MapLocale.KOREA, MapLocale.FRANCE, MapLocale.SPAIN)
 
         private var index: Int = 0
 
