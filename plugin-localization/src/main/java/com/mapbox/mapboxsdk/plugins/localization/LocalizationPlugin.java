@@ -27,7 +27,16 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
  * Useful class for quickly adjusting the maps language and the maps camera starting position.
  * You can either use {@link #matchMapLanguageWithDeviceDefault()} to match the map language with
  * the one being currently used on the device. Using {@link #setMapLanguage(Locale)} and it's
- * variants, you can also change the maps langauge at anytime to any of the supported languages.
+ * variants, you can also change the maps language at anytime to any of the supported languages.
+ * <p>
+ * The plugin uses a fallback logic in case there are missing resources
+ * - if there is no available localization for a label, the plugin will use local name, if it's Latin script based,
+ * otherwise English. Traditional Chinese falls back to Simplified Chinese before executing before mentioned logic.
+ * <p>
+ * The plugin only support Mapbox sources:<br/>
+ * - mapbox.mapbox-streets-v6<br/>
+ * - mapbox.mapbox-streets-v7<br/>
+ * - mapbox.mapbox-streets-v8
  *
  * @since 0.1.0
  */
@@ -137,8 +146,6 @@ public final class LocalizationPlugin {
    * locale you are trying to use, has a complementary {@link MapLocale} for it.
    *
    * @param locale a {@link Locale} which has a complementary {@link MapLocale} for it
-   * @throws NullPointerException thrown when the locale passed into the method doesn't have a
-   *                              matching {@link MapLocale}
    * @since 0.1.0
    */
   public void setMapLanguage(@NonNull Locale locale) {
@@ -178,7 +185,15 @@ public final class LocalizationPlugin {
           }
         }
       } else {
-        Timber.w("The source is not based on Mapbox Vector Tiles. Supported sources:\n %s", SUPPORTED_SOURCES);
+        String url = null;
+        if (source instanceof VectorSource) {
+          url = ((VectorSource) source).getUrl();
+        }
+        if (url == null) {
+          url = "not found";
+        }
+        Timber.w("The \"%s\" source is not based on Mapbox Vector Tiles. Supported sources:\n %s",
+          url, SUPPORTED_SOURCES);
       }
     }
   }
@@ -249,8 +264,6 @@ public final class LocalizationPlugin {
    *
    * @param locale  a {@link Locale} which has a complementary {@link MapLocale} for it
    * @param padding camera padding
-   * @throws NullPointerException thrown when the locale passed into the method doesn't have a
-   *                              matching {@link MapLocale}
    * @since 0.1.0
    */
   public void setCameraToLocaleCountry(Locale locale, int padding) {
@@ -268,8 +281,6 @@ public final class LocalizationPlugin {
    *
    * @param mapLocale the {@link MapLocale} object which contains the desired map bounds
    * @param padding   camera padding
-   * @throws NullPointerException thrown when it was expecting a {@link LatLngBounds} but instead
-   *                              it was null
    * @since 0.1.0
    */
   public void setCameraToLocaleCountry(MapLocale mapLocale, int padding) {
