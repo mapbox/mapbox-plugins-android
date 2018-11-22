@@ -86,6 +86,11 @@ public final class MapLocale {
   public static final String CHINESE = "name_zh";
 
   /**
+   * Chinese (if available, otherwise same as name)
+   */
+  static final String CHINESE_V8 = "name_zh-Hant";
+
+  /**
    * Simplified Chinese (if available, otherwise same as name)
    */
   public static final String SIMPLIFIED_CHINESE = "name_zh-Hans";
@@ -282,7 +287,7 @@ public final class MapLocale {
    * @param mapLanguage a non-null string which is allowed from {@link Languages}
    * @since 0.1.0
    */
-  public MapLocale(@NonNull @Languages String mapLanguage) {
+  public MapLocale(@NonNull String mapLanguage) {
     this(mapLanguage, null);
   }
 
