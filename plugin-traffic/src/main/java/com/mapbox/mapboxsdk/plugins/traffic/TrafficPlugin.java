@@ -16,11 +16,24 @@ import com.mapbox.mapboxsdk.style.sources.Source;
 import com.mapbox.mapboxsdk.style.sources.VectorSource;
 import timber.log.Timber;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mapbox.mapboxsdk.style.expressions.Expression.*;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.exponential;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.match;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.literal;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.stop;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineColor;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineOffset;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineCap;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineJoin;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineOpacity;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
 
 /**
  * The Traffic Plugin allows you to add Mapbox Traffic v1 to the Mapbox Maps SDK for Android.
@@ -33,7 +46,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
  * Use {@link #isVisible()} to validate if the plugin is active or not.
  * </p>
  */
-public final class TrafficPlugin implements MapView.OnDidFinishLoadingStyleListener {
+public final class TrafficPlugin {
 
   private final MapboxMap mapboxMap;
   private final List<String> layerIds = new ArrayList<>();
@@ -62,7 +75,7 @@ public final class TrafficPlugin implements MapView.OnDidFinishLoadingStyleListe
                        @Nullable String belowLayer) {
     this.mapboxMap = mapboxMap;
     this.belowLayer = belowLayer;
-    mapView.addOnDidFinishLoadingStyleListener(this);
+    mapView.addOnDidFinishLoadingStyleListener(new StyleLoadHandler(this));
     updateState();
   }
 
@@ -92,16 +105,6 @@ public final class TrafficPlugin implements MapView.OnDidFinishLoadingStyleListe
       if (layerIds.contains(layer.getId())) {
         layer.setProperties(visibility(visible ? Property.VISIBLE : Property.NONE));
       }
-    }
-  }
-
-  /**
-   * Called when we detected loading of a new style, if applicable reapply traffic source and layers.
-   */
-  @Override
-  public void onDidFinishLoadingStyle() {
-    if (isVisible()) {
-      updateState();
     }
   }
 
@@ -320,12 +323,12 @@ public final class TrafficPlugin implements MapView.OnDidFinishLoadingStyleListe
 
   private static class TrafficLayer {
 
-    static LineLayer getLineLayer(String lineLayerId, float minZoom, Expression statement,
+    static LineLayer getLineLayer(String lineLayerId, float minZoom, Expression filter,
                                   Expression lineColor, Expression lineWidth, Expression lineOffset) {
-      return getLineLayer(lineLayerId, minZoom, statement, lineColor, lineWidth, lineOffset, null);
+      return getLineLayer(lineLayerId, minZoom, filter, lineColor, lineWidth, lineOffset, null);
     }
 
-    static LineLayer getLineLayer(String lineLayerId, float minZoom, Expression statement,
+    static LineLayer getLineLayer(String lineLayerId, float minZoom, Expression filter,
                                   Expression lineColorExpression, Expression lineWidthExpression,
                                   Expression lineOffsetExpression, Expression lineOpacityExpression) {
       LineLayer lineLayer = new LineLayer(lineLayerId, TrafficData.SOURCE_ID);
@@ -341,7 +344,7 @@ public final class TrafficPlugin implements MapView.OnDidFinishLoadingStyleListe
         lineLayer.setProperties(lineOpacity(lineOpacityExpression));
       }
 
-      lineLayer.setFilter(statement);
+      lineLayer.setFilter(filter);
       lineLayer.setMinZoom(minZoom);
       return lineLayer;
     }
@@ -472,9 +475,12 @@ public final class TrafficPlugin implements MapView.OnDidFinishLoadingStyleListe
     static final String BASE_LAYER_ID = "traffic-secondary-tertiary";
     static final String CASE_LAYER_ID = "traffic-secondary-tertiary-bg";
     static final float ZOOM_LEVEL = 6.0f;
-    static final String[] FILTER_LAYERS = new String[] {"secondary", "tertiary"};
 
-    static final Expression FILTER = match(get("class"), literal(false), literal(FILTER_LAYERS), literal(true));
+    static final Expression FILTER = match(
+      get("class"), literal(false),
+      stop("secondary", true),
+      stop("tertiary", true)
+    );
 
     static final Expression FUNCTION_LINE_WIDTH = interpolate(exponential(1.5f), zoom(),
       stop(9, 0.5f),
@@ -506,9 +512,12 @@ public final class TrafficPlugin implements MapView.OnDidFinishLoadingStyleListe
     static final String CASE_LAYER_ID = "traffic-local-case";
     static final float ZOOM_LEVEL = 15.0f;
 
-    static final String[] FILTER_LAYERS = new String[] {"motorway_link", "service", "street"};
-
-    static final Expression FILTER = match(get("class"), literal(false), literal(FILTER_LAYERS), literal(true));
+    static final Expression FILTER = match(
+      get("class"), literal(false),
+      stop("motorway_link", true),
+      stop("service", true),
+      stop("street", true)
+    );
 
     static final Expression FUNCTION_LINE_WIDTH = interpolate(exponential(1.5f), zoom(),
       stop(14, 1.5f),
@@ -538,5 +547,22 @@ public final class TrafficPlugin implements MapView.OnDidFinishLoadingStyleListe
     static final int CASE_ORANGE = Color.parseColor("#bd0010");
     static final int BASE_RED = Color.parseColor("#981b25");
     static final int CASE_RED = Color.parseColor("#5f1117");
+  }
+
+  private static class StyleLoadHandler implements MapView.OnDidFinishLoadingStyleListener {
+
+    private WeakReference<TrafficPlugin> trafficPlugin;
+
+    StyleLoadHandler(TrafficPlugin trafficPlugin) {
+      this.trafficPlugin = new WeakReference<>(trafficPlugin);
+    }
+
+    @Override
+    public void onDidFinishLoadingStyle() {
+      TrafficPlugin trafficPlugin = this.trafficPlugin.get();
+      if (trafficPlugin != null && trafficPlugin.isVisible()) {
+        trafficPlugin.updateState();
+      }
+    }
   }
 }
