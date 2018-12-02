@@ -5,38 +5,22 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
-
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.Property;
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.Source;
 import com.mapbox.mapboxsdk.style.sources.VectorSource;
+import timber.log.Timber;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import timber.log.Timber;
-
-import static com.mapbox.mapboxsdk.style.expressions.Expression.exponential;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.literal;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.match;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.stop;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.toColor;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineCap;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineJoin;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineOffset;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineOpacity;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.*;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 
 /**
  * The Traffic Plugin allows you to add Mapbox Traffic v1 to the Mapbox Maps SDK for Android.
@@ -49,11 +33,12 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
  * Use {@link #isVisible()} to validate if the plugin is active or not.
  * </p>
  */
-public final class TrafficPlugin implements MapView.OnMapChangedListener {
+public final class TrafficPlugin implements MapView.OnDidFinishLoadingStyleListener {
 
-  private MapboxMap mapboxMap;
-  private List<String> layerIds;
-  private String belowLayer;
+  private final MapboxMap mapboxMap;
+  private final List<String> layerIds = new ArrayList<>();
+  private final String belowLayer;
+
   private boolean visible;
 
   /**
@@ -77,7 +62,7 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
                        @Nullable String belowLayer) {
     this.mapboxMap = mapboxMap;
     this.belowLayer = belowLayer;
-    mapView.addOnMapChangedListener(this);
+    mapView.addOnDidFinishLoadingStyleListener(this);
     updateState();
   }
 
@@ -96,6 +81,11 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
    * @param visible true for visible, false for none
    */
   public void setVisibility(boolean visible) {
+    Source source = mapboxMap.getSource(TrafficData.SOURCE_ID);
+    if (source == null) {
+      initialise();
+    }
+
     this.visible = visible;
     List<Layer> layers = mapboxMap.getLayers();
     for (Layer layer : layers) {
@@ -106,16 +96,11 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
   }
 
   /**
-   * Called when a map change events occurs.
-   * <p>
-   * Used to detect loading of a new style, if applicable reapply traffic source and layers.
-   * </p>
-   *
-   * @param change the map change event that occurred
+   * Called when we detected loading of a new style, if applicable reapply traffic source and layers.
    */
   @Override
-  public void onMapChanged(int change) {
-    if (change == MapView.DID_FINISH_LOADING_STYLE && isVisible()) {
+  public void onDidFinishLoadingStyle() {
+    if (isVisible()) {
       updateState();
     }
   }
@@ -136,8 +121,6 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
    * Initialise the traffic source and layers.
    */
   private void initialise() {
-    layerIds = new ArrayList<>();
-
     try {
       addTrafficSource();
       addTrafficLayers();
@@ -348,8 +331,8 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
       LineLayer lineLayer = new LineLayer(lineLayerId, TrafficData.SOURCE_ID);
       lineLayer.setSourceLayer(TrafficData.SOURCE_LAYER);
       lineLayer.setProperties(
-        lineCap("round"),
-        lineJoin("round"),
+        lineCap(Property.LINE_CAP_ROUND),
+        lineJoin(Property.LINE_JOIN_ROUND),
         lineColor(lineColorExpression),
         lineWidth(lineWidthExpression),
         lineOffset(lineOffsetExpression)
@@ -367,12 +350,11 @@ public final class TrafficPlugin implements MapView.OnMapChangedListener {
   private static class TrafficFunction {
     static Expression getLineColorFunction(@ColorInt int low, @ColorInt int moderate, @ColorInt int heavy,
                                            @ColorInt int severe) {
-      // fixme replace toColor with color expression after 6.0.0-beta.5
-      return match(get("congestion"), toColor(literal(PropertyFactory.colorToRgbaString(Color.TRANSPARENT))),
-        stop("low", toColor(literal(PropertyFactory.colorToRgbaString(low)))),
-        stop("moderate", toColor(literal(PropertyFactory.colorToRgbaString(moderate)))),
-        stop("heavy", toColor(literal(PropertyFactory.colorToRgbaString(heavy)))),
-        stop("severe", toColor(literal(PropertyFactory.colorToRgbaString(severe)))));
+      return match(get("congestion"), Expression.color(Color.TRANSPARENT),
+        stop("low", Expression.color(low)),
+        stop("moderate", Expression.color(moderate)),
+        stop("heavy", Expression.color(heavy)),
+        stop("severe", Expression.color(severe)));
     }
   }
 
