@@ -9,7 +9,7 @@ import com.mapbox.mapboxsdk.maps.Projection;
 /**
  * MarkerView class wraps a latitude-longitude pair with a Android SDK View.
  * <p>
- * It can be used in conjuction with {@link MarkerViewManager} to synchronise the Android SDK View on top
+ * It can be used in conjunction with {@link MarkerViewManager} to synchronise the Android SDK View on top
  * of map at the latitude-longitude pair.
  * </p>
  */

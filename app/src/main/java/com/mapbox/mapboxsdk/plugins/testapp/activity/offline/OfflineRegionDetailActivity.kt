@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Toast
 
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
+import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.offline.OfflineManager
 import com.mapbox.mapboxsdk.offline.OfflineRegion
 import com.mapbox.mapboxsdk.offline.OfflineRegionStatus
@@ -139,29 +140,29 @@ class OfflineRegionDetailActivity : AppCompatActivity(), OfflineDownloadChangeLi
         // update map
         mapView?.getMapAsync { mapboxMap ->
             // correct style
-            mapboxMap.setStyle(definition.styleURL)
+            mapboxMap.setStyle(Style.Builder().fromUrl(definition.styleURL))
+            {
+                // position map on top of offline region
+                val cameraPosition = OfflineUtils.getCameraPosition(definition)
+                mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
-            // position map on top of offline region
-            val cameraPosition = OfflineUtils.getCameraPosition(definition)
-            mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+                // restrict camera movement
+                mapboxMap.setMinZoomPreference(definition.minZoom)
+                mapboxMap.setMaxZoomPreference(definition.maxZoom)
+                mapboxMap.setLatLngBoundsForCameraTarget(definition.bounds)
 
-            // restrict camera movement
-            mapboxMap.setMinZoomPreference(definition.minZoom)
-            mapboxMap.setMaxZoomPreference(definition.maxZoom)
-            mapboxMap.setLatLngBoundsForCameraTarget(definition.bounds)
+                // update textview data
+                offlineRegion?.metadata?.let {
+                    regionName.text = OfflineUtils.convertRegionName(it)
+                }
+                regionStyleUrl.text = definition.styleURL
+                regionLatLngBounds.text = definition.bounds.toString()
+                regionMinZoom.text = definition.minZoom.toString()
+                regionMaxZoom.text = definition.maxZoom.toString()
+                offlineRegion?.getStatus(offlineRegionStatusCallback)
+            }
         }
-
-        // update textview data
-        offlineRegion?.metadata?.let {
-            regionName.text = OfflineUtils.convertRegionName(it)
-        }
-        regionStyleUrl.text = definition.styleURL
-        regionLatLngBounds.text = definition.bounds.toString()
-        regionMinZoom.text = definition.minZoom.toString()
-        regionMaxZoom.text = definition.maxZoom.toString()
-        offlineRegion?.getStatus(offlineRegionStatusCallback)
     }
-
 
     fun onFabClick(view: View) {
         if (offlineRegion != null) {

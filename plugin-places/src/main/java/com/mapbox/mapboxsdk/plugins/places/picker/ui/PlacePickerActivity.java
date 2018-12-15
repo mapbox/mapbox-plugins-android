@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -22,6 +23,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.places.R;
 import com.mapbox.mapboxsdk.plugins.places.common.PlaceConstants;
 import com.mapbox.mapboxsdk.plugins.places.common.utils.ColorUtils;
@@ -110,22 +112,26 @@ public class PlacePickerActivity extends AppCompatActivity implements OnMapReady
   }
 
   @Override
-  public void onMapReady(MapboxMap mapboxMap) {
+  public void onMapReady(final MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
+    mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
+      @Override
+      public void onStyleLoaded(@NonNull Style style) {
+        if (options != null) {
+          if (options.startingBounds() != null) {
+            mapboxMap.moveCamera(CameraUpdateFactory.newLatLngBounds(options.startingBounds(), 0));
+          } else if (options.statingCameraPosition() != null) {
+            mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(options.statingCameraPosition()));
+          }
+        }
 
-    if (options != null) {
-      if (options.startingBounds() != null) {
-        mapboxMap.moveCamera(CameraUpdateFactory.newLatLngBounds(options.startingBounds(), 0));
-      } else if (options.statingCameraPosition() != null) {
-        mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(options.statingCameraPosition()));
+        // Initialize with the markers current location information.
+        makeReverseGeocodingSearch();
+
+        PlacePickerActivity.this.mapboxMap.addOnCameraMoveStartedListener(PlacePickerActivity.this);
+        PlacePickerActivity.this.mapboxMap.addOnCameraIdleListener(PlacePickerActivity.this);
       }
-    }
-
-    // Initialize with the markers current location information.
-    makeReverseGeocodingSearch();
-
-    mapboxMap.addOnCameraMoveStartedListener(this);
-    mapboxMap.addOnCameraIdleListener(this);
+    });
   }
 
   @Override

@@ -6,12 +6,12 @@ import android.support.test.espresso.UiController;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.traffic.TrafficActivity;
+import com.mapbox.mapboxsdk.plugins.utils.OnMapReadyIdlingResource;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.Property;
-import com.mapbox.mapboxsdk.plugins.utils.OnMapReadyIdlingResource;
 
 import org.junit.After;
 import org.junit.Before;
@@ -98,7 +98,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getSource(TrafficData.SOURCE_ID) != null);
+        assertTrue(mapboxMap.getStyle().getSource(TrafficData.SOURCE_ID) != null);
       }
     });
   }
@@ -108,7 +108,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(MotorWay.BASE_LAYER_ID) != null);
+        assertTrue(mapboxMap.getStyle().getLayer(MotorWay.BASE_LAYER_ID) != null);
       }
     });
   }
@@ -118,7 +118,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(MotorWay.CASE_LAYER_ID) != null);
+        assertTrue(mapboxMap.getStyle().getLayer(MotorWay.CASE_LAYER_ID) != null);
       }
     });
   }
@@ -128,7 +128,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Trunk.BASE_LAYER_ID) != null);
+        assertTrue(mapboxMap.getStyle().getLayer(Trunk.BASE_LAYER_ID) != null);
       }
     });
   }
@@ -138,7 +138,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Trunk.CASE_LAYER_ID) != null);
+        assertTrue(mapboxMap.getStyle().getLayer(Trunk.CASE_LAYER_ID) != null);
       }
     });
   }
@@ -148,7 +148,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Secondary.BASE_LAYER_ID) != null);
+        assertTrue(mapboxMap.getStyle().getLayer(Secondary.BASE_LAYER_ID) != null);
       }
     });
   }
@@ -158,7 +158,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Secondary.CASE_LAYER_ID) != null);
+        assertTrue(mapboxMap.getStyle().getLayer(Secondary.CASE_LAYER_ID) != null);
       }
     });
   }
@@ -168,7 +168,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Primary.BASE_LAYER_ID) != null);
+        assertTrue(mapboxMap.getStyle().getLayer(Primary.BASE_LAYER_ID) != null);
       }
     });
   }
@@ -178,7 +178,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Primary.CASE_LAYER_ID) != null);
+        assertTrue(mapboxMap.getStyle().getLayer(Primary.CASE_LAYER_ID) != null);
       }
     });
   }
@@ -188,7 +188,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Local.BASE_LAYER_ID) != null);
+        assertTrue(mapboxMap.getStyle().getLayer(Local.BASE_LAYER_ID) != null);
       }
     });
   }
@@ -198,7 +198,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Local.CASE_LAYER_ID) != null);
+        assertTrue(mapboxMap.getStyle().getLayer(Local.CASE_LAYER_ID) != null);
       }
     });
   }
@@ -208,7 +208,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Local.BASE_LAYER_ID).getVisibility().getValue().equals(Property.VISIBLE));
+        assertTrue(mapboxMap.getStyle().getLayer(Local.BASE_LAYER_ID).getVisibility().getValue().equals(Property.VISIBLE));
       }
     });
   }
@@ -218,7 +218,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Local.CASE_LAYER_ID).getVisibility().getValue().equals(Property.VISIBLE));
+        assertTrue(mapboxMap.getStyle().getLayer(Local.CASE_LAYER_ID).getVisibility().getValue().equals(Property.VISIBLE));
       }
     });
   }
@@ -228,7 +228,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Secondary.BASE_LAYER_ID).getVisibility().getValue().equals(Property.VISIBLE));
+        assertTrue(mapboxMap.getStyle().getLayer(Secondary.BASE_LAYER_ID).getVisibility().getValue().equals(Property.VISIBLE));
       }
     });
   }
@@ -238,7 +238,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Secondary.CASE_LAYER_ID).getVisibility().getValue().equals(Property.VISIBLE));
+        assertTrue(mapboxMap.getStyle().getLayer(Secondary.CASE_LAYER_ID).getVisibility().getValue().equals(Property.VISIBLE));
       }
     });
   }
@@ -248,7 +248,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Primary.BASE_LAYER_ID).getVisibility().getValue().equals(Property.VISIBLE));
+        assertTrue(mapboxMap.getStyle().getLayer(Primary.BASE_LAYER_ID).getVisibility().getValue().equals(Property.VISIBLE));
       }
     });
   }
@@ -258,7 +258,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Primary.CASE_LAYER_ID).getVisibility().getValue().equals(Property.VISIBLE));
+        assertTrue(mapboxMap.getStyle().getLayer(Primary.CASE_LAYER_ID).getVisibility().getValue().equals(Property.VISIBLE));
       }
     });
   }
@@ -268,7 +268,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Primary.BASE_LAYER_ID).getVisibility().getValue().equals(Property.VISIBLE));
+        assertTrue(mapboxMap.getStyle().getLayer(Primary.BASE_LAYER_ID).getVisibility().getValue().equals(Property.VISIBLE));
       }
     });
   }
@@ -278,7 +278,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Primary.CASE_LAYER_ID).getVisibility().getValue().equals(Property.VISIBLE));
+        assertTrue(mapboxMap.getStyle().getLayer(Primary.CASE_LAYER_ID).getVisibility().getValue().equals(Property.VISIBLE));
       }
     });
   }
@@ -288,7 +288,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(MotorWay.BASE_LAYER_ID).getVisibility().getValue().equals(Property.VISIBLE));
+        assertTrue(mapboxMap.getStyle().getLayer(MotorWay.BASE_LAYER_ID).getVisibility().getValue().equals(Property.VISIBLE));
       }
     });
   }
@@ -298,7 +298,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(MotorWay.CASE_LAYER_ID).getVisibility().getValue().equals(Property.VISIBLE));
+        assertTrue(mapboxMap.getStyle().getLayer(MotorWay.CASE_LAYER_ID).getVisibility().getValue().equals(Property.VISIBLE));
       }
     });
   }
@@ -308,7 +308,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Local.BASE_LAYER_ID).getMinZoom() == Local.ZOOM_LEVEL);
+        assertTrue(mapboxMap.getStyle().getLayer(Local.BASE_LAYER_ID).getMinZoom() == Local.ZOOM_LEVEL);
       }
     });
   }
@@ -318,7 +318,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Local.CASE_LAYER_ID).getMinZoom() == Local.ZOOM_LEVEL);
+        assertTrue(mapboxMap.getStyle().getLayer(Local.CASE_LAYER_ID).getMinZoom() == Local.ZOOM_LEVEL);
       }
     });
   }
@@ -328,7 +328,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Secondary.BASE_LAYER_ID).getMinZoom() == Secondary.ZOOM_LEVEL);
+        assertTrue(mapboxMap.getStyle().getLayer(Secondary.BASE_LAYER_ID).getMinZoom() == Secondary.ZOOM_LEVEL);
       }
     });
   }
@@ -338,7 +338,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Secondary.CASE_LAYER_ID).getMinZoom() == Secondary.ZOOM_LEVEL);
+        assertTrue(mapboxMap.getStyle().getLayer(Secondary.CASE_LAYER_ID).getMinZoom() == Secondary.ZOOM_LEVEL);
       }
     });
   }
@@ -348,7 +348,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Primary.BASE_LAYER_ID).getMinZoom() == Primary.ZOOM_LEVEL);
+        assertTrue(mapboxMap.getStyle().getLayer(Primary.BASE_LAYER_ID).getMinZoom() == Primary.ZOOM_LEVEL);
       }
     });
   }
@@ -358,7 +358,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Primary.CASE_LAYER_ID).getMinZoom() == Primary.ZOOM_LEVEL);
+        assertTrue(mapboxMap.getStyle().getLayer(Primary.CASE_LAYER_ID).getMinZoom() == Primary.ZOOM_LEVEL);
       }
     });
   }
@@ -368,7 +368,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Trunk.BASE_LAYER_ID).getMinZoom() == Trunk.ZOOM_LEVEL);
+        assertTrue(mapboxMap.getStyle().getLayer(Trunk.BASE_LAYER_ID).getMinZoom() == Trunk.ZOOM_LEVEL);
       }
     });
   }
@@ -378,7 +378,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(Trunk.CASE_LAYER_ID).getMinZoom() == Trunk.ZOOM_LEVEL);
+        assertTrue(mapboxMap.getStyle().getLayer(Trunk.CASE_LAYER_ID).getMinZoom() == Trunk.ZOOM_LEVEL);
       }
     });
   }
@@ -388,7 +388,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(MotorWay.BASE_LAYER_ID).getMinZoom() == MotorWay.ZOOM_LEVEL);
+        assertTrue(mapboxMap.getStyle().getLayer(MotorWay.BASE_LAYER_ID).getMinZoom() == MotorWay.ZOOM_LEVEL);
       }
     });
   }
@@ -398,7 +398,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertTrue(mapboxMap.getLayer(MotorWay.CASE_LAYER_ID).getMinZoom() == MotorWay.ZOOM_LEVEL);
+        assertTrue(mapboxMap.getStyle().getLayer(MotorWay.CASE_LAYER_ID).getMinZoom() == MotorWay.ZOOM_LEVEL);
       }
     });
   }
@@ -409,7 +409,7 @@ import static org.junit.Assert.assertTrue;
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         trafficPlugin.setVisibility(false);
-        assertTrue(mapboxMap.getLayer(Local.BASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
+        assertTrue(mapboxMap.getStyle().getLayer(Local.BASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
       }
     });
   }
@@ -420,7 +420,7 @@ import static org.junit.Assert.assertTrue;
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         trafficPlugin.setVisibility(false);
-        assertTrue(mapboxMap.getLayer(Local.CASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
+        assertTrue(mapboxMap.getStyle().getLayer(Local.CASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
       }
     });
   }
@@ -431,7 +431,7 @@ import static org.junit.Assert.assertTrue;
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         trafficPlugin.setVisibility(false);
-        assertTrue(mapboxMap.getLayer(Secondary.BASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
+        assertTrue(mapboxMap.getStyle().getLayer(Secondary.BASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
       }
     });
   }
@@ -442,7 +442,7 @@ import static org.junit.Assert.assertTrue;
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         trafficPlugin.setVisibility(false);
-        assertTrue(mapboxMap.getLayer(Secondary.CASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
+        assertTrue(mapboxMap.getStyle().getLayer(Secondary.CASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
       }
     });
   }
@@ -453,7 +453,7 @@ import static org.junit.Assert.assertTrue;
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         trafficPlugin.setVisibility(false);
-        assertTrue(mapboxMap.getLayer(Primary.BASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
+        assertTrue(mapboxMap.getStyle().getLayer(Primary.BASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
       }
     });
   }
@@ -464,7 +464,7 @@ import static org.junit.Assert.assertTrue;
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         trafficPlugin.setVisibility(false);
-        assertTrue(mapboxMap.getLayer(Primary.CASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
+        assertTrue(mapboxMap.getStyle().getLayer(Primary.CASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
       }
     });
   }
@@ -476,7 +476,7 @@ import static org.junit.Assert.assertTrue;
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         trafficPlugin.setVisibility(false);
-        assertTrue(mapboxMap.getLayer(Trunk.BASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
+        assertTrue(mapboxMap.getStyle().getLayer(Trunk.BASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
       }
     });
   }
@@ -487,7 +487,7 @@ import static org.junit.Assert.assertTrue;
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         trafficPlugin.setVisibility(false);
-        assertTrue(mapboxMap.getLayer(Trunk.CASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
+        assertTrue(mapboxMap.getStyle().getLayer(Trunk.CASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
       }
     });
   }
@@ -498,7 +498,7 @@ import static org.junit.Assert.assertTrue;
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         trafficPlugin.setVisibility(false);
-        assertTrue(mapboxMap.getLayer(MotorWay.BASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
+        assertTrue(mapboxMap.getStyle().getLayer(MotorWay.BASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
       }
     });
   }
@@ -509,7 +509,7 @@ import static org.junit.Assert.assertTrue;
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
         trafficPlugin.setVisibility(false);
-        assertTrue(mapboxMap.getLayer(MotorWay.CASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
+        assertTrue(mapboxMap.getStyle().getLayer(MotorWay.CASE_LAYER_ID).getVisibility().getValue().equals(Property.NONE));
       }
     });
   }
@@ -519,9 +519,9 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        mapboxMap.setStyleUrl(Style.DARK);
+        mapboxMap.setStyle(Style.DARK);
         controller.loopMainThreadForAtLeast(500);
-        assertTrue(mapboxMap.getLayer(Local.BASE_LAYER_ID) != null);
+        assertTrue(mapboxMap.getStyle().getLayer(Local.BASE_LAYER_ID) != null);
       }
     });
   }
@@ -531,9 +531,9 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        mapboxMap.setStyleUrl(Style.DARK);
+        mapboxMap.setStyle(Style.DARK);
         controller.loopMainThreadForAtLeast(500);
-        assertTrue(mapboxMap.getLayer(Local.CASE_LAYER_ID) != null);
+        assertTrue(mapboxMap.getStyle().getLayer(Local.CASE_LAYER_ID) != null);
       }
     });
   }
@@ -543,9 +543,9 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        mapboxMap.setStyleUrl(Style.DARK);
+        mapboxMap.setStyle(Style.DARK);
         controller.loopMainThreadForAtLeast(500);
-        assertTrue(mapboxMap.getLayer(Secondary.BASE_LAYER_ID) != null);
+        assertTrue(mapboxMap.getStyle().getLayer(Secondary.BASE_LAYER_ID) != null);
       }
     });
   }
@@ -555,9 +555,9 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        mapboxMap.setStyleUrl(Style.DARK);
+        mapboxMap.setStyle(Style.DARK);
         controller.loopMainThreadForAtLeast(500);
-        assertTrue(mapboxMap.getLayer(Secondary.CASE_LAYER_ID) != null);
+        assertTrue(mapboxMap.getStyle().getLayer(Secondary.CASE_LAYER_ID) != null);
       }
     });
   }
@@ -567,9 +567,9 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        mapboxMap.setStyleUrl(Style.DARK);
+        mapboxMap.setStyle(Style.DARK);
         controller.loopMainThreadForAtLeast(500);
-        assertTrue(mapboxMap.getLayer(Primary.BASE_LAYER_ID) != null);
+        assertTrue(mapboxMap.getStyle().getLayer(Primary.BASE_LAYER_ID) != null);
       }
     });
   }
@@ -579,9 +579,9 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        mapboxMap.setStyleUrl(Style.DARK);
+        mapboxMap.setStyle(Style.DARK);
         controller.loopMainThreadForAtLeast(500);
-        assertTrue(mapboxMap.getLayer(Primary.CASE_LAYER_ID) != null);
+        assertTrue(mapboxMap.getStyle().getLayer(Primary.CASE_LAYER_ID) != null);
       }
     });
   }
@@ -591,9 +591,9 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        mapboxMap.setStyleUrl(Style.DARK);
+        mapboxMap.setStyle(Style.DARK);
         controller.loopMainThreadForAtLeast(500);
-        assertTrue(mapboxMap.getLayer(Trunk.BASE_LAYER_ID) != null);
+        assertTrue(mapboxMap.getStyle().getLayer(Trunk.BASE_LAYER_ID) != null);
       }
     });
   }
@@ -603,9 +603,9 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        mapboxMap.setStyleUrl(Style.DARK);
+        mapboxMap.setStyle(Style.DARK);
         controller.loopMainThreadForAtLeast(500);
-        assertTrue(mapboxMap.getLayer(Trunk.CASE_LAYER_ID) != null);
+        assertTrue(mapboxMap.getStyle().getLayer(Trunk.CASE_LAYER_ID) != null);
       }
     });
   }
@@ -615,9 +615,9 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        mapboxMap.setStyleUrl(Style.DARK);
+        mapboxMap.setStyle(Style.DARK);
         controller.loopMainThreadForAtLeast(500);
-        assertTrue(mapboxMap.getLayer(MotorWay.BASE_LAYER_ID) != null);
+        assertTrue(mapboxMap.getStyle().getLayer(MotorWay.BASE_LAYER_ID) != null);
       }
     });
   }
@@ -627,9 +627,9 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        mapboxMap.setStyleUrl(Style.DARK);
+        mapboxMap.setStyle(Style.DARK);
         controller.loopMainThreadForAtLeast(500);
-        assertTrue(mapboxMap.getLayer(MotorWay.CASE_LAYER_ID) != null);
+        assertTrue(mapboxMap.getStyle().getLayer(MotorWay.CASE_LAYER_ID) != null);
       }
     });
   }
@@ -639,7 +639,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertEquals(ROUND, ((LineLayer) mapboxMap.getLayerAs(Secondary.BASE_LAYER_ID)).getLineCap().getValue());
+        assertEquals(ROUND, ((LineLayer) mapboxMap.getStyle().getLayerAs(Secondary.BASE_LAYER_ID)).getLineCap().getValue());
       }
     });
   }
@@ -649,7 +649,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertEquals(ROUND, ((LineLayer) mapboxMap.getLayerAs(Secondary.CASE_LAYER_ID)).getLineCap().getValue());
+        assertEquals(ROUND, ((LineLayer) mapboxMap.getStyle().getLayerAs(Secondary.CASE_LAYER_ID)).getLineCap().getValue());
       }
     });
   }
@@ -659,7 +659,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertEquals(ROUND, ((LineLayer) mapboxMap.getLayerAs(Local.BASE_LAYER_ID)).getLineCap().getValue());
+        assertEquals(ROUND, ((LineLayer) mapboxMap.getStyle().getLayerAs(Local.BASE_LAYER_ID)).getLineCap().getValue());
       }
     });
   }
@@ -669,7 +669,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertEquals(ROUND, ((LineLayer) mapboxMap.getLayerAs(Local.CASE_LAYER_ID)).getLineCap().getValue());
+        assertEquals(ROUND, ((LineLayer) mapboxMap.getStyle().getLayerAs(Local.CASE_LAYER_ID)).getLineCap().getValue());
       }
     });
   }
@@ -679,7 +679,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertEquals(ROUND, ((LineLayer) mapboxMap.getLayerAs(Primary.BASE_LAYER_ID)).getLineCap().getValue());
+        assertEquals(ROUND, ((LineLayer) mapboxMap.getStyle().getLayerAs(Primary.BASE_LAYER_ID)).getLineCap().getValue());
       }
     });
   }
@@ -689,7 +689,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertEquals(ROUND, ((LineLayer) mapboxMap.getLayerAs(Primary.CASE_LAYER_ID)).getLineCap().getValue());
+        assertEquals(ROUND, ((LineLayer) mapboxMap.getStyle().getLayerAs(Primary.CASE_LAYER_ID)).getLineCap().getValue());
       }
     });
   }
@@ -699,7 +699,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertEquals(ROUND, ((LineLayer) mapboxMap.getLayerAs(Trunk.BASE_LAYER_ID)).getLineCap().getValue());
+        assertEquals(ROUND, ((LineLayer) mapboxMap.getStyle().getLayerAs(Trunk.BASE_LAYER_ID)).getLineCap().getValue());
       }
     });
   }
@@ -709,7 +709,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertEquals(ROUND, ((LineLayer) mapboxMap.getLayerAs(Trunk.CASE_LAYER_ID)).getLineCap().getValue());
+        assertEquals(ROUND, ((LineLayer) mapboxMap.getStyle().getLayerAs(Trunk.CASE_LAYER_ID)).getLineCap().getValue());
       }
     });
   }
@@ -719,7 +719,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertEquals(ROUND, ((LineLayer) mapboxMap.getLayerAs(Local.BASE_LAYER_ID)).getLineJoin().getValue());
+        assertEquals(ROUND, ((LineLayer) mapboxMap.getStyle().getLayerAs(Local.BASE_LAYER_ID)).getLineJoin().getValue());
       }
     });
   }
@@ -729,7 +729,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertEquals(ROUND, ((LineLayer) mapboxMap.getLayerAs(Local.CASE_LAYER_ID)).getLineJoin().getValue());
+        assertEquals(ROUND, ((LineLayer) mapboxMap.getStyle().getLayerAs(Local.CASE_LAYER_ID)).getLineJoin().getValue());
       }
     });
   }
@@ -739,7 +739,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertEquals(ROUND, ((LineLayer) mapboxMap.getLayerAs(Secondary.BASE_LAYER_ID)).getLineJoin().getValue());
+        assertEquals(ROUND, ((LineLayer) mapboxMap.getStyle().getLayerAs(Secondary.BASE_LAYER_ID)).getLineJoin().getValue());
       }
     });
   }
@@ -749,7 +749,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertEquals(ROUND, ((LineLayer) mapboxMap.getLayerAs(Secondary.CASE_LAYER_ID)).getLineJoin().getValue());
+        assertEquals(ROUND, ((LineLayer) mapboxMap.getStyle().getLayerAs(Secondary.CASE_LAYER_ID)).getLineJoin().getValue());
       }
     });
   }
@@ -759,7 +759,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertEquals(ROUND, ((LineLayer) mapboxMap.getLayerAs(Primary.BASE_LAYER_ID)).getLineJoin().getValue());
+        assertEquals(ROUND, ((LineLayer) mapboxMap.getStyle().getLayerAs(Primary.BASE_LAYER_ID)).getLineJoin().getValue());
       }
     });
   }
@@ -769,7 +769,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertEquals(ROUND, ((LineLayer) mapboxMap.getLayerAs(Primary.CASE_LAYER_ID)).getLineJoin().getValue());
+        assertEquals(ROUND, ((LineLayer) mapboxMap.getStyle().getLayerAs(Primary.CASE_LAYER_ID)).getLineJoin().getValue());
       }
     });
   }
@@ -779,7 +779,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertEquals(ROUND, ((LineLayer) mapboxMap.getLayerAs(Trunk.BASE_LAYER_ID)).getLineJoin().getValue());
+        assertEquals(ROUND, ((LineLayer) mapboxMap.getStyle().getLayerAs(Trunk.BASE_LAYER_ID)).getLineJoin().getValue());
       }
     });
   }
@@ -789,7 +789,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertEquals(ROUND, ((LineLayer) mapboxMap.getLayerAs(Trunk.CASE_LAYER_ID)).getLineJoin().getValue());
+        assertEquals(ROUND, ((LineLayer) mapboxMap.getStyle().getLayerAs(Trunk.CASE_LAYER_ID)).getLineJoin().getValue());
       }
     });
   }
@@ -799,7 +799,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertEquals(ROUND, ((LineLayer) mapboxMap.getLayerAs(MotorWay.BASE_LAYER_ID)).getLineJoin().getValue());
+        assertEquals(ROUND, ((LineLayer) mapboxMap.getStyle().getLayerAs(MotorWay.BASE_LAYER_ID)).getLineJoin().getValue());
       }
     });
   }
@@ -809,7 +809,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        assertEquals(ROUND, ((LineLayer) mapboxMap.getLayerAs(MotorWay.CASE_LAYER_ID)).getLineJoin().getValue());
+        assertEquals(ROUND, ((LineLayer) mapboxMap.getStyle().getLayerAs(MotorWay.CASE_LAYER_ID)).getLineJoin().getValue());
       }
     });
   }
@@ -819,7 +819,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        LineLayer layer = mapboxMap.getLayerAs(Local.BASE_LAYER_ID);
+        LineLayer layer = mapboxMap.getStyle().getLayerAs(Local.BASE_LAYER_ID);
         assertNotNull(layer.getLineWidth());
         assertNotNull(layer.getLineWidth().getExpression());
       }
@@ -831,7 +831,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        LineLayer layer = mapboxMap.getLayerAs(Local.CASE_LAYER_ID);
+        LineLayer layer = mapboxMap.getStyle().getLayerAs(Local.CASE_LAYER_ID);
         assertNotNull(layer.getLineWidth());
         assertNotNull(layer.getLineWidth().getExpression());
       }
@@ -844,7 +844,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        LineLayer layer = mapboxMap.getLayerAs(Secondary.BASE_LAYER_ID);
+        LineLayer layer = mapboxMap.getStyle().getLayerAs(Secondary.BASE_LAYER_ID);
         assertNotNull(layer.getLineWidth());
         assertNotNull(layer.getLineWidth().getExpression());
       }
@@ -856,7 +856,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        LineLayer layer = mapboxMap.getLayerAs(Secondary.CASE_LAYER_ID);
+        LineLayer layer = mapboxMap.getStyle().getLayerAs(Secondary.CASE_LAYER_ID);
         assertNotNull(layer.getLineWidth());
         assertNotNull(layer.getLineWidth().getExpression());
       }
@@ -868,7 +868,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        LineLayer layer = mapboxMap.getLayerAs(Primary.BASE_LAYER_ID);
+        LineLayer layer = mapboxMap.getStyle().getLayerAs(Primary.BASE_LAYER_ID);
         assertNotNull(layer.getLineWidth());
         assertNotNull(layer.getLineWidth().getExpression());
       }
@@ -880,7 +880,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        LineLayer layer = mapboxMap.getLayerAs(Primary.CASE_LAYER_ID);
+        LineLayer layer = mapboxMap.getStyle().getLayerAs(Primary.CASE_LAYER_ID);
         assertNotNull(layer.getLineWidth());
         assertNotNull(layer.getLineWidth().getExpression());
       }
@@ -892,7 +892,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        LineLayer layer = mapboxMap.getLayerAs(Trunk.BASE_LAYER_ID);
+        LineLayer layer = mapboxMap.getStyle().getLayerAs(Trunk.BASE_LAYER_ID);
         assertNotNull(layer.getLineWidth());
         assertNotNull(layer.getLineWidth().getExpression());
       }
@@ -904,7 +904,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        LineLayer layer = mapboxMap.getLayerAs(Trunk.CASE_LAYER_ID);
+        LineLayer layer = mapboxMap.getStyle().getLayerAs(Trunk.CASE_LAYER_ID);
         assertNotNull(layer.getLineWidth());
         assertNotNull(layer.getLineWidth().getExpression());
       }
@@ -916,7 +916,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        LineLayer layer = mapboxMap.getLayerAs(MotorWay.BASE_LAYER_ID);
+        LineLayer layer = mapboxMap.getStyle().getLayerAs(MotorWay.BASE_LAYER_ID);
         assertNotNull(layer.getLineWidth());
         assertNotNull(layer.getLineWidth().getExpression());
       }
@@ -928,7 +928,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        LineLayer layer = mapboxMap.getLayerAs(MotorWay.CASE_LAYER_ID);
+        LineLayer layer = mapboxMap.getStyle().getLayerAs(MotorWay.CASE_LAYER_ID);
         assertNotNull(layer.getLineWidth());
         assertNotNull(layer.getLineWidth().getExpression());
       }
@@ -940,7 +940,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        LineLayer layer = mapboxMap.getLayerAs(Local.BASE_LAYER_ID);
+        LineLayer layer = mapboxMap.getStyle().getLayerAs(Local.BASE_LAYER_ID);
         assertNotNull(layer.getLineOffset());
         assertNotNull(layer.getLineOffset().getExpression());
       }
@@ -952,7 +952,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        LineLayer layer = mapboxMap.getLayerAs(Local.CASE_LAYER_ID);
+        LineLayer layer = mapboxMap.getStyle().getLayerAs(Local.CASE_LAYER_ID);
         assertNotNull(layer.getLineOffset());
         assertNotNull(layer.getLineOffset().getExpression());
       }
@@ -965,7 +965,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        LineLayer layer = mapboxMap.getLayerAs(Secondary.BASE_LAYER_ID);
+        LineLayer layer = mapboxMap.getStyle().getLayerAs(Secondary.BASE_LAYER_ID);
         assertNotNull(layer.getLineOffset());
         assertNotNull(layer.getLineOffset().getExpression());
       }
@@ -977,7 +977,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        LineLayer layer = mapboxMap.getLayerAs(Secondary.CASE_LAYER_ID);
+        LineLayer layer = mapboxMap.getStyle().getLayerAs(Secondary.CASE_LAYER_ID);
         assertNotNull(layer.getLineOffset());
         assertNotNull(layer.getLineOffset().getExpression());
       }
@@ -989,7 +989,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        LineLayer layer = mapboxMap.getLayerAs(Primary.BASE_LAYER_ID);
+        LineLayer layer = mapboxMap.getStyle().getLayerAs(Primary.BASE_LAYER_ID);
         assertNotNull(layer.getLineOffset());
         assertNotNull(layer.getLineOffset().getExpression());
       }
@@ -1001,7 +1001,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        LineLayer layer = mapboxMap.getLayerAs(Primary.CASE_LAYER_ID);
+        LineLayer layer = mapboxMap.getStyle().getLayerAs(Primary.CASE_LAYER_ID);
         assertNotNull(layer.getLineOffset());
         assertNotNull(layer.getLineOffset().getExpression());
       }
@@ -1013,7 +1013,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        LineLayer layer = mapboxMap.getLayerAs(Trunk.BASE_LAYER_ID);
+        LineLayer layer = mapboxMap.getStyle().getLayerAs(Trunk.BASE_LAYER_ID);
         assertNotNull(layer.getLineOffset());
         assertNotNull(layer.getLineOffset().getExpression());
       }
@@ -1025,7 +1025,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        LineLayer layer = mapboxMap.getLayerAs(Trunk.CASE_LAYER_ID);
+        LineLayer layer = mapboxMap.getStyle().getLayerAs(Trunk.CASE_LAYER_ID);
         assertNotNull(layer.getLineOffset());
         assertNotNull(layer.getLineOffset().getExpression());
       }
@@ -1037,7 +1037,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        LineLayer layer = mapboxMap.getLayerAs(MotorWay.BASE_LAYER_ID);
+        LineLayer layer = mapboxMap.getStyle().getLayerAs(MotorWay.BASE_LAYER_ID);
         assertNotNull(layer.getLineOffset());
         assertNotNull(layer.getLineOffset().getExpression());
       }
@@ -1049,7 +1049,7 @@ import static org.junit.Assert.assertTrue;
     executeTrafficTest(new TrafficPluginAction.OnPerformTrafficAction() {
       @Override
       public void onTrafficAction(TrafficPlugin trafficPlugin, MapboxMap mapboxMap, UiController controller) {
-        LineLayer layer = mapboxMap.getLayerAs(MotorWay.CASE_LAYER_ID);
+        LineLayer layer = mapboxMap.getStyle().getLayerAs(MotorWay.CASE_LAYER_ID);
         assertNotNull(layer.getLineOffset());
         assertNotNull(layer.getLineOffset().getExpression());
       }

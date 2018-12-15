@@ -14,7 +14,6 @@
     app:mapbox_cameraTargetLng="-0.075073"
     app:mapbox_cameraTilt="20"
     app:mapbox_cameraZoom="2.5"
-    app:mapbox_styleUrl="@string/mapbox_style_mapbox_streets"
     app:mapbox_uiAttribution="false">
 
   </com.mapbox.mapboxsdk.maps.MapView>

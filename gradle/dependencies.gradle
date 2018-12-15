@@ -8,7 +8,7 @@ ext {
   ]
 
   version = [
-      mapboxMapSdk       : '6.7.2',
+      mapboxMapSdk       : '7.0.0-beta.1',
       mapboxJava         : '3.2.0',
       playLocation       : '15.0.1',
       autoValue          : '1.5.4',
