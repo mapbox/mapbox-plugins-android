@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.layers.FillExtrusionLayer;
 import com.mapbox.mapboxsdk.style.light.Light;
 
@@ -50,6 +51,7 @@ public final class BuildingPlugin {
   private float minZoomLevel = 15.0f;
   private Light light;
   private MapboxMap mapboxMap;
+  private Style style;
 
   /**
    * Create a building plugin.
@@ -72,11 +74,12 @@ public final class BuildingPlugin {
   public BuildingPlugin(@NonNull MapView mapView, @NonNull final MapboxMap mapboxMap,
                         @Nullable final String belowLayer) {
     this.mapboxMap = mapboxMap;
+    this.style = mapboxMap.getStyle();
     initLayer(belowLayer);
-    mapView.addOnMapChangedListener(new MapView.OnMapChangedListener() {
+    mapView.addOnDidFinishLoadingStyleListener(new MapView.OnDidFinishLoadingStyleListener() {
       @Override
-      public void onMapChanged(int change) {
-        if (change == MapView.DID_FINISH_LOADING_STYLE && mapboxMap.getLayer(LAYER_ID) == null) {
+      public void onDidFinishLoadingStyle() {
+        if(style !=null && style.getLayer(LAYER_ID) == null) {
           initLayer(belowLayer);
         }
       }
@@ -89,7 +92,7 @@ public final class BuildingPlugin {
    * @param belowLayer optionally place the buildings layer below a provided layer id
    */
   private void initLayer(String belowLayer) {
-    light = mapboxMap.getLight();
+    light = style.getLight();
     fillExtrusionLayer = new FillExtrusionLayer(LAYER_ID, "composite");
     fillExtrusionLayer.setSourceLayer("building");
     fillExtrusionLayer.setMinZoom(minZoomLevel);
@@ -110,10 +113,10 @@ public final class BuildingPlugin {
   }
 
   private void addLayer(FillExtrusionLayer fillExtrusionLayer, String belowLayer) {
-    if (belowLayer != null && !belowLayer.isEmpty()) {
-      mapboxMap.addLayerBelow(fillExtrusionLayer, belowLayer);
-    } else {
-      mapboxMap.addLayer(fillExtrusionLayer);
+    if (belowLayer != null && !belowLayer.isEmpty() && style != null) {
+      style.addLayerBelow(fillExtrusionLayer, belowLayer);
+    } else if (style != null) {
+      style.addLayer(fillExtrusionLayer);
     }
   }
 

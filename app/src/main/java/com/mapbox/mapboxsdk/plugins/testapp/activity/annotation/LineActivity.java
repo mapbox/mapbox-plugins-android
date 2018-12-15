@@ -11,10 +11,12 @@ import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.annotation.*;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.Utils;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,49 +39,50 @@ public class LineActivity extends AppCompatActivity {
     setContentView(R.layout.activity_annotation);
     mapView = findViewById(R.id.mapView);
     mapView.onCreate(savedInstanceState);
-    mapView.getMapAsync(mapboxMap -> {
-      mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
+    mapView.getMapAsync(mapboxMap ->
+      mapboxMap.setStyle(Style.MAPBOX_STREETS, style -> {
+        mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
 
-      lineManager = new LineManager(mapView, mapboxMap);
-      lineManager.addClickListener(line -> Toast.makeText(LineActivity.this,
-        String.format("Line clicked %s", line.getId()),
-        Toast.LENGTH_SHORT
-      ).show());
-      lineManager.addLongClickListener(line -> Toast.makeText(LineActivity.this,
-        String.format("Line long clicked %s", line.getId()),
-        Toast.LENGTH_SHORT
-      ).show());
+        lineManager = new LineManager(mapView, mapboxMap);
+        lineManager.addClickListener(line -> Toast.makeText(LineActivity.this,
+          String.format("Line clicked %s", line.getId()),
+          Toast.LENGTH_SHORT
+        ).show());
+        lineManager.addLongClickListener(line -> Toast.makeText(LineActivity.this,
+          String.format("Line long clicked %s", line.getId()),
+          Toast.LENGTH_SHORT
+        ).show());
 
-      // create a fixed line
-      List<LatLng> latLngs = new ArrayList<>();
-      latLngs.add(new LatLng(-2.178992, -4.375974));
-      latLngs.add(new LatLng(-4.107888, -7.639772));
-      latLngs.add(new LatLng(2.798737, -11.439207));
-      LineOptions lineOptions = new LineOptions()
-        .withLatLngs(latLngs)
-        .withLineColor(PropertyFactory.colorToRgbaString(Color.RED))
-        .withLineWidth(5.0f);
-      lineManager.create(lineOptions);
+        // create a fixed line
+        List<LatLng> latLngs = new ArrayList<>();
+        latLngs.add(new LatLng(-2.178992, -4.375974));
+        latLngs.add(new LatLng(-4.107888, -7.639772));
+        latLngs.add(new LatLng(2.798737, -11.439207));
+        LineOptions lineOptions = new LineOptions()
+          .withLatLngs(latLngs)
+          .withLineColor(ColorUtils.colorToRgbaString(Color.RED))
+          .withLineWidth(5.0f);
+        lineManager.create(lineOptions);
 
-      // random add lines across the globe
-      List<List<LatLng>> lists = new ArrayList<>();
-      for (int i = 0; i < 100; i++) {
-        lists.add(createRandomLatLngs());
-      }
+        // random add lines across the globe
+        List<List<LatLng>> lists = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+          lists.add(createRandomLatLngs());
+        }
 
-      List<LineOptions> lineOptionsList = new ArrayList<>();
-      for (List<LatLng> list : lists) {
-        int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
-        lineOptionsList.add(new LineOptions().withLatLngs(list).withLineColor(PropertyFactory.colorToRgbaString(color)));
-      }
-      lineManager.create(lineOptionsList);
+        List<LineOptions> lineOptionsList = new ArrayList<>();
+        for (List<LatLng> list : lists) {
+          int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
+          lineOptionsList.add(new LineOptions().withLatLngs(list).withLineColor(ColorUtils.colorToRgbaString(color)));
+        }
+        lineManager.create(lineOptionsList);
 
-      try {
-        lineManager.create(Utils.INSTANCE.loadStringFromAssets(this, "annotations.json"));
-      } catch (IOException e) {
-        throw new RuntimeException("Unable to parse annotations.json");
-      }
-    });
+        try {
+          lineManager.create(Utils.INSTANCE.loadStringFromAssets(this, "annotations.json"));
+        } catch (IOException e) {
+          throw new RuntimeException("Unable to parse annotations.json");
+        }
+      }));
   }
 
   private List<LatLng> createRandomLatLngs() {

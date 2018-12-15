@@ -3,7 +3,7 @@ package com.mapbox.mapboxsdk.plugins.testapp
 import android.content.Context
 import android.location.Location
 import com.mapbox.core.utils.TextUtils
-import com.mapbox.mapboxsdk.constants.Style
+import com.mapbox.mapboxsdk.maps.Style
 import timber.log.Timber
 import java.io.BufferedReader
 import java.io.IOException

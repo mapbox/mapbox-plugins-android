@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
+import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.plugins.testapp.R
 import com.mapbox.mapboxsdk.plugins.testapp.Utils
 import com.mapbox.mapboxsdk.plugins.traffic.TrafficPlugin
@@ -23,8 +24,6 @@ class TrafficActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_traffic)
-
-        mapView.setStyleUrl(Utils.nextStyle)
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
 
@@ -36,14 +35,16 @@ class TrafficActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         fabStyles.setOnClickListener {
-            mapboxMap?.setStyleUrl(Utils.nextStyle)
+            mapboxMap?.setStyle(Style.Builder().fromUrl(Utils.nextStyle))
         }
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
         this.mapboxMap = mapboxMap
-        this.trafficPlugin = TrafficPlugin(mapView, mapboxMap)
-        this.trafficPlugin?.setVisibility(true) // Enable the traffic view by default
+        mapboxMap.setStyle(Style.MAPBOX_STREETS) {
+            this.trafficPlugin = TrafficPlugin(mapView, mapboxMap)
+            this.trafficPlugin?.setVisibility(true) // Enable the traffic view by default
+        }
     }
 
     override fun onStart() {

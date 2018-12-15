@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
+import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.plugins.localization.LocalizationPlugin
 import com.mapbox.mapboxsdk.plugins.localization.MapLocale
 import com.mapbox.mapboxsdk.plugins.testapp.R
@@ -46,14 +47,16 @@ class LocalizationActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         fabStyles.setOnClickListener{
-            mapboxMap?.setStyleUrl(Utils.nextStyle)
+            mapboxMap?.setStyle(Style.Builder().fromUrl(Utils.nextStyle))
         }
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
         this.mapboxMap = mapboxMap
-        localizationPlugin = LocalizationPlugin(mapView, mapboxMap)
-        localizationPlugin?.matchMapLanguageWithDeviceDefault()
+        mapboxMap.setStyle(Style.MAPBOX_STREETS){
+            localizationPlugin = LocalizationPlugin(mapView, mapboxMap)
+            localizationPlugin?.matchMapLanguageWithDeviceDefault()
+        }
     }
 
     override fun onStart() {
