@@ -10,6 +10,7 @@ import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
@@ -51,6 +52,7 @@ public abstract class AnnotationManager<
   private final GeoJsonSource geoJsonSource;
   private final MapClickResolver mapClickResolver;
   private final Comparator<Feature> comparator;
+  private Style style;
 
   @UiThread
   protected AnnotationManager(MapboxMap mapboxMap,
@@ -61,16 +63,17 @@ public abstract class AnnotationManager<
     this.mapboxMap = mapboxMap;
     this.geoJsonSource = geoJsonSource;
     this.comparator = comparator;
-    mapboxMap.addSource(geoJsonSource);
+    this.style = mapboxMap.getStyle();
+    style.addSource(geoJsonSource);
     mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver());
     mapboxMap.addOnMapLongClickListener(mapClickResolver);
     this.draggableAnnotationController = draggableAnnotationController;
     draggableAnnotationController.injectAnnotationManager(this);
 
-    if (belowLayerId == null) {
-      mapboxMap.addLayer(layer);
-    } else {
-      mapboxMap.addLayerBelow(layer, belowLayerId);
+    if (belowLayerId == null && style != null) {
+      style.addLayer(layer);
+    } else if (style != null) {
+      style.addLayerBelow(layer, belowLayerId);
     }
   }
 
@@ -284,9 +287,9 @@ public abstract class AnnotationManager<
   private class MapClickResolver implements MapboxMap.OnMapClickListener, MapboxMap.OnMapLongClickListener {
 
     @Override
-    public void onMapClick(@NonNull LatLng point) {
+    public boolean onMapClick(@NonNull LatLng point) {
       if (clickListeners.isEmpty()) {
-        return;
+        return true;
       }
 
       T annotation = queryMapForFeatures(point);
@@ -295,12 +298,13 @@ public abstract class AnnotationManager<
           clickListener.onAnnotationClick(annotation);
         }
       }
+      return true;
     }
 
     @Override
-    public void onMapLongClick(@NonNull LatLng point) {
+    public boolean onMapLongClick(@NonNull LatLng point) {
       if (longClickListeners.isEmpty()) {
-        return;
+        return true;
       }
 
       T annotation = queryMapForFeatures(point);
@@ -309,6 +313,7 @@ public abstract class AnnotationManager<
           clickListener.onAnnotationLongClick(annotation);
         }
       }
+      return true;
     }
   }
 

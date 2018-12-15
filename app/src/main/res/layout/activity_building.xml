@@ -16,7 +16,6 @@
     app:mapbox_cameraTargetLng="-0.075073"
     app:mapbox_cameraTilt="60"
     app:mapbox_cameraZoom="16"
-    app:mapbox_styleUrl="@string/mapbox_style_mapbox_streets"
     app:mapbox_uiAttribution="false"/>
 
   <android.support.design.widget.FloatingActionButton

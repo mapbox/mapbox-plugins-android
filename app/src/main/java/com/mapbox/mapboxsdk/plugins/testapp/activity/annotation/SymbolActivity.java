@@ -16,6 +16,7 @@ import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolDragListener;
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
@@ -25,6 +26,7 @@ import com.mapbox.mapboxsdk.plugins.testapp.Utils;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,79 +62,83 @@ public class SymbolActivity extends AppCompatActivity {
 
     mapView = findViewById(R.id.mapView);
     mapView.onCreate(savedInstanceState);
-    mapView.getMapAsync(mapboxMap -> {
-      mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
+    mapView.getMapAsync(mapboxMap ->
 
-      // create symbol manager
-      symbolManager = new SymbolManager(mapView, mapboxMap);
-      symbolManager.addClickListener(symbol -> Toast.makeText(SymbolActivity.this,
-        String.format("Symbol clicked %s", symbol.getId()),
-        Toast.LENGTH_SHORT
-      ).show());
-      symbolManager.addLongClickListener(symbol ->
-        Toast.makeText(SymbolActivity.this,
-          String.format("Symbol long clicked %s", symbol.getId()),
+      mapboxMap.setStyle(Style.MAPBOX_STREETS, style -> {
+
+        mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
+
+        // create symbol manager
+        symbolManager = new SymbolManager(mapView, mapboxMap);
+        symbolManager.addClickListener(symbol -> Toast.makeText(SymbolActivity.this,
+          String.format("Symbol clicked %s", symbol.getId()),
           Toast.LENGTH_SHORT
         ).show());
+        symbolManager.addLongClickListener(symbol ->
+          Toast.makeText(SymbolActivity.this,
+            String.format("Symbol long clicked %s", symbol.getId()),
+            Toast.LENGTH_SHORT
+          ).show());
 
-      // set non data driven properties
-      symbolManager.setIconAllowOverlap(true);
-      symbolManager.setTextAllowOverlap(true);
+        // set non data driven properties
+        symbolManager.setIconAllowOverlap(true);
+        symbolManager.setTextAllowOverlap(true);
 
-      // create a symbol
-      SymbolOptions symbolOptions = new SymbolOptions()
-        .withLatLng(new LatLng(6.687337, 0.381457))
-        .withIconImage(MAKI_ICON_AIRPORT)
-        .withIconSize(1.3f)
-        .withZIndex(10)
-        .setDraggable(true);
-      symbol = symbolManager.create(symbolOptions);
+        // create a symbol
+        SymbolOptions symbolOptions = new SymbolOptions()
+          .withLatLng(new LatLng(6.687337, 0.381457))
+          .withIconImage(MAKI_ICON_AIRPORT)
+          .withIconSize(1.3f)
+          .withZIndex(10)
+          .setDraggable(true);
+        symbol = symbolManager.create(symbolOptions);
 
-      // create nearby symbols
-      SymbolOptions nearbyOptions = new SymbolOptions()
-        .withLatLng(new LatLng(6.626384, 0.367099))
-        .withIconImage(MAKI_ICON_CIRCLE)
-        .withIconColor(PropertyFactory.colorToRgbaString(Color.YELLOW))
-        .withIconSize(2.5f)
-        .withZIndex(5)
-        .setDraggable(true);
-      symbolManager.create(nearbyOptions);
+        // create nearby symbols
+        SymbolOptions nearbyOptions = new SymbolOptions()
+          .withLatLng(new LatLng(6.626384, 0.367099))
+          .withIconImage(MAKI_ICON_CIRCLE)
+          .withIconColor(ColorUtils.colorToRgbaString(Color.YELLOW))
+          .withIconSize(2.5f)
+          .withZIndex(5)
+          .setDraggable(true);
+        symbolManager.create(nearbyOptions);
 
-      // random add symbols across the globe
-      List<SymbolOptions> symbolOptionsList = new ArrayList<>();
-      for (int i = 0; i < 20; i++) {
-        symbolOptionsList.add(new SymbolOptions().withLatLng(createRandomLatLng()).withIconImage(MAKI_ICON_CAR)
-          .setDraggable(true));
-      }
-      symbolManager.create(symbolOptionsList);
+        // random add symbols across the globe
+        List<SymbolOptions> symbolOptionsList = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+          symbolOptionsList.add(new SymbolOptions().withLatLng(createRandomLatLng()).withIconImage(MAKI_ICON_CAR)
+            .setDraggable(true));
+        }
+        symbolManager.create(symbolOptionsList);
 
-      try {
-        symbolManager.create(FeatureCollection.fromJson(Utils.INSTANCE.loadStringFromAssets(this, "annotations.json")));
-      } catch (IOException e) {
-        throw new RuntimeException("Unable to parse annotations.json");
-      }
-
-      symbolManager.addDragListener(new OnSymbolDragListener() {
-        @Override
-        public void onAnnotationDragStarted(Symbol annotation) {
-          draggableInfoTv.setVisibility(View.VISIBLE);
+        try {
+          symbolManager.create(FeatureCollection.fromJson(Utils.INSTANCE.loadStringFromAssets(this, "annotations.json")));
+        } catch (IOException e) {
+          throw new RuntimeException("Unable to parse annotations.json");
         }
 
-        @Override
-        public void onAnnotationDrag(Symbol annotation) {
-          draggableInfoTv.setText(String.format(
-            Locale.US,
-            "ID: %s\nLatLng:%f, %f",
-            annotation.getId(),
-            annotation.getLatLng().getLatitude(), annotation.getLatLng().getLongitude()));
-        }
+        symbolManager.addDragListener(new OnSymbolDragListener() {
+          @Override
+          public void onAnnotationDragStarted(Symbol annotation) {
+            draggableInfoTv.setVisibility(View.VISIBLE);
+          }
 
-        @Override
-        public void onAnnotationDragFinished(Symbol annotation) {
-          draggableInfoTv.setVisibility(View.GONE);
-        }
-      });
-    });
+          @Override
+          public void onAnnotationDrag(Symbol annotation) {
+            draggableInfoTv.setText(String.format(
+              Locale.US,
+              "ID: %s\nLatLng:%f, %f",
+              annotation.getId(),
+              annotation.getLatLng().getLatitude(), annotation.getLatLng().getLongitude()));
+          }
+
+          @Override
+          public void onAnnotationDragFinished(Symbol annotation) {
+            draggableInfoTv.setVisibility(View.GONE);
+          }
+
+        });
+      }));
   }
 
   private LatLng createRandomLatLng() {

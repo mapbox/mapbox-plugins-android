@@ -6,6 +6,7 @@ import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.localization.MapLocale.Languages;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.Layer;
@@ -94,6 +95,7 @@ public final class LocalizationPlugin {
   // configuration
   private final MapboxMap mapboxMap;
   private MapLocale mapLocale;
+  private Style style;
 
   /**
    * Public constructor for passing in the required {@link MapboxMap} object.
@@ -103,6 +105,7 @@ public final class LocalizationPlugin {
    */
   public LocalizationPlugin(@NonNull MapView mapview, @NonNull MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
+    this.style = mapboxMap.getStyle();
     MapView.OnDidFinishLoadingStyleListener styleLoadListener = new MapView.OnDidFinishLoadingStyleListener() {
       @Override
       public void onDidFinishLoadingStyle() {
@@ -166,34 +169,36 @@ public final class LocalizationPlugin {
    */
   public void setMapLanguage(@NonNull MapLocale mapLocale) {
     this.mapLocale = mapLocale;
-    List<Layer> layers = mapboxMap.getLayers();
-    for (Source source : mapboxMap.getSources()) {
-      if (sourceIsFromMapbox(source)) {
-        boolean isStreetsV8 = sourceIsStreetsV8(source);
-        for (Layer layer : layers) {
-          if (layer instanceof SymbolLayer) {
-            PropertyValue<?> textFieldProperty = ((SymbolLayer) layer).getTextField();
-            if (textFieldProperty.isExpression()) {
-              if (isStreetsV8) {
-                convertExpressionV8(mapLocale, layer, textFieldProperty);
+    if (style!=null) {
+      List<Layer> layers = style.getLayers();
+      for (Source source : style.getSources()) {
+        if (sourceIsFromMapbox(source)) {
+          boolean isStreetsV8 = sourceIsStreetsV8(source);
+          for (Layer layer : layers) {
+            if (layer instanceof SymbolLayer) {
+              PropertyValue<?> textFieldProperty = ((SymbolLayer) layer).getTextField();
+              if (textFieldProperty.isExpression()) {
+                if (isStreetsV8) {
+                  convertExpressionV8(mapLocale, layer, textFieldProperty);
+                } else {
+                  convertExpression(mapLocale, layer, textFieldProperty);
+                }
               } else {
-                convertExpression(mapLocale, layer, textFieldProperty);
+                convertToken(mapLocale, layer, textFieldProperty);
               }
-            } else {
-              convertToken(mapLocale, layer, textFieldProperty);
             }
           }
+        } else {
+          String url = null;
+          if (source instanceof VectorSource) {
+            url = ((VectorSource) source).getUrl();
+          }
+          if (url == null) {
+            url = "not found";
+          }
+          Timber.w("The \"%s\" source is not based on Mapbox Vector Tiles. Supported sources:\n %s",
+            url, SUPPORTED_SOURCES);
         }
-      } else {
-        String url = null;
-        if (source instanceof VectorSource) {
-          url = ((VectorSource) source).getUrl();
-        }
-        if (url == null) {
-          url = "not found";
-        }
-        Timber.w("The \"%s\" source is not based on Mapbox Vector Tiles. Supported sources:\n %s",
-          url, SUPPORTED_SOURCES);
       }
     }
   }

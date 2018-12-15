@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
@@ -51,7 +52,6 @@ public final class TrafficPlugin {
   private final MapboxMap mapboxMap;
   private final List<String> layerIds = new ArrayList<>();
   private final String belowLayer;
-
   private boolean visible;
 
   /**
@@ -94,13 +94,13 @@ public final class TrafficPlugin {
    * @param visible true for visible, false for none
    */
   public void setVisibility(boolean visible) {
-    Source source = mapboxMap.getSource(TrafficData.SOURCE_ID);
+    Source source = mapboxMap.getStyle().getSource(TrafficData.SOURCE_ID);
     if (source == null) {
       initialise();
     }
 
     this.visible = visible;
-    List<Layer> layers = mapboxMap.getLayers();
+    List<Layer> layers = mapboxMap.getStyle().getLayers();
     for (Layer layer : layers) {
       if (layerIds.contains(layer.getId())) {
         layer.setProperties(visibility(visible ? Property.VISIBLE : Property.NONE));
@@ -112,7 +112,7 @@ public final class TrafficPlugin {
    * Update the state of the traffic plugin.
    */
   private void updateState() {
-    Source source = mapboxMap.getSource(TrafficData.SOURCE_ID);
+    Source source = mapboxMap.getStyle().getSource(TrafficData.SOURCE_ID);
     if (source == null) {
       initialise();
       return;
@@ -139,7 +139,7 @@ public final class TrafficPlugin {
    */
   private void addTrafficSource() {
     VectorSource trafficSource = new VectorSource(TrafficData.SOURCE_ID, TrafficData.SOURCE_URL);
-    mapboxMap.addSource(trafficSource);
+    mapboxMap.getStyle().addSource(trafficSource);
   }
 
   /**
@@ -185,7 +185,7 @@ public final class TrafficPlugin {
    */
   private String placeLayerBelow() {
     if (belowLayer == null || belowLayer.isEmpty()) {
-      List<Layer> styleLayers = mapboxMap.getLayers();
+      List<Layer> styleLayers = mapboxMap.getStyle().getLayers();
       Layer layer;
       for (int i = styleLayers.size() - 1; i >= 0; i--) {
         layer = styleLayers.get(i);
@@ -315,8 +315,8 @@ public final class TrafficPlugin {
    * @param idAboveLayer the id of the layer above
    */
   private void addTrafficLayersToMap(Layer layerCase, Layer layer, String idAboveLayer) {
-    mapboxMap.addLayerBelow(layerCase, idAboveLayer);
-    mapboxMap.addLayerAbove(layer, layerCase.getId());
+    mapboxMap.getStyle().addLayerBelow(layerCase, idAboveLayer);
+    mapboxMap.getStyle().addLayerAbove(layer, layerCase.getId());
     layerIds.add(layerCase.getId());
     layerIds.add(layer.getId());
   }
