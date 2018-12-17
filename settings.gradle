@@ -1,6 +1,5 @@
 include ':app'
 include ':plugin-traffic'
-include ':plugin-locationlayer'
 include ':plugin-building'
 include ':plugin-places'
 include ':plugin-offline'

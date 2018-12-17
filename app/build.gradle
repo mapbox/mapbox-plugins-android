@@ -115,7 +115,6 @@ dependencies {
 
   // Plugin modules
   implementation project(':plugin-traffic')
-  implementation project(':plugin-locationlayer')
   implementation project(':plugin-building')
   implementation project(':plugin-places')
   implementation project(':plugin-offline')
