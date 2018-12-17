@@ -1,6 +1,7 @@
 package com.mapbox.mapboxsdk.plugins.localization;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.UiThread;
 
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
@@ -41,6 +42,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
  *
  * @since 0.1.0
  */
+@UiThread
 public final class LocalizationPlugin {
 
   private static final List<String> SUPPORTED_SOURCES = new ArrayList<>();
@@ -95,26 +97,38 @@ public final class LocalizationPlugin {
   // configuration
   private final MapboxMap mapboxMap;
   private MapLocale mapLocale;
+  @NonNull
   private Style style;
 
   /**
-   * Public constructor for passing in the required {@link MapboxMap} object.
+   * Public constructor for passing in the required objects.
    *
+   * @param mapView   the MapView object in which the map is displayed
    * @param mapboxMap the Mapbox map object which your current map view is using for control
-   * @since 0.1.0
+   * @param style     the Style object that represents a fully loaded style
    */
-  public LocalizationPlugin(@NonNull MapView mapview, @NonNull MapboxMap mapboxMap) {
+  public LocalizationPlugin(@NonNull MapView mapView, @NonNull final MapboxMap mapboxMap, @NonNull Style style) {
     this.mapboxMap = mapboxMap;
-    this.style = mapboxMap.getStyle();
-    MapView.OnDidFinishLoadingStyleListener styleLoadListener = new MapView.OnDidFinishLoadingStyleListener() {
+    this.style = style;
+    if (!style.isFullyLoaded()) {
+      throw new RuntimeException("The style has to be non-null and fully loaded.");
+    }
+
+    MapView.OnWillStartLoadingMapListener styleLoadListener = new MapView.OnWillStartLoadingMapListener() {
       @Override
-      public void onDidFinishLoadingStyle() {
-        if (mapLocale != null) {
-          setMapLanguage(mapLocale);
-        }
+      public void onWillStartLoadingMap() {
+        mapboxMap.getStyle(new Style.OnStyleLoaded() {
+          @Override
+          public void onStyleLoaded(@NonNull Style style) {
+            LocalizationPlugin.this.style = style;
+            if (mapLocale != null) {
+              setMapLanguage(mapLocale);
+            }
+          }
+        });
       }
     };
-    mapview.addOnDidFinishLoadingStyleListener(styleLoadListener);
+    mapView.addOnWillStartLoadingMapListener(styleLoadListener);
   }
 
   /*
@@ -169,36 +183,39 @@ public final class LocalizationPlugin {
    */
   public void setMapLanguage(@NonNull MapLocale mapLocale) {
     this.mapLocale = mapLocale;
-    if (style!=null) {
-      List<Layer> layers = style.getLayers();
-      for (Source source : style.getSources()) {
-        if (sourceIsFromMapbox(source)) {
-          boolean isStreetsV8 = sourceIsStreetsV8(source);
-          for (Layer layer : layers) {
-            if (layer instanceof SymbolLayer) {
-              PropertyValue<?> textFieldProperty = ((SymbolLayer) layer).getTextField();
-              if (textFieldProperty.isExpression()) {
-                if (isStreetsV8) {
-                  convertExpressionV8(mapLocale, layer, textFieldProperty);
-                } else {
-                  convertExpression(mapLocale, layer, textFieldProperty);
-                }
+    if (!style.isFullyLoaded()) {
+      // We are in progress of loading a new style
+      return;
+    }
+
+    List<Layer> layers = style.getLayers();
+    for (Source source : style.getSources()) {
+      if (sourceIsFromMapbox(source)) {
+        boolean isStreetsV8 = sourceIsStreetsV8(source);
+        for (Layer layer : layers) {
+          if (layer instanceof SymbolLayer) {
+            PropertyValue<?> textFieldProperty = ((SymbolLayer) layer).getTextField();
+            if (textFieldProperty.isExpression()) {
+              if (isStreetsV8) {
+                convertExpressionV8(mapLocale, layer, textFieldProperty);
               } else {
-                convertToken(mapLocale, layer, textFieldProperty);
+                convertExpression(mapLocale, layer, textFieldProperty);
               }
+            } else {
+              convertToken(mapLocale, layer, textFieldProperty);
             }
           }
-        } else {
-          String url = null;
-          if (source instanceof VectorSource) {
-            url = ((VectorSource) source).getUrl();
-          }
-          if (url == null) {
-            url = "not found";
-          }
-          Timber.w("The \"%s\" source is not based on Mapbox Vector Tiles. Supported sources:\n %s",
-            url, SUPPORTED_SOURCES);
         }
+      } else {
+        String url = null;
+        if (source instanceof VectorSource) {
+          url = ((VectorSource) source).getUrl();
+        }
+        if (url == null) {
+          url = "not found";
+        }
+        Timber.w("The \"%s\" source is not based on Mapbox Vector Tiles. Supported sources:\n %s",
+          url, SUPPORTED_SOURCES);
       }
     }
   }
