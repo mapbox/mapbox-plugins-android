@@ -4,7 +4,11 @@
 
 ## Getting Started
 
-To use the MarkerView plugin you include it in your `build.gradle` file.
+[More documentation about the plugin can be found here](https://www.mapbox.com/android-docs/plugins/overview/markerview/).
+
+Please be aware that Android views are the less performant and less customizable option for adding icons to a map. The Mapbox Maps SDK's SymbolLayer is the recommended way to add icons. View [the Mapbox Annotation Plugin for Android](https://www.mapbox.com/android-docs/plugins/overview/annotation) for more information about using a SymbolLayer.
+
+To use the MarkerView plugin, you include its dependency in your `build.gradle` file.
 
 ```
 // In the root build.gradle file
