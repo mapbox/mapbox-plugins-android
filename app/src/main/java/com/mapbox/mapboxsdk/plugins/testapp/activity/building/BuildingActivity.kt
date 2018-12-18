@@ -24,7 +24,6 @@ class BuildingActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var mapboxMap: MapboxMap? = null
     private var buildingPlugin: BuildingPlugin? = null
-    private var isEnabled: Boolean = false
     lateinit var mapView: MapView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,9 +35,8 @@ class BuildingActivity : AppCompatActivity(), OnMapReadyCallback {
 
         fabBuilding.setOnClickListener { _ ->
             buildingPlugin?.let {
-                isEnabled = !isEnabled
-                it.setVisibility(isEnabled)
-                Timber.e("Building plugin is enabled :%s", isEnabled)
+                it.setVisibility(!it.isVisible)
+                Timber.e("Building plugin is enabled :%s", it.isVisible)
             }
         }
     }
@@ -46,7 +44,7 @@ class BuildingActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(mapboxMap: MapboxMap) {
         this.mapboxMap = mapboxMap
         mapboxMap.setStyle(Style.MAPBOX_STREETS){
-            buildingPlugin = BuildingPlugin(mapView, mapboxMap)
+            buildingPlugin = BuildingPlugin(mapView, mapboxMap, it)
             buildingPlugin?.setMinZoomLevel(15f)
             fabBuilding.visibility = View.VISIBLE
             initLightSeekbar()
