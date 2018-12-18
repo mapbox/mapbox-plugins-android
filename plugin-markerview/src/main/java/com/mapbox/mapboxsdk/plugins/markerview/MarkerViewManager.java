@@ -2,6 +2,7 @@ package com.mapbox.mapboxsdk.plugins.markerview;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
+
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
@@ -79,7 +80,9 @@ public class MarkerViewManager implements MapView.OnDidFinishRenderingFrameListe
 
   @Override
   public void onDidFinishRenderingFrame(boolean fully) {
-    update();
+    if (fully) {
+      update();
+    }
   }
 
   private void update() {
