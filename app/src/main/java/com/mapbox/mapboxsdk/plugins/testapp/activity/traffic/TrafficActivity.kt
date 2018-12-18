@@ -42,7 +42,7 @@ class TrafficActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(mapboxMap: MapboxMap) {
         this.mapboxMap = mapboxMap
         mapboxMap.setStyle(Style.MAPBOX_STREETS) {
-            this.trafficPlugin = TrafficPlugin(mapView, mapboxMap)
+            this.trafficPlugin = TrafficPlugin(mapView, mapboxMap, it)
             this.trafficPlugin?.setVisibility(true) // Enable the traffic view by default
         }
     }
