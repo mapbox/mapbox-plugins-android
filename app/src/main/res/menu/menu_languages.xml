@@ -58,4 +58,9 @@
         android:title="Korean"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/local"
+        android:title="Local names"
+        app:showAsAction="never"/>
+
 </menu>

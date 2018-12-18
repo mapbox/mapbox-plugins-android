@@ -2,6 +2,9 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.google.gson.*;
 import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.style.layers.Property;
@@ -13,13 +16,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.convertArray;
+import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.toFloatArray;
+import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.toStringArray;
 
 /**
  * Builder class from which a symbol is created.
  */
 public class SymbolOptions extends Options<Symbol> {
 
-  private Geometry geometry;
+  private boolean isDraggable;
+  private Point geometry;
   private Float iconSize;
   private String iconImage;
   private Float iconRotate;
@@ -592,8 +598,28 @@ public class SymbolOptions extends Options<Symbol> {
     return zIndex;
   }
 
+  /**
+   * Returns whether this symbol is draggable, meaning it can be dragged across the screen when touched and moved.
+   *
+   * @return draggable when touched
+   */
+  public boolean isDraggable() {
+    return isDraggable;
+  }
+
+  /**
+   * Set whether this symbol should be draggable,
+   * meaning it can be dragged across the screen when touched and moved.
+   *
+   * @param draggable should be draggable
+   */
+  public SymbolOptions setDraggable(boolean draggable) {
+    isDraggable = draggable;
+    return this;
+  }
+
   @Override
-  Symbol build(long id) {
+  Symbol build(long id, AnnotationManager<?, Symbol, ?, ?, ?, ?> annotationManager) {
     if (geometry == null) {
       throw new RuntimeException("geometry field is required");
     }
@@ -624,6 +650,140 @@ public class SymbolOptions extends Options<Symbol> {
     jsonObject.addProperty("text-halo-width", textHaloWidth);
     jsonObject.addProperty("text-halo-blur", textHaloBlur);
     jsonObject.addProperty(Symbol.Z_INDEX, zIndex);
-    return new Symbol(id, jsonObject, geometry);
+    Symbol symbol = new Symbol(id, annotationManager, jsonObject, geometry);
+    symbol.setDraggable(isDraggable);
+    return symbol;
+  }
+
+  /**
+   * Creates SymbolOptions out of a Feature.
+   * <p>
+   * All supported properties are:<br>
+   * "icon-size" - Float<br>
+   * "icon-image" - String<br>
+   * "icon-rotate" - Float<br>
+   * "icon-offset" - Float[]<br>
+   * "icon-anchor" - String<br>
+   * "text-field" - String<br>
+   * "text-font" - String[]<br>
+   * "text-size" - Float<br>
+   * "text-max-width" - Float<br>
+   * "text-letter-spacing" - Float<br>
+   * "text-justify" - String<br>
+   * "text-anchor" - String<br>
+   * "text-rotate" - Float<br>
+   * "text-transform" - String<br>
+   * "text-offset" - Float[]<br>
+   * "icon-opacity" - Float<br>
+   * "icon-color" - String<br>
+   * "icon-halo-color" - String<br>
+   * "icon-halo-width" - Float<br>
+   * "icon-halo-blur" - Float<br>
+   * "text-opacity" - Float<br>
+   * "text-color" - String<br>
+   * "text-halo-color" - String<br>
+   * "text-halo-width" - Float<br>
+   * "text-halo-blur" - Float<br>
+   * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
+   * <p>
+   * Out of spec properties:<br>
+   * "z-index" - Integer, z-index of the feature within the manager<br>
+   * "is-draggable" - Boolean, true if the symbol should be draggable, false otherwise
+   *
+   * @param feature feature to be converted
+   */
+  @Nullable
+  static SymbolOptions fromFeature(@NonNull Feature feature) {
+    if (feature.geometry() == null) {
+      throw new RuntimeException("geometry field is required");
+    }
+    if (!(feature.geometry() instanceof Point)) {
+      return null;
+    }
+
+    SymbolOptions options = new SymbolOptions();
+    options.geometry = (Point) feature.geometry();
+    if (feature.hasProperty("icon-size")) {
+      options.iconSize = feature.getProperty("icon-size").getAsFloat();
+    }
+    if (feature.hasProperty("icon-image")) {
+      options.iconImage = feature.getProperty("icon-image").getAsString();
+    }
+    if (feature.hasProperty("icon-rotate")) {
+      options.iconRotate = feature.getProperty("icon-rotate").getAsFloat();
+    }
+    if (feature.hasProperty("icon-offset")) {
+      options.iconOffset = toFloatArray(feature.getProperty("icon-offset").getAsJsonArray());
+    }
+    if (feature.hasProperty("icon-anchor")) {
+      options.iconAnchor = feature.getProperty("icon-anchor").getAsString();
+    }
+    if (feature.hasProperty("text-field")) {
+      options.textField = feature.getProperty("text-field").getAsString();
+    }
+    if (feature.hasProperty("text-font")) {
+      options.textFont = toStringArray(feature.getProperty("text-font").getAsJsonArray());
+    }
+    if (feature.hasProperty("text-size")) {
+      options.textSize = feature.getProperty("text-size").getAsFloat();
+    }
+    if (feature.hasProperty("text-max-width")) {
+      options.textMaxWidth = feature.getProperty("text-max-width").getAsFloat();
+    }
+    if (feature.hasProperty("text-letter-spacing")) {
+      options.textLetterSpacing = feature.getProperty("text-letter-spacing").getAsFloat();
+    }
+    if (feature.hasProperty("text-justify")) {
+      options.textJustify = feature.getProperty("text-justify").getAsString();
+    }
+    if (feature.hasProperty("text-anchor")) {
+      options.textAnchor = feature.getProperty("text-anchor").getAsString();
+    }
+    if (feature.hasProperty("text-rotate")) {
+      options.textRotate = feature.getProperty("text-rotate").getAsFloat();
+    }
+    if (feature.hasProperty("text-transform")) {
+      options.textTransform = feature.getProperty("text-transform").getAsString();
+    }
+    if (feature.hasProperty("text-offset")) {
+      options.textOffset = toFloatArray(feature.getProperty("text-offset").getAsJsonArray());
+    }
+    if (feature.hasProperty("icon-opacity")) {
+      options.iconOpacity = feature.getProperty("icon-opacity").getAsFloat();
+    }
+    if (feature.hasProperty("icon-color")) {
+      options.iconColor = feature.getProperty("icon-color").getAsString();
+    }
+    if (feature.hasProperty("icon-halo-color")) {
+      options.iconHaloColor = feature.getProperty("icon-halo-color").getAsString();
+    }
+    if (feature.hasProperty("icon-halo-width")) {
+      options.iconHaloWidth = feature.getProperty("icon-halo-width").getAsFloat();
+    }
+    if (feature.hasProperty("icon-halo-blur")) {
+      options.iconHaloBlur = feature.getProperty("icon-halo-blur").getAsFloat();
+    }
+    if (feature.hasProperty("text-opacity")) {
+      options.textOpacity = feature.getProperty("text-opacity").getAsFloat();
+    }
+    if (feature.hasProperty("text-color")) {
+      options.textColor = feature.getProperty("text-color").getAsString();
+    }
+    if (feature.hasProperty("text-halo-color")) {
+      options.textHaloColor = feature.getProperty("text-halo-color").getAsString();
+    }
+    if (feature.hasProperty("text-halo-width")) {
+      options.textHaloWidth = feature.getProperty("text-halo-width").getAsFloat();
+    }
+    if (feature.hasProperty("text-halo-blur")) {
+      options.textHaloBlur = feature.getProperty("text-halo-blur").getAsFloat();
+    }
+    if (feature.hasProperty("z-index")) {
+      options.zIndex = feature.getProperty("z-index").getAsInt();
+    }
+    if (feature.hasProperty("is-draggable")) {
+      options.isDraggable = feature.getProperty("is-draggable").getAsBoolean();
+    }
+    return options;
   }
 }

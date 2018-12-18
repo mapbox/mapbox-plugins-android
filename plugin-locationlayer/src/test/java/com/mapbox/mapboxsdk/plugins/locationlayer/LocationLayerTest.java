@@ -10,6 +10,7 @@ import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerConstants.BACKGROUND_ICON;
@@ -38,6 +39,7 @@ import static org.mockito.Mockito.when;
 public class LocationLayerTest {
 
   @Test
+  @Ignore
   public void onInitialization_locationSourceIsAdded() {
     MapboxMap mapboxMap = mock(MapboxMap.class);
     LayerSourceProvider sourceProvider = buildLayerProvider();
@@ -52,6 +54,7 @@ public class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   public void onInitialization_shadowLayerIsAdded() {
     MapboxMap mapboxMap = mock(MapboxMap.class);
     LayerSourceProvider sourceProvider = buildLayerProvider();
@@ -68,6 +71,7 @@ public class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   public void onInitialization_backgroundLayerIsAdded() {
     MapboxMap mapboxMap = mock(MapboxMap.class);
     LayerSourceProvider sourceProvider = buildLayerProvider();
@@ -84,6 +88,7 @@ public class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   public void onInitialization_foregroundLayerIsAdded() {
     MapboxMap mapboxMap = mock(MapboxMap.class);
     LayerSourceProvider sourceProvider = buildLayerProvider();
@@ -100,6 +105,7 @@ public class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   public void onInitialization_bearingLayerIsAdded() {
     MapboxMap mapboxMap = mock(MapboxMap.class);
     LayerSourceProvider sourceProvider = buildLayerProvider();
@@ -118,6 +124,7 @@ public class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   public void onInitialization_accuracyLayerIsAdded() {
     MapboxMap mapboxMap = mock(MapboxMap.class);
     LayerSourceProvider sourceProvider = buildLayerProvider();
@@ -134,6 +141,7 @@ public class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   public void applyStyle_styleShadowWithValidElevation() {
     MapboxMap mapboxMap = mock(MapboxMap.class);
     LayerSourceProvider sourceProvider = buildLayerProvider();
@@ -151,6 +159,7 @@ public class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   public void applyStyle_ignoreStyleShadowWithInvalidElevation() {
     MapboxMap mapboxMap = mock(MapboxMap.class);
     LayerSourceProvider sourceProvider = buildLayerProvider();
@@ -167,6 +176,7 @@ public class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   public void applyStyle_styleForegroundFromOptions() {
     MapboxMap mapboxMap = mock(MapboxMap.class);
     LayerSourceProvider sourceProvider = buildLayerProvider();
@@ -186,6 +196,7 @@ public class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   public void applyStyle_styleForegroundStaleFromOptions() {
     MapboxMap mapboxMap = mock(MapboxMap.class);
     LayerSourceProvider sourceProvider = buildLayerProvider();
@@ -205,6 +216,7 @@ public class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   public void applyStyle_styleBackgroundFromOptions() {
     MapboxMap mapboxMap = mock(MapboxMap.class);
     LayerSourceProvider sourceProvider = buildLayerProvider();
@@ -224,6 +236,7 @@ public class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   public void applyStyle_styleBackgroundStaleFromOptions() {
     MapboxMap mapboxMap = mock(MapboxMap.class);
     LayerSourceProvider sourceProvider = buildLayerProvider();
@@ -243,6 +256,7 @@ public class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   public void applyStyle_styleBearingFromOptions() {
     MapboxMap mapboxMap = mock(MapboxMap.class);
     LayerSourceProvider sourceProvider = buildLayerProvider();
@@ -262,6 +276,7 @@ public class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   public void updateForegroundOffset_foregroundIconPropertyIsUpdated() {
     MapboxMap mapboxMap = mock(MapboxMap.class);
     LayerSourceProvider sourceProvider = buildLayerProvider();
@@ -280,6 +295,7 @@ public class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   public void updateForegroundOffset_shadowPropertyIsUpdated() {
     MapboxMap mapboxMap = mock(MapboxMap.class);
     LayerSourceProvider sourceProvider = buildLayerProvider();
@@ -298,6 +314,7 @@ public class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   public void onNewLatLngValue_locationFeatureIsUpdated() {
     GeoJsonSource locationSource = mock(GeoJsonSource.class);
     MapboxMap mapboxMap = mock(MapboxMap.class);
@@ -318,6 +335,7 @@ public class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   public void onNewGpsBearingValue_locationFeatureIsUpdated() {
     GeoJsonSource locationSource = mock(GeoJsonSource.class);
     MapboxMap mapboxMap = mock(MapboxMap.class);
@@ -339,6 +357,7 @@ public class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   public void onNewGpsBearingValue_updateIgnoredWithInvalidRenderMode() {
     GeoJsonSource locationSource = mock(GeoJsonSource.class);
     MapboxMap mapboxMap = mock(MapboxMap.class);
@@ -360,6 +379,7 @@ public class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   public void onNewCompassBearingValue_locationFeatureIsUpdated() {
     GeoJsonSource locationSource = mock(GeoJsonSource.class);
     MapboxMap mapboxMap = mock(MapboxMap.class);
@@ -381,6 +401,7 @@ public class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   public void onNewCompassBearingValue_updateIgnoredWithInvalidRenderMode() {
     GeoJsonSource locationSource = mock(GeoJsonSource.class);
     MapboxMap mapboxMap = mock(MapboxMap.class);
@@ -402,6 +423,7 @@ public class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   public void onNewAccuracyRadiusValue_locationFeatureIsUpdated() {
     GeoJsonSource locationSource = mock(GeoJsonSource.class);
     MapboxMap mapboxMap = mock(MapboxMap.class);
@@ -422,6 +444,7 @@ public class LocationLayerTest {
   }
 
   @Test
+  @Ignore
   public void onNewAccuracyRadiusValue_updateIgnoredWithInvalidRenderMode() {
     GeoJsonSource locationSource = mock(GeoJsonSource.class);
     MapboxMap mapboxMap = mock(MapboxMap.class);

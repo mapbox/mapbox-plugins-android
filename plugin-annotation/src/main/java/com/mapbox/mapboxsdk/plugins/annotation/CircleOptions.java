@@ -2,6 +2,9 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.google.gson.*;
 import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.style.layers.Property;
@@ -13,13 +16,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.convertArray;
+import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.toFloatArray;
+import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.toStringArray;
 
 /**
  * Builder class from which a circle is created.
  */
 public class CircleOptions extends Options<Circle> {
 
-  private Geometry geometry;
+  private boolean isDraggable;
+  private Point geometry;
   private Float circleRadius;
   private String circleColor;
   private Float circleBlur;
@@ -190,8 +196,28 @@ public class CircleOptions extends Options<Circle> {
     return this;
   }
 
+  /**
+   * Returns whether this circle is draggable, meaning it can be dragged across the screen when touched and moved.
+   *
+   * @return draggable when touched
+   */
+  public boolean isDraggable() {
+    return isDraggable;
+  }
+
+  /**
+   * Set whether this circle should be draggable,
+   * meaning it can be dragged across the screen when touched and moved.
+   *
+   * @param draggable should be draggable
+   */
+  public CircleOptions setDraggable(boolean draggable) {
+    isDraggable = draggable;
+    return this;
+  }
+
   @Override
-  Circle build(long id) {
+  Circle build(long id, AnnotationManager<?, Circle, ?, ?, ?, ?> annotationManager) {
     if (geometry == null) {
       throw new RuntimeException("geometry field is required");
     }
@@ -203,6 +229,64 @@ public class CircleOptions extends Options<Circle> {
     jsonObject.addProperty("circle-stroke-width", circleStrokeWidth);
     jsonObject.addProperty("circle-stroke-color", circleStrokeColor);
     jsonObject.addProperty("circle-stroke-opacity", circleStrokeOpacity);
-    return new Circle(id, jsonObject, geometry);
+    Circle circle = new Circle(id, annotationManager, jsonObject, geometry);
+    circle.setDraggable(isDraggable);
+    return circle;
+  }
+
+  /**
+   * Creates CircleOptions out of a Feature.
+   * <p>
+   * All supported properties are:<br>
+   * "circle-radius" - Float<br>
+   * "circle-color" - String<br>
+   * "circle-blur" - Float<br>
+   * "circle-opacity" - Float<br>
+   * "circle-stroke-width" - Float<br>
+   * "circle-stroke-color" - String<br>
+   * "circle-stroke-opacity" - Float<br>
+   * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
+   * <p>
+   * Out of spec properties:<br>
+   * "is-draggable" - Boolean, true if the circle should be draggable, false otherwise
+   *
+   * @param feature feature to be converted
+   */
+  @Nullable
+  static CircleOptions fromFeature(@NonNull Feature feature) {
+    if (feature.geometry() == null) {
+      throw new RuntimeException("geometry field is required");
+    }
+    if (!(feature.geometry() instanceof Point)) {
+      return null;
+    }
+
+    CircleOptions options = new CircleOptions();
+    options.geometry = (Point) feature.geometry();
+    if (feature.hasProperty("circle-radius")) {
+      options.circleRadius = feature.getProperty("circle-radius").getAsFloat();
+    }
+    if (feature.hasProperty("circle-color")) {
+      options.circleColor = feature.getProperty("circle-color").getAsString();
+    }
+    if (feature.hasProperty("circle-blur")) {
+      options.circleBlur = feature.getProperty("circle-blur").getAsFloat();
+    }
+    if (feature.hasProperty("circle-opacity")) {
+      options.circleOpacity = feature.getProperty("circle-opacity").getAsFloat();
+    }
+    if (feature.hasProperty("circle-stroke-width")) {
+      options.circleStrokeWidth = feature.getProperty("circle-stroke-width").getAsFloat();
+    }
+    if (feature.hasProperty("circle-stroke-color")) {
+      options.circleStrokeColor = feature.getProperty("circle-stroke-color").getAsString();
+    }
+    if (feature.hasProperty("circle-stroke-opacity")) {
+      options.circleStrokeOpacity = feature.getProperty("circle-stroke-opacity").getAsFloat();
+    }
+    if (feature.hasProperty("is-draggable")) {
+      options.isDraggable = feature.getProperty("is-draggable").getAsBoolean();
+    }
+    return options;
   }
 }

@@ -11,20 +11,30 @@ import android.support.annotation.ColorInt;
 import android.graphics.PointF;
 import android.support.annotation.UiThread;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import com.mapbox.android.gestures.MoveDistancesObject;
+import com.mapbox.mapboxsdk.maps.Projection;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mapbox.mapboxsdk.constants.GeometryConstants.MAX_MERCATOR_LATITUDE;
+import static com.mapbox.mapboxsdk.constants.GeometryConstants.MIN_MERCATOR_LATITUDE;
+
 @UiThread
-public class <%- camelize(type) %> extends Annotation {
+public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>> {
+
+  private final AnnotationManager<?, <%- camelize(type) %>, ?, ?, ?, ?> annotationManager;
 <% if (type === "symbol") { -%>
 
-  public static final String Z_INDEX = "z-index";
+  static final String Z_INDEX = "z-index";
 <% } -%>
 
   /**
@@ -34,8 +44,25 @@ public class <%- camelize(type) %> extends Annotation {
    * @param jsonObject the features of the annotation
    * @param geometry the geometry of the annotation
    */
-  <%- camelize(type) %>(long id, JsonObject jsonObject, Geometry geometry) {
+  <%- camelize(type) %>(long id, AnnotationManager<?, <%- camelize(type) %>, ?, ?, ?, ?> annotationManager, JsonObject jsonObject, <%- geometryType(type) %> geometry) {
     super(id, jsonObject, geometry);
+    this.annotationManager = annotationManager;
+  }
+
+  @Override
+  void setUsedDataDrivenProperties() {
+<% for (const property of properties) { -%>
+<% if (supportsPropertyFunction(property)) { -%>
+    if (!(jsonObject.get("<%- property.name %>") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("<%- property.name %>");
+    }
+<% } -%>
+<% } -%>
+<% if (type === "symbol") { -%>
+    if (!(jsonObject.get(Z_INDEX) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(Z_INDEX);
+    }
+<% } -%>
   }
 <% if (type === "circle" || type === "symbol") { -%>
 
@@ -45,10 +72,20 @@ public class <%- camelize(type) %> extends Annotation {
    * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
    * <p>
    *
-   * @param latLng the location of the <%- type %> in a longitude and latitude pair
+   * @param latLng the location of the <%- type %> in a latitude and longitude pair
    */
   public void setLatLng(LatLng latLng) {
     geometry = Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
+  }
+
+  /**
+   * Get the LatLng of the <%- type %>, which represents the location of the <%- type %> on the map
+   *
+   * @return the location of the <%- type %>
+   */
+  @NonNull
+  public LatLng getLatLng() {
+    return new LatLng(geometry.latitude(), geometry.longitude());
   }
 <% } else if (type === "line") { -%>
 
@@ -67,6 +104,21 @@ public class <%- camelize(type) %> extends Annotation {
     }
     geometry = LineString.fromLngLats(points);
   }
+
+  /**
+   * Get a list of LatLng for the line, which represents the locations of the line on the map
+   *
+   * @return a list of the locations of the line in a latitude and longitude pairs
+   */
+  @NonNull
+  public List<LatLng> getLatLngs() {
+    LineString lineString = (LineString) geometry;
+    List<LatLng> latLngs = new ArrayList<>();
+    for (Point point: lineString.coordinates()) {
+      latLngs.add(new LatLng(point.latitude(), point.longitude()));
+    }
+    return latLngs;
+  }
 <% } else { -%>
 
   /**
@@ -75,7 +127,7 @@ public class <%- camelize(type) %> extends Annotation {
    * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
    * <p>
    *
-   * @param latLngs a list of a lists of the locations of the line in a longitude and latitude pairs
+   * @param latLngs a list of a lists of the locations of the polygon in a latitude and longitude pairs
    */
   public void setLatLngs(List<List<LatLng>> latLngs) {
     List<List<Point>> points = new ArrayList<>();
@@ -88,45 +140,27 @@ public class <%- camelize(type) %> extends Annotation {
     }
     geometry = Polygon.fromLngLats(points);
   }
-<% } -%>
-<% if (type === "circle" || type === "symbol") { -%>
 
   /**
-   * Set the Geometry of the <%- type %>, which represents the location of the <%- type %> on the map
-   * <p>
-   * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
-   * <p>
+   * Get a list of lists of LatLng for the fill, which represents the locations of the fill on the map
    *
-   * @param geometry the geometry of the <%- type %>
+   * @return a list of a lists of the locations of the polygon in a latitude and longitude pairs
    */
-  public void setGeometry(Point geometry) {
-    this.geometry = geometry;
-  }
-<% } else if (type === "line") { -%>
-
-  /**
-   * Set the Geometry of the <%- type %>, which represents the location of the <%- type %> on the map
-   * <p>
-   * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
-   * <p>
-   *
-   * @param geometry the geometry of the <%- type %>
-   */
-  public void setGeometry(LineString geometry) {
-    this.geometry = geometry;
-  }
-<% } else { -%>
-
-  /**
-   * Set the Geometry of the <%- type %>, which represents the location of the <%- type %> on the map
-   * <p>
-   * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
-   * <p>
-   *
-   * @param geometry the geometry of the <%- type %>
-   */
-  public void setGeometry(Polygon geometry) {
-    this.geometry = geometry;
+  @NonNull
+  public List<List<LatLng>> getLatLngs() {
+    Polygon polygon = (Polygon) geometry;
+    List<List<LatLng>> latLngs = new ArrayList<>();
+    List<List<Point>> coordinates = polygon.coordinates();
+    if (coordinates != null) {
+      for (List<Point> innerPoints : coordinates) {
+        List<LatLng> innerList = new ArrayList<>();
+        for (Point point : innerPoints) {
+          innerList.add(new LatLng(point.latitude(), point.longitude()));
+        }
+        latLngs.add(innerList);
+      }
+    }
+    return latLngs;
   }
 <% } -%>
 <% if (type === "symbol") { -%>
@@ -263,5 +297,76 @@ public class <%- camelize(type) %> extends Annotation {
   }
 <% } -%>
 <% } -%>
+<% } -%>
+<% if (type === "circle" || type === "symbol") { -%>
+
+  @Override
+  @Nullable
+  Geometry getOffsetGeometry(@NonNull Projection projection, @NonNull MoveDistancesObject moveDistancesObject,
+                             float touchAreaShiftX, float touchAreaShiftY) {
+    PointF pointF = new PointF(
+      moveDistancesObject.getCurrentX() - touchAreaShiftX,
+      moveDistancesObject.getCurrentY() - touchAreaShiftY
+    );
+
+    LatLng latLng = projection.fromScreenLocation(pointF);
+    if (latLng.getLatitude() > MAX_MERCATOR_LATITUDE || latLng.getLatitude() < MIN_MERCATOR_LATITUDE) {
+      return null;
+    }
+
+    return Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
+  }
+<% } else if (type === "line") { -%>
+
+  @Override
+  @Nullable
+  Geometry getOffsetGeometry(@NonNull Projection projection, @NonNull MoveDistancesObject moveDistancesObject,
+                             float touchAreaShiftX, float touchAreaShiftY) {
+    List<Point> originalPoints = geometry.coordinates();
+    List<Point> resultingPoints = new ArrayList<>(originalPoints.size());
+    for (Point jsonPoint : originalPoints) {
+      PointF pointF = projection.toScreenLocation(new LatLng(jsonPoint.latitude(), jsonPoint.longitude()));
+      pointF.x -= moveDistancesObject.getDistanceXSinceLast();
+      pointF.y -= moveDistancesObject.getDistanceYSinceLast();
+
+      LatLng latLng = projection.fromScreenLocation(pointF);
+      if (latLng.getLatitude() > MAX_MERCATOR_LATITUDE || latLng.getLatitude() < MIN_MERCATOR_LATITUDE) {
+        return null;
+      }
+      resultingPoints.add(Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude()));
+    }
+
+    return LineString.fromLngLats(resultingPoints);
+  }
+<% } else { -%>
+
+  @Override
+  @Nullable
+  Geometry getOffsetGeometry(@NonNull Projection projection, @NonNull MoveDistancesObject moveDistancesObject,
+                             float touchAreaShiftX, float touchAreaShiftY) {
+    List<List<Point>> originalPoints = geometry.coordinates();
+    if (originalPoints != null) {
+      List<List<Point>> resultingPoints = new ArrayList<>(originalPoints.size());
+      for (List<Point> points : originalPoints) {
+        List<Point> innerPoints = new ArrayList<>();
+        for (Point jsonPoint : points) {
+          PointF pointF = projection.toScreenLocation(new LatLng(jsonPoint.latitude(), jsonPoint.longitude()));
+          pointF.x -= moveDistancesObject.getDistanceXSinceLast();
+          pointF.y -= moveDistancesObject.getDistanceYSinceLast();
+
+          LatLng latLng = projection.fromScreenLocation(pointF);
+          if (latLng.getLatitude() > MAX_MERCATOR_LATITUDE || latLng.getLatitude() < MIN_MERCATOR_LATITUDE) {
+            return null;
+          }
+          innerPoints.add(Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude()));
+        }
+        resultingPoints.add(innerPoints);
+      }
+
+      return Polygon.fromLngLats(resultingPoints);
+    }
+
+    return null;
+  }
 <% } -%>
 }

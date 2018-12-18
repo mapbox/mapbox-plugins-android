@@ -22,7 +22,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.10.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.11.0'
 }
 ```
 
@@ -40,7 +40,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.11.0-SNAPSHOT'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.12.0-SNAPSHOT'
 }
 ```
 

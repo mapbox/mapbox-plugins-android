@@ -1,6 +1,7 @@
 package com.mapbox.mapboxsdk.plugins.localization;
 
 import android.support.annotation.NonNull;
+
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -12,10 +13,12 @@ import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.Source;
 import com.mapbox.mapboxsdk.style.sources.VectorSource;
-import timber.log.Timber;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import timber.log.Timber;
 
 import static com.mapbox.mapboxsdk.style.expressions.Expression.raw;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
@@ -24,18 +27,63 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
  * Useful class for quickly adjusting the maps language and the maps camera starting position.
  * You can either use {@link #matchMapLanguageWithDeviceDefault()} to match the map language with
  * the one being currently used on the device. Using {@link #setMapLanguage(Locale)} and it's
- * variants, you can also change the maps langauge at anytime to any of the supported languages.
+ * variants, you can also change the maps language at anytime to any of the supported languages.
+ * <p>
+ * The plugin uses a fallback logic in case there are missing resources
+ * - if there is no available localization for a label, the plugin will use local name, if it's Latin script based,
+ * otherwise English. Traditional Chinese falls back to Simplified Chinese before executing before mentioned logic.
+ * <p>
+ * The plugin only support Mapbox sources:<br/>
+ * - mapbox.mapbox-streets-v6<br/>
+ * - mapbox.mapbox-streets-v7<br/>
+ * - mapbox.mapbox-streets-v8
  *
  * @since 0.1.0
  */
-public final class LocalizationPlugin implements MapView.OnMapChangedListener {
+public final class LocalizationPlugin {
+
+  private static final List<String> SUPPORTED_SOURCES = new ArrayList<>();
+
+  static {
+    SUPPORTED_SOURCES.add("mapbox.mapbox-streets-v6");
+    SUPPORTED_SOURCES.add("mapbox.mapbox-streets-v7");
+    SUPPORTED_SOURCES.add("mapbox.mapbox-streets-v8");
+  }
 
   // expression syntax
-  private static final String EXPRESSION_REGEX = "\\bname_.{2}";
+  private static final String EXPRESSION_REGEX = "\\b(name|name_.{2,7})\\b";
+
+  private static final String EXPRESSION_V8_REGEX_BASE = "\\[\"get\", \"name_en\"], \\[\"get\", \"name\"]";
+  private static final String EXPRESSION_V8_TEMPLATE_BASE = "[\"get\", \"name_en\"], [\"get\", \"name\"]";
+  private static final String EXPRESSION_V8_REGEX_LOCALIZED =
+    "\\[\"match\", \"(name|name_.{2,7})\", "
+      + "\"name_zh-Hant\", \\[\"coalesce\", "
+      + "\\[\"get\", \"name_zh-Hant\"], "
+      + "\\[\"get\", \"name_zh-Hans\"], "
+      + "\\[\"match\", \\[\"get\", \"name_script\"], \"Latin\", \\[\"get\", \"name\"], \\[\"get\", \"name_en\"]], "
+      + "\\[\"get\", \"name\"]], "
+      + "\\[\"coalesce\", "
+      + "\\[\"get\", \"(name|name_.{2,7})\"], "
+      + "\\[\"match\", \\[\"get\", \"name_script\"], \"Latin\", \\[\"get\", \"name\"], \\[\"get\", \"name_en\"]], "
+      + "\\[\"get\", \"name\"]]"
+      + "]";
+
+  private static final String EXPRESSION_V8_TEMPLATE_LOCALIZED =
+    "[\"match\", \"%s\", "
+      + "\"name_zh-Hant\", [\"coalesce\", "
+      + "[\"get\", \"name_zh-Hant\"], "
+      + "[\"get\", \"name_zh-Hans\"], "
+      + "[\"match\", [\"get\", \"name_script\"], \"Latin\", [\"get\", \"name\"], [\"get\", \"name_en\"]], "
+      + "[\"get\", \"name\"]], "
+      + "[\"coalesce\", "
+      + "[\"get\", \"%s\"], "
+      + "[\"match\", [\"get\", \"name_script\"], \"Latin\", [\"get\", \"name\"], [\"get\", \"name_en\"]], "
+      + "[\"get\", \"name\"]]"
+      + "]";
 
   // faulty step expression workaround
   private static final String STEP_REGEX = "\\[\"zoom\"], ";
-  private static final String STEP_TEMPLATE = "[\"zoom\"], %s, ";
+  private static final String STEP_TEMPLATE = "[\"zoom\"], \"\", ";
 
   // legacy token syntax
   private static final String TOKEN_TEMPLATE = "{%s}";
@@ -55,17 +103,15 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
    */
   public LocalizationPlugin(@NonNull MapView mapview, @NonNull MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
-    mapview.addOnMapChangedListener(this);
-  }
-
-  /**
-   * Handles resetting the map language when the map style changes.
-   */
-  @Override
-  public void onMapChanged(int change) {
-    if (change == MapView.DID_FINISH_LOADING_STYLE && mapLocale != null) {
-      setMapLanguage(mapLocale);
-    }
+    MapView.OnDidFinishLoadingStyleListener styleLoadListener = new MapView.OnDidFinishLoadingStyleListener() {
+      @Override
+      public void onDidFinishLoadingStyle() {
+        if (mapLocale != null) {
+          setMapLanguage(mapLocale);
+        }
+      }
+    };
+    mapview.addOnDidFinishLoadingStyleListener(styleLoadListener);
   }
 
   /*
@@ -100,8 +146,6 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
    * locale you are trying to use, has a complementary {@link MapLocale} for it.
    *
    * @param locale a {@link Locale} which has a complementary {@link MapLocale} for it
-   * @throws NullPointerException thrown when the locale passed into the method doesn't have a
-   *                              matching {@link MapLocale}
    * @since 0.1.0
    */
   public void setMapLanguage(@NonNull Locale locale) {
@@ -112,7 +156,6 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
       Timber.e("Couldn't match Locale %s to a MapLocale", locale.getDisplayName());
     }
   }
-
 
   /**
    * You can pass in a {@link MapLocale} directly into this method which uses the language defined
@@ -126,16 +169,31 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
     List<Layer> layers = mapboxMap.getLayers();
     for (Source source : mapboxMap.getSources()) {
       if (sourceIsFromMapbox(source)) {
+        boolean isStreetsV8 = sourceIsStreetsV8(source);
         for (Layer layer : layers) {
           if (layer instanceof SymbolLayer) {
             PropertyValue<?> textFieldProperty = ((SymbolLayer) layer).getTextField();
             if (textFieldProperty.isExpression()) {
-              convertExpression(mapLocale, layer, textFieldProperty);
+              if (isStreetsV8) {
+                convertExpressionV8(mapLocale, layer, textFieldProperty);
+              } else {
+                convertExpression(mapLocale, layer, textFieldProperty);
+              }
             } else {
               convertToken(mapLocale, layer, textFieldProperty);
             }
           }
         }
+      } else {
+        String url = null;
+        if (source instanceof VectorSource) {
+          url = ((VectorSource) source).getUrl();
+        }
+        if (url == null) {
+          url = "not found";
+        }
+        Timber.w("The \"%s\" source is not based on Mapbox Vector Tiles. Supported sources:\n %s",
+          url, SUPPORTED_SOURCES);
       }
     }
   }
@@ -155,9 +213,32 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
       String text = textFieldExpression.toString().replaceAll(EXPRESSION_REGEX, mapLocale.getMapLanguage());
       if (text.startsWith("[\"step") && textFieldExpression.toArray().length % 2 == 0) {
         // got an invalid step expression from core, we need to add an additional name_x into step
-        text = text.replaceAll(STEP_REGEX, String.format(STEP_TEMPLATE, mapLocale.getMapLanguage()));
+        text = text.replaceAll(STEP_REGEX, STEP_TEMPLATE);
       }
       layer.setProperties(textField(raw(text)));
+    }
+  }
+
+  private void convertExpressionV8(@NonNull MapLocale mapLocale, Layer layer, PropertyValue<?> textFieldProperty) {
+    Expression textFieldExpression = textFieldProperty.getExpression();
+    if (textFieldExpression != null) {
+      String stringExpression =
+        textFieldExpression.toString().replaceAll(EXPRESSION_V8_REGEX_LOCALIZED, EXPRESSION_V8_TEMPLATE_BASE);
+
+      String mapLanguage = mapLocale.getMapLanguage();
+      if (!mapLanguage.equals(MapLocale.ENGLISH)) {
+        if (mapLanguage.equals(MapLocale.CHINESE)) {
+          // in streets v8 tiles chinese is declared as "name_zh-Hant" instead of "name_zh"
+          mapLanguage = MapLocale.CHINESE_V8;
+        }
+
+        stringExpression = stringExpression.replaceAll(EXPRESSION_V8_REGEX_BASE,
+          String.format(Locale.US,
+            EXPRESSION_V8_TEMPLATE_LOCALIZED,
+            mapLanguage,
+            mapLanguage));
+      }
+      layer.setProperties(textField(raw(stringExpression)));
     }
   }
 
@@ -170,25 +251,25 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
    * Specifically, this method gets the devices currently set locale and adjust the map camera to
    * view that country if a {@link MapLocale} matches.
    *
+   * @param padding camera padding
    * @since 0.1.0
    */
-  public void setCameraToLocaleCountry() {
-    setCameraToLocaleCountry(Locale.getDefault());
+  public void setCameraToLocaleCountry(int padding) {
+    setCameraToLocaleCountry(Locale.getDefault(), padding);
   }
 
   /**
    * If you'd like to manually set the camera position to a specific map region or country, pass in
    * the locale (which must have a paired }{@link MapLocale}) to work properly
    *
-   * @param locale a {@link Locale} which has a complementary {@link MapLocale} for it
-   * @throws NullPointerException thrown when the locale passed into the method doesn't have a
-   *                              matching {@link MapLocale}
+   * @param locale  a {@link Locale} which has a complementary {@link MapLocale} for it
+   * @param padding camera padding
    * @since 0.1.0
    */
-  public void setCameraToLocaleCountry(Locale locale) {
+  public void setCameraToLocaleCountry(Locale locale, int padding) {
     MapLocale mapLocale = MapLocale.getMapLocale(locale);
     if (mapLocale != null) {
-      setCameraToLocaleCountry(mapLocale);
+      setCameraToLocaleCountry(mapLocale, padding);
     } else {
       Timber.e("Couldn't match Locale %s to a MapLocale", locale.getDisplayName());
     }
@@ -198,18 +279,17 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
    * You can pass in a {@link MapLocale} directly into this method which uses the country bounds
    * defined in it to represent the language found on the map.
    *
-   * @param mapLocale he {@link MapLocale} object which contains the desired map bounds
-   * @throws NullPointerException thrown when it was expecting a {@link LatLngBounds} but instead
-   *                              it was null
+   * @param mapLocale the {@link MapLocale} object which contains the desired map bounds
+   * @param padding   camera padding
    * @since 0.1.0
    */
-  public void setCameraToLocaleCountry(MapLocale mapLocale) {
+  public void setCameraToLocaleCountry(MapLocale mapLocale, int padding) {
     LatLngBounds bounds = mapLocale.getCountryBounds();
     if (bounds == null) {
       throw new NullPointerException("Expected a LatLngBounds object but received null instead. Mak"
         + "e sure your MapLocale instance also has a country bounding box defined.");
     }
-    mapboxMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+    mapboxMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
   }
 
   /*
@@ -223,28 +303,23 @@ public final class LocalizationPlugin implements MapView.OnMapChangedListener {
    * @return true if the source is from the Mapbox Streets vector source, false if it's not.
    */
   private boolean sourceIsFromMapbox(Source singleSource) {
-    return singleSource instanceof VectorSource
-      && ((VectorSource) singleSource).getUrl().substring(0, 9).equals("mapbox://")
-      && (((VectorSource) singleSource).getUrl().contains("mapbox.mapbox-streets-v7")
-      || ((VectorSource) singleSource).getUrl().contains("mapbox.mapbox-streets-v6"));
+    if (singleSource instanceof VectorSource) {
+      String url = ((VectorSource) singleSource).getUrl();
+      if (url != null) {
+        for (String supportedSource : SUPPORTED_SOURCES) {
+          if (url.contains(supportedSource)) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
   }
 
-  /**
-   * Checks whether a single map layer has a textField that could potentially be localized to the
-   * device's language.
-   *
-   * @param singleLayer an individual layer from the map
-   * @return true if the layer has a textField eligible for translation, false if not.
-   */
-  private boolean layerHasAdjustableTextField(Layer singleLayer) {
-    if (singleLayer instanceof SymbolLayer) {
-      PropertyValue<String> textField = ((SymbolLayer) singleLayer).getTextField();
-      if (textField != null) {
-        Timber.e("TextField is not null: %s - %s", textField.getValue(), textField.getExpression());
-        return true;
-      } else {
-        Timber.e("TextField is NULL");
-      }
+  private boolean sourceIsStreetsV8(Source source) {
+    if (source instanceof VectorSource) {
+      String url = ((VectorSource) source).getUrl();
+      return url != null && url.contains("mapbox.mapbox-streets-v8");
     }
     return false;
   }

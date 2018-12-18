@@ -7,6 +7,9 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.google.gson.*;
 import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.style.layers.Property;
@@ -18,13 +21,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.convertArray;
+import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.toFloatArray;
+import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.toStringArray;
 
 /**
  * Builder class from which a <%- type %> is created.
  */
 public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>> {
 
-  private Geometry geometry;
+  private boolean isDraggable;
+  private <%- geometryType(type) %> geometry;
 <% for (const property of properties) { -%>
 <% if (supportsPropertyFunction(property)) { -%>
   private <%- propertyType(property) %> <%- camelizeWithLeadingLowercase(property.name) %>;
@@ -76,7 +82,7 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
    * @param geometry the location of the <%- type %>
    * @return this
    */
-  public <%- camelize(type) %>Options withGeometry(Point geometry) {
+  public <%- camelize(type) %>Options withGeometry(<%- geometryType(type) %> geometry) {
     this.geometry = geometry;
     return this;
   }
@@ -165,8 +171,28 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
   }
 <% } -%>
 
+  /**
+   * Returns whether this <%- type %> is draggable, meaning it can be dragged across the screen when touched and moved.
+   *
+   * @return draggable when touched
+   */
+  public boolean isDraggable() {
+    return isDraggable;
+  }
+
+  /**
+   * Set whether this <%- type %> should be draggable,
+   * meaning it can be dragged across the screen when touched and moved.
+   *
+   * @param draggable should be draggable
+   */
+  public <%- camelize(type) %>Options setDraggable(boolean draggable) {
+    isDraggable = draggable;
+    return this;
+  }
+
   @Override
-  <%- camelize(type) %> build(long id) {
+  <%- camelize(type) %> build(long id, AnnotationManager<?, <%- camelize(type) %>, ?, ?, ?, ?> annotationManager) {
     if (geometry == null) {
       throw new RuntimeException("geometry field is required");
     }
@@ -183,6 +209,67 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
 <% if (type === "symbol") { -%>
     jsonObject.addProperty(Symbol.Z_INDEX, zIndex);
 <% } -%>
-    return new <%- camelize(type) %>(id, jsonObject, geometry);
+    <%- camelize(type) %> <%- type %> = new <%- camelize(type) %>(id, annotationManager, jsonObject, geometry);
+    <%- type %>.setDraggable(isDraggable);
+    return <%- type %>;
+  }
+
+  /**
+   * Creates <%- camelize(type) %>Options out of a Feature.
+   * <p>
+   * All supported properties are:<br>
+<% for (const property of properties) { -%>
+<% if (supportsPropertyFunction(property)) { -%>
+   * "<%- property.name %>" - <%- propertyType(property) -%><br>
+<% } -%>
+<% } -%>
+   * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
+   * <p>
+   * Out of spec properties:<br>
+<% if (type === "symbol") { -%>
+   * "z-index" - Integer, z-index of the feature within the manager<br>
+<% } -%>
+   * "is-draggable" - Boolean, true if the <%- type %> should be draggable, false otherwise
+   *
+   * @param feature feature to be converted
+   */
+  @Nullable
+  static <%- camelize(type) %>Options fromFeature(@NonNull Feature feature) {
+    if (feature.geometry() == null) {
+      throw new RuntimeException("geometry field is required");
+    }
+<% if (type === "circle" || type === "symbol") { -%>
+    if (!(feature.geometry() instanceof Point)) {
+<% } else if (type === "line") { -%>
+    if (!(feature.geometry() instanceof LineString)) {
+<% } else { -%>
+    if (!(feature.geometry() instanceof Polygon)) {<% } -%>
+      return null;
+    }
+
+    <%- camelize(type) %>Options options = new <%- camelize(type) %>Options();
+    options.geometry = (<%- geometryType(type) %>) feature.geometry();
+<% for (const property of properties) { -%>
+<% if (supportsPropertyFunction(property)) { -%>
+<% if (propertyType(property).endsWith("[]")) { -%>
+    if (feature.hasProperty("<%- property.name %>")) {
+      options.<%- camelizeWithLeadingLowercase(property.name) %> = to<%- propertyType(property).slice(0, -2) -%>Array(feature.getProperty("<%- property.name %>").getAsJsonArray());
+    }
+<% } else { -%>
+    if (feature.hasProperty("<%- property.name %>")) {
+      options.<%- camelizeWithLeadingLowercase(property.name) %> = feature.getProperty("<%- property.name %>").getAs<%- propertyType(property) %>();
+    }
+<% } -%>
+<% } -%>
+<% } -%>
+<% if (type === "symbol") { -%>
+    if (feature.hasProperty("z-index")) {
+      options.zIndex = feature.getProperty("z-index").getAsInt();
+    }
+<% } -%>
+    if (feature.hasProperty("is-draggable")) {
+      options.isDraggable = feature.getProperty("is-draggable").getAsBoolean();
+    }
+    return options;
   }
 }

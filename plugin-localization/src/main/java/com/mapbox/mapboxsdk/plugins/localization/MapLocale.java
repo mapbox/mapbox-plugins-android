@@ -41,62 +41,67 @@ public final class MapLocale {
    */
 
   /**
-   * the name (or names) used locally for the place.
+   * The name (or names) used locally for the place.
    */
   public static final String LOCAL_NAME = "name";
 
   /**
-   * English (if available, otherwise same as name)
+   * English (if available)
    */
   public static final String ENGLISH = "name_en";
 
   /**
-   * French (if available, otherwise same as name_en)
+   * French (if available)
    */
   public static final String FRENCH = "name_fr";
 
   /**
-   * Arabic (if available, otherwise same as name)
+   * Arabic (if available)
    */
   public static final String ARABIC = "name_ar";
 
   /**
-   * Spanish (if available, otherwise same as name_en)
+   * Spanish (if available)
    */
   public static final String SPANISH = "name_es";
 
   /**
-   * German (if available, otherwise same as name_en)
+   * German (if available)
    */
   public static final String GERMAN = "name_de";
 
   /**
-   * Portuguese (if available, otherwise same as name_en)
+   * Portuguese (if available)
    */
   public static final String PORTUGUESE = "name_pt";
 
   /**
-   * Russian (if available, otherwise same as name)
+   * Russian (if available)
    */
   public static final String RUSSIAN = "name_ru";
 
   /**
-   * Chinese (if available, otherwise same as name)
+   * Chinese (if available)
    */
   public static final String CHINESE = "name_zh";
 
   /**
-   * Simplified Chinese (if available, otherwise same as name)
+   * Chinese (if available)
+   */
+  static final String CHINESE_V8 = "name_zh-Hant";
+
+  /**
+   * Simplified Chinese (if available)
    */
   public static final String SIMPLIFIED_CHINESE = "name_zh-Hans";
 
   /**
-   * Japanese (if available, otherwise same as name)
+   * Japanese (if available)
    */
   public static final String JAPANESE = "name_ja";
 
   /**
-   * Korean (if available, otherwise same as name)
+   * Korean (if available)
    */
   public static final String KOREAN = "name_ko";
 
@@ -167,13 +172,6 @@ public final class MapLocale {
     .include(new LatLng(41.371582, 9.561556)).build();
 
   /**
-   * Italy Bounding Box extracted from Open Street Map
-   */
-  static final LatLngBounds ITALY_BBOX = new LatLngBounds.Builder()
-    .include(new LatLng(47.095196, 6.614889))
-    .include(new LatLng(36.652779, 18.513445)).build();
-
-  /**
    * Peoples Republic of China Bounding Box extracted from Open Street Map
    */
   static final LatLngBounds PRC_BBOX = new LatLngBounds.Builder()
@@ -181,11 +179,18 @@ public final class MapLocale {
     .include(new LatLng(15.775416, 134.773911)).build();
 
   /**
-   * Russian Bounding box extraced from Open Street Map
+   * Russian Bounding box extracted from Open Street Map
    */
   static final LatLngBounds RUSSIA_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(81.856903, -168.997849))
     .include(new LatLng(41.185902, 19.638861)).build();
+
+  /**
+   * Spain Bounding box extracted from Open Street Map
+   */
+  static final LatLngBounds SPAIN_BBOX = new LatLngBounds.Builder()
+    .include(new LatLng(27.4335426, -18.3936845))
+    .include(new LatLng(43.9933088, 4.5918885)).build();
 
   /*
    * Some MapLocales already defined (these match with the predefined ones in the Locale class)
@@ -204,17 +209,12 @@ public final class MapLocale {
   /**
    * Useful constant for country.
    */
-  public static final MapLocale ITALY = new MapLocale(LOCAL_NAME, ITALY_BBOX);
+  public static final MapLocale JAPAN = new MapLocale(JAPANESE, JAPAN_BBOX);
 
   /**
    * Useful constant for country.
    */
-  public static final MapLocale JAPAN = new MapLocale(LOCAL_NAME, JAPAN_BBOX);
-
-  /**
-   * Useful constant for country.
-   */
-  public static final MapLocale KOREA = new MapLocale(LOCAL_NAME, KOREA_BBOX);
+  public static final MapLocale KOREA = new MapLocale(KOREAN, KOREA_BBOX);
 
   /**
    * Useful constant for country.
@@ -252,6 +252,11 @@ public final class MapLocale {
   public static final MapLocale RUSSIA = new MapLocale(RUSSIAN, RUSSIA_BBOX);
 
   /**
+   * Useful constant for country.
+   */
+  public static final MapLocale SPAIN = new MapLocale(SPANISH, SPAIN_BBOX);
+
+  /**
    * Maps out the Matching pair of {@link Locale} and {@link MapLocale}. In other words, if I have a
    * {@link Locale#CANADA}, this should be matched up with {@link MapLocale#CANADA}.
    */
@@ -264,13 +269,13 @@ public final class MapLocale {
     LOCALE_SET.put(Locale.CANADA, MapLocale.CANADA);
     LOCALE_SET.put(Locale.CHINA, MapLocale.CHINA);
     LOCALE_SET.put(Locale.PRC, MapLocale.PRC);
-    LOCALE_SET.put(Locale.ITALY, MapLocale.ITALY);
     LOCALE_SET.put(Locale.UK, MapLocale.UK);
     LOCALE_SET.put(Locale.JAPAN, MapLocale.JAPAN);
     LOCALE_SET.put(Locale.KOREA, MapLocale.KOREA);
     LOCALE_SET.put(Locale.GERMANY, MapLocale.GERMANY);
     LOCALE_SET.put(Locale.FRANCE, MapLocale.FRANCE);
     LOCALE_SET.put(new Locale("ru", "RU"), RUSSIA);
+    LOCALE_SET.put(new Locale("es", "ES"), SPAIN);
   }
 
   private final LatLngBounds countryBounds;
@@ -282,7 +287,7 @@ public final class MapLocale {
    * @param mapLanguage a non-null string which is allowed from {@link Languages}
    * @since 0.1.0
    */
-  public MapLocale(@NonNull @Languages String mapLanguage) {
+  public MapLocale(@NonNull String mapLanguage) {
     this(mapLanguage, null);
   }
 

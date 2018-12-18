@@ -6,17 +6,27 @@ import android.support.annotation.ColorInt;
 import android.graphics.PointF;
 import android.support.annotation.UiThread;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import com.mapbox.android.gestures.MoveDistancesObject;
+import com.mapbox.mapboxsdk.maps.Projection;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mapbox.mapboxsdk.constants.GeometryConstants.MAX_MERCATOR_LATITUDE;
+import static com.mapbox.mapboxsdk.constants.GeometryConstants.MIN_MERCATOR_LATITUDE;
+
 @UiThread
-public class Circle extends Annotation {
+public class Circle extends Annotation<Point> {
+
+  private final AnnotationManager<?, Circle, ?, ?, ?, ?> annotationManager;
 
   /**
    * Create a circle.
@@ -25,8 +35,34 @@ public class Circle extends Annotation {
    * @param jsonObject the features of the annotation
    * @param geometry the geometry of the annotation
    */
-  Circle(long id, JsonObject jsonObject, Geometry geometry) {
+  Circle(long id, AnnotationManager<?, Circle, ?, ?, ?, ?> annotationManager, JsonObject jsonObject, Point geometry) {
     super(id, jsonObject, geometry);
+    this.annotationManager = annotationManager;
+  }
+
+  @Override
+  void setUsedDataDrivenProperties() {
+    if (!(jsonObject.get("circle-radius") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("circle-radius");
+    }
+    if (!(jsonObject.get("circle-color") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("circle-color");
+    }
+    if (!(jsonObject.get("circle-blur") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("circle-blur");
+    }
+    if (!(jsonObject.get("circle-opacity") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("circle-opacity");
+    }
+    if (!(jsonObject.get("circle-stroke-width") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("circle-stroke-width");
+    }
+    if (!(jsonObject.get("circle-stroke-color") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("circle-stroke-color");
+    }
+    if (!(jsonObject.get("circle-stroke-opacity") instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty("circle-stroke-opacity");
+    }
   }
 
   /**
@@ -35,22 +71,20 @@ public class Circle extends Annotation {
    * To update the circle on the map use {@link CircleManager#update(Annotation)}.
    * <p>
    *
-   * @param latLng the location of the circle in a longitude and latitude pair
+   * @param latLng the location of the circle in a latitude and longitude pair
    */
   public void setLatLng(LatLng latLng) {
     geometry = Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
   }
 
   /**
-   * Set the Geometry of the circle, which represents the location of the circle on the map
-   * <p>
-   * To update the circle on the map use {@link CircleManager#update(Annotation)}.
-   * <p>
+   * Get the LatLng of the circle, which represents the location of the circle on the map
    *
-   * @param geometry the geometry of the circle
+   * @return the location of the circle
    */
-  public void setGeometry(Point geometry) {
-    this.geometry = geometry;
+  @NonNull
+  public LatLng getLatLng() {
+    return new LatLng(geometry.latitude(), geometry.longitude());
   }
 
   // Property accessors
@@ -202,5 +236,22 @@ public class Circle extends Annotation {
    */
   public void setCircleStrokeOpacity(Float value) {
     jsonObject.addProperty("circle-stroke-opacity", value);
+  }
+
+  @Override
+  @Nullable
+  Geometry getOffsetGeometry(@NonNull Projection projection, @NonNull MoveDistancesObject moveDistancesObject,
+                             float touchAreaShiftX, float touchAreaShiftY) {
+    PointF pointF = new PointF(
+      moveDistancesObject.getCurrentX() - touchAreaShiftX,
+      moveDistancesObject.getCurrentY() - touchAreaShiftY
+    );
+
+    LatLng latLng = projection.fromScreenLocation(pointF);
+    if (latLng.getLatitude() > MAX_MERCATOR_LATITUDE || latLng.getLatitude() < MIN_MERCATOR_LATITUDE) {
+      return null;
+    }
+
+    return Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
   }
 }

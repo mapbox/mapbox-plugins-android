@@ -32,7 +32,7 @@ public class SymbolManagerTest extends BaseActivityTest {
   private void setupSymbolManager() {
     Timber.i("Retrieving layer");
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      symbolManager = new SymbolManager(mapboxMap);
+      symbolManager = new SymbolManager(((BuildingActivity) rule.getActivity()).getMapView(), mapboxMap);
     });
   }
 

@@ -2,38 +2,34 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
-import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.VisibleForTesting;
-import android.support.v4.util.LongSparseArray;
+
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.style.layers.PropertyValue;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
+import static com.mapbox.mapboxsdk.plugins.annotation.Symbol.Z_INDEX;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 
 /**
  * The symbol manager allows to add symbols to a map.
  */
-public class SymbolManager extends AnnotationManager<Symbol, SymbolOptions, OnSymbolClickListener, OnSymbolLongClickListener> {
+public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, SymbolOptions, OnSymbolDragListener, OnSymbolClickListener, OnSymbolLongClickListener> {
 
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-symbol-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-symbol-layer";
-
-  private SymbolLayer layer;
 
   /**
    * Create a symbol manager, used to manage symbols.
@@ -41,8 +37,8 @@ public class SymbolManager extends AnnotationManager<Symbol, SymbolOptions, OnSy
    * @param mapboxMap the map object to add symbols to
    */
   @UiThread
-  public SymbolManager(@NonNull MapboxMap mapboxMap) {
-    this(mapboxMap, null);
+  public SymbolManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
+    this(mapView, mapboxMap, null);
   }
 
   /**
@@ -52,11 +48,9 @@ public class SymbolManager extends AnnotationManager<Symbol, SymbolOptions, OnSy
    * @param belowLayerId the id of the layer above the circle layer
    */
   @UiThread
-  public SymbolManager(@NonNull MapboxMap mapboxMap, @Nullable String belowLayerId) {
-    this(mapboxMap, new GeoJsonSource(ID_GEOJSON_SOURCE), new SymbolLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE)
-      .withProperties(
-        getLayerDefinition()
-      ), belowLayerId);
+  public SymbolManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @Nullable String belowLayerId) {
+    this(mapboxMap, new GeoJsonSource(ID_GEOJSON_SOURCE), new SymbolLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE),
+    belowLayerId, new DraggableAnnotationController<>(mapView, mapboxMap));
   }
 
   /**
@@ -67,23 +61,161 @@ public class SymbolManager extends AnnotationManager<Symbol, SymbolOptions, OnSy
    * @param layer         the symbol layer to visualise Symbols with
    */
   @VisibleForTesting
-  public SymbolManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull SymbolLayer layer, @Nullable String belowLayerId) {
-    super(mapboxMap, geoJsonSource, new SymbolComparator());
-    initLayer(layer, belowLayerId);
+  public SymbolManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull SymbolLayer layer, @Nullable String belowLayerId, DraggableAnnotationController<Symbol, OnSymbolDragListener> draggableAnnotationController) {
+    super(mapboxMap, layer, geoJsonSource, new SymbolComparator(), draggableAnnotationController, belowLayerId);
+    initializeDataDrivenPropertyMap();
   }
 
   /**
-   * Initialise the layer on the map.
+   * Create a list of symbols on the map.
+   * <p>
+   * Symbols are going to be created only for features with a matching geometry.
+   * <p>
+   * You can inspect a full list of supported feature properties in {@link SymbolOptions#fromFeature(Feature)}.
    *
-   * @param layer the layer to be added
-   * @param belowLayerId the id of the layer above the circle layer
+   * @param json the GeoJSON defining the list of symbols to build
+   * @return the list of built symbols
    */
-  private void initLayer(@NonNull SymbolLayer layer, @Nullable String belowLayerId) {
-    this.layer = layer;
-    if (belowLayerId == null) {
-      mapboxMap.addLayer(layer);
-    } else {
-      mapboxMap.addLayerBelow(layer, belowLayerId);
+  @UiThread
+  public List<Symbol> create(@NonNull String json) {
+    return create(FeatureCollection.fromJson(json));
+  }
+
+  /**
+   * Create a list of symbols on the map.
+   * <p>
+   * Symbols are going to be created only for features with a matching geometry.
+   * <p>
+   * You can inspect a full list of supported feature properties in {@link SymbolOptions#fromFeature(Feature)}.
+   *
+   * @param featureCollection the featureCollection defining the list of symbols to build
+   * @return the list of built symbols
+   */
+  @UiThread
+  public List<Symbol> create(@NonNull FeatureCollection featureCollection) {
+    List<Feature> features = featureCollection.features();
+    List<SymbolOptions> options = new ArrayList<>();
+    if (features != null) {
+      for (Feature feature : features) {
+        SymbolOptions option = SymbolOptions.fromFeature(feature);
+        if (option != null) {
+          options.add(option);
+        }
+      }
+    }
+    return create(options);
+  }
+
+  private void initializeDataDrivenPropertyMap() {
+    propertyUsageMap.put("icon-size", false);
+    propertyUsageMap.put("icon-image", false);
+    propertyUsageMap.put("icon-rotate", false);
+    propertyUsageMap.put("icon-offset", false);
+    propertyUsageMap.put("icon-anchor", false);
+    propertyUsageMap.put("text-field", false);
+    propertyUsageMap.put("text-font", false);
+    propertyUsageMap.put("text-size", false);
+    propertyUsageMap.put("text-max-width", false);
+    propertyUsageMap.put("text-letter-spacing", false);
+    propertyUsageMap.put("text-justify", false);
+    propertyUsageMap.put("text-anchor", false);
+    propertyUsageMap.put("text-rotate", false);
+    propertyUsageMap.put("text-transform", false);
+    propertyUsageMap.put("text-offset", false);
+    propertyUsageMap.put("icon-opacity", false);
+    propertyUsageMap.put("icon-color", false);
+    propertyUsageMap.put("icon-halo-color", false);
+    propertyUsageMap.put("icon-halo-width", false);
+    propertyUsageMap.put("icon-halo-blur", false);
+    propertyUsageMap.put("text-opacity", false);
+    propertyUsageMap.put("text-color", false);
+    propertyUsageMap.put("text-halo-color", false);
+    propertyUsageMap.put("text-halo-width", false);
+    propertyUsageMap.put("text-halo-blur", false);
+    propertyUsageMap.put(Z_INDEX, false);
+  }
+
+  @Override
+  protected void setDataDrivenPropertyIsUsed(@NonNull String property) {
+    switch (property) {
+      case "icon-size":
+        layer.setProperties(iconSize(get("icon-size")));
+        break;
+      case "icon-image":
+        layer.setProperties(iconImage(get("icon-image")));
+        break;
+      case "icon-rotate":
+        layer.setProperties(iconRotate(get("icon-rotate")));
+        break;
+      case "icon-offset":
+        layer.setProperties(iconOffset(get("icon-offset")));
+        break;
+      case "icon-anchor":
+        layer.setProperties(iconAnchor(get("icon-anchor")));
+        break;
+      case "text-field":
+        layer.setProperties(textField(get("text-field")));
+        break;
+      case "text-font":
+        layer.setProperties(textFont(get("text-font")));
+        break;
+      case "text-size":
+        layer.setProperties(textSize(get("text-size")));
+        break;
+      case "text-max-width":
+        layer.setProperties(textMaxWidth(get("text-max-width")));
+        break;
+      case "text-letter-spacing":
+        layer.setProperties(textLetterSpacing(get("text-letter-spacing")));
+        break;
+      case "text-justify":
+        layer.setProperties(textJustify(get("text-justify")));
+        break;
+      case "text-anchor":
+        layer.setProperties(textAnchor(get("text-anchor")));
+        break;
+      case "text-rotate":
+        layer.setProperties(textRotate(get("text-rotate")));
+        break;
+      case "text-transform":
+        layer.setProperties(textTransform(get("text-transform")));
+        break;
+      case "text-offset":
+        layer.setProperties(textOffset(get("text-offset")));
+        break;
+      case "icon-opacity":
+        layer.setProperties(iconOpacity(get("icon-opacity")));
+        break;
+      case "icon-color":
+        layer.setProperties(iconColor(get("icon-color")));
+        break;
+      case "icon-halo-color":
+        layer.setProperties(iconHaloColor(get("icon-halo-color")));
+        break;
+      case "icon-halo-width":
+        layer.setProperties(iconHaloWidth(get("icon-halo-width")));
+        break;
+      case "icon-halo-blur":
+        layer.setProperties(iconHaloBlur(get("icon-halo-blur")));
+        break;
+      case "text-opacity":
+        layer.setProperties(textOpacity(get("text-opacity")));
+        break;
+      case "text-color":
+        layer.setProperties(textColor(get("text-color")));
+        break;
+      case "text-halo-color":
+        layer.setProperties(textHaloColor(get("text-halo-color")));
+        break;
+      case "text-halo-width":
+        layer.setProperties(textHaloWidth(get("text-halo-width")));
+        break;
+      case "text-halo-blur":
+        layer.setProperties(textHaloBlur(get("text-halo-blur")));
+        break;
+      case Z_INDEX:
+        layer.setProperties(symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE));
+        break;
     }
   }
 
@@ -105,37 +237,6 @@ public class SymbolManager extends AnnotationManager<Symbol, SymbolOptions, OnSy
   @Override
   String getAnnotationIdKey() {
     return Symbol.ID_KEY;
-  }
-
-  private static PropertyValue<?>[] getLayerDefinition() {
-    return new PropertyValue[]{
-      iconSize(get("icon-size")),
-      iconImage(get("icon-image")),
-      iconRotate(get("icon-rotate")),
-      iconOffset(get("icon-offset")),
-      iconAnchor(get("icon-anchor")),
-      textField(get("text-field")),
-      textFont(get("text-font")),
-      textSize(get("text-size")),
-      textMaxWidth(get("text-max-width")),
-      textLetterSpacing(get("text-letter-spacing")),
-      textJustify(get("text-justify")),
-      textAnchor(get("text-anchor")),
-      textRotate(get("text-rotate")),
-      textTransform(get("text-transform")),
-      textOffset(get("text-offset")),
-      iconOpacity(get("icon-opacity")),
-      iconColor(get("icon-color")),
-      iconHaloColor(get("icon-halo-color")),
-      iconHaloWidth(get("icon-halo-width")),
-      iconHaloBlur(get("icon-halo-blur")),
-      textOpacity(get("text-opacity")),
-      textColor(get("text-color")),
-      textHaloColor(get("text-halo-color")),
-      textHaloWidth(get("text-halo-width")),
-      textHaloBlur(get("text-halo-blur")),
-      symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE)
-    };
   }
 
   // Property accessors
@@ -589,4 +690,22 @@ public class SymbolManager extends AnnotationManager<Symbol, SymbolOptions, OnSy
     layer.setProperties(textTranslateAnchor(value));
   }
 
+  /**
+   * Set filter on the managed symbols.
+   *
+   * @param expression expression
+   */
+  public void setFilter(@NonNull Expression expression) {
+    layer.setFilter(expression);
+  }
+
+  /**
+   * Get filter of the managed symbols.
+   *
+   * @return expression
+   */
+  @Nullable
+  public Expression getFilter() {
+    return layer.getFilter();
+  }
 }

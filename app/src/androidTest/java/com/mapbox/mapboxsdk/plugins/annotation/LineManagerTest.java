@@ -32,7 +32,7 @@ public class LineManagerTest extends BaseActivityTest {
   private void setupLineManager() {
     Timber.i("Retrieving layer");
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      lineManager = new LineManager(mapboxMap);
+      lineManager = new LineManager(((BuildingActivity) rule.getActivity()).getMapView(), mapboxMap);
     });
   }
 

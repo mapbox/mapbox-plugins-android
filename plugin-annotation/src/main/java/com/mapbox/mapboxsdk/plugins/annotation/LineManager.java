@@ -2,38 +2,34 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
-import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.VisibleForTesting;
-import android.support.v4.util.LongSparseArray;
+
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.style.layers.PropertyValue;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
+import static com.mapbox.mapboxsdk.plugins.annotation.Symbol.Z_INDEX;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 
 /**
  * The line manager allows to add lines to a map.
  */
-public class LineManager extends AnnotationManager<Line, LineOptions, OnLineClickListener, OnLineLongClickListener> {
+public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions, OnLineDragListener, OnLineClickListener, OnLineLongClickListener> {
 
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-line-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-line-layer";
-
-  private LineLayer layer;
 
   /**
    * Create a line manager, used to manage lines.
@@ -41,8 +37,8 @@ public class LineManager extends AnnotationManager<Line, LineOptions, OnLineClic
    * @param mapboxMap the map object to add lines to
    */
   @UiThread
-  public LineManager(@NonNull MapboxMap mapboxMap) {
-    this(mapboxMap, null);
+  public LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
+    this(mapView, mapboxMap, null);
   }
 
   /**
@@ -52,11 +48,9 @@ public class LineManager extends AnnotationManager<Line, LineOptions, OnLineClic
    * @param belowLayerId the id of the layer above the circle layer
    */
   @UiThread
-  public LineManager(@NonNull MapboxMap mapboxMap, @Nullable String belowLayerId) {
-    this(mapboxMap, new GeoJsonSource(ID_GEOJSON_SOURCE), new LineLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE)
-      .withProperties(
-        getLayerDefinition()
-      ), belowLayerId);
+  public LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @Nullable String belowLayerId) {
+    this(mapboxMap, new GeoJsonSource(ID_GEOJSON_SOURCE), new LineLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE),
+    belowLayerId, new DraggableAnnotationController<>(mapView, mapboxMap));
   }
 
   /**
@@ -67,23 +61,89 @@ public class LineManager extends AnnotationManager<Line, LineOptions, OnLineClic
    * @param layer         the line layer to visualise Lines with
    */
   @VisibleForTesting
-  public LineManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull LineLayer layer, @Nullable String belowLayerId) {
-    super(mapboxMap, geoJsonSource);
-    initLayer(layer, belowLayerId);
+  public LineManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull LineLayer layer, @Nullable String belowLayerId, DraggableAnnotationController<Line, OnLineDragListener> draggableAnnotationController) {
+    super(mapboxMap, layer, geoJsonSource, null, draggableAnnotationController, belowLayerId);
+    initializeDataDrivenPropertyMap();
   }
 
   /**
-   * Initialise the layer on the map.
+   * Create a list of lines on the map.
+   * <p>
+   * Lines are going to be created only for features with a matching geometry.
+   * <p>
+   * You can inspect a full list of supported feature properties in {@link LineOptions#fromFeature(Feature)}.
    *
-   * @param layer the layer to be added
-   * @param belowLayerId the id of the layer above the circle layer
+   * @param json the GeoJSON defining the list of lines to build
+   * @return the list of built lines
    */
-  private void initLayer(@NonNull LineLayer layer, @Nullable String belowLayerId) {
-    this.layer = layer;
-    if (belowLayerId == null) {
-      mapboxMap.addLayer(layer);
-    } else {
-      mapboxMap.addLayerBelow(layer, belowLayerId);
+  @UiThread
+  public List<Line> create(@NonNull String json) {
+    return create(FeatureCollection.fromJson(json));
+  }
+
+  /**
+   * Create a list of lines on the map.
+   * <p>
+   * Lines are going to be created only for features with a matching geometry.
+   * <p>
+   * You can inspect a full list of supported feature properties in {@link LineOptions#fromFeature(Feature)}.
+   *
+   * @param featureCollection the featureCollection defining the list of lines to build
+   * @return the list of built lines
+   */
+  @UiThread
+  public List<Line> create(@NonNull FeatureCollection featureCollection) {
+    List<Feature> features = featureCollection.features();
+    List<LineOptions> options = new ArrayList<>();
+    if (features != null) {
+      for (Feature feature : features) {
+        LineOptions option = LineOptions.fromFeature(feature);
+        if (option != null) {
+          options.add(option);
+        }
+      }
+    }
+    return create(options);
+  }
+
+  private void initializeDataDrivenPropertyMap() {
+    propertyUsageMap.put("line-join", false);
+    propertyUsageMap.put("line-opacity", false);
+    propertyUsageMap.put("line-color", false);
+    propertyUsageMap.put("line-width", false);
+    propertyUsageMap.put("line-gap-width", false);
+    propertyUsageMap.put("line-offset", false);
+    propertyUsageMap.put("line-blur", false);
+    propertyUsageMap.put("line-pattern", false);
+  }
+
+  @Override
+  protected void setDataDrivenPropertyIsUsed(@NonNull String property) {
+    switch (property) {
+      case "line-join":
+        layer.setProperties(lineJoin(get("line-join")));
+        break;
+      case "line-opacity":
+        layer.setProperties(lineOpacity(get("line-opacity")));
+        break;
+      case "line-color":
+        layer.setProperties(lineColor(get("line-color")));
+        break;
+      case "line-width":
+        layer.setProperties(lineWidth(get("line-width")));
+        break;
+      case "line-gap-width":
+        layer.setProperties(lineGapWidth(get("line-gap-width")));
+        break;
+      case "line-offset":
+        layer.setProperties(lineOffset(get("line-offset")));
+        break;
+      case "line-blur":
+        layer.setProperties(lineBlur(get("line-blur")));
+        break;
+      case "line-pattern":
+        layer.setProperties(linePattern(get("line-pattern")));
+        break;
     }
   }
 
@@ -105,19 +165,6 @@ public class LineManager extends AnnotationManager<Line, LineOptions, OnLineClic
   @Override
   String getAnnotationIdKey() {
     return Line.ID_KEY;
-  }
-
-  private static PropertyValue<?>[] getLayerDefinition() {
-    return new PropertyValue[]{
-      lineJoin(get("line-join")),
-      lineOpacity(get("line-opacity")),
-      lineColor(get("line-color")),
-      lineWidth(get("line-width")),
-      lineGapWidth(get("line-gap-width")),
-      lineOffset(get("line-offset")),
-      lineBlur(get("line-blur")),
-      linePattern(get("line-pattern")),
-    };
   }
 
   // Property accessors
@@ -229,4 +276,22 @@ public class LineManager extends AnnotationManager<Line, LineOptions, OnLineClic
     layer.setProperties(lineDasharray(value));
   }
 
+  /**
+   * Set filter on the managed lines.
+   *
+   * @param expression expression
+   */
+  public void setFilter(@NonNull Expression expression) {
+    layer.setFilter(expression);
+  }
+
+  /**
+   * Get filter of the managed lines.
+   *
+   * @return expression
+   */
+  @Nullable
+  public Expression getFilter() {
+    return layer.getFilter();
+  }
 }

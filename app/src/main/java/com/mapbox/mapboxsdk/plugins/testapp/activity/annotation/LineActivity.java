@@ -3,14 +3,20 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity.annotation;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.plugins.annotation.*;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
+import com.mapbox.mapboxsdk.plugins.testapp.Utils;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -34,7 +40,7 @@ public class LineActivity extends AppCompatActivity {
     mapView.getMapAsync(mapboxMap -> {
       mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
 
-      lineManager = new LineManager(mapboxMap);
+      lineManager = new LineManager(mapView, mapboxMap);
       lineManager.addClickListener(line -> Toast.makeText(LineActivity.this,
         String.format("Line clicked %s", line.getId()),
         Toast.LENGTH_SHORT
@@ -67,6 +73,12 @@ public class LineActivity extends AppCompatActivity {
         lineOptionsList.add(new LineOptions().withLatLngs(list).withLineColor(PropertyFactory.colorToRgbaString(color)));
       }
       lineManager.create(lineOptionsList);
+
+      try {
+        lineManager.create(Utils.INSTANCE.loadStringFromAssets(this, "annotations.json"));
+      } catch (IOException e) {
+        throw new RuntimeException("Unable to parse annotations.json");
+      }
     });
   }
 
@@ -79,6 +91,23 @@ public class LineActivity extends AppCompatActivity {
     return latLngs;
   }
 
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_line, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.menu_action_draggable) {
+      for (int i = 0; i < lineManager.getAnnotations().size(); i++) {
+        Line line = lineManager.getAnnotations().get(i);
+        line.setDraggable(!line.isDraggable());
+      }
+      return true;
+    }
+    return false;
+  }
 
   @Override
   protected void onStart() {

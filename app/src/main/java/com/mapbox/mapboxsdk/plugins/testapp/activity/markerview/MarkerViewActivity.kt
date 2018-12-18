@@ -95,9 +95,7 @@ class MarkerViewActivity : AppCompatActivity(), MapboxMap.OnMapLongClickListener
     }
 
     override fun onMapClick(point: LatLng) {
-        marker?.let {
-            it.setLatLng(point)
-        }
+        marker?.setLatLng(point)
     }
 
     override fun onStart() {
