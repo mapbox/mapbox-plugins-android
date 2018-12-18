@@ -50,7 +50,6 @@ public final class BuildingPlugin {
   private float opacity = 0.6f;
   private float minZoomLevel = 15.0f;
   private Light light;
-  private MapboxMap mapboxMap;
   private Style style;
 
   /**
@@ -60,8 +59,8 @@ public final class BuildingPlugin {
    * @param mapboxMap the MapboxMap to apply building plugin with
    * @since 0.1.0
    */
-  public BuildingPlugin(@NonNull MapView mapView, @NonNull final MapboxMap mapboxMap) {
-    this(mapView, mapboxMap, null);
+  public BuildingPlugin(@NonNull MapView mapView, @NonNull final MapboxMap mapboxMap, @NonNull Style style) {
+    this(mapView, mapboxMap, style, null);
   }
 
   /**
@@ -71,17 +70,24 @@ public final class BuildingPlugin {
    * @param mapboxMap the MapboxMap to apply building plugin with
    * @since 0.1.0
    */
-  public BuildingPlugin(@NonNull MapView mapView, @NonNull final MapboxMap mapboxMap,
+  public BuildingPlugin(@NonNull MapView mapView, @NonNull final MapboxMap mapboxMap, @NonNull Style style,
                         @Nullable final String belowLayer) {
-    this.mapboxMap = mapboxMap;
-    this.style = mapboxMap.getStyle();
+    this.style = style;
+    if (!style.isFullyLoaded()) {
+      throw new RuntimeException("The style has to be non-null and fully loaded.");
+    }
+
     initLayer(belowLayer);
-    mapView.addOnDidFinishLoadingStyleListener(new MapView.OnDidFinishLoadingStyleListener() {
+    mapView.addOnWillStartLoadingMapListener(new MapView.OnWillStartLoadingMapListener() {
       @Override
-      public void onDidFinishLoadingStyle() {
-        if(style !=null && style.getLayer(LAYER_ID) == null) {
-          initLayer(belowLayer);
-        }
+      public void onWillStartLoadingMap() {
+        mapboxMap.getStyle(new Style.OnStyleLoaded() {
+          @Override
+          public void onStyleLoaded(@NonNull Style style) {
+            BuildingPlugin.this.style = style;
+            initLayer(belowLayer);
+          }
+        });
       }
     });
   }
@@ -138,6 +144,11 @@ public final class BuildingPlugin {
    */
   public void setVisibility(boolean visible) {
     this.visible = visible;
+    if (!style.isFullyLoaded()) {
+      // We are in progress of loading a new style
+      return;
+    }
+
     fillExtrusionLayer.setProperties(visibility(visible ? VISIBLE : NONE));
   }
 
@@ -149,6 +160,11 @@ public final class BuildingPlugin {
    */
   public void setOpacity(@FloatRange(from = 0.0f, to = 1.0f) float opacity) {
     this.opacity = opacity;
+    if (!style.isFullyLoaded()) {
+      // We are in progress of loading a new style
+      return;
+    }
+
     fillExtrusionLayer.setProperties(fillExtrusionOpacity(opacity));
   }
 
@@ -160,6 +176,11 @@ public final class BuildingPlugin {
    */
   public void setColor(@ColorInt int color) {
     this.color = color;
+    if (!style.isFullyLoaded()) {
+      // We are in progress of loading a new style
+      return;
+    }
+
     fillExtrusionLayer.setProperties(fillExtrusionColor(color));
   }
 
@@ -174,6 +195,11 @@ public final class BuildingPlugin {
   public void setMinZoomLevel(@FloatRange(from = MINIMUM_ZOOM, to = MAXIMUM_ZOOM)
                                 float minZoomLevel) {
     this.minZoomLevel = minZoomLevel;
+    if (!style.isFullyLoaded()) {
+      // We are in progress of loading a new style
+      return;
+    }
+
     fillExtrusionLayer.setMinZoom(minZoomLevel);
   }
 
