@@ -49,7 +49,7 @@ public class NotificationUtils {
       .setOnlyAlertOnce(true)
       .setContentIntent(contentIntent)
       .addAction(R.drawable.ic_cancel,
-        context.getString(R.string.mapbox_offline_notification_action_cancel),
+        options.cancelText(),
         PendingIntent.getService(context, offlineDownload.uuid().intValue(), cancelIntent,
           PendingIntent.FLAG_CANCEL_CURRENT));
   }
