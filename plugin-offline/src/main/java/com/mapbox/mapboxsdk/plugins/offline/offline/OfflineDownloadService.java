@@ -148,17 +148,19 @@ public class OfflineDownloadService extends Service {
     );
     startForeground(offlineDownload.uuid().intValue(), notificationBuilder.build());
 
-    // create map bitmap to show as notification icon
-    createMapSnapshot(offlineDownload.definition(), new MapSnapshotter.SnapshotReadyCallback() {
-      @Override
-      public void onSnapshotReady(MapSnapshot snapshot) {
-        final int regionId = offlineDownload.uuid().intValue();
-        if (regionLongSparseArray.get(regionId) != null) {
-          notificationBuilder.setLargeIcon(snapshot.getBitmap());
-          notificationManager.notify(regionId, notificationBuilder.build());
+    if (offlineDownload.notificationOptions().requestMapSnapshot()) {
+      // create map bitmap to show as notification icon
+      createMapSnapshot(offlineDownload.definition(), new MapSnapshotter.SnapshotReadyCallback() {
+        @Override
+        public void onSnapshotReady(MapSnapshot snapshot) {
+          final int regionId = offlineDownload.uuid().intValue();
+          if (regionLongSparseArray.get(regionId) != null) {
+            notificationBuilder.setLargeIcon(snapshot.getBitmap());
+            notificationManager.notify(regionId, notificationBuilder.build());
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   private void createMapSnapshot(OfflineTilePyramidRegionDefinition definition,
