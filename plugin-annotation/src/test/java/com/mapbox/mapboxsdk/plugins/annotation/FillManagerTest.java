@@ -4,6 +4,7 @@ package com.mapbox.mapboxsdk.plugins.annotation;
 
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
@@ -12,6 +13,7 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,20 +31,106 @@ import static org.mockito.Mockito.*;
 public class FillManagerTest {
 
   private DraggableAnnotationController<Fill, OnFillDragListener> draggableAnnotationController = mock(DraggableAnnotationController.class);
+  private MapView mapView = mock(MapView.class);
   private MapboxMap mapboxMap = mock(MapboxMap.class);
   private Style style = mock(Style.class);
   private GeoJsonSource geoJsonSource = mock(GeoJsonSource.class);
   private FillLayer fillLayer = mock(FillLayer.class);
   private FillManager fillManager;
+  private CoreElementProvider<FillLayer> coreElementProvider = mock(CoreElementProvider.class);
 
   @Before
   public void beforeTest() {
+    when(coreElementProvider.getLayer()).thenReturn(fillLayer);
+    when(coreElementProvider.getSource()).thenReturn(geoJsonSource);
     when(style.isFullyLoaded()).thenReturn(true);
-    fillManager = new FillManager(mapboxMap, style, geoJsonSource, fillLayer, null, draggableAnnotationController);
+  }
+
+  @Test
+  public void testInitialization() {
+    fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    verify(style).addSource(geoJsonSource);
+    verify(style).addLayer(fillLayer);
+    assertTrue(fillManager.dataDrivenPropertyUsageMap.size() > 0);
+    for (Boolean value : fillManager.dataDrivenPropertyUsageMap.values()) {
+      assertFalse(value);
+    }
+    verify(fillLayer).setProperties(fillManager.constantPropertyUsageMap.values().toArray(new PropertyValue[0]));
+    verify(fillLayer, times(0)).setFilter(any());
+    verify(draggableAnnotationController).onSourceUpdated();
+    verify(geoJsonSource).setGeoJson(any(FeatureCollection.class));
+  }
+
+  @Test
+  public void testInitializationOnStyleReload() {
+    fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    verify(style).addSource(geoJsonSource);
+    verify(style).addLayer(fillLayer);
+    assertTrue(fillManager.dataDrivenPropertyUsageMap.size() > 0);
+    for (Boolean value : fillManager.dataDrivenPropertyUsageMap.values()) {
+      assertFalse(value);
+    }
+    verify(fillLayer).setProperties(fillManager.constantPropertyUsageMap.values().toArray(new PropertyValue[0]));
+    verify(draggableAnnotationController).onSourceUpdated();
+    verify(geoJsonSource).setGeoJson(any(FeatureCollection.class));
+
+    Expression filter = Expression.literal(false);
+    fillManager.setFilter(filter);
+
+    ArgumentCaptor<MapView.OnWillStartLoadingMapListener> loadingArgumentCaptor = ArgumentCaptor.forClass(MapView.OnWillStartLoadingMapListener.class);
+    verify(mapView).addOnWillStartLoadingMapListener(loadingArgumentCaptor.capture());
+    loadingArgumentCaptor.getValue().onWillStartLoadingMap();
+
+    ArgumentCaptor<Style.OnStyleLoaded> styleLoadedArgumentCaptor = ArgumentCaptor.forClass(Style.OnStyleLoaded.class);
+    verify(mapboxMap).getStyle(styleLoadedArgumentCaptor.capture());
+
+    Style newStyle = mock(Style.class);
+    when(newStyle.isFullyLoaded()).thenReturn(true);
+    GeoJsonSource newSource = mock(GeoJsonSource.class);
+    when(coreElementProvider.getSource()).thenReturn(newSource);
+    FillLayer newLayer = mock(FillLayer.class);
+    when(coreElementProvider.getLayer()).thenReturn(newLayer);
+    styleLoadedArgumentCaptor.getValue().onStyleLoaded(newStyle);
+
+    verify(newStyle).addSource(newSource);
+    verify(newStyle).addLayer(newLayer);
+    assertTrue(fillManager.dataDrivenPropertyUsageMap.size() > 0);
+    for (Boolean value : fillManager.dataDrivenPropertyUsageMap.values()) {
+      assertFalse(value);
+    }
+    verify(newLayer).setProperties(fillManager.constantPropertyUsageMap.values().toArray(new PropertyValue[0]));
+    verify(fillLayer).setFilter(filter);
+    verify(draggableAnnotationController, times(2)).onSourceUpdated();
+    verify(newSource).setGeoJson(any(FeatureCollection.class));
+  }
+
+  @Test
+  public void testLayerBelowInitialization() {
+    fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, "test_layer", draggableAnnotationController);
+    verify(style).addSource(geoJsonSource);
+    verify(style).addLayerBelow(fillLayer, "test_layer");
+    assertTrue(fillManager.dataDrivenPropertyUsageMap.size() > 0);
+    for (Boolean value : fillManager.dataDrivenPropertyUsageMap.values()) {
+      assertFalse(value);
+    }
+    verify(fillLayer).setProperties(fillManager.constantPropertyUsageMap.values().toArray(new PropertyValue[0]));
+    verify(draggableAnnotationController).onSourceUpdated();
+    verify(geoJsonSource).setGeoJson(any(FeatureCollection.class));
+  }
+
+  @Test
+  public void testNoUpdateOnStyleReload() {
+    fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, "test_layer", draggableAnnotationController);
+    verify(geoJsonSource, times(1)).setGeoJson(any(FeatureCollection.class));
+
+    when(style.isFullyLoaded()).thenReturn(false);
+    fillManager.updateSource();
+    verify(geoJsonSource, times(1)).setGeoJson(any(FeatureCollection.class));
   }
 
   @Test
   public void testAddFill() {
+    fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     List<LatLng>innerLatLngs = new ArrayList<>();
     innerLatLngs.add(new LatLng());
     innerLatLngs.add(new LatLng(1,1));
@@ -56,6 +144,7 @@ public class FillManagerTest {
 
   @Test
   public void addFillFromFeatureCollection() {
+    fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     List<Point> innerPoints = new ArrayList<>();
     innerPoints.add(Point.fromLngLat(0, 0));
     innerPoints.add(Point.fromLngLat(1, 1));
@@ -85,6 +174,7 @@ public class FillManagerTest {
 
   @Test
   public void addFills() {
+    fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     List<List<LatLng>> latLngListOne = new ArrayList<>();
     latLngListOne.add(new ArrayList<LatLng>() {{
       add(new LatLng(2, 2));
@@ -120,6 +210,7 @@ public class FillManagerTest {
 
   @Test
   public void testDeleteFill() {
+    fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     List<LatLng>innerLatLngs = new ArrayList<>();
     innerLatLngs.add(new LatLng());
     innerLatLngs.add(new LatLng(1,1));
@@ -133,6 +224,7 @@ public class FillManagerTest {
 
   @Test
   public void testGeometryFill() {
+    fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     List<LatLng>innerLatLngs = new ArrayList<>();
     innerLatLngs.add(new LatLng());
     innerLatLngs.add(new LatLng(1,1));
@@ -151,6 +243,7 @@ public class FillManagerTest {
 
   @Test
   public void testFeatureIdFill() {
+    fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     List<LatLng>innerLatLngs = new ArrayList<>();
     innerLatLngs.add(new LatLng());
     innerLatLngs.add(new LatLng(1,1));
@@ -165,6 +258,7 @@ public class FillManagerTest {
 
   @Test
   public void testFillDraggableFlag() {
+    fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     List<LatLng>innerLatLngs = new ArrayList<>();
     innerLatLngs.add(new LatLng());
     innerLatLngs.add(new LatLng(1,1));
@@ -183,6 +277,7 @@ public class FillManagerTest {
 
   @Test
   public void testFillOpacityLayerProperty() {
+    fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     verify(fillLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(fillOpacity(get("fill-opacity")))));
 
     List<LatLng>innerLatLngs = new ArrayList<>();
@@ -201,6 +296,7 @@ public class FillManagerTest {
 
   @Test
   public void testFillColorLayerProperty() {
+    fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     verify(fillLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(fillColor(get("fill-color")))));
 
     List<LatLng>innerLatLngs = new ArrayList<>();
@@ -219,6 +315,7 @@ public class FillManagerTest {
 
   @Test
   public void testFillOutlineColorLayerProperty() {
+    fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     verify(fillLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(fillOutlineColor(get("fill-outline-color")))));
 
     List<LatLng>innerLatLngs = new ArrayList<>();
@@ -237,6 +334,7 @@ public class FillManagerTest {
 
   @Test
   public void testFillPatternLayerProperty() {
+    fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     verify(fillLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(fillPattern(get("fill-pattern")))));
 
     List<LatLng>innerLatLngs = new ArrayList<>();
@@ -256,6 +354,7 @@ public class FillManagerTest {
 
   @Test
   public void testFillLayerFilter() {
+    fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     Expression expression = Expression.eq(Expression.get("test"), "selected");
     verify(fillLayer, times(0)).setFilter(expression);
 
@@ -264,5 +363,6 @@ public class FillManagerTest {
 
     when(fillLayer.getFilter()).thenReturn(expression);
     assertEquals(expression, fillManager.getFilter());
+    assertEquals(expression, fillManager.layerFilter);
   }
 }
