@@ -14,6 +14,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
+import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
 
@@ -52,8 +53,19 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   @UiThread
   public SymbolManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId) {
-    this(mapboxMap, style, new GeoJsonSource(ID_GEOJSON_SOURCE), new SymbolLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE),
-    belowLayerId, new DraggableAnnotationController<>(mapView, mapboxMap));
+    this(mapView, mapboxMap, style,
+      new CoreElementProvider<SymbolLayer>() {
+        @Override
+        public SymbolLayer getLayer() {
+          return new SymbolLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE);
+        }
+
+        @Override
+        public GeoJsonSource getSource() {
+          return new GeoJsonSource(ID_GEOJSON_SOURCE);
+        }
+      },
+     belowLayerId, new DraggableAnnotationController<>(mapView, mapboxMap));
   }
 
   /**
@@ -61,82 +73,40 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    *
    * @param mapboxMap     the map object to add symbols to
    * @param style a valid a fully loaded style object
-   * @param geoJsonSource the geojson source to add symbols to
-   * @param layer         the symbol layer to visualise Symbols with
    */
   @VisibleForTesting
-  public SymbolManager(@NonNull MapboxMap mapboxMap, @NonNull Style style, @NonNull GeoJsonSource geoJsonSource, @NonNull SymbolLayer layer, @Nullable String belowLayerId, DraggableAnnotationController<Symbol, OnSymbolDragListener> draggableAnnotationController) {
-    super(mapboxMap, style, layer, geoJsonSource, new SymbolComparator(), draggableAnnotationController, belowLayerId);
-    initializeDataDrivenPropertyMap();
+  public SymbolManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @NonNull CoreElementProvider<SymbolLayer> coreElementProvider, @Nullable String belowLayerId, DraggableAnnotationController<Symbol, OnSymbolDragListener> draggableAnnotationController) {
+    super(mapView, mapboxMap, style, coreElementProvider, new SymbolComparator(), draggableAnnotationController, belowLayerId);
   }
 
-  /**
-   * Create a list of symbols on the map.
-   * <p>
-   * Symbols are going to be created only for features with a matching geometry.
-   * <p>
-   * You can inspect a full list of supported feature properties in {@link SymbolOptions#fromFeature(Feature)}.
-   *
-   * @param json the GeoJSON defining the list of symbols to build
-   * @return the list of built symbols
-   */
-  @UiThread
-  public List<Symbol> create(@NonNull String json) {
-    return create(FeatureCollection.fromJson(json));
-  }
-
-  /**
-   * Create a list of symbols on the map.
-   * <p>
-   * Symbols are going to be created only for features with a matching geometry.
-   * <p>
-   * You can inspect a full list of supported feature properties in {@link SymbolOptions#fromFeature(Feature)}.
-   *
-   * @param featureCollection the featureCollection defining the list of symbols to build
-   * @return the list of built symbols
-   */
-  @UiThread
-  public List<Symbol> create(@NonNull FeatureCollection featureCollection) {
-    List<Feature> features = featureCollection.features();
-    List<SymbolOptions> options = new ArrayList<>();
-    if (features != null) {
-      for (Feature feature : features) {
-        SymbolOptions option = SymbolOptions.fromFeature(feature);
-        if (option != null) {
-          options.add(option);
-        }
-      }
-    }
-    return create(options);
-  }
-
-  private void initializeDataDrivenPropertyMap() {
-    propertyUsageMap.put("icon-size", false);
-    propertyUsageMap.put("icon-image", false);
-    propertyUsageMap.put("icon-rotate", false);
-    propertyUsageMap.put("icon-offset", false);
-    propertyUsageMap.put("icon-anchor", false);
-    propertyUsageMap.put("text-field", false);
-    propertyUsageMap.put("text-font", false);
-    propertyUsageMap.put("text-size", false);
-    propertyUsageMap.put("text-max-width", false);
-    propertyUsageMap.put("text-letter-spacing", false);
-    propertyUsageMap.put("text-justify", false);
-    propertyUsageMap.put("text-anchor", false);
-    propertyUsageMap.put("text-rotate", false);
-    propertyUsageMap.put("text-transform", false);
-    propertyUsageMap.put("text-offset", false);
-    propertyUsageMap.put("icon-opacity", false);
-    propertyUsageMap.put("icon-color", false);
-    propertyUsageMap.put("icon-halo-color", false);
-    propertyUsageMap.put("icon-halo-width", false);
-    propertyUsageMap.put("icon-halo-blur", false);
-    propertyUsageMap.put("text-opacity", false);
-    propertyUsageMap.put("text-color", false);
-    propertyUsageMap.put("text-halo-color", false);
-    propertyUsageMap.put("text-halo-width", false);
-    propertyUsageMap.put("text-halo-blur", false);
-    propertyUsageMap.put(Z_INDEX, false);
+  @Override
+  void initializeDataDrivenPropertyMap() {
+    dataDrivenPropertyUsageMap.put("icon-size", false);
+    dataDrivenPropertyUsageMap.put("icon-image", false);
+    dataDrivenPropertyUsageMap.put("icon-rotate", false);
+    dataDrivenPropertyUsageMap.put("icon-offset", false);
+    dataDrivenPropertyUsageMap.put("icon-anchor", false);
+    dataDrivenPropertyUsageMap.put("text-field", false);
+    dataDrivenPropertyUsageMap.put("text-font", false);
+    dataDrivenPropertyUsageMap.put("text-size", false);
+    dataDrivenPropertyUsageMap.put("text-max-width", false);
+    dataDrivenPropertyUsageMap.put("text-letter-spacing", false);
+    dataDrivenPropertyUsageMap.put("text-justify", false);
+    dataDrivenPropertyUsageMap.put("text-anchor", false);
+    dataDrivenPropertyUsageMap.put("text-rotate", false);
+    dataDrivenPropertyUsageMap.put("text-transform", false);
+    dataDrivenPropertyUsageMap.put("text-offset", false);
+    dataDrivenPropertyUsageMap.put("icon-opacity", false);
+    dataDrivenPropertyUsageMap.put("icon-color", false);
+    dataDrivenPropertyUsageMap.put("icon-halo-color", false);
+    dataDrivenPropertyUsageMap.put("icon-halo-width", false);
+    dataDrivenPropertyUsageMap.put("icon-halo-blur", false);
+    dataDrivenPropertyUsageMap.put("text-opacity", false);
+    dataDrivenPropertyUsageMap.put("text-color", false);
+    dataDrivenPropertyUsageMap.put("text-halo-color", false);
+    dataDrivenPropertyUsageMap.put("text-halo-width", false);
+    dataDrivenPropertyUsageMap.put("text-halo-blur", false);
+    dataDrivenPropertyUsageMap.put(Z_INDEX, false);
   }
 
   @Override
@@ -224,6 +194,46 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
   }
 
   /**
+   * Create a list of symbols on the map.
+   * <p>
+   * Symbols are going to be created only for features with a matching geometry.
+   * <p>
+   * You can inspect a full list of supported feature properties in {@link SymbolOptions#fromFeature(Feature)}.
+   *
+   * @param json the GeoJSON defining the list of symbols to build
+   * @return the list of built symbols
+   */
+  @UiThread
+  public List<Symbol> create(@NonNull String json) {
+    return create(FeatureCollection.fromJson(json));
+  }
+
+  /**
+   * Create a list of symbols on the map.
+   * <p>
+   * Symbols are going to be created only for features with a matching geometry.
+   * <p>
+   * You can inspect a full list of supported feature properties in {@link SymbolOptions#fromFeature(Feature)}.
+   *
+   * @param featureCollection the featureCollection defining the list of symbols to build
+   * @return the list of built symbols
+   */
+  @UiThread
+  public List<Symbol> create(@NonNull FeatureCollection featureCollection) {
+    List<Feature> features = featureCollection.features();
+    List<SymbolOptions> options = new ArrayList<>();
+    if (features != null) {
+      for (Feature feature : features) {
+        SymbolOptions option = SymbolOptions.fromFeature(feature);
+        if (option != null) {
+          options.add(option);
+        }
+      }
+    }
+    return create(options);
+  }
+
+  /**
    * Get the layer id of the annotation layer.
    *
    * @return the layer id
@@ -259,7 +269,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around String
    */
   public void setSymbolPlacement(@Property.SYMBOL_PLACEMENT String value) {
-    layer.setProperties(symbolPlacement(value));
+    PropertyValue propertyValue = symbolPlacement(value);
+    constantPropertyUsageMap.put("symbol-placement", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -277,7 +289,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around Float
    */
   public void setSymbolSpacing( Float value) {
-    layer.setProperties(symbolSpacing(value));
+    PropertyValue propertyValue = symbolSpacing(value);
+    constantPropertyUsageMap.put("symbol-spacing", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -295,7 +309,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around Boolean
    */
   public void setSymbolAvoidEdges( Boolean value) {
-    layer.setProperties(symbolAvoidEdges(value));
+    PropertyValue propertyValue = symbolAvoidEdges(value);
+    constantPropertyUsageMap.put("symbol-avoid-edges", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -313,7 +329,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around Boolean
    */
   public void setIconAllowOverlap( Boolean value) {
-    layer.setProperties(iconAllowOverlap(value));
+    PropertyValue propertyValue = iconAllowOverlap(value);
+    constantPropertyUsageMap.put("icon-allow-overlap", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -331,7 +349,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around Boolean
    */
   public void setIconIgnorePlacement( Boolean value) {
-    layer.setProperties(iconIgnorePlacement(value));
+    PropertyValue propertyValue = iconIgnorePlacement(value);
+    constantPropertyUsageMap.put("icon-ignore-placement", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -349,7 +369,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around Boolean
    */
   public void setIconOptional( Boolean value) {
-    layer.setProperties(iconOptional(value));
+    PropertyValue propertyValue = iconOptional(value);
+    constantPropertyUsageMap.put("icon-optional", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -367,7 +389,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around String
    */
   public void setIconRotationAlignment(@Property.ICON_ROTATION_ALIGNMENT String value) {
-    layer.setProperties(iconRotationAlignment(value));
+    PropertyValue propertyValue = iconRotationAlignment(value);
+    constantPropertyUsageMap.put("icon-rotation-alignment", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -385,7 +409,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around String
    */
   public void setIconTextFit(@Property.ICON_TEXT_FIT String value) {
-    layer.setProperties(iconTextFit(value));
+    PropertyValue propertyValue = iconTextFit(value);
+    constantPropertyUsageMap.put("icon-text-fit", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -403,7 +429,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around Float[]
    */
   public void setIconTextFitPadding( Float[] value) {
-    layer.setProperties(iconTextFitPadding(value));
+    PropertyValue propertyValue = iconTextFitPadding(value);
+    constantPropertyUsageMap.put("icon-text-fit-padding", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -421,7 +449,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around Float
    */
   public void setIconPadding( Float value) {
-    layer.setProperties(iconPadding(value));
+    PropertyValue propertyValue = iconPadding(value);
+    constantPropertyUsageMap.put("icon-padding", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -439,7 +469,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around Boolean
    */
   public void setIconKeepUpright( Boolean value) {
-    layer.setProperties(iconKeepUpright(value));
+    PropertyValue propertyValue = iconKeepUpright(value);
+    constantPropertyUsageMap.put("icon-keep-upright", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -457,7 +489,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around String
    */
   public void setIconPitchAlignment(@Property.ICON_PITCH_ALIGNMENT String value) {
-    layer.setProperties(iconPitchAlignment(value));
+    PropertyValue propertyValue = iconPitchAlignment(value);
+    constantPropertyUsageMap.put("icon-pitch-alignment", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -475,7 +509,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around String
    */
   public void setTextPitchAlignment(@Property.TEXT_PITCH_ALIGNMENT String value) {
-    layer.setProperties(textPitchAlignment(value));
+    PropertyValue propertyValue = textPitchAlignment(value);
+    constantPropertyUsageMap.put("text-pitch-alignment", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -493,7 +529,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around String
    */
   public void setTextRotationAlignment(@Property.TEXT_ROTATION_ALIGNMENT String value) {
-    layer.setProperties(textRotationAlignment(value));
+    PropertyValue propertyValue = textRotationAlignment(value);
+    constantPropertyUsageMap.put("text-rotation-alignment", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -511,7 +549,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around Float
    */
   public void setTextLineHeight( Float value) {
-    layer.setProperties(textLineHeight(value));
+    PropertyValue propertyValue = textLineHeight(value);
+    constantPropertyUsageMap.put("text-line-height", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -529,7 +569,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around Float
    */
   public void setTextMaxAngle( Float value) {
-    layer.setProperties(textMaxAngle(value));
+    PropertyValue propertyValue = textMaxAngle(value);
+    constantPropertyUsageMap.put("text-max-angle", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -547,7 +589,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around Float
    */
   public void setTextPadding( Float value) {
-    layer.setProperties(textPadding(value));
+    PropertyValue propertyValue = textPadding(value);
+    constantPropertyUsageMap.put("text-padding", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -565,7 +609,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around Boolean
    */
   public void setTextKeepUpright( Boolean value) {
-    layer.setProperties(textKeepUpright(value));
+    PropertyValue propertyValue = textKeepUpright(value);
+    constantPropertyUsageMap.put("text-keep-upright", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -583,7 +629,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around Boolean
    */
   public void setTextAllowOverlap( Boolean value) {
-    layer.setProperties(textAllowOverlap(value));
+    PropertyValue propertyValue = textAllowOverlap(value);
+    constantPropertyUsageMap.put("text-allow-overlap", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -601,7 +649,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around Boolean
    */
   public void setTextIgnorePlacement( Boolean value) {
-    layer.setProperties(textIgnorePlacement(value));
+    PropertyValue propertyValue = textIgnorePlacement(value);
+    constantPropertyUsageMap.put("text-ignore-placement", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -619,7 +669,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around Boolean
    */
   public void setTextOptional( Boolean value) {
-    layer.setProperties(textOptional(value));
+    PropertyValue propertyValue = textOptional(value);
+    constantPropertyUsageMap.put("text-optional", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -637,7 +689,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around Float[]
    */
   public void setIconTranslate( Float[] value) {
-    layer.setProperties(iconTranslate(value));
+    PropertyValue propertyValue = iconTranslate(value);
+    constantPropertyUsageMap.put("icon-translate", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -655,7 +709,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around String
    */
   public void setIconTranslateAnchor(@Property.ICON_TRANSLATE_ANCHOR String value) {
-    layer.setProperties(iconTranslateAnchor(value));
+    PropertyValue propertyValue = iconTranslateAnchor(value);
+    constantPropertyUsageMap.put("icon-translate-anchor", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -673,7 +729,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around Float[]
    */
   public void setTextTranslate( Float[] value) {
-    layer.setProperties(textTranslate(value));
+    PropertyValue propertyValue = textTranslate(value);
+    constantPropertyUsageMap.put("text-translate", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -691,7 +749,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * @param value property wrapper value around String
    */
   public void setTextTranslateAnchor(@Property.TEXT_TRANSLATE_ANCHOR String value) {
-    layer.setProperties(textTranslateAnchor(value));
+    PropertyValue propertyValue = textTranslateAnchor(value);
+    constantPropertyUsageMap.put("text-translate-anchor", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -699,8 +759,10 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    *
    * @param expression expression
    */
+   @Override
   public void setFilter(@NonNull Expression expression) {
-    layer.setFilter(expression);
+    layerFilter = expression;
+    layer.setFilter(layerFilter);
   }
 
   /**

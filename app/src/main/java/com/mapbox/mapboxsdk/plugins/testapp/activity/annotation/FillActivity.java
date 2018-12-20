@@ -12,10 +12,11 @@ import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.Style;
-import com.mapbox.mapboxsdk.plugins.annotation.*;
+import com.mapbox.mapboxsdk.plugins.annotation.Fill;
+import com.mapbox.mapboxsdk.plugins.annotation.FillManager;
+import com.mapbox.mapboxsdk.plugins.annotation.FillOptions;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.Utils;
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
 
 import java.io.IOException;
@@ -39,53 +40,52 @@ public class FillActivity extends AppCompatActivity {
     setContentView(R.layout.activity_annotation);
     mapView = findViewById(R.id.mapView);
     mapView.onCreate(savedInstanceState);
-    mapView.getMapAsync(mapboxMap ->
+    mapView.getMapAsync(mapboxMap -> mapboxMap.setStyle(Style.MAPBOX_STREETS, style -> {
+      findViewById(R.id.fabStyles).setOnClickListener(v -> mapboxMap.setStyle(Utils.INSTANCE.getNextStyle()));
 
-      mapboxMap.setStyle(Style.MAPBOX_STREETS, style -> {
+      mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
 
-        mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
+      fillManager = new FillManager(mapView, mapboxMap, style);
+      fillManager.addClickListener(fill -> Toast.makeText(FillActivity.this,
+        String.format("Fill clicked %s", fill.getId()),
+        Toast.LENGTH_SHORT
+      ).show());
+      fillManager.addLongClickListener(fill -> Toast.makeText(FillActivity.this,
+        String.format("Fill long clicked %s", fill.getId()),
+        Toast.LENGTH_SHORT
+      ).show());
 
-        fillManager = new FillManager(mapView, mapboxMap, style);
-        fillManager.addClickListener(fill -> Toast.makeText(FillActivity.this,
-          String.format("Fill clicked %s", fill.getId()),
-          Toast.LENGTH_SHORT
-        ).show());
-        fillManager.addLongClickListener(fill -> Toast.makeText(FillActivity.this,
-          String.format("Fill long clicked %s", fill.getId()),
-          Toast.LENGTH_SHORT
-        ).show());
+      // create a fixed fill
+      List<LatLng> innerLatLngs = new ArrayList<>();
+      innerLatLngs.add(new LatLng(-10.733102, -3.363937));
+      innerLatLngs.add(new LatLng(-19.716317, 1.754703));
+      innerLatLngs.add(new LatLng(-21.085074, -15.747196));
+      innerLatLngs.add(new LatLng(-10.733102, -3.363937));
+      List<List<LatLng>> latLngs = new ArrayList<>();
+      latLngs.add(innerLatLngs);
 
-        // create a fixed fill
-        List<LatLng> innerLatLngs = new ArrayList<>();
-        innerLatLngs.add(new LatLng(-10.733102, -3.363937));
-        innerLatLngs.add(new LatLng(-19.716317, 1.754703));
-        innerLatLngs.add(new LatLng(-21.085074, -15.747196));
-        innerLatLngs.add(new LatLng(-10.733102, -3.363937));
-        List<List<LatLng>> latLngs = new ArrayList<>();
-        latLngs.add(innerLatLngs);
+      FillOptions fillOptions = new FillOptions()
+        .withLatLngs(latLngs)
+        .withFillColor(ColorUtils.colorToRgbaString(Color.RED));
+      fillManager.create(fillOptions);
 
-        FillOptions fillOptions = new FillOptions()
-          .withLatLngs(latLngs)
-          .withFillColor(ColorUtils.colorToRgbaString(Color.RED));
-        fillManager.create(fillOptions);
+      // random add fills across the globe
+      List<FillOptions> fillOptionsList = new ArrayList<>();
+      for (int i = 0; i < 20; i++) {
+        int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
+        fillOptionsList.add(new FillOptions()
+          .withLatLngs(createRandomLatLngs())
+          .withFillColor(ColorUtils.colorToRgbaString(color))
+        );
+      }
+      fillManager.create(fillOptionsList);
 
-        // random add fills across the globe
-        List<FillOptions> fillOptionsList = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-          int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
-          fillOptionsList.add(new FillOptions()
-            .withLatLngs(createRandomLatLngs())
-            .withFillColor(ColorUtils.colorToRgbaString(color))
-          );
-        }
-        fillManager.create(fillOptionsList);
-
-        try {
-          fillManager.create(FeatureCollection.fromJson(Utils.INSTANCE.loadStringFromAssets(this, "annotations.json")));
-        } catch (IOException e) {
-          throw new RuntimeException("Unable to parse annotations.json");
-        }
-      }));
+      try {
+        fillManager.create(FeatureCollection.fromJson(Utils.INSTANCE.loadStringFromAssets(this, "annotations.json")));
+      } catch (IOException e) {
+        throw new RuntimeException("Unable to parse annotations.json");
+      }
+    }));
   }
 
   private List<List<LatLng>> createRandomLatLngs() {

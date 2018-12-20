@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -20,7 +19,6 @@ import com.mapbox.mapboxsdk.plugins.annotation.CircleOptions;
 import com.mapbox.mapboxsdk.plugins.annotation.OnCircleDragListener;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.Utils;
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
 
 import java.io.IOException;
@@ -48,70 +46,70 @@ public class CircleActivity extends AppCompatActivity {
 
     mapView = findViewById(R.id.mapView);
     mapView.onCreate(savedInstanceState);
-    mapView.getMapAsync(mapboxMap ->
-      mapboxMap.setStyle(Style.MAPBOX_STREETS, style -> {
+    mapView.getMapAsync(mapboxMap -> mapboxMap.setStyle(Style.MAPBOX_STREETS, style -> {
+      findViewById(R.id.fabStyles).setOnClickListener(v -> mapboxMap.setStyle(Utils.INSTANCE.getNextStyle()));
 
-        mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
+      mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
 
-        // create circle manager
-        circleManager = new CircleManager(mapView, mapboxMap, style);
-        circleManager.addClickListener(circle -> Toast.makeText(CircleActivity.this,
-          String.format("Circle clicked %s", circle.getId()),
-          Toast.LENGTH_SHORT
-        ).show());
-        circleManager.addLongClickListener(circle -> Toast.makeText(CircleActivity.this,
-          String.format("Circle long clicked %s", circle.getId()),
-          Toast.LENGTH_SHORT
-        ).show());
+      // create circle manager
+      circleManager = new CircleManager(mapView, mapboxMap, style);
+      circleManager.addClickListener(circle -> Toast.makeText(CircleActivity.this,
+        String.format("Circle clicked %s", circle.getId()),
+        Toast.LENGTH_SHORT
+      ).show());
+      circleManager.addLongClickListener(circle -> Toast.makeText(CircleActivity.this,
+        String.format("Circle long clicked %s", circle.getId()),
+        Toast.LENGTH_SHORT
+      ).show());
 
-        // create a fixed circle
-        CircleOptions circleOptions = new CircleOptions()
-          .withLatLng(new LatLng(6.687337, 0.381457))
-          .withCircleColor(ColorUtils.colorToRgbaString(Color.YELLOW))
-          .withCircleRadius(12f)
-          .setDraggable(true);
-        circleManager.create(circleOptions);
+      // create a fixed circle
+      CircleOptions circleOptions = new CircleOptions()
+        .withLatLng(new LatLng(6.687337, 0.381457))
+        .withCircleColor(ColorUtils.colorToRgbaString(Color.YELLOW))
+        .withCircleRadius(12f)
+        .setDraggable(true);
+      circleManager.create(circleOptions);
 
-        // random add circles across the globe
-        List<CircleOptions> circleOptionsList = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-          int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
-          circleOptionsList.add(new CircleOptions()
-            .withLatLng(createRandomLatLng())
-            .withCircleColor(ColorUtils.colorToRgbaString(color))
-            .withCircleRadius(8f)
-            .setDraggable(true)
-          );
+      // random add circles across the globe
+      List<CircleOptions> circleOptionsList = new ArrayList<>();
+      for (int i = 0; i < 20; i++) {
+        int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
+        circleOptionsList.add(new CircleOptions()
+          .withLatLng(createRandomLatLng())
+          .withCircleColor(ColorUtils.colorToRgbaString(color))
+          .withCircleRadius(8f)
+          .setDraggable(true)
+        );
+      }
+      circleManager.create(circleOptionsList);
+
+      try {
+        circleManager.create(Utils.INSTANCE.loadStringFromAssets(this, "annotations.json"));
+      } catch (IOException e) {
+        throw new RuntimeException("Unable to parse annotations.json");
+      }
+
+      circleManager.addDragListener(new OnCircleDragListener() {
+        @Override
+        public void onAnnotationDragStarted(Circle annotation) {
+          draggableInfoTv.setVisibility(View.VISIBLE);
         }
-        circleManager.create(circleOptionsList);
 
-        try {
-          circleManager.create(Utils.INSTANCE.loadStringFromAssets(this, "annotations.json"));
-        } catch (IOException e) {
-          throw new RuntimeException("Unable to parse annotations.json");
+        @Override
+        public void onAnnotationDrag(Circle annotation) {
+          draggableInfoTv.setText(String.format(
+            Locale.US,
+            "ID: %s\nLatLng:%f, %f",
+            annotation.getId(),
+            annotation.getLatLng().getLatitude(), annotation.getLatLng().getLongitude()));
         }
 
-        circleManager.addDragListener(new OnCircleDragListener() {
-          @Override
-          public void onAnnotationDragStarted(Circle annotation) {
-            draggableInfoTv.setVisibility(View.VISIBLE);
-          }
-
-          @Override
-          public void onAnnotationDrag(Circle annotation) {
-            draggableInfoTv.setText(String.format(
-              Locale.US,
-              "ID: %s\nLatLng:%f, %f",
-              annotation.getId(),
-              annotation.getLatLng().getLatitude(), annotation.getLatLng().getLongitude()));
-          }
-
-          @Override
-          public void onAnnotationDragFinished(Circle annotation) {
-            draggableInfoTv.setVisibility(View.GONE);
-          }
-        });
-      }));
+        @Override
+        public void onAnnotationDragFinished(Circle annotation) {
+          draggableInfoTv.setVisibility(View.GONE);
+        }
+      });
+    }));
   }
 
   private LatLng createRandomLatLng() {
