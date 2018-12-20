@@ -7,12 +7,14 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.BaseActivityTest;
-import com.mapbox.mapboxsdk.plugins.testapp.activity.building.BuildingActivity;
+import com.mapbox.mapboxsdk.plugins.testapp.activity.TestActivity;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
 import timber.log.Timber;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.Objects;
 
 import static com.mapbox.mapboxsdk.plugins.annotation.MapboxMapAction.invoke;
 import static org.junit.Assert.*;
@@ -31,13 +33,13 @@ public class CircleTest extends BaseActivityTest {
 
   @Override
   protected Class getActivityClass() {
-    return BuildingActivity.class;
+    return TestActivity.class;
   }
 
   private void setupAnnotation() {
     Timber.i("Retrieving layer");
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      CircleManager circleManager = new CircleManager(((BuildingActivity) rule.getActivity()).getMapView(), mapboxMap);
+      CircleManager circleManager = new CircleManager(idlingResource.getMapView(), mapboxMap, Objects.requireNonNull(mapboxMap.getStyle()));
       circle = circleManager.create(new CircleOptions().withLatLng(new LatLng()));
     });
   }

@@ -69,7 +69,7 @@ public class SymbolActivity extends AppCompatActivity {
         mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
 
         // create symbol manager
-        symbolManager = new SymbolManager(mapView, mapboxMap);
+        symbolManager = new SymbolManager(mapView, mapboxMap, style);
         symbolManager.addClickListener(symbol -> Toast.makeText(SymbolActivity.this,
           String.format("Symbol clicked %s", symbol.getId()),
           Toast.LENGTH_SHORT

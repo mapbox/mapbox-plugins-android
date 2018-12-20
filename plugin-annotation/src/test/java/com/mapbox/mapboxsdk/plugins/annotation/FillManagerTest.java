@@ -5,6 +5,7 @@ package com.mapbox.mapboxsdk.plugins.annotation;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.*;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
@@ -29,13 +30,15 @@ public class FillManagerTest {
 
   private DraggableAnnotationController<Fill, OnFillDragListener> draggableAnnotationController = mock(DraggableAnnotationController.class);
   private MapboxMap mapboxMap = mock(MapboxMap.class);
+  private Style style = mock(Style.class);
   private GeoJsonSource geoJsonSource = mock(GeoJsonSource.class);
   private FillLayer fillLayer = mock(FillLayer.class);
   private FillManager fillManager;
 
   @Before
   public void beforeTest() {
-    fillManager = new FillManager(mapboxMap, geoJsonSource, fillLayer, null, draggableAnnotationController);
+    when(style.isFullyLoaded()).thenReturn(true);
+    fillManager = new FillManager(mapboxMap, style, geoJsonSource, fillLayer, null, draggableAnnotationController);
   }
 
   @Test

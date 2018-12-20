@@ -5,6 +5,7 @@ package com.mapbox.mapboxsdk.plugins.annotation;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.*;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
@@ -29,13 +30,15 @@ public class CircleManagerTest {
 
   private DraggableAnnotationController<Circle, OnCircleDragListener> draggableAnnotationController = mock(DraggableAnnotationController.class);
   private MapboxMap mapboxMap = mock(MapboxMap.class);
+  private Style style = mock(Style.class);
   private GeoJsonSource geoJsonSource = mock(GeoJsonSource.class);
   private CircleLayer circleLayer = mock(CircleLayer.class);
   private CircleManager circleManager;
 
   @Before
   public void beforeTest() {
-    circleManager = new CircleManager(mapboxMap, geoJsonSource, circleLayer, null, draggableAnnotationController);
+    when(style.isFullyLoaded()).thenReturn(true);
+    circleManager = new CircleManager(mapboxMap, style, geoJsonSource, circleLayer, null, draggableAnnotationController);
   }
 
   @Test
