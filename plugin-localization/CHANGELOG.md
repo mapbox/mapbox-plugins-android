@@ -2,6 +2,11 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### 0.6.0 - December 20, 2018
+ - Add support for Russian locale [#678](https://github.com/mapbox/mapbox-plugins-android/pull/678)
+ - Support for streets v8 sources [#778](https://github.com/mapbox/mapbox-plugins-android/pull/778)
+ - Maps 6.8.0 bump [#797](https://github.com/mapbox/mapbox-plugins-android/pull/797)
+
 ### 0.5.0 - September 12, 2018
  - Update ProGuard to support built-in shrinker of Gradle Plugin [#582](https://github.com/mapbox/mapbox-plugins-android/pull/582)
  - Update localization plugin to support expressions [#654](https://github.com/mapbox/mapbox-plugins-android/pull/654)
