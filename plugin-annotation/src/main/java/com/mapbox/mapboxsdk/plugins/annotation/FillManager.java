@@ -11,6 +11,7 @@ import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.FillLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
@@ -35,21 +36,23 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
    * Create a fill manager, used to manage fills.
    *
    * @param mapboxMap the map object to add fills to
+   * @param style a valid a fully loaded style object
    */
   @UiThread
-  public FillManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
-    this(mapView, mapboxMap, null);
+  public FillManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style) {
+    this(mapView, mapboxMap, style, null);
   }
 
   /**
    * Create a fill manager, used to manage fills.
    *
    * @param mapboxMap the map object to add fills to
+   * @param style a valid a fully loaded style object
    * @param belowLayerId the id of the layer above the circle layer
    */
   @UiThread
-  public FillManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @Nullable String belowLayerId) {
-    this(mapboxMap, new GeoJsonSource(ID_GEOJSON_SOURCE), new FillLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE),
+  public FillManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId) {
+    this(mapboxMap, style, new GeoJsonSource(ID_GEOJSON_SOURCE), new FillLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE),
     belowLayerId, new DraggableAnnotationController<>(mapView, mapboxMap));
   }
 
@@ -57,12 +60,13 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
    * Create a fill manager, used to manage fills.
    *
    * @param mapboxMap     the map object to add fills to
+   * @param style a valid a fully loaded style object
    * @param geoJsonSource the geojson source to add fills to
    * @param layer         the fill layer to visualise Fills with
    */
   @VisibleForTesting
-  public FillManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull FillLayer layer, @Nullable String belowLayerId, DraggableAnnotationController<Fill, OnFillDragListener> draggableAnnotationController) {
-    super(mapboxMap, layer, geoJsonSource, null, draggableAnnotationController, belowLayerId);
+  public FillManager(@NonNull MapboxMap mapboxMap, @NonNull Style style, @NonNull GeoJsonSource geoJsonSource, @NonNull FillLayer layer, @Nullable String belowLayerId, DraggableAnnotationController<Fill, OnFillDragListener> draggableAnnotationController) {
+    super(mapboxMap, style, layer, geoJsonSource, null, draggableAnnotationController, belowLayerId);
     initializeDataDrivenPropertyMap();
   }
 

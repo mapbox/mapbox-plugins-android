@@ -10,6 +10,7 @@ package com.mapbox.mapboxsdk.plugins.annotation;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.*;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
@@ -34,13 +35,15 @@ public class <%- camelize(type) %>ManagerTest {
 
   private DraggableAnnotationController<<%- camelize(type) %>, On<%- camelize(type) %>DragListener> draggableAnnotationController = mock(DraggableAnnotationController.class);
   private MapboxMap mapboxMap = mock(MapboxMap.class);
+  private Style style = mock(Style.class);
   private GeoJsonSource geoJsonSource = mock(GeoJsonSource.class);
   private <%- camelize(type) %>Layer <%- type  %>Layer = mock(<%- camelize(type) %>Layer.class);
   private <%- camelize(type) %>Manager <%- type  %>Manager;
 
   @Before
   public void beforeTest() {
-    <%- type  %>Manager = new <%- camelize(type) %>Manager(mapboxMap, geoJsonSource, <%- type  %>Layer, null, draggableAnnotationController);
+    when(style.isFullyLoaded()).thenReturn(true);
+    <%- type  %>Manager = new <%- camelize(type) %>Manager(mapboxMap, style, geoJsonSource, <%- type  %>Layer, null, draggableAnnotationController);
   }
 
   @Test

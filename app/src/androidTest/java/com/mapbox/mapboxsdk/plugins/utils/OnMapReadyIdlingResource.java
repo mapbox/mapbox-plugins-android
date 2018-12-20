@@ -3,11 +3,13 @@ package com.mapbox.mapboxsdk.plugins.utils;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.test.espresso.IdlingResource;
 
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 
 public class OnMapReadyIdlingResource implements IdlingResource, OnMapReadyCallback {
@@ -37,7 +39,7 @@ public class OnMapReadyIdlingResource implements IdlingResource, OnMapReadyCallb
 
   @Override
   public boolean isIdleNow() {
-    return mapboxMap != null;
+    return mapboxMap != null && mapboxMap.getStyle() != null && mapboxMap.getStyle().isFullyLoaded();
   }
 
   @Override
@@ -54,10 +56,12 @@ public class OnMapReadyIdlingResource implements IdlingResource, OnMapReadyCallb
   }
 
   @Override
-  public void onMapReady(MapboxMap mapboxMap) {
+  public void onMapReady(@NonNull MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
-    if (resourceCallback != null) {
-      resourceCallback.onTransitionToIdle();
-    }
+    mapboxMap.setStyle(Style.MAPBOX_STREETS, style -> {
+      if (resourceCallback != null) {
+        resourceCallback.onTransitionToIdle();
+      }
+    });
   }
 }

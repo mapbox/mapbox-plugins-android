@@ -55,7 +55,7 @@ public abstract class AnnotationManager<
   private Style style;
 
   @UiThread
-  protected AnnotationManager(MapboxMap mapboxMap,
+  protected AnnotationManager(MapboxMap mapboxMap, Style style,
                               L layer, GeoJsonSource geoJsonSource, Comparator<Feature> comparator,
                               DraggableAnnotationController<T, D> draggableAnnotationController,
                               String belowLayerId) {
@@ -63,16 +63,21 @@ public abstract class AnnotationManager<
     this.mapboxMap = mapboxMap;
     this.geoJsonSource = geoJsonSource;
     this.comparator = comparator;
-    this.style = mapboxMap.getStyle();
+    this.style = style;
+
+    if (!style.isFullyLoaded()) {
+      throw new RuntimeException("The style has to be non-null and fully loaded.");
+    }
+
     style.addSource(geoJsonSource);
     mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver());
     mapboxMap.addOnMapLongClickListener(mapClickResolver);
     this.draggableAnnotationController = draggableAnnotationController;
     draggableAnnotationController.injectAnnotationManager(this);
 
-    if (belowLayerId == null && style != null) {
+    if (belowLayerId == null) {
       style.addLayer(layer);
-    } else if (style != null) {
+    } else {
       style.addLayerBelow(layer, belowLayerId);
     }
   }
@@ -178,6 +183,11 @@ public abstract class AnnotationManager<
   }
 
   void internalUpdateSource() {
+    if (!style.isFullyLoaded()) {
+      // We are in progress of loading a new style
+      return;
+    }
+
     List<Feature>features = new ArrayList<>();
     T t;
     for (int i = 0; i < annotations.size(); i++) {

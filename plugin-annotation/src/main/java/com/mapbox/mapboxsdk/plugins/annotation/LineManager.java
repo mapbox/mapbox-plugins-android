@@ -11,6 +11,7 @@ import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
@@ -35,21 +36,23 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    * Create a line manager, used to manage lines.
    *
    * @param mapboxMap the map object to add lines to
+   * @param style a valid a fully loaded style object
    */
   @UiThread
-  public LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
-    this(mapView, mapboxMap, null);
+  public LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style) {
+    this(mapView, mapboxMap, style, null);
   }
 
   /**
    * Create a line manager, used to manage lines.
    *
    * @param mapboxMap the map object to add lines to
+   * @param style a valid a fully loaded style object
    * @param belowLayerId the id of the layer above the circle layer
    */
   @UiThread
-  public LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @Nullable String belowLayerId) {
-    this(mapboxMap, new GeoJsonSource(ID_GEOJSON_SOURCE), new LineLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE),
+  public LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId) {
+    this(mapboxMap, style, new GeoJsonSource(ID_GEOJSON_SOURCE), new LineLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE),
     belowLayerId, new DraggableAnnotationController<>(mapView, mapboxMap));
   }
 
@@ -57,12 +60,13 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    * Create a line manager, used to manage lines.
    *
    * @param mapboxMap     the map object to add lines to
+   * @param style a valid a fully loaded style object
    * @param geoJsonSource the geojson source to add lines to
    * @param layer         the line layer to visualise Lines with
    */
   @VisibleForTesting
-  public LineManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull LineLayer layer, @Nullable String belowLayerId, DraggableAnnotationController<Line, OnLineDragListener> draggableAnnotationController) {
-    super(mapboxMap, layer, geoJsonSource, null, draggableAnnotationController, belowLayerId);
+  public LineManager(@NonNull MapboxMap mapboxMap, @NonNull Style style, @NonNull GeoJsonSource geoJsonSource, @NonNull LineLayer layer, @Nullable String belowLayerId, DraggableAnnotationController<Line, OnLineDragListener> draggableAnnotationController) {
+    super(mapboxMap, style, layer, geoJsonSource, null, draggableAnnotationController, belowLayerId);
     initializeDataDrivenPropertyMap();
   }
 
