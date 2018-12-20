@@ -9,9 +9,12 @@ import android.support.v4.util.LongSparseArray;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.Layer;
+import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
 import java.util.ArrayList;
@@ -40,46 +43,53 @@ public abstract class AnnotationManager<
 
   protected final MapboxMap mapboxMap;
   protected final LongSparseArray<T> annotations = new LongSparseArray<>();
-  protected final Map<String, Boolean> propertyUsageMap = new HashMap<>();
+  final Map<String, Boolean> dataDrivenPropertyUsageMap = new HashMap<>();
+  final Map<String, PropertyValue> constantPropertyUsageMap = new HashMap<>();
+  Expression layerFilter;
 
   private final DraggableAnnotationController<T, D> draggableAnnotationController;
   private final List<D> dragListeners = new ArrayList<>();
   private final List<U> clickListeners = new ArrayList<>();
   private final List<V> longClickListeners = new ArrayList<>();
-  protected long currentId;
+  private long currentId;
 
-  protected final L layer;
-  private final GeoJsonSource geoJsonSource;
+  protected L layer;
+  private GeoJsonSource geoJsonSource;
   private final MapClickResolver mapClickResolver;
   private final Comparator<Feature> comparator;
   private Style style;
+  private String belowLayerId;
+  private CoreElementProvider<L> coreElementProvider;
 
   @UiThread
-  protected AnnotationManager(MapboxMap mapboxMap, Style style,
-                              L layer, GeoJsonSource geoJsonSource, Comparator<Feature> comparator,
+  protected AnnotationManager(MapView mapView, MapboxMap mapboxMap, Style style,
+                              CoreElementProvider<L> coreElementProvider,
+                              Comparator<Feature> comparator,
                               DraggableAnnotationController<T, D> draggableAnnotationController,
                               String belowLayerId) {
-    this.layer = layer;
     this.mapboxMap = mapboxMap;
-    this.geoJsonSource = geoJsonSource;
     this.comparator = comparator;
     this.style = style;
+    this.belowLayerId = belowLayerId;
+    this.coreElementProvider = coreElementProvider;
 
     if (!style.isFullyLoaded()) {
       throw new RuntimeException("The style has to be non-null and fully loaded.");
     }
 
-    style.addSource(geoJsonSource);
     mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver());
     mapboxMap.addOnMapLongClickListener(mapClickResolver);
     this.draggableAnnotationController = draggableAnnotationController;
     draggableAnnotationController.injectAnnotationManager(this);
 
-    if (belowLayerId == null) {
-      style.addLayer(layer);
-    } else {
-      style.addLayerBelow(layer, belowLayerId);
-    }
+    initializeSourcesAndLayers();
+
+    mapView.addOnWillStartLoadingMapListener(() ->
+      mapboxMap.getStyle(loadedStyle -> {
+        this.style = loadedStyle;
+        initializeSourcesAndLayers();
+      })
+    );
   }
 
   /**
@@ -188,7 +198,7 @@ public abstract class AnnotationManager<
       return;
     }
 
-    List<Feature>features = new ArrayList<>();
+    List<Feature> features = new ArrayList<>();
     T t;
     for (int i = 0; i < annotations.size(); i++) {
       t = annotations.valueAt(i);
@@ -203,8 +213,8 @@ public abstract class AnnotationManager<
   }
 
   void enableDataDrivenProperty(@NonNull String property) {
-    if (propertyUsageMap.get(property).equals(false)) {
-      propertyUsageMap.put(property, true);
+    if (dataDrivenPropertyUsageMap.get(property).equals(false)) {
+      dataDrivenPropertyUsageMap.put(property, true);
       setDataDrivenPropertyIsUsed(property);
     }
   }
@@ -287,8 +297,32 @@ public abstract class AnnotationManager<
 
   abstract String getAnnotationIdKey();
 
+  abstract void initializeDataDrivenPropertyMap();
+
+  abstract void setFilter(@NonNull Expression expression);
+
   List<D> getDragListeners() {
     return dragListeners;
+  }
+
+  private void initializeSourcesAndLayers() {
+    geoJsonSource = coreElementProvider.getSource();
+    layer = coreElementProvider.getLayer();
+
+    style.addSource(geoJsonSource);
+    if (belowLayerId == null) {
+      style.addLayer(layer);
+    } else {
+      style.addLayerBelow(layer, belowLayerId);
+    }
+
+    initializeDataDrivenPropertyMap();
+    layer.setProperties(constantPropertyUsageMap.values().toArray(new PropertyValue[0]));
+    if (layerFilter != null) {
+      setFilter(layerFilter);
+    }
+
+    updateSource();
   }
 
   /**

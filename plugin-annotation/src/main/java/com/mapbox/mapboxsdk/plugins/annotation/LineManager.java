@@ -14,6 +14,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
+import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
 
@@ -52,8 +53,19 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    */
   @UiThread
   public LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId) {
-    this(mapboxMap, style, new GeoJsonSource(ID_GEOJSON_SOURCE), new LineLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE),
-    belowLayerId, new DraggableAnnotationController<>(mapView, mapboxMap));
+    this(mapView, mapboxMap, style,
+      new CoreElementProvider<LineLayer>() {
+        @Override
+        public LineLayer getLayer() {
+          return new LineLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE);
+        }
+
+        @Override
+        public GeoJsonSource getSource() {
+          return new GeoJsonSource(ID_GEOJSON_SOURCE);
+        }
+      },
+     belowLayerId, new DraggableAnnotationController<>(mapView, mapboxMap));
   }
 
   /**
@@ -61,13 +73,52 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    *
    * @param mapboxMap     the map object to add lines to
    * @param style a valid a fully loaded style object
-   * @param geoJsonSource the geojson source to add lines to
-   * @param layer         the line layer to visualise Lines with
    */
   @VisibleForTesting
-  public LineManager(@NonNull MapboxMap mapboxMap, @NonNull Style style, @NonNull GeoJsonSource geoJsonSource, @NonNull LineLayer layer, @Nullable String belowLayerId, DraggableAnnotationController<Line, OnLineDragListener> draggableAnnotationController) {
-    super(mapboxMap, style, layer, geoJsonSource, null, draggableAnnotationController, belowLayerId);
-    initializeDataDrivenPropertyMap();
+  public LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @NonNull CoreElementProvider<LineLayer> coreElementProvider, @Nullable String belowLayerId, DraggableAnnotationController<Line, OnLineDragListener> draggableAnnotationController) {
+    super(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController, belowLayerId);
+  }
+
+  @Override
+  void initializeDataDrivenPropertyMap() {
+    dataDrivenPropertyUsageMap.put("line-join", false);
+    dataDrivenPropertyUsageMap.put("line-opacity", false);
+    dataDrivenPropertyUsageMap.put("line-color", false);
+    dataDrivenPropertyUsageMap.put("line-width", false);
+    dataDrivenPropertyUsageMap.put("line-gap-width", false);
+    dataDrivenPropertyUsageMap.put("line-offset", false);
+    dataDrivenPropertyUsageMap.put("line-blur", false);
+    dataDrivenPropertyUsageMap.put("line-pattern", false);
+  }
+
+  @Override
+  protected void setDataDrivenPropertyIsUsed(@NonNull String property) {
+    switch (property) {
+      case "line-join":
+        layer.setProperties(lineJoin(get("line-join")));
+        break;
+      case "line-opacity":
+        layer.setProperties(lineOpacity(get("line-opacity")));
+        break;
+      case "line-color":
+        layer.setProperties(lineColor(get("line-color")));
+        break;
+      case "line-width":
+        layer.setProperties(lineWidth(get("line-width")));
+        break;
+      case "line-gap-width":
+        layer.setProperties(lineGapWidth(get("line-gap-width")));
+        break;
+      case "line-offset":
+        layer.setProperties(lineOffset(get("line-offset")));
+        break;
+      case "line-blur":
+        layer.setProperties(lineBlur(get("line-blur")));
+        break;
+      case "line-pattern":
+        layer.setProperties(linePattern(get("line-pattern")));
+        break;
+    }
   }
 
   /**
@@ -110,47 +161,6 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
     return create(options);
   }
 
-  private void initializeDataDrivenPropertyMap() {
-    propertyUsageMap.put("line-join", false);
-    propertyUsageMap.put("line-opacity", false);
-    propertyUsageMap.put("line-color", false);
-    propertyUsageMap.put("line-width", false);
-    propertyUsageMap.put("line-gap-width", false);
-    propertyUsageMap.put("line-offset", false);
-    propertyUsageMap.put("line-blur", false);
-    propertyUsageMap.put("line-pattern", false);
-  }
-
-  @Override
-  protected void setDataDrivenPropertyIsUsed(@NonNull String property) {
-    switch (property) {
-      case "line-join":
-        layer.setProperties(lineJoin(get("line-join")));
-        break;
-      case "line-opacity":
-        layer.setProperties(lineOpacity(get("line-opacity")));
-        break;
-      case "line-color":
-        layer.setProperties(lineColor(get("line-color")));
-        break;
-      case "line-width":
-        layer.setProperties(lineWidth(get("line-width")));
-        break;
-      case "line-gap-width":
-        layer.setProperties(lineGapWidth(get("line-gap-width")));
-        break;
-      case "line-offset":
-        layer.setProperties(lineOffset(get("line-offset")));
-        break;
-      case "line-blur":
-        layer.setProperties(lineBlur(get("line-blur")));
-        break;
-      case "line-pattern":
-        layer.setProperties(linePattern(get("line-pattern")));
-        break;
-    }
-  }
-
   /**
    * Get the layer id of the annotation layer.
    *
@@ -187,7 +197,9 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    * @param value property wrapper value around String
    */
   public void setLineCap(@Property.LINE_CAP String value) {
-    layer.setProperties(lineCap(value));
+    PropertyValue propertyValue = lineCap(value);
+    constantPropertyUsageMap.put("line-cap", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -205,7 +217,9 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    * @param value property wrapper value around Float
    */
   public void setLineMiterLimit( Float value) {
-    layer.setProperties(lineMiterLimit(value));
+    PropertyValue propertyValue = lineMiterLimit(value);
+    constantPropertyUsageMap.put("line-miter-limit", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -223,7 +237,9 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    * @param value property wrapper value around Float
    */
   public void setLineRoundLimit( Float value) {
-    layer.setProperties(lineRoundLimit(value));
+    PropertyValue propertyValue = lineRoundLimit(value);
+    constantPropertyUsageMap.put("line-round-limit", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -241,7 +257,9 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    * @param value property wrapper value around Float[]
    */
   public void setLineTranslate( Float[] value) {
-    layer.setProperties(lineTranslate(value));
+    PropertyValue propertyValue = lineTranslate(value);
+    constantPropertyUsageMap.put("line-translate", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -259,7 +277,9 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    * @param value property wrapper value around String
    */
   public void setLineTranslateAnchor(@Property.LINE_TRANSLATE_ANCHOR String value) {
-    layer.setProperties(lineTranslateAnchor(value));
+    PropertyValue propertyValue = lineTranslateAnchor(value);
+    constantPropertyUsageMap.put("line-translate-anchor", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -277,7 +297,9 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    * @param value property wrapper value around Float[]
    */
   public void setLineDasharray( Float[] value) {
-    layer.setProperties(lineDasharray(value));
+    PropertyValue propertyValue = lineDasharray(value);
+    constantPropertyUsageMap.put("line-dasharray", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
   /**
@@ -285,8 +307,10 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    *
    * @param expression expression
    */
+   @Override
   public void setFilter(@NonNull Expression expression) {
-    layer.setFilter(expression);
+    layerFilter = expression;
+    layer.setFilter(layerFilter);
   }
 
   /**
