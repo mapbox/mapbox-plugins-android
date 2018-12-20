@@ -43,7 +43,7 @@ public class LineActivity extends AppCompatActivity {
       mapboxMap.setStyle(Style.MAPBOX_STREETS, style -> {
         mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
 
-        lineManager = new LineManager(mapView, mapboxMap);
+        lineManager = new LineManager(mapView, mapboxMap, style);
         lineManager.addClickListener(line -> Toast.makeText(LineActivity.this,
           String.format("Line clicked %s", line.getId()),
           Toast.LENGTH_SHORT

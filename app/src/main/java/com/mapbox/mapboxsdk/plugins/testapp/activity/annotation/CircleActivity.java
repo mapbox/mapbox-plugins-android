@@ -54,7 +54,7 @@ public class CircleActivity extends AppCompatActivity {
         mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
 
         // create circle manager
-        circleManager = new CircleManager(mapView, mapboxMap);
+        circleManager = new CircleManager(mapView, mapboxMap, style);
         circleManager.addClickListener(circle -> Toast.makeText(CircleActivity.this,
           String.format("Circle clicked %s", circle.getId()),
           Toast.LENGTH_SHORT

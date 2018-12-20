@@ -11,6 +11,7 @@ import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
@@ -35,21 +36,23 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * Create a symbol manager, used to manage symbols.
    *
    * @param mapboxMap the map object to add symbols to
+   * @param style a valid a fully loaded style object
    */
   @UiThread
-  public SymbolManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
-    this(mapView, mapboxMap, null);
+  public SymbolManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style) {
+    this(mapView, mapboxMap, style, null);
   }
 
   /**
    * Create a symbol manager, used to manage symbols.
    *
    * @param mapboxMap the map object to add symbols to
+   * @param style a valid a fully loaded style object
    * @param belowLayerId the id of the layer above the circle layer
    */
   @UiThread
-  public SymbolManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @Nullable String belowLayerId) {
-    this(mapboxMap, new GeoJsonSource(ID_GEOJSON_SOURCE), new SymbolLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE),
+  public SymbolManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId) {
+    this(mapboxMap, style, new GeoJsonSource(ID_GEOJSON_SOURCE), new SymbolLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE),
     belowLayerId, new DraggableAnnotationController<>(mapView, mapboxMap));
   }
 
@@ -57,12 +60,13 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * Create a symbol manager, used to manage symbols.
    *
    * @param mapboxMap     the map object to add symbols to
+   * @param style a valid a fully loaded style object
    * @param geoJsonSource the geojson source to add symbols to
    * @param layer         the symbol layer to visualise Symbols with
    */
   @VisibleForTesting
-  public SymbolManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull SymbolLayer layer, @Nullable String belowLayerId, DraggableAnnotationController<Symbol, OnSymbolDragListener> draggableAnnotationController) {
-    super(mapboxMap, layer, geoJsonSource, new SymbolComparator(), draggableAnnotationController, belowLayerId);
+  public SymbolManager(@NonNull MapboxMap mapboxMap, @NonNull Style style, @NonNull GeoJsonSource geoJsonSource, @NonNull SymbolLayer layer, @Nullable String belowLayerId, DraggableAnnotationController<Symbol, OnSymbolDragListener> draggableAnnotationController) {
+    super(mapboxMap, style, layer, geoJsonSource, new SymbolComparator(), draggableAnnotationController, belowLayerId);
     initializeDataDrivenPropertyMap();
   }
 
