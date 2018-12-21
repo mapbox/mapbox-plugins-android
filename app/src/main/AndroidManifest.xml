@@ -194,11 +194,6 @@
               android:value=".activity.FeatureOverviewActivity" />
     </activity>
 
-    <activity
-        android:name=".activity.TestActivity"
-        android:label="@string/title_activity_test"
-        android:theme="@style/AppTheme.NoActionBar"/>
-
     <service
       android:name="com.mapbox.mapboxsdk.plugins.offline.offline.OfflineDownloadService"
       android:exported="false"/>
