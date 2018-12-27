@@ -18,9 +18,9 @@ Plugins are single-purpose libraries built on top of the [Mapbox Maps SDK for An
 
 ## Available Plugins
  
-* [**Annotation:** Simplify the way to set and adjust the visual properties of annotations on a Mapbox map.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-markerview)
+* [**Annotation:** Simplify the way to set and adjust the visual properties of annotations on a Mapbox map.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-annotation)
 
-* [**MarkerView:** Add map markers that are Android views.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-annotation)
+* [**MarkerView:** Add map markers that are Android views.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-markerview)
  
 * [**Traffic:** Adds a real-time traffic layer to any Mapbox base map.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-traffic)
 
