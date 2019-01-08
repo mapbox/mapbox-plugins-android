@@ -31,7 +31,6 @@ ext {
 
   pluginVersion = [
       checkstyle: '8.10.1',
-      jacoco    : '0.8.1',
       gradle    : '3.2.0',
       kotlin    : '1.2.51',
       dokka     : '0.9.17'

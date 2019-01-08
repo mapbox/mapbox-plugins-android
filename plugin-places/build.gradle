@@ -35,11 +35,6 @@ android {
 
   testOptions {
     unitTests {
-      all {
-        jacoco {
-          includeNoLocationClasses = true
-        }
-      }
       includeAndroidResources = true
       returnDefaultValues = true
     }
@@ -80,4 +75,3 @@ dependencies {
 apply from: "${rootDir}/gradle/javadoc.gradle"
 apply from: "${rootDir}/gradle/publish.gradle"
 apply from: "${rootDir}/gradle/checkstyle.gradle"
-apply from: "${rootDir}/gradle/jacoco.gradle"

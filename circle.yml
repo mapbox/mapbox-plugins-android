@@ -30,8 +30,8 @@ jobs:
           name: Check Java code style
           command: make checkstyle
       - run:
-          name: Run unit-test and generate Jacoco test report
-          command: ./gradlew jacocoTestReport
+          name: Run unit tests
+          command: make test
       - run:
           name: Generate Activity Sanity tests
           command: make generate-sanity-test

@@ -9,7 +9,7 @@ checkstyle:
 	./gradlew checkstyle
 
 test:
-	./gradlew test
+	./gradlew test --info
 
 build-release:
 	./gradlew assembleRelease
