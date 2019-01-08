@@ -30,14 +30,6 @@ android {
     abortOnError false
   }
 
-  testOptions {
-    unitTests.all {
-      jacoco {
-        includeNoLocationClasses = true
-      }
-    }
-  }
-
   dexOptions {
     maxProcessCount 8
     javaMaxHeapSize "2g"

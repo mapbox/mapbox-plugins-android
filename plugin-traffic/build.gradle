@@ -17,14 +17,6 @@ android {
   lintOptions {
     abortOnError false
   }
-
-  testOptions {
-    unitTests.all {
-      jacoco {
-        includeNoLocationClasses = true
-      }
-    }
-  }
 }
 
 dependencies {
@@ -42,4 +34,3 @@ dependencies {
 apply from: "${rootDir}/gradle/javadoc.gradle"
 apply from: "${rootDir}/gradle/publish.gradle"
 apply from: "${rootDir}/gradle/checkstyle.gradle"
-apply from: "${rootDir}/gradle/jacoco.gradle"
