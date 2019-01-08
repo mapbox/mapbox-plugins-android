@@ -1,5 +1,8 @@
 # Changelog for the Mapbox building plugin
 
+### mapbox-android-plugin-building-v7:0.5.0 - January 8, 2019
+- Update building plugin with Maps SDK 7.0.0 [#795](https://github.com/mapbox/mapbox-plugins-android/pull/795)
+
 ### 0.4.0 - May 23, 2018
 - Updates Map SDK to 6.1.1 [#531](https://github.com/mapbox/mapbox-plugins-android/pull/531)
 
