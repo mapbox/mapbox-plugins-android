@@ -8,3 +8,5 @@ Each Mapbox plugin for Android has a separate changelog that highlights changes 
 * [Places plugin](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-places/CHANGELOG.md)
 * [Offline plugin](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-offline/CHANGELOG.md)
 * [Localization plugin](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-localization/CHANGELOG.md)
+* [Annotation plugin](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-annotation/CHANGELOG.md)
+* [MarkerView plugin](https://github.com/mapbox/mapbox-plugins-android/blob/master/plugin-markerview/CHANGELOG.md)
