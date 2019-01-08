@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### mapbox-android-plugin-places-v7:0.7.0 - January 8, 2019
+ - Update Offline plugin with the Maps SDK v7.0.0 [#789](https://github.com/mapbox/mapbox-plugins-android/pull/789)
+ - Places plugin NPEs fixes [#806](https://github.com/mapbox/mapbox-plugins-android/pull/806)
+
 ### 0.6.0 - September 12, 2018
  - Problem with option 'country' [#554](https://github.com/mapbox/mapbox-plugins-android/pull/554)
  - Update ProGuard to support built-in shrinker of Gradle Plugin [#582](https://github.com/mapbox/mapbox-plugins-android/pull/582)
