@@ -55,6 +55,10 @@ dependencies {
 ```
 5. Click the Sync Project with Gradle Files near the toolbar in Studio.
 
+## Maps SDK compatibility
+
+The Mapbox Plugins for Android are heavily dependent on the major semantic versioning number of the Maps SDK. They either won't compile or hide runtime bugs when paired with a different major version of the Maps SDK. Each plugin's dependency name has a `vX` suffix which states the major version of the Maps SDK that the plugin is compatible with. This suffix makes the transition between versions easier and more educated without the need to jump into changelogs and compare repositories.
+
 ## Help and Usage
 
 This repository includes an app that shows how to use each plugins in this repository. [Check out its code](https://github.com/mapbox/mapbox-plugins-android/tree/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp) for ready-to-use snippets.
