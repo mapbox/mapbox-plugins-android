@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
@@ -64,7 +65,10 @@ public class PlacePickerActivity extends AppCompatActivity implements OnMapReady
     // activity style would cover this issue but this seems to prevent us from getting the users
     // application colorPrimary color.
     getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-    getSupportActionBar().hide();
+    ActionBar actionBar = getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.hide();
+    }
     setContentView(R.layout.mapbox_activity_place_picker);
 
     if (savedInstanceState == null) {
