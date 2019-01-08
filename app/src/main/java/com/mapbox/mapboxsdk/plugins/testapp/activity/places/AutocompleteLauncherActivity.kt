@@ -94,7 +94,7 @@ class AutocompleteLauncherActivity : AppCompatActivity(), OnMapReadyCallback {
                 .build()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_AUTOCOMPLETE) {
             val feature = PlaceAutocomplete.getPlace(data)
