@@ -1,5 +1,10 @@
 # Changelog for the Mapbox offline plugin
 
+### mapbox-android-plugin-offline-v7:0.4.0 - January 8, 2019
+- Update Offline plugin with the Maps SDK v7.0.0 [#789](https://github.com/mapbox/mapbox-plugins-android/pull/789)
+- Cancelling download reworked [#779](https://github.com/mapbox/mapbox-plugins-android/pull/779)
+- Add cancel text and enable/disable map snapshots notification options [#805](https://github.com/mapbox/mapbox-plugins-android/pull/805)
+
 ### 0.3.0 - May 23, 2018
 - Updates the Map SDK to 6.1.3 [#531](https://github.com/mapbox/mapbox-plugins-android/pull/531)
 
