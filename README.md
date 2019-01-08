@@ -50,9 +50,12 @@ repositories {
 }
 
 dependencies {
-  implementation 'com.mapbox.mapboxsdk:PLUGIN_NAME:PLUGIN_VERSION_NUMBER'
+  implementation 'com.mapbox.mapboxsdk:{PLUGIN_NAME}-v{MAJOR_MAPS_SDK_VERSION_NUMBER}:PLUGIN_VERSION_NUMBER'
 }
 ```
+
+Plugin artifacts are versioned based on the major release of the Maps SDK for Android, which means, that each artifact's name has a major version of the Maps SDK it's compatible with appended.
+
 5. Click the Sync Project with Gradle Files near the toolbar in Studio.
 
 ## Maps SDK compatibility
