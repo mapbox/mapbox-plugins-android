@@ -1,5 +1,9 @@
 # Changelog for the Mapbox traffic plugin
 
+### mapbox-android-plugin-traffic-v7:0.8.0 - January 8, 2019
+ - Update Traffic plugin with the Maps SDK v7.0.0 [#793](https://github.com/mapbox/mapbox-plugins-android/pull/793)
+ - Traffic plugin update [#785](https://github.com/mapbox/mapbox-plugins-android/pull/785)
+
 ### 0.7.0 - May 23, 2018
 - Updates the Map SDK to 6.1.3 [#531](https://github.com/mapbox/mapbox-plugins-android/pull/531)
 
