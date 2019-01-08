@@ -35,7 +35,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-	implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-offline:0.5.0-SNAPSHOT'
+	implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-offline-v7:0.5.0-SNAPSHOT'
 }
 ```
 
