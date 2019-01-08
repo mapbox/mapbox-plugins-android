@@ -19,6 +19,7 @@ import java.util.Random
 
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.plugins.testapp.Utils
 import kotlinx.android.synthetic.main.activity_annotation.*
 
 class MarkerViewActivity : AppCompatActivity(), MapboxMap.OnMapLongClickListener, MapboxMap.OnMapClickListener {
@@ -32,8 +33,9 @@ class MarkerViewActivity : AppCompatActivity(), MapboxMap.OnMapLongClickListener
         setContentView(R.layout.activity_annotation)
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync { mapboxMap ->
+            mapboxMap.setStyle(Style.MAPBOX_STREETS) { _ ->
+                findViewById<View>(R.id.fabStyles).setOnClickListener { mapboxMap.setStyle(Utils.nextStyle) }
 
-            mapboxMap.setStyle(Style.MAPBOX_STREETS){
                 mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2.0))
 
                 markerViewManager = MarkerViewManager(mapView, mapboxMap)
