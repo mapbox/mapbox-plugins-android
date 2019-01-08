@@ -2,6 +2,9 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### mapbox-android-plugin-localization-v7:0.7.0 - January 8, 2019
+ - Update localization plugin with the Maps SDK v7.0.0 [#791](https://github.com/mapbox/mapbox-plugins-android/pull/791)
+
 ### 0.6.0 - December 20, 2018
  - Add support for Russian locale [#678](https://github.com/mapbox/mapbox-plugins-android/pull/678)
  - Support for streets v8 sources [#778](https://github.com/mapbox/mapbox-plugins-android/pull/778)
