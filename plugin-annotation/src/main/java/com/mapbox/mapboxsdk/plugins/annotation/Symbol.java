@@ -33,6 +33,7 @@ public class Symbol extends Annotation {
   /**
    * Called to update the underlying data source.
    */
+  @Override
   public void update() {
     symbolManager.updateSource();
   }

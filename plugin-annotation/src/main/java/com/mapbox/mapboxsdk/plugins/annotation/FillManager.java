@@ -94,6 +94,7 @@ public class FillManager extends AnnotationManager<Fill, OnFillClickListener> {
    * Cleanup fill manager, used to clear listeners
    */
   @UiThread
+  @Override
   public void onDestroy() {
     super.onDestroy();
     mapboxMap.removeOnMapClickListener(mapClickResolver);

@@ -94,6 +94,7 @@ public class CircleManager extends AnnotationManager<Circle, OnCircleClickListen
    * Cleanup circle manager, used to clear listeners
    */
   @UiThread
+  @Override
   public void onDestroy() {
     super.onDestroy();
     mapboxMap.removeOnMapClickListener(mapClickResolver);

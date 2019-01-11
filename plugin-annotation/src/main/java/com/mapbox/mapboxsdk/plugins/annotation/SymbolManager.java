@@ -95,6 +95,7 @@ public class SymbolManager extends AnnotationManager<Symbol, OnSymbolClickListen
    * Cleanup symbol manager, used to clear listeners
    */
   @UiThread
+  @Override
   public void onDestroy() {
     super.onDestroy();
     mapboxMap.removeOnMapClickListener(mapClickResolver);
