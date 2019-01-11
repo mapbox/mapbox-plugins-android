@@ -6,12 +6,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
@@ -22,7 +24,7 @@ import com.mapbox.mapboxsdk.plugins.testapp.R;
  * Shows how to use a OnMapClickListener and a OnMapLongClickListener
  * </p>
  */
-public class PressForSymbolActivity extends AppCompatActivity {
+public class PressForSymbolActivity extends AppCompatActivity implements Style.OnStyleLoaded {
 
   public static final String ID_ICON = "id-icon";
   private SymbolManager symbolManager;
@@ -45,23 +47,30 @@ public class PressForSymbolActivity extends AppCompatActivity {
         .bearing(90)
         .build()
       );
-
-      mapboxMap.addImage(ID_ICON, generateBitmap(R.drawable.mapbox_ic_place));
-
-      symbolManager = new SymbolManager(mapView, mapboxMap);
-      symbolManager.setIconAllowOverlap(true);
-      symbolManager.setTextAllowOverlap(true);
-
       mapboxMap.addOnMapLongClickListener(this::addSymbol);
       mapboxMap.addOnMapClickListener(this::addSymbol);
+      mapboxMap.setStyle(new Style.Builder().fromUrl(Style.MAPBOX_STREETS)
+        .withImage(ID_ICON, generateBitmap(R.drawable.mapbox_ic_place)), this);
     });
   }
 
-  private void addSymbol(LatLng point) {
+  @Override
+  public void onStyleLoaded(@NonNull Style style) {
+    symbolManager = new SymbolManager(mapView, mapboxMap, style);
+    symbolManager.setIconAllowOverlap(true);
+    symbolManager.setTextAllowOverlap(true);
+  }
+
+  private boolean addSymbol(LatLng point) {
+    if(symbolManager==null){
+      return false;
+    }
+
     symbolManager.create(new SymbolOptions()
       .withLatLng(point)
       .withIconImage(ID_ICON)
     );
+    return true;
   }
 
   @Override

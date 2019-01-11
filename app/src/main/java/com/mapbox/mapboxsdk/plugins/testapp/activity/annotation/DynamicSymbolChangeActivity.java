@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -14,6 +15,7 @@ import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
@@ -57,22 +59,27 @@ public class DynamicSymbolChangeActivity extends AppCompatActivity {
           .build()
       ));
 
-      mapboxMap.addImage(ID_ICON_1, generateBitmap(R.drawable.mapbox_ic_place));
-      mapboxMap.addImage(ID_ICON_2, generateBitmap(R.drawable.mapbox_ic_offline));
+      mapboxMap.setStyle(new Style.Builder()
+        .fromUrl(Style.MAPBOX_STREETS)
+        .withImage(ID_ICON_1, generateBitmap(R.drawable.mapbox_ic_place),true)
+        .withImage(ID_ICON_2, generateBitmap(R.drawable.mapbox_ic_offline), true)
+        , style -> {
+          symbolManager = new SymbolManager(mapView, mapboxMap, style);
+          symbolManager.setIconAllowOverlap(true);
+          symbolManager.setTextAllowOverlap(true);
 
-      symbolManager = new SymbolManager(mapView, mapboxMap);
-      symbolManager.setIconAllowOverlap(true);
-      symbolManager.setTextAllowOverlap(true);
+          // Create Symbol
+          SymbolOptions SymbolOptions = new SymbolOptions()
+            .withLatLng(LAT_LNG_CHELSEA)
+            .withIconImage(ID_ICON_1);
 
-      // Create Symbol
-      SymbolOptions SymbolOptions = new SymbolOptions()
-        .withLatLng(LAT_LNG_CHELSEA)
-        .withIconImage(ID_ICON_1);
+          symbol = symbolManager.create(SymbolOptions);
+      });
 
-      symbol = symbolManager.create(SymbolOptions);
+
     });
 
-    FloatingActionButton fab = findViewById(R.id.fab);
+    FloatingActionButton fab = findViewById(R.id.fabStyles);
     fab.setVisibility(MapView.VISIBLE);
     fab.setOnClickListener(view -> {
       if (mapboxMap != null) {

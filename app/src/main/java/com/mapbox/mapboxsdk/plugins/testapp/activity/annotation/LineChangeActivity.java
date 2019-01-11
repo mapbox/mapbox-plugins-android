@@ -9,9 +9,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.annotation.Line;
 import com.mapbox.mapboxsdk.plugins.annotation.LineManager;
 import com.mapbox.mapboxsdk.plugins.annotation.LineOptions;
@@ -58,26 +58,24 @@ public class LineChangeActivity extends AppCompatActivity {
 
     mapView = findViewById(R.id.mapView);
     mapView.onCreate(savedInstanceState);
-    mapView.setStyleUrl(Style.MAPBOX_STREETS);
     mapView.getMapAsync(mapboxMap -> {
       mapboxMap.moveCamera(
         CameraUpdateFactory.newLatLngZoom(
-          new LatLng(47.798202,7.573781),
+          new LatLng(47.798202, 7.573781),
           4)
       );
 
-      lineManager = new LineManager(mapView, mapboxMap);
-
-      mapboxMap.setOnPolylineClickListener(polyline -> Toast.makeText(
-        LineChangeActivity.this,
-        "You clicked on polyline with id = " + polyline.getId(),
-        Toast.LENGTH_SHORT
-      ).show());
-
-      lines = lineManager.create(getAllPolylines());
+      mapboxMap.setStyle(new Style.Builder().fromUrl(Style.MAPBOX_STREETS), style -> {
+        lineManager = new LineManager(mapView, mapboxMap, style);
+        lines = lineManager.create(getAllPolylines());
+        lineManager.addClickListener(line -> Toast.makeText(
+          LineChangeActivity.this,
+          "Clicked: " + line.getId(),
+          Toast.LENGTH_SHORT).show());
+      });
     });
 
-    View fab = findViewById(R.id.fab);
+    View fab = findViewById(R.id.fabStyles);
     fab.setVisibility(View.VISIBLE);
     fab.setOnClickListener(view -> {
       if (lineManager != null) {

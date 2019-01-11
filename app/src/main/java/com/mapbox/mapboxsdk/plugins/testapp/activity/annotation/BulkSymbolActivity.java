@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,10 +16,10 @@ import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
@@ -54,19 +53,22 @@ public class BulkSymbolActivity extends AppCompatActivity implements AdapterView
 
     mapView = findViewById(R.id.mapView);
     mapView.onCreate(savedInstanceState);
-    mapView.setStyleUrl(Style.MAPBOX_STREETS);
     mapView.getMapAsync(this::initMap);
   }
 
   private void initMap(MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
-    this.mapboxMap.moveCamera(
+    mapboxMap.moveCamera(
       CameraUpdateFactory.newLatLngZoom(
         new LatLng(38.87031, -77.00897), 10
       )
     );
-    symbolManager = new SymbolManager(mapView, mapboxMap);
-    symbolManager.setIconAllowOverlap(true);
+
+    mapboxMap.setStyle(new Style.Builder().fromUrl(Style.MAPBOX_STREETS), style -> {
+      symbolManager = new SymbolManager(mapView, mapboxMap, style);
+      symbolManager.setIconAllowOverlap(true);
+      loadData(0);
+    });
   }
 
   @Override
@@ -84,6 +86,14 @@ public class BulkSymbolActivity extends AppCompatActivity implements AdapterView
 
   @Override
   public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+    if (mapboxMap.getStyle() == null || !mapboxMap.getStyle().isFullyLoaded()) {
+      return;
+    }
+
+    loadData(position);
+  }
+
+  private void loadData(int position) {
     int amount = Integer.valueOf(getResources().getStringArray(R.array.bulk_marker_list)[position]);
     if (locations == null) {
       progressDialog = ProgressDialog.show(this, "Loading", "Fetching markers", false);

@@ -8,23 +8,31 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.MapboxMapOptions;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.annotation.Fill;
 import com.mapbox.mapboxsdk.plugins.annotation.FillManager;
 import com.mapbox.mapboxsdk.plugins.annotation.FillOptions;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
+import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
+import timber.log.Timber;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import static com.mapbox.mapboxsdk.plugins.testapp.activity.annotation.FillChangeActivity.Config.*;
+import static com.mapbox.mapboxsdk.plugins.testapp.activity.annotation.FillChangeActivity.Config.BLUE_COLOR;
+import static com.mapbox.mapboxsdk.plugins.testapp.activity.annotation.FillChangeActivity.Config.BROKEN_SHAPE_POINTS;
+import static com.mapbox.mapboxsdk.plugins.testapp.activity.annotation.FillChangeActivity.Config.FULL_ALPHA;
+import static com.mapbox.mapboxsdk.plugins.testapp.activity.annotation.FillChangeActivity.Config.NO_ALPHA;
+import static com.mapbox.mapboxsdk.plugins.testapp.activity.annotation.FillChangeActivity.Config.PARTIAL_ALPHA;
+import static com.mapbox.mapboxsdk.plugins.testapp.activity.annotation.FillChangeActivity.Config.RED_COLOR;
+import static com.mapbox.mapboxsdk.plugins.testapp.activity.annotation.FillChangeActivity.Config.STAR_SHAPE_HOLES;
+import static com.mapbox.mapboxsdk.plugins.testapp.activity.annotation.FillChangeActivity.Config.STAR_SHAPE_POINTS;
 
 /**
  * Test activity to showcase the Polygon annotation API & programmatically creating a MapView.
@@ -53,7 +61,6 @@ public class FillChangeActivity extends AppCompatActivity implements OnMapReadyC
     MapboxMapOptions options = new MapboxMapOptions()
       .attributionTintColor(RED_COLOR)
       .compassFadesWhenFacingNorth(false)
-      .styleUrl(Style.MAPBOX_STREETS)
       .camera(new CameraPosition.Builder()
         .target(new LatLng(45.520486, -122.673541))
         .zoom(12)
@@ -71,18 +78,18 @@ public class FillChangeActivity extends AppCompatActivity implements OnMapReadyC
 
   @Override
   public void onMapReady(@NonNull MapboxMap map) {
-    fillManager = new FillManager(mapView, map, "housenum-label");
+    map.setStyle(new Style.Builder().fromUrl(Style.MAPBOX_STREETS), style -> {
+      fillManager = new FillManager(mapView, map, style, "aerialway");
+      fillManager.addClickListener(fill -> Toast.makeText(
+        FillChangeActivity.this,
+        "Clicked: " + fill.getId(),
+        Toast.LENGTH_SHORT).show());
 
-    map.setOnPolygonClickListener(polygon -> Toast.makeText(
-      FillChangeActivity.this,
-      "You clicked on polygon with id = " + polygon.getId(),
-      Toast.LENGTH_SHORT
-    ).show());
-
-    fill = fillManager.create(new FillOptions()
-      .withLatLngs(STAR_SHAPE_POINTS)
-      .withFillColor(ColorUtils.colorToRgbaString(BLUE_COLOR))
-    );
+      fill = fillManager.create(new FillOptions()
+        .withLatLngs(STAR_SHAPE_POINTS)
+        .withFillColor(ColorUtils.colorToRgbaString(BLUE_COLOR))
+      );
+    });
   }
 
   @Override
