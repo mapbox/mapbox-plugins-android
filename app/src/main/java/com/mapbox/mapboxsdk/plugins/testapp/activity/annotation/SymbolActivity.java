@@ -47,7 +47,7 @@ public class SymbolActivity extends AppCompatActivity {
   private static final String MAKI_ICON_AIRPORT = "airport-15";
   private static final String MAKI_ICON_CAR = "car-15";
   private static final String MAKI_ICON_CAFE = "cafe-15";
-  private static final String MAKI_ICON_CIRCLE = "circle-15";
+  private static final String MAKI_ICON_CIRCLE = "fire-station-15";
 
   private final Random random = new Random();
   private final List<ValueAnimator> animators = new ArrayList<>();

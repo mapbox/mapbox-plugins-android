@@ -24,6 +24,8 @@ import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
+import com.mapbox.mapboxsdk.plugins.testapp.Utils;
+
 import timber.log.Timber;
 
 import java.io.*;
@@ -65,6 +67,7 @@ public class BulkSymbolActivity extends AppCompatActivity implements AdapterView
     );
 
     mapboxMap.setStyle(new Style.Builder().fromUrl(Style.MAPBOX_STREETS), style -> {
+      findViewById(R.id.fabStyles).setOnClickListener(v -> mapboxMap.setStyle(Utils.INSTANCE.getNextStyle()));
       symbolManager = new SymbolManager(mapView, mapboxMap, style);
       symbolManager.setIconAllowOverlap(true);
       loadData(0);

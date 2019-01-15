@@ -5,11 +5,10 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -60,9 +59,9 @@ public class DynamicSymbolChangeActivity extends AppCompatActivity {
       ));
 
       mapboxMap.setStyle(new Style.Builder()
-        .fromUrl(Style.MAPBOX_STREETS)
-        .withImage(ID_ICON_1, generateBitmap(R.drawable.mapbox_ic_place),true)
-        .withImage(ID_ICON_2, generateBitmap(R.drawable.mapbox_ic_offline), true)
+          .fromUrl(Style.MAPBOX_STREETS)
+          .withImage(ID_ICON_1, generateBitmap(R.drawable.mapbox_ic_place), true)
+          .withImage(ID_ICON_2, generateBitmap(R.drawable.mapbox_ic_offline), true)
         , style -> {
           symbolManager = new SymbolManager(mapView, mapboxMap, style);
           symbolManager.setIconAllowOverlap(true);
@@ -74,7 +73,7 @@ public class DynamicSymbolChangeActivity extends AppCompatActivity {
             .withIconImage(ID_ICON_1);
 
           symbol = symbolManager.create(SymbolOptions);
-      });
+        });
 
 
     });

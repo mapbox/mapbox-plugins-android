@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -18,9 +19,7 @@ import com.mapbox.mapboxsdk.plugins.annotation.Fill;
 import com.mapbox.mapboxsdk.plugins.annotation.FillManager;
 import com.mapbox.mapboxsdk.plugins.annotation.FillOptions;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
-import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
-import timber.log.Timber;
 
 import java.util.ArrayList;
 import java.util.List;
