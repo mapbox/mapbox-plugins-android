@@ -16,6 +16,7 @@ import com.mapbox.mapboxsdk.plugins.annotation.Line;
 import com.mapbox.mapboxsdk.plugins.annotation.LineManager;
 import com.mapbox.mapboxsdk.plugins.annotation.LineOptions;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
+import com.mapbox.mapboxsdk.plugins.testapp.Utils;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
 
 import java.util.ArrayList;
@@ -66,6 +67,8 @@ public class LineChangeActivity extends AppCompatActivity {
       );
 
       mapboxMap.setStyle(new Style.Builder().fromUrl(Style.MAPBOX_STREETS), style -> {
+        findViewById(R.id.fabStyles).setOnClickListener(v -> mapboxMap.setStyle(Utils.INSTANCE.getNextStyle()));
+
         lineManager = new LineManager(mapView, mapboxMap, style);
         lines = lineManager.create(getAllPolylines());
         lineManager.addClickListener(line -> Toast.makeText(
