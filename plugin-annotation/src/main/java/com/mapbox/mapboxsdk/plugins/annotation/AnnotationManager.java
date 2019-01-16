@@ -333,7 +333,7 @@ public abstract class AnnotationManager<
     @Override
     public boolean onMapClick(@NonNull LatLng point) {
       if (clickListeners.isEmpty()) {
-        return true;
+        return false;
       }
 
       T annotation = queryMapForFeatures(point);
@@ -342,13 +342,13 @@ public abstract class AnnotationManager<
           clickListener.onAnnotationClick(annotation);
         }
       }
-      return true;
+      return false;
     }
 
     @Override
     public boolean onMapLongClick(@NonNull LatLng point) {
       if (longClickListeners.isEmpty()) {
-        return true;
+        return false;
       }
 
       T annotation = queryMapForFeatures(point);
@@ -357,7 +357,7 @@ public abstract class AnnotationManager<
           clickListener.onAnnotationLongClick(annotation);
         }
       }
-      return true;
+      return false;
     }
   }
 
