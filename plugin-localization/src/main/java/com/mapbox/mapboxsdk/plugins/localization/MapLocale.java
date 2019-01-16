@@ -3,6 +3,7 @@ package com.mapbox.mapboxsdk.plugins.localization;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
+import android.util.Log;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
@@ -364,7 +365,35 @@ public final class MapLocale {
    * @since 0.1.0
    */
   @Nullable
-  public static MapLocale getMapLocale(@NonNull Locale locale) {
-    return LOCALE_SET.get(locale);
+  public static MapLocale getMapLocale(@NonNull Locale locale, boolean acceptFallback) {
+    MapLocale foundLocale = LOCALE_SET.get(locale);
+    if (acceptFallback && foundLocale == null) {
+      foundLocale = getMapLocaleFallback(locale);
+    }
+    return foundLocale;
+  }
+
+  /**
+   * Passing in a Locale, you are able to receive the {@link MapLocale} object which it is currently
+   * paired with as a fallback. If this returns null, there was no matching {@link MapLocale} to go along with the
+   * passed in Locale. If you expected a non-null result, you should make sure you used
+   * {@link #addMapLocale(Locale, MapLocale)} before making this call.
+   *
+   * @param locale the locale which you'd like to receive its matching {@link MapLocale}(fallback) if one exists
+   * @return the matching {@link MapLocale} if one exists, otherwise null
+   * @since 0.1.0
+   */
+  @Nullable
+  private static MapLocale getMapLocaleFallback(@NonNull Locale locale) {
+    String fallbackCode = locale.getLanguage().substring(0,2);
+    MapLocale foundMapLocale = null;
+
+    for (Locale possibleLocale: LOCALE_SET.keySet()) {
+      if (possibleLocale.getLanguage().equals(fallbackCode)) {
+        foundMapLocale = LOCALE_SET.get(possibleLocale);
+        break;
+      }
+    }
+    return foundMapLocale;
   }
 }

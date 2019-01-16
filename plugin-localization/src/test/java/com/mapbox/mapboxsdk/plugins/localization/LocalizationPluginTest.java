@@ -46,6 +46,6 @@ public class LocalizationPluginTest {
     thrown.expectMessage(containsString("has no matching MapLocale object. You need to create"));
     LocalizationPlugin localizationPlugin
       = new LocalizationPlugin(mock(MapView.class), mock(MapboxMap.class), style);
-    localizationPlugin.setMapLanguage(new Locale("foo", "bar"));
+    localizationPlugin.setMapLanguage(new Locale("foo", "bar"),false);
   }
 }
