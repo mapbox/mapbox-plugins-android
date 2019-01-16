@@ -22,7 +22,18 @@ public class MapLocaleTest {
     Locale locale = new Locale("foo", "bar");
     MapLocale mapLocale = new MapLocale("abc");
     MapLocale.addMapLocale(locale, mapLocale);
-    MapLocale mapLocale1 = MapLocale.getMapLocale(locale);
+    MapLocale mapLocale1 = MapLocale.getMapLocale(locale,false);
     Assert.assertThat(mapLocale1.getMapLanguage(), equalTo("abc"));
+  }
+
+  @Test
+  public void regionalVariantsCanFallbackCorrectly() throws Exception {
+    Locale localeHN = new Locale("es_HN", "Honduras");
+    MapLocale mapLocale1 = MapLocale.getMapLocale(localeHN,true);
+    assertThat(mapLocale1.getMapLanguage(), equalTo(MapLocale.SPANISH));
+
+    Locale localeUS = new Locale("es_US", "United States of America");
+    MapLocale mapLocale2 = MapLocale.getMapLocale(localeUS,true);
+    assertThat(mapLocale2.getMapLanguage(), equalTo(MapLocale.SPANISH));
   }
 }
