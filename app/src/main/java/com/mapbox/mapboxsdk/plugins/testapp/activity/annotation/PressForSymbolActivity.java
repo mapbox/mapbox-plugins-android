@@ -9,7 +9,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-
+import android.support.v7.app.AppCompatDelegate;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -18,7 +18,6 @@ import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
-import com.mapbox.mapboxsdk.plugins.testapp.Utils;
 
 /**
  * Test activity showcasing to add a Symbol on click.
@@ -26,7 +25,7 @@ import com.mapbox.mapboxsdk.plugins.testapp.Utils;
  * Shows how to use a OnMapClickListener and a OnMapLongClickListener
  * </p>
  */
-public class PressForSymbolActivity extends AppCompatActivity {
+public class PressForSymbolActivity extends AppCompatActivity implements Style.OnStyleLoaded {
 
   public static final String ID_ICON = "id-icon";
   private SymbolManager symbolManager;
@@ -37,7 +36,7 @@ public class PressForSymbolActivity extends AppCompatActivity {
   protected void onCreate(@Nullable final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_annotation);
-
+    AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     mapView = findViewById(R.id.mapView);
     mapView.onCreate(savedInstanceState);
     mapView.getMapAsync(map -> {
@@ -51,20 +50,23 @@ public class PressForSymbolActivity extends AppCompatActivity {
       );
       mapboxMap.addOnMapLongClickListener(this::addSymbol);
       mapboxMap.addOnMapClickListener(this::addSymbol);
-      mapboxMap.setStyle(getStyleBuilder(Style.MAPBOX_STREETS), style -> {
-        findViewById(R.id.fabStyles).setOnClickListener(v ->
-          mapboxMap.setStyle(getStyleBuilder(Utils.INSTANCE.getNextStyle())));
-
-        symbolManager = new SymbolManager(mapView, mapboxMap, style);
-      });
+      mapboxMap.setStyle(new Style.Builder()
+          .fromUrl(Style.MAPBOX_STREETS)
+          .withImage(ID_ICON, generateBitmap(R.drawable.mapbox_ic_place)),
+        PressForSymbolActivity.this);
     });
   }
 
-  private boolean addSymbol(LatLng point) {
-    if (symbolManager == null) {
-      return false;
-    }
+  @Override
+  public void onStyleLoaded(@NonNull Style style) {
+    symbolManager = new SymbolManager(mapView, mapboxMap, style);
+    symbolManager.setIconAllowOverlap(true);
+    symbolManager.setTextAllowOverlap(true);
+    mapboxMap.addOnMapLongClickListener(this::addSymbol);
+    mapboxMap.addOnMapClickListener(this::addSymbol);
+  }
 
+  private boolean addSymbol(LatLng point) {
     symbolManager.create(new SymbolOptions()
       .withLatLng(point)
       .withIconImage(ID_ICON)
