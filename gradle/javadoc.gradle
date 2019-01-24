@@ -6,7 +6,7 @@ android.libraryVariants.all { variant ->
     description = "Generates javadoc for build $name"
     failOnError = false
     destinationDir = new File(destinationDir, variant.baseName)
-    source = variant.javaCompile.source
+    source = variant.sourceSets.collect { it.java.sourceFiles }.inject { m, i -> m + i }
     classpath = files(android.bootClasspath)
     options.windowTitle("$POM_NAME $VERSION_NAME Reference")
     options.docTitle("$POM_NAME $VERSION_NAME")
