@@ -28,7 +28,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
 /**
  * Useful class for quickly adjusting the maps language and the maps camera starting position.
  * You can either use {@link #matchMapLanguageWithDeviceDefault(boolean acceptFallback)} to match the map language with
- * the one being currently used on the device. Using {@link #setMapLanguage(Locale,boolean acceptFallback)} and it's
+ * the one being currently used on the device. Using {@link #setMapLanguage(Locale, boolean acceptFallback)} and it's
  * variants, you can also change the maps language at anytime to any of the supported languages.
  * <p>
  * The plugin uses a fallback logic in case there are missing resources
@@ -139,12 +139,22 @@ public final class LocalizationPlugin {
    * Initializing this class and then calling this method oftentimes will be the only thing you'll
    * need to quickly adjust the map language to the devices specified language.
    *
-   * @param acceptFallback whether a fallback to a language default is desired
+   * @since 0.1.0
+   */
+  public void matchMapLanguageWithDeviceDefault() {
+    setMapLanguage(Locale.getDefault(), false);
+  }
+
+  /**
+   * Initializing this class and then calling this method oftentimes will be the only thing you'll
+   * need to quickly adjust the map language to the devices specified language.
    *
+   * @param acceptFallback whether the locale should fallback to the first declared that matches the language,
+   *                       the fallback locale can be added with {@link MapLocale#addMapLocale(Locale, MapLocale)}
    * @since 0.1.0
    */
   public void matchMapLanguageWithDeviceDefault(boolean acceptFallback) {
-    setMapLanguage(Locale.getDefault(),acceptFallback);
+    setMapLanguage(Locale.getDefault(), acceptFallback);
   }
 
   /**
@@ -165,11 +175,25 @@ public final class LocalizationPlugin {
    * locale you are trying to use, has a complementary {@link MapLocale} for it.
    *
    * @param locale a {@link Locale} which has a complementary {@link MapLocale} for it
-   * @param acceptFallback whether a fallback to a language default is desired
+   * @since 0.1.0
+   */
+  public void setMapLanguage(@NonNull Locale locale) {
+    setMapLanguage(locale, false);
+  }
+
+  /**
+   * If you'd like to set the map language to a specific locale, you can pass it in as a parameter
+   * and MapLocale will try matching the information with one of the MapLocales found in its map.
+   * If one isn't found, a null point exception will be thrown. To prevent this, ensure that the
+   * locale you are trying to use, has a complementary {@link MapLocale} for it.
+   *
+   * @param locale         a {@link Locale} which has a complementary {@link MapLocale} for it
+   * @param acceptFallback whether the locale should fallback to the first declared that matches the language,
+   *                       the fallback locale can be added with {@link MapLocale#addMapLocale(Locale, MapLocale)}
    * @since 0.1.0
    */
   public void setMapLanguage(@NonNull Locale locale, boolean acceptFallback) {
-    MapLocale mapLocale = MapLocale.getMapLocale(locale,acceptFallback);
+    MapLocale mapLocale = MapLocale.getMapLocale(locale, acceptFallback);
     if (mapLocale != null) {
       setMapLanguage(mapLocale);
     } else {
@@ -292,7 +316,7 @@ public final class LocalizationPlugin {
    * @since 0.1.0
    */
   public void setCameraToLocaleCountry(Locale locale, int padding) {
-    MapLocale mapLocale = MapLocale.getMapLocale(locale,false);
+    MapLocale mapLocale = MapLocale.getMapLocale(locale, false);
     if (mapLocale != null) {
       setCameraToLocaleCountry(mapLocale, padding);
     } else {

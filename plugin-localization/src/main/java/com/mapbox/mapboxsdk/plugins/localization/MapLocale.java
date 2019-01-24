@@ -3,7 +3,6 @@ package com.mapbox.mapboxsdk.plugins.localization;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
-import android.util.Log;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
@@ -361,7 +360,24 @@ public final class MapLocale {
    * {@link #addMapLocale(Locale, MapLocale)} before making this call.
    *
    * @param locale the locale which you'd like to receive its matching {@link MapLocale} if one exists
+   * @since 0.1.0
+   */
+  @Nullable
+  public static MapLocale getMapLocale(@NonNull Locale locale) {
+    return getMapLocale(locale, false);
+  }
+
+  /**
+   * Passing in a Locale, you are able to receive the {@link MapLocale} object which it is currently
+   * paired with. If this returns null, there was no matching {@link MapLocale} to go along with the
+   * passed in Locale. If you expected a non-null result, you should make sure you used
+   * {@link #addMapLocale(Locale, MapLocale)} before making this call.
+   *
+   * @param locale         the locale which you'd like to receive its matching {@link MapLocale} if one exists
+   * @param acceptFallback whether the locale should fallback to the first declared that matches the language,
+   *                       the fallback locale can be added with {@link #addMapLocale(Locale, MapLocale)}
    * @return the matching {@link MapLocale} if one exists, otherwise null
+   * @see #getMapLocaleFallback(Locale)
    * @since 0.1.0
    */
   @Nullable
@@ -385,10 +401,10 @@ public final class MapLocale {
    */
   @Nullable
   private static MapLocale getMapLocaleFallback(@NonNull Locale locale) {
-    String fallbackCode = locale.getLanguage().substring(0,2);
+    String fallbackCode = locale.getLanguage().substring(0, 2);
     MapLocale foundMapLocale = null;
 
-    for (Locale possibleLocale: LOCALE_SET.keySet()) {
+    for (Locale possibleLocale : LOCALE_SET.keySet()) {
       if (possibleLocale.getLanguage().equals(fallbackCode)) {
         foundMapLocale = LOCALE_SET.get(possibleLocale);
         break;
