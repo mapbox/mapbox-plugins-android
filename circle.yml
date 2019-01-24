@@ -10,7 +10,7 @@ jobs:
   build:
     working_directory: ~/code
     docker:
-      - image: mbgl/61abee1674:android-ndk-r18
+      - image: mbgl/android-ndk-r19:8e91a7ebab
     environment:
       JVM_OPTS: -Xmx3200m
       BUILDTYPE: Debug
@@ -73,7 +73,7 @@ jobs:
 # ------------------------------------------------------------------------------
   release:
     docker:
-      - image: mbgl/61abee1674:android-ndk-r18
+      - image: mbgl/android-ndk-r19:8e91a7ebab
     working_directory: ~/code
     environment:
       BUILDTYPE: Release
