@@ -2,23 +2,23 @@ ext {
 
   androidVersions = [
       minSdkVersion    : 14,
-      targetSdkVersion : 27,
-      compileSdkVersion: 27,
+      targetSdkVersion : 28,
+      compileSdkVersion: 28,
       buildToolsVersion: '28.0.3'
   ]
 
   version = [
       mapboxMapSdk       : '7.0.1',
-      mapboxJava         : '3.2.0',
-      playLocation       : '15.0.1',
+      mapboxJava         : '4.3.0',
+      playLocation       : '16.0.0',
       autoValue          : '1.5.4',
       autoValueParcel    : '0.2.6',
       junit              : '4.12',
-      supportLib         : '27.1.1',
-      constraintLayout   : '1.1.0',
-      mockito            : '2.18.3',
-      leakCanary         : '1.6.1',
-      timber             : '4.7.0',
+      supportLib         : '28.0.0',
+      constraintLayout   : '1.1.2',
+      mockito            : '2.23.4',
+      leakCanary         : '1.6.3',
+      timber             : '4.7.1',
       testRunner         : '1.0.2',
       espresso           : '3.0.2',
       lifecycleCompiler  : '1.1.1',
@@ -31,8 +31,8 @@ ext {
 
   pluginVersion = [
       checkstyle: '8.10.1',
-      gradle    : '3.2.0',
-      kotlin    : '1.2.51',
+      gradle    : '3.3.0',
+      kotlin    : '1.3.20',
       dokka     : '0.9.17'
   ]
 
