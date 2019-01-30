@@ -4,6 +4,7 @@ import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.util.LongSparseArray;
 
 import com.mapbox.geojson.Feature;
@@ -237,7 +238,7 @@ public abstract class AnnotationManager<
    * @param d the callback to be removed
    */
   @UiThread
-  public void removeClickListener(@NonNull D d) {
+  public void removeDragListener(@NonNull D d) {
     dragListeners.remove(d);
   }
 
@@ -281,6 +282,21 @@ public abstract class AnnotationManager<
     longClickListeners.remove(v);
   }
 
+  @VisibleForTesting
+  List<U> getClickListeners() {
+    return clickListeners;
+  }
+
+  @VisibleForTesting
+  List<V> getLongClickListeners() {
+    return longClickListeners;
+  }
+
+  @VisibleForTesting
+  List<D> getDragListeners() {
+    return dragListeners;
+  }
+
   /**
    * Cleanup annotation manager, used to clear listeners
    */
@@ -300,10 +316,6 @@ public abstract class AnnotationManager<
   abstract void initializeDataDrivenPropertyMap();
 
   abstract void setFilter(@NonNull Expression expression);
-
-  List<D> getDragListeners() {
-    return dragListeners;
-  }
 
   private void initializeSourcesAndLayers() {
     geoJsonSource = coreElementProvider.getSource();

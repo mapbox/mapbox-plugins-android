@@ -365,4 +365,38 @@ public class FillManagerTest {
     assertEquals(expression, fillManager.getFilter());
     assertEquals(expression, fillManager.layerFilter);
   }
+
+  @Test
+  public void testClickListener(){
+    OnFillClickListener listener = mock(OnFillClickListener.class);
+    fillManager = new  FillManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    assertTrue(fillManager.getClickListeners().isEmpty());
+    fillManager.addClickListener(listener);
+    assertTrue(fillManager.getClickListeners().contains(listener));
+    fillManager.removeClickListener(listener);
+    assertTrue( fillManager.getClickListeners().isEmpty());
+  }
+
+  @Test
+  public void testLongClickListener(){
+    OnFillLongClickListener listener = mock(OnFillLongClickListener.class);
+    fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    assertTrue(fillManager.getLongClickListeners().isEmpty());
+    fillManager.addLongClickListener(listener);
+    assertTrue(fillManager.getLongClickListeners().contains(listener));
+    fillManager.removeLongClickListener(listener);
+    assertTrue(fillManager.getLongClickListeners().isEmpty());
+  }
+
+  @Test
+  public void testDragListener(){
+    OnFillDragListener listener = mock(OnFillDragListener.class);
+    fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    assertTrue(fillManager.getDragListeners().isEmpty());
+    fillManager.addDragListener(listener);
+    assertTrue(fillManager.getDragListeners().contains(listener));
+    fillManager.removeDragListener(listener);
+    assertTrue(fillManager.getDragListeners().isEmpty());
+  }
+
 }
