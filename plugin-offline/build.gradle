@@ -37,6 +37,9 @@ dependencies {
   annotationProcessor dependenciesList.autoValue
   compileOnly dependenciesList.autoValue
 
+  // Timber
+  implementation dependenciesList.timber
+
   // Unit testing
   testImplementation dependenciesList.junit
   testImplementation dependenciesList.mockito
