@@ -51,6 +51,9 @@ dependencies {
   implementation dependenciesList.supportV4
   implementation dependenciesList.supportDesign
 
+  // Timber
+  implementation dependenciesList.timber
+
   // AutoValues
   annotationProcessor dependenciesList.autoValuesParcel
   annotationProcessor dependenciesList.autoValue
