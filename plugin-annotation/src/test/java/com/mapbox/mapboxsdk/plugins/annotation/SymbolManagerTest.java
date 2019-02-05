@@ -609,4 +609,38 @@ public class SymbolManagerTest {
     assertEquals(expression, symbolManager.getFilter());
     assertEquals(expression, symbolManager.layerFilter);
   }
+
+  @Test
+  public void testClickListener(){
+    OnSymbolClickListener listener = mock(OnSymbolClickListener.class);
+    symbolManager = new  SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    assertTrue(symbolManager.getClickListeners().isEmpty());
+    symbolManager.addClickListener(listener);
+    assertTrue(symbolManager.getClickListeners().contains(listener));
+    symbolManager.removeClickListener(listener);
+    assertTrue( symbolManager.getClickListeners().isEmpty());
+  }
+
+  @Test
+  public void testLongClickListener(){
+    OnSymbolLongClickListener listener = mock(OnSymbolLongClickListener.class);
+    symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    assertTrue(symbolManager.getLongClickListeners().isEmpty());
+    symbolManager.addLongClickListener(listener);
+    assertTrue(symbolManager.getLongClickListeners().contains(listener));
+    symbolManager.removeLongClickListener(listener);
+    assertTrue(symbolManager.getLongClickListeners().isEmpty());
+  }
+
+  @Test
+  public void testDragListener(){
+    OnSymbolDragListener listener = mock(OnSymbolDragListener.class);
+    symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    assertTrue(symbolManager.getDragListeners().isEmpty());
+    symbolManager.addDragListener(listener);
+    assertTrue(symbolManager.getDragListeners().contains(listener));
+    symbolManager.removeDragListener(listener);
+    assertTrue(symbolManager.getDragListeners().isEmpty());
+  }
+
 }

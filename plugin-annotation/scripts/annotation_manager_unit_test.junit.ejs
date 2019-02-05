@@ -451,4 +451,38 @@ public class <%- camelize(type) %>ManagerTest {
     assertEquals(expression, <%- type %>Manager.getFilter());
     assertEquals(expression, <%- type %>Manager.layerFilter);
   }
+
+  @Test
+  public void testClickListener(){
+    On<%- camelize(type) %>ClickListener listener = mock(On<%- camelize(type) %>ClickListener.class);
+    <%- type  %>Manager = new  <%- camelize(type) %>Manager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    assertTrue(<%- type  %>Manager.getClickListeners().isEmpty());
+    <%- type  %>Manager.addClickListener(listener);
+    assertTrue(<%- type  %>Manager.getClickListeners().contains(listener));
+    <%- type  %>Manager.removeClickListener(listener);
+    assertTrue( <%- type  %>Manager.getClickListeners().isEmpty());
+  }
+
+  @Test
+  public void testLongClickListener(){
+    On<%- camelize(type) %>LongClickListener listener = mock(On<%- camelize(type) %>LongClickListener.class);
+    <%- type  %>Manager = new <%- camelize(type) %>Manager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    assertTrue(<%- type  %>Manager.getLongClickListeners().isEmpty());
+    <%- type  %>Manager.addLongClickListener(listener);
+    assertTrue(<%- type  %>Manager.getLongClickListeners().contains(listener));
+    <%- type  %>Manager.removeLongClickListener(listener);
+    assertTrue(<%- type  %>Manager.getLongClickListeners().isEmpty());
+  }
+
+  @Test
+  public void testDragListener(){
+    On<%- camelize(type) %>DragListener listener = mock(On<%- camelize(type) %>DragListener.class);
+    <%- type  %>Manager = new <%- camelize(type) %>Manager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    assertTrue(<%- type  %>Manager.getDragListeners().isEmpty());
+    <%- type  %>Manager.addDragListener(listener);
+    assertTrue(<%- type  %>Manager.getDragListeners().contains(listener));
+    <%- type  %>Manager.removeDragListener(listener);
+    assertTrue(<%- type  %>Manager.getDragListeners().isEmpty());
+  }
+
 }

@@ -387,4 +387,38 @@ public class LineManagerTest {
     assertEquals(expression, lineManager.getFilter());
     assertEquals(expression, lineManager.layerFilter);
   }
+
+  @Test
+  public void testClickListener(){
+    OnLineClickListener listener = mock(OnLineClickListener.class);
+    lineManager = new  LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    assertTrue(lineManager.getClickListeners().isEmpty());
+    lineManager.addClickListener(listener);
+    assertTrue(lineManager.getClickListeners().contains(listener));
+    lineManager.removeClickListener(listener);
+    assertTrue( lineManager.getClickListeners().isEmpty());
+  }
+
+  @Test
+  public void testLongClickListener(){
+    OnLineLongClickListener listener = mock(OnLineLongClickListener.class);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    assertTrue(lineManager.getLongClickListeners().isEmpty());
+    lineManager.addLongClickListener(listener);
+    assertTrue(lineManager.getLongClickListeners().contains(listener));
+    lineManager.removeLongClickListener(listener);
+    assertTrue(lineManager.getLongClickListeners().isEmpty());
+  }
+
+  @Test
+  public void testDragListener(){
+    OnLineDragListener listener = mock(OnLineDragListener.class);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    assertTrue(lineManager.getDragListeners().isEmpty());
+    lineManager.addDragListener(listener);
+    assertTrue(lineManager.getDragListeners().contains(listener));
+    lineManager.removeDragListener(listener);
+    assertTrue(lineManager.getDragListeners().isEmpty());
+  }
+
 }

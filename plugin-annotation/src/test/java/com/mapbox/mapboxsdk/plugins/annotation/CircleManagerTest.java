@@ -321,4 +321,38 @@ public class CircleManagerTest {
     assertEquals(expression, circleManager.getFilter());
     assertEquals(expression, circleManager.layerFilter);
   }
+
+  @Test
+  public void testClickListener(){
+    OnCircleClickListener listener = mock(OnCircleClickListener.class);
+    circleManager = new  CircleManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    assertTrue(circleManager.getClickListeners().isEmpty());
+    circleManager.addClickListener(listener);
+    assertTrue(circleManager.getClickListeners().contains(listener));
+    circleManager.removeClickListener(listener);
+    assertTrue( circleManager.getClickListeners().isEmpty());
+  }
+
+  @Test
+  public void testLongClickListener(){
+    OnCircleLongClickListener listener = mock(OnCircleLongClickListener.class);
+    circleManager = new CircleManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    assertTrue(circleManager.getLongClickListeners().isEmpty());
+    circleManager.addLongClickListener(listener);
+    assertTrue(circleManager.getLongClickListeners().contains(listener));
+    circleManager.removeLongClickListener(listener);
+    assertTrue(circleManager.getLongClickListeners().isEmpty());
+  }
+
+  @Test
+  public void testDragListener(){
+    OnCircleDragListener listener = mock(OnCircleDragListener.class);
+    circleManager = new CircleManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    assertTrue(circleManager.getDragListeners().isEmpty());
+    circleManager.addDragListener(listener);
+    assertTrue(circleManager.getDragListeners().contains(listener));
+    circleManager.removeDragListener(listener);
+    assertTrue(circleManager.getDragListeners().isEmpty());
+  }
+
 }
