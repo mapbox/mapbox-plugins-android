@@ -201,7 +201,9 @@ public class FillChangeActivity extends AppCompatActivity implements OnMapReadyC
     static final List<List<LatLng>> BROKEN_SHAPE_POINTS =
       new ArrayList<List<LatLng>>() {
         {
-          add(STAR_SHAPE_POINTS.get(0).subList(0, STAR_SHAPE_POINTS.get(0).size() - 3));
+          List<LatLng> latLngs = new ArrayList<>(STAR_SHAPE_POINTS.get(0).subList(0, STAR_SHAPE_POINTS.get(0).size() - 3));
+          latLngs.add(STAR_SHAPE_POINTS.get(0).get(0)); //enclose geometry
+          add(latLngs);
         }
       };
 
