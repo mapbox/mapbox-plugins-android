@@ -2,6 +2,12 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### mapbox-android-plugin-localization-v7:0.8.0 - February 5, 2019
+- Language fallbacks for Localization plugin [#823](https://github.com/mapbox/mapbox-plugins-android/pull/823)
+- Update dependencies and javadoc source reference [#827](https://github.com/mapbox/mapbox-plugins-android/pull/827)
+- Increase usefulness of warning log for Localization sources [#825](https://github.com/mapbox/mapbox-plugins-android/pull/825)
+- Maps SDK v7.1.1 [#820](https://github.com/mapbox/mapbox-plugins-android/pull/820)
+
 ### mapbox-android-plugin-localization-v7:0.7.0 - January 8, 2019
  - Update localization plugin with the Maps SDK v7.0.0 [#791](https://github.com/mapbox/mapbox-plugins-android/pull/791)
 
