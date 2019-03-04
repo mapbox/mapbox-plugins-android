@@ -162,6 +162,15 @@ public abstract class AnnotationManager<
   }
 
   /**
+   * Deletes all annotations from the map.
+   */
+  @UiThread
+  public void deleteAll() {
+    annotations.clear();
+    updateSource();
+  }
+
+  /**
    * Update an annotation on the map.
    *
    * @param annotation annotation to be updated
