@@ -27,6 +27,7 @@ import com.mapbox.mapboxsdk.plugins.testapp.Utils;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
+import timber.log.Timber;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -94,6 +95,7 @@ public class SymbolActivity extends AppCompatActivity {
         .withZIndex(10)
         .setDraggable(true);
       symbol = symbolManager.create(symbolOptions);
+      Timber.e(symbol.toString());
 
       // create nearby symbols
       SymbolOptions nearbyOptions = new SymbolOptions()

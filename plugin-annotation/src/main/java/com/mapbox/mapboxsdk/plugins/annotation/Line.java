@@ -290,4 +290,9 @@ public class Line extends Annotation<LineString> {
 
     return LineString.fromLngLats(resultingPoints);
   }
+
+  @Override
+  String getName() {
+     return "Line";
+  }
 }

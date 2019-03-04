@@ -254,4 +254,9 @@ public class Circle extends Annotation<Point> {
 
     return Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
   }
+
+  @Override
+  String getName() {
+    return "Circle";
+  }
 }
