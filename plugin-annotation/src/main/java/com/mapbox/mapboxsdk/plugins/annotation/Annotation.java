@@ -80,4 +80,43 @@ public abstract class Annotation<T extends Geometry> {
                                       float touchAreaShiftX, float touchAreaShiftY);
 
   abstract void setUsedDataDrivenProperties();
+
+  abstract String getName();
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Annotation<?> that = (Annotation<?>) o;
+
+    if (isDraggable != that.isDraggable) {
+      return false;
+    }
+    if (!jsonObject.equals(that.jsonObject)) {
+      return false;
+    }
+    return geometry.equals(that.geometry);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = jsonObject.hashCode();
+    result = 31 * result + geometry.hashCode();
+    result = 31 * result + (isDraggable ? 1 : 0);
+    return result;
+  }
+
+  @Override
+  public String toString() {
+    return getName()
+      + "{geometry=" + geometry
+      + ", properties=" + jsonObject
+      + ", isDraggable=" + isDraggable
+      + '}';
+  }
 }

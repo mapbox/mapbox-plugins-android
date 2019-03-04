@@ -214,4 +214,9 @@ public class Fill extends Annotation<Polygon> {
 
     return null;
   }
+
+  @Override
+  String getName() {
+    return "Fill";
+  }
 }

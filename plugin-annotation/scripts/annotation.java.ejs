@@ -369,4 +369,19 @@ public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>>
     return null;
   }
 <% } -%>
+
+  @Override
+  String getName() {
+<% if (type === "symbol") { -%>
+    return "Symbol";
+<% } else if (type === "circle")  { -%>
+    return "Circle";
+<% } else if (type === "fill")  { -%>
+    return "Fill";
+<% } else if (type === "line")  { -%>
+     return "Line";
+<% } else { -%>
+    return "Annotation";
+<% } -%>
+  }
 }
