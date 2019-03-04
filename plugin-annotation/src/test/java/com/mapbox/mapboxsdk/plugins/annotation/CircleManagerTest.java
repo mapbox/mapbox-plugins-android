@@ -355,4 +355,14 @@ public class CircleManagerTest {
     assertTrue(circleManager.getDragListeners().isEmpty());
   }
 
+  @Test
+  public void testClearAll() {
+    circleManager = new CircleManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    CircleOptions options = new CircleOptions().withLatLng(new LatLng());
+    circleManager.create(options);
+    assertEquals(1, circleManager.getAnnotations().size());
+    circleManager.deleteAll();
+    assertEquals(0, circleManager.getAnnotations().size());
+  }
+
 }

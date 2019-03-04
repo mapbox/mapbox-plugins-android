@@ -399,4 +399,20 @@ public class FillManagerTest {
     assertTrue(fillManager.getDragListeners().isEmpty());
   }
 
+  @Test
+  public void testClearAll() {
+    fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    List<LatLng>innerLatLngs = new ArrayList<>();
+    innerLatLngs.add(new LatLng());
+    innerLatLngs.add(new LatLng(1,1));
+    innerLatLngs.add(new LatLng(-1,-1));
+    List<List<LatLng>>latLngs = new ArrayList<>();
+    latLngs.add(innerLatLngs);
+    FillOptions options = new FillOptions().withLatLngs(latLngs);
+    fillManager.create(options);
+    assertEquals(1, fillManager.getAnnotations().size());
+    fillManager.deleteAll();
+    assertEquals(0, fillManager.getAnnotations().size());
+  }
+
 }

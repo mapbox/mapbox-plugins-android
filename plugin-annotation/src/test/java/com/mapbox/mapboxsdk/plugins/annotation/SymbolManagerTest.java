@@ -643,4 +643,14 @@ public class SymbolManagerTest {
     assertTrue(symbolManager.getDragListeners().isEmpty());
   }
 
+  @Test
+  public void testClearAll() {
+    symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng());
+    symbolManager.create(options);
+    assertEquals(1, symbolManager.getAnnotations().size());
+    symbolManager.deleteAll();
+    assertEquals(0, symbolManager.getAnnotations().size());
+  }
+
 }

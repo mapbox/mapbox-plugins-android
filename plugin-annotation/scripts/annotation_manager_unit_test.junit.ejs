@@ -453,7 +453,7 @@ public class <%- camelize(type) %>ManagerTest {
   }
 
   @Test
-  public void testClickListener(){
+  public void testClickListener() {
     On<%- camelize(type) %>ClickListener listener = mock(On<%- camelize(type) %>ClickListener.class);
     <%- type  %>Manager = new  <%- camelize(type) %>Manager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     assertTrue(<%- type  %>Manager.getClickListeners().isEmpty());
@@ -464,7 +464,7 @@ public class <%- camelize(type) %>ManagerTest {
   }
 
   @Test
-  public void testLongClickListener(){
+  public void testLongClickListener() {
     On<%- camelize(type) %>LongClickListener listener = mock(On<%- camelize(type) %>LongClickListener.class);
     <%- type  %>Manager = new <%- camelize(type) %>Manager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     assertTrue(<%- type  %>Manager.getLongClickListeners().isEmpty());
@@ -475,7 +475,7 @@ public class <%- camelize(type) %>ManagerTest {
   }
 
   @Test
-  public void testDragListener(){
+  public void testDragListener() {
     On<%- camelize(type) %>DragListener listener = mock(On<%- camelize(type) %>DragListener.class);
     <%- type  %>Manager = new <%- camelize(type) %>Manager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     assertTrue(<%- type  %>Manager.getDragListeners().isEmpty());
@@ -483,6 +483,31 @@ public class <%- camelize(type) %>ManagerTest {
     assertTrue(<%- type  %>Manager.getDragListeners().contains(listener));
     <%- type  %>Manager.removeDragListener(listener);
     assertTrue(<%- type  %>Manager.getDragListeners().isEmpty());
+  }
+
+  @Test
+  public void testClearAll() {
+    <%- type  %>Manager = new <%- camelize(type) %>Manager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+<% if (type === "circle" || type === "symbol") { -%>
+    <%- camelize(type) %>Options options = new <%- camelize(type) %>Options().withLatLng(new LatLng());
+<% } else if (type === "line") { -%>
+    List<LatLng>latLngs = new ArrayList<>();
+    latLngs.add(new LatLng());
+    latLngs.add(new LatLng(1,1));
+    <%- camelize(type) %>Options options = new <%- camelize(type) %>Options().withLatLngs(latLngs);
+<% } else { -%>
+    List<LatLng>innerLatLngs = new ArrayList<>();
+    innerLatLngs.add(new LatLng());
+    innerLatLngs.add(new LatLng(1,1));
+    innerLatLngs.add(new LatLng(-1,-1));
+    List<List<LatLng>>latLngs = new ArrayList<>();
+    latLngs.add(innerLatLngs);
+    <%- camelize(type) %>Options options = new <%- camelize(type) %>Options().withLatLngs(latLngs);
+<% } -%>
+    <%- type  %>Manager.create(options);
+    assertEquals(1, <%- type  %>Manager.getAnnotations().size());
+    <%- type  %>Manager.deleteAll();
+    assertEquals(0, <%- type  %>Manager.getAnnotations().size());
   }
 
 }
