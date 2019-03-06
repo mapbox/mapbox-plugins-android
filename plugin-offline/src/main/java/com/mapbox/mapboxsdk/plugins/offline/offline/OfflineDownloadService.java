@@ -83,13 +83,15 @@ public class OfflineDownloadService extends Service {
   @Override
   public int onStartCommand(final Intent intent, int flags, final int startId) {
     Timber.v("onStartCommand called.");
-    final OfflineDownloadOptions offlineDownload = intent.getParcelableExtra(KEY_BUNDLE);
-    if (offlineDownload != null) {
-      onResolveCommand(intent.getAction(), offlineDownload);
-    } else {
-      stopSelf(startId);
-      throw new NullPointerException("A DownloadOptions instance must be passed into the service to"
-        + " begin downloading.");
+    if (intent != null) {
+      final OfflineDownloadOptions offlineDownload = intent.getParcelableExtra(KEY_BUNDLE);
+      if (offlineDownload != null) {
+        onResolveCommand(intent.getAction(), offlineDownload);
+      } else {
+        stopSelf(startId);
+        throw new NullPointerException("A DownloadOptions instance must be passed into the service to"
+            + " begin downloading.");
+      }
     }
     return START_STICKY;
   }
