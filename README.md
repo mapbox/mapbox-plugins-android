@@ -18,9 +18,9 @@ Plugins are single-purpose libraries built on top of the [Mapbox Maps SDK for An
 
 ## Available Plugins
  
-* [**Annotation:** Simplify the way to set and adjust the visual properties of annotations on a Mapbox map.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-markerview)
+* [**Annotation:** Simplify the way to set and adjust the visual properties of annotations on a Mapbox map.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-annotation)
 
-* [**MarkerView:** Add map markers that are Android views.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-annotation)
+* [**MarkerView:** Add map markers that are Android views.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-markerview)
  
 * [**Traffic:** Adds a real-time traffic layer to any Mapbox base map.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-traffic)
 
@@ -50,10 +50,17 @@ repositories {
 }
 
 dependencies {
-  implementation 'com.mapbox.mapboxsdk:PLUGIN_NAME:PLUGIN_VERSION_NUMBER'
+  implementation 'com.mapbox.mapboxsdk:{PLUGIN_NAME}-v{MAJOR_MAPS_SDK_VERSION_NUMBER}:PLUGIN_VERSION_NUMBER'
 }
 ```
+
+Plugin artifacts are versioned based on the major release of the Maps SDK for Android, which means, that each artifact's name has a major version of the Maps SDK it's compatible with appended.
+
 5. Click the Sync Project with Gradle Files near the toolbar in Studio.
+
+## Maps SDK compatibility
+
+The Mapbox Plugins for Android are heavily dependent on the major semantic versioning number of the Maps SDK. They either won't compile or hide runtime bugs when paired with a different major version of the Maps SDK. Each plugin's dependency name has a `vX` suffix which states the major version of the Maps SDK that the plugin is compatible with. This suffix makes the transition between versions easier and more educated without the need to jump into changelogs and compare repositories.
 
 ## Help and Usage
 

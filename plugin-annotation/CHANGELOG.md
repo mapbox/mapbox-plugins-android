@@ -2,6 +2,22 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### mapbox-android-plugin-annotation-v7:0.5.0 - February 5, 2019
+- Do not flag click events as handled [#822](https://github.com/mapbox/mapbox-plugins-android/pull/822)
+- Update dependencies and javadoc source reference [#827](https://github.com/mapbox/mapbox-plugins-android/pull/827)
+- Fixup remove drag listener naming [#833](https://github.com/mapbox/mapbox-plugins-android/pull/833)
+- Maps SDK v7.1.1 [#820](https://github.com/mapbox/mapbox-plugins-android/pull/820)
+
+### mapbox-android-plugin-annotation-v7:0.4.0 - January 8, 2019
+- Mapbox maps SDK for Android v7.0.0 [#800](https://github.com/mapbox/mapbox-plugins-android/pull/800)
+- Save plugin's state across style changes [#800](https://github.com/mapbox/mapbox-plugins-android/pull/800/commits/cba17474e6087faf94375570700d4edfc52b6dd6)
+- Exposed filter API [#775](https://github.com/mapbox/mapbox-plugins-android/pull/775)
+- Create annotations from FeatureCollection/GeoJSON [#772](https://github.com/mapbox/mapbox-plugins-android/pull/772)
+- Invalid symbol ID during animation fix [#776](https://github.com/mapbox/mapbox-plugins-android/pull/776/commits/c2488010f27107693fd529a01afc2f51ecde03cf)
+- Make package private abstract classes public [#769](https://github.com/mapbox/mapbox-plugins-android/pull/769)
+- Draggable builder option [#768](https://github.com/mapbox/mapbox-plugins-android/pull/768)
+- Generic geometry [#777](https://github.com/mapbox/mapbox-plugins-android/pull/777)
+
 ### 0.3.0 - November 9, 2018
 - Mapbox maps SDK for Android v6.7.0 [#728](https://github.com/mapbox/mapbox-plugins-android/pull/728)
 - Draggable annotations [#753](https://github.com/mapbox/mapbox-plugins-android/pull/753)

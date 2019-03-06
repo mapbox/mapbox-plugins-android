@@ -2,7 +2,6 @@ apply plugin: 'com.android.library'
 
 android {
   compileSdkVersion androidVersions.compileSdkVersion
-  buildToolsVersion androidVersions.buildToolsVersion
 
   defaultConfig {
     minSdkVersion androidVersions.minSdkVersion
@@ -35,11 +34,6 @@ android {
 
   testOptions {
     unitTests {
-      all {
-        jacoco {
-          includeNoLocationClasses = true
-        }
-      }
       includeAndroidResources = true
       returnDefaultValues = true
     }
@@ -56,6 +50,9 @@ dependencies {
   implementation dependenciesList.supportRecyclerView
   implementation dependenciesList.supportV4
   implementation dependenciesList.supportDesign
+
+  // Timber
+  implementation dependenciesList.timber
 
   // AutoValues
   annotationProcessor dependenciesList.autoValuesParcel
@@ -80,4 +77,3 @@ dependencies {
 apply from: "${rootDir}/gradle/javadoc.gradle"
 apply from: "${rootDir}/gradle/publish.gradle"
 apply from: "${rootDir}/gradle/checkstyle.gradle"
-apply from: "${rootDir}/gradle/jacoco.gradle"

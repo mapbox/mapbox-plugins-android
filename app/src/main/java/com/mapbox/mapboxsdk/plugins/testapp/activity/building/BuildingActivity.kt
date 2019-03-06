@@ -7,15 +7,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.SeekBar
-
-import com.mapbox.mapboxsdk.constants.Style
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
+import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.plugins.building.BuildingPlugin
 import com.mapbox.mapboxsdk.plugins.testapp.R
 import com.mapbox.mapboxsdk.style.light.Position
-
 import kotlinx.android.synthetic.main.activity_building.*
 import timber.log.Timber
 
@@ -26,7 +24,6 @@ class BuildingActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var mapboxMap: MapboxMap? = null
     private var buildingPlugin: BuildingPlugin? = null
-    private var isEnabled: Boolean = false
     lateinit var mapView: MapView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,21 +33,22 @@ class BuildingActivity : AppCompatActivity(), OnMapReadyCallback {
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
 
-        fabBuilding.setOnClickListener{ _ ->
+        fabBuilding.setOnClickListener { _ ->
             buildingPlugin?.let {
-                isEnabled = !isEnabled
-                it.setVisibility(isEnabled)
-                Timber.e("Building plugin is enabled :%s", isEnabled)
+                it.setVisibility(!it.isVisible)
+                Timber.e("Building plugin is enabled :%s", it.isVisible)
             }
         }
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
         this.mapboxMap = mapboxMap
-        buildingPlugin = BuildingPlugin(mapView, mapboxMap)
-        buildingPlugin?.setMinZoomLevel(15f)
-        fabBuilding.visibility = View.VISIBLE
-        initLightSeekbar()
+        mapboxMap.setStyle(Style.MAPBOX_STREETS){
+            buildingPlugin = BuildingPlugin(mapView, mapboxMap, it)
+            buildingPlugin?.setMinZoomLevel(15f)
+            fabBuilding.visibility = View.VISIBLE
+            initLightSeekbar()
+        }
     }
 
     // See https://en.wikipedia.org/wiki/Spherical_coordinate_system for more information on these values
@@ -80,7 +78,7 @@ class BuildingActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun invalidateLightPosition() {
-        val light = mapboxMap?.light
+        val light = mapboxMap?.style?.light
         val radialCoordinate = seekbarLightRadialCoordinate.progress.toFloat() / 20
         val azimuthalAngle = seekbarLightAzimuthalAngle.progress.toFloat()
         val polarAngle = seekbarLightPolarAngle.progress.toFloat()

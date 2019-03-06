@@ -6,6 +6,7 @@ import android.widget.Toast
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
+import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.plugins.maps.queryRenderedFeatures
 import com.mapbox.mapboxsdk.plugins.testapp.R
 import kotlinx.android.synthetic.main.activity_maps_ktx.*
@@ -21,16 +22,20 @@ class MapboxKtxActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.OnM
         mapView.getMapAsync(this)
     }
 
-    override fun onMapReady(mapboxMap: MapboxMap?) {
+    override fun onMapReady(mapboxMap: MapboxMap) {
         this.mapboxMap = mapboxMap
-        mapboxMap?.addOnMapClickListener(this)
+        mapboxMap.setStyle(Style.MAPBOX_STREETS) {
+            mapboxMap.addOnMapClickListener(this)
+            Toast.makeText(this,"Click on the map", Toast.LENGTH_SHORT).show()
+        }
     }
 
-    override fun onMapClick(point: LatLng) {
+    override fun onMapClick(point: LatLng): Boolean {
         val features = mapboxMap?.queryRenderedFeatures(point)
         features?.first().let {
             Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
         }
+        return true
     }
 
     public override fun onResume() {
@@ -60,7 +65,7 @@ class MapboxKtxActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.OnM
 
     override fun onDestroy() {
         super.onDestroy()
-        mapboxMap?.removeOnMapClickListener (this)
+        mapboxMap?.removeOnMapClickListener(this)
         mapView.onDestroy()
     }
 

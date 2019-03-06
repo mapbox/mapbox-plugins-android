@@ -1,11 +1,13 @@
 package com.mapbox.mapboxsdk.plugins.localization;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.UiThread;
 
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.localization.MapLocale.Languages;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.Layer;
@@ -25,8 +27,8 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
 
 /**
  * Useful class for quickly adjusting the maps language and the maps camera starting position.
- * You can either use {@link #matchMapLanguageWithDeviceDefault()} to match the map language with
- * the one being currently used on the device. Using {@link #setMapLanguage(Locale)} and it's
+ * You can either use {@link #matchMapLanguageWithDeviceDefault(boolean acceptFallback)} to match the map language with
+ * the one being currently used on the device. Using {@link #setMapLanguage(Locale, boolean acceptFallback)} and it's
  * variants, you can also change the maps language at anytime to any of the supported languages.
  * <p>
  * The plugin uses a fallback logic in case there are missing resources
@@ -40,6 +42,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
  *
  * @since 0.1.0
  */
+@UiThread
 public final class LocalizationPlugin {
 
   private static final List<String> SUPPORTED_SOURCES = new ArrayList<>();
@@ -94,24 +97,38 @@ public final class LocalizationPlugin {
   // configuration
   private final MapboxMap mapboxMap;
   private MapLocale mapLocale;
+  @NonNull
+  private Style style;
 
   /**
-   * Public constructor for passing in the required {@link MapboxMap} object.
+   * Public constructor for passing in the required objects.
    *
+   * @param mapView   the MapView object in which the map is displayed
    * @param mapboxMap the Mapbox map object which your current map view is using for control
-   * @since 0.1.0
+   * @param style     the Style object that represents a fully loaded style
    */
-  public LocalizationPlugin(@NonNull MapView mapview, @NonNull MapboxMap mapboxMap) {
+  public LocalizationPlugin(@NonNull MapView mapView, @NonNull final MapboxMap mapboxMap, @NonNull Style style) {
     this.mapboxMap = mapboxMap;
-    MapView.OnDidFinishLoadingStyleListener styleLoadListener = new MapView.OnDidFinishLoadingStyleListener() {
+    this.style = style;
+    if (!style.isFullyLoaded()) {
+      throw new RuntimeException("The style has to be non-null and fully loaded.");
+    }
+
+    MapView.OnWillStartLoadingMapListener styleLoadListener = new MapView.OnWillStartLoadingMapListener() {
       @Override
-      public void onDidFinishLoadingStyle() {
-        if (mapLocale != null) {
-          setMapLanguage(mapLocale);
-        }
+      public void onWillStartLoadingMap() {
+        mapboxMap.getStyle(new Style.OnStyleLoaded() {
+          @Override
+          public void onStyleLoaded(@NonNull Style style) {
+            LocalizationPlugin.this.style = style;
+            if (mapLocale != null) {
+              setMapLanguage(mapLocale);
+            }
+          }
+        });
       }
     };
-    mapview.addOnDidFinishLoadingStyleListener(styleLoadListener);
+    mapView.addOnWillStartLoadingMapListener(styleLoadListener);
   }
 
   /*
@@ -125,7 +142,19 @@ public final class LocalizationPlugin {
    * @since 0.1.0
    */
   public void matchMapLanguageWithDeviceDefault() {
-    setMapLanguage(Locale.getDefault());
+    setMapLanguage(Locale.getDefault(), false);
+  }
+
+  /**
+   * Initializing this class and then calling this method oftentimes will be the only thing you'll
+   * need to quickly adjust the map language to the devices specified language.
+   *
+   * @param acceptFallback whether the locale should fallback to the first declared that matches the language,
+   *                       the fallback locale can be added with {@link MapLocale#addMapLocale(Locale, MapLocale)}
+   * @since 0.1.0
+   */
+  public void matchMapLanguageWithDeviceDefault(boolean acceptFallback) {
+    setMapLanguage(Locale.getDefault(), acceptFallback);
   }
 
   /**
@@ -149,7 +178,22 @@ public final class LocalizationPlugin {
    * @since 0.1.0
    */
   public void setMapLanguage(@NonNull Locale locale) {
-    MapLocale mapLocale = MapLocale.getMapLocale(locale);
+    setMapLanguage(locale, false);
+  }
+
+  /**
+   * If you'd like to set the map language to a specific locale, you can pass it in as a parameter
+   * and MapLocale will try matching the information with one of the MapLocales found in its map.
+   * If one isn't found, a null point exception will be thrown. To prevent this, ensure that the
+   * locale you are trying to use, has a complementary {@link MapLocale} for it.
+   *
+   * @param locale         a {@link Locale} which has a complementary {@link MapLocale} for it
+   * @param acceptFallback whether the locale should fallback to the first declared that matches the language,
+   *                       the fallback locale can be added with {@link MapLocale#addMapLocale(Locale, MapLocale)}
+   * @since 0.1.0
+   */
+  public void setMapLanguage(@NonNull Locale locale, boolean acceptFallback) {
+    MapLocale mapLocale = MapLocale.getMapLocale(locale, acceptFallback);
     if (mapLocale != null) {
       setMapLanguage(mapLocale);
     } else {
@@ -166,8 +210,13 @@ public final class LocalizationPlugin {
    */
   public void setMapLanguage(@NonNull MapLocale mapLocale) {
     this.mapLocale = mapLocale;
-    List<Layer> layers = mapboxMap.getLayers();
-    for (Source source : mapboxMap.getSources()) {
+    if (!style.isFullyLoaded()) {
+      // We are in progress of loading a new style
+      return;
+    }
+
+    List<Layer> layers = style.getLayers();
+    for (Source source : style.getSources()) {
       if (sourceIsFromMapbox(source)) {
         boolean isStreetsV8 = sourceIsStreetsV8(source);
         for (Layer layer : layers) {
@@ -192,8 +241,8 @@ public final class LocalizationPlugin {
         if (url == null) {
           url = "not found";
         }
-        Timber.w("The \"%s\" source is not based on Mapbox Vector Tiles. Supported sources:\n %s",
-          url, SUPPORTED_SOURCES);
+        Timber.w("The %s (%s) source is not based on Mapbox Vector Tiles. Supported sources:\n %s",
+          source.getId(), url, SUPPORTED_SOURCES);
       }
     }
   }
@@ -267,7 +316,7 @@ public final class LocalizationPlugin {
    * @since 0.1.0
    */
   public void setCameraToLocaleCountry(Locale locale, int padding) {
-    MapLocale mapLocale = MapLocale.getMapLocale(locale);
+    MapLocale mapLocale = MapLocale.getMapLocale(locale, false);
     if (mapLocale != null) {
       setCameraToLocaleCountry(mapLocale, padding);
     } else {

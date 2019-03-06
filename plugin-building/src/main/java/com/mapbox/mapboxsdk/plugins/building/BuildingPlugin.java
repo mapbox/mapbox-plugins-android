@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.layers.FillExtrusionLayer;
 import com.mapbox.mapboxsdk.style.light.Light;
 
@@ -49,7 +50,7 @@ public final class BuildingPlugin {
   private float opacity = 0.6f;
   private float minZoomLevel = 15.0f;
   private Light light;
-  private MapboxMap mapboxMap;
+  private Style style;
 
   /**
    * Create a building plugin.
@@ -58,8 +59,8 @@ public final class BuildingPlugin {
    * @param mapboxMap the MapboxMap to apply building plugin with
    * @since 0.1.0
    */
-  public BuildingPlugin(@NonNull MapView mapView, @NonNull final MapboxMap mapboxMap) {
-    this(mapView, mapboxMap, null);
+  public BuildingPlugin(@NonNull MapView mapView, @NonNull final MapboxMap mapboxMap, @NonNull Style style) {
+    this(mapView, mapboxMap, style, null);
   }
 
   /**
@@ -69,16 +70,24 @@ public final class BuildingPlugin {
    * @param mapboxMap the MapboxMap to apply building plugin with
    * @since 0.1.0
    */
-  public BuildingPlugin(@NonNull MapView mapView, @NonNull final MapboxMap mapboxMap,
+  public BuildingPlugin(@NonNull MapView mapView, @NonNull final MapboxMap mapboxMap, @NonNull Style style,
                         @Nullable final String belowLayer) {
-    this.mapboxMap = mapboxMap;
+    this.style = style;
+    if (!style.isFullyLoaded()) {
+      throw new RuntimeException("The style has to be non-null and fully loaded.");
+    }
+
     initLayer(belowLayer);
-    mapView.addOnMapChangedListener(new MapView.OnMapChangedListener() {
+    mapView.addOnWillStartLoadingMapListener(new MapView.OnWillStartLoadingMapListener() {
       @Override
-      public void onMapChanged(int change) {
-        if (change == MapView.DID_FINISH_LOADING_STYLE && mapboxMap.getLayer(LAYER_ID) == null) {
-          initLayer(belowLayer);
-        }
+      public void onWillStartLoadingMap() {
+        mapboxMap.getStyle(new Style.OnStyleLoaded() {
+          @Override
+          public void onStyleLoaded(@NonNull Style style) {
+            BuildingPlugin.this.style = style;
+            initLayer(belowLayer);
+          }
+        });
       }
     });
   }
@@ -89,7 +98,7 @@ public final class BuildingPlugin {
    * @param belowLayer optionally place the buildings layer below a provided layer id
    */
   private void initLayer(String belowLayer) {
-    light = mapboxMap.getLight();
+    light = style.getLight();
     fillExtrusionLayer = new FillExtrusionLayer(LAYER_ID, "composite");
     fillExtrusionLayer.setSourceLayer("building");
     fillExtrusionLayer.setMinZoom(minZoomLevel);
@@ -110,10 +119,10 @@ public final class BuildingPlugin {
   }
 
   private void addLayer(FillExtrusionLayer fillExtrusionLayer, String belowLayer) {
-    if (belowLayer != null && !belowLayer.isEmpty()) {
-      mapboxMap.addLayerBelow(fillExtrusionLayer, belowLayer);
-    } else {
-      mapboxMap.addLayer(fillExtrusionLayer);
+    if (belowLayer != null && !belowLayer.isEmpty() && style != null) {
+      style.addLayerBelow(fillExtrusionLayer, belowLayer);
+    } else if (style != null) {
+      style.addLayer(fillExtrusionLayer);
     }
   }
 
@@ -135,6 +144,11 @@ public final class BuildingPlugin {
    */
   public void setVisibility(boolean visible) {
     this.visible = visible;
+    if (!style.isFullyLoaded()) {
+      // We are in progress of loading a new style
+      return;
+    }
+
     fillExtrusionLayer.setProperties(visibility(visible ? VISIBLE : NONE));
   }
 
@@ -146,6 +160,11 @@ public final class BuildingPlugin {
    */
   public void setOpacity(@FloatRange(from = 0.0f, to = 1.0f) float opacity) {
     this.opacity = opacity;
+    if (!style.isFullyLoaded()) {
+      // We are in progress of loading a new style
+      return;
+    }
+
     fillExtrusionLayer.setProperties(fillExtrusionOpacity(opacity));
   }
 
@@ -157,6 +176,11 @@ public final class BuildingPlugin {
    */
   public void setColor(@ColorInt int color) {
     this.color = color;
+    if (!style.isFullyLoaded()) {
+      // We are in progress of loading a new style
+      return;
+    }
+
     fillExtrusionLayer.setProperties(fillExtrusionColor(color));
   }
 
@@ -171,6 +195,11 @@ public final class BuildingPlugin {
   public void setMinZoomLevel(@FloatRange(from = MINIMUM_ZOOM, to = MAXIMUM_ZOOM)
                                 float minZoomLevel) {
     this.minZoomLevel = minZoomLevel;
+    if (!style.isFullyLoaded()) {
+      // We are in progress of loading a new style
+      return;
+    }
+
     fillExtrusionLayer.setMinZoom(minZoomLevel);
   }
 

@@ -4,9 +4,12 @@ import android.graphics.Color;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.annotation.VisibleForTesting;
+
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
@@ -14,25 +17,26 @@ import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.Source;
 import com.mapbox.mapboxsdk.style.sources.VectorSource;
-import timber.log.Timber;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
+import timber.log.Timber;
+
 import static com.mapbox.mapboxsdk.style.expressions.Expression.exponential;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.match;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.literal;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.match;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.stop;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineOffset;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineCap;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineColor;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineJoin;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineOffset;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineOpacity;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
 
 /**
@@ -46,12 +50,13 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
  * Use {@link #isVisible()} to validate if the plugin is active or not.
  * </p>
  */
+@UiThread
 public final class TrafficPlugin {
 
   private final MapboxMap mapboxMap;
+  private Style style;
   private final List<String> layerIds = new ArrayList<>();
   private final String belowLayer;
-
   private boolean visible;
 
   /**
@@ -60,8 +65,8 @@ public final class TrafficPlugin {
    * @param mapView   the MapView to apply the traffic plugin to
    * @param mapboxMap the MapboxMap to apply traffic plugin with
    */
-  public TrafficPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
-    this(mapView, mapboxMap, null);
+  public TrafficPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style) {
+    this(mapView, mapboxMap, style, null);
   }
 
   /**
@@ -71,12 +76,16 @@ public final class TrafficPlugin {
    * @param mapboxMap  the MapboxMap to apply traffic plugin with
    * @param belowLayer the layer id where you'd like the traffic to display below
    */
-  public TrafficPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap,
+  public TrafficPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style,
                        @Nullable String belowLayer) {
+    if (!style.isFullyLoaded()) {
+      throw new RuntimeException("The style has to be non-null and fully loaded.");
+    }
+
     this.mapboxMap = mapboxMap;
+    this.style = style;
     this.belowLayer = belowLayer;
-    mapView.addOnDidFinishLoadingStyleListener(new StyleLoadHandler(this));
-    updateState();
+    mapView.addOnWillStartLoadingMapListener(new StyleLoadHandler(this));
   }
 
   /**
@@ -94,30 +103,24 @@ public final class TrafficPlugin {
    * @param visible true for visible, false for none
    */
   public void setVisibility(boolean visible) {
-    Source source = mapboxMap.getSource(TrafficData.SOURCE_ID);
+    this.visible = visible;
+
+    if (!style.isFullyLoaded()) {
+      // We are in progress of loading a new style
+      return;
+    }
+
+    Source source = style.getSource(TrafficData.SOURCE_ID);
     if (source == null) {
       initialise();
     }
 
-    this.visible = visible;
-    List<Layer> layers = mapboxMap.getLayers();
+    List<Layer> layers = style.getLayers();
     for (Layer layer : layers) {
       if (layerIds.contains(layer.getId())) {
         layer.setProperties(visibility(visible ? Property.VISIBLE : Property.NONE));
       }
     }
-  }
-
-  /**
-   * Update the state of the traffic plugin.
-   */
-  private void updateState() {
-    Source source = mapboxMap.getSource(TrafficData.SOURCE_ID);
-    if (source == null) {
-      initialise();
-      return;
-    }
-    setVisibility(visible);
   }
 
   /**
@@ -139,7 +142,7 @@ public final class TrafficPlugin {
    */
   private void addTrafficSource() {
     VectorSource trafficSource = new VectorSource(TrafficData.SOURCE_ID, TrafficData.SOURCE_URL);
-    mapboxMap.addSource(trafficSource);
+    style.addSource(trafficSource);
   }
 
   /**
@@ -185,7 +188,7 @@ public final class TrafficPlugin {
    */
   private String placeLayerBelow() {
     if (belowLayer == null || belowLayer.isEmpty()) {
-      List<Layer> styleLayers = mapboxMap.getLayers();
+      List<Layer> styleLayers = style.getLayers();
       Layer layer;
       for (int i = styleLayers.size() - 1; i >= 0; i--) {
         layer = styleLayers.get(i);
@@ -315,8 +318,8 @@ public final class TrafficPlugin {
    * @param idAboveLayer the id of the layer above
    */
   private void addTrafficLayersToMap(Layer layerCase, Layer layer, String idAboveLayer) {
-    mapboxMap.addLayerBelow(layerCase, idAboveLayer);
-    mapboxMap.addLayerAbove(layer, layerCase.getId());
+    style.addLayerBelow(layerCase, idAboveLayer);
+    style.addLayerAbove(layer, layerCase.getId());
     layerIds.add(layerCase.getId());
     layerIds.add(layer.getId());
   }
@@ -549,7 +552,7 @@ public final class TrafficPlugin {
     static final int CASE_RED = Color.parseColor("#5f1117");
   }
 
-  private static class StyleLoadHandler implements MapView.OnDidFinishLoadingStyleListener {
+  private static class StyleLoadHandler implements MapView.OnWillStartLoadingMapListener {
 
     private WeakReference<TrafficPlugin> trafficPlugin;
 
@@ -558,11 +561,21 @@ public final class TrafficPlugin {
     }
 
     @Override
-    public void onDidFinishLoadingStyle() {
+    public void onWillStartLoadingMap() {
       TrafficPlugin trafficPlugin = this.trafficPlugin.get();
-      if (trafficPlugin != null && trafficPlugin.isVisible()) {
-        trafficPlugin.updateState();
+      if (trafficPlugin != null) {
+        trafficPlugin.onWillStartLoadingMap();
       }
     }
+  }
+
+  private void onWillStartLoadingMap() {
+    mapboxMap.getStyle(new Style.OnStyleLoaded() {
+      @Override
+      public void onStyleLoaded(@NonNull Style style) {
+        TrafficPlugin.this.style = style;
+        setVisibility(visible);
+      }
+    });
   }
 }

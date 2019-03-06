@@ -2,7 +2,6 @@ apply plugin: 'com.android.library'
 
 android {
   compileSdkVersion androidVersions.compileSdkVersion
-  buildToolsVersion androidVersions.buildToolsVersion
 
   defaultConfig {
     minSdkVersion androidVersions.minSdkVersion
@@ -17,14 +16,6 @@ android {
 
   lintOptions {
     abortOnError false
-  }
-
-  testOptions {
-    unitTests.all {
-      jacoco {
-        includeNoLocationClasses = true
-      }
-    }
   }
 
   // Avoid naming conflicts
@@ -46,6 +37,9 @@ dependencies {
   annotationProcessor dependenciesList.autoValue
   compileOnly dependenciesList.autoValue
 
+  // Timber
+  implementation dependenciesList.timber
+
   // Unit testing
   testImplementation dependenciesList.junit
   testImplementation dependenciesList.mockito
@@ -57,4 +51,3 @@ dependencies {
 apply from: "${rootDir}/gradle/javadoc.gradle"
 apply from: "${rootDir}/gradle/publish.gradle"
 apply from: "${rootDir}/gradle/checkstyle.gradle"
-apply from: "${rootDir}/gradle/jacoco.gradle"

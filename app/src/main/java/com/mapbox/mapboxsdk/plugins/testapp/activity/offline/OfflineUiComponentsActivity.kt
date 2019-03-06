@@ -39,7 +39,7 @@ class OfflineUiComponentsActivity : AppCompatActivity() {
         startActivityForResult(intent, REQUEST_CODE)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
             val builder = NotificationOptions.builder(this)
@@ -47,14 +47,14 @@ class OfflineUiComponentsActivity : AppCompatActivity() {
                     .returnActivity(OfflineUiComponentsActivity::class.java.name)
                     .smallIconRes(android.R.drawable.stat_sys_download)
 
-            if (OfflineRegionSelector.getRegionName(data) != null) {
+            if (data?.let { OfflineRegionSelector.getRegionName(it) } != null) {
                 builder.contentText(OfflineRegionSelector.getRegionName(data))
             }
 
             val options = OfflineRegionSelector.getOfflineDownloadOptions(data, builder.build())
             OfflinePlugin.getInstance(this).startDownload(options)
 
-            Toast.makeText(this, String.format(Locale.US, "Region name: %s", OfflineRegionSelector.getRegionName(data)), Toast.LENGTH_LONG).show()
+            Toast.makeText(this, String.format(Locale.US, "Region name: %s", data?.let { OfflineRegionSelector.getRegionName(it) } ?: "null"), Toast.LENGTH_LONG).show()
         } else if (resultCode == Activity.RESULT_CANCELED) {
             Toast.makeText(this, "user canceled out of region selector", Toast.LENGTH_LONG).show()
         }

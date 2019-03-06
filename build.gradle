@@ -1,6 +1,5 @@
 buildscript {
   apply from: "${rootDir}/gradle/dependencies.gradle"
-  apply plugin: 'jacoco'
 
   repositories {
     google()
@@ -25,7 +24,6 @@ allprojects {
 
 subprojects {
   apply plugin: 'idea'
-  apply plugin: 'jacoco'
   apply from: "${rootDir}/gradle/dependencies.gradle"
 }
 

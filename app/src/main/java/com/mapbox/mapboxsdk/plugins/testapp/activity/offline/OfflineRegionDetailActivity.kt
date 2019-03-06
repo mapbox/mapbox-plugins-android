@@ -1,26 +1,21 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.offline
 
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
-
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.offline.OfflineManager
 import com.mapbox.mapboxsdk.offline.OfflineRegion
 import com.mapbox.mapboxsdk.offline.OfflineRegionStatus
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition
 import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions
+import com.mapbox.mapboxsdk.plugins.offline.offline.OfflineConstants.KEY_BUNDLE
 import com.mapbox.mapboxsdk.plugins.offline.offline.OfflineDownloadChangeListener
 import com.mapbox.mapboxsdk.plugins.offline.offline.OfflinePlugin
 import com.mapbox.mapboxsdk.plugins.offline.utils.OfflineUtils
 import com.mapbox.mapboxsdk.plugins.testapp.R
-
-import timber.log.Timber
-
-import com.mapbox.mapboxsdk.plugins.offline.offline.OfflineConstants.KEY_BUNDLE
 import kotlinx.android.synthetic.main.activity_offline_region_detail.*
+import timber.log.Timber
 
 /**
  * Activity showing the detail of an offline region.
@@ -139,29 +134,22 @@ class OfflineRegionDetailActivity : AppCompatActivity(), OfflineDownloadChangeLi
         // update map
         mapView?.getMapAsync { mapboxMap ->
             // correct style
-            mapboxMap.setStyle(definition.styleURL)
+            mapboxMap.setOfflineRegionDefinition(definition) { _ ->
+                // restrict camera movement
+                mapboxMap.setLatLngBoundsForCameraTarget(definition.bounds)
 
-            // position map on top of offline region
-            val cameraPosition = OfflineUtils.getCameraPosition(definition)
-            mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
-
-            // restrict camera movement
-            mapboxMap.setMinZoomPreference(definition.minZoom)
-            mapboxMap.setMaxZoomPreference(definition.maxZoom)
-            mapboxMap.setLatLngBoundsForCameraTarget(definition.bounds)
+                // update textview data
+                offlineRegion?.metadata?.let {
+                    regionName.text = OfflineUtils.convertRegionName(it)
+                }
+                regionStyleUrl.text = definition.styleURL
+                regionLatLngBounds.text = definition.bounds.toString()
+                regionMinZoom.text = definition.minZoom.toString()
+                regionMaxZoom.text = definition.maxZoom.toString()
+                offlineRegion?.getStatus(offlineRegionStatusCallback)
+            }
         }
-
-        // update textview data
-        offlineRegion?.metadata?.let {
-            regionName.text = OfflineUtils.convertRegionName(it)
-        }
-        regionStyleUrl.text = definition.styleURL
-        regionLatLngBounds.text = definition.bounds.toString()
-        regionMinZoom.text = definition.minZoom.toString()
-        regionMaxZoom.text = definition.maxZoom.toString()
-        offlineRegion?.getStatus(offlineRegionStatusCallback)
     }
-
 
     fun onFabClick(view: View) {
         if (offlineRegion != null) {

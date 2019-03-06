@@ -11,11 +11,13 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolDragListener;
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
@@ -24,7 +26,8 @@ import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.Utils;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.Property;
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
+import timber.log.Timber;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,7 +35,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-import static com.mapbox.mapboxsdk.style.expressions.Expression.*;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.eq;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.not;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.toNumber;
 
 /**
  * Activity showcasing adding symbols using the annotation plugin
@@ -42,7 +48,7 @@ public class SymbolActivity extends AppCompatActivity {
   private static final String MAKI_ICON_AIRPORT = "airport-15";
   private static final String MAKI_ICON_CAR = "car-15";
   private static final String MAKI_ICON_CAFE = "cafe-15";
-  private static final String MAKI_ICON_CIRCLE = "circle-15";
+  private static final String MAKI_ICON_CIRCLE = "fire-station-15";
 
   private final Random random = new Random();
   private final List<ValueAnimator> animators = new ArrayList<>();
@@ -60,11 +66,13 @@ public class SymbolActivity extends AppCompatActivity {
 
     mapView = findViewById(R.id.mapView);
     mapView.onCreate(savedInstanceState);
-    mapView.getMapAsync(mapboxMap -> {
+    mapView.getMapAsync(mapboxMap -> mapboxMap.setStyle(Style.MAPBOX_STREETS, style -> {
+      findViewById(R.id.fabStyles).setOnClickListener(v -> mapboxMap.setStyle(Utils.INSTANCE.getNextStyle()));
+
       mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
 
       // create symbol manager
-      symbolManager = new SymbolManager(mapView, mapboxMap);
+      symbolManager = new SymbolManager(mapView, mapboxMap, style);
       symbolManager.addClickListener(symbol -> Toast.makeText(SymbolActivity.this,
         String.format("Symbol clicked %s", symbol.getId()),
         Toast.LENGTH_SHORT
@@ -87,12 +95,13 @@ public class SymbolActivity extends AppCompatActivity {
         .withZIndex(10)
         .setDraggable(true);
       symbol = symbolManager.create(symbolOptions);
+      Timber.e(symbol.toString());
 
       // create nearby symbols
       SymbolOptions nearbyOptions = new SymbolOptions()
         .withLatLng(new LatLng(6.626384, 0.367099))
         .withIconImage(MAKI_ICON_CIRCLE)
-        .withIconColor(PropertyFactory.colorToRgbaString(Color.YELLOW))
+        .withIconColor(ColorUtils.colorToRgbaString(Color.YELLOW))
         .withIconSize(2.5f)
         .withZIndex(5)
         .setDraggable(true);
@@ -131,8 +140,9 @@ public class SymbolActivity extends AppCompatActivity {
         public void onAnnotationDragFinished(Symbol annotation) {
           draggableInfoTv.setVisibility(View.GONE);
         }
+
       });
-    });
+    }));
   }
 
   private LatLng createRandomLatLng() {

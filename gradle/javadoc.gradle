@@ -6,12 +6,12 @@ android.libraryVariants.all { variant ->
     description = "Generates javadoc for build $name"
     failOnError = false
     destinationDir = new File(destinationDir, variant.baseName)
-    source = variant.javaCompile.source
+    source = variant.sourceSets.collect { it.java.sourceFiles }.inject { m, i -> m + i }
     classpath = files(android.bootClasspath)
     options.windowTitle("$POM_NAME $VERSION_NAME Reference")
     options.docTitle("$POM_NAME $VERSION_NAME")
     options.header("$POM_NAME $VERSION_NAME Reference")
-    options.bottom("&copy; 2015&ndash;2018 Mapbox. All rights reserved.")
+    options.bottom("&copy; 2015&ndash;2019 Mapbox. All rights reserved.")
     options.links("http://docs.oracle.com/javase/7/docs/api/")
     options.linksOffline("http://d.android.com/reference/", "$System.env.ANDROID_HOME/docs/reference")
     exclude '**/R.java', '**/BuildConfig.java', '**/*.kt'

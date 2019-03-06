@@ -18,6 +18,8 @@ import com.mapbox.mapboxsdk.plugins.testapp.R
 import java.util.Random
 
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.plugins.testapp.Utils
 import kotlinx.android.synthetic.main.activity_annotation.*
 
 class MarkerViewActivity : AppCompatActivity(), MapboxMap.OnMapLongClickListener, MapboxMap.OnMapClickListener {
@@ -31,14 +33,18 @@ class MarkerViewActivity : AppCompatActivity(), MapboxMap.OnMapLongClickListener
         setContentView(R.layout.activity_annotation)
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync { mapboxMap ->
-            mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2.0))
+            mapboxMap.setStyle(Style.MAPBOX_STREETS) { _ ->
+                findViewById<View>(R.id.fabStyles).setOnClickListener { mapboxMap.setStyle(Utils.nextStyle) }
 
-            markerViewManager = MarkerViewManager(mapView, mapboxMap)
-            createCustomMarker()
-            createRandomMarkers()
+                mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2.0))
 
-            mapboxMap.addOnMapLongClickListener(this@MarkerViewActivity)
-            mapboxMap.addOnMapClickListener(this@MarkerViewActivity)
+                markerViewManager = MarkerViewManager(mapView, mapboxMap)
+                createCustomMarker()
+                createRandomMarkers()
+
+                mapboxMap.addOnMapLongClickListener(this@MarkerViewActivity)
+                mapboxMap.addOnMapClickListener(this@MarkerViewActivity)
+            }
         }
     }
 
@@ -56,7 +62,7 @@ class MarkerViewActivity : AppCompatActivity(), MapboxMap.OnMapLongClickListener
         customView.layoutParams = FrameLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
         val icon = customView.findViewById<View>(R.id.imageview)
         val animationView = customView.findViewById<View>(R.id.animation_layout)
-        icon.setOnClickListener { v ->
+        icon.setOnClickListener { view ->
             val anim = ValueAnimator.ofInt(animationView.measuredWidth, 350)
             anim.interpolator = AccelerateDecelerateInterpolator()
             anim.addUpdateListener { valueAnimator ->
@@ -88,14 +94,16 @@ class MarkerViewActivity : AppCompatActivity(), MapboxMap.OnMapLongClickListener
                 random.nextDouble() * -360.0 + 180.0)
     }
 
-    override fun onMapLongClick(point: LatLng) {
+    override fun onMapLongClick(point: LatLng): Boolean {
         marker?.let {
             markerViewManager?.removeMarker(it)
         }
+        return true
     }
 
-    override fun onMapClick(point: LatLng) {
+    override fun onMapClick(point: LatLng): Boolean {
         marker?.setLatLng(point)
+        return true
     }
 
     override fun onStart() {

@@ -4,13 +4,18 @@ import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.util.LongSparseArray;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.Layer;
+import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
 import java.util.ArrayList;
@@ -39,39 +44,53 @@ public abstract class AnnotationManager<
 
   protected final MapboxMap mapboxMap;
   protected final LongSparseArray<T> annotations = new LongSparseArray<>();
-  protected final Map<String, Boolean> propertyUsageMap = new HashMap<>();
+  final Map<String, Boolean> dataDrivenPropertyUsageMap = new HashMap<>();
+  final Map<String, PropertyValue> constantPropertyUsageMap = new HashMap<>();
+  Expression layerFilter;
 
   private final DraggableAnnotationController<T, D> draggableAnnotationController;
   private final List<D> dragListeners = new ArrayList<>();
   private final List<U> clickListeners = new ArrayList<>();
   private final List<V> longClickListeners = new ArrayList<>();
-  protected long currentId;
+  private long currentId;
 
-  protected final L layer;
-  private final GeoJsonSource geoJsonSource;
+  protected L layer;
+  private GeoJsonSource geoJsonSource;
   private final MapClickResolver mapClickResolver;
   private final Comparator<Feature> comparator;
+  private Style style;
+  private String belowLayerId;
+  private CoreElementProvider<L> coreElementProvider;
 
   @UiThread
-  protected AnnotationManager(MapboxMap mapboxMap,
-                              L layer, GeoJsonSource geoJsonSource, Comparator<Feature> comparator,
+  protected AnnotationManager(MapView mapView, MapboxMap mapboxMap, Style style,
+                              CoreElementProvider<L> coreElementProvider,
+                              Comparator<Feature> comparator,
                               DraggableAnnotationController<T, D> draggableAnnotationController,
                               String belowLayerId) {
-    this.layer = layer;
     this.mapboxMap = mapboxMap;
-    this.geoJsonSource = geoJsonSource;
     this.comparator = comparator;
-    mapboxMap.addSource(geoJsonSource);
+    this.style = style;
+    this.belowLayerId = belowLayerId;
+    this.coreElementProvider = coreElementProvider;
+
+    if (!style.isFullyLoaded()) {
+      throw new RuntimeException("The style has to be non-null and fully loaded.");
+    }
+
     mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver());
     mapboxMap.addOnMapLongClickListener(mapClickResolver);
     this.draggableAnnotationController = draggableAnnotationController;
     draggableAnnotationController.injectAnnotationManager(this);
 
-    if (belowLayerId == null) {
-      mapboxMap.addLayer(layer);
-    } else {
-      mapboxMap.addLayerBelow(layer, belowLayerId);
-    }
+    initializeSourcesAndLayers();
+
+    mapView.addOnWillStartLoadingMapListener(() ->
+      mapboxMap.getStyle(loadedStyle -> {
+        this.style = loadedStyle;
+        initializeSourcesAndLayers();
+      })
+    );
   }
 
   /**
@@ -143,6 +162,15 @@ public abstract class AnnotationManager<
   }
 
   /**
+   * Deletes all annotations from the map.
+   */
+  @UiThread
+  public void deleteAll() {
+    annotations.clear();
+    updateSource();
+  }
+
+  /**
    * Update an annotation on the map.
    *
    * @param annotation annotation to be updated
@@ -175,7 +203,12 @@ public abstract class AnnotationManager<
   }
 
   void internalUpdateSource() {
-    List<Feature>features = new ArrayList<>();
+    if (!style.isFullyLoaded()) {
+      // We are in progress of loading a new style
+      return;
+    }
+
+    List<Feature> features = new ArrayList<>();
     T t;
     for (int i = 0; i < annotations.size(); i++) {
       t = annotations.valueAt(i);
@@ -190,8 +223,8 @@ public abstract class AnnotationManager<
   }
 
   void enableDataDrivenProperty(@NonNull String property) {
-    if (propertyUsageMap.get(property).equals(false)) {
-      propertyUsageMap.put(property, true);
+    if (dataDrivenPropertyUsageMap.get(property).equals(false)) {
+      dataDrivenPropertyUsageMap.put(property, true);
       setDataDrivenPropertyIsUsed(property);
     }
   }
@@ -214,7 +247,7 @@ public abstract class AnnotationManager<
    * @param d the callback to be removed
    */
   @UiThread
-  public void removeClickListener(@NonNull D d) {
+  public void removeDragListener(@NonNull D d) {
     dragListeners.remove(d);
   }
 
@@ -258,6 +291,21 @@ public abstract class AnnotationManager<
     longClickListeners.remove(v);
   }
 
+  @VisibleForTesting
+  List<U> getClickListeners() {
+    return clickListeners;
+  }
+
+  @VisibleForTesting
+  List<V> getLongClickListeners() {
+    return longClickListeners;
+  }
+
+  @VisibleForTesting
+  List<D> getDragListeners() {
+    return dragListeners;
+  }
+
   /**
    * Cleanup annotation manager, used to clear listeners
    */
@@ -274,8 +322,28 @@ public abstract class AnnotationManager<
 
   abstract String getAnnotationIdKey();
 
-  List<D> getDragListeners() {
-    return dragListeners;
+  abstract void initializeDataDrivenPropertyMap();
+
+  abstract void setFilter(@NonNull Expression expression);
+
+  private void initializeSourcesAndLayers() {
+    geoJsonSource = coreElementProvider.getSource();
+    layer = coreElementProvider.getLayer();
+
+    style.addSource(geoJsonSource);
+    if (belowLayerId == null) {
+      style.addLayer(layer);
+    } else {
+      style.addLayerBelow(layer, belowLayerId);
+    }
+
+    initializeDataDrivenPropertyMap();
+    layer.setProperties(constantPropertyUsageMap.values().toArray(new PropertyValue[0]));
+    if (layerFilter != null) {
+      setFilter(layerFilter);
+    }
+
+    updateSource();
   }
 
   /**
@@ -284,9 +352,9 @@ public abstract class AnnotationManager<
   private class MapClickResolver implements MapboxMap.OnMapClickListener, MapboxMap.OnMapLongClickListener {
 
     @Override
-    public void onMapClick(@NonNull LatLng point) {
+    public boolean onMapClick(@NonNull LatLng point) {
       if (clickListeners.isEmpty()) {
-        return;
+        return false;
       }
 
       T annotation = queryMapForFeatures(point);
@@ -295,12 +363,13 @@ public abstract class AnnotationManager<
           clickListener.onAnnotationClick(annotation);
         }
       }
+      return false;
     }
 
     @Override
-    public void onMapLongClick(@NonNull LatLng point) {
+    public boolean onMapLongClick(@NonNull LatLng point) {
       if (longClickListeners.isEmpty()) {
-        return;
+        return false;
       }
 
       T annotation = queryMapForFeatures(point);
@@ -309,6 +378,7 @@ public abstract class AnnotationManager<
           clickListener.onAnnotationLongClick(annotation);
         }
       }
+      return false;
     }
   }
 

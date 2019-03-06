@@ -11,12 +11,14 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.BaseActivityTest;
-import com.mapbox.mapboxsdk.plugins.testapp.activity.building.BuildingActivity;
+import com.mapbox.mapboxsdk.plugins.testapp.activity.TestActivity;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
 import timber.log.Timber;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.Objects;
 
 import static com.mapbox.mapboxsdk.plugins.annotation.MapboxMapAction.invoke;
 import static org.junit.Assert.*;
@@ -35,13 +37,13 @@ public class <%- camelize(type) %>Test extends BaseActivityTest {
 
   @Override
   protected Class getActivityClass() {
-    return BuildingActivity.class;
+    return TestActivity.class;
   }
 
   private void setupAnnotation() {
     Timber.i("Retrieving layer");
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      <%- camelize(type) %>Manager <%- type %>Manager = new <%- camelize(type) %>Manager(((BuildingActivity) rule.getActivity()).getMapView(), mapboxMap);
+      <%- camelize(type) %>Manager <%- type %>Manager = new <%- camelize(type) %>Manager(idlingResource.getMapView(), mapboxMap, Objects.requireNonNull(mapboxMap.getStyle()));
 <% if (type === "circle" || type === "symbol") { -%>
       <%- type %> = <%- type %>Manager.create(new <%- camelize(type) %>Options().withLatLng(new LatLng()));
 <% } else if (type === "line") { -%>

@@ -13,7 +13,7 @@
           android:roundIcon="@mipmap/ic_launcher_round"
           android:supportsRtl="true"
           android:theme="@style/AppTheme"
-          tools:ignore="GoogleAppIndexingWarning">
+          tools:ignore="AllowBackup,GoogleAppIndexingWarning">
     <activity android:name=".activity.FeatureOverviewActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
@@ -62,50 +62,6 @@
       <meta-data
         android:name="@string/category"
         android:value="@string/category_extrusions"/>
-      <meta-data
-        android:name="android.support.PARENT_ACTIVITY"
-        android:value=".activity.FeatureOverviewActivity"/>
-    </activity>
-    <activity
-      android:name=".activity.location.LocationLayerModesActivity"
-      android:description="@string/description_location_modes"
-      android:label="@string/title_location_modes">
-      <meta-data
-        android:name="@string/category"
-        android:value="@string/category_location"/>
-      <meta-data
-        android:name="android.support.PARENT_ACTIVITY"
-        android:value=".activity.FeatureOverviewActivity"/>
-    </activity>
-    <activity
-      android:name=".activity.location.LocationLayerMapChangeActivity"
-      android:description="@string/description_location_map_change"
-      android:label="@string/title_location_map_change">
-      <meta-data
-        android:name="@string/category"
-        android:value="@string/category_location"/>
-      <meta-data
-        android:name="android.support.PARENT_ACTIVITY"
-        android:value=".activity.FeatureOverviewActivity"/>
-    </activity>
-    <activity
-      android:name=".activity.location.ManualLocationUpdatesActivity"
-      android:description="@string/description_location_manual_update"
-      android:label="@string/title_location_manual_update">
-      <meta-data
-        android:name="@string/category"
-        android:value="@string/category_location"/>
-      <meta-data
-        android:name="android.support.PARENT_ACTIVITY"
-        android:value=".activity.FeatureOverviewActivity"/>
-    </activity>
-    <activity
-      android:name=".activity.location.CompassListenerActivity"
-      android:description="@string/description_compass_listener"
-      android:label="@string/title_compass_listener">
-      <meta-data
-        android:name="@string/category"
-        android:value="@string/category_location"/>
       <meta-data
         android:name="android.support.PARENT_ACTIVITY"
         android:value=".activity.FeatureOverviewActivity"/>
@@ -171,17 +127,6 @@
         android:value=".activity.FeatureOverviewActivity"/>
     </activity>
     <activity
-        android:name=".activity.location.LocationLayerFragmentActivity"
-        android:description="@string/description_location_fragment"
-        android:label="@string/title_location_fragment">
-        <meta-data
-            android:name="@string/category"
-            android:value="@string/category_location" />
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".activity.FeatureOverviewActivity" />
-    </activity>
-    <activity
             android:name=".activity.annotation.SymbolActivity"
             android:description="@string/description_symbol"
             android:label="@string/title_symbol">
@@ -193,9 +138,53 @@
               android:value=".activity.FeatureOverviewActivity" />
     </activity>
     <activity
+            android:name=".activity.annotation.PressForSymbolActivity"
+            android:description="@string/description_symbol_press"
+            android:label="@string/title_symbol_press">
+      <meta-data
+              android:name="@string/category"
+              android:value="@string/category_annotation" />
+      <meta-data
+              android:name="android.support.PARENT_ACTIVITY"
+              android:value=".activity.FeatureOverviewActivity" />
+    </activity>
+    <activity
+            android:name=".activity.annotation.BulkSymbolActivity"
+            android:description="@string/description_symbol_bulk"
+            android:label="@string/title_symbol_bulk">
+      <meta-data
+              android:name="@string/category"
+              android:value="@string/category_annotation" />
+      <meta-data
+              android:name="android.support.PARENT_ACTIVITY"
+              android:value=".activity.FeatureOverviewActivity" />
+    </activity>
+    <activity
+            android:name=".activity.annotation.DynamicSymbolChangeActivity"
+            android:description="@string/description_symbol_change"
+            android:label="@string/title_symbol_change">
+      <meta-data
+              android:name="@string/category"
+              android:value="@string/category_annotation" />
+      <meta-data
+              android:name="android.support.PARENT_ACTIVITY"
+              android:value=".activity.FeatureOverviewActivity" />
+    </activity>
+    <activity
             android:name=".activity.annotation.FillActivity"
             android:description="@string/description_fill"
             android:label="@string/title_fill">
+      <meta-data
+              android:name="@string/category"
+              android:value="@string/category_annotation" />
+      <meta-data
+              android:name="android.support.PARENT_ACTIVITY"
+              android:value=".activity.FeatureOverviewActivity" />
+    </activity>
+    <activity
+            android:name=".activity.annotation.FillChangeActivity"
+            android:description="@string/description_fill_change"
+            android:label="@string/title_fill_change">
       <meta-data
               android:name="@string/category"
               android:value="@string/category_annotation" />
@@ -218,6 +207,17 @@
             android:name=".activity.annotation.LineActivity"
             android:description="@string/description_line"
             android:label="@string/title_line">
+      <meta-data
+              android:name="@string/category"
+              android:value="@string/category_annotation" />
+      <meta-data
+              android:name="android.support.PARENT_ACTIVITY"
+              android:value=".activity.FeatureOverviewActivity" />
+    </activity>
+    <activity
+            android:name=".activity.annotation.LineChangeActivity"
+            android:description="@string/description_line_change"
+            android:label="@string/title_line_change">
       <meta-data
               android:name="@string/category"
               android:value="@string/category_annotation" />

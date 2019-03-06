@@ -4,7 +4,6 @@ apply plugin: 'kotlin-kapt'
 
 android {
   compileSdkVersion androidVersions.compileSdkVersion
-  buildToolsVersion androidVersions.buildToolsVersion
 
   defaultConfig {
     minSdkVersion androidVersions.minSdkVersion
@@ -28,14 +27,6 @@ android {
 
   lintOptions {
     abortOnError false
-  }
-
-  testOptions {
-    unitTests.all {
-      jacoco {
-        includeNoLocationClasses = true
-      }
-    }
   }
 
   dexOptions {
@@ -115,7 +106,6 @@ dependencies {
 
   // Plugin modules
   implementation project(':plugin-traffic')
-  implementation project(':plugin-locationlayer')
   implementation project(':plugin-building')
   implementation project(':plugin-places')
   implementation project(':plugin-offline')

@@ -16,8 +16,10 @@ import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.<%- camelize(type) %>Layer;
+import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
 
@@ -40,39 +42,80 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
    * Create a <%- type %> manager, used to manage <%- type %>s.
    *
    * @param mapboxMap the map object to add <%- type %>s to
+   * @param style a valid a fully loaded style object
    */
   @UiThread
-  public <%- camelize(type) %>Manager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
-    this(mapView, mapboxMap, null);
+  public <%- camelize(type) %>Manager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style) {
+    this(mapView, mapboxMap, style, null);
   }
 
   /**
    * Create a <%- type %> manager, used to manage <%- type %>s.
    *
    * @param mapboxMap the map object to add <%- type %>s to
+   * @param style a valid a fully loaded style object
    * @param belowLayerId the id of the layer above the circle layer
    */
   @UiThread
-  public <%- camelize(type) %>Manager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @Nullable String belowLayerId) {
-    this(mapboxMap, new GeoJsonSource(ID_GEOJSON_SOURCE), new <%- camelize(type) %>Layer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE),
-    belowLayerId, new DraggableAnnotationController<>(mapView, mapboxMap));
+  public <%- camelize(type) %>Manager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId) {
+    this(mapView, mapboxMap, style,
+      new CoreElementProvider<<%- camelize(type) %>Layer>() {
+        @Override
+        public <%- camelize(type) %>Layer getLayer() {
+          return new <%- camelize(type) %>Layer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE);
+        }
+
+        @Override
+        public GeoJsonSource getSource() {
+          return new GeoJsonSource(ID_GEOJSON_SOURCE);
+        }
+      },
+     belowLayerId, new DraggableAnnotationController<>(mapView, mapboxMap));
   }
 
   /**
    * Create a <%- type %> manager, used to manage <%- type %>s.
    *
    * @param mapboxMap     the map object to add <%- type %>s to
-   * @param geoJsonSource the geojson source to add <%- type %>s to
-   * @param layer         the <%- type %> layer to visualise <%- camelize(type) %>s with
+   * @param style a valid a fully loaded style object
    */
   @VisibleForTesting
-  public <%- camelize(type) %>Manager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, @NonNull <%- camelize(type) %>Layer layer, @Nullable String belowLayerId, DraggableAnnotationController<<%- camelize(type) %>, On<%- camelize(type) %>DragListener> draggableAnnotationController) {
+  public <%- camelize(type) %>Manager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @NonNull CoreElementProvider<<%- camelize(type) %>Layer> coreElementProvider, @Nullable String belowLayerId, DraggableAnnotationController<<%- camelize(type) %>, On<%- camelize(type) %>DragListener> draggableAnnotationController) {
 <% if (type === "symbol") { -%>
-    super(mapboxMap, layer, geoJsonSource, new SymbolComparator(), draggableAnnotationController, belowLayerId);
+    super(mapView, mapboxMap, style, coreElementProvider, new SymbolComparator(), draggableAnnotationController, belowLayerId);
 <% } else { -%>
-    super(mapboxMap, layer, geoJsonSource, null, draggableAnnotationController, belowLayerId);
+    super(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController, belowLayerId);
 <% } -%>
-    initializeDataDrivenPropertyMap();
+  }
+
+  @Override
+  void initializeDataDrivenPropertyMap() {
+<% for (const property of properties) { -%>
+<% if (supportsPropertyFunction(property)) { -%>
+    dataDrivenPropertyUsageMap.put("<%- property.name %>", false);
+<% } -%>
+<% } -%>
+<% if (type === "symbol") { -%>
+    dataDrivenPropertyUsageMap.put(Z_INDEX, false);
+<% } -%>
+  }
+
+  @Override
+  protected void setDataDrivenPropertyIsUsed(@NonNull String property) {
+    switch (property) {
+<% for (const property of properties) { -%>
+<% if (supportsPropertyFunction(property)) { -%>
+      case "<%- property.name %>":
+        layer.setProperties(<%- camelizeWithLeadingLowercase(property.name) %>(get("<%- property.name %>")));
+        break;
+<% } -%>
+<% } -%>
+<% if (type === "symbol") { -%>
+      case Z_INDEX:
+        layer.setProperties(symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE));
+        break;
+<% } -%>
+    }
   }
 
   /**
@@ -115,35 +158,6 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
     return create(options);
   }
 
-  private void initializeDataDrivenPropertyMap() {
-<% for (const property of properties) { -%>
-<% if (supportsPropertyFunction(property)) { -%>
-    propertyUsageMap.put("<%- property.name %>", false);
-<% } -%>
-<% } -%>
-<% if (type === "symbol") { -%>
-    propertyUsageMap.put(Z_INDEX, false);
-<% } -%>
-  }
-
-  @Override
-  protected void setDataDrivenPropertyIsUsed(@NonNull String property) {
-    switch (property) {
-<% for (const property of properties) { -%>
-<% if (supportsPropertyFunction(property)) { -%>
-      case "<%- property.name %>":
-        layer.setProperties(<%- camelizeWithLeadingLowercase(property.name) %>(get("<%- property.name %>")));
-        break;
-<% } -%>
-<% } -%>
-<% if (type === "symbol") { -%>
-      case Z_INDEX:
-        layer.setProperties(symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE));
-        break;
-<% } -%>
-    }
-  }
-
   /**
    * Get the layer id of the annotation layer.
    *
@@ -182,7 +196,9 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
    * @param value property wrapper value around <%- propertyType(property) %>
    */
   public void set<%- camelize(property.name) %>(<%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), "") %> <%- propertyType(property) %> value) {
-    layer.setProperties(<%- camelizeWithLeadingLowercase(property.name) %>(value));
+    PropertyValue propertyValue = <%- camelizeWithLeadingLowercase(property.name) %>(value);
+    constantPropertyUsageMap.put("<%- property.name %>", propertyValue);
+    layer.setProperties(propertyValue);
   }
 
 <% } -%>
@@ -192,8 +208,10 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
    *
    * @param expression expression
    */
+   @Override
   public void setFilter(@NonNull Expression expression) {
-    layer.setFilter(expression);
+    layerFilter = expression;
+    layer.setFilter(layerFilter);
   }
 
   /**

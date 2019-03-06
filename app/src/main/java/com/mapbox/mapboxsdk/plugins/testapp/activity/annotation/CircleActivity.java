@@ -9,17 +9,17 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.annotation.Circle;
 import com.mapbox.mapboxsdk.plugins.annotation.CircleManager;
 import com.mapbox.mapboxsdk.plugins.annotation.CircleOptions;
 import com.mapbox.mapboxsdk.plugins.annotation.OnCircleDragListener;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.Utils;
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,11 +46,13 @@ public class CircleActivity extends AppCompatActivity {
 
     mapView = findViewById(R.id.mapView);
     mapView.onCreate(savedInstanceState);
-    mapView.getMapAsync(mapboxMap -> {
+    mapView.getMapAsync(mapboxMap -> mapboxMap.setStyle(Style.MAPBOX_STREETS, style -> {
+      findViewById(R.id.fabStyles).setOnClickListener(v -> mapboxMap.setStyle(Utils.INSTANCE.getNextStyle()));
+
       mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
 
       // create circle manager
-      circleManager = new CircleManager(mapView, mapboxMap);
+      circleManager = new CircleManager(mapView, mapboxMap, style);
       circleManager.addClickListener(circle -> Toast.makeText(CircleActivity.this,
         String.format("Circle clicked %s", circle.getId()),
         Toast.LENGTH_SHORT
@@ -63,7 +65,7 @@ public class CircleActivity extends AppCompatActivity {
       // create a fixed circle
       CircleOptions circleOptions = new CircleOptions()
         .withLatLng(new LatLng(6.687337, 0.381457))
-        .withCircleColor(PropertyFactory.colorToRgbaString(Color.YELLOW))
+        .withCircleColor(ColorUtils.colorToRgbaString(Color.YELLOW))
         .withCircleRadius(12f)
         .setDraggable(true);
       circleManager.create(circleOptions);
@@ -74,7 +76,7 @@ public class CircleActivity extends AppCompatActivity {
         int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
         circleOptionsList.add(new CircleOptions()
           .withLatLng(createRandomLatLng())
-          .withCircleColor(PropertyFactory.colorToRgbaString(color))
+          .withCircleColor(ColorUtils.colorToRgbaString(color))
           .withCircleRadius(8f)
           .setDraggable(true)
         );
@@ -107,7 +109,7 @@ public class CircleActivity extends AppCompatActivity {
           draggableInfoTv.setVisibility(View.GONE);
         }
       });
-    });
+    }));
   }
 
   private LatLng createRandomLatLng() {
