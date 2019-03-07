@@ -116,7 +116,7 @@ public class SymbolOptions extends Options<Symbol> {
   /**
    * Set icon-offset to initialise the symbol with.
    *
-   * @param iconOffset the icon-offset value
+   * @param iconOffset the icon-offset value (horizontal, vertical)
    * @return this
    */
   public SymbolOptions withIconOffset(Float[] iconOffset) {
