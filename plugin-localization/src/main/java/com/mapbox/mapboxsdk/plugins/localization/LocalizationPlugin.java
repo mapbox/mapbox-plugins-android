@@ -34,12 +34,13 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
  * The plugin uses a fallback logic in case there are missing resources
  * - if there is no available localization for a label, the plugin will use local name, if it's Latin script based,
  * otherwise English. Traditional Chinese falls back to Simplified Chinese before executing before mentioned logic.
- * <p>
- * The plugin only support Mapbox sources:<br/>
- * - mapbox.mapbox-streets-v6<br/>
- * - mapbox.mapbox-streets-v7<br/>
- * - mapbox.mapbox-streets-v8
- *
+ * </p>
+ * The plugin only support Mapbox sources:
+ * <ul>
+ * <li>- mapbox.mapbox-streets-v6</li>
+ * <li>- mapbox.mapbox-streets-v7</li>
+ * <li>- mapbox.mapbox-streets-v8</li>
+ * </ul>
  * @since 0.1.0
  */
 @UiThread
