@@ -361,6 +361,7 @@ public final class MapLocale {
    *
    * @param locale the locale which you'd like to receive its matching {@link MapLocale} if one exists
    * @since 0.1.0
+   * @return the created MapLocale
    */
   @Nullable
   public static MapLocale getMapLocale(@NonNull Locale locale) {
