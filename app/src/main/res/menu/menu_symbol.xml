@@ -46,6 +46,10 @@
             android:title="Change Z index"
             app:showAsAction="never"/>
     <item
+            android:id="@+id/menu_action_halo"
+            android:title="Add icon halo"
+            app:showAsAction="never"/>
+    <item
             android:id="@+id/menu_action_filter"
             android:title="Filter"
             app:showAsAction="never"/>
