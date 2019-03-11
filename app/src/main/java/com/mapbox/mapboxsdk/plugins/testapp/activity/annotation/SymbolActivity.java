@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -26,6 +25,7 @@ import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.Utils;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.utils.BitmapUtils;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
 import timber.log.Timber;
 
@@ -45,7 +45,7 @@ import static com.mapbox.mapboxsdk.style.expressions.Expression.toNumber;
  */
 public class SymbolActivity extends AppCompatActivity {
 
-  private static final String MAKI_ICON_AIRPORT = "airport-15";
+  private static final String ID_ICON_AIRPORT = "airport";
   private static final String MAKI_ICON_CAR = "car-15";
   private static final String MAKI_ICON_CAFE = "cafe-15";
   private static final String MAKI_ICON_CIRCLE = "fire-station-15";
@@ -71,6 +71,10 @@ public class SymbolActivity extends AppCompatActivity {
 
       mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
 
+      style.addImage(ID_ICON_AIRPORT,
+        BitmapUtils.getBitmapFromDrawable(getResources().getDrawable(R.drawable.ic_airplanemode_active_black_24dp)),
+        true);
+
       // create symbol manager
       symbolManager = new SymbolManager(mapView, mapboxMap, style);
       symbolManager.addClickListener(symbol -> Toast.makeText(SymbolActivity.this,
@@ -90,7 +94,7 @@ public class SymbolActivity extends AppCompatActivity {
       // create a symbol
       SymbolOptions symbolOptions = new SymbolOptions()
         .withLatLng(new LatLng(6.687337, 0.381457))
-        .withIconImage(MAKI_ICON_AIRPORT)
+        .withIconImage(ID_ICON_AIRPORT)
         .withIconSize(1.3f)
         .withZIndex(10)
         .setDraggable(true);
@@ -191,6 +195,10 @@ public class SymbolActivity extends AppCompatActivity {
       symbol.setTextSize(22f);
     } else if (item.getItemId() == R.id.menu_action_z_index) {
       symbol.setZIndex(0);
+    } else if (item.getItemId() == R.id.menu_action_halo) {
+      symbol.setIconHaloWidth(5.0f);
+      symbol.setIconHaloColor(Color.RED);
+      symbol.setIconHaloBlur(1.0f);
     } else if (item.getItemId() == R.id.menu_action_animate) {
       resetSymbol();
       easeSymbol(symbol, new LatLng(6.687337, 0.381457), 180);
