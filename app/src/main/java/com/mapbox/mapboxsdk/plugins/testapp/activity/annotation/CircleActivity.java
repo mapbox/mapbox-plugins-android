@@ -168,7 +168,11 @@ public class CircleActivity extends AppCompatActivity {
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    circleManager.onDestroy();
+
+    if (circleManager != null) {
+      circleManager.onDestroy();
+    }
+
     mapView.onDestroy();
   }
 

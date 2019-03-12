@@ -114,7 +114,11 @@ public class PressForSymbolActivity extends AppCompatActivity {
     super.onDestroy();
     mapboxMap.removeOnMapClickListener(this::addSymbol);
     mapboxMap.removeOnMapLongClickListener(this::addSymbol);
-    symbolManager.onDestroy();
+
+    if (symbolManager != null) {
+      symbolManager.onDestroy();
+    }
+
     mapView.onDestroy();
   }
 

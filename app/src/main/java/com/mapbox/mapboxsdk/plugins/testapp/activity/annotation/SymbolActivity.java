@@ -287,7 +287,11 @@ public class SymbolActivity extends AppCompatActivity {
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    symbolManager.onDestroy();
+
+    if (symbolManager != null) {
+      symbolManager.onDestroy();
+    }
+
     mapView.onDestroy();
   }
 

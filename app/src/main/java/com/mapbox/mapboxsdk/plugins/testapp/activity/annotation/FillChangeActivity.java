@@ -124,7 +124,11 @@ public class FillChangeActivity extends AppCompatActivity implements OnMapReadyC
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    fillManager.onDestroy();
+
+    if (fillManager != null) {
+      fillManager.onDestroy();
+    }
+
     mapView.onDestroy();
   }
 

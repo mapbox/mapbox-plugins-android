@@ -146,7 +146,11 @@ public class LineActivity extends AppCompatActivity {
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    lineManager.onDestroy();
+
+    if (lineManager != null) {
+      lineManager.onDestroy();
+    }
+
     mapView.onDestroy();
   }
 
