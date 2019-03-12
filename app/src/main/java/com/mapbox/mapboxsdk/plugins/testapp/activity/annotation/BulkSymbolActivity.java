@@ -186,7 +186,11 @@ public class BulkSymbolActivity extends AppCompatActivity implements AdapterView
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    symbolManager.onDestroy();
+
+    if (symbolManager != null) {
+      symbolManager.onDestroy();
+    }
+
     mapView.onDestroy();
   }
 

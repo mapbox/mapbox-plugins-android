@@ -155,7 +155,11 @@ public class FillActivity extends AppCompatActivity {
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    fillManager.onDestroy();
+
+    if (fillManager != null) {
+      fillManager.onDestroy();
+    }
+
     mapView.onDestroy();
   }
 
