@@ -89,12 +89,6 @@ public final class LocalizationPlugin {
   private static final String STEP_REGEX = "\\[\"zoom\"], ";
   private static final String STEP_TEMPLATE = "[\"zoom\"], \"\", ";
 
-  // legacy token syntax
-  private static final String TOKEN_TEMPLATE = "{%s}";
-  private static final String TOKEN_REGEX = "[{]((name).*?)[}]";
-  private static final String TOKEN_NAME = "{name";
-  private static final String TOKEN_ABBR = "{abbr}";
-
   // configuration
   private final MapboxMap mapboxMap;
   private MapLocale mapLocale;
@@ -229,8 +223,6 @@ public final class LocalizationPlugin {
               } else {
                 convertExpression(mapLocale, layer, textFieldProperty);
               }
-            } else {
-              convertToken(mapLocale, layer, textFieldProperty);
             }
           }
         }
@@ -245,15 +237,6 @@ public final class LocalizationPlugin {
         Timber.w("The %s (%s) source is not based on Mapbox Vector Tiles. Supported sources:\n %s",
           source.getId(), url, SUPPORTED_SOURCES);
       }
-    }
-  }
-
-  private void convertToken(@NonNull MapLocale mapLocale, Layer layer, PropertyValue<?> textFieldProperty) {
-    String text = (String) textFieldProperty.getValue();
-    if (text != null && (text.contains(TOKEN_NAME) || text.contains(TOKEN_ABBR))) {
-      layer.setProperties(textField(text.replaceAll(
-        TOKEN_REGEX, String.format(TOKEN_TEMPLATE, mapLocale.getMapLanguage())
-      )));
     }
   }
 
