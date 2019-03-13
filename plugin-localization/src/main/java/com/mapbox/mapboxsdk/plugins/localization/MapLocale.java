@@ -86,9 +86,9 @@ public final class MapLocale {
   public static final String CHINESE = "name_zh";
 
   /**
-   * Chinese (if available)
+   * Traditional Chinese (if available)
    */
-  static final String CHINESE_V8 = "name_zh-Hant";
+  static final String TRADITIONAL_CHINESE = "name_zh-Hant";
 
   /**
    * Simplified Chinese (if available)
@@ -106,8 +106,8 @@ public final class MapLocale {
   public static final String KOREAN = "name_ko";
 
   @Retention(SOURCE)
-  @StringDef( {LOCAL_NAME, ENGLISH, FRENCH, SIMPLIFIED_CHINESE, ARABIC, SPANISH, GERMAN, PORTUGUESE,
-    RUSSIAN, CHINESE, JAPANESE, KOREAN})
+  @StringDef( {LOCAL_NAME, ARABIC, CHINESE, SIMPLIFIED_CHINESE, TRADITIONAL_CHINESE, ENGLISH,
+          FRENCH, GERMAN, JAPANESE, KOREAN, PORTUGUESE, RUSSIAN, SPANISH})
   public @interface Languages {
   }
 
@@ -144,6 +144,13 @@ public final class MapLocale {
     .include(new LatLng(15.775416, 134.773911)).build();
 
   /**
+   * Taiwan Bounding Box extracted from Open Street Map
+   */
+  static final LatLngBounds TAIWAN_BBOX = new LatLngBounds.Builder()
+          .include(new LatLng(26.389444, 118.115255566105))
+          .include(new LatLng(21.733333, 122.107778)).build();
+
+  /**
    * Germany Bounding Box extracted from Open Street Map
    */
   static final LatLngBounds GERMANY_BBOX = new LatLngBounds.Builder()
@@ -170,13 +177,6 @@ public final class MapLocale {
   static final LatLngBounds FRANCE_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(51.092804, -5.142222))
     .include(new LatLng(41.371582, 9.561556)).build();
-
-  /**
-   * Peoples Republic of China Bounding Box extracted from Open Street Map
-   */
-  static final LatLngBounds PRC_BBOX = new LatLngBounds.Builder()
-    .include(new LatLng(53.56086, 73.557693))
-    .include(new LatLng(15.775416, 134.773911)).build();
 
   /**
    * Russian Bounding box extracted from Open Street Map
@@ -224,7 +224,7 @@ public final class MapLocale {
   /**
    * Useful constant for country.
    */
-  public static final MapLocale PRC = new MapLocale(SIMPLIFIED_CHINESE, PRC_BBOX);
+  public static final MapLocale TAIWAN = new MapLocale(TRADITIONAL_CHINESE, TAIWAN_BBOX);
 
   /**
    * Useful constant for country.
@@ -268,7 +268,7 @@ public final class MapLocale {
     LOCALE_SET.put(Locale.CANADA_FRENCH, MapLocale.CANADA_FRENCH);
     LOCALE_SET.put(Locale.CANADA, MapLocale.CANADA);
     LOCALE_SET.put(Locale.CHINA, MapLocale.CHINA);
-    LOCALE_SET.put(Locale.PRC, MapLocale.PRC);
+    LOCALE_SET.put(Locale.TAIWAN, MapLocale.TAIWAN);
     LOCALE_SET.put(Locale.UK, MapLocale.UK);
     LOCALE_SET.put(Locale.JAPAN, MapLocale.JAPAN);
     LOCALE_SET.put(Locale.KOREA, MapLocale.KOREA);
