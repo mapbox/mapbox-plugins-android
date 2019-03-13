@@ -260,11 +260,6 @@ public final class LocalizationPlugin {
 
       String mapLanguage = mapLocale.getMapLanguage();
       if (!mapLanguage.equals(MapLocale.ENGLISH)) {
-        if (mapLanguage.equals(MapLocale.CHINESE)) {
-          // in streets v8 tiles chinese is declared as "name_zh-Hant" instead of "name_zh"
-          mapLanguage = MapLocale.CHINESE_V8;
-        }
-
         stringExpression = stringExpression.replaceAll(EXPRESSION_V8_REGEX_BASE,
           String.format(Locale.US,
             EXPRESSION_V8_TEMPLATE_LOCALIZED,
