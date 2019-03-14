@@ -227,6 +227,16 @@ public final class MapLocale {
   public static final MapLocale TAIWAN = new MapLocale(TRADITIONAL_CHINESE, TAIWAN_BBOX);
 
   /**
+   * Useful constant for country. General Simplified Chinese
+   */
+  public static final MapLocale  CHINESE_HANS = new MapLocale(SIMPLIFIED_CHINESE);
+
+  /**
+   * Useful constant for country. General Traditional Chinese
+   */
+  public static final MapLocale CHINESE_HANT = new MapLocale(TRADITIONAL_CHINESE);
+
+  /**
    * Useful constant for country.
    */
   public static final MapLocale UK = new MapLocale(ENGLISH, UK_BBOX);
@@ -276,6 +286,28 @@ public final class MapLocale {
     LOCALE_SET.put(Locale.FRANCE, MapLocale.FRANCE);
     LOCALE_SET.put(new Locale("ru", "RU"), RUSSIA);
     LOCALE_SET.put(new Locale("es", "ES"), SPAIN);
+
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+      Locale zh_CN_Hans = new Locale.Builder().setLanguage("zh").setRegion("CN").setScript("Hans").build();
+      Locale zh_HK_Hans = new Locale.Builder().setLanguage("zh").setRegion("HK").setScript("Hans").build();
+      Locale zh_MO_Hans = new Locale.Builder().setLanguage("zh").setRegion("MO").setScript("Hans").build();
+      Locale zh_SG_Hans = new Locale.Builder().setLanguage("zh").setRegion("SG").setScript("Hans").build();
+
+      Locale zh_TW_Hant = new Locale.Builder().setLanguage("zh").setRegion("TW").setScript("Hant").build();
+      Locale zh_HK_Hant = new Locale.Builder().setLanguage("zh").setRegion("HK").setScript("Hant").build();
+      Locale zh_MO_Hant = new Locale.Builder().setLanguage("zh").setRegion("MO").setScript("Hant").build();
+
+      // streets v8 supports name_zh-Hans(MapLocale.CHINESE_HANS) and name_zh-Hant(MapLocale.CHINESE_HANT)
+      // https://docs.mapbox.com/vector-tiles/reference/mapbox-streets-v8/#name-text--name_lang-code-text
+      LOCALE_SET.put(zh_CN_Hans, MapLocale.CHINESE_HANS);
+      LOCALE_SET.put(zh_HK_Hans, MapLocale.CHINESE_HANS);
+      LOCALE_SET.put(zh_MO_Hans, MapLocale.CHINESE_HANS);
+      LOCALE_SET.put(zh_SG_Hans, MapLocale.CHINESE_HANS);
+
+      LOCALE_SET.put(zh_TW_Hant, MapLocale.TAIWAN);
+      LOCALE_SET.put(zh_HK_Hant, MapLocale.CHINESE_HANT);
+      LOCALE_SET.put(zh_MO_Hant, MapLocale.CHINESE_HANT);
+    }
   }
 
   private final LatLngBounds countryBounds;
