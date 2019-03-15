@@ -15,6 +15,7 @@ import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
 
@@ -184,6 +185,9 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
   // Property accessors
   /**
    * Get the LineCap property
+   * <p>
+   * The display of line endings.
+   * </p>
    *
    * @return property wrapper value around String
    */
@@ -193,6 +197,9 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
 
   /**
    * Set the LineCap property
+   * <p>
+   * The display of line endings.
+   * </p>
    *
    * @param value property wrapper value around String
    */
@@ -204,6 +211,9 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
 
   /**
    * Get the LineMiterLimit property
+   * <p>
+   * Used to automatically convert miter joins to bevel joins for sharp angles.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -213,6 +223,9 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
 
   /**
    * Set the LineMiterLimit property
+   * <p>
+   * Used to automatically convert miter joins to bevel joins for sharp angles.
+   * </p>
    *
    * @param value property wrapper value around Float
    */
@@ -224,6 +237,9 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
 
   /**
    * Get the LineRoundLimit property
+   * <p>
+   * Used to automatically convert round joins to miter joins for shallow angles.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -233,6 +249,9 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
 
   /**
    * Set the LineRoundLimit property
+   * <p>
+   * Used to automatically convert round joins to miter joins for shallow angles.
+   * </p>
    *
    * @param value property wrapper value around Float
    */
@@ -244,6 +263,9 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
 
   /**
    * Get the LineTranslate property
+   * <p>
+   * The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
+   * </p>
    *
    * @return property wrapper value around Float[]
    */
@@ -253,6 +275,9 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
 
   /**
    * Set the LineTranslate property
+   * <p>
+   * The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
+   * </p>
    *
    * @param value property wrapper value around Float[]
    */
@@ -264,6 +289,9 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
 
   /**
    * Get the LineTranslateAnchor property
+   * <p>
+   * Controls the frame of reference for {@link PropertyFactory#lineTranslate}.
+   * </p>
    *
    * @return property wrapper value around String
    */
@@ -273,6 +301,9 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
 
   /**
    * Set the LineTranslateAnchor property
+   * <p>
+   * Controls the frame of reference for {@link PropertyFactory#lineTranslate}.
+   * </p>
    *
    * @param value property wrapper value around String
    */
@@ -284,6 +315,9 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
 
   /**
    * Get the LineDasharray property
+   * <p>
+   * Specifies the lengths of the alternating dashes and gaps that form the dash pattern. The lengths are later scaled by the line width. To convert a dash length to density-independent pixels, multiply the length by the current line width. Note that GeoJSON sources with `lineMetrics: true` specified won't render dashed lines to the expected scale. Also note that zoom-dependent expressions will be evaluated only at integer zoom levels.
+   * </p>
    *
    * @return property wrapper value around Float[]
    */
@@ -293,6 +327,9 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
 
   /**
    * Set the LineDasharray property
+   * <p>
+   * Specifies the lengths of the alternating dashes and gaps that form the dash pattern. The lengths are later scaled by the line width. To convert a dash length to density-independent pixels, multiply the length by the current line width. Note that GeoJSON sources with `lineMetrics: true` specified won't render dashed lines to the expected scale. Also note that zoom-dependent expressions will be evaluated only at integer zoom levels.
+   * </p>
    *
    * @param value property wrapper value around Float[]
    */

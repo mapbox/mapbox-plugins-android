@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import com.google.gson.*;
 import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -33,7 +34,9 @@ public class FillOptions extends Options<Fill> {
 
   /**
    * Set fill-opacity to initialise the fill with.
-   *
+   * <p>
+   * The opacity of the entire fill layer. In contrast to the {@link PropertyFactory#fillColor}, this value will also affect the 1px stroke around the fill, if the stroke is used.
+   * </p>
    * @param fillOpacity the fill-opacity value
    * @return this
    */
@@ -44,7 +47,9 @@ public class FillOptions extends Options<Fill> {
 
   /**
    * Get the current configured  fill-opacity for the fill
-   *
+   * <p>
+   * The opacity of the entire fill layer. In contrast to the {@link PropertyFactory#fillColor}, this value will also affect the 1px stroke around the fill, if the stroke is used.
+   * </p>
    * @return fillOpacity value
    */
   public Float getFillOpacity() {
@@ -53,7 +58,9 @@ public class FillOptions extends Options<Fill> {
 
   /**
    * Set fill-color to initialise the fill with.
-   *
+   * <p>
+   * The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
+   * </p>
    * @param fillColor the fill-color value
    * @return this
    */
@@ -64,7 +71,9 @@ public class FillOptions extends Options<Fill> {
 
   /**
    * Get the current configured  fill-color for the fill
-   *
+   * <p>
+   * The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
+   * </p>
    * @return fillColor value
    */
   public String getFillColor() {
@@ -73,7 +82,9 @@ public class FillOptions extends Options<Fill> {
 
   /**
    * Set fill-outline-color to initialise the fill with.
-   *
+   * <p>
+   * The outline color of the fill. Matches the value of {@link PropertyFactory#fillColor} if unspecified.
+   * </p>
    * @param fillOutlineColor the fill-outline-color value
    * @return this
    */
@@ -84,7 +95,9 @@ public class FillOptions extends Options<Fill> {
 
   /**
    * Get the current configured  fill-outline-color for the fill
-   *
+   * <p>
+   * The outline color of the fill. Matches the value of {@link PropertyFactory#fillColor} if unspecified.
+   * </p>
    * @return fillOutlineColor value
    */
   public String getFillOutlineColor() {
@@ -93,7 +106,9 @@ public class FillOptions extends Options<Fill> {
 
   /**
    * Set fill-pattern to initialise the fill with.
-   *
+   * <p>
+   * Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
+   * </p>
    * @param fillPattern the fill-pattern value
    * @return this
    */
@@ -104,7 +119,9 @@ public class FillOptions extends Options<Fill> {
 
   /**
    * Get the current configured  fill-pattern for the fill
-   *
+   * <p>
+   * Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
+   * </p>
    * @return fillPattern value
    */
   public String getFillPattern() {

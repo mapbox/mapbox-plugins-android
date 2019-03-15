@@ -611,7 +611,7 @@ public class SymbolManagerTest {
   }
 
   @Test
-  public void testClickListener(){
+  public void testClickListener() {
     OnSymbolClickListener listener = mock(OnSymbolClickListener.class);
     symbolManager = new  SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     assertTrue(symbolManager.getClickListeners().isEmpty());
@@ -622,7 +622,7 @@ public class SymbolManagerTest {
   }
 
   @Test
-  public void testLongClickListener(){
+  public void testLongClickListener() {
     OnSymbolLongClickListener listener = mock(OnSymbolLongClickListener.class);
     symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     assertTrue(symbolManager.getLongClickListeners().isEmpty());
@@ -633,7 +633,7 @@ public class SymbolManagerTest {
   }
 
   @Test
-  public void testDragListener(){
+  public void testDragListener() {
     OnSymbolDragListener listener = mock(OnSymbolDragListener.class);
     symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     assertTrue(symbolManager.getDragListeners().isEmpty());

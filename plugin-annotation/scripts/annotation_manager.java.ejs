@@ -20,6 +20,7 @@ import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.<%- camelize(type) %>Layer;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
 
@@ -183,6 +184,9 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
 <% if (!supportsPropertyFunction(property) && property.name !== "line-gradient" && property.name !== "symbol-z-order") { -%>
   /**
    * Get the <%- camelize(property.name) %> property
+   * <p>
+   * <%- propertyFactoryMethodDoc(property) %>
+   * </p>
    *
    * @return property wrapper value around <%- propertyType(property) %>
    */
@@ -192,6 +196,9 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
 
   /**
    * Set the <%- camelize(property.name) %> property
+   * <p>
+   * <%- propertyFactoryMethodDoc(property) %>
+   * </p>
    *
    * @param value property wrapper value around <%- propertyType(property) %>
    */

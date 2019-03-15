@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -174,6 +175,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the IconSize property
+   * <p>
+   * Scales the original size of the icon by the provided factor. The new pixel size of the image will be the original pixel size multiplied by {@link PropertyFactory#iconSize}. 1 is the original size; 3 triples the size of the image.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -183,6 +187,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Set the IconSize property
+   * <p>
+   * Scales the original size of the icon by the provided factor. The new pixel size of the image will be the original pixel size multiplied by {@link PropertyFactory#iconSize}. 1 is the original size; 3 triples the size of the image.
+   * </p>
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
@@ -195,6 +202,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the IconImage property
+   * <p>
+   * Name of image in sprite to use for drawing an image background.
+   * </p>
    *
    * @return property wrapper value around String
    */
@@ -204,6 +214,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Set the IconImage property
+   * <p>
+   * Name of image in sprite to use for drawing an image background.
+   * </p>
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
@@ -216,6 +229,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the IconRotate property
+   * <p>
+   * Rotates the icon clockwise.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -225,6 +241,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Set the IconRotate property
+   * <p>
+   * Rotates the icon clockwise.
+   * </p>
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
@@ -237,6 +256,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the IconOffset property
+   * <p>
+   * Offset distance of icon from its anchor. Positive values indicate right and down, while negative values indicate left and up. Each component is multiplied by the value of {@link PropertyFactory#iconSize} to obtain the final offset in density-independent pixels. When combined with {@link PropertyFactory#iconRotate} the offset will be as if the rotated direction was up.
+   * </p>
    *
    * @return PointF value for Float[]
    */
@@ -248,8 +270,12 @@ public class Symbol extends Annotation<Point> {
   /**
    * Set the IconOffset property.
    * <p>
+   * Offset distance of icon from its anchor. Positive values indicate right and down, while negative values indicate left and up. Each component is multiplied by the value of {@link PropertyFactory#iconSize} to obtain the final offset in density-independent pixels. When combined with {@link PropertyFactory#iconRotate} the offset will be as if the rotated direction was up.
+   * </p>
+   * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
+   *
    * @param pointF value for Float[]
    */
   public void setIconOffset(PointF pointF) {
@@ -261,6 +287,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the IconAnchor property
+   * <p>
+   * Part of the icon placed closest to the anchor.
+   * </p>
    *
    * @return property wrapper value around String
    */
@@ -270,6 +299,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Set the IconAnchor property
+   * <p>
+   * Part of the icon placed closest to the anchor.
+   * </p>
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
@@ -282,6 +314,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the TextField property
+   * <p>
+   * Value to use for a text label. If a plain `string` is provided, it will be treated as a `formatted` with default/inherited formatting options.
+   * </p>
    *
    * @return property wrapper value around String
    */
@@ -291,6 +326,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Set the TextField property
+   * <p>
+   * Value to use for a text label. If a plain `string` is provided, it will be treated as a `formatted` with default/inherited formatting options.
+   * </p>
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
@@ -303,6 +341,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the TextFont property
+   * <p>
+   * Font stack to use for displaying text.
+   * </p>
    *
    * @return property wrapper value around String[]
    */
@@ -318,8 +359,12 @@ public class Symbol extends Annotation<Point> {
   /**
    * Set the TextFont property.
    * <p>
+   * Font stack to use for displaying text.
+   * </p>
+   * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
+   *
    * @param value constant property value for String[]
    */
   public void setTextFont(String[] value) {
@@ -332,6 +377,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the TextSize property
+   * <p>
+   * Font size.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -341,6 +389,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Set the TextSize property
+   * <p>
+   * Font size.
+   * </p>
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
@@ -353,6 +404,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the TextMaxWidth property
+   * <p>
+   * The maximum line width for text wrapping.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -362,6 +416,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Set the TextMaxWidth property
+   * <p>
+   * The maximum line width for text wrapping.
+   * </p>
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
@@ -374,6 +431,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the TextLetterSpacing property
+   * <p>
+   * Text tracking amount.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -383,6 +443,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Set the TextLetterSpacing property
+   * <p>
+   * Text tracking amount.
+   * </p>
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
@@ -395,6 +458,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the TextJustify property
+   * <p>
+   * Text justification options.
+   * </p>
    *
    * @return property wrapper value around String
    */
@@ -404,6 +470,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Set the TextJustify property
+   * <p>
+   * Text justification options.
+   * </p>
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
@@ -416,6 +485,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the TextAnchor property
+   * <p>
+   * Part of the text placed closest to the anchor.
+   * </p>
    *
    * @return property wrapper value around String
    */
@@ -425,6 +497,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Set the TextAnchor property
+   * <p>
+   * Part of the text placed closest to the anchor.
+   * </p>
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
@@ -437,6 +512,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the TextRotate property
+   * <p>
+   * Rotates the text clockwise.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -446,6 +524,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Set the TextRotate property
+   * <p>
+   * Rotates the text clockwise.
+   * </p>
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
@@ -458,6 +539,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the TextTransform property
+   * <p>
+   * Specifies how to capitalize text, similar to the CSS {@link PropertyFactory#textTransform} property.
+   * </p>
    *
    * @return property wrapper value around String
    */
@@ -467,6 +551,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Set the TextTransform property
+   * <p>
+   * Specifies how to capitalize text, similar to the CSS {@link PropertyFactory#textTransform} property.
+   * </p>
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
@@ -479,6 +566,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the TextOffset property
+   * <p>
+   * Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up.
+   * </p>
    *
    * @return PointF value for Float[]
    */
@@ -490,8 +580,12 @@ public class Symbol extends Annotation<Point> {
   /**
    * Set the TextOffset property.
    * <p>
+   * Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up.
+   * </p>
+   * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
+   *
    * @param pointF value for Float[]
    */
   public void setTextOffset(PointF pointF) {
@@ -503,6 +597,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the IconOpacity property
+   * <p>
+   * The opacity at which the icon will be drawn.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -512,6 +609,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Set the IconOpacity property
+   * <p>
+   * The opacity at which the icon will be drawn.
+   * </p>
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
@@ -524,6 +624,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the IconColor property
+   * <p>
+   * The color of the icon. This can only be used with sdf icons.
+   * </p>
    *
    * @return color value for String
    */
@@ -534,6 +637,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Set the IconColor property
+   * <p>
+   * The color of the icon. This can only be used with sdf icons.
+   * </p>
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
@@ -546,6 +652,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the IconHaloColor property
+   * <p>
+   * The color of the icon's halo. Icon halos can only be used with SDF icons.
+   * </p>
    *
    * @return color value for String
    */
@@ -556,6 +665,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Set the IconHaloColor property
+   * <p>
+   * The color of the icon's halo. Icon halos can only be used with SDF icons.
+   * </p>
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
@@ -568,6 +680,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the IconHaloWidth property
+   * <p>
+   * Distance of halo to the icon outline.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -577,6 +692,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Set the IconHaloWidth property
+   * <p>
+   * Distance of halo to the icon outline.
+   * </p>
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
@@ -589,6 +707,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the IconHaloBlur property
+   * <p>
+   * Fade out the halo towards the outside.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -598,6 +719,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Set the IconHaloBlur property
+   * <p>
+   * Fade out the halo towards the outside.
+   * </p>
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
@@ -610,6 +734,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the TextOpacity property
+   * <p>
+   * The opacity at which the text will be drawn.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -619,6 +746,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Set the TextOpacity property
+   * <p>
+   * The opacity at which the text will be drawn.
+   * </p>
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
@@ -631,6 +761,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the TextColor property
+   * <p>
+   * The color with which the text will be drawn.
+   * </p>
    *
    * @return color value for String
    */
@@ -641,6 +774,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Set the TextColor property
+   * <p>
+   * The color with which the text will be drawn.
+   * </p>
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
@@ -653,6 +789,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the TextHaloColor property
+   * <p>
+   * The color of the text's halo, which helps it stand out from backgrounds.
+   * </p>
    *
    * @return color value for String
    */
@@ -663,6 +802,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Set the TextHaloColor property
+   * <p>
+   * The color of the text's halo, which helps it stand out from backgrounds.
+   * </p>
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
@@ -675,6 +817,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the TextHaloWidth property
+   * <p>
+   * Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -684,6 +829,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Set the TextHaloWidth property
+   * <p>
+   * Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
+   * </p>
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>
@@ -696,6 +844,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Get the TextHaloBlur property
+   * <p>
+   * The halo's fadeout distance towards the outside.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -705,6 +856,9 @@ public class Symbol extends Annotation<Point> {
 
   /**
    * Set the TextHaloBlur property
+   * <p>
+   * The halo's fadeout distance towards the outside.
+   * </p>
    * <p>
    * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
    * <p>

@@ -367,7 +367,7 @@ public class FillManagerTest {
   }
 
   @Test
-  public void testClickListener(){
+  public void testClickListener() {
     OnFillClickListener listener = mock(OnFillClickListener.class);
     fillManager = new  FillManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     assertTrue(fillManager.getClickListeners().isEmpty());
@@ -378,7 +378,7 @@ public class FillManagerTest {
   }
 
   @Test
-  public void testLongClickListener(){
+  public void testLongClickListener() {
     OnFillLongClickListener listener = mock(OnFillLongClickListener.class);
     fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     assertTrue(fillManager.getLongClickListeners().isEmpty());
@@ -389,7 +389,7 @@ public class FillManagerTest {
   }
 
   @Test
-  public void testDragListener(){
+  public void testDragListener() {
     OnFillDragListener listener = mock(OnFillDragListener.class);
     fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     assertTrue(fillManager.getDragListeners().isEmpty());

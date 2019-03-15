@@ -15,6 +15,7 @@ import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.FillLayer;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
 
@@ -168,6 +169,9 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
   // Property accessors
   /**
    * Get the FillAntialias property
+   * <p>
+   * Whether or not the fill should be antialiased.
+   * </p>
    *
    * @return property wrapper value around Boolean
    */
@@ -177,6 +181,9 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
 
   /**
    * Set the FillAntialias property
+   * <p>
+   * Whether or not the fill should be antialiased.
+   * </p>
    *
    * @param value property wrapper value around Boolean
    */
@@ -188,6 +195,9 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
 
   /**
    * Get the FillTranslate property
+   * <p>
+   * The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
+   * </p>
    *
    * @return property wrapper value around Float[]
    */
@@ -197,6 +207,9 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
 
   /**
    * Set the FillTranslate property
+   * <p>
+   * The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
+   * </p>
    *
    * @param value property wrapper value around Float[]
    */
@@ -208,6 +221,9 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
 
   /**
    * Get the FillTranslateAnchor property
+   * <p>
+   * Controls the frame of reference for {@link PropertyFactory#fillTranslate}.
+   * </p>
    *
    * @return property wrapper value around String
    */
@@ -217,6 +233,9 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
 
   /**
    * Set the FillTranslateAnchor property
+   * <p>
+   * Controls the frame of reference for {@link PropertyFactory#fillTranslate}.
+   * </p>
    *
    * @param value property wrapper value around String
    */

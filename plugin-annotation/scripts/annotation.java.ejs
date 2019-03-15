@@ -16,6 +16,7 @@ import com.google.gson.JsonObject;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -198,6 +199,9 @@ public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>>
 
   /**
    * Get the <%- camelize(property.name) %> property
+   * <p>
+   * <%- propertyFactoryMethodDoc(property) %>
+   * </p>
    *
    * @return PointF value for <%- propertyType(property) %>
    */
@@ -209,8 +213,12 @@ public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>>
   /**
    * Set the <%- camelize(property.name) %> property.
    * <p>
+   * <%- propertyFactoryMethodDoc(property) %>
+   * </p>
+   * <p>
    * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
    * <p>
+   *
    * @param pointF value for <%- propertyType(property) %>
    */
   public void set<%- camelize(property.name) %>(PointF pointF) {
@@ -223,6 +231,9 @@ public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>>
 
   /**
    * Get the <%- camelize(property.name) %> property
+   * <p>
+   * <%- propertyFactoryMethodDoc(property) %>
+   * </p>
    *
    * @return property wrapper value around <%- propertyType(property) %>
    */
@@ -238,8 +249,12 @@ public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>>
   /**
    * Set the <%- camelize(property.name) %> property.
    * <p>
+   * <%- propertyFactoryMethodDoc(property) %>
+   * </p>
+   * <p>
    * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
    * <p>
+   *
    * @param value constant property value for <%- propertyType(property) %>
    */
   public void set<%- camelize(property.name) %>(<%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), " ") %><%- propertyType(property) %> value) {
@@ -254,6 +269,9 @@ public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>>
 
   /**
    * Get the <%- camelize(property.name) %> property
+   * <p>
+   * <%- propertyFactoryMethodDoc(property) %>
+   * </p>
    *
    * @return color value for <%- propertyType(property) %>
    */
@@ -264,6 +282,9 @@ public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>>
 
   /**
    * Set the <%- camelize(property.name) %> property
+   * <p>
+   * <%- propertyFactoryMethodDoc(property) %>
+   * </p>
    * <p>
    * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
    * <p>
@@ -277,6 +298,9 @@ public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>>
 
   /**
    * Get the <%- camelize(property.name) %> property
+   * <p>
+   * <%- propertyFactoryMethodDoc(property) %>
+   * </p>
    *
    * @return property wrapper value around <%- propertyType(property) %>
    */
@@ -286,6 +310,9 @@ public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>>
 
   /**
    * Set the <%- camelize(property.name) %> property
+   * <p>
+   * <%- propertyFactoryMethodDoc(property) %>
+   * </p>
    * <p>
    * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
    * <p>

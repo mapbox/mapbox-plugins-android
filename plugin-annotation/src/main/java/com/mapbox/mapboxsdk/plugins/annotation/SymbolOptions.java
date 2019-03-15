@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import com.google.gson.*;
 import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -55,7 +56,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set icon-size to initialise the symbol with.
-   *
+   * <p>
+   * Scales the original size of the icon by the provided factor. The new pixel size of the image will be the original pixel size multiplied by {@link PropertyFactory#iconSize}. 1 is the original size; 3 triples the size of the image.
+   * </p>
    * @param iconSize the icon-size value
    * @return this
    */
@@ -66,7 +69,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  icon-size for the symbol
-   *
+   * <p>
+   * Scales the original size of the icon by the provided factor. The new pixel size of the image will be the original pixel size multiplied by {@link PropertyFactory#iconSize}. 1 is the original size; 3 triples the size of the image.
+   * </p>
    * @return iconSize value
    */
   public Float getIconSize() {
@@ -75,7 +80,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set icon-image to initialise the symbol with.
-   *
+   * <p>
+   * Name of image in sprite to use for drawing an image background.
+   * </p>
    * @param iconImage the icon-image value
    * @return this
    */
@@ -86,7 +93,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  icon-image for the symbol
-   *
+   * <p>
+   * Name of image in sprite to use for drawing an image background.
+   * </p>
    * @return iconImage value
    */
   public String getIconImage() {
@@ -95,7 +104,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set icon-rotate to initialise the symbol with.
-   *
+   * <p>
+   * Rotates the icon clockwise.
+   * </p>
    * @param iconRotate the icon-rotate value
    * @return this
    */
@@ -106,7 +117,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  icon-rotate for the symbol
-   *
+   * <p>
+   * Rotates the icon clockwise.
+   * </p>
    * @return iconRotate value
    */
   public Float getIconRotate() {
@@ -115,7 +128,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set icon-offset to initialise the symbol with.
-   *
+   * <p>
+   * Offset distance of icon from its anchor. Positive values indicate right and down, while negative values indicate left and up. Each component is multiplied by the value of {@link PropertyFactory#iconSize} to obtain the final offset in density-independent pixels. When combined with {@link PropertyFactory#iconRotate} the offset will be as if the rotated direction was up.
+   * </p>
    * @param iconOffset the icon-offset value
    * @return this
    */
@@ -126,7 +141,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  icon-offset for the symbol
-   *
+   * <p>
+   * Offset distance of icon from its anchor. Positive values indicate right and down, while negative values indicate left and up. Each component is multiplied by the value of {@link PropertyFactory#iconSize} to obtain the final offset in density-independent pixels. When combined with {@link PropertyFactory#iconRotate} the offset will be as if the rotated direction was up.
+   * </p>
    * @return iconOffset value
    */
   public Float[] getIconOffset() {
@@ -135,7 +152,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set icon-anchor to initialise the symbol with.
-   *
+   * <p>
+   * Part of the icon placed closest to the anchor.
+   * </p>
    * @param iconAnchor the icon-anchor value
    * @return this
    */
@@ -146,7 +165,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  icon-anchor for the symbol
-   *
+   * <p>
+   * Part of the icon placed closest to the anchor.
+   * </p>
    * @return iconAnchor value
    */
   public String getIconAnchor() {
@@ -155,7 +176,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set text-field to initialise the symbol with.
-   *
+   * <p>
+   * Value to use for a text label. If a plain `string` is provided, it will be treated as a `formatted` with default/inherited formatting options.
+   * </p>
    * @param textField the text-field value
    * @return this
    */
@@ -166,7 +189,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  text-field for the symbol
-   *
+   * <p>
+   * Value to use for a text label. If a plain `string` is provided, it will be treated as a `formatted` with default/inherited formatting options.
+   * </p>
    * @return textField value
    */
   public String getTextField() {
@@ -175,7 +200,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set text-font to initialise the symbol with.
-   *
+   * <p>
+   * Font stack to use for displaying text.
+   * </p>
    * @param textFont the text-font value
    * @return this
    */
@@ -186,7 +213,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  text-font for the symbol
-   *
+   * <p>
+   * Font stack to use for displaying text.
+   * </p>
    * @return textFont value
    */
   public String[] getTextFont() {
@@ -195,7 +224,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set text-size to initialise the symbol with.
-   *
+   * <p>
+   * Font size.
+   * </p>
    * @param textSize the text-size value
    * @return this
    */
@@ -206,7 +237,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  text-size for the symbol
-   *
+   * <p>
+   * Font size.
+   * </p>
    * @return textSize value
    */
   public Float getTextSize() {
@@ -215,7 +248,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set text-max-width to initialise the symbol with.
-   *
+   * <p>
+   * The maximum line width for text wrapping.
+   * </p>
    * @param textMaxWidth the text-max-width value
    * @return this
    */
@@ -226,7 +261,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  text-max-width for the symbol
-   *
+   * <p>
+   * The maximum line width for text wrapping.
+   * </p>
    * @return textMaxWidth value
    */
   public Float getTextMaxWidth() {
@@ -235,7 +272,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set text-letter-spacing to initialise the symbol with.
-   *
+   * <p>
+   * Text tracking amount.
+   * </p>
    * @param textLetterSpacing the text-letter-spacing value
    * @return this
    */
@@ -246,7 +285,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  text-letter-spacing for the symbol
-   *
+   * <p>
+   * Text tracking amount.
+   * </p>
    * @return textLetterSpacing value
    */
   public Float getTextLetterSpacing() {
@@ -255,7 +296,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set text-justify to initialise the symbol with.
-   *
+   * <p>
+   * Text justification options.
+   * </p>
    * @param textJustify the text-justify value
    * @return this
    */
@@ -266,7 +309,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  text-justify for the symbol
-   *
+   * <p>
+   * Text justification options.
+   * </p>
    * @return textJustify value
    */
   public String getTextJustify() {
@@ -275,7 +320,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set text-anchor to initialise the symbol with.
-   *
+   * <p>
+   * Part of the text placed closest to the anchor.
+   * </p>
    * @param textAnchor the text-anchor value
    * @return this
    */
@@ -286,7 +333,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  text-anchor for the symbol
-   *
+   * <p>
+   * Part of the text placed closest to the anchor.
+   * </p>
    * @return textAnchor value
    */
   public String getTextAnchor() {
@@ -295,7 +344,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set text-rotate to initialise the symbol with.
-   *
+   * <p>
+   * Rotates the text clockwise.
+   * </p>
    * @param textRotate the text-rotate value
    * @return this
    */
@@ -306,7 +357,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  text-rotate for the symbol
-   *
+   * <p>
+   * Rotates the text clockwise.
+   * </p>
    * @return textRotate value
    */
   public Float getTextRotate() {
@@ -315,7 +368,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set text-transform to initialise the symbol with.
-   *
+   * <p>
+   * Specifies how to capitalize text, similar to the CSS {@link PropertyFactory#textTransform} property.
+   * </p>
    * @param textTransform the text-transform value
    * @return this
    */
@@ -326,7 +381,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  text-transform for the symbol
-   *
+   * <p>
+   * Specifies how to capitalize text, similar to the CSS {@link PropertyFactory#textTransform} property.
+   * </p>
    * @return textTransform value
    */
   public String getTextTransform() {
@@ -335,7 +392,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set text-offset to initialise the symbol with.
-   *
+   * <p>
+   * Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up.
+   * </p>
    * @param textOffset the text-offset value
    * @return this
    */
@@ -346,7 +405,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  text-offset for the symbol
-   *
+   * <p>
+   * Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up.
+   * </p>
    * @return textOffset value
    */
   public Float[] getTextOffset() {
@@ -355,7 +416,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set icon-opacity to initialise the symbol with.
-   *
+   * <p>
+   * The opacity at which the icon will be drawn.
+   * </p>
    * @param iconOpacity the icon-opacity value
    * @return this
    */
@@ -366,7 +429,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  icon-opacity for the symbol
-   *
+   * <p>
+   * The opacity at which the icon will be drawn.
+   * </p>
    * @return iconOpacity value
    */
   public Float getIconOpacity() {
@@ -375,7 +440,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set icon-color to initialise the symbol with.
-   *
+   * <p>
+   * The color of the icon. This can only be used with sdf icons.
+   * </p>
    * @param iconColor the icon-color value
    * @return this
    */
@@ -386,7 +453,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  icon-color for the symbol
-   *
+   * <p>
+   * The color of the icon. This can only be used with sdf icons.
+   * </p>
    * @return iconColor value
    */
   public String getIconColor() {
@@ -395,7 +464,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set icon-halo-color to initialise the symbol with.
-   *
+   * <p>
+   * The color of the icon's halo. Icon halos can only be used with SDF icons.
+   * </p>
    * @param iconHaloColor the icon-halo-color value
    * @return this
    */
@@ -406,7 +477,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  icon-halo-color for the symbol
-   *
+   * <p>
+   * The color of the icon's halo. Icon halos can only be used with SDF icons.
+   * </p>
    * @return iconHaloColor value
    */
   public String getIconHaloColor() {
@@ -415,7 +488,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set icon-halo-width to initialise the symbol with.
-   *
+   * <p>
+   * Distance of halo to the icon outline.
+   * </p>
    * @param iconHaloWidth the icon-halo-width value
    * @return this
    */
@@ -426,7 +501,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  icon-halo-width for the symbol
-   *
+   * <p>
+   * Distance of halo to the icon outline.
+   * </p>
    * @return iconHaloWidth value
    */
   public Float getIconHaloWidth() {
@@ -435,7 +512,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set icon-halo-blur to initialise the symbol with.
-   *
+   * <p>
+   * Fade out the halo towards the outside.
+   * </p>
    * @param iconHaloBlur the icon-halo-blur value
    * @return this
    */
@@ -446,7 +525,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  icon-halo-blur for the symbol
-   *
+   * <p>
+   * Fade out the halo towards the outside.
+   * </p>
    * @return iconHaloBlur value
    */
   public Float getIconHaloBlur() {
@@ -455,7 +536,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set text-opacity to initialise the symbol with.
-   *
+   * <p>
+   * The opacity at which the text will be drawn.
+   * </p>
    * @param textOpacity the text-opacity value
    * @return this
    */
@@ -466,7 +549,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  text-opacity for the symbol
-   *
+   * <p>
+   * The opacity at which the text will be drawn.
+   * </p>
    * @return textOpacity value
    */
   public Float getTextOpacity() {
@@ -475,7 +560,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set text-color to initialise the symbol with.
-   *
+   * <p>
+   * The color with which the text will be drawn.
+   * </p>
    * @param textColor the text-color value
    * @return this
    */
@@ -486,7 +573,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  text-color for the symbol
-   *
+   * <p>
+   * The color with which the text will be drawn.
+   * </p>
    * @return textColor value
    */
   public String getTextColor() {
@@ -495,7 +584,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set text-halo-color to initialise the symbol with.
-   *
+   * <p>
+   * The color of the text's halo, which helps it stand out from backgrounds.
+   * </p>
    * @param textHaloColor the text-halo-color value
    * @return this
    */
@@ -506,7 +597,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  text-halo-color for the symbol
-   *
+   * <p>
+   * The color of the text's halo, which helps it stand out from backgrounds.
+   * </p>
    * @return textHaloColor value
    */
   public String getTextHaloColor() {
@@ -515,7 +608,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set text-halo-width to initialise the symbol with.
-   *
+   * <p>
+   * Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
+   * </p>
    * @param textHaloWidth the text-halo-width value
    * @return this
    */
@@ -526,7 +621,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  text-halo-width for the symbol
-   *
+   * <p>
+   * Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
+   * </p>
    * @return textHaloWidth value
    */
   public Float getTextHaloWidth() {
@@ -535,7 +632,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Set text-halo-blur to initialise the symbol with.
-   *
+   * <p>
+   * The halo's fadeout distance towards the outside.
+   * </p>
    * @param textHaloBlur the text-halo-blur value
    * @return this
    */
@@ -546,7 +645,9 @@ public class SymbolOptions extends Options<Symbol> {
 
   /**
    * Get the current configured  text-halo-blur for the symbol
-   *
+   * <p>
+   * The halo's fadeout distance towards the outside.
+   * </p>
    * @return textHaloBlur value
    */
   public Float getTextHaloBlur() {
