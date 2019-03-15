@@ -73,6 +73,7 @@ public class PressForSymbolActivity extends AppCompatActivity {
           @Override
           public void onAnnotationClick(Symbol symbol) {
             symbol.setIconImage(MAKI_ICON_CAFE);
+            symbolManager.update(symbol);
             Log.v("Symbol", "symbol is " + symbol);
           }
         });
