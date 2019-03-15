@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -91,6 +92,9 @@ public class Circle extends Annotation<Point> {
 
   /**
    * Get the CircleRadius property
+   * <p>
+   * Circle radius.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -100,6 +104,9 @@ public class Circle extends Annotation<Point> {
 
   /**
    * Set the CircleRadius property
+   * <p>
+   * Circle radius.
+   * </p>
    * <p>
    * To update the circle on the map use {@link CircleManager#update(Annotation)}.
    * <p>
@@ -112,6 +119,9 @@ public class Circle extends Annotation<Point> {
 
   /**
    * Get the CircleColor property
+   * <p>
+   * The fill color of the circle.
+   * </p>
    *
    * @return color value for String
    */
@@ -122,6 +132,9 @@ public class Circle extends Annotation<Point> {
 
   /**
    * Set the CircleColor property
+   * <p>
+   * The fill color of the circle.
+   * </p>
    * <p>
    * To update the circle on the map use {@link CircleManager#update(Annotation)}.
    * <p>
@@ -134,6 +147,9 @@ public class Circle extends Annotation<Point> {
 
   /**
    * Get the CircleBlur property
+   * <p>
+   * Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -143,6 +159,9 @@ public class Circle extends Annotation<Point> {
 
   /**
    * Set the CircleBlur property
+   * <p>
+   * Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
+   * </p>
    * <p>
    * To update the circle on the map use {@link CircleManager#update(Annotation)}.
    * <p>
@@ -155,6 +174,9 @@ public class Circle extends Annotation<Point> {
 
   /**
    * Get the CircleOpacity property
+   * <p>
+   * The opacity at which the circle will be drawn.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -164,6 +186,9 @@ public class Circle extends Annotation<Point> {
 
   /**
    * Set the CircleOpacity property
+   * <p>
+   * The opacity at which the circle will be drawn.
+   * </p>
    * <p>
    * To update the circle on the map use {@link CircleManager#update(Annotation)}.
    * <p>
@@ -176,6 +201,9 @@ public class Circle extends Annotation<Point> {
 
   /**
    * Get the CircleStrokeWidth property
+   * <p>
+   * The width of the circle's stroke. Strokes are placed outside of the {@link PropertyFactory#circleRadius}.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -185,6 +213,9 @@ public class Circle extends Annotation<Point> {
 
   /**
    * Set the CircleStrokeWidth property
+   * <p>
+   * The width of the circle's stroke. Strokes are placed outside of the {@link PropertyFactory#circleRadius}.
+   * </p>
    * <p>
    * To update the circle on the map use {@link CircleManager#update(Annotation)}.
    * <p>
@@ -197,6 +228,9 @@ public class Circle extends Annotation<Point> {
 
   /**
    * Get the CircleStrokeColor property
+   * <p>
+   * The stroke color of the circle.
+   * </p>
    *
    * @return color value for String
    */
@@ -207,6 +241,9 @@ public class Circle extends Annotation<Point> {
 
   /**
    * Set the CircleStrokeColor property
+   * <p>
+   * The stroke color of the circle.
+   * </p>
    * <p>
    * To update the circle on the map use {@link CircleManager#update(Annotation)}.
    * <p>
@@ -219,6 +256,9 @@ public class Circle extends Annotation<Point> {
 
   /**
    * Get the CircleStrokeOpacity property
+   * <p>
+   * The opacity of the circle's stroke.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -228,6 +268,9 @@ public class Circle extends Annotation<Point> {
 
   /**
    * Set the CircleStrokeOpacity property
+   * <p>
+   * The opacity of the circle's stroke.
+   * </p>
    * <p>
    * To update the circle on the map use {@link CircleManager#update(Annotation)}.
    * <p>

@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import com.google.gson.*;
 import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -44,7 +45,9 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
 
   /**
    * Set <%- property.name %> to initialise the <%- type %> with.
-   *
+   * <p>
+   * <%- propertyFactoryMethodDoc(property) %>
+   * </p>
    * @param <%- camelizeWithLeadingLowercase(property.name) %> the <%- property.name %> value
    * @return this
    */
@@ -55,7 +58,9 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
 
   /**
    * Get the current configured  <%- property.name %> for the <%- type %>
-   *
+   * <p>
+   * <%- propertyFactoryMethodDoc(property) %>
+   * </p>
    * @return <%- camelizeWithLeadingLowercase(property.name) %> value
    */
   public <%- propertyType(property) %> get<%- camelize(property.name) %>() {

@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import com.google.gson.*;
 import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -36,7 +37,9 @@ public class CircleOptions extends Options<Circle> {
 
   /**
    * Set circle-radius to initialise the circle with.
-   *
+   * <p>
+   * Circle radius.
+   * </p>
    * @param circleRadius the circle-radius value
    * @return this
    */
@@ -47,7 +50,9 @@ public class CircleOptions extends Options<Circle> {
 
   /**
    * Get the current configured  circle-radius for the circle
-   *
+   * <p>
+   * Circle radius.
+   * </p>
    * @return circleRadius value
    */
   public Float getCircleRadius() {
@@ -56,7 +61,9 @@ public class CircleOptions extends Options<Circle> {
 
   /**
    * Set circle-color to initialise the circle with.
-   *
+   * <p>
+   * The fill color of the circle.
+   * </p>
    * @param circleColor the circle-color value
    * @return this
    */
@@ -67,7 +74,9 @@ public class CircleOptions extends Options<Circle> {
 
   /**
    * Get the current configured  circle-color for the circle
-   *
+   * <p>
+   * The fill color of the circle.
+   * </p>
    * @return circleColor value
    */
   public String getCircleColor() {
@@ -76,7 +85,9 @@ public class CircleOptions extends Options<Circle> {
 
   /**
    * Set circle-blur to initialise the circle with.
-   *
+   * <p>
+   * Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
+   * </p>
    * @param circleBlur the circle-blur value
    * @return this
    */
@@ -87,7 +98,9 @@ public class CircleOptions extends Options<Circle> {
 
   /**
    * Get the current configured  circle-blur for the circle
-   *
+   * <p>
+   * Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
+   * </p>
    * @return circleBlur value
    */
   public Float getCircleBlur() {
@@ -96,7 +109,9 @@ public class CircleOptions extends Options<Circle> {
 
   /**
    * Set circle-opacity to initialise the circle with.
-   *
+   * <p>
+   * The opacity at which the circle will be drawn.
+   * </p>
    * @param circleOpacity the circle-opacity value
    * @return this
    */
@@ -107,7 +122,9 @@ public class CircleOptions extends Options<Circle> {
 
   /**
    * Get the current configured  circle-opacity for the circle
-   *
+   * <p>
+   * The opacity at which the circle will be drawn.
+   * </p>
    * @return circleOpacity value
    */
   public Float getCircleOpacity() {
@@ -116,7 +133,9 @@ public class CircleOptions extends Options<Circle> {
 
   /**
    * Set circle-stroke-width to initialise the circle with.
-   *
+   * <p>
+   * The width of the circle's stroke. Strokes are placed outside of the {@link PropertyFactory#circleRadius}.
+   * </p>
    * @param circleStrokeWidth the circle-stroke-width value
    * @return this
    */
@@ -127,7 +146,9 @@ public class CircleOptions extends Options<Circle> {
 
   /**
    * Get the current configured  circle-stroke-width for the circle
-   *
+   * <p>
+   * The width of the circle's stroke. Strokes are placed outside of the {@link PropertyFactory#circleRadius}.
+   * </p>
    * @return circleStrokeWidth value
    */
   public Float getCircleStrokeWidth() {
@@ -136,7 +157,9 @@ public class CircleOptions extends Options<Circle> {
 
   /**
    * Set circle-stroke-color to initialise the circle with.
-   *
+   * <p>
+   * The stroke color of the circle.
+   * </p>
    * @param circleStrokeColor the circle-stroke-color value
    * @return this
    */
@@ -147,7 +170,9 @@ public class CircleOptions extends Options<Circle> {
 
   /**
    * Get the current configured  circle-stroke-color for the circle
-   *
+   * <p>
+   * The stroke color of the circle.
+   * </p>
    * @return circleStrokeColor value
    */
   public String getCircleStrokeColor() {
@@ -156,7 +181,9 @@ public class CircleOptions extends Options<Circle> {
 
   /**
    * Set circle-stroke-opacity to initialise the circle with.
-   *
+   * <p>
+   * The opacity of the circle's stroke.
+   * </p>
    * @param circleStrokeOpacity the circle-stroke-opacity value
    * @return this
    */
@@ -167,7 +194,9 @@ public class CircleOptions extends Options<Circle> {
 
   /**
    * Get the current configured  circle-stroke-opacity for the circle
-   *
+   * <p>
+   * The opacity of the circle's stroke.
+   * </p>
    * @return circleStrokeOpacity value
    */
   public Float getCircleStrokeOpacity() {

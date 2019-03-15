@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -102,6 +103,9 @@ public class Fill extends Annotation<Polygon> {
 
   /**
    * Get the FillOpacity property
+   * <p>
+   * The opacity of the entire fill layer. In contrast to the {@link PropertyFactory#fillColor}, this value will also affect the 1px stroke around the fill, if the stroke is used.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -111,6 +115,9 @@ public class Fill extends Annotation<Polygon> {
 
   /**
    * Set the FillOpacity property
+   * <p>
+   * The opacity of the entire fill layer. In contrast to the {@link PropertyFactory#fillColor}, this value will also affect the 1px stroke around the fill, if the stroke is used.
+   * </p>
    * <p>
    * To update the fill on the map use {@link FillManager#update(Annotation)}.
    * <p>
@@ -123,6 +130,9 @@ public class Fill extends Annotation<Polygon> {
 
   /**
    * Get the FillColor property
+   * <p>
+   * The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
+   * </p>
    *
    * @return color value for String
    */
@@ -133,6 +143,9 @@ public class Fill extends Annotation<Polygon> {
 
   /**
    * Set the FillColor property
+   * <p>
+   * The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
+   * </p>
    * <p>
    * To update the fill on the map use {@link FillManager#update(Annotation)}.
    * <p>
@@ -145,6 +158,9 @@ public class Fill extends Annotation<Polygon> {
 
   /**
    * Get the FillOutlineColor property
+   * <p>
+   * The outline color of the fill. Matches the value of {@link PropertyFactory#fillColor} if unspecified.
+   * </p>
    *
    * @return color value for String
    */
@@ -155,6 +171,9 @@ public class Fill extends Annotation<Polygon> {
 
   /**
    * Set the FillOutlineColor property
+   * <p>
+   * The outline color of the fill. Matches the value of {@link PropertyFactory#fillColor} if unspecified.
+   * </p>
    * <p>
    * To update the fill on the map use {@link FillManager#update(Annotation)}.
    * <p>
@@ -167,6 +186,9 @@ public class Fill extends Annotation<Polygon> {
 
   /**
    * Get the FillPattern property
+   * <p>
+   * Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
+   * </p>
    *
    * @return property wrapper value around String
    */
@@ -176,6 +198,9 @@ public class Fill extends Annotation<Polygon> {
 
   /**
    * Set the FillPattern property
+   * <p>
+   * Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
+   * </p>
    * <p>
    * To update the fill on the map use {@link FillManager#update(Annotation)}.
    * <p>

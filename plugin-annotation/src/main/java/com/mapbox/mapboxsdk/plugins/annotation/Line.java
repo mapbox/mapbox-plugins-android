@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -103,6 +104,9 @@ public class Line extends Annotation<LineString> {
 
   /**
    * Get the LineJoin property
+   * <p>
+   * The display of lines when joining.
+   * </p>
    *
    * @return property wrapper value around String
    */
@@ -112,6 +116,9 @@ public class Line extends Annotation<LineString> {
 
   /**
    * Set the LineJoin property
+   * <p>
+   * The display of lines when joining.
+   * </p>
    * <p>
    * To update the line on the map use {@link LineManager#update(Annotation)}.
    * <p>
@@ -124,6 +131,9 @@ public class Line extends Annotation<LineString> {
 
   /**
    * Get the LineOpacity property
+   * <p>
+   * The opacity at which the line will be drawn.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -133,6 +143,9 @@ public class Line extends Annotation<LineString> {
 
   /**
    * Set the LineOpacity property
+   * <p>
+   * The opacity at which the line will be drawn.
+   * </p>
    * <p>
    * To update the line on the map use {@link LineManager#update(Annotation)}.
    * <p>
@@ -145,6 +158,9 @@ public class Line extends Annotation<LineString> {
 
   /**
    * Get the LineColor property
+   * <p>
+   * The color with which the line will be drawn.
+   * </p>
    *
    * @return color value for String
    */
@@ -155,6 +171,9 @@ public class Line extends Annotation<LineString> {
 
   /**
    * Set the LineColor property
+   * <p>
+   * The color with which the line will be drawn.
+   * </p>
    * <p>
    * To update the line on the map use {@link LineManager#update(Annotation)}.
    * <p>
@@ -167,6 +186,9 @@ public class Line extends Annotation<LineString> {
 
   /**
    * Get the LineWidth property
+   * <p>
+   * Stroke thickness.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -176,6 +198,9 @@ public class Line extends Annotation<LineString> {
 
   /**
    * Set the LineWidth property
+   * <p>
+   * Stroke thickness.
+   * </p>
    * <p>
    * To update the line on the map use {@link LineManager#update(Annotation)}.
    * <p>
@@ -188,6 +213,9 @@ public class Line extends Annotation<LineString> {
 
   /**
    * Get the LineGapWidth property
+   * <p>
+   * Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -197,6 +225,9 @@ public class Line extends Annotation<LineString> {
 
   /**
    * Set the LineGapWidth property
+   * <p>
+   * Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.
+   * </p>
    * <p>
    * To update the line on the map use {@link LineManager#update(Annotation)}.
    * <p>
@@ -209,6 +240,9 @@ public class Line extends Annotation<LineString> {
 
   /**
    * Get the LineOffset property
+   * <p>
+   * The line's offset. For linear features, a positive value offsets the line to the right, relative to the direction of the line, and a negative value to the left. For polygon features, a positive value results in an inset, and a negative value results in an outset.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -218,6 +252,9 @@ public class Line extends Annotation<LineString> {
 
   /**
    * Set the LineOffset property
+   * <p>
+   * The line's offset. For linear features, a positive value offsets the line to the right, relative to the direction of the line, and a negative value to the left. For polygon features, a positive value results in an inset, and a negative value results in an outset.
+   * </p>
    * <p>
    * To update the line on the map use {@link LineManager#update(Annotation)}.
    * <p>
@@ -230,6 +267,9 @@ public class Line extends Annotation<LineString> {
 
   /**
    * Get the LineBlur property
+   * <p>
+   * Blur applied to the line, in density-independent pixels.
+   * </p>
    *
    * @return property wrapper value around Float
    */
@@ -239,6 +279,9 @@ public class Line extends Annotation<LineString> {
 
   /**
    * Set the LineBlur property
+   * <p>
+   * Blur applied to the line, in density-independent pixels.
+   * </p>
    * <p>
    * To update the line on the map use {@link LineManager#update(Annotation)}.
    * <p>
@@ -251,6 +294,9 @@ public class Line extends Annotation<LineString> {
 
   /**
    * Get the LinePattern property
+   * <p>
+   * Name of image in sprite to use for drawing image lines. For seamless patterns, image width must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
+   * </p>
    *
    * @return property wrapper value around String
    */
@@ -260,6 +306,9 @@ public class Line extends Annotation<LineString> {
 
   /**
    * Set the LinePattern property
+   * <p>
+   * Name of image in sprite to use for drawing image lines. For seamless patterns, image width must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
+   * </p>
    * <p>
    * To update the line on the map use {@link LineManager#update(Annotation)}.
    * <p>

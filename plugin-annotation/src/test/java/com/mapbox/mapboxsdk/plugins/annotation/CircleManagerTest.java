@@ -323,7 +323,7 @@ public class CircleManagerTest {
   }
 
   @Test
-  public void testClickListener(){
+  public void testClickListener() {
     OnCircleClickListener listener = mock(OnCircleClickListener.class);
     circleManager = new  CircleManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     assertTrue(circleManager.getClickListeners().isEmpty());
@@ -334,7 +334,7 @@ public class CircleManagerTest {
   }
 
   @Test
-  public void testLongClickListener(){
+  public void testLongClickListener() {
     OnCircleLongClickListener listener = mock(OnCircleLongClickListener.class);
     circleManager = new CircleManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     assertTrue(circleManager.getLongClickListeners().isEmpty());
@@ -345,7 +345,7 @@ public class CircleManagerTest {
   }
 
   @Test
-  public void testDragListener(){
+  public void testDragListener() {
     OnCircleDragListener listener = mock(OnCircleDragListener.class);
     circleManager = new CircleManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
     assertTrue(circleManager.getDragListeners().isEmpty());

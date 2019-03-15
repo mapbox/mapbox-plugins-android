@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import com.google.gson.*;
 import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -37,7 +38,9 @@ public class LineOptions extends Options<Line> {
 
   /**
    * Set line-join to initialise the line with.
-   *
+   * <p>
+   * The display of lines when joining.
+   * </p>
    * @param lineJoin the line-join value
    * @return this
    */
@@ -48,7 +51,9 @@ public class LineOptions extends Options<Line> {
 
   /**
    * Get the current configured  line-join for the line
-   *
+   * <p>
+   * The display of lines when joining.
+   * </p>
    * @return lineJoin value
    */
   public String getLineJoin() {
@@ -57,7 +62,9 @@ public class LineOptions extends Options<Line> {
 
   /**
    * Set line-opacity to initialise the line with.
-   *
+   * <p>
+   * The opacity at which the line will be drawn.
+   * </p>
    * @param lineOpacity the line-opacity value
    * @return this
    */
@@ -68,7 +75,9 @@ public class LineOptions extends Options<Line> {
 
   /**
    * Get the current configured  line-opacity for the line
-   *
+   * <p>
+   * The opacity at which the line will be drawn.
+   * </p>
    * @return lineOpacity value
    */
   public Float getLineOpacity() {
@@ -77,7 +86,9 @@ public class LineOptions extends Options<Line> {
 
   /**
    * Set line-color to initialise the line with.
-   *
+   * <p>
+   * The color with which the line will be drawn.
+   * </p>
    * @param lineColor the line-color value
    * @return this
    */
@@ -88,7 +99,9 @@ public class LineOptions extends Options<Line> {
 
   /**
    * Get the current configured  line-color for the line
-   *
+   * <p>
+   * The color with which the line will be drawn.
+   * </p>
    * @return lineColor value
    */
   public String getLineColor() {
@@ -97,7 +110,9 @@ public class LineOptions extends Options<Line> {
 
   /**
    * Set line-width to initialise the line with.
-   *
+   * <p>
+   * Stroke thickness.
+   * </p>
    * @param lineWidth the line-width value
    * @return this
    */
@@ -108,7 +123,9 @@ public class LineOptions extends Options<Line> {
 
   /**
    * Get the current configured  line-width for the line
-   *
+   * <p>
+   * Stroke thickness.
+   * </p>
    * @return lineWidth value
    */
   public Float getLineWidth() {
@@ -117,7 +134,9 @@ public class LineOptions extends Options<Line> {
 
   /**
    * Set line-gap-width to initialise the line with.
-   *
+   * <p>
+   * Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.
+   * </p>
    * @param lineGapWidth the line-gap-width value
    * @return this
    */
@@ -128,7 +147,9 @@ public class LineOptions extends Options<Line> {
 
   /**
    * Get the current configured  line-gap-width for the line
-   *
+   * <p>
+   * Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.
+   * </p>
    * @return lineGapWidth value
    */
   public Float getLineGapWidth() {
@@ -137,7 +158,9 @@ public class LineOptions extends Options<Line> {
 
   /**
    * Set line-offset to initialise the line with.
-   *
+   * <p>
+   * The line's offset. For linear features, a positive value offsets the line to the right, relative to the direction of the line, and a negative value to the left. For polygon features, a positive value results in an inset, and a negative value results in an outset.
+   * </p>
    * @param lineOffset the line-offset value
    * @return this
    */
@@ -148,7 +171,9 @@ public class LineOptions extends Options<Line> {
 
   /**
    * Get the current configured  line-offset for the line
-   *
+   * <p>
+   * The line's offset. For linear features, a positive value offsets the line to the right, relative to the direction of the line, and a negative value to the left. For polygon features, a positive value results in an inset, and a negative value results in an outset.
+   * </p>
    * @return lineOffset value
    */
   public Float getLineOffset() {
@@ -157,7 +182,9 @@ public class LineOptions extends Options<Line> {
 
   /**
    * Set line-blur to initialise the line with.
-   *
+   * <p>
+   * Blur applied to the line, in density-independent pixels.
+   * </p>
    * @param lineBlur the line-blur value
    * @return this
    */
@@ -168,7 +195,9 @@ public class LineOptions extends Options<Line> {
 
   /**
    * Get the current configured  line-blur for the line
-   *
+   * <p>
+   * Blur applied to the line, in density-independent pixels.
+   * </p>
    * @return lineBlur value
    */
   public Float getLineBlur() {
@@ -177,7 +206,9 @@ public class LineOptions extends Options<Line> {
 
   /**
    * Set line-pattern to initialise the line with.
-   *
+   * <p>
+   * Name of image in sprite to use for drawing image lines. For seamless patterns, image width must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
+   * </p>
    * @param linePattern the line-pattern value
    * @return this
    */
@@ -188,7 +219,9 @@ public class LineOptions extends Options<Line> {
 
   /**
    * Get the current configured  line-pattern for the line
-   *
+   * <p>
+   * Name of image in sprite to use for drawing image lines. For seamless patterns, image width must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
+   * </p>
    * @return linePattern value
    */
   public String getLinePattern() {
