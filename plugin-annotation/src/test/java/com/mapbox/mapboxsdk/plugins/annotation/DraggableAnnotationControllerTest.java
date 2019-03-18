@@ -20,6 +20,8 @@ import org.robolectric.RobolectricTestRunner;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -122,10 +124,12 @@ public class DraggableAnnotationControllerTest {
     when(moveGestureDetector.getFocalPoint()).thenReturn(pointF);
     when(moveGestureDetector.getPointersCount()).thenReturn(0);
 
-    draggableAnnotationController.onMoveBegin(moveGestureDetector);
+    boolean moveBegan1 = draggableAnnotationController.onMoveBegin(moveGestureDetector);
+    assertFalse(moveBegan1);
 
     when(moveGestureDetector.getPointersCount()).thenReturn(2);
-    draggableAnnotationController.onMoveBegin(moveGestureDetector);
+    boolean moveBegan2 = draggableAnnotationController.onMoveBegin(moveGestureDetector);
+    assertFalse(moveBegan2);
     verify(dragListener, times(0)).onAnnotationDragStarted(annotation);
   }
 
@@ -139,7 +143,8 @@ public class DraggableAnnotationControllerTest {
     when(moveGestureDetector.getFocalPoint()).thenReturn(pointF);
     when(moveGestureDetector.getPointersCount()).thenReturn(1);
 
-    draggableAnnotationController.onMoveBegin(moveGestureDetector);
+    boolean moveBegan = draggableAnnotationController.onMoveBegin(moveGestureDetector);
+    assertTrue(moveBegan);
     verify(dragListener, times(1)).onAnnotationDragStarted(annotation);
   }
 
@@ -151,9 +156,25 @@ public class DraggableAnnotationControllerTest {
 
     when(moveGestureDetector.getPointersCount()).thenReturn(2);
 
-    draggableAnnotationController.onMove(moveGestureDetector);
+    boolean moved = draggableAnnotationController.onMove(moveGestureDetector);
+    assertTrue(moved);
     verify(dragListener, times(0)).onAnnotationDrag(annotation);
     verify(dragListener, times(1)).onAnnotationDragFinished(annotation);
+  }
+
+  @Test
+  public void gestureOnMoveBeginNonDraggableAnnotationTest() {
+    when(annotation.isDraggable()).thenReturn(false);
+    when(annotationManager.getDragListeners()).thenReturn(dragListenerList);
+
+    PointF pointF = new PointF();
+    when(annotationManager.queryMapForFeatures(pointF)).thenReturn(annotation);
+    when(moveGestureDetector.getFocalPoint()).thenReturn(pointF);
+    when(moveGestureDetector.getPointersCount()).thenReturn(1);
+
+    boolean moveBegan = draggableAnnotationController.onMoveBegin(moveGestureDetector);
+    assertFalse(moveBegan);
+    verify(dragListener, times(0)).onAnnotationDragStarted(annotation);
   }
 
   @Test
@@ -203,8 +224,9 @@ public class DraggableAnnotationControllerTest {
     when(mapboxMap.getProjection()).thenReturn(projection);
     when(annotation.getOffsetGeometry(projection, moveObject, 0, 0)).thenReturn(null);
 
-    draggableAnnotationController.onMove(moveGestureDetector);
+    boolean moved = draggableAnnotationController.onMove(moveGestureDetector);
 
+    assertFalse(moved);
     verify(dragListener, times(0)).onAnnotationDrag(annotation);
   }
 
@@ -223,8 +245,9 @@ public class DraggableAnnotationControllerTest {
     when(mapboxMap.getProjection()).thenReturn(projection);
     when(annotation.getOffsetGeometry(projection, moveObject, 0, 0)).thenReturn(geometry);
 
-    draggableAnnotationController.onMove(moveGestureDetector);
+    boolean moved = draggableAnnotationController.onMove(moveGestureDetector);
 
+    assertTrue(moved);
     verify(annotation).setGeometry(geometry);
     verify(annotationManager).internalUpdateSource();
     verify(dragListener, times(1)).onAnnotationDrag(annotation);
@@ -255,8 +278,9 @@ public class DraggableAnnotationControllerTest {
     when(mapboxMap.getProjection()).thenReturn(projection);
     when(annotation.getOffsetGeometry(projection, moveObject, 0, 0)).thenReturn(geometry);
 
-    draggableAnnotationController.onMove(moveGestureDetector);
+    boolean moved = draggableAnnotationController.onMove(moveGestureDetector);
 
+    assertFalse(moved);
     verify(dragListener, times(0)).onAnnotationDrag(annotation);
   }
 
@@ -276,8 +300,9 @@ public class DraggableAnnotationControllerTest {
     when(annotation.getOffsetGeometry(projection, moveObject, 0, 0)).thenReturn(geometry);
 
     when(annotation.isDraggable()).thenReturn(false);
-    draggableAnnotationController.onMove(moveGestureDetector);
+    boolean moved = draggableAnnotationController.onMove(moveGestureDetector);
 
+    assertTrue(moved);
     verify(dragListener, times(0)).onAnnotationDrag(annotation);
   }
 }
