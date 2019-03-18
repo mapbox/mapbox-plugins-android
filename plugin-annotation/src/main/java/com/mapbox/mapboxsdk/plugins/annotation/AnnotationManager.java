@@ -309,7 +309,6 @@ public abstract class AnnotationManager<
     return longClickListeners;
   }
 
-  @VisibleForTesting
   List<D> getDragListeners() {
     return dragListeners;
   }
