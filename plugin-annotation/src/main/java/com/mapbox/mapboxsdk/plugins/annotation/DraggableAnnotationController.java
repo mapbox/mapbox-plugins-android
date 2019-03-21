@@ -24,7 +24,7 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
   private final int touchAreaMaxX;
   private final int touchAreaMaxY;
 
-  private T draggedAnnotation;
+  @Nullable private T draggedAnnotation;
 
   @SuppressLint("ClickableViewAccessibility")
   DraggableAnnotationController(MapView mapView, MapboxMap mapboxMap) {
@@ -67,9 +67,8 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
     if (detector.getPointersCount() == 1) {
       T annotation = annotationManager.queryMapForFeatures(detector.getFocalPoint());
       if (annotation != null) {
-        startDragging(annotation);
+        return startDragging(annotation);
       }
-      return annotation != null;
     }
     return false;
   }
@@ -121,13 +120,17 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
     stopDragging(draggedAnnotation);
   }
 
-  void startDragging(@NonNull T annotation) {
+  boolean startDragging(@NonNull T annotation) {
     if (annotation.isDraggable()) {
+      if (!annotationManager.getDragListeners().isEmpty()) {
         for (D d : annotationManager.getDragListeners()) {
           d.onAnnotationDragStarted(annotation);
         }
+      }
       draggedAnnotation = annotation;
+      return true;
     }
+    return false;
   }
 
   void stopDragging(@Nullable T annotation) {

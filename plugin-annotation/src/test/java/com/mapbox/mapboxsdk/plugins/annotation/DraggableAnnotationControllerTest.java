@@ -163,6 +163,21 @@ public class DraggableAnnotationControllerTest {
   }
 
   @Test
+  public void gestureOnMoveBeginNonDraggableAnnotationTest() {
+    when(annotation.isDraggable()).thenReturn(false);
+    when(annotationManager.getDragListeners()).thenReturn(dragListenerList);
+
+    PointF pointF = new PointF();
+    when(annotationManager.queryMapForFeatures(pointF)).thenReturn(annotation);
+    when(moveGestureDetector.getFocalPoint()).thenReturn(pointF);
+    when(moveGestureDetector.getPointersCount()).thenReturn(1);
+
+    boolean moveBegan = draggableAnnotationController.onMoveBegin(moveGestureDetector);
+    assertFalse(moveBegan);
+    verify(dragListener, times(0)).onAnnotationDragStarted(annotation);
+  }
+
+  @Test
   public void gestureOnMoveMoveOutOfBoundsTest() {
     when(annotation.isDraggable()).thenReturn(true);
     when(annotationManager.getDragListeners()).thenReturn(dragListenerList);
