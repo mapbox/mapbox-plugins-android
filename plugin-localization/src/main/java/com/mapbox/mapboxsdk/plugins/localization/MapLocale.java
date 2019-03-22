@@ -277,7 +277,7 @@ public final class MapLocale {
     LOCALE_SET.put(Locale.US, MapLocale.US);
     LOCALE_SET.put(Locale.CANADA_FRENCH, MapLocale.CANADA_FRENCH);
     LOCALE_SET.put(Locale.CANADA, MapLocale.CANADA);
-    LOCALE_SET.put(Locale.CHINA, MapLocale.CHINA);
+    LOCALE_SET.put(Locale.CHINA, MapLocale.CHINESE_HANS);
     LOCALE_SET.put(Locale.TAIWAN, MapLocale.TAIWAN);
     LOCALE_SET.put(Locale.UK, MapLocale.UK);
     LOCALE_SET.put(Locale.JAPAN, MapLocale.JAPAN);

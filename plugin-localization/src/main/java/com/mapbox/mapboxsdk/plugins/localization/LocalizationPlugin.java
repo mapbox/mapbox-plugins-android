@@ -231,7 +231,6 @@ public final class LocalizationPlugin {
     for (Source source : style.getSources()) {
       if (sourceIsFromMapbox(source)) {
         boolean isStreetsV8 = sourceIsStreetsV8(source);
-        boolean isStreetsV7 = sourceIsStreetsV7(source);
         for (Layer layer : layers) {
           if (layer instanceof SymbolLayer) {
             PropertyValue<?> textFieldProperty = ((SymbolLayer) layer).getTextField();
@@ -239,6 +238,7 @@ public final class LocalizationPlugin {
               if (isStreetsV8) {
                 convertExpressionV8(mapLocale, layer, textFieldProperty);
               } else {
+                boolean isStreetsV7 = sourceIsStreetsV7(source);
                 convertExpression(mapLocale, layer, textFieldProperty, isStreetsV7);
               }
             }
@@ -287,6 +287,9 @@ public final class LocalizationPlugin {
 
       String mapLanguage = mapLocale.getMapLanguage();
       if (!mapLanguage.equals(MapLocale.ENGLISH)) {
+        if (mapLanguage.equals("name_zh")) {
+          mapLanguage = MapLocale.SIMPLIFIED_CHINESE;
+        }
         stringExpression = stringExpression.replaceAll(EXPRESSION_V8_REGEX_BASE,
           String.format(Locale.US,
             EXPRESSION_V8_TEMPLATE_LOCALIZED,
