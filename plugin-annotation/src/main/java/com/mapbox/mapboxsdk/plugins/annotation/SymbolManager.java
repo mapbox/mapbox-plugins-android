@@ -199,7 +199,37 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * <p>
    * Symbols are going to be created only for features with a matching geometry.
    * <p>
-   * You can inspect a full list of supported feature properties in {@link SymbolOptions#fromFeature(Feature)}.
+   * All supported properties are:<br>
+   * "icon-size" - Float<br>
+   * "icon-image" - String<br>
+   * "icon-rotate" - Float<br>
+   * "icon-offset" - Float[]<br>
+   * "icon-anchor" - String<br>
+   * "text-field" - String<br>
+   * "text-font" - String[]<br>
+   * "text-size" - Float<br>
+   * "text-max-width" - Float<br>
+   * "text-letter-spacing" - Float<br>
+   * "text-justify" - String<br>
+   * "text-anchor" - String<br>
+   * "text-rotate" - Float<br>
+   * "text-transform" - String<br>
+   * "text-offset" - Float[]<br>
+   * "icon-opacity" - Float<br>
+   * "icon-color" - String<br>
+   * "icon-halo-color" - String<br>
+   * "icon-halo-width" - Float<br>
+   * "icon-halo-blur" - Float<br>
+   * "text-opacity" - Float<br>
+   * "text-color" - String<br>
+   * "text-halo-color" - String<br>
+   * "text-halo-width" - Float<br>
+   * "text-halo-blur" - Float<br>
+   * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
+   * <p>
+   * Out of spec properties:<br>
+   * "z-index" - Integer, z-index of the feature within the manager<br>
+   * "is-draggable" - Boolean, true if the symbol should be draggable, false otherwise
    *
    * @param json the GeoJSON defining the list of symbols to build
    * @return the list of built symbols
@@ -214,7 +244,37 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * <p>
    * Symbols are going to be created only for features with a matching geometry.
    * <p>
-   * You can inspect a full list of supported feature properties in {@link SymbolOptions#fromFeature(Feature)}.
+   * All supported properties are:<br>
+   * "icon-size" - Float<br>
+   * "icon-image" - String<br>
+   * "icon-rotate" - Float<br>
+   * "icon-offset" - Float[]<br>
+   * "icon-anchor" - String<br>
+   * "text-field" - String<br>
+   * "text-font" - String[]<br>
+   * "text-size" - Float<br>
+   * "text-max-width" - Float<br>
+   * "text-letter-spacing" - Float<br>
+   * "text-justify" - String<br>
+   * "text-anchor" - String<br>
+   * "text-rotate" - Float<br>
+   * "text-transform" - String<br>
+   * "text-offset" - Float[]<br>
+   * "icon-opacity" - Float<br>
+   * "icon-color" - String<br>
+   * "icon-halo-color" - String<br>
+   * "icon-halo-width" - Float<br>
+   * "icon-halo-blur" - Float<br>
+   * "text-opacity" - Float<br>
+   * "text-color" - String<br>
+   * "text-halo-color" - String<br>
+   * "text-halo-width" - Float<br>
+   * "text-halo-blur" - Float<br>
+   * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
+   * <p>
+   * Out of spec properties:<br>
+   * "z-index" - Integer, z-index of the feature within the manager<br>
+   * "is-draggable" - Boolean, true if the symbol should be draggable, false otherwise
    *
    * @param featureCollection the featureCollection defining the list of symbols to build
    * @return the list of built symbols

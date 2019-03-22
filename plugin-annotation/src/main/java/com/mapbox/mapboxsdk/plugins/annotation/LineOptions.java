@@ -295,20 +295,6 @@ public class LineOptions extends Options<Line> {
 
   /**
    * Creates LineOptions out of a Feature.
-   * <p>
-   * All supported properties are:<br>
-   * "line-join" - String<br>
-   * "line-opacity" - Float<br>
-   * "line-color" - String<br>
-   * "line-width" - Float<br>
-   * "line-gap-width" - Float<br>
-   * "line-offset" - Float<br>
-   * "line-blur" - Float<br>
-   * "line-pattern" - String<br>
-   * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
-   * <p>
-   * Out of spec properties:<br>
-   * "is-draggable" - Boolean, true if the line should be draggable, false otherwise
    *
    * @param feature feature to be converted
    */

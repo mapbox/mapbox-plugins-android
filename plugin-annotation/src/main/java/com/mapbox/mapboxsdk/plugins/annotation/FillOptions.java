@@ -195,16 +195,6 @@ public class FillOptions extends Options<Fill> {
 
   /**
    * Creates FillOptions out of a Feature.
-   * <p>
-   * All supported properties are:<br>
-   * "fill-opacity" - Float<br>
-   * "fill-color" - String<br>
-   * "fill-outline-color" - String<br>
-   * "fill-pattern" - String<br>
-   * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
-   * <p>
-   * Out of spec properties:<br>
-   * "is-draggable" - Boolean, true if the fill should be draggable, false otherwise
    *
    * @param feature feature to be converted
    */

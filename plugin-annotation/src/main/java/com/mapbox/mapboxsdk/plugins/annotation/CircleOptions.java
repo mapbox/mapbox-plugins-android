@@ -265,19 +265,6 @@ public class CircleOptions extends Options<Circle> {
 
   /**
    * Creates CircleOptions out of a Feature.
-   * <p>
-   * All supported properties are:<br>
-   * "circle-radius" - Float<br>
-   * "circle-color" - String<br>
-   * "circle-blur" - Float<br>
-   * "circle-opacity" - Float<br>
-   * "circle-stroke-width" - Float<br>
-   * "circle-stroke-color" - String<br>
-   * "circle-stroke-opacity" - Float<br>
-   * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
-   * <p>
-   * Out of spec properties:<br>
-   * "is-draggable" - Boolean, true if the circle should be draggable, false otherwise
    *
    * @param feature feature to be converted
    */
