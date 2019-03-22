@@ -123,7 +123,18 @@ public class CircleManager extends AnnotationManager<CircleLayer, Circle, Circle
    * <p>
    * Circles are going to be created only for features with a matching geometry.
    * <p>
-   * You can inspect a full list of supported feature properties in {@link CircleOptions#fromFeature(Feature)}.
+   * All supported properties are:<br>
+   * "circle-radius" - Float<br>
+   * "circle-color" - String<br>
+   * "circle-blur" - Float<br>
+   * "circle-opacity" - Float<br>
+   * "circle-stroke-width" - Float<br>
+   * "circle-stroke-color" - String<br>
+   * "circle-stroke-opacity" - Float<br>
+   * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
+   * <p>
+   * Out of spec properties:<br>
+   * "is-draggable" - Boolean, true if the circle should be draggable, false otherwise
    *
    * @param json the GeoJSON defining the list of circles to build
    * @return the list of built circles
@@ -138,7 +149,18 @@ public class CircleManager extends AnnotationManager<CircleLayer, Circle, Circle
    * <p>
    * Circles are going to be created only for features with a matching geometry.
    * <p>
-   * You can inspect a full list of supported feature properties in {@link CircleOptions#fromFeature(Feature)}.
+   * All supported properties are:<br>
+   * "circle-radius" - Float<br>
+   * "circle-color" - String<br>
+   * "circle-blur" - Float<br>
+   * "circle-opacity" - Float<br>
+   * "circle-stroke-width" - Float<br>
+   * "circle-stroke-color" - String<br>
+   * "circle-stroke-opacity" - Float<br>
+   * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
+   * <p>
+   * Out of spec properties:<br>
+   * "is-draggable" - Boolean, true if the circle should be draggable, false otherwise
    *
    * @param featureCollection the featureCollection defining the list of circles to build
    * @return the list of built circles

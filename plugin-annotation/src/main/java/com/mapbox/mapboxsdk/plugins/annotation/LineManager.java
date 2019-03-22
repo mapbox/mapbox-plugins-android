@@ -127,7 +127,19 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    * <p>
    * Lines are going to be created only for features with a matching geometry.
    * <p>
-   * You can inspect a full list of supported feature properties in {@link LineOptions#fromFeature(Feature)}.
+   * All supported properties are:<br>
+   * "line-join" - String<br>
+   * "line-opacity" - Float<br>
+   * "line-color" - String<br>
+   * "line-width" - Float<br>
+   * "line-gap-width" - Float<br>
+   * "line-offset" - Float<br>
+   * "line-blur" - Float<br>
+   * "line-pattern" - String<br>
+   * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
+   * <p>
+   * Out of spec properties:<br>
+   * "is-draggable" - Boolean, true if the line should be draggable, false otherwise
    *
    * @param json the GeoJSON defining the list of lines to build
    * @return the list of built lines
@@ -142,7 +154,19 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    * <p>
    * Lines are going to be created only for features with a matching geometry.
    * <p>
-   * You can inspect a full list of supported feature properties in {@link LineOptions#fromFeature(Feature)}.
+   * All supported properties are:<br>
+   * "line-join" - String<br>
+   * "line-opacity" - Float<br>
+   * "line-color" - String<br>
+   * "line-width" - Float<br>
+   * "line-gap-width" - Float<br>
+   * "line-offset" - Float<br>
+   * "line-blur" - Float<br>
+   * "line-pattern" - String<br>
+   * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
+   * <p>
+   * Out of spec properties:<br>
+   * "is-draggable" - Boolean, true if the line should be draggable, false otherwise
    *
    * @param featureCollection the featureCollection defining the list of lines to build
    * @return the list of built lines
