@@ -6,10 +6,10 @@ import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.util.LongSparseArray;
-
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.log.Logger;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
@@ -41,6 +41,8 @@ public abstract class AnnotationManager<
   D extends OnAnnotationDragListener<T>,
   U extends OnAnnotationClickListener<T>,
   V extends OnAnnotationLongClickListener<T>> {
+
+  private static final String TAG = "AnnotationManager";
 
   protected final MapboxMap mapboxMap;
   protected final LongSparseArray<T> annotations = new LongSparseArray<>();
@@ -177,8 +179,14 @@ public abstract class AnnotationManager<
    */
   @UiThread
   public void update(T annotation) {
-    annotations.put(annotation.getId(), annotation);
-    updateSource();
+    if (annotations.containsValue(annotation)) {
+      annotations.put(annotation.getId(), annotation);
+      updateSource();
+    } else {
+      Logger.e(TAG, "Can't update annotation: "
+        + annotation.toString()
+        + ", the annotation isn't active annotation.");
+    }
   }
 
   /**

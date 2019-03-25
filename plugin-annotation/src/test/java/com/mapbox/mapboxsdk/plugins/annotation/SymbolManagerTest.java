@@ -653,4 +653,19 @@ public class SymbolManagerTest {
     assertEquals(0, symbolManager.getAnnotations().size());
   }
 
+  @Test
+  public void testIgnoreClearedAnnotations() {
+    symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng());
+     Symbol  symbol = symbolManager.create(options);
+    assertEquals(1, symbolManager.annotations.size());
+
+    symbolManager.getAnnotations().clear();
+    symbolManager.updateSource();
+    assertTrue(symbolManager.getAnnotations().isEmpty());
+
+    symbolManager.update(symbol);
+    assertTrue(symbolManager.getAnnotations().isEmpty());
+  }
+
 }

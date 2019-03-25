@@ -510,4 +510,34 @@ public class <%- camelize(type) %>ManagerTest {
     assertEquals(0, <%- type  %>Manager.getAnnotations().size());
   }
 
+  @Test
+  public void testIgnoreClearedAnnotations() {
+    <%- type  %>Manager = new <%- camelize(type) %>Manager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+<% if (type === "circle" || type === "symbol") { -%>
+    <%- camelize(type) %>Options options = new <%- camelize(type) %>Options().withLatLng(new LatLng());
+<% } else if (type === "line") { -%>
+    List<LatLng>latLngs = new ArrayList<>();
+    latLngs.add(new LatLng());
+    latLngs.add(new LatLng(1,1));
+    <%- camelize(type) %>Options options = new <%- camelize(type) %>Options().withLatLngs(latLngs);
+<% } else { -%>
+    List<LatLng>innerLatLngs = new ArrayList<>();
+    innerLatLngs.add(new LatLng());
+    innerLatLngs.add(new LatLng(1,1));
+    innerLatLngs.add(new LatLng(-1,-1));
+    List<List<LatLng>>latLngs = new ArrayList<>();
+    latLngs.add(innerLatLngs);
+    <%- camelize(type) %>Options options = new <%- camelize(type) %>Options().withLatLngs(latLngs);
+<% } -%>
+     <%- camelize(type) %>  <%- type %> = <%- type  %>Manager.create(options);
+    assertEquals(1, <%- type  %>Manager.annotations.size());
+
+    <%- type  %>Manager.getAnnotations().clear();
+    <%- type  %>Manager.updateSource();
+    assertTrue(<%- type  %>Manager.getAnnotations().isEmpty());
+
+    <%- type  %>Manager.update(<%- type  %>);
+    assertTrue(<%- type  %>Manager.getAnnotations().isEmpty());
+  }
+
 }
