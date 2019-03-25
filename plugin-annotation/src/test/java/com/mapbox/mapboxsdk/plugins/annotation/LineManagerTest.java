@@ -434,4 +434,22 @@ public class LineManagerTest {
     assertEquals(0, lineManager.getAnnotations().size());
   }
 
+  @Test
+  public void testIgnoreClearedAnnotations() {
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    List<LatLng>latLngs = new ArrayList<>();
+    latLngs.add(new LatLng());
+    latLngs.add(new LatLng(1,1));
+    LineOptions options = new LineOptions().withLatLngs(latLngs);
+     Line  line = lineManager.create(options);
+    assertEquals(1, lineManager.annotations.size());
+
+    lineManager.getAnnotations().clear();
+    lineManager.updateSource();
+    assertTrue(lineManager.getAnnotations().isEmpty());
+
+    lineManager.update(line);
+    assertTrue(lineManager.getAnnotations().isEmpty());
+  }
+
 }

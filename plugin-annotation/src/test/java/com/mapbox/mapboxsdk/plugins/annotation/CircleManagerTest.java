@@ -365,4 +365,19 @@ public class CircleManagerTest {
     assertEquals(0, circleManager.getAnnotations().size());
   }
 
+  @Test
+  public void testIgnoreClearedAnnotations() {
+    circleManager = new CircleManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    CircleOptions options = new CircleOptions().withLatLng(new LatLng());
+     Circle  circle = circleManager.create(options);
+    assertEquals(1, circleManager.annotations.size());
+
+    circleManager.getAnnotations().clear();
+    circleManager.updateSource();
+    assertTrue(circleManager.getAnnotations().isEmpty());
+
+    circleManager.update(circle);
+    assertTrue(circleManager.getAnnotations().isEmpty());
+  }
+
 }

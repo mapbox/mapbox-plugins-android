@@ -415,4 +415,25 @@ public class FillManagerTest {
     assertEquals(0, fillManager.getAnnotations().size());
   }
 
+  @Test
+  public void testIgnoreClearedAnnotations() {
+    fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    List<LatLng>innerLatLngs = new ArrayList<>();
+    innerLatLngs.add(new LatLng());
+    innerLatLngs.add(new LatLng(1,1));
+    innerLatLngs.add(new LatLng(-1,-1));
+    List<List<LatLng>>latLngs = new ArrayList<>();
+    latLngs.add(innerLatLngs);
+    FillOptions options = new FillOptions().withLatLngs(latLngs);
+     Fill  fill = fillManager.create(options);
+    assertEquals(1, fillManager.annotations.size());
+
+    fillManager.getAnnotations().clear();
+    fillManager.updateSource();
+    assertTrue(fillManager.getAnnotations().isEmpty());
+
+    fillManager.update(fill);
+    assertTrue(fillManager.getAnnotations().isEmpty());
+  }
+
 }
