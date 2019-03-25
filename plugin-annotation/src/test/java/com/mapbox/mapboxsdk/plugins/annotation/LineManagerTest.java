@@ -163,7 +163,7 @@ public class LineManagerTest {
     assertEquals(line.geometry, geometry);
     assertEquals(line.getLineJoin(), LINE_JOIN_BEVEL);
     assertEquals(line.getLineOpacity(), 0.3f);
-    assertEquals(line.getLineColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    assertEquals(line.getLineColor(), "rgba(0, 0, 0, 1)");
     assertEquals(line.getLineWidth(), 0.3f);
     assertEquals(line.getLineGapWidth(), 0.3f);
     assertEquals(line.getLineOffset(), 0.3f);

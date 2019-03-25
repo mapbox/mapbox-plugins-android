@@ -276,8 +276,35 @@ public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>>
    * @return color value for <%- propertyType(property) %>
    */
   @ColorInt
-  public int get<%- camelize(property.name) %>() {
+  public int get<%- camelize(property.name) %>AsInt() {
     return ColorUtils.rgbaToColor(jsonObject.get("<%- property.name %>").getAs<%- propertyType(property) %>());
+  }
+
+  /**
+   * Get the <%- camelize(property.name) %> property
+   * <p>
+   * <%- propertyFactoryMethodDoc(property) %>
+   * </p>
+   *
+   * @return color value for <%- propertyType(property) %>
+   */
+  public String get<%- camelize(property.name) %>() {
+    return jsonObject.get("<%- property.name %>").getAs<%- propertyType(property) %>();
+  }
+
+  /**
+   * Set the <%- camelize(property.name) %> property
+   * <p>
+   * <%- propertyFactoryMethodDoc(property) %>
+   * </p>
+   * <p>
+   * To update the <%- type %> on the map use {@link <%- camelize(type) %>Manager#update(Annotation)}.
+   * <p>
+   *
+   * @param colorString value for <%- propertyType(property) %>
+   */
+  public void set<%- camelize(property.name) %>(@NonNull String colorString) {
+    jsonObject.addProperty("<%- property.name %>", colorString);
   }
 
   /**

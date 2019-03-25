@@ -137,8 +137,35 @@ public class Fill extends Annotation<Polygon> {
    * @return color value for String
    */
   @ColorInt
-  public int getFillColor() {
+  public int getFillColorAsInt() {
     return ColorUtils.rgbaToColor(jsonObject.get("fill-color").getAsString());
+  }
+
+  /**
+   * Get the FillColor property
+   * <p>
+   * The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
+   * </p>
+   *
+   * @return color value for String
+   */
+  public String getFillColor() {
+    return jsonObject.get("fill-color").getAsString();
+  }
+
+  /**
+   * Set the FillColor property
+   * <p>
+   * The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
+   * </p>
+   * <p>
+   * To update the fill on the map use {@link FillManager#update(Annotation)}.
+   * <p>
+   *
+   * @param colorString value for String
+   */
+  public void setFillColor(@NonNull String colorString) {
+    jsonObject.addProperty("fill-color", colorString);
   }
 
   /**
@@ -165,8 +192,35 @@ public class Fill extends Annotation<Polygon> {
    * @return color value for String
    */
   @ColorInt
-  public int getFillOutlineColor() {
+  public int getFillOutlineColorAsInt() {
     return ColorUtils.rgbaToColor(jsonObject.get("fill-outline-color").getAsString());
+  }
+
+  /**
+   * Get the FillOutlineColor property
+   * <p>
+   * The outline color of the fill. Matches the value of {@link PropertyFactory#fillColor} if unspecified.
+   * </p>
+   *
+   * @return color value for String
+   */
+  public String getFillOutlineColor() {
+    return jsonObject.get("fill-outline-color").getAsString();
+  }
+
+  /**
+   * Set the FillOutlineColor property
+   * <p>
+   * The outline color of the fill. Matches the value of {@link PropertyFactory#fillColor} if unspecified.
+   * </p>
+   * <p>
+   * To update the fill on the map use {@link FillManager#update(Annotation)}.
+   * <p>
+   *
+   * @param colorString value for String
+   */
+  public void setFillOutlineColor(@NonNull String colorString) {
+    jsonObject.addProperty("fill-outline-color", colorString);
   }
 
   /**

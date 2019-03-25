@@ -165,8 +165,35 @@ public class Line extends Annotation<LineString> {
    * @return color value for String
    */
   @ColorInt
-  public int getLineColor() {
+  public int getLineColorAsInt() {
     return ColorUtils.rgbaToColor(jsonObject.get("line-color").getAsString());
+  }
+
+  /**
+   * Get the LineColor property
+   * <p>
+   * The color with which the line will be drawn.
+   * </p>
+   *
+   * @return color value for String
+   */
+  public String getLineColor() {
+    return jsonObject.get("line-color").getAsString();
+  }
+
+  /**
+   * Set the LineColor property
+   * <p>
+   * The color with which the line will be drawn.
+   * </p>
+   * <p>
+   * To update the line on the map use {@link LineManager#update(Annotation)}.
+   * <p>
+   *
+   * @param colorString value for String
+   */
+  public void setLineColor(@NonNull String colorString) {
+    jsonObject.addProperty("line-color", colorString);
   }
 
   /**
