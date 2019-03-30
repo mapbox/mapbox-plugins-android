@@ -330,11 +330,16 @@ public abstract class AnnotationManager<
     geoJsonSource = coreElementProvider.getSource();
     layer = coreElementProvider.getLayer();
 
-    style.addSource(geoJsonSource);
-    if (belowLayerId == null) {
-      style.addLayer(layer);
-    } else {
-      style.addLayerBelow(layer, belowLayerId);
+    if (style.getSource(geoJsonSource.getId()) == null) {
+      style.addSource(geoJsonSource);
+    }
+
+    if (style.getLayer(layer.getId()) == null) {
+      if (belowLayerId == null) {
+        style.addLayer(layer);
+      } else {
+        style.addLayerBelow(layer, belowLayerId);
+      }
     }
 
     initializeDataDrivenPropertyMap();
