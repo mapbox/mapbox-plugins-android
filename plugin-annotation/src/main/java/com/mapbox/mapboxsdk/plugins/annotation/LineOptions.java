@@ -259,7 +259,7 @@ public class LineOptions extends Options<Line> {
    *
    * @return draggable when touched
    */
-  public boolean isDraggable() {
+  public boolean getDraggable() {
     return isDraggable;
   }
 
@@ -269,7 +269,7 @@ public class LineOptions extends Options<Line> {
    *
    * @param draggable should be draggable
    */
-  public LineOptions setDraggable(boolean draggable) {
+  public LineOptions withDraggable(boolean draggable) {
     isDraggable = draggable;
     return this;
   }

@@ -230,7 +230,7 @@ public class CircleOptions extends Options<Circle> {
    *
    * @return draggable when touched
    */
-  public boolean isDraggable() {
+  public boolean getDraggable() {
     return isDraggable;
   }
 
@@ -240,7 +240,7 @@ public class CircleOptions extends Options<Circle> {
    *
    * @param draggable should be draggable
    */
-  public CircleOptions setDraggable(boolean draggable) {
+  public CircleOptions withDraggable(boolean draggable) {
     isDraggable = draggable;
     return this;
   }

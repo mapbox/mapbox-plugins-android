@@ -163,7 +163,7 @@ public class FillOptions extends Options<Fill> {
    *
    * @return draggable when touched
    */
-  public boolean isDraggable() {
+  public boolean getDraggable() {
     return isDraggable;
   }
 
@@ -173,7 +173,7 @@ public class FillOptions extends Options<Fill> {
    *
    * @param draggable should be draggable
    */
-  public FillOptions setDraggable(boolean draggable) {
+  public FillOptions withDraggable(boolean draggable) {
     isDraggable = draggable;
     return this;
   }

@@ -181,7 +181,7 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
    *
    * @return draggable when touched
    */
-  public boolean isDraggable() {
+  public boolean getDraggable() {
     return isDraggable;
   }
 
@@ -191,7 +191,7 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
    *
    * @param draggable should be draggable
    */
-  public <%- camelize(type) %>Options setDraggable(boolean draggable) {
+  public <%- camelize(type) %>Options withDraggable(boolean draggable) {
     isDraggable = draggable;
     return this;
   }

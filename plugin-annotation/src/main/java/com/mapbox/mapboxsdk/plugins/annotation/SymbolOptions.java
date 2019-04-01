@@ -704,7 +704,7 @@ public class SymbolOptions extends Options<Symbol> {
    *
    * @return draggable when touched
    */
-  public boolean isDraggable() {
+  public boolean getDraggable() {
     return isDraggable;
   }
 
@@ -714,7 +714,7 @@ public class SymbolOptions extends Options<Symbol> {
    *
    * @param draggable should be draggable
    */
-  public SymbolOptions setDraggable(boolean draggable) {
+  public SymbolOptions withDraggable(boolean draggable) {
     isDraggable = draggable;
     return this;
   }

@@ -67,7 +67,7 @@ public class CircleActivity extends AppCompatActivity {
         .withLatLng(new LatLng(6.687337, 0.381457))
         .withCircleColor(ColorUtils.colorToRgbaString(Color.YELLOW))
         .withCircleRadius(12f)
-        .setDraggable(true);
+        .withDraggable(true);
       circleManager.create(circleOptions);
 
       // random add circles across the globe
@@ -78,7 +78,7 @@ public class CircleActivity extends AppCompatActivity {
           .withLatLng(createRandomLatLng())
           .withCircleColor(ColorUtils.colorToRgbaString(color))
           .withCircleRadius(8f)
-          .setDraggable(true)
+          .withDraggable(true)
         );
       }
       circleManager.create(circleOptionsList);

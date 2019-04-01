@@ -97,7 +97,7 @@ public class SymbolActivity extends AppCompatActivity {
         .withIconImage(ID_ICON_AIRPORT)
         .withIconSize(1.3f)
         .withZIndex(10)
-        .setDraggable(true);
+        .withDraggable(true);
       symbol = symbolManager.create(symbolOptions);
       Timber.e(symbol.toString());
 
@@ -108,14 +108,14 @@ public class SymbolActivity extends AppCompatActivity {
         .withIconColor(ColorUtils.colorToRgbaString(Color.YELLOW))
         .withIconSize(2.5f)
         .withZIndex(5)
-        .setDraggable(true);
+        .withDraggable(true);
       symbolManager.create(nearbyOptions);
 
       // random add symbols across the globe
       List<SymbolOptions> symbolOptionsList = new ArrayList<>();
       for (int i = 0; i < 20; i++) {
         symbolOptionsList.add(new SymbolOptions().withLatLng(createRandomLatLng()).withIconImage(MAKI_ICON_CAR)
-          .setDraggable(true));
+          .withDraggable(true));
       }
       symbolManager.create(symbolOptionsList);
 
