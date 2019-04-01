@@ -155,11 +155,11 @@ public class CircleManagerTest {
 
     assertEquals(circle.geometry, geometry);
     assertEquals(circle.getCircleRadius(), 0.3f);
-    assertEquals(circle.getCircleColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    assertEquals(circle.getCircleColor(), "rgba(0, 0, 0, 1)");
     assertEquals(circle.getCircleBlur(), 0.3f);
     assertEquals(circle.getCircleOpacity(), 0.3f);
     assertEquals(circle.getCircleStrokeWidth(), 0.3f);
-    assertEquals(circle.getCircleStrokeColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    assertEquals(circle.getCircleStrokeColor(), "rgba(0, 0, 0, 1)");
     assertEquals(circle.getCircleStrokeOpacity(), 0.3f);
     assertTrue(circle.isDraggable());
   }

@@ -81,10 +81,23 @@ public class LineTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(line);
 
-      line.setLineColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
-      assertEquals(line.getLineColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      line.setLineColor("rgba(0, 0, 0, 1)");
+      assertEquals(line.getLineColor(), "rgba(0, 0, 0, 1)");
     });
   }
+
+  @Test
+  public void testLineColorAsInt() {
+    validateTestSetup();
+    setupAnnotation();
+    Timber.i("line-color");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(line);
+      line.setLineColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      assertEquals(line.getLineColorAsInt(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    });
+  }
+
 
   @Test
   public void testLineWidth() {

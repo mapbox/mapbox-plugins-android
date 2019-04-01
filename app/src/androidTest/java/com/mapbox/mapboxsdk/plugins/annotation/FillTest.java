@@ -71,10 +71,23 @@ public class FillTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(fill);
 
-      fill.setFillColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
-      assertEquals(fill.getFillColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      fill.setFillColor("rgba(0, 0, 0, 1)");
+      assertEquals(fill.getFillColor(), "rgba(0, 0, 0, 1)");
     });
   }
+
+  @Test
+  public void testFillColorAsInt() {
+    validateTestSetup();
+    setupAnnotation();
+    Timber.i("fill-color");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(fill);
+      fill.setFillColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      assertEquals(fill.getFillColorAsInt(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    });
+  }
+
 
   @Test
   public void testFillOutlineColor() {
@@ -84,10 +97,23 @@ public class FillTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(fill);
 
-      fill.setFillOutlineColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
-      assertEquals(fill.getFillOutlineColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      fill.setFillOutlineColor("rgba(0, 0, 0, 1)");
+      assertEquals(fill.getFillOutlineColor(), "rgba(0, 0, 0, 1)");
     });
   }
+
+  @Test
+  public void testFillOutlineColorAsInt() {
+    validateTestSetup();
+    setupAnnotation();
+    Timber.i("fill-outline-color");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(fill);
+      fill.setFillOutlineColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      assertEquals(fill.getFillOutlineColorAsInt(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    });
+  }
+
 
   @Test
   public void testFillPattern() {

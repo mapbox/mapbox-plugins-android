@@ -260,10 +260,23 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setIconColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
-      assertEquals(symbol.getIconColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      symbol.setIconColor("rgba(0, 0, 0, 1)");
+      assertEquals(symbol.getIconColor(), "rgba(0, 0, 0, 1)");
     });
   }
+
+  @Test
+  public void testIconColorAsInt() {
+    validateTestSetup();
+    setupAnnotation();
+    Timber.i("icon-color");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+      symbol.setIconColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      assertEquals(symbol.getIconColorAsInt(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    });
+  }
+
 
   @Test
   public void testIconHaloColor() {
@@ -273,10 +286,23 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setIconHaloColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
-      assertEquals(symbol.getIconHaloColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      symbol.setIconHaloColor("rgba(0, 0, 0, 1)");
+      assertEquals(symbol.getIconHaloColor(), "rgba(0, 0, 0, 1)");
     });
   }
+
+  @Test
+  public void testIconHaloColorAsInt() {
+    validateTestSetup();
+    setupAnnotation();
+    Timber.i("icon-halo-color");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+      symbol.setIconHaloColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      assertEquals(symbol.getIconHaloColorAsInt(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    });
+  }
+
 
   @Test
   public void testIconHaloWidth() {
@@ -325,10 +351,23 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setTextColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
-      assertEquals(symbol.getTextColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      symbol.setTextColor("rgba(0, 0, 0, 1)");
+      assertEquals(symbol.getTextColor(), "rgba(0, 0, 0, 1)");
     });
   }
+
+  @Test
+  public void testTextColorAsInt() {
+    validateTestSetup();
+    setupAnnotation();
+    Timber.i("text-color");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+      symbol.setTextColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      assertEquals(symbol.getTextColorAsInt(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    });
+  }
+
 
   @Test
   public void testTextHaloColor() {
@@ -338,10 +377,23 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setTextHaloColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
-      assertEquals(symbol.getTextHaloColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      symbol.setTextHaloColor("rgba(0, 0, 0, 1)");
+      assertEquals(symbol.getTextHaloColor(), "rgba(0, 0, 0, 1)");
     });
   }
+
+  @Test
+  public void testTextHaloColorAsInt() {
+    validateTestSetup();
+    setupAnnotation();
+    Timber.i("text-halo-color");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+      symbol.setTextHaloColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      assertEquals(symbol.getTextHaloColorAsInt(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    });
+  }
+
 
   @Test
   public void testTextHaloWidth() {

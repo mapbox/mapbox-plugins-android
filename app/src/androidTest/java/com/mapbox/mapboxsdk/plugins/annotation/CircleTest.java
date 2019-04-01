@@ -65,10 +65,23 @@ public class CircleTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(circle);
 
-      circle.setCircleColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
-      assertEquals(circle.getCircleColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      circle.setCircleColor("rgba(0, 0, 0, 1)");
+      assertEquals(circle.getCircleColor(), "rgba(0, 0, 0, 1)");
     });
   }
+
+  @Test
+  public void testCircleColorAsInt() {
+    validateTestSetup();
+    setupAnnotation();
+    Timber.i("circle-color");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(circle);
+      circle.setCircleColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      assertEquals(circle.getCircleColorAsInt(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    });
+  }
+
 
   @Test
   public void testCircleBlur() {
@@ -117,10 +130,23 @@ public class CircleTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(circle);
 
-      circle.setCircleStrokeColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
-      assertEquals(circle.getCircleStrokeColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      circle.setCircleStrokeColor("rgba(0, 0, 0, 1)");
+      assertEquals(circle.getCircleStrokeColor(), "rgba(0, 0, 0, 1)");
     });
   }
+
+  @Test
+  public void testCircleStrokeColorAsInt() {
+    validateTestSetup();
+    setupAnnotation();
+    Timber.i("circle-stroke-color");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(circle);
+      circle.setCircleStrokeColor(ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+      assertEquals(circle.getCircleStrokeColorAsInt(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    });
+  }
+
 
   @Test
   public void testCircleStrokeOpacity() {
