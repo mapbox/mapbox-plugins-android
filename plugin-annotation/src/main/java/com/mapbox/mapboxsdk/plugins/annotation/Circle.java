@@ -126,8 +126,20 @@ public class Circle extends Annotation<Point> {
    * @return color value for String
    */
   @ColorInt
-  public int getCircleColor() {
+  public int getCircleColorAsInt() {
     return ColorUtils.rgbaToColor(jsonObject.get("circle-color").getAsString());
+  }
+
+  /**
+   * Get the CircleColor property
+   * <p>
+   * The fill color of the circle.
+   * </p>
+   *
+   * @return color value for String
+   */
+  public String getCircleColor() {
+    return jsonObject.get("circle-color").getAsString();
   }
 
   /**
@@ -143,6 +155,21 @@ public class Circle extends Annotation<Point> {
    */
   public void setCircleColor(@ColorInt int color) {
     jsonObject.addProperty("circle-color", ColorUtils.colorToRgbaString(color));
+  }
+
+  /**
+   * Set the CircleColor property
+   * <p>
+   * The fill color of the circle.
+   * </p>
+   * <p>
+   * To update the circle on the map use {@link CircleManager#update(Annotation)}.
+   * <p>
+   *
+   * @param color value for String
+   */
+  public void setCircleColor(@NonNull String color) {
+    jsonObject.addProperty("circle-color", color);
   }
 
   /**
@@ -235,8 +262,20 @@ public class Circle extends Annotation<Point> {
    * @return color value for String
    */
   @ColorInt
-  public int getCircleStrokeColor() {
+  public int getCircleStrokeColorAsInt() {
     return ColorUtils.rgbaToColor(jsonObject.get("circle-stroke-color").getAsString());
+  }
+
+  /**
+   * Get the CircleStrokeColor property
+   * <p>
+   * The stroke color of the circle.
+   * </p>
+   *
+   * @return color value for String
+   */
+  public String getCircleStrokeColor() {
+    return jsonObject.get("circle-stroke-color").getAsString();
   }
 
   /**
@@ -252,6 +291,21 @@ public class Circle extends Annotation<Point> {
    */
   public void setCircleStrokeColor(@ColorInt int color) {
     jsonObject.addProperty("circle-stroke-color", ColorUtils.colorToRgbaString(color));
+  }
+
+  /**
+   * Set the CircleStrokeColor property
+   * <p>
+   * The stroke color of the circle.
+   * </p>
+   * <p>
+   * To update the circle on the map use {@link CircleManager#update(Annotation)}.
+   * <p>
+   *
+   * @param color value for String
+   */
+  public void setCircleStrokeColor(@NonNull String color) {
+    jsonObject.addProperty("circle-stroke-color", color);
   }
 
   /**

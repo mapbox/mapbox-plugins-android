@@ -631,8 +631,20 @@ public class Symbol extends Annotation<Point> {
    * @return color value for String
    */
   @ColorInt
-  public int getIconColor() {
+  public int getIconColorAsInt() {
     return ColorUtils.rgbaToColor(jsonObject.get("icon-color").getAsString());
+  }
+
+  /**
+   * Get the IconColor property
+   * <p>
+   * The color of the icon. This can only be used with sdf icons.
+   * </p>
+   *
+   * @return color value for String
+   */
+  public String getIconColor() {
+    return jsonObject.get("icon-color").getAsString();
   }
 
   /**
@@ -651,6 +663,21 @@ public class Symbol extends Annotation<Point> {
   }
 
   /**
+   * Set the IconColor property
+   * <p>
+   * The color of the icon. This can only be used with sdf icons.
+   * </p>
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
+   *
+   * @param color value for String
+   */
+  public void setIconColor(@NonNull String color) {
+    jsonObject.addProperty("icon-color", color);
+  }
+
+  /**
    * Get the IconHaloColor property
    * <p>
    * The color of the icon's halo. Icon halos can only be used with SDF icons.
@@ -659,8 +686,20 @@ public class Symbol extends Annotation<Point> {
    * @return color value for String
    */
   @ColorInt
-  public int getIconHaloColor() {
+  public int getIconHaloColorAsInt() {
     return ColorUtils.rgbaToColor(jsonObject.get("icon-halo-color").getAsString());
+  }
+
+  /**
+   * Get the IconHaloColor property
+   * <p>
+   * The color of the icon's halo. Icon halos can only be used with SDF icons.
+   * </p>
+   *
+   * @return color value for String
+   */
+  public String getIconHaloColor() {
+    return jsonObject.get("icon-halo-color").getAsString();
   }
 
   /**
@@ -676,6 +715,21 @@ public class Symbol extends Annotation<Point> {
    */
   public void setIconHaloColor(@ColorInt int color) {
     jsonObject.addProperty("icon-halo-color", ColorUtils.colorToRgbaString(color));
+  }
+
+  /**
+   * Set the IconHaloColor property
+   * <p>
+   * The color of the icon's halo. Icon halos can only be used with SDF icons.
+   * </p>
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
+   *
+   * @param color value for String
+   */
+  public void setIconHaloColor(@NonNull String color) {
+    jsonObject.addProperty("icon-halo-color", color);
   }
 
   /**
@@ -768,8 +822,20 @@ public class Symbol extends Annotation<Point> {
    * @return color value for String
    */
   @ColorInt
-  public int getTextColor() {
+  public int getTextColorAsInt() {
     return ColorUtils.rgbaToColor(jsonObject.get("text-color").getAsString());
+  }
+
+  /**
+   * Get the TextColor property
+   * <p>
+   * The color with which the text will be drawn.
+   * </p>
+   *
+   * @return color value for String
+   */
+  public String getTextColor() {
+    return jsonObject.get("text-color").getAsString();
   }
 
   /**
@@ -788,6 +854,21 @@ public class Symbol extends Annotation<Point> {
   }
 
   /**
+   * Set the TextColor property
+   * <p>
+   * The color with which the text will be drawn.
+   * </p>
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
+   *
+   * @param color value for String
+   */
+  public void setTextColor(@NonNull String color) {
+    jsonObject.addProperty("text-color", color);
+  }
+
+  /**
    * Get the TextHaloColor property
    * <p>
    * The color of the text's halo, which helps it stand out from backgrounds.
@@ -796,8 +877,20 @@ public class Symbol extends Annotation<Point> {
    * @return color value for String
    */
   @ColorInt
-  public int getTextHaloColor() {
+  public int getTextHaloColorAsInt() {
     return ColorUtils.rgbaToColor(jsonObject.get("text-halo-color").getAsString());
+  }
+
+  /**
+   * Get the TextHaloColor property
+   * <p>
+   * The color of the text's halo, which helps it stand out from backgrounds.
+   * </p>
+   *
+   * @return color value for String
+   */
+  public String getTextHaloColor() {
+    return jsonObject.get("text-halo-color").getAsString();
   }
 
   /**
@@ -813,6 +906,21 @@ public class Symbol extends Annotation<Point> {
    */
   public void setTextHaloColor(@ColorInt int color) {
     jsonObject.addProperty("text-halo-color", ColorUtils.colorToRgbaString(color));
+  }
+
+  /**
+   * Set the TextHaloColor property
+   * <p>
+   * The color of the text's halo, which helps it stand out from backgrounds.
+   * </p>
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
+   *
+   * @param color value for String
+   */
+  public void setTextHaloColor(@NonNull String color) {
+    jsonObject.addProperty("text-halo-color", color);
   }
 
   /**

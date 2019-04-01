@@ -209,7 +209,7 @@ public class <%- camelize(type) %>ManagerTest {
     assertTrue(Arrays.equals(<%- type %>.get<%- camelize(property.name) %>(), <%- defaultValueJava(property) %>));
 <% } -%>
 <% } else if (property.type == 'color') { -%>
-    assertEquals(<%- type %>.get<%- camelize(property.name) %>(), ColorUtils.rgbaToColor(<%- defaultValueJava(property) %>));
+    assertEquals(<%- type %>.get<%- camelize(property.name) %>(), <%- defaultValueJava(property) %>);
 <% } else { -%>
     assertEquals(<%- type %>.get<%- camelize(property.name) %>(), <%- defaultValueJava(property) %>);
 <% } -%>

@@ -193,13 +193,13 @@ public class SymbolManagerTest {
     assertEquals(textOffsetExpected.x, symbol.getTextOffset().x);
     assertEquals(textOffsetExpected.y, symbol.getTextOffset().y);
     assertEquals(symbol.getIconOpacity(), 0.3f);
-    assertEquals(symbol.getIconColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
-    assertEquals(symbol.getIconHaloColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    assertEquals(symbol.getIconColor(), "rgba(0, 0, 0, 1)");
+    assertEquals(symbol.getIconHaloColor(), "rgba(0, 0, 0, 1)");
     assertEquals(symbol.getIconHaloWidth(), 0.3f);
     assertEquals(symbol.getIconHaloBlur(), 0.3f);
     assertEquals(symbol.getTextOpacity(), 0.3f);
-    assertEquals(symbol.getTextColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
-    assertEquals(symbol.getTextHaloColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    assertEquals(symbol.getTextColor(), "rgba(0, 0, 0, 1)");
+    assertEquals(symbol.getTextHaloColor(), "rgba(0, 0, 0, 1)");
     assertEquals(symbol.getTextHaloWidth(), 0.3f);
     assertEquals(symbol.getTextHaloBlur(), 0.3f);
     assertEquals(symbol.getZIndex(), 2);

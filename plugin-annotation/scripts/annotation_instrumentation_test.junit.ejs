@@ -88,10 +88,23 @@ public class <%- camelize(type) %>Test extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(<%- type %>);
 
-      <%- type %>.set<%- camelize(property.name) %>(ColorUtils.rgbaToColor(<%- defaultValueJava(property) %>));
-      assertEquals(<%- type %>.get<%- camelize(property.name) %>(), ColorUtils.rgbaToColor(<%- defaultValueJava(property) %>));
+      <%- type %>.set<%- camelize(property.name) %>(<%- defaultValueJava(property) %>);
+      assertEquals(<%- type %>.get<%- camelize(property.name) %>(), <%- defaultValueJava(property) %>);
     });
   }
+
+  @Test
+  public void test<%- camelize(property.name) %>AsInt() {
+    validateTestSetup();
+    setupAnnotation();
+    Timber.i("<%- property.name %>");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(<%- type %>);
+      <%- type %>.set<%- camelize(property.name) %>(ColorUtils.rgbaToColor(<%- defaultValueJava(property) %>));
+      assertEquals(<%- type %>.get<%- camelize(property.name) %>AsInt(), ColorUtils.rgbaToColor(<%- defaultValueJava(property) %>));
+    });
+  }
+
 <% } else { -%>
 
   @Test

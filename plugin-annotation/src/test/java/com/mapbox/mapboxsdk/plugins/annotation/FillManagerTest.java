@@ -166,8 +166,8 @@ public class FillManagerTest {
 
     assertEquals(fill.geometry, geometry);
     assertEquals(fill.getFillOpacity(), 0.3f);
-    assertEquals(fill.getFillColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
-    assertEquals(fill.getFillOutlineColor(), ColorUtils.rgbaToColor("rgba(0, 0, 0, 1)"));
+    assertEquals(fill.getFillColor(), "rgba(0, 0, 0, 1)");
+    assertEquals(fill.getFillOutlineColor(), "rgba(0, 0, 0, 1)");
     assertEquals(fill.getFillPattern(), "pedestrian-polygon");
     assertTrue(fill.isDraggable());
   }
