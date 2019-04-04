@@ -41,6 +41,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
  * <li>- mapbox.mapbox-streets-v7</li>
  * <li>- mapbox.mapbox-streets-v8</li>
  * </ul>
+ *
  * @since 0.1.0
  */
 @UiThread
@@ -109,9 +110,9 @@ public final class LocalizationPlugin {
       throw new RuntimeException("The style has to be non-null and fully loaded.");
     }
 
-    MapView.OnWillStartLoadingMapListener styleLoadListener = new MapView.OnWillStartLoadingMapListener() {
+    mapView.addOnDidFinishLoadingStyleListener(new MapView.OnDidFinishLoadingStyleListener() {
       @Override
-      public void onWillStartLoadingMap() {
+      public void onDidFinishLoadingStyle() {
         mapboxMap.getStyle(new Style.OnStyleLoaded() {
           @Override
           public void onStyleLoaded(@NonNull Style style) {
@@ -122,8 +123,7 @@ public final class LocalizationPlugin {
           }
         });
       }
-    };
-    mapView.addOnWillStartLoadingMapListener(styleLoadListener);
+    });
   }
 
   private MapLocale getChineseMapLocale(MapLocale mapLocale, boolean isStreetsV7) {

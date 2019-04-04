@@ -78,9 +78,10 @@ public final class BuildingPlugin {
     }
 
     initLayer(belowLayer);
-    mapView.addOnWillStartLoadingMapListener(new MapView.OnWillStartLoadingMapListener() {
+
+    mapView.addOnDidFinishLoadingStyleListener(new MapView.OnDidFinishLoadingStyleListener() {
       @Override
-      public void onWillStartLoadingMap() {
+      public void onDidFinishLoadingStyle() {
         mapboxMap.getStyle(new Style.OnStyleLoaded() {
           @Override
           public void onStyleLoaded(@NonNull Style style) {

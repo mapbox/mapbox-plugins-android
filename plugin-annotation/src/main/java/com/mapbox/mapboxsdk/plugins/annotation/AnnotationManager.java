@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.util.LongSparseArray;
+
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -87,7 +88,7 @@ public abstract class AnnotationManager<
 
     initializeSourcesAndLayers();
 
-    mapView.addOnWillStartLoadingMapListener(() ->
+    mapView.addOnDidFinishLoadingStyleListener(() ->
       mapboxMap.getStyle(loadedStyle -> {
         this.style = loadedStyle;
         initializeSourcesAndLayers();
