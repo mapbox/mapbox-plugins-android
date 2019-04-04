@@ -77,9 +77,9 @@ public class SymbolManagerTest {
     Expression filter = Expression.literal(false);
     symbolManager.setFilter(filter);
 
-    ArgumentCaptor<MapView.OnWillStartLoadingMapListener> loadingArgumentCaptor = ArgumentCaptor.forClass(MapView.OnWillStartLoadingMapListener.class);
-    verify(mapView).addOnWillStartLoadingMapListener(loadingArgumentCaptor.capture());
-    loadingArgumentCaptor.getValue().onWillStartLoadingMap();
+    ArgumentCaptor<MapView.OnDidFinishLoadingStyleListener> loadingArgumentCaptor = ArgumentCaptor.forClass(MapView.OnDidFinishLoadingStyleListener.class);
+    verify(mapView).addOnDidFinishLoadingStyleListener(loadingArgumentCaptor.capture());
+    loadingArgumentCaptor.getValue().onDidFinishLoadingStyle();
 
     ArgumentCaptor<Style.OnStyleLoaded> styleLoadedArgumentCaptor = ArgumentCaptor.forClass(Style.OnStyleLoaded.class);
     verify(mapboxMap).getStyle(styleLoadedArgumentCaptor.capture());

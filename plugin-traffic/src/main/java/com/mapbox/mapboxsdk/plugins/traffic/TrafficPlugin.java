@@ -85,7 +85,7 @@ public final class TrafficPlugin {
     this.mapboxMap = mapboxMap;
     this.style = style;
     this.belowLayer = belowLayer;
-    mapView.addOnWillStartLoadingMapListener(new StyleLoadHandler(this));
+    mapView.addOnDidFinishLoadingStyleListener(new StyleLoadHandler(this));
   }
 
   /**
@@ -552,7 +552,7 @@ public final class TrafficPlugin {
     static final int CASE_RED = Color.parseColor("#5f1117");
   }
 
-  private static class StyleLoadHandler implements MapView.OnWillStartLoadingMapListener {
+  private static class StyleLoadHandler implements MapView.OnDidFinishLoadingStyleListener {
 
     private WeakReference<TrafficPlugin> trafficPlugin;
 
@@ -561,15 +561,15 @@ public final class TrafficPlugin {
     }
 
     @Override
-    public void onWillStartLoadingMap() {
+    public void onDidFinishLoadingStyle() {
       TrafficPlugin trafficPlugin = this.trafficPlugin.get();
       if (trafficPlugin != null) {
-        trafficPlugin.onWillStartLoadingMap();
+        trafficPlugin.onDidFinishLoadingStyle();
       }
     }
   }
 
-  private void onWillStartLoadingMap() {
+  private void onDidFinishLoadingStyle() {
     mapboxMap.getStyle(new Style.OnStyleLoaded() {
       @Override
       public void onStyleLoaded(@NonNull Style style) {
