@@ -6,20 +6,13 @@ import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.BaseAdapter
-import android.widget.ListView
-import android.widget.TextView
-import android.widget.Toast
-
+import android.widget.*
 import com.mapbox.mapboxsdk.offline.OfflineManager
 import com.mapbox.mapboxsdk.offline.OfflineRegion
-import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition
+import com.mapbox.mapboxsdk.offline.OfflineRegionDefinition
 import com.mapbox.mapboxsdk.plugins.offline.utils.OfflineUtils
 import com.mapbox.mapboxsdk.plugins.testapp.R
-
-import java.util.ArrayList
-import java.util.Arrays
+import java.util.*
 
 /**
  * Activity showing a list of offline regions.
@@ -108,7 +101,7 @@ class OfflineRegionListActivity : AppCompatActivity(), AdapterView.OnItemClickLi
             currentRegion?.metadata?.let {
                 holder.text?.text = OfflineUtils.convertRegionName(it)
             }
-            holder.subText?.text = (currentRegion?.definition as OfflineTilePyramidRegionDefinition).styleURL
+            holder.subText?.text = (currentRegion?.definition as OfflineRegionDefinition).styleURL
             return convertView
         }
 
