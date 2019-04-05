@@ -16,6 +16,7 @@ import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
+import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
 import java.util.ArrayList;
@@ -69,7 +70,7 @@ public abstract class AnnotationManager<
                               CoreElementProvider<L> coreElementProvider,
                               Comparator<Feature> comparator,
                               DraggableAnnotationController<T, D> draggableAnnotationController,
-                              String belowLayerId) {
+                              String belowLayerId, GeoJsonOptions geoJsonOptions) {
     this.mapboxMap = mapboxMap;
     this.comparator = comparator;
     this.style = style;
@@ -85,12 +86,12 @@ public abstract class AnnotationManager<
     this.draggableAnnotationController = draggableAnnotationController;
     draggableAnnotationController.injectAnnotationManager(this);
 
-    initializeSourcesAndLayers();
+    initializeSourcesAndLayers(geoJsonOptions);
 
     mapView.addOnWillStartLoadingMapListener(() ->
       mapboxMap.getStyle(loadedStyle -> {
         this.style = loadedStyle;
-        initializeSourcesAndLayers();
+        initializeSourcesAndLayers(geoJsonOptions);
       })
     );
   }
@@ -334,8 +335,8 @@ public abstract class AnnotationManager<
 
   abstract void setFilter(@NonNull Expression expression);
 
-  private void initializeSourcesAndLayers() {
-    geoJsonSource = coreElementProvider.getSource();
+  private void initializeSourcesAndLayers(GeoJsonOptions geoJsonOptions) {
+    geoJsonSource = coreElementProvider.getSource(geoJsonOptions);
     layer = coreElementProvider.getLayer();
 
     style.addSource(geoJsonSource);

@@ -16,6 +16,7 @@ import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.FillLayer;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
+import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
 
@@ -42,7 +43,7 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
    */
   @UiThread
   public FillManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style) {
-    this(mapView, mapboxMap, style, null);
+    this(mapView, mapboxMap, style, null, null);
   }
 
   /**
@@ -54,6 +55,19 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
    */
   @UiThread
   public FillManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId) {
+    this(mapView, mapboxMap, style, belowLayerId, null);
+  }
+
+  /**
+   * Create a fill manager, used to manage fills.
+   *
+   * @param mapboxMap the map object to add fills to
+   * @param style a valid a fully loaded style object
+   * @param belowLayerId the id of the layer above the circle layer
+   * @param geoJsonOptions options for the internal source
+   */
+  @UiThread
+  public FillManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions) {
     this(mapView, mapboxMap, style,
       new CoreElementProvider<FillLayer>() {
         @Override
@@ -62,22 +76,20 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
         }
 
         @Override
-        public GeoJsonSource getSource() {
-          return new GeoJsonSource(ID_GEOJSON_SOURCE);
+        public GeoJsonSource getSource(@Nullable GeoJsonOptions geoJsonOptions) {
+          if (geoJsonOptions != null) {
+            return new GeoJsonSource(ID_GEOJSON_SOURCE, geoJsonOptions);
+          } else {
+            return new GeoJsonSource(ID_GEOJSON_SOURCE);
+          }
         }
       },
-     belowLayerId, new DraggableAnnotationController<>(mapView, mapboxMap));
+     belowLayerId, geoJsonOptions, new DraggableAnnotationController<>(mapView, mapboxMap));
   }
 
-  /**
-   * Create a fill manager, used to manage fills.
-   *
-   * @param mapboxMap     the map object to add fills to
-   * @param style a valid a fully loaded style object
-   */
   @VisibleForTesting
-  public FillManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @NonNull CoreElementProvider<FillLayer> coreElementProvider, @Nullable String belowLayerId, DraggableAnnotationController<Fill, OnFillDragListener> draggableAnnotationController) {
-    super(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController, belowLayerId);
+  FillManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @NonNull CoreElementProvider<FillLayer> coreElementProvider, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions, DraggableAnnotationController<Fill, OnFillDragListener> draggableAnnotationController) {
+    super(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController, belowLayerId, geoJsonOptions);
   }
 
   @Override

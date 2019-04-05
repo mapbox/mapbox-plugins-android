@@ -9,6 +9,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.*;
+import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
 import org.junit.Before;
@@ -35,20 +36,23 @@ public class LineManagerTest {
   private MapboxMap mapboxMap = mock(MapboxMap.class);
   private Style style = mock(Style.class);
   private GeoJsonSource geoJsonSource = mock(GeoJsonSource.class);
+  private GeoJsonSource optionedGeoJsonSource = mock(GeoJsonSource.class);
   private LineLayer lineLayer = mock(LineLayer.class);
   private LineManager lineManager;
   private CoreElementProvider<LineLayer> coreElementProvider = mock(CoreElementProvider.class);
+  private GeoJsonOptions geoJsonOptions = mock(GeoJsonOptions.class);
 
   @Before
   public void beforeTest() {
     when(coreElementProvider.getLayer()).thenReturn(lineLayer);
-    when(coreElementProvider.getSource()).thenReturn(geoJsonSource);
+    when(coreElementProvider.getSource(null)).thenReturn(geoJsonSource);
+    when(coreElementProvider.getSource(geoJsonOptions)).thenReturn(optionedGeoJsonSource);
     when(style.isFullyLoaded()).thenReturn(true);
   }
 
   @Test
   public void testInitialization() {
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(style).addSource(geoJsonSource);
     verify(style).addLayer(lineLayer);
     assertTrue(lineManager.dataDrivenPropertyUsageMap.size() > 0);
@@ -63,7 +67,7 @@ public class LineManagerTest {
 
   @Test
   public void testInitializationOnStyleReload() {
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(style).addSource(geoJsonSource);
     verify(style).addLayer(lineLayer);
     assertTrue(lineManager.dataDrivenPropertyUsageMap.size() > 0);
@@ -87,7 +91,7 @@ public class LineManagerTest {
     Style newStyle = mock(Style.class);
     when(newStyle.isFullyLoaded()).thenReturn(true);
     GeoJsonSource newSource = mock(GeoJsonSource.class);
-    when(coreElementProvider.getSource()).thenReturn(newSource);
+    when(coreElementProvider.getSource(null)).thenReturn(newSource);
     LineLayer newLayer = mock(LineLayer.class);
     when(coreElementProvider.getLayer()).thenReturn(newLayer);
     styleLoadedArgumentCaptor.getValue().onStyleLoaded(newStyle);
@@ -106,7 +110,7 @@ public class LineManagerTest {
 
   @Test
   public void testLayerBelowInitialization() {
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, "test_layer", draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, "test_layer", null, draggableAnnotationController);
     verify(style).addSource(geoJsonSource);
     verify(style).addLayerBelow(lineLayer, "test_layer");
     assertTrue(lineManager.dataDrivenPropertyUsageMap.size() > 0);
@@ -119,8 +123,23 @@ public class LineManagerTest {
   }
 
   @Test
+  public void testGeoJsonOptionsInitialization() {
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, geoJsonOptions, draggableAnnotationController);
+    verify(style).addSource(optionedGeoJsonSource);
+    verify(style).addLayer(lineLayer);
+    assertTrue(lineManager.dataDrivenPropertyUsageMap.size() > 0);
+    for (Boolean value : lineManager.dataDrivenPropertyUsageMap.values()) {
+      assertFalse(value);
+    }
+    verify(lineLayer).setProperties(lineManager.constantPropertyUsageMap.values().toArray(new PropertyValue[0]));
+    verify(lineLayer, times(0)).setFilter(any());
+    verify(draggableAnnotationController).onSourceUpdated();
+    verify(optionedGeoJsonSource).setGeoJson(any(FeatureCollection.class));
+  }
+
+  @Test
   public void testNoUpdateOnStyleReload() {
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, "test_layer", draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, "test_layer", null, draggableAnnotationController);
     verify(geoJsonSource, times(1)).setGeoJson(any(FeatureCollection.class));
 
     when(style.isFullyLoaded()).thenReturn(false);
@@ -130,7 +149,7 @@ public class LineManagerTest {
 
   @Test
   public void testAddLine() {
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     List<LatLng>latLngs = new ArrayList<>();
     latLngs.add(new LatLng());
     latLngs.add(new LatLng(1,1));
@@ -140,7 +159,7 @@ public class LineManagerTest {
 
   @Test
   public void addLineFromFeatureCollection() {
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     List<Point> points = new ArrayList<>();
     points.add(Point.fromLngLat(0, 0));
     points.add(Point.fromLngLat(1, 1));
@@ -174,7 +193,7 @@ public class LineManagerTest {
 
   @Test
   public void addLines() {
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     List<List<LatLng>> latLngList = new ArrayList<>();
     latLngList.add(new ArrayList<LatLng>() {{
       add(new LatLng(2, 2));
@@ -195,7 +214,7 @@ public class LineManagerTest {
 
   @Test
   public void testDeleteLine() {
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     List<LatLng>latLngs = new ArrayList<>();
     latLngs.add(new LatLng());
     latLngs.add(new LatLng(1,1));
@@ -206,7 +225,7 @@ public class LineManagerTest {
 
   @Test
   public void testGeometryLine() {
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     List<LatLng>latLngs = new ArrayList<>();
     latLngs.add(new LatLng());
     latLngs.add(new LatLng(1,1));
@@ -219,7 +238,7 @@ public class LineManagerTest {
 
   @Test
   public void testFeatureIdLine() {
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     List<LatLng>latLngs = new ArrayList<>();
     latLngs.add(new LatLng());
     latLngs.add(new LatLng(1,1));
@@ -231,7 +250,7 @@ public class LineManagerTest {
 
   @Test
   public void testLineDraggableFlag() {
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     List<LatLng>latLngs = new ArrayList<>();
     latLngs.add(new LatLng());
     latLngs.add(new LatLng(1,1));
@@ -247,7 +266,7 @@ public class LineManagerTest {
 
   @Test
   public void testLineJoinLayerProperty() {
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(lineLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(lineJoin(get("line-join")))));
 
     List<LatLng>latLngs = new ArrayList<>();
@@ -263,7 +282,7 @@ public class LineManagerTest {
 
   @Test
   public void testLineOpacityLayerProperty() {
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(lineLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(lineOpacity(get("line-opacity")))));
 
     List<LatLng>latLngs = new ArrayList<>();
@@ -279,7 +298,7 @@ public class LineManagerTest {
 
   @Test
   public void testLineColorLayerProperty() {
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(lineLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(lineColor(get("line-color")))));
 
     List<LatLng>latLngs = new ArrayList<>();
@@ -295,7 +314,7 @@ public class LineManagerTest {
 
   @Test
   public void testLineWidthLayerProperty() {
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(lineLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(lineWidth(get("line-width")))));
 
     List<LatLng>latLngs = new ArrayList<>();
@@ -311,7 +330,7 @@ public class LineManagerTest {
 
   @Test
   public void testLineGapWidthLayerProperty() {
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(lineLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(lineGapWidth(get("line-gap-width")))));
 
     List<LatLng>latLngs = new ArrayList<>();
@@ -327,7 +346,7 @@ public class LineManagerTest {
 
   @Test
   public void testLineOffsetLayerProperty() {
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(lineLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(lineOffset(get("line-offset")))));
 
     List<LatLng>latLngs = new ArrayList<>();
@@ -343,7 +362,7 @@ public class LineManagerTest {
 
   @Test
   public void testLineBlurLayerProperty() {
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(lineLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(lineBlur(get("line-blur")))));
 
     List<LatLng>latLngs = new ArrayList<>();
@@ -359,7 +378,7 @@ public class LineManagerTest {
 
   @Test
   public void testLinePatternLayerProperty() {
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(lineLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(linePattern(get("line-pattern")))));
 
     List<LatLng>latLngs = new ArrayList<>();
@@ -376,7 +395,7 @@ public class LineManagerTest {
 
   @Test
   public void testLineLayerFilter() {
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     Expression expression = Expression.eq(Expression.get("test"), "selected");
     verify(lineLayer, times(0)).setFilter(expression);
 
@@ -391,7 +410,7 @@ public class LineManagerTest {
   @Test
   public void testClickListener() {
     OnLineClickListener listener = mock(OnLineClickListener.class);
-    lineManager = new  LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new  LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     assertTrue(lineManager.getClickListeners().isEmpty());
     lineManager.addClickListener(listener);
     assertTrue(lineManager.getClickListeners().contains(listener));
@@ -402,7 +421,7 @@ public class LineManagerTest {
   @Test
   public void testLongClickListener() {
     OnLineLongClickListener listener = mock(OnLineLongClickListener.class);
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     assertTrue(lineManager.getLongClickListeners().isEmpty());
     lineManager.addLongClickListener(listener);
     assertTrue(lineManager.getLongClickListeners().contains(listener));
@@ -413,7 +432,7 @@ public class LineManagerTest {
   @Test
   public void testDragListener() {
     OnLineDragListener listener = mock(OnLineDragListener.class);
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     assertTrue(lineManager.getDragListeners().isEmpty());
     lineManager.addDragListener(listener);
     assertTrue(lineManager.getDragListeners().contains(listener));
@@ -423,7 +442,7 @@ public class LineManagerTest {
 
   @Test
   public void testClearAll() {
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     List<LatLng>latLngs = new ArrayList<>();
     latLngs.add(new LatLng());
     latLngs.add(new LatLng(1,1));
@@ -436,7 +455,7 @@ public class LineManagerTest {
 
   @Test
   public void testIgnoreClearedAnnotations() {
-    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController);
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     List<LatLng>latLngs = new ArrayList<>();
     latLngs.add(new LatLng());
     latLngs.add(new LatLng(1,1));
