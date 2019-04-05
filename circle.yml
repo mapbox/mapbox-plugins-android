@@ -101,7 +101,7 @@ jobs:
           name: Publish Plugins SDK To Maven Central
           command: |
             if [ -n "${PUBLISH_NEXUS_USERNAME}" ]; then
-              if [ "${CIRCLE_BRANCH}" == "lp-release-7.3.0" ]; then
+              if [ "${CIRCLE_BRANCH}" == "master" ]; then
                 make publish
               fi
             fi
