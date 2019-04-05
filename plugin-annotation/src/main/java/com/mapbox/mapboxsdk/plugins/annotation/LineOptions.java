@@ -36,6 +36,16 @@ public class LineOptions extends Options<Line> {
   private Float lineBlur;
   private String linePattern;
 
+  static final String PROPERTY_lineJoin = "line-join";
+  static final String PROPERTY_lineOpacity = "line-opacity";
+  static final String PROPERTY_lineColor = "line-color";
+  static final String PROPERTY_lineWidth = "line-width";
+  static final String PROPERTY_lineGapWidth = "line-gap-width";
+  static final String PROPERTY_lineOffset = "line-offset";
+  static final String PROPERTY_lineBlur = "line-blur";
+  static final String PROPERTY_linePattern = "line-pattern";
+  private static final String PROPERTY_isDraggable = "is-draggable";
+
   /**
    * Set line-join to initialise the line with.
    * <p>
@@ -280,14 +290,14 @@ public class LineOptions extends Options<Line> {
       throw new RuntimeException("geometry field is required");
     }
     JsonObject jsonObject = new JsonObject();
-    jsonObject.addProperty("line-join", lineJoin);
-    jsonObject.addProperty("line-opacity", lineOpacity);
-    jsonObject.addProperty("line-color", lineColor);
-    jsonObject.addProperty("line-width", lineWidth);
-    jsonObject.addProperty("line-gap-width", lineGapWidth);
-    jsonObject.addProperty("line-offset", lineOffset);
-    jsonObject.addProperty("line-blur", lineBlur);
-    jsonObject.addProperty("line-pattern", linePattern);
+    jsonObject.addProperty(PROPERTY_lineJoin, lineJoin);
+    jsonObject.addProperty(PROPERTY_lineOpacity, lineOpacity);
+    jsonObject.addProperty(PROPERTY_lineColor, lineColor);
+    jsonObject.addProperty(PROPERTY_lineWidth, lineWidth);
+    jsonObject.addProperty(PROPERTY_lineGapWidth, lineGapWidth);
+    jsonObject.addProperty(PROPERTY_lineOffset, lineOffset);
+    jsonObject.addProperty(PROPERTY_lineBlur, lineBlur);
+    jsonObject.addProperty(PROPERTY_linePattern, linePattern);
     Line line = new Line(id, annotationManager, jsonObject, geometry);
     line.setDraggable(isDraggable);
     return line;
@@ -309,32 +319,32 @@ public class LineOptions extends Options<Line> {
 
     LineOptions options = new LineOptions();
     options.geometry = (LineString) feature.geometry();
-    if (feature.hasProperty("line-join")) {
-      options.lineJoin = feature.getProperty("line-join").getAsString();
+    if (feature.hasProperty(PROPERTY_lineJoin)) {
+      options.lineJoin = feature.getProperty(PROPERTY_lineJoin).getAsString();
     }
-    if (feature.hasProperty("line-opacity")) {
-      options.lineOpacity = feature.getProperty("line-opacity").getAsFloat();
+    if (feature.hasProperty(PROPERTY_lineOpacity)) {
+      options.lineOpacity = feature.getProperty(PROPERTY_lineOpacity).getAsFloat();
     }
-    if (feature.hasProperty("line-color")) {
-      options.lineColor = feature.getProperty("line-color").getAsString();
+    if (feature.hasProperty(PROPERTY_lineColor)) {
+      options.lineColor = feature.getProperty(PROPERTY_lineColor).getAsString();
     }
-    if (feature.hasProperty("line-width")) {
-      options.lineWidth = feature.getProperty("line-width").getAsFloat();
+    if (feature.hasProperty(PROPERTY_lineWidth)) {
+      options.lineWidth = feature.getProperty(PROPERTY_lineWidth).getAsFloat();
     }
-    if (feature.hasProperty("line-gap-width")) {
-      options.lineGapWidth = feature.getProperty("line-gap-width").getAsFloat();
+    if (feature.hasProperty(PROPERTY_lineGapWidth)) {
+      options.lineGapWidth = feature.getProperty(PROPERTY_lineGapWidth).getAsFloat();
     }
-    if (feature.hasProperty("line-offset")) {
-      options.lineOffset = feature.getProperty("line-offset").getAsFloat();
+    if (feature.hasProperty(PROPERTY_lineOffset)) {
+      options.lineOffset = feature.getProperty(PROPERTY_lineOffset).getAsFloat();
     }
-    if (feature.hasProperty("line-blur")) {
-      options.lineBlur = feature.getProperty("line-blur").getAsFloat();
+    if (feature.hasProperty(PROPERTY_lineBlur)) {
+      options.lineBlur = feature.getProperty(PROPERTY_lineBlur).getAsFloat();
     }
-    if (feature.hasProperty("line-pattern")) {
-      options.linePattern = feature.getProperty("line-pattern").getAsString();
+    if (feature.hasProperty(PROPERTY_linePattern)) {
+      options.linePattern = feature.getProperty(PROPERTY_linePattern).getAsString();
     }
-    if (feature.hasProperty("is-draggable")) {
-      options.isDraggable = feature.getProperty("is-draggable").getAsBoolean();
+    if (feature.hasProperty(PROPERTY_isDraggable)) {
+      options.isDraggable = feature.getProperty(PROPERTY_isDraggable).getAsBoolean();
     }
     return options;
   }

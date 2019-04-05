@@ -35,6 +35,15 @@ public class CircleOptions extends Options<Circle> {
   private String circleStrokeColor;
   private Float circleStrokeOpacity;
 
+  static final String PROPERTY_circleRadius = "circle-radius";
+  static final String PROPERTY_circleColor = "circle-color";
+  static final String PROPERTY_circleBlur = "circle-blur";
+  static final String PROPERTY_circleOpacity = "circle-opacity";
+  static final String PROPERTY_circleStrokeWidth = "circle-stroke-width";
+  static final String PROPERTY_circleStrokeColor = "circle-stroke-color";
+  static final String PROPERTY_circleStrokeOpacity = "circle-stroke-opacity";
+  private static final String PROPERTY_isDraggable = "is-draggable";
+
   /**
    * Set circle-radius to initialise the circle with.
    * <p>
@@ -251,13 +260,13 @@ public class CircleOptions extends Options<Circle> {
       throw new RuntimeException("geometry field is required");
     }
     JsonObject jsonObject = new JsonObject();
-    jsonObject.addProperty("circle-radius", circleRadius);
-    jsonObject.addProperty("circle-color", circleColor);
-    jsonObject.addProperty("circle-blur", circleBlur);
-    jsonObject.addProperty("circle-opacity", circleOpacity);
-    jsonObject.addProperty("circle-stroke-width", circleStrokeWidth);
-    jsonObject.addProperty("circle-stroke-color", circleStrokeColor);
-    jsonObject.addProperty("circle-stroke-opacity", circleStrokeOpacity);
+    jsonObject.addProperty(PROPERTY_circleRadius, circleRadius);
+    jsonObject.addProperty(PROPERTY_circleColor, circleColor);
+    jsonObject.addProperty(PROPERTY_circleBlur, circleBlur);
+    jsonObject.addProperty(PROPERTY_circleOpacity, circleOpacity);
+    jsonObject.addProperty(PROPERTY_circleStrokeWidth, circleStrokeWidth);
+    jsonObject.addProperty(PROPERTY_circleStrokeColor, circleStrokeColor);
+    jsonObject.addProperty(PROPERTY_circleStrokeOpacity, circleStrokeOpacity);
     Circle circle = new Circle(id, annotationManager, jsonObject, geometry);
     circle.setDraggable(isDraggable);
     return circle;
@@ -279,29 +288,29 @@ public class CircleOptions extends Options<Circle> {
 
     CircleOptions options = new CircleOptions();
     options.geometry = (Point) feature.geometry();
-    if (feature.hasProperty("circle-radius")) {
-      options.circleRadius = feature.getProperty("circle-radius").getAsFloat();
+    if (feature.hasProperty(PROPERTY_circleRadius)) {
+      options.circleRadius = feature.getProperty(PROPERTY_circleRadius).getAsFloat();
     }
-    if (feature.hasProperty("circle-color")) {
-      options.circleColor = feature.getProperty("circle-color").getAsString();
+    if (feature.hasProperty(PROPERTY_circleColor)) {
+      options.circleColor = feature.getProperty(PROPERTY_circleColor).getAsString();
     }
-    if (feature.hasProperty("circle-blur")) {
-      options.circleBlur = feature.getProperty("circle-blur").getAsFloat();
+    if (feature.hasProperty(PROPERTY_circleBlur)) {
+      options.circleBlur = feature.getProperty(PROPERTY_circleBlur).getAsFloat();
     }
-    if (feature.hasProperty("circle-opacity")) {
-      options.circleOpacity = feature.getProperty("circle-opacity").getAsFloat();
+    if (feature.hasProperty(PROPERTY_circleOpacity)) {
+      options.circleOpacity = feature.getProperty(PROPERTY_circleOpacity).getAsFloat();
     }
-    if (feature.hasProperty("circle-stroke-width")) {
-      options.circleStrokeWidth = feature.getProperty("circle-stroke-width").getAsFloat();
+    if (feature.hasProperty(PROPERTY_circleStrokeWidth)) {
+      options.circleStrokeWidth = feature.getProperty(PROPERTY_circleStrokeWidth).getAsFloat();
     }
-    if (feature.hasProperty("circle-stroke-color")) {
-      options.circleStrokeColor = feature.getProperty("circle-stroke-color").getAsString();
+    if (feature.hasProperty(PROPERTY_circleStrokeColor)) {
+      options.circleStrokeColor = feature.getProperty(PROPERTY_circleStrokeColor).getAsString();
     }
-    if (feature.hasProperty("circle-stroke-opacity")) {
-      options.circleStrokeOpacity = feature.getProperty("circle-stroke-opacity").getAsFloat();
+    if (feature.hasProperty(PROPERTY_circleStrokeOpacity)) {
+      options.circleStrokeOpacity = feature.getProperty(PROPERTY_circleStrokeOpacity).getAsFloat();
     }
-    if (feature.hasProperty("is-draggable")) {
-      options.isDraggable = feature.getProperty("is-draggable").getAsBoolean();
+    if (feature.hasProperty(PROPERTY_isDraggable)) {
+      options.isDraggable = feature.getProperty(PROPERTY_isDraggable).getAsBoolean();
     }
     return options;
   }
