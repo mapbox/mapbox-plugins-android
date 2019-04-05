@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
+import com.mapbox.mapboxsdk.offline.OfflineRegionDefinition;
 
 import org.json.JSONObject;
 
@@ -36,7 +36,7 @@ public class OfflineUtils {
     return metadata;
   }
 
-  public static CameraPosition getCameraPosition(OfflineTilePyramidRegionDefinition definition) {
+  public static CameraPosition getCameraPosition(OfflineRegionDefinition definition) {
     return new CameraPosition.Builder()
       .target(definition.getBounds().getCenter())
       .zoom(definition.getMinZoom())

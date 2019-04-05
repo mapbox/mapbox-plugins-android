@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 
-import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
+import com.mapbox.mapboxsdk.offline.OfflineRegionDefinition;
 import com.mapbox.mapboxsdk.plugins.offline.model.NotificationOptions;
 import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions;
 import com.mapbox.mapboxsdk.plugins.offline.model.RegionSelectionOptions;
@@ -50,7 +50,7 @@ public class OfflineRegionSelector {
    *
    * @param data     the {@link Activity#startActivityForResult(Intent, int)} which this method should
    *                 be used in provides the returning intent which should be provided in this param
-   * @param metadata Add additional metadata to the {@link OfflineTilePyramidRegionDefinition}, note
+   * @param metadata Add additional metadata to the {@link OfflineRegionDefinition}, note
    *                 to make sure not to override the region definition name if you still wish to use
    *                 it
    * @return a new {@link OfflineDownloadOptions} instance which can be used to launch the download
@@ -98,7 +98,7 @@ public class OfflineRegionSelector {
    *                            be provided in this param
    * @param notificationOptions the {@link NotificationOptions} object you've constructed to be used
    *                            when launching the offline region download service.
-   * @param metadata            Add additional metadata to the {@link OfflineTilePyramidRegionDefinition},
+   * @param metadata            Add additional metadata to the {@link OfflineRegionDefinition},
    *                            note to make sure not to override the region definition name if you
    *                            still wish to use it
    * @return a new {@link OfflineDownloadOptions} instance which can be used to launch the download
@@ -118,16 +118,16 @@ public class OfflineRegionSelector {
   }
 
   /**
-   * Returns the {@link OfflineTilePyramidRegionDefinition} which was created when the user was
+   * Returns the {@link OfflineRegionDefinition} which was created when the user was
    * inside the {@link OfflineActivity}.
    *
    * @param data the {@link Activity#startActivityForResult(Intent, int)} which this method should
    *             be used in provides the returning intent which should be provided in this param
-   * @return the {@link OfflineTilePyramidRegionDefinition} which was created inside the
+   * @return the {@link OfflineRegionDefinition} which was created inside the
    * {@link OfflineActivity}
    * @since 0.1.0
    */
-  public static OfflineTilePyramidRegionDefinition getRegionDefinition(Intent data) {
+  public static OfflineRegionDefinition getRegionDefinition(Intent data) {
     return data.getParcelableExtra(RETURNING_DEFINITION);
   }
 

@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
-import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
+import com.mapbox.mapboxsdk.offline.OfflineRegionDefinition;
 import com.mapbox.mapboxsdk.plugins.offline.offline.OfflineDownloadService;
 import com.mapbox.mapboxsdk.plugins.offline.offline.OfflinePlugin;
 
@@ -32,7 +32,7 @@ public abstract class OfflineDownloadOptions implements Parcelable {
    * @since 0.1.0
    */
   @NonNull
-  public abstract OfflineTilePyramidRegionDefinition definition();
+  public abstract OfflineRegionDefinition definition();
 
   /**
    * Launching the service requires a notification, using the {@link NotificationOptions} class
@@ -152,7 +152,7 @@ public abstract class OfflineDownloadOptions implements Parcelable {
      * @return this builder for chaining options together
      * @since 0.1.0
      */
-    public abstract Builder definition(@NonNull OfflineTilePyramidRegionDefinition definition);
+    public abstract Builder definition(@NonNull OfflineRegionDefinition definition);
 
     /**
      * Launching the service requires a notification, using the {@link NotificationOptions} class

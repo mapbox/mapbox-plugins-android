@@ -7,7 +7,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 
-import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
+import com.mapbox.mapboxsdk.offline.OfflineRegionDefinition;
 import com.mapbox.mapboxsdk.plugins.offline.OfflinePluginConstants;
 import com.mapbox.mapboxsdk.plugins.offline.R;
 import com.mapbox.mapboxsdk.plugins.offline.model.RegionSelectionOptions;
@@ -53,7 +53,7 @@ public class OfflineActivity extends AppCompatActivity implements RegionSelected
   }
 
   @Override
-  public void onSelected(OfflineTilePyramidRegionDefinition definition, String regionName) {
+  public void onSelected(OfflineRegionDefinition definition, String regionName) {
     Intent returningIntent = new Intent();
     returningIntent.putExtra(RETURNING_DEFINITION, definition);
     returningIntent.putExtra(RETURNING_REGION_NAME, regionName);
