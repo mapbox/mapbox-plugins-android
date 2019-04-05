@@ -33,10 +33,6 @@ import static com.mapbox.mapboxsdk.constants.GeometryConstants.MIN_MERCATOR_LATI
 public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>> {
 
   private final AnnotationManager<?, <%- camelize(type) %>, ?, ?, ?, ?> annotationManager;
-<% if (type === "symbol") { -%>
-
-  static final String Z_INDEX = "z-index";
-<% } -%>
 
   /**
    * Create a <%- type %>.
@@ -54,14 +50,14 @@ public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>>
   void setUsedDataDrivenProperties() {
 <% for (const property of properties) { -%>
 <% if (supportsPropertyFunction(property)) { -%>
-    if (!(jsonObject.get("<%- property.name %>") instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty("<%- property.name %>");
+    if (!(jsonObject.get(<%- camelize(type) %>Options.PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %>) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(<%- camelize(type) %>Options.PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %>);
     }
 <% } -%>
 <% } -%>
 <% if (type === "symbol") { -%>
-    if (!(jsonObject.get(Z_INDEX) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(Z_INDEX);
+    if (!(jsonObject.get(<%- camelize(type) %>Options.PROPERTY_zIndex) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(<%- camelize(type) %>Options.PROPERTY_zIndex);
     }
 <% } -%>
   }
@@ -178,7 +174,7 @@ public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>>
    * @param index the z-index value
    */
   public void setZIndex(int index) {
-    jsonObject.addProperty(Z_INDEX, index);
+    jsonObject.addProperty(<%- camelize(type) %>Options.PROPERTY_zIndex, index);
   }
 
   /**
@@ -187,7 +183,7 @@ public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>>
    * @return the z-index value, 0 if not set
    */
   public int getZIndex() {
-    return jsonObject.get(Z_INDEX).getAsInt();
+    return jsonObject.get(<%- camelize(type) %>Options.PROPERTY_zIndex).getAsInt();
   }
 <% } -%>
 
@@ -206,7 +202,7 @@ public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>>
    * @return PointF value for <%- propertyType(property) %>
    */
   public PointF get<%- camelize(property.name) %>() {
-    JsonArray jsonArray = jsonObject.getAsJsonArray("<%-property.name %>");
+    JsonArray jsonArray = jsonObject.getAsJsonArray(<%- camelize(type) %>Options.PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %>);
     return new PointF(jsonArray.get(0).getAsFloat(), jsonArray.get(1).getAsFloat());
   }
 
@@ -225,7 +221,7 @@ public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>>
     JsonArray jsonArray = new JsonArray();
     jsonArray.add(pointF.x);
     jsonArray.add(pointF.y);
-    jsonObject.add("<%-property.name %>", jsonArray);
+    jsonObject.add(<%- camelize(type) %>Options.PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %>, jsonArray);
   }
 <% } else { -%>
 
@@ -238,7 +234,7 @@ public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>>
    * @return property wrapper value around <%- propertyType(property) %>
    */
   public <%- propertyType(property) %> get<%- camelize(property.name) %>() {
-    JsonArray jsonArray = jsonObject.getAsJsonArray("<%-property.name %>");
+    JsonArray jsonArray = jsonObject.getAsJsonArray(<%- camelize(type) %>Options.PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %>);
     <%- propertyType(property) %> value = new <%- propertyType(property).substring(0, propertyType(property).length-1) %>jsonArray.size()];
     for (int i = 0; i < jsonArray.size(); i++) {
       value[i] = jsonArray.get(i).getAs<%- propertyType(property).substring(0, propertyType(property).length-2) %>();
@@ -262,7 +258,7 @@ public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>>
     for (<%- propertyType(property).substring(0, propertyType(property).length-2) %> element : value) {
       jsonArray.add(element);
     }
-    jsonObject.add("<%-property.name %>", jsonArray);
+    jsonObject.add(<%- camelize(type) %>Options.PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %>, jsonArray);
   }
 <% } -%>
 <% } else if (property.type == 'color') { -%>
@@ -277,7 +273,7 @@ public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>>
    */
   @ColorInt
   public int get<%- camelize(property.name) %>AsInt() {
-    return ColorUtils.rgbaToColor(jsonObject.get("<%- property.name %>").getAs<%- propertyType(property) %>());
+    return ColorUtils.rgbaToColor(jsonObject.get(<%- camelize(type) %>Options.PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %>).getAs<%- propertyType(property) %>());
   }
 
   /**
@@ -289,7 +285,7 @@ public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>>
    * @return color value for <%- propertyType(property) %>
    */
   public String get<%- camelize(property.name) %>() {
-    return jsonObject.get("<%- property.name %>").getAs<%- propertyType(property) %>();
+    return jsonObject.get(<%- camelize(type) %>Options.PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %>).getAs<%- propertyType(property) %>();
   }
 
   /**
@@ -304,7 +300,7 @@ public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>>
    * @param color value for <%- propertyType(property) %>
    */
   public void set<%- camelize(property.name) %>(@ColorInt int color) {
-    jsonObject.addProperty("<%- property.name %>", ColorUtils.colorToRgbaString(color));
+    jsonObject.addProperty(<%- camelize(type) %>Options.PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %>, ColorUtils.colorToRgbaString(color));
   }
 
   /**
@@ -332,7 +328,7 @@ public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>>
    * @return property wrapper value around <%- propertyType(property) %>
    */
   public <%- propertyType(property) %> get<%- camelize(property.name) %>() {
-    return jsonObject.get("<%- property.name %>").getAs<%- propertyType(property) %>();
+    return jsonObject.get(<%- camelize(type) %>Options.PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %>).getAs<%- propertyType(property) %>();
   }
 
   /**
@@ -347,7 +343,7 @@ public class <%- camelize(type) %> extends Annotation<<%- geometryType(type) %>>
    * @param value constant property value for <%- propertyType(property) %>
    */
   public void set<%- camelize(property.name) %>(<%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), " ") %><%- propertyType(property) %> value) {
-    jsonObject.addProperty("<%- property.name %>", value);
+    jsonObject.addProperty(<%- camelize(type) %>Options.PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %>, value);
   }
 <% } -%>
 <% } -%>
