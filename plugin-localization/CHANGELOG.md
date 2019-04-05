@@ -2,6 +2,15 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### mapbox-android-plugin-localization-v7:0.9.0 - April 5, 2019
+#### Features
+- Maps SDK bump to 7.3.0 [#895](https://github.com/mapbox/mapbox-plugins-android/pull/895)
+- Add better support for Chinese languages [#878](https://github.com/mapbox/mapbox-plugins-android/pull/878)
+#### Bugs
+- Correct javadoc syntax [#871](https://github.com/mapbox/mapbox-plugins-android/commit/0761054e0be8b55e5c41415bf196ab8c42a4decc)
+- Remove textField constant value check [#875](https://github.com/mapbox/mapbox-plugins-android/pull/875)
+- Register only one style loaded listener [#905](https://github.com/mapbox/mapbox-plugins-android/pull/905)
+
 ### mapbox-android-plugin-localization-v7:0.8.0 - February 5, 2019
 - Language fallbacks for Localization plugin [#823](https://github.com/mapbox/mapbox-plugins-android/pull/823)
 - Update dependencies and javadoc source reference [#827](https://github.com/mapbox/mapbox-plugins-android/pull/827)

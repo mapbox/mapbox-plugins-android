@@ -1,5 +1,14 @@
 # Changelog for the Mapbox offline plugin
 
+### mapbox-android-plugin-offline-v7:0.5.0 - April 5, 2019
+#### Features
+- Maps SDK bump to 7.3.0 [#895](https://github.com/mapbox/mapbox-plugins-android/pull/895)
+- Use a generic OfflineRegionDefinition [#913](https://github.com/mapbox/mapbox-plugins-android/pull/913)
+#### Bugs
+- Include missing Timber dependency [#820](https://github.com/mapbox/mapbox-plugins-android/pull/820/commits/12083e8964fd81b4cd0818bfcc2d433ba361b6fa)
+- Disable vector drawable in download notification on pre lollipop devices [#866](https://github.com/mapbox/mapbox-plugins-android/pull/866)
+- Check for null intent in case of a service restart [#912](https://github.com/mapbox/mapbox-plugins-android/pull/912)
+
 ### mapbox-android-plugin-offline-v7:0.4.0 - January 8, 2019
 - Update Offline plugin with the Maps SDK v7.0.0 [#789](https://github.com/mapbox/mapbox-plugins-android/pull/789)
 - Cancelling download reworked [#779](https://github.com/mapbox/mapbox-plugins-android/pull/779)
