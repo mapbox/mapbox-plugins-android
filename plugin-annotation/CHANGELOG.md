@@ -2,6 +2,22 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### mapbox-android-plugin-annotation-v7:0.6.0 - April 5, 2019
+#### Features
+- Maps SDK bump to 7.3.0 [#895](https://github.com/mapbox/mapbox-plugins-android/pull/895)
+- Add toString, hashcode and equals [#858](https://github.com/mapbox/mapbox-plugins-android/pull/858)
+- Delete all annotations method [#859](https://github.com/mapbox/mapbox-plugins-android/pull/859)
+- Add style spec documentation generation [#879](https://github.com/mapbox/mapbox-plugins-android/pull/879)
+- Move supported json properties docs to the public methods [#889](https://github.com/mapbox/mapbox-plugins-android/pull/889)
+- Support string color for layout properties [#897](https://github.com/mapbox/mapbox-plugins-android/pull/897)
+- Expose GeoJsonOptions [#909](https://github.com/mapbox/mapbox-plugins-android/pull/909)
+#### Bugs
+- Check if annotation is an active annotation when updating [#891](https://github.com/mapbox/mapbox-plugins-android/pull/891)
+- Use with prefix for options [#898](https://github.com/mapbox/mapbox-plugins-android/pull/898)
+- Notify gesture manager when drag is handled [#906](https://github.com/mapbox/mapbox-plugins-android/pull/906)
+- Register only one style loaded listener [#905](https://github.com/mapbox/mapbox-plugins-android/pull/905)
+- Use constants wherever property name strings are needed [#910](https://github.com/mapbox/mapbox-plugins-android/pull/910)
+
 ### mapbox-android-plugin-annotation-v7:0.5.0 - February 5, 2019
 - Do not flag click events as handled [#822](https://github.com/mapbox/mapbox-plugins-android/pull/822)
 - Update dependencies and javadoc source reference [#827](https://github.com/mapbox/mapbox-plugins-android/pull/827)

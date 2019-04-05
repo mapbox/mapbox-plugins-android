@@ -2,6 +2,12 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### mapbox-android-plugin-places-v7:0.8.0 - April 5, 2019
+#### Features
+- Maps SDK bump to 7.3.0 [#895](https://github.com/mapbox/mapbox-plugins-android/pull/895)
+#### Bugs
+- Include missing Timber dependency [#820](https://github.com/mapbox/mapbox-plugins-android/pull/820/commits/12083e8964fd81b4cd0818bfcc2d433ba361b6fa)
+
 ### mapbox-android-plugin-places-v7:0.7.0 - January 8, 2019
  - Update Offline plugin with the Maps SDK v7.0.0 [#789](https://github.com/mapbox/mapbox-plugins-android/pull/789)
  - Places plugin NPEs fixes [#806](https://github.com/mapbox/mapbox-plugins-android/pull/806)
