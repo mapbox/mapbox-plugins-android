@@ -6,8 +6,8 @@ import android.view.View
 import android.widget.Toast
 import com.mapbox.mapboxsdk.offline.OfflineManager
 import com.mapbox.mapboxsdk.offline.OfflineRegion
+import com.mapbox.mapboxsdk.offline.OfflineRegionDefinition
 import com.mapbox.mapboxsdk.offline.OfflineRegionStatus
-import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition
 import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions
 import com.mapbox.mapboxsdk.plugins.offline.offline.OfflineConstants.KEY_BUNDLE
 import com.mapbox.mapboxsdk.plugins.offline.offline.OfflineDownloadChangeListener
@@ -107,7 +107,7 @@ class OfflineRegionDetailActivity : AppCompatActivity(), OfflineDownloadChangeLi
                         for (region in offlineRegions) {
                             if (region.id == id) {
                                 offlineRegion = region
-                                val definition = region.definition as OfflineTilePyramidRegionDefinition
+                                val definition = region.definition as OfflineRegionDefinition
                                 setupUI(definition)
                                 return
                             }
@@ -130,7 +130,7 @@ class OfflineRegionDetailActivity : AppCompatActivity(), OfflineDownloadChangeLi
         }
     }
 
-    private fun setupUI(definition: OfflineTilePyramidRegionDefinition) {
+    private fun setupUI(definition: OfflineRegionDefinition) {
         // update map
         mapView?.getMapAsync { mapboxMap ->
             // correct style
