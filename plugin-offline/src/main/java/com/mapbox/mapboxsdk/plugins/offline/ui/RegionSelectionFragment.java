@@ -20,6 +20,7 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.offline.OfflineRegionDefinition;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
 import com.mapbox.mapboxsdk.plugins.offline.OfflinePluginConstants;
 import com.mapbox.mapboxsdk.plugins.offline.R;
@@ -196,7 +197,7 @@ public class RegionSelectionFragment extends Fragment implements OnMapReadyCallb
     return getString(R.string.mapbox_offline_default_region_name);
   }
 
-  OfflineTilePyramidRegionDefinition createRegion() {
+  OfflineRegionDefinition createRegion() {
     if (mapboxMap == null) {
       throw new NullPointerException("MapboxMap is null and can't be used to create Offline region"
         + "definition.");

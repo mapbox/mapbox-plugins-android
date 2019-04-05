@@ -13,9 +13,9 @@ import android.support.v4.util.LongSparseArray;
 
 import com.mapbox.mapboxsdk.offline.OfflineManager;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
+import com.mapbox.mapboxsdk.offline.OfflineRegionDefinition;
 import com.mapbox.mapboxsdk.offline.OfflineRegionError;
 import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
-import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
 import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions;
 import com.mapbox.mapboxsdk.plugins.offline.utils.NotificationUtils;
 import com.mapbox.mapboxsdk.snapshotter.MapSnapshot;
@@ -114,7 +114,7 @@ public class OfflineDownloadService extends Service {
   }
 
   private void createDownload(final OfflineDownloadOptions offlineDownload) {
-    final OfflineTilePyramidRegionDefinition definition = offlineDownload.definition();
+    final OfflineRegionDefinition definition = offlineDownload.definition();
     final byte[] metadata = offlineDownload.metadata();
     OfflineManager.getInstance(getApplicationContext())
       .createOfflineRegion(
@@ -163,7 +163,7 @@ public class OfflineDownloadService extends Service {
     }
   }
 
-  private void createMapSnapshot(OfflineTilePyramidRegionDefinition definition,
+  private void createMapSnapshot(OfflineRegionDefinition definition,
                                  MapSnapshotter.SnapshotReadyCallback callback) {
     Resources resources = getResources();
     int height = (int) resources.getDimension(android.R.dimen.notification_large_icon_height);
