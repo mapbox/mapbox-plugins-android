@@ -16,6 +16,7 @@ import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
+import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
 
@@ -48,7 +49,7 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    */
   @UiThread
   public LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style) {
-    this(mapView, mapboxMap, style, null);
+    this(mapView, mapboxMap, style, null, null);
   }
 
   /**
@@ -60,6 +61,19 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    */
   @UiThread
   public LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId) {
+    this(mapView, mapboxMap, style, belowLayerId, null);
+  }
+
+  /**
+   * Create a line manager, used to manage lines.
+   *
+   * @param mapboxMap the map object to add lines to
+   * @param style a valid a fully loaded style object
+   * @param belowLayerId the id of the layer above the circle layer
+   * @param geoJsonOptions options for the internal source
+   */
+  @UiThread
+  public LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions) {
     this(mapView, mapboxMap, style,
       new CoreElementProvider<LineLayer>() {
         @Override
@@ -68,22 +82,20 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
         }
 
         @Override
-        public GeoJsonSource getSource() {
-          return new GeoJsonSource(ID_GEOJSON_SOURCE);
+        public GeoJsonSource getSource(@Nullable GeoJsonOptions geoJsonOptions) {
+          if (geoJsonOptions != null) {
+            return new GeoJsonSource(ID_GEOJSON_SOURCE, geoJsonOptions);
+          } else {
+            return new GeoJsonSource(ID_GEOJSON_SOURCE);
+          }
         }
       },
-     belowLayerId, new DraggableAnnotationController<>(mapView, mapboxMap));
+     belowLayerId, geoJsonOptions, new DraggableAnnotationController<>(mapView, mapboxMap));
   }
 
-  /**
-   * Create a line manager, used to manage lines.
-   *
-   * @param mapboxMap     the map object to add lines to
-   * @param style a valid a fully loaded style object
-   */
   @VisibleForTesting
-  public LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @NonNull CoreElementProvider<LineLayer> coreElementProvider, @Nullable String belowLayerId, DraggableAnnotationController<Line, OnLineDragListener> draggableAnnotationController) {
-    super(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController, belowLayerId);
+  LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @NonNull CoreElementProvider<LineLayer> coreElementProvider, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions, DraggableAnnotationController<Line, OnLineDragListener> draggableAnnotationController) {
+    super(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController, belowLayerId, geoJsonOptions);
   }
 
   @Override

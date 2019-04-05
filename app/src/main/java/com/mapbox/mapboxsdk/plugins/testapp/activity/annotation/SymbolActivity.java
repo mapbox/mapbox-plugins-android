@@ -25,6 +25,7 @@ import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.Utils;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 import com.mapbox.mapboxsdk.utils.BitmapUtils;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
 import timber.log.Timber;
@@ -76,7 +77,8 @@ public class SymbolActivity extends AppCompatActivity {
         true);
 
       // create symbol manager
-      symbolManager = new SymbolManager(mapView, mapboxMap, style);
+      GeoJsonOptions geoJsonOptions = new GeoJsonOptions().withTolerance(0.4f);
+      symbolManager = new SymbolManager(mapView, mapboxMap, style, null, geoJsonOptions);
       symbolManager.addClickListener(symbol -> Toast.makeText(SymbolActivity.this,
         String.format("Symbol clicked %s", symbol.getId()),
         Toast.LENGTH_SHORT
