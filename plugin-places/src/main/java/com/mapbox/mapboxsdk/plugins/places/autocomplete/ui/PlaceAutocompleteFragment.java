@@ -44,6 +44,7 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
   private SearchView searchView;
   private View dropShadowView;
   private String accessToken;
+  private Integer historyCount;
   private View rootView;
   private int mode;
 
@@ -204,8 +205,15 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
   void updateSearchHistoryView(@Nullable List<SearchHistoryEntity> searchHistoryEntities) {
     searchHistoryView.getResultsList().clear();
     if (searchHistoryEntities != null) {
-      for (SearchHistoryEntity entity : searchHistoryEntities) {
-        searchHistoryView.getResultsList().add(entity.getCarmenFeature());
+      if (placeOptions.historyCount() != null) {
+        historyCount = placeOptions.historyCount();
+        for (int x = 0; x < historyCount; x++) {
+          searchHistoryView.getResultsList().add(searchHistoryEntities.get(x).getCarmenFeature());
+        }
+      } else {
+        for (SearchHistoryEntity entity : searchHistoryEntities) {
+          searchHistoryView.getResultsList().add(entity.getCarmenFeature());
+        }
       }
     }
     searchHistoryView.notifyDataSetChanged();
@@ -268,5 +276,9 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
 
   public String getAccessToken() {
     return accessToken;
+  }
+
+  public Integer getHistoryCount() {
+    return historyCount;
   }
 }
