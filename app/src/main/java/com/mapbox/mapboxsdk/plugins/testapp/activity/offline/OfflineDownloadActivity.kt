@@ -31,7 +31,12 @@ class OfflineDownloadActivity : AppCompatActivity() {
         setContentView(R.layout.activity_offline_download)
         initUi()
         initSeekbarListeners()
-        fabStartDownload.setOnClickListener { onDownloadRegion() }
+        fabStartDownload.setOnClickListener {
+            if (seekbarMaxZoom.progress.toFloat() > seekbarMinZoom.progress.toFloat())
+                onDownloadRegion() else Toast.makeText(this,
+                    "Please make sure that the Max zoom value is larger" +
+                            " than the Min zoom level", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun initUi() {
