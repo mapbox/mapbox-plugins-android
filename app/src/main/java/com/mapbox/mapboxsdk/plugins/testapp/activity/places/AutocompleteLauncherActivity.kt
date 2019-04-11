@@ -80,15 +80,15 @@ class AutocompleteLauncherActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun addUserLocations() {
         home = CarmenFeature.builder().text("Directions to Home")
-                .geometry(Point.fromLngLat(1.0, 2.0))
+                .geometry(Point.fromLngLat(-77.015665, 38.8996419))
                 .placeName("300 Massachusetts Ave NW")
                 .id("directions-home")
                 .properties(JsonObject())
                 .build()
 
         work = CarmenFeature.builder().text("Directions to Work")
-                .placeName("1509 16th St NW")
-                .geometry(Point.fromLngLat(1.0, 2.0))
+                .placeName("740 15th St NW")
+                .geometry(Point.fromLngLat(-77.03389, 38.89985))
                 .id("directions-work")
                 .properties(JsonObject())
                 .build()
