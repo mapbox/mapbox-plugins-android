@@ -85,6 +85,16 @@ public abstract class PlaceOptions implements Parcelable {
   public abstract int limit();
 
   /**
+   * Limit the number of results returned. The default is the maximum number of
+   * historical searches already saved by the Places plugin.
+   *
+   * @return the number of past search results returned by the geocoder
+   * @since 0.9.0
+   */
+  @Nullable
+  public abstract Integer historyCount();
+
+  /**
    * Limit results to a bounding box. Options are in the format {@code minX,minY,maxX,maxY}.
    *
    * @return the string with the coordinate order minX,minY,maxX,maxY
@@ -244,6 +254,15 @@ public abstract class PlaceOptions implements Parcelable {
      * @since 0.1.0
      */
     public abstract Builder limit(@IntRange(from = 1, to = 10) int limit);
+
+    /**
+     * Limit the number of past search results shown.
+     *
+     * @param historyCount the number of past historical searches shown before a search starts.
+     * @return this builder instance for chaining options together
+     * @since 0.9.0
+     */
+    public abstract Builder historyCount(@Nullable @IntRange(from = 0) Integer historyCount);
 
     /**
      * Limit results to a bounding box.

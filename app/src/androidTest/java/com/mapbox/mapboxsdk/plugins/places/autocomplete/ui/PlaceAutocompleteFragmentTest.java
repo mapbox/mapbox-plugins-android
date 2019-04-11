@@ -28,6 +28,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -36,6 +37,7 @@ import static org.mockito.Mockito.verify;
 @Ignore public class PlaceAutocompleteFragmentTest {
 
   private static final String ACCESS_TOKEN = "pk.XXX";
+  private static final Integer HISTORY_COUNT = 5;
 
   private PlaceAutocompleteFragment placeAutocompleteFragment;
 
@@ -53,6 +55,7 @@ import static org.mockito.Mockito.verify;
 
     // For style test
     builder.backgroundColor(Color.BLUE);
+    builder.historyCount(HISTORY_COUNT);
     builder.hint("foobar");
 
     placeAutocompleteFragment = PlaceAutocompleteFragment.newInstance(
@@ -68,6 +71,11 @@ import static org.mockito.Mockito.verify;
     assertThat(placeAutocompleteFragment.getAccessToken(), equalTo(ACCESS_TOKEN));
   }
 
+  @Test
+  public void styleView_setHistoryCountIsCorrect() throws Exception {
+    assertThat(placeAutocompleteFragment.getHistoryCount(), equalTo(HISTORY_COUNT));
+  }
+  
   @Test
   public void onCreateView_doesInflateCorrectModeView() throws Exception {
     onView(withId(R.id.cardView)).check(matches(isDisplayed()));
