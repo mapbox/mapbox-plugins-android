@@ -18,9 +18,6 @@ import android.support.annotation.Nullable;
 import com.mapbox.android.gestures.MoveDistancesObject;
 import com.mapbox.mapboxsdk.maps.Projection;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.mapbox.mapboxsdk.constants.GeometryConstants.MAX_MERCATOR_LATITUDE;
 import static com.mapbox.mapboxsdk.constants.GeometryConstants.MIN_MERCATOR_LATITUDE;
 
