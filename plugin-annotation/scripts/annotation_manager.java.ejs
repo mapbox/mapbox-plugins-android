@@ -41,7 +41,7 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
 
 <% for (const property of properties) { -%>
 <% if (!supportsPropertyFunction(property) && property.name !== "line-gradient" && property.name !== "symbol-z-order") { -%>
-  private static final String PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %> = "<%- property.name %>";
+  private static final String PROPERTY_<%- snakeCaseUpper(property.name) %> = "<%- property.name %>";
 <% } -%>
 <% } -%>
 
@@ -110,11 +110,11 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
   void initializeDataDrivenPropertyMap() {
 <% for (const property of properties) { -%>
 <% if (supportsPropertyFunction(property)) { -%>
-    dataDrivenPropertyUsageMap.put(<%- camelize(type) %>Options.PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %>, false);
+    dataDrivenPropertyUsageMap.put(<%- camelize(type) %>Options.PROPERTY_<%- snakeCaseUpper(property.name) %>, false);
 <% } -%>
 <% } -%>
 <% if (type === "symbol") { -%>
-    dataDrivenPropertyUsageMap.put(<%- camelize(type) %>Options.PROPERTY_zIndex, false);
+    dataDrivenPropertyUsageMap.put(<%- camelize(type) %>Options.PROPERTY_Z_INDEX, false);
 <% } -%>
   }
 
@@ -123,13 +123,13 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
     switch (property) {
 <% for (const property of properties) { -%>
 <% if (supportsPropertyFunction(property)) { -%>
-      case <%- camelize(type) %>Options.PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %>:
-        layer.setProperties(<%- camelizeWithLeadingLowercase(property.name) %>(get(<%- camelize(type) %>Options.PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %>)));
+      case <%- camelize(type) %>Options.PROPERTY_<%- snakeCaseUpper(property.name) %>:
+        layer.setProperties(<%- camelizeWithLeadingLowercase(property.name) %>(get(<%- camelize(type) %>Options.PROPERTY_<%- snakeCaseUpper(property.name) %>)));
         break;
 <% } -%>
 <% } -%>
 <% if (type === "symbol") { -%>
-      case <%- camelize(type) %>Options.PROPERTY_zIndex:
+      case <%- camelize(type) %>Options.PROPERTY_Z_INDEX:
         layer.setProperties(symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE));
         break;
 <% } -%>
@@ -144,7 +144,7 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
    * All supported properties are:<br>
 <% for (const property of properties) { -%>
 <% if (supportsPropertyFunction(property)) { -%>
-   * <%- camelize(type) %>Options.PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %> - <%- propertyType(property) -%><br>
+   * <%- camelize(type) %>Options.PROPERTY_<%- snakeCaseUpper(property.name) %> - <%- propertyType(property) -%><br>
 <% } -%>
 <% } -%>
    * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
@@ -171,7 +171,7 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
    * All supported properties are:<br>
 <% for (const property of properties) { -%>
 <% if (supportsPropertyFunction(property)) { -%>
-   * <%- camelize(type) %>Options.PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %> - <%- propertyType(property) -%><br>
+   * <%- camelize(type) %>Options.PROPERTY_<%- snakeCaseUpper(property.name) %> - <%- propertyType(property) -%><br>
 <% } -%>
 <% } -%>
    * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
@@ -245,7 +245,7 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
    */
   public void set<%- camelize(property.name) %>(<%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), "") %> <%- propertyType(property) %> value) {
     PropertyValue propertyValue = <%- camelizeWithLeadingLowercase(property.name) %>(value);
-    constantPropertyUsageMap.put(PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %>, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_<%- snakeCaseUpper(property.name) %>, propertyValue);
     layer.setProperties(propertyValue);
   }
 

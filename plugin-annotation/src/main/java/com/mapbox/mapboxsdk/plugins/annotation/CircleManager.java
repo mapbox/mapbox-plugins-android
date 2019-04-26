@@ -34,10 +34,10 @@ public class CircleManager extends AnnotationManager<CircleLayer, Circle, Circle
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-circle-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-circle-layer";
 
-  private static final String PROPERTY_circleTranslate = "circle-translate";
-  private static final String PROPERTY_circleTranslateAnchor = "circle-translate-anchor";
-  private static final String PROPERTY_circlePitchScale = "circle-pitch-scale";
-  private static final String PROPERTY_circlePitchAlignment = "circle-pitch-alignment";
+  private static final String PROPERTY_CIRCLE_TRANSLATE = "circle-translate";
+  private static final String PROPERTY_CIRCLE_TRANSLATE_ANCHOR = "circle-translate-anchor";
+  private static final String PROPERTY_CIRCLE_PITCH_SCALE = "circle-pitch-scale";
+  private static final String PROPERTY_CIRCLE_PITCH_ALIGNMENT = "circle-pitch-alignment";
 
   /**
    * Create a circle manager, used to manage circles.
@@ -98,38 +98,38 @@ public class CircleManager extends AnnotationManager<CircleLayer, Circle, Circle
 
   @Override
   void initializeDataDrivenPropertyMap() {
-    dataDrivenPropertyUsageMap.put(CircleOptions.PROPERTY_circleRadius, false);
-    dataDrivenPropertyUsageMap.put(CircleOptions.PROPERTY_circleColor, false);
-    dataDrivenPropertyUsageMap.put(CircleOptions.PROPERTY_circleBlur, false);
-    dataDrivenPropertyUsageMap.put(CircleOptions.PROPERTY_circleOpacity, false);
-    dataDrivenPropertyUsageMap.put(CircleOptions.PROPERTY_circleStrokeWidth, false);
-    dataDrivenPropertyUsageMap.put(CircleOptions.PROPERTY_circleStrokeColor, false);
-    dataDrivenPropertyUsageMap.put(CircleOptions.PROPERTY_circleStrokeOpacity, false);
+    dataDrivenPropertyUsageMap.put(CircleOptions.PROPERTY_CIRCLE_RADIUS, false);
+    dataDrivenPropertyUsageMap.put(CircleOptions.PROPERTY_CIRCLE_COLOR, false);
+    dataDrivenPropertyUsageMap.put(CircleOptions.PROPERTY_CIRCLE_BLUR, false);
+    dataDrivenPropertyUsageMap.put(CircleOptions.PROPERTY_CIRCLE_OPACITY, false);
+    dataDrivenPropertyUsageMap.put(CircleOptions.PROPERTY_CIRCLE_STROKE_WIDTH, false);
+    dataDrivenPropertyUsageMap.put(CircleOptions.PROPERTY_CIRCLE_STROKE_COLOR, false);
+    dataDrivenPropertyUsageMap.put(CircleOptions.PROPERTY_CIRCLE_STROKE_OPACITY, false);
   }
 
   @Override
   protected void setDataDrivenPropertyIsUsed(@NonNull String property) {
     switch (property) {
-      case CircleOptions.PROPERTY_circleRadius:
-        layer.setProperties(circleRadius(get(CircleOptions.PROPERTY_circleRadius)));
+      case CircleOptions.PROPERTY_CIRCLE_RADIUS:
+        layer.setProperties(circleRadius(get(CircleOptions.PROPERTY_CIRCLE_RADIUS)));
         break;
-      case CircleOptions.PROPERTY_circleColor:
-        layer.setProperties(circleColor(get(CircleOptions.PROPERTY_circleColor)));
+      case CircleOptions.PROPERTY_CIRCLE_COLOR:
+        layer.setProperties(circleColor(get(CircleOptions.PROPERTY_CIRCLE_COLOR)));
         break;
-      case CircleOptions.PROPERTY_circleBlur:
-        layer.setProperties(circleBlur(get(CircleOptions.PROPERTY_circleBlur)));
+      case CircleOptions.PROPERTY_CIRCLE_BLUR:
+        layer.setProperties(circleBlur(get(CircleOptions.PROPERTY_CIRCLE_BLUR)));
         break;
-      case CircleOptions.PROPERTY_circleOpacity:
-        layer.setProperties(circleOpacity(get(CircleOptions.PROPERTY_circleOpacity)));
+      case CircleOptions.PROPERTY_CIRCLE_OPACITY:
+        layer.setProperties(circleOpacity(get(CircleOptions.PROPERTY_CIRCLE_OPACITY)));
         break;
-      case CircleOptions.PROPERTY_circleStrokeWidth:
-        layer.setProperties(circleStrokeWidth(get(CircleOptions.PROPERTY_circleStrokeWidth)));
+      case CircleOptions.PROPERTY_CIRCLE_STROKE_WIDTH:
+        layer.setProperties(circleStrokeWidth(get(CircleOptions.PROPERTY_CIRCLE_STROKE_WIDTH)));
         break;
-      case CircleOptions.PROPERTY_circleStrokeColor:
-        layer.setProperties(circleStrokeColor(get(CircleOptions.PROPERTY_circleStrokeColor)));
+      case CircleOptions.PROPERTY_CIRCLE_STROKE_COLOR:
+        layer.setProperties(circleStrokeColor(get(CircleOptions.PROPERTY_CIRCLE_STROKE_COLOR)));
         break;
-      case CircleOptions.PROPERTY_circleStrokeOpacity:
-        layer.setProperties(circleStrokeOpacity(get(CircleOptions.PROPERTY_circleStrokeOpacity)));
+      case CircleOptions.PROPERTY_CIRCLE_STROKE_OPACITY:
+        layer.setProperties(circleStrokeOpacity(get(CircleOptions.PROPERTY_CIRCLE_STROKE_OPACITY)));
         break;
     }
   }
@@ -140,13 +140,13 @@ public class CircleManager extends AnnotationManager<CircleLayer, Circle, Circle
    * Circles are going to be created only for features with a matching geometry.
    * <p>
    * All supported properties are:<br>
-   * CircleOptions.PROPERTY_circleRadius - Float<br>
-   * CircleOptions.PROPERTY_circleColor - String<br>
-   * CircleOptions.PROPERTY_circleBlur - Float<br>
-   * CircleOptions.PROPERTY_circleOpacity - Float<br>
-   * CircleOptions.PROPERTY_circleStrokeWidth - Float<br>
-   * CircleOptions.PROPERTY_circleStrokeColor - String<br>
-   * CircleOptions.PROPERTY_circleStrokeOpacity - Float<br>
+   * CircleOptions.PROPERTY_CIRCLE_RADIUS - Float<br>
+   * CircleOptions.PROPERTY_CIRCLE_COLOR - String<br>
+   * CircleOptions.PROPERTY_CIRCLE_BLUR - Float<br>
+   * CircleOptions.PROPERTY_CIRCLE_OPACITY - Float<br>
+   * CircleOptions.PROPERTY_CIRCLE_STROKE_WIDTH - Float<br>
+   * CircleOptions.PROPERTY_CIRCLE_STROKE_COLOR - String<br>
+   * CircleOptions.PROPERTY_CIRCLE_STROKE_OPACITY - Float<br>
    * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
    * <p>
    * Out of spec properties:<br>
@@ -166,13 +166,13 @@ public class CircleManager extends AnnotationManager<CircleLayer, Circle, Circle
    * Circles are going to be created only for features with a matching geometry.
    * <p>
    * All supported properties are:<br>
-   * CircleOptions.PROPERTY_circleRadius - Float<br>
-   * CircleOptions.PROPERTY_circleColor - String<br>
-   * CircleOptions.PROPERTY_circleBlur - Float<br>
-   * CircleOptions.PROPERTY_circleOpacity - Float<br>
-   * CircleOptions.PROPERTY_circleStrokeWidth - Float<br>
-   * CircleOptions.PROPERTY_circleStrokeColor - String<br>
-   * CircleOptions.PROPERTY_circleStrokeOpacity - Float<br>
+   * CircleOptions.PROPERTY_CIRCLE_RADIUS - Float<br>
+   * CircleOptions.PROPERTY_CIRCLE_COLOR - String<br>
+   * CircleOptions.PROPERTY_CIRCLE_BLUR - Float<br>
+   * CircleOptions.PROPERTY_CIRCLE_OPACITY - Float<br>
+   * CircleOptions.PROPERTY_CIRCLE_STROKE_WIDTH - Float<br>
+   * CircleOptions.PROPERTY_CIRCLE_STROKE_COLOR - String<br>
+   * CircleOptions.PROPERTY_CIRCLE_STROKE_OPACITY - Float<br>
    * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
    * <p>
    * Out of spec properties:<br>
@@ -239,7 +239,7 @@ public class CircleManager extends AnnotationManager<CircleLayer, Circle, Circle
    */
   public void setCircleTranslate( Float[] value) {
     PropertyValue propertyValue = circleTranslate(value);
-    constantPropertyUsageMap.put(PROPERTY_circleTranslate, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_CIRCLE_TRANSLATE, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -265,7 +265,7 @@ public class CircleManager extends AnnotationManager<CircleLayer, Circle, Circle
    */
   public void setCircleTranslateAnchor(@Property.CIRCLE_TRANSLATE_ANCHOR String value) {
     PropertyValue propertyValue = circleTranslateAnchor(value);
-    constantPropertyUsageMap.put(PROPERTY_circleTranslateAnchor, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_CIRCLE_TRANSLATE_ANCHOR, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -291,7 +291,7 @@ public class CircleManager extends AnnotationManager<CircleLayer, Circle, Circle
    */
   public void setCirclePitchScale(@Property.CIRCLE_PITCH_SCALE String value) {
     PropertyValue propertyValue = circlePitchScale(value);
-    constantPropertyUsageMap.put(PROPERTY_circlePitchScale, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_CIRCLE_PITCH_SCALE, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -317,7 +317,7 @@ public class CircleManager extends AnnotationManager<CircleLayer, Circle, Circle
    */
   public void setCirclePitchAlignment(@Property.CIRCLE_PITCH_ALIGNMENT String value) {
     PropertyValue propertyValue = circlePitchAlignment(value);
-    constantPropertyUsageMap.put(PROPERTY_circlePitchAlignment, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_CIRCLE_PITCH_ALIGNMENT, propertyValue);
     layer.setProperties(propertyValue);
   }
 

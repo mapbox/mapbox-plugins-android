@@ -34,12 +34,12 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-line-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-line-layer";
 
-  private static final String PROPERTY_lineCap = "line-cap";
-  private static final String PROPERTY_lineMiterLimit = "line-miter-limit";
-  private static final String PROPERTY_lineRoundLimit = "line-round-limit";
-  private static final String PROPERTY_lineTranslate = "line-translate";
-  private static final String PROPERTY_lineTranslateAnchor = "line-translate-anchor";
-  private static final String PROPERTY_lineDasharray = "line-dasharray";
+  private static final String PROPERTY_LINE_CAP = "line-cap";
+  private static final String PROPERTY_LINE_MITER_LIMIT = "line-miter-limit";
+  private static final String PROPERTY_LINE_ROUND_LIMIT = "line-round-limit";
+  private static final String PROPERTY_LINE_TRANSLATE = "line-translate";
+  private static final String PROPERTY_LINE_TRANSLATE_ANCHOR = "line-translate-anchor";
+  private static final String PROPERTY_LINE_DASHARRAY = "line-dasharray";
 
   /**
    * Create a line manager, used to manage lines.
@@ -100,42 +100,42 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
 
   @Override
   void initializeDataDrivenPropertyMap() {
-    dataDrivenPropertyUsageMap.put(LineOptions.PROPERTY_lineJoin, false);
-    dataDrivenPropertyUsageMap.put(LineOptions.PROPERTY_lineOpacity, false);
-    dataDrivenPropertyUsageMap.put(LineOptions.PROPERTY_lineColor, false);
-    dataDrivenPropertyUsageMap.put(LineOptions.PROPERTY_lineWidth, false);
-    dataDrivenPropertyUsageMap.put(LineOptions.PROPERTY_lineGapWidth, false);
-    dataDrivenPropertyUsageMap.put(LineOptions.PROPERTY_lineOffset, false);
-    dataDrivenPropertyUsageMap.put(LineOptions.PROPERTY_lineBlur, false);
-    dataDrivenPropertyUsageMap.put(LineOptions.PROPERTY_linePattern, false);
+    dataDrivenPropertyUsageMap.put(LineOptions.PROPERTY_LINE_JOIN, false);
+    dataDrivenPropertyUsageMap.put(LineOptions.PROPERTY_LINE_OPACITY, false);
+    dataDrivenPropertyUsageMap.put(LineOptions.PROPERTY_LINE_COLOR, false);
+    dataDrivenPropertyUsageMap.put(LineOptions.PROPERTY_LINE_WIDTH, false);
+    dataDrivenPropertyUsageMap.put(LineOptions.PROPERTY_LINE_GAP_WIDTH, false);
+    dataDrivenPropertyUsageMap.put(LineOptions.PROPERTY_LINE_OFFSET, false);
+    dataDrivenPropertyUsageMap.put(LineOptions.PROPERTY_LINE_BLUR, false);
+    dataDrivenPropertyUsageMap.put(LineOptions.PROPERTY_LINE_PATTERN, false);
   }
 
   @Override
   protected void setDataDrivenPropertyIsUsed(@NonNull String property) {
     switch (property) {
-      case LineOptions.PROPERTY_lineJoin:
-        layer.setProperties(lineJoin(get(LineOptions.PROPERTY_lineJoin)));
+      case LineOptions.PROPERTY_LINE_JOIN:
+        layer.setProperties(lineJoin(get(LineOptions.PROPERTY_LINE_JOIN)));
         break;
-      case LineOptions.PROPERTY_lineOpacity:
-        layer.setProperties(lineOpacity(get(LineOptions.PROPERTY_lineOpacity)));
+      case LineOptions.PROPERTY_LINE_OPACITY:
+        layer.setProperties(lineOpacity(get(LineOptions.PROPERTY_LINE_OPACITY)));
         break;
-      case LineOptions.PROPERTY_lineColor:
-        layer.setProperties(lineColor(get(LineOptions.PROPERTY_lineColor)));
+      case LineOptions.PROPERTY_LINE_COLOR:
+        layer.setProperties(lineColor(get(LineOptions.PROPERTY_LINE_COLOR)));
         break;
-      case LineOptions.PROPERTY_lineWidth:
-        layer.setProperties(lineWidth(get(LineOptions.PROPERTY_lineWidth)));
+      case LineOptions.PROPERTY_LINE_WIDTH:
+        layer.setProperties(lineWidth(get(LineOptions.PROPERTY_LINE_WIDTH)));
         break;
-      case LineOptions.PROPERTY_lineGapWidth:
-        layer.setProperties(lineGapWidth(get(LineOptions.PROPERTY_lineGapWidth)));
+      case LineOptions.PROPERTY_LINE_GAP_WIDTH:
+        layer.setProperties(lineGapWidth(get(LineOptions.PROPERTY_LINE_GAP_WIDTH)));
         break;
-      case LineOptions.PROPERTY_lineOffset:
-        layer.setProperties(lineOffset(get(LineOptions.PROPERTY_lineOffset)));
+      case LineOptions.PROPERTY_LINE_OFFSET:
+        layer.setProperties(lineOffset(get(LineOptions.PROPERTY_LINE_OFFSET)));
         break;
-      case LineOptions.PROPERTY_lineBlur:
-        layer.setProperties(lineBlur(get(LineOptions.PROPERTY_lineBlur)));
+      case LineOptions.PROPERTY_LINE_BLUR:
+        layer.setProperties(lineBlur(get(LineOptions.PROPERTY_LINE_BLUR)));
         break;
-      case LineOptions.PROPERTY_linePattern:
-        layer.setProperties(linePattern(get(LineOptions.PROPERTY_linePattern)));
+      case LineOptions.PROPERTY_LINE_PATTERN:
+        layer.setProperties(linePattern(get(LineOptions.PROPERTY_LINE_PATTERN)));
         break;
     }
   }
@@ -146,14 +146,14 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    * Lines are going to be created only for features with a matching geometry.
    * <p>
    * All supported properties are:<br>
-   * LineOptions.PROPERTY_lineJoin - String<br>
-   * LineOptions.PROPERTY_lineOpacity - Float<br>
-   * LineOptions.PROPERTY_lineColor - String<br>
-   * LineOptions.PROPERTY_lineWidth - Float<br>
-   * LineOptions.PROPERTY_lineGapWidth - Float<br>
-   * LineOptions.PROPERTY_lineOffset - Float<br>
-   * LineOptions.PROPERTY_lineBlur - Float<br>
-   * LineOptions.PROPERTY_linePattern - String<br>
+   * LineOptions.PROPERTY_LINE_JOIN - String<br>
+   * LineOptions.PROPERTY_LINE_OPACITY - Float<br>
+   * LineOptions.PROPERTY_LINE_COLOR - String<br>
+   * LineOptions.PROPERTY_LINE_WIDTH - Float<br>
+   * LineOptions.PROPERTY_LINE_GAP_WIDTH - Float<br>
+   * LineOptions.PROPERTY_LINE_OFFSET - Float<br>
+   * LineOptions.PROPERTY_LINE_BLUR - Float<br>
+   * LineOptions.PROPERTY_LINE_PATTERN - String<br>
    * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
    * <p>
    * Out of spec properties:<br>
@@ -173,14 +173,14 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    * Lines are going to be created only for features with a matching geometry.
    * <p>
    * All supported properties are:<br>
-   * LineOptions.PROPERTY_lineJoin - String<br>
-   * LineOptions.PROPERTY_lineOpacity - Float<br>
-   * LineOptions.PROPERTY_lineColor - String<br>
-   * LineOptions.PROPERTY_lineWidth - Float<br>
-   * LineOptions.PROPERTY_lineGapWidth - Float<br>
-   * LineOptions.PROPERTY_lineOffset - Float<br>
-   * LineOptions.PROPERTY_lineBlur - Float<br>
-   * LineOptions.PROPERTY_linePattern - String<br>
+   * LineOptions.PROPERTY_LINE_JOIN - String<br>
+   * LineOptions.PROPERTY_LINE_OPACITY - Float<br>
+   * LineOptions.PROPERTY_LINE_COLOR - String<br>
+   * LineOptions.PROPERTY_LINE_WIDTH - Float<br>
+   * LineOptions.PROPERTY_LINE_GAP_WIDTH - Float<br>
+   * LineOptions.PROPERTY_LINE_OFFSET - Float<br>
+   * LineOptions.PROPERTY_LINE_BLUR - Float<br>
+   * LineOptions.PROPERTY_LINE_PATTERN - String<br>
    * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
    * <p>
    * Out of spec properties:<br>
@@ -247,7 +247,7 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    */
   public void setLineCap(@Property.LINE_CAP String value) {
     PropertyValue propertyValue = lineCap(value);
-    constantPropertyUsageMap.put(PROPERTY_lineCap, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_LINE_CAP, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -273,7 +273,7 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    */
   public void setLineMiterLimit( Float value) {
     PropertyValue propertyValue = lineMiterLimit(value);
-    constantPropertyUsageMap.put(PROPERTY_lineMiterLimit, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_LINE_MITER_LIMIT, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -299,7 +299,7 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    */
   public void setLineRoundLimit( Float value) {
     PropertyValue propertyValue = lineRoundLimit(value);
-    constantPropertyUsageMap.put(PROPERTY_lineRoundLimit, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_LINE_ROUND_LIMIT, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -325,7 +325,7 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    */
   public void setLineTranslate( Float[] value) {
     PropertyValue propertyValue = lineTranslate(value);
-    constantPropertyUsageMap.put(PROPERTY_lineTranslate, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_LINE_TRANSLATE, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -351,7 +351,7 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    */
   public void setLineTranslateAnchor(@Property.LINE_TRANSLATE_ANCHOR String value) {
     PropertyValue propertyValue = lineTranslateAnchor(value);
-    constantPropertyUsageMap.put(PROPERTY_lineTranslateAnchor, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_LINE_TRANSLATE_ANCHOR, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -377,7 +377,7 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    */
   public void setLineDasharray( Float[] value) {
     PropertyValue propertyValue = lineDasharray(value);
-    constantPropertyUsageMap.put(PROPERTY_lineDasharray, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_LINE_DASHARRAY, propertyValue);
     layer.setProperties(propertyValue);
   }
 

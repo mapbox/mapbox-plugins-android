@@ -54,33 +54,33 @@ public class SymbolOptions extends Options<Symbol> {
   private Float textHaloBlur;
   private int zIndex;
 
-  static final String PROPERTY_iconSize = "icon-size";
-  static final String PROPERTY_iconImage = "icon-image";
-  static final String PROPERTY_iconRotate = "icon-rotate";
-  static final String PROPERTY_iconOffset = "icon-offset";
-  static final String PROPERTY_iconAnchor = "icon-anchor";
-  static final String PROPERTY_textField = "text-field";
-  static final String PROPERTY_textFont = "text-font";
-  static final String PROPERTY_textSize = "text-size";
-  static final String PROPERTY_textMaxWidth = "text-max-width";
-  static final String PROPERTY_textLetterSpacing = "text-letter-spacing";
-  static final String PROPERTY_textJustify = "text-justify";
-  static final String PROPERTY_textAnchor = "text-anchor";
-  static final String PROPERTY_textRotate = "text-rotate";
-  static final String PROPERTY_textTransform = "text-transform";
-  static final String PROPERTY_textOffset = "text-offset";
-  static final String PROPERTY_iconOpacity = "icon-opacity";
-  static final String PROPERTY_iconColor = "icon-color";
-  static final String PROPERTY_iconHaloColor = "icon-halo-color";
-  static final String PROPERTY_iconHaloWidth = "icon-halo-width";
-  static final String PROPERTY_iconHaloBlur = "icon-halo-blur";
-  static final String PROPERTY_textOpacity = "text-opacity";
-  static final String PROPERTY_textColor = "text-color";
-  static final String PROPERTY_textHaloColor = "text-halo-color";
-  static final String PROPERTY_textHaloWidth = "text-halo-width";
-  static final String PROPERTY_textHaloBlur = "text-halo-blur";
-  static final String PROPERTY_zIndex = "z-index";
-  private static final String PROPERTY_isDraggable = "is-draggable";
+  static final String PROPERTY_ICON_SIZE = "icon-size";
+  static final String PROPERTY_ICON_IMAGE = "icon-image";
+  static final String PROPERTY_ICON_ROTATE = "icon-rotate";
+  static final String PROPERTY_ICON_OFFSET = "icon-offset";
+  static final String PROPERTY_ICON_ANCHOR = "icon-anchor";
+  static final String PROPERTY_TEXT_FIELD = "text-field";
+  static final String PROPERTY_TEXT_FONT = "text-font";
+  static final String PROPERTY_TEXT_SIZE = "text-size";
+  static final String PROPERTY_TEXT_MAX_WIDTH = "text-max-width";
+  static final String PROPERTY_TEXT_LETTER_SPACING = "text-letter-spacing";
+  static final String PROPERTY_TEXT_JUSTIFY = "text-justify";
+  static final String PROPERTY_TEXT_ANCHOR = "text-anchor";
+  static final String PROPERTY_TEXT_ROTATE = "text-rotate";
+  static final String PROPERTY_TEXT_TRANSFORM = "text-transform";
+  static final String PROPERTY_TEXT_OFFSET = "text-offset";
+  static final String PROPERTY_ICON_OPACITY = "icon-opacity";
+  static final String PROPERTY_ICON_COLOR = "icon-color";
+  static final String PROPERTY_ICON_HALO_COLOR = "icon-halo-color";
+  static final String PROPERTY_ICON_HALO_WIDTH = "icon-halo-width";
+  static final String PROPERTY_ICON_HALO_BLUR = "icon-halo-blur";
+  static final String PROPERTY_TEXT_OPACITY = "text-opacity";
+  static final String PROPERTY_TEXT_COLOR = "text-color";
+  static final String PROPERTY_TEXT_HALO_COLOR = "text-halo-color";
+  static final String PROPERTY_TEXT_HALO_WIDTH = "text-halo-width";
+  static final String PROPERTY_TEXT_HALO_BLUR = "text-halo-blur";
+  static final String PROPERTY_Z_INDEX = "z-index";
+  private static final String PROPERTY_IS_DRAGGABLE = "is-draggable";
 
   /**
    * Set icon-size to initialise the symbol with.
@@ -753,32 +753,32 @@ public class SymbolOptions extends Options<Symbol> {
       throw new RuntimeException("geometry field is required");
     }
     JsonObject jsonObject = new JsonObject();
-    jsonObject.addProperty(PROPERTY_iconSize, iconSize);
-    jsonObject.addProperty(PROPERTY_iconImage, iconImage);
-    jsonObject.addProperty(PROPERTY_iconRotate, iconRotate);
-    jsonObject.add(PROPERTY_iconOffset, convertArray(iconOffset));
-    jsonObject.addProperty(PROPERTY_iconAnchor, iconAnchor);
-    jsonObject.addProperty(PROPERTY_textField, textField);
-    jsonObject.add(PROPERTY_textFont, convertArray(textFont));
-    jsonObject.addProperty(PROPERTY_textSize, textSize);
-    jsonObject.addProperty(PROPERTY_textMaxWidth, textMaxWidth);
-    jsonObject.addProperty(PROPERTY_textLetterSpacing, textLetterSpacing);
-    jsonObject.addProperty(PROPERTY_textJustify, textJustify);
-    jsonObject.addProperty(PROPERTY_textAnchor, textAnchor);
-    jsonObject.addProperty(PROPERTY_textRotate, textRotate);
-    jsonObject.addProperty(PROPERTY_textTransform, textTransform);
-    jsonObject.add(PROPERTY_textOffset, convertArray(textOffset));
-    jsonObject.addProperty(PROPERTY_iconOpacity, iconOpacity);
-    jsonObject.addProperty(PROPERTY_iconColor, iconColor);
-    jsonObject.addProperty(PROPERTY_iconHaloColor, iconHaloColor);
-    jsonObject.addProperty(PROPERTY_iconHaloWidth, iconHaloWidth);
-    jsonObject.addProperty(PROPERTY_iconHaloBlur, iconHaloBlur);
-    jsonObject.addProperty(PROPERTY_textOpacity, textOpacity);
-    jsonObject.addProperty(PROPERTY_textColor, textColor);
-    jsonObject.addProperty(PROPERTY_textHaloColor, textHaloColor);
-    jsonObject.addProperty(PROPERTY_textHaloWidth, textHaloWidth);
-    jsonObject.addProperty(PROPERTY_textHaloBlur, textHaloBlur);
-    jsonObject.addProperty(PROPERTY_zIndex, zIndex);
+    jsonObject.addProperty(PROPERTY_ICON_SIZE, iconSize);
+    jsonObject.addProperty(PROPERTY_ICON_IMAGE, iconImage);
+    jsonObject.addProperty(PROPERTY_ICON_ROTATE, iconRotate);
+    jsonObject.add(PROPERTY_ICON_OFFSET, convertArray(iconOffset));
+    jsonObject.addProperty(PROPERTY_ICON_ANCHOR, iconAnchor);
+    jsonObject.addProperty(PROPERTY_TEXT_FIELD, textField);
+    jsonObject.add(PROPERTY_TEXT_FONT, convertArray(textFont));
+    jsonObject.addProperty(PROPERTY_TEXT_SIZE, textSize);
+    jsonObject.addProperty(PROPERTY_TEXT_MAX_WIDTH, textMaxWidth);
+    jsonObject.addProperty(PROPERTY_TEXT_LETTER_SPACING, textLetterSpacing);
+    jsonObject.addProperty(PROPERTY_TEXT_JUSTIFY, textJustify);
+    jsonObject.addProperty(PROPERTY_TEXT_ANCHOR, textAnchor);
+    jsonObject.addProperty(PROPERTY_TEXT_ROTATE, textRotate);
+    jsonObject.addProperty(PROPERTY_TEXT_TRANSFORM, textTransform);
+    jsonObject.add(PROPERTY_TEXT_OFFSET, convertArray(textOffset));
+    jsonObject.addProperty(PROPERTY_ICON_OPACITY, iconOpacity);
+    jsonObject.addProperty(PROPERTY_ICON_COLOR, iconColor);
+    jsonObject.addProperty(PROPERTY_ICON_HALO_COLOR, iconHaloColor);
+    jsonObject.addProperty(PROPERTY_ICON_HALO_WIDTH, iconHaloWidth);
+    jsonObject.addProperty(PROPERTY_ICON_HALO_BLUR, iconHaloBlur);
+    jsonObject.addProperty(PROPERTY_TEXT_OPACITY, textOpacity);
+    jsonObject.addProperty(PROPERTY_TEXT_COLOR, textColor);
+    jsonObject.addProperty(PROPERTY_TEXT_HALO_COLOR, textHaloColor);
+    jsonObject.addProperty(PROPERTY_TEXT_HALO_WIDTH, textHaloWidth);
+    jsonObject.addProperty(PROPERTY_TEXT_HALO_BLUR, textHaloBlur);
+    jsonObject.addProperty(PROPERTY_Z_INDEX, zIndex);
     Symbol symbol = new Symbol(id, annotationManager, jsonObject, geometry);
     symbol.setDraggable(isDraggable);
     return symbol;
@@ -800,86 +800,86 @@ public class SymbolOptions extends Options<Symbol> {
 
     SymbolOptions options = new SymbolOptions();
     options.geometry = (Point) feature.geometry();
-    if (feature.hasProperty(PROPERTY_iconSize)) {
-      options.iconSize = feature.getProperty(PROPERTY_iconSize).getAsFloat();
+    if (feature.hasProperty(PROPERTY_ICON_SIZE)) {
+      options.iconSize = feature.getProperty(PROPERTY_ICON_SIZE).getAsFloat();
     }
-    if (feature.hasProperty(PROPERTY_iconImage)) {
-      options.iconImage = feature.getProperty(PROPERTY_iconImage).getAsString();
+    if (feature.hasProperty(PROPERTY_ICON_IMAGE)) {
+      options.iconImage = feature.getProperty(PROPERTY_ICON_IMAGE).getAsString();
     }
-    if (feature.hasProperty(PROPERTY_iconRotate)) {
-      options.iconRotate = feature.getProperty(PROPERTY_iconRotate).getAsFloat();
+    if (feature.hasProperty(PROPERTY_ICON_ROTATE)) {
+      options.iconRotate = feature.getProperty(PROPERTY_ICON_ROTATE).getAsFloat();
     }
-    if (feature.hasProperty(PROPERTY_iconOffset)) {
-      options.iconOffset = toFloatArray(feature.getProperty(PROPERTY_iconOffset).getAsJsonArray());
+    if (feature.hasProperty(PROPERTY_ICON_OFFSET)) {
+      options.iconOffset = toFloatArray(feature.getProperty(PROPERTY_ICON_OFFSET).getAsJsonArray());
     }
-    if (feature.hasProperty(PROPERTY_iconAnchor)) {
-      options.iconAnchor = feature.getProperty(PROPERTY_iconAnchor).getAsString();
+    if (feature.hasProperty(PROPERTY_ICON_ANCHOR)) {
+      options.iconAnchor = feature.getProperty(PROPERTY_ICON_ANCHOR).getAsString();
     }
-    if (feature.hasProperty(PROPERTY_textField)) {
-      options.textField = feature.getProperty(PROPERTY_textField).getAsString();
+    if (feature.hasProperty(PROPERTY_TEXT_FIELD)) {
+      options.textField = feature.getProperty(PROPERTY_TEXT_FIELD).getAsString();
     }
-    if (feature.hasProperty(PROPERTY_textFont)) {
-      options.textFont = toStringArray(feature.getProperty(PROPERTY_textFont).getAsJsonArray());
+    if (feature.hasProperty(PROPERTY_TEXT_FONT)) {
+      options.textFont = toStringArray(feature.getProperty(PROPERTY_TEXT_FONT).getAsJsonArray());
     }
-    if (feature.hasProperty(PROPERTY_textSize)) {
-      options.textSize = feature.getProperty(PROPERTY_textSize).getAsFloat();
+    if (feature.hasProperty(PROPERTY_TEXT_SIZE)) {
+      options.textSize = feature.getProperty(PROPERTY_TEXT_SIZE).getAsFloat();
     }
-    if (feature.hasProperty(PROPERTY_textMaxWidth)) {
-      options.textMaxWidth = feature.getProperty(PROPERTY_textMaxWidth).getAsFloat();
+    if (feature.hasProperty(PROPERTY_TEXT_MAX_WIDTH)) {
+      options.textMaxWidth = feature.getProperty(PROPERTY_TEXT_MAX_WIDTH).getAsFloat();
     }
-    if (feature.hasProperty(PROPERTY_textLetterSpacing)) {
-      options.textLetterSpacing = feature.getProperty(PROPERTY_textLetterSpacing).getAsFloat();
+    if (feature.hasProperty(PROPERTY_TEXT_LETTER_SPACING)) {
+      options.textLetterSpacing = feature.getProperty(PROPERTY_TEXT_LETTER_SPACING).getAsFloat();
     }
-    if (feature.hasProperty(PROPERTY_textJustify)) {
-      options.textJustify = feature.getProperty(PROPERTY_textJustify).getAsString();
+    if (feature.hasProperty(PROPERTY_TEXT_JUSTIFY)) {
+      options.textJustify = feature.getProperty(PROPERTY_TEXT_JUSTIFY).getAsString();
     }
-    if (feature.hasProperty(PROPERTY_textAnchor)) {
-      options.textAnchor = feature.getProperty(PROPERTY_textAnchor).getAsString();
+    if (feature.hasProperty(PROPERTY_TEXT_ANCHOR)) {
+      options.textAnchor = feature.getProperty(PROPERTY_TEXT_ANCHOR).getAsString();
     }
-    if (feature.hasProperty(PROPERTY_textRotate)) {
-      options.textRotate = feature.getProperty(PROPERTY_textRotate).getAsFloat();
+    if (feature.hasProperty(PROPERTY_TEXT_ROTATE)) {
+      options.textRotate = feature.getProperty(PROPERTY_TEXT_ROTATE).getAsFloat();
     }
-    if (feature.hasProperty(PROPERTY_textTransform)) {
-      options.textTransform = feature.getProperty(PROPERTY_textTransform).getAsString();
+    if (feature.hasProperty(PROPERTY_TEXT_TRANSFORM)) {
+      options.textTransform = feature.getProperty(PROPERTY_TEXT_TRANSFORM).getAsString();
     }
-    if (feature.hasProperty(PROPERTY_textOffset)) {
-      options.textOffset = toFloatArray(feature.getProperty(PROPERTY_textOffset).getAsJsonArray());
+    if (feature.hasProperty(PROPERTY_TEXT_OFFSET)) {
+      options.textOffset = toFloatArray(feature.getProperty(PROPERTY_TEXT_OFFSET).getAsJsonArray());
     }
-    if (feature.hasProperty(PROPERTY_iconOpacity)) {
-      options.iconOpacity = feature.getProperty(PROPERTY_iconOpacity).getAsFloat();
+    if (feature.hasProperty(PROPERTY_ICON_OPACITY)) {
+      options.iconOpacity = feature.getProperty(PROPERTY_ICON_OPACITY).getAsFloat();
     }
-    if (feature.hasProperty(PROPERTY_iconColor)) {
-      options.iconColor = feature.getProperty(PROPERTY_iconColor).getAsString();
+    if (feature.hasProperty(PROPERTY_ICON_COLOR)) {
+      options.iconColor = feature.getProperty(PROPERTY_ICON_COLOR).getAsString();
     }
-    if (feature.hasProperty(PROPERTY_iconHaloColor)) {
-      options.iconHaloColor = feature.getProperty(PROPERTY_iconHaloColor).getAsString();
+    if (feature.hasProperty(PROPERTY_ICON_HALO_COLOR)) {
+      options.iconHaloColor = feature.getProperty(PROPERTY_ICON_HALO_COLOR).getAsString();
     }
-    if (feature.hasProperty(PROPERTY_iconHaloWidth)) {
-      options.iconHaloWidth = feature.getProperty(PROPERTY_iconHaloWidth).getAsFloat();
+    if (feature.hasProperty(PROPERTY_ICON_HALO_WIDTH)) {
+      options.iconHaloWidth = feature.getProperty(PROPERTY_ICON_HALO_WIDTH).getAsFloat();
     }
-    if (feature.hasProperty(PROPERTY_iconHaloBlur)) {
-      options.iconHaloBlur = feature.getProperty(PROPERTY_iconHaloBlur).getAsFloat();
+    if (feature.hasProperty(PROPERTY_ICON_HALO_BLUR)) {
+      options.iconHaloBlur = feature.getProperty(PROPERTY_ICON_HALO_BLUR).getAsFloat();
     }
-    if (feature.hasProperty(PROPERTY_textOpacity)) {
-      options.textOpacity = feature.getProperty(PROPERTY_textOpacity).getAsFloat();
+    if (feature.hasProperty(PROPERTY_TEXT_OPACITY)) {
+      options.textOpacity = feature.getProperty(PROPERTY_TEXT_OPACITY).getAsFloat();
     }
-    if (feature.hasProperty(PROPERTY_textColor)) {
-      options.textColor = feature.getProperty(PROPERTY_textColor).getAsString();
+    if (feature.hasProperty(PROPERTY_TEXT_COLOR)) {
+      options.textColor = feature.getProperty(PROPERTY_TEXT_COLOR).getAsString();
     }
-    if (feature.hasProperty(PROPERTY_textHaloColor)) {
-      options.textHaloColor = feature.getProperty(PROPERTY_textHaloColor).getAsString();
+    if (feature.hasProperty(PROPERTY_TEXT_HALO_COLOR)) {
+      options.textHaloColor = feature.getProperty(PROPERTY_TEXT_HALO_COLOR).getAsString();
     }
-    if (feature.hasProperty(PROPERTY_textHaloWidth)) {
-      options.textHaloWidth = feature.getProperty(PROPERTY_textHaloWidth).getAsFloat();
+    if (feature.hasProperty(PROPERTY_TEXT_HALO_WIDTH)) {
+      options.textHaloWidth = feature.getProperty(PROPERTY_TEXT_HALO_WIDTH).getAsFloat();
     }
-    if (feature.hasProperty(PROPERTY_textHaloBlur)) {
-      options.textHaloBlur = feature.getProperty(PROPERTY_textHaloBlur).getAsFloat();
+    if (feature.hasProperty(PROPERTY_TEXT_HALO_BLUR)) {
+      options.textHaloBlur = feature.getProperty(PROPERTY_TEXT_HALO_BLUR).getAsFloat();
     }
-    if (feature.hasProperty(PROPERTY_zIndex)) {
-      options.zIndex = feature.getProperty(PROPERTY_zIndex).getAsInt();
+    if (feature.hasProperty(PROPERTY_Z_INDEX)) {
+      options.zIndex = feature.getProperty(PROPERTY_Z_INDEX).getAsInt();
     }
-    if (feature.hasProperty(PROPERTY_isDraggable)) {
-      options.isDraggable = feature.getProperty(PROPERTY_isDraggable).getAsBoolean();
+    if (feature.hasProperty(PROPERTY_IS_DRAGGABLE)) {
+      options.isDraggable = feature.getProperty(PROPERTY_IS_DRAGGABLE).getAsBoolean();
     }
     return options;
   }

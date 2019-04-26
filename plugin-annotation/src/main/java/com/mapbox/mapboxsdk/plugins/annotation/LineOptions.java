@@ -36,15 +36,15 @@ public class LineOptions extends Options<Line> {
   private Float lineBlur;
   private String linePattern;
 
-  static final String PROPERTY_lineJoin = "line-join";
-  static final String PROPERTY_lineOpacity = "line-opacity";
-  static final String PROPERTY_lineColor = "line-color";
-  static final String PROPERTY_lineWidth = "line-width";
-  static final String PROPERTY_lineGapWidth = "line-gap-width";
-  static final String PROPERTY_lineOffset = "line-offset";
-  static final String PROPERTY_lineBlur = "line-blur";
-  static final String PROPERTY_linePattern = "line-pattern";
-  private static final String PROPERTY_isDraggable = "is-draggable";
+  static final String PROPERTY_LINE_JOIN = "line-join";
+  static final String PROPERTY_LINE_OPACITY = "line-opacity";
+  static final String PROPERTY_LINE_COLOR = "line-color";
+  static final String PROPERTY_LINE_WIDTH = "line-width";
+  static final String PROPERTY_LINE_GAP_WIDTH = "line-gap-width";
+  static final String PROPERTY_LINE_OFFSET = "line-offset";
+  static final String PROPERTY_LINE_BLUR = "line-blur";
+  static final String PROPERTY_LINE_PATTERN = "line-pattern";
+  private static final String PROPERTY_IS_DRAGGABLE = "is-draggable";
 
   /**
    * Set line-join to initialise the line with.
@@ -290,14 +290,14 @@ public class LineOptions extends Options<Line> {
       throw new RuntimeException("geometry field is required");
     }
     JsonObject jsonObject = new JsonObject();
-    jsonObject.addProperty(PROPERTY_lineJoin, lineJoin);
-    jsonObject.addProperty(PROPERTY_lineOpacity, lineOpacity);
-    jsonObject.addProperty(PROPERTY_lineColor, lineColor);
-    jsonObject.addProperty(PROPERTY_lineWidth, lineWidth);
-    jsonObject.addProperty(PROPERTY_lineGapWidth, lineGapWidth);
-    jsonObject.addProperty(PROPERTY_lineOffset, lineOffset);
-    jsonObject.addProperty(PROPERTY_lineBlur, lineBlur);
-    jsonObject.addProperty(PROPERTY_linePattern, linePattern);
+    jsonObject.addProperty(PROPERTY_LINE_JOIN, lineJoin);
+    jsonObject.addProperty(PROPERTY_LINE_OPACITY, lineOpacity);
+    jsonObject.addProperty(PROPERTY_LINE_COLOR, lineColor);
+    jsonObject.addProperty(PROPERTY_LINE_WIDTH, lineWidth);
+    jsonObject.addProperty(PROPERTY_LINE_GAP_WIDTH, lineGapWidth);
+    jsonObject.addProperty(PROPERTY_LINE_OFFSET, lineOffset);
+    jsonObject.addProperty(PROPERTY_LINE_BLUR, lineBlur);
+    jsonObject.addProperty(PROPERTY_LINE_PATTERN, linePattern);
     Line line = new Line(id, annotationManager, jsonObject, geometry);
     line.setDraggable(isDraggable);
     return line;
@@ -319,32 +319,32 @@ public class LineOptions extends Options<Line> {
 
     LineOptions options = new LineOptions();
     options.geometry = (LineString) feature.geometry();
-    if (feature.hasProperty(PROPERTY_lineJoin)) {
-      options.lineJoin = feature.getProperty(PROPERTY_lineJoin).getAsString();
+    if (feature.hasProperty(PROPERTY_LINE_JOIN)) {
+      options.lineJoin = feature.getProperty(PROPERTY_LINE_JOIN).getAsString();
     }
-    if (feature.hasProperty(PROPERTY_lineOpacity)) {
-      options.lineOpacity = feature.getProperty(PROPERTY_lineOpacity).getAsFloat();
+    if (feature.hasProperty(PROPERTY_LINE_OPACITY)) {
+      options.lineOpacity = feature.getProperty(PROPERTY_LINE_OPACITY).getAsFloat();
     }
-    if (feature.hasProperty(PROPERTY_lineColor)) {
-      options.lineColor = feature.getProperty(PROPERTY_lineColor).getAsString();
+    if (feature.hasProperty(PROPERTY_LINE_COLOR)) {
+      options.lineColor = feature.getProperty(PROPERTY_LINE_COLOR).getAsString();
     }
-    if (feature.hasProperty(PROPERTY_lineWidth)) {
-      options.lineWidth = feature.getProperty(PROPERTY_lineWidth).getAsFloat();
+    if (feature.hasProperty(PROPERTY_LINE_WIDTH)) {
+      options.lineWidth = feature.getProperty(PROPERTY_LINE_WIDTH).getAsFloat();
     }
-    if (feature.hasProperty(PROPERTY_lineGapWidth)) {
-      options.lineGapWidth = feature.getProperty(PROPERTY_lineGapWidth).getAsFloat();
+    if (feature.hasProperty(PROPERTY_LINE_GAP_WIDTH)) {
+      options.lineGapWidth = feature.getProperty(PROPERTY_LINE_GAP_WIDTH).getAsFloat();
     }
-    if (feature.hasProperty(PROPERTY_lineOffset)) {
-      options.lineOffset = feature.getProperty(PROPERTY_lineOffset).getAsFloat();
+    if (feature.hasProperty(PROPERTY_LINE_OFFSET)) {
+      options.lineOffset = feature.getProperty(PROPERTY_LINE_OFFSET).getAsFloat();
     }
-    if (feature.hasProperty(PROPERTY_lineBlur)) {
-      options.lineBlur = feature.getProperty(PROPERTY_lineBlur).getAsFloat();
+    if (feature.hasProperty(PROPERTY_LINE_BLUR)) {
+      options.lineBlur = feature.getProperty(PROPERTY_LINE_BLUR).getAsFloat();
     }
-    if (feature.hasProperty(PROPERTY_linePattern)) {
-      options.linePattern = feature.getProperty(PROPERTY_linePattern).getAsString();
+    if (feature.hasProperty(PROPERTY_LINE_PATTERN)) {
+      options.linePattern = feature.getProperty(PROPERTY_LINE_PATTERN).getAsString();
     }
-    if (feature.hasProperty(PROPERTY_isDraggable)) {
-      options.isDraggable = feature.getProperty(PROPERTY_isDraggable).getAsBoolean();
+    if (feature.hasProperty(PROPERTY_IS_DRAGGABLE)) {
+      options.isDraggable = feature.getProperty(PROPERTY_IS_DRAGGABLE).getAsBoolean();
     }
     return options;
   }

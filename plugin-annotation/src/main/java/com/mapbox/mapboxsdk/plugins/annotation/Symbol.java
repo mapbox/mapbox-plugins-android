@@ -43,83 +43,83 @@ public class Symbol extends Annotation<Point> {
 
   @Override
   void setUsedDataDrivenProperties() {
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_iconSize) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_iconSize);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_ICON_SIZE) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_ICON_SIZE);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_iconImage) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_iconImage);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_ICON_IMAGE) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_ICON_IMAGE);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_iconRotate) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_iconRotate);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_ICON_ROTATE) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_ICON_ROTATE);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_iconOffset) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_iconOffset);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_ICON_OFFSET) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_ICON_OFFSET);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_iconAnchor) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_iconAnchor);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_ICON_ANCHOR) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_ICON_ANCHOR);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_textField) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_textField);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_TEXT_FIELD) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_TEXT_FIELD);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_textFont) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_textFont);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_TEXT_FONT) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_TEXT_FONT);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_textSize) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_textSize);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_TEXT_SIZE) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_TEXT_SIZE);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_textMaxWidth) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_textMaxWidth);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_TEXT_MAX_WIDTH) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_TEXT_MAX_WIDTH);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_textLetterSpacing) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_textLetterSpacing);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_TEXT_LETTER_SPACING) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_TEXT_LETTER_SPACING);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_textJustify) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_textJustify);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_TEXT_JUSTIFY) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_TEXT_JUSTIFY);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_textAnchor) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_textAnchor);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_TEXT_ANCHOR) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_TEXT_ANCHOR);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_textRotate) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_textRotate);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_TEXT_ROTATE) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_TEXT_ROTATE);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_textTransform) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_textTransform);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_TEXT_TRANSFORM) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_TEXT_TRANSFORM);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_textOffset) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_textOffset);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_TEXT_OFFSET) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_TEXT_OFFSET);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_iconOpacity) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_iconOpacity);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_ICON_OPACITY) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_ICON_OPACITY);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_iconColor) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_iconColor);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_ICON_COLOR) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_ICON_COLOR);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_iconHaloColor) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_iconHaloColor);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_ICON_HALO_COLOR) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_ICON_HALO_COLOR);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_iconHaloWidth) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_iconHaloWidth);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_ICON_HALO_WIDTH) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_ICON_HALO_WIDTH);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_iconHaloBlur) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_iconHaloBlur);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_ICON_HALO_BLUR) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_ICON_HALO_BLUR);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_textOpacity) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_textOpacity);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_TEXT_OPACITY) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_TEXT_OPACITY);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_textColor) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_textColor);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_TEXT_COLOR) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_TEXT_COLOR);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_textHaloColor) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_textHaloColor);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_TEXT_HALO_COLOR) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_TEXT_HALO_COLOR);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_textHaloWidth) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_textHaloWidth);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_TEXT_HALO_WIDTH) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_TEXT_HALO_WIDTH);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_textHaloBlur) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_textHaloBlur);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_TEXT_HALO_BLUR) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_TEXT_HALO_BLUR);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_zIndex) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_zIndex);
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_Z_INDEX) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_Z_INDEX);
     }
   }
 
@@ -157,7 +157,7 @@ public class Symbol extends Annotation<Point> {
    * @param index the z-index value
    */
   public void setZIndex(int index) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_zIndex, index);
+    jsonObject.addProperty(SymbolOptions.PROPERTY_Z_INDEX, index);
   }
 
   /**
@@ -166,7 +166,7 @@ public class Symbol extends Annotation<Point> {
    * @return the z-index value, 0 if not set
    */
   public int getZIndex() {
-    return jsonObject.get(SymbolOptions.PROPERTY_zIndex).getAsInt();
+    return jsonObject.get(SymbolOptions.PROPERTY_Z_INDEX).getAsInt();
   }
 
   // Property accessors
@@ -180,7 +180,7 @@ public class Symbol extends Annotation<Point> {
    * @return property wrapper value around Float
    */
   public Float getIconSize() {
-    return jsonObject.get(SymbolOptions.PROPERTY_iconSize).getAsFloat();
+    return jsonObject.get(SymbolOptions.PROPERTY_ICON_SIZE).getAsFloat();
   }
 
   /**
@@ -195,7 +195,7 @@ public class Symbol extends Annotation<Point> {
    * @param value constant property value for Float
    */
   public void setIconSize(Float value) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_iconSize, value);
+    jsonObject.addProperty(SymbolOptions.PROPERTY_ICON_SIZE, value);
   }
 
   /**
@@ -207,7 +207,7 @@ public class Symbol extends Annotation<Point> {
    * @return property wrapper value around String
    */
   public String getIconImage() {
-    return jsonObject.get(SymbolOptions.PROPERTY_iconImage).getAsString();
+    return jsonObject.get(SymbolOptions.PROPERTY_ICON_IMAGE).getAsString();
   }
 
   /**
@@ -222,7 +222,7 @@ public class Symbol extends Annotation<Point> {
    * @param value constant property value for String
    */
   public void setIconImage(String value) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_iconImage, value);
+    jsonObject.addProperty(SymbolOptions.PROPERTY_ICON_IMAGE, value);
   }
 
   /**
@@ -234,7 +234,7 @@ public class Symbol extends Annotation<Point> {
    * @return property wrapper value around Float
    */
   public Float getIconRotate() {
-    return jsonObject.get(SymbolOptions.PROPERTY_iconRotate).getAsFloat();
+    return jsonObject.get(SymbolOptions.PROPERTY_ICON_ROTATE).getAsFloat();
   }
 
   /**
@@ -249,7 +249,7 @@ public class Symbol extends Annotation<Point> {
    * @param value constant property value for Float
    */
   public void setIconRotate(Float value) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_iconRotate, value);
+    jsonObject.addProperty(SymbolOptions.PROPERTY_ICON_ROTATE, value);
   }
 
   /**
@@ -261,7 +261,7 @@ public class Symbol extends Annotation<Point> {
    * @return PointF value for Float[]
    */
   public PointF getIconOffset() {
-    JsonArray jsonArray = jsonObject.getAsJsonArray(SymbolOptions.PROPERTY_iconOffset);
+    JsonArray jsonArray = jsonObject.getAsJsonArray(SymbolOptions.PROPERTY_ICON_OFFSET);
     return new PointF(jsonArray.get(0).getAsFloat(), jsonArray.get(1).getAsFloat());
   }
 
@@ -280,7 +280,7 @@ public class Symbol extends Annotation<Point> {
     JsonArray jsonArray = new JsonArray();
     jsonArray.add(pointF.x);
     jsonArray.add(pointF.y);
-    jsonObject.add(SymbolOptions.PROPERTY_iconOffset, jsonArray);
+    jsonObject.add(SymbolOptions.PROPERTY_ICON_OFFSET, jsonArray);
   }
 
   /**
@@ -292,7 +292,7 @@ public class Symbol extends Annotation<Point> {
    * @return property wrapper value around String
    */
   public String getIconAnchor() {
-    return jsonObject.get(SymbolOptions.PROPERTY_iconAnchor).getAsString();
+    return jsonObject.get(SymbolOptions.PROPERTY_ICON_ANCHOR).getAsString();
   }
 
   /**
@@ -307,7 +307,7 @@ public class Symbol extends Annotation<Point> {
    * @param value constant property value for String
    */
   public void setIconAnchor(@Property.ICON_ANCHOR String value) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_iconAnchor, value);
+    jsonObject.addProperty(SymbolOptions.PROPERTY_ICON_ANCHOR, value);
   }
 
   /**
@@ -319,7 +319,7 @@ public class Symbol extends Annotation<Point> {
    * @return property wrapper value around String
    */
   public String getTextField() {
-    return jsonObject.get(SymbolOptions.PROPERTY_textField).getAsString();
+    return jsonObject.get(SymbolOptions.PROPERTY_TEXT_FIELD).getAsString();
   }
 
   /**
@@ -334,7 +334,7 @@ public class Symbol extends Annotation<Point> {
    * @param value constant property value for String
    */
   public void setTextField(String value) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_textField, value);
+    jsonObject.addProperty(SymbolOptions.PROPERTY_TEXT_FIELD, value);
   }
 
   /**
@@ -346,7 +346,7 @@ public class Symbol extends Annotation<Point> {
    * @return property wrapper value around String[]
    */
   public String[] getTextFont() {
-    JsonArray jsonArray = jsonObject.getAsJsonArray(SymbolOptions.PROPERTY_textFont);
+    JsonArray jsonArray = jsonObject.getAsJsonArray(SymbolOptions.PROPERTY_TEXT_FONT);
     String[] value = new String[jsonArray.size()];
     for (int i = 0; i < jsonArray.size(); i++) {
       value[i] = jsonArray.get(i).getAsString();
@@ -370,7 +370,7 @@ public class Symbol extends Annotation<Point> {
     for (String element : value) {
       jsonArray.add(element);
     }
-    jsonObject.add(SymbolOptions.PROPERTY_textFont, jsonArray);
+    jsonObject.add(SymbolOptions.PROPERTY_TEXT_FONT, jsonArray);
   }
 
   /**
@@ -382,7 +382,7 @@ public class Symbol extends Annotation<Point> {
    * @return property wrapper value around Float
    */
   public Float getTextSize() {
-    return jsonObject.get(SymbolOptions.PROPERTY_textSize).getAsFloat();
+    return jsonObject.get(SymbolOptions.PROPERTY_TEXT_SIZE).getAsFloat();
   }
 
   /**
@@ -397,7 +397,7 @@ public class Symbol extends Annotation<Point> {
    * @param value constant property value for Float
    */
   public void setTextSize(Float value) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_textSize, value);
+    jsonObject.addProperty(SymbolOptions.PROPERTY_TEXT_SIZE, value);
   }
 
   /**
@@ -409,7 +409,7 @@ public class Symbol extends Annotation<Point> {
    * @return property wrapper value around Float
    */
   public Float getTextMaxWidth() {
-    return jsonObject.get(SymbolOptions.PROPERTY_textMaxWidth).getAsFloat();
+    return jsonObject.get(SymbolOptions.PROPERTY_TEXT_MAX_WIDTH).getAsFloat();
   }
 
   /**
@@ -424,7 +424,7 @@ public class Symbol extends Annotation<Point> {
    * @param value constant property value for Float
    */
   public void setTextMaxWidth(Float value) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_textMaxWidth, value);
+    jsonObject.addProperty(SymbolOptions.PROPERTY_TEXT_MAX_WIDTH, value);
   }
 
   /**
@@ -436,7 +436,7 @@ public class Symbol extends Annotation<Point> {
    * @return property wrapper value around Float
    */
   public Float getTextLetterSpacing() {
-    return jsonObject.get(SymbolOptions.PROPERTY_textLetterSpacing).getAsFloat();
+    return jsonObject.get(SymbolOptions.PROPERTY_TEXT_LETTER_SPACING).getAsFloat();
   }
 
   /**
@@ -451,7 +451,7 @@ public class Symbol extends Annotation<Point> {
    * @param value constant property value for Float
    */
   public void setTextLetterSpacing(Float value) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_textLetterSpacing, value);
+    jsonObject.addProperty(SymbolOptions.PROPERTY_TEXT_LETTER_SPACING, value);
   }
 
   /**
@@ -463,7 +463,7 @@ public class Symbol extends Annotation<Point> {
    * @return property wrapper value around String
    */
   public String getTextJustify() {
-    return jsonObject.get(SymbolOptions.PROPERTY_textJustify).getAsString();
+    return jsonObject.get(SymbolOptions.PROPERTY_TEXT_JUSTIFY).getAsString();
   }
 
   /**
@@ -478,7 +478,7 @@ public class Symbol extends Annotation<Point> {
    * @param value constant property value for String
    */
   public void setTextJustify(@Property.TEXT_JUSTIFY String value) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_textJustify, value);
+    jsonObject.addProperty(SymbolOptions.PROPERTY_TEXT_JUSTIFY, value);
   }
 
   /**
@@ -490,7 +490,7 @@ public class Symbol extends Annotation<Point> {
    * @return property wrapper value around String
    */
   public String getTextAnchor() {
-    return jsonObject.get(SymbolOptions.PROPERTY_textAnchor).getAsString();
+    return jsonObject.get(SymbolOptions.PROPERTY_TEXT_ANCHOR).getAsString();
   }
 
   /**
@@ -505,7 +505,7 @@ public class Symbol extends Annotation<Point> {
    * @param value constant property value for String
    */
   public void setTextAnchor(@Property.TEXT_ANCHOR String value) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_textAnchor, value);
+    jsonObject.addProperty(SymbolOptions.PROPERTY_TEXT_ANCHOR, value);
   }
 
   /**
@@ -517,7 +517,7 @@ public class Symbol extends Annotation<Point> {
    * @return property wrapper value around Float
    */
   public Float getTextRotate() {
-    return jsonObject.get(SymbolOptions.PROPERTY_textRotate).getAsFloat();
+    return jsonObject.get(SymbolOptions.PROPERTY_TEXT_ROTATE).getAsFloat();
   }
 
   /**
@@ -532,7 +532,7 @@ public class Symbol extends Annotation<Point> {
    * @param value constant property value for Float
    */
   public void setTextRotate(Float value) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_textRotate, value);
+    jsonObject.addProperty(SymbolOptions.PROPERTY_TEXT_ROTATE, value);
   }
 
   /**
@@ -544,7 +544,7 @@ public class Symbol extends Annotation<Point> {
    * @return property wrapper value around String
    */
   public String getTextTransform() {
-    return jsonObject.get(SymbolOptions.PROPERTY_textTransform).getAsString();
+    return jsonObject.get(SymbolOptions.PROPERTY_TEXT_TRANSFORM).getAsString();
   }
 
   /**
@@ -559,7 +559,7 @@ public class Symbol extends Annotation<Point> {
    * @param value constant property value for String
    */
   public void setTextTransform(@Property.TEXT_TRANSFORM String value) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_textTransform, value);
+    jsonObject.addProperty(SymbolOptions.PROPERTY_TEXT_TRANSFORM, value);
   }
 
   /**
@@ -571,7 +571,7 @@ public class Symbol extends Annotation<Point> {
    * @return PointF value for Float[]
    */
   public PointF getTextOffset() {
-    JsonArray jsonArray = jsonObject.getAsJsonArray(SymbolOptions.PROPERTY_textOffset);
+    JsonArray jsonArray = jsonObject.getAsJsonArray(SymbolOptions.PROPERTY_TEXT_OFFSET);
     return new PointF(jsonArray.get(0).getAsFloat(), jsonArray.get(1).getAsFloat());
   }
 
@@ -590,7 +590,7 @@ public class Symbol extends Annotation<Point> {
     JsonArray jsonArray = new JsonArray();
     jsonArray.add(pointF.x);
     jsonArray.add(pointF.y);
-    jsonObject.add(SymbolOptions.PROPERTY_textOffset, jsonArray);
+    jsonObject.add(SymbolOptions.PROPERTY_TEXT_OFFSET, jsonArray);
   }
 
   /**
@@ -602,7 +602,7 @@ public class Symbol extends Annotation<Point> {
    * @return property wrapper value around Float
    */
   public Float getIconOpacity() {
-    return jsonObject.get(SymbolOptions.PROPERTY_iconOpacity).getAsFloat();
+    return jsonObject.get(SymbolOptions.PROPERTY_ICON_OPACITY).getAsFloat();
   }
 
   /**
@@ -617,7 +617,7 @@ public class Symbol extends Annotation<Point> {
    * @param value constant property value for Float
    */
   public void setIconOpacity(Float value) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_iconOpacity, value);
+    jsonObject.addProperty(SymbolOptions.PROPERTY_ICON_OPACITY, value);
   }
 
   /**
@@ -630,7 +630,7 @@ public class Symbol extends Annotation<Point> {
    */
   @ColorInt
   public int getIconColorAsInt() {
-    return ColorUtils.rgbaToColor(jsonObject.get(SymbolOptions.PROPERTY_iconColor).getAsString());
+    return ColorUtils.rgbaToColor(jsonObject.get(SymbolOptions.PROPERTY_ICON_COLOR).getAsString());
   }
 
   /**
@@ -642,7 +642,7 @@ public class Symbol extends Annotation<Point> {
    * @return color value for String
    */
   public String getIconColor() {
-    return jsonObject.get(SymbolOptions.PROPERTY_iconColor).getAsString();
+    return jsonObject.get(SymbolOptions.PROPERTY_ICON_COLOR).getAsString();
   }
 
   /**
@@ -657,7 +657,7 @@ public class Symbol extends Annotation<Point> {
    * @param color value for String
    */
   public void setIconColor(@ColorInt int color) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_iconColor, ColorUtils.colorToRgbaString(color));
+    jsonObject.addProperty(SymbolOptions.PROPERTY_ICON_COLOR, ColorUtils.colorToRgbaString(color));
   }
 
   /**
@@ -685,7 +685,7 @@ public class Symbol extends Annotation<Point> {
    */
   @ColorInt
   public int getIconHaloColorAsInt() {
-    return ColorUtils.rgbaToColor(jsonObject.get(SymbolOptions.PROPERTY_iconHaloColor).getAsString());
+    return ColorUtils.rgbaToColor(jsonObject.get(SymbolOptions.PROPERTY_ICON_HALO_COLOR).getAsString());
   }
 
   /**
@@ -697,7 +697,7 @@ public class Symbol extends Annotation<Point> {
    * @return color value for String
    */
   public String getIconHaloColor() {
-    return jsonObject.get(SymbolOptions.PROPERTY_iconHaloColor).getAsString();
+    return jsonObject.get(SymbolOptions.PROPERTY_ICON_HALO_COLOR).getAsString();
   }
 
   /**
@@ -712,7 +712,7 @@ public class Symbol extends Annotation<Point> {
    * @param color value for String
    */
   public void setIconHaloColor(@ColorInt int color) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_iconHaloColor, ColorUtils.colorToRgbaString(color));
+    jsonObject.addProperty(SymbolOptions.PROPERTY_ICON_HALO_COLOR, ColorUtils.colorToRgbaString(color));
   }
 
   /**
@@ -739,7 +739,7 @@ public class Symbol extends Annotation<Point> {
    * @return property wrapper value around Float
    */
   public Float getIconHaloWidth() {
-    return jsonObject.get(SymbolOptions.PROPERTY_iconHaloWidth).getAsFloat();
+    return jsonObject.get(SymbolOptions.PROPERTY_ICON_HALO_WIDTH).getAsFloat();
   }
 
   /**
@@ -754,7 +754,7 @@ public class Symbol extends Annotation<Point> {
    * @param value constant property value for Float
    */
   public void setIconHaloWidth(Float value) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_iconHaloWidth, value);
+    jsonObject.addProperty(SymbolOptions.PROPERTY_ICON_HALO_WIDTH, value);
   }
 
   /**
@@ -766,7 +766,7 @@ public class Symbol extends Annotation<Point> {
    * @return property wrapper value around Float
    */
   public Float getIconHaloBlur() {
-    return jsonObject.get(SymbolOptions.PROPERTY_iconHaloBlur).getAsFloat();
+    return jsonObject.get(SymbolOptions.PROPERTY_ICON_HALO_BLUR).getAsFloat();
   }
 
   /**
@@ -781,7 +781,7 @@ public class Symbol extends Annotation<Point> {
    * @param value constant property value for Float
    */
   public void setIconHaloBlur(Float value) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_iconHaloBlur, value);
+    jsonObject.addProperty(SymbolOptions.PROPERTY_ICON_HALO_BLUR, value);
   }
 
   /**
@@ -793,7 +793,7 @@ public class Symbol extends Annotation<Point> {
    * @return property wrapper value around Float
    */
   public Float getTextOpacity() {
-    return jsonObject.get(SymbolOptions.PROPERTY_textOpacity).getAsFloat();
+    return jsonObject.get(SymbolOptions.PROPERTY_TEXT_OPACITY).getAsFloat();
   }
 
   /**
@@ -808,7 +808,7 @@ public class Symbol extends Annotation<Point> {
    * @param value constant property value for Float
    */
   public void setTextOpacity(Float value) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_textOpacity, value);
+    jsonObject.addProperty(SymbolOptions.PROPERTY_TEXT_OPACITY, value);
   }
 
   /**
@@ -821,7 +821,7 @@ public class Symbol extends Annotation<Point> {
    */
   @ColorInt
   public int getTextColorAsInt() {
-    return ColorUtils.rgbaToColor(jsonObject.get(SymbolOptions.PROPERTY_textColor).getAsString());
+    return ColorUtils.rgbaToColor(jsonObject.get(SymbolOptions.PROPERTY_TEXT_COLOR).getAsString());
   }
 
   /**
@@ -833,7 +833,7 @@ public class Symbol extends Annotation<Point> {
    * @return color value for String
    */
   public String getTextColor() {
-    return jsonObject.get(SymbolOptions.PROPERTY_textColor).getAsString();
+    return jsonObject.get(SymbolOptions.PROPERTY_TEXT_COLOR).getAsString();
   }
 
   /**
@@ -848,7 +848,7 @@ public class Symbol extends Annotation<Point> {
    * @param color value for String
    */
   public void setTextColor(@ColorInt int color) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_textColor, ColorUtils.colorToRgbaString(color));
+    jsonObject.addProperty(SymbolOptions.PROPERTY_TEXT_COLOR, ColorUtils.colorToRgbaString(color));
   }
 
   /**
@@ -876,7 +876,7 @@ public class Symbol extends Annotation<Point> {
    */
   @ColorInt
   public int getTextHaloColorAsInt() {
-    return ColorUtils.rgbaToColor(jsonObject.get(SymbolOptions.PROPERTY_textHaloColor).getAsString());
+    return ColorUtils.rgbaToColor(jsonObject.get(SymbolOptions.PROPERTY_TEXT_HALO_COLOR).getAsString());
   }
 
   /**
@@ -888,7 +888,7 @@ public class Symbol extends Annotation<Point> {
    * @return color value for String
    */
   public String getTextHaloColor() {
-    return jsonObject.get(SymbolOptions.PROPERTY_textHaloColor).getAsString();
+    return jsonObject.get(SymbolOptions.PROPERTY_TEXT_HALO_COLOR).getAsString();
   }
 
   /**
@@ -903,7 +903,7 @@ public class Symbol extends Annotation<Point> {
    * @param color value for String
    */
   public void setTextHaloColor(@ColorInt int color) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_textHaloColor, ColorUtils.colorToRgbaString(color));
+    jsonObject.addProperty(SymbolOptions.PROPERTY_TEXT_HALO_COLOR, ColorUtils.colorToRgbaString(color));
   }
 
   /**
@@ -930,7 +930,7 @@ public class Symbol extends Annotation<Point> {
    * @return property wrapper value around Float
    */
   public Float getTextHaloWidth() {
-    return jsonObject.get(SymbolOptions.PROPERTY_textHaloWidth).getAsFloat();
+    return jsonObject.get(SymbolOptions.PROPERTY_TEXT_HALO_WIDTH).getAsFloat();
   }
 
   /**
@@ -945,7 +945,7 @@ public class Symbol extends Annotation<Point> {
    * @param value constant property value for Float
    */
   public void setTextHaloWidth(Float value) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_textHaloWidth, value);
+    jsonObject.addProperty(SymbolOptions.PROPERTY_TEXT_HALO_WIDTH, value);
   }
 
   /**
@@ -957,7 +957,7 @@ public class Symbol extends Annotation<Point> {
    * @return property wrapper value around Float
    */
   public Float getTextHaloBlur() {
-    return jsonObject.get(SymbolOptions.PROPERTY_textHaloBlur).getAsFloat();
+    return jsonObject.get(SymbolOptions.PROPERTY_TEXT_HALO_BLUR).getAsFloat();
   }
 
   /**
@@ -972,7 +972,7 @@ public class Symbol extends Annotation<Point> {
    * @param value constant property value for Float
    */
   public void setTextHaloBlur(Float value) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_textHaloBlur, value);
+    jsonObject.addProperty(SymbolOptions.PROPERTY_TEXT_HALO_BLUR, value);
   }
 
   @Override

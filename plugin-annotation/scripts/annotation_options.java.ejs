@@ -43,13 +43,13 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
 
 <% for (const property of properties) { -%>
 <% if (supportsPropertyFunction(property)) { -%>
-  static final String PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %> = "<%- property.name %>";
+  static final String PROPERTY_<%- snakeCaseUpper(property.name) %> = "<%- property.name %>";
 <% } -%>
 <% } -%>
 <% if (type === "symbol") { -%>
-  static final String PROPERTY_zIndex = "z-index";
+  static final String PROPERTY_Z_INDEX = "z-index";
 <% } -%>
-  private static final String PROPERTY_isDraggable = "is-draggable";
+  private static final String PROPERTY_IS_DRAGGABLE = "is-draggable";
 <% for (const property of properties) { -%>
 <% if (supportsPropertyFunction(property)) { -%>
 
@@ -215,14 +215,14 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
 <% for (const property of properties) { -%>
 <% if (supportsPropertyFunction(property)) { -%>
 <% if (propertyType(property).endsWith("[]")) { -%>
-    jsonObject.add(PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %>, convertArray(<%- camelizeWithLeadingLowercase(property.name) %>));
+    jsonObject.add(PROPERTY_<%- snakeCaseUpper(property.name) %>, convertArray(<%- camelizeWithLeadingLowercase(property.name) %>));
 <% } else { -%>
-    jsonObject.addProperty(PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %>, <%- camelizeWithLeadingLowercase(property.name) %>);
+    jsonObject.addProperty(PROPERTY_<%- snakeCaseUpper(property.name) %>, <%- camelizeWithLeadingLowercase(property.name) %>);
 <% } -%>
 <% } -%>
 <% } -%>
 <% if (type === "symbol") { -%>
-    jsonObject.addProperty(PROPERTY_zIndex, zIndex);
+    jsonObject.addProperty(PROPERTY_Z_INDEX, zIndex);
 <% } -%>
     <%- camelize(type) %> <%- type %> = new <%- camelize(type) %>(id, annotationManager, jsonObject, geometry);
     <%- type %>.setDraggable(isDraggable);
@@ -253,23 +253,23 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
 <% for (const property of properties) { -%>
 <% if (supportsPropertyFunction(property)) { -%>
 <% if (propertyType(property).endsWith("[]")) { -%>
-    if (feature.hasProperty(PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %>)) {
-      options.<%- camelizeWithLeadingLowercase(property.name) %> = to<%- propertyType(property).slice(0, -2) -%>Array(feature.getProperty(PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %>).getAsJsonArray());
+    if (feature.hasProperty(PROPERTY_<%- snakeCaseUpper(property.name) %>)) {
+      options.<%- camelizeWithLeadingLowercase(property.name) %> = to<%- propertyType(property).slice(0, -2) -%>Array(feature.getProperty(PROPERTY_<%- snakeCaseUpper(property.name) %>).getAsJsonArray());
     }
 <% } else { -%>
-    if (feature.hasProperty(PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %>)) {
-      options.<%- camelizeWithLeadingLowercase(property.name) %> = feature.getProperty(PROPERTY_<%- camelizeWithLeadingLowercase(property.name) %>).getAs<%- propertyType(property) %>();
+    if (feature.hasProperty(PROPERTY_<%- snakeCaseUpper(property.name) %>)) {
+      options.<%- camelizeWithLeadingLowercase(property.name) %> = feature.getProperty(PROPERTY_<%- snakeCaseUpper(property.name) %>).getAs<%- propertyType(property) %>();
     }
 <% } -%>
 <% } -%>
 <% } -%>
 <% if (type === "symbol") { -%>
-    if (feature.hasProperty(PROPERTY_zIndex)) {
-      options.zIndex = feature.getProperty(PROPERTY_zIndex).getAsInt();
+    if (feature.hasProperty(PROPERTY_Z_INDEX)) {
+      options.zIndex = feature.getProperty(PROPERTY_Z_INDEX).getAsInt();
     }
 <% } -%>
-    if (feature.hasProperty(PROPERTY_isDraggable)) {
-      options.isDraggable = feature.getProperty(PROPERTY_isDraggable).getAsBoolean();
+    if (feature.hasProperty(PROPERTY_IS_DRAGGABLE)) {
+      options.isDraggable = feature.getProperty(PROPERTY_IS_DRAGGABLE).getAsBoolean();
     }
     return options;
   }

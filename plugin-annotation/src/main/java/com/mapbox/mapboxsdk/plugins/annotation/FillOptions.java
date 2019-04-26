@@ -32,11 +32,11 @@ public class FillOptions extends Options<Fill> {
   private String fillOutlineColor;
   private String fillPattern;
 
-  static final String PROPERTY_fillOpacity = "fill-opacity";
-  static final String PROPERTY_fillColor = "fill-color";
-  static final String PROPERTY_fillOutlineColor = "fill-outline-color";
-  static final String PROPERTY_fillPattern = "fill-pattern";
-  private static final String PROPERTY_isDraggable = "is-draggable";
+  static final String PROPERTY_FILL_OPACITY = "fill-opacity";
+  static final String PROPERTY_FILL_COLOR = "fill-color";
+  static final String PROPERTY_FILL_OUTLINE_COLOR = "fill-outline-color";
+  static final String PROPERTY_FILL_PATTERN = "fill-pattern";
+  private static final String PROPERTY_IS_DRAGGABLE = "is-draggable";
 
   /**
    * Set fill-opacity to initialise the fill with.
@@ -190,10 +190,10 @@ public class FillOptions extends Options<Fill> {
       throw new RuntimeException("geometry field is required");
     }
     JsonObject jsonObject = new JsonObject();
-    jsonObject.addProperty(PROPERTY_fillOpacity, fillOpacity);
-    jsonObject.addProperty(PROPERTY_fillColor, fillColor);
-    jsonObject.addProperty(PROPERTY_fillOutlineColor, fillOutlineColor);
-    jsonObject.addProperty(PROPERTY_fillPattern, fillPattern);
+    jsonObject.addProperty(PROPERTY_FILL_OPACITY, fillOpacity);
+    jsonObject.addProperty(PROPERTY_FILL_COLOR, fillColor);
+    jsonObject.addProperty(PROPERTY_FILL_OUTLINE_COLOR, fillOutlineColor);
+    jsonObject.addProperty(PROPERTY_FILL_PATTERN, fillPattern);
     Fill fill = new Fill(id, annotationManager, jsonObject, geometry);
     fill.setDraggable(isDraggable);
     return fill;
@@ -214,20 +214,20 @@ public class FillOptions extends Options<Fill> {
 
     FillOptions options = new FillOptions();
     options.geometry = (Polygon) feature.geometry();
-    if (feature.hasProperty(PROPERTY_fillOpacity)) {
-      options.fillOpacity = feature.getProperty(PROPERTY_fillOpacity).getAsFloat();
+    if (feature.hasProperty(PROPERTY_FILL_OPACITY)) {
+      options.fillOpacity = feature.getProperty(PROPERTY_FILL_OPACITY).getAsFloat();
     }
-    if (feature.hasProperty(PROPERTY_fillColor)) {
-      options.fillColor = feature.getProperty(PROPERTY_fillColor).getAsString();
+    if (feature.hasProperty(PROPERTY_FILL_COLOR)) {
+      options.fillColor = feature.getProperty(PROPERTY_FILL_COLOR).getAsString();
     }
-    if (feature.hasProperty(PROPERTY_fillOutlineColor)) {
-      options.fillOutlineColor = feature.getProperty(PROPERTY_fillOutlineColor).getAsString();
+    if (feature.hasProperty(PROPERTY_FILL_OUTLINE_COLOR)) {
+      options.fillOutlineColor = feature.getProperty(PROPERTY_FILL_OUTLINE_COLOR).getAsString();
     }
-    if (feature.hasProperty(PROPERTY_fillPattern)) {
-      options.fillPattern = feature.getProperty(PROPERTY_fillPattern).getAsString();
+    if (feature.hasProperty(PROPERTY_FILL_PATTERN)) {
+      options.fillPattern = feature.getProperty(PROPERTY_FILL_PATTERN).getAsString();
     }
-    if (feature.hasProperty(PROPERTY_isDraggable)) {
-      options.isDraggable = feature.getProperty(PROPERTY_isDraggable).getAsBoolean();
+    if (feature.hasProperty(PROPERTY_IS_DRAGGABLE)) {
+      options.isDraggable = feature.getProperty(PROPERTY_IS_DRAGGABLE).getAsBoolean();
     }
     return options;
   }

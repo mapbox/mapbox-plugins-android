@@ -34,31 +34,31 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-symbol-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-symbol-layer";
 
-  private static final String PROPERTY_symbolPlacement = "symbol-placement";
-  private static final String PROPERTY_symbolSpacing = "symbol-spacing";
-  private static final String PROPERTY_symbolAvoidEdges = "symbol-avoid-edges";
-  private static final String PROPERTY_iconAllowOverlap = "icon-allow-overlap";
-  private static final String PROPERTY_iconIgnorePlacement = "icon-ignore-placement";
-  private static final String PROPERTY_iconOptional = "icon-optional";
-  private static final String PROPERTY_iconRotationAlignment = "icon-rotation-alignment";
-  private static final String PROPERTY_iconTextFit = "icon-text-fit";
-  private static final String PROPERTY_iconTextFitPadding = "icon-text-fit-padding";
-  private static final String PROPERTY_iconPadding = "icon-padding";
-  private static final String PROPERTY_iconKeepUpright = "icon-keep-upright";
-  private static final String PROPERTY_iconPitchAlignment = "icon-pitch-alignment";
-  private static final String PROPERTY_textPitchAlignment = "text-pitch-alignment";
-  private static final String PROPERTY_textRotationAlignment = "text-rotation-alignment";
-  private static final String PROPERTY_textLineHeight = "text-line-height";
-  private static final String PROPERTY_textMaxAngle = "text-max-angle";
-  private static final String PROPERTY_textPadding = "text-padding";
-  private static final String PROPERTY_textKeepUpright = "text-keep-upright";
-  private static final String PROPERTY_textAllowOverlap = "text-allow-overlap";
-  private static final String PROPERTY_textIgnorePlacement = "text-ignore-placement";
-  private static final String PROPERTY_textOptional = "text-optional";
-  private static final String PROPERTY_iconTranslate = "icon-translate";
-  private static final String PROPERTY_iconTranslateAnchor = "icon-translate-anchor";
-  private static final String PROPERTY_textTranslate = "text-translate";
-  private static final String PROPERTY_textTranslateAnchor = "text-translate-anchor";
+  private static final String PROPERTY_SYMBOL_PLACEMENT = "symbol-placement";
+  private static final String PROPERTY_SYMBOL_SPACING = "symbol-spacing";
+  private static final String PROPERTY_SYMBOL_AVOID_EDGES = "symbol-avoid-edges";
+  private static final String PROPERTY_ICON_ALLOW_OVERLAP = "icon-allow-overlap";
+  private static final String PROPERTY_ICON_IGNORE_PLACEMENT = "icon-ignore-placement";
+  private static final String PROPERTY_ICON_OPTIONAL = "icon-optional";
+  private static final String PROPERTY_ICON_ROTATION_ALIGNMENT = "icon-rotation-alignment";
+  private static final String PROPERTY_ICON_TEXT_FIT = "icon-text-fit";
+  private static final String PROPERTY_ICON_TEXT_FIT_PADDING = "icon-text-fit-padding";
+  private static final String PROPERTY_ICON_PADDING = "icon-padding";
+  private static final String PROPERTY_ICON_KEEP_UPRIGHT = "icon-keep-upright";
+  private static final String PROPERTY_ICON_PITCH_ALIGNMENT = "icon-pitch-alignment";
+  private static final String PROPERTY_TEXT_PITCH_ALIGNMENT = "text-pitch-alignment";
+  private static final String PROPERTY_TEXT_ROTATION_ALIGNMENT = "text-rotation-alignment";
+  private static final String PROPERTY_TEXT_LINE_HEIGHT = "text-line-height";
+  private static final String PROPERTY_TEXT_MAX_ANGLE = "text-max-angle";
+  private static final String PROPERTY_TEXT_PADDING = "text-padding";
+  private static final String PROPERTY_TEXT_KEEP_UPRIGHT = "text-keep-upright";
+  private static final String PROPERTY_TEXT_ALLOW_OVERLAP = "text-allow-overlap";
+  private static final String PROPERTY_TEXT_IGNORE_PLACEMENT = "text-ignore-placement";
+  private static final String PROPERTY_TEXT_OPTIONAL = "text-optional";
+  private static final String PROPERTY_ICON_TRANSLATE = "icon-translate";
+  private static final String PROPERTY_ICON_TRANSLATE_ANCHOR = "icon-translate-anchor";
+  private static final String PROPERTY_TEXT_TRANSLATE = "text-translate";
+  private static final String PROPERTY_TEXT_TRANSLATE_ANCHOR = "text-translate-anchor";
 
   /**
    * Create a symbol manager, used to manage symbols.
@@ -119,113 +119,113 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
 
   @Override
   void initializeDataDrivenPropertyMap() {
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_iconSize, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_iconImage, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_iconRotate, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_iconOffset, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_iconAnchor, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_textField, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_textFont, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_textSize, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_textMaxWidth, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_textLetterSpacing, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_textJustify, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_textAnchor, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_textRotate, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_textTransform, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_textOffset, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_iconOpacity, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_iconColor, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_iconHaloColor, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_iconHaloWidth, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_iconHaloBlur, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_textOpacity, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_textColor, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_textHaloColor, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_textHaloWidth, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_textHaloBlur, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_zIndex, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_ICON_SIZE, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_ICON_IMAGE, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_ICON_ROTATE, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_ICON_OFFSET, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_ICON_ANCHOR, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_FIELD, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_FONT, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_SIZE, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_MAX_WIDTH, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_LETTER_SPACING, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_JUSTIFY, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_ANCHOR, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_ROTATE, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_TRANSFORM, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_OFFSET, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_ICON_OPACITY, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_ICON_COLOR, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_ICON_HALO_COLOR, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_ICON_HALO_WIDTH, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_ICON_HALO_BLUR, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_OPACITY, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_COLOR, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_HALO_COLOR, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_HALO_WIDTH, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_HALO_BLUR, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_Z_INDEX, false);
   }
 
   @Override
   protected void setDataDrivenPropertyIsUsed(@NonNull String property) {
     switch (property) {
-      case SymbolOptions.PROPERTY_iconSize:
-        layer.setProperties(iconSize(get(SymbolOptions.PROPERTY_iconSize)));
+      case SymbolOptions.PROPERTY_ICON_SIZE:
+        layer.setProperties(iconSize(get(SymbolOptions.PROPERTY_ICON_SIZE)));
         break;
-      case SymbolOptions.PROPERTY_iconImage:
-        layer.setProperties(iconImage(get(SymbolOptions.PROPERTY_iconImage)));
+      case SymbolOptions.PROPERTY_ICON_IMAGE:
+        layer.setProperties(iconImage(get(SymbolOptions.PROPERTY_ICON_IMAGE)));
         break;
-      case SymbolOptions.PROPERTY_iconRotate:
-        layer.setProperties(iconRotate(get(SymbolOptions.PROPERTY_iconRotate)));
+      case SymbolOptions.PROPERTY_ICON_ROTATE:
+        layer.setProperties(iconRotate(get(SymbolOptions.PROPERTY_ICON_ROTATE)));
         break;
-      case SymbolOptions.PROPERTY_iconOffset:
-        layer.setProperties(iconOffset(get(SymbolOptions.PROPERTY_iconOffset)));
+      case SymbolOptions.PROPERTY_ICON_OFFSET:
+        layer.setProperties(iconOffset(get(SymbolOptions.PROPERTY_ICON_OFFSET)));
         break;
-      case SymbolOptions.PROPERTY_iconAnchor:
-        layer.setProperties(iconAnchor(get(SymbolOptions.PROPERTY_iconAnchor)));
+      case SymbolOptions.PROPERTY_ICON_ANCHOR:
+        layer.setProperties(iconAnchor(get(SymbolOptions.PROPERTY_ICON_ANCHOR)));
         break;
-      case SymbolOptions.PROPERTY_textField:
-        layer.setProperties(textField(get(SymbolOptions.PROPERTY_textField)));
+      case SymbolOptions.PROPERTY_TEXT_FIELD:
+        layer.setProperties(textField(get(SymbolOptions.PROPERTY_TEXT_FIELD)));
         break;
-      case SymbolOptions.PROPERTY_textFont:
-        layer.setProperties(textFont(get(SymbolOptions.PROPERTY_textFont)));
+      case SymbolOptions.PROPERTY_TEXT_FONT:
+        layer.setProperties(textFont(get(SymbolOptions.PROPERTY_TEXT_FONT)));
         break;
-      case SymbolOptions.PROPERTY_textSize:
-        layer.setProperties(textSize(get(SymbolOptions.PROPERTY_textSize)));
+      case SymbolOptions.PROPERTY_TEXT_SIZE:
+        layer.setProperties(textSize(get(SymbolOptions.PROPERTY_TEXT_SIZE)));
         break;
-      case SymbolOptions.PROPERTY_textMaxWidth:
-        layer.setProperties(textMaxWidth(get(SymbolOptions.PROPERTY_textMaxWidth)));
+      case SymbolOptions.PROPERTY_TEXT_MAX_WIDTH:
+        layer.setProperties(textMaxWidth(get(SymbolOptions.PROPERTY_TEXT_MAX_WIDTH)));
         break;
-      case SymbolOptions.PROPERTY_textLetterSpacing:
-        layer.setProperties(textLetterSpacing(get(SymbolOptions.PROPERTY_textLetterSpacing)));
+      case SymbolOptions.PROPERTY_TEXT_LETTER_SPACING:
+        layer.setProperties(textLetterSpacing(get(SymbolOptions.PROPERTY_TEXT_LETTER_SPACING)));
         break;
-      case SymbolOptions.PROPERTY_textJustify:
-        layer.setProperties(textJustify(get(SymbolOptions.PROPERTY_textJustify)));
+      case SymbolOptions.PROPERTY_TEXT_JUSTIFY:
+        layer.setProperties(textJustify(get(SymbolOptions.PROPERTY_TEXT_JUSTIFY)));
         break;
-      case SymbolOptions.PROPERTY_textAnchor:
-        layer.setProperties(textAnchor(get(SymbolOptions.PROPERTY_textAnchor)));
+      case SymbolOptions.PROPERTY_TEXT_ANCHOR:
+        layer.setProperties(textAnchor(get(SymbolOptions.PROPERTY_TEXT_ANCHOR)));
         break;
-      case SymbolOptions.PROPERTY_textRotate:
-        layer.setProperties(textRotate(get(SymbolOptions.PROPERTY_textRotate)));
+      case SymbolOptions.PROPERTY_TEXT_ROTATE:
+        layer.setProperties(textRotate(get(SymbolOptions.PROPERTY_TEXT_ROTATE)));
         break;
-      case SymbolOptions.PROPERTY_textTransform:
-        layer.setProperties(textTransform(get(SymbolOptions.PROPERTY_textTransform)));
+      case SymbolOptions.PROPERTY_TEXT_TRANSFORM:
+        layer.setProperties(textTransform(get(SymbolOptions.PROPERTY_TEXT_TRANSFORM)));
         break;
-      case SymbolOptions.PROPERTY_textOffset:
-        layer.setProperties(textOffset(get(SymbolOptions.PROPERTY_textOffset)));
+      case SymbolOptions.PROPERTY_TEXT_OFFSET:
+        layer.setProperties(textOffset(get(SymbolOptions.PROPERTY_TEXT_OFFSET)));
         break;
-      case SymbolOptions.PROPERTY_iconOpacity:
-        layer.setProperties(iconOpacity(get(SymbolOptions.PROPERTY_iconOpacity)));
+      case SymbolOptions.PROPERTY_ICON_OPACITY:
+        layer.setProperties(iconOpacity(get(SymbolOptions.PROPERTY_ICON_OPACITY)));
         break;
-      case SymbolOptions.PROPERTY_iconColor:
-        layer.setProperties(iconColor(get(SymbolOptions.PROPERTY_iconColor)));
+      case SymbolOptions.PROPERTY_ICON_COLOR:
+        layer.setProperties(iconColor(get(SymbolOptions.PROPERTY_ICON_COLOR)));
         break;
-      case SymbolOptions.PROPERTY_iconHaloColor:
-        layer.setProperties(iconHaloColor(get(SymbolOptions.PROPERTY_iconHaloColor)));
+      case SymbolOptions.PROPERTY_ICON_HALO_COLOR:
+        layer.setProperties(iconHaloColor(get(SymbolOptions.PROPERTY_ICON_HALO_COLOR)));
         break;
-      case SymbolOptions.PROPERTY_iconHaloWidth:
-        layer.setProperties(iconHaloWidth(get(SymbolOptions.PROPERTY_iconHaloWidth)));
+      case SymbolOptions.PROPERTY_ICON_HALO_WIDTH:
+        layer.setProperties(iconHaloWidth(get(SymbolOptions.PROPERTY_ICON_HALO_WIDTH)));
         break;
-      case SymbolOptions.PROPERTY_iconHaloBlur:
-        layer.setProperties(iconHaloBlur(get(SymbolOptions.PROPERTY_iconHaloBlur)));
+      case SymbolOptions.PROPERTY_ICON_HALO_BLUR:
+        layer.setProperties(iconHaloBlur(get(SymbolOptions.PROPERTY_ICON_HALO_BLUR)));
         break;
-      case SymbolOptions.PROPERTY_textOpacity:
-        layer.setProperties(textOpacity(get(SymbolOptions.PROPERTY_textOpacity)));
+      case SymbolOptions.PROPERTY_TEXT_OPACITY:
+        layer.setProperties(textOpacity(get(SymbolOptions.PROPERTY_TEXT_OPACITY)));
         break;
-      case SymbolOptions.PROPERTY_textColor:
-        layer.setProperties(textColor(get(SymbolOptions.PROPERTY_textColor)));
+      case SymbolOptions.PROPERTY_TEXT_COLOR:
+        layer.setProperties(textColor(get(SymbolOptions.PROPERTY_TEXT_COLOR)));
         break;
-      case SymbolOptions.PROPERTY_textHaloColor:
-        layer.setProperties(textHaloColor(get(SymbolOptions.PROPERTY_textHaloColor)));
+      case SymbolOptions.PROPERTY_TEXT_HALO_COLOR:
+        layer.setProperties(textHaloColor(get(SymbolOptions.PROPERTY_TEXT_HALO_COLOR)));
         break;
-      case SymbolOptions.PROPERTY_textHaloWidth:
-        layer.setProperties(textHaloWidth(get(SymbolOptions.PROPERTY_textHaloWidth)));
+      case SymbolOptions.PROPERTY_TEXT_HALO_WIDTH:
+        layer.setProperties(textHaloWidth(get(SymbolOptions.PROPERTY_TEXT_HALO_WIDTH)));
         break;
-      case SymbolOptions.PROPERTY_textHaloBlur:
-        layer.setProperties(textHaloBlur(get(SymbolOptions.PROPERTY_textHaloBlur)));
+      case SymbolOptions.PROPERTY_TEXT_HALO_BLUR:
+        layer.setProperties(textHaloBlur(get(SymbolOptions.PROPERTY_TEXT_HALO_BLUR)));
         break;
-      case SymbolOptions.PROPERTY_zIndex:
+      case SymbolOptions.PROPERTY_Z_INDEX:
         layer.setProperties(symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE));
         break;
     }
@@ -237,31 +237,31 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * Symbols are going to be created only for features with a matching geometry.
    * <p>
    * All supported properties are:<br>
-   * SymbolOptions.PROPERTY_iconSize - Float<br>
-   * SymbolOptions.PROPERTY_iconImage - String<br>
-   * SymbolOptions.PROPERTY_iconRotate - Float<br>
-   * SymbolOptions.PROPERTY_iconOffset - Float[]<br>
-   * SymbolOptions.PROPERTY_iconAnchor - String<br>
-   * SymbolOptions.PROPERTY_textField - String<br>
-   * SymbolOptions.PROPERTY_textFont - String[]<br>
-   * SymbolOptions.PROPERTY_textSize - Float<br>
-   * SymbolOptions.PROPERTY_textMaxWidth - Float<br>
-   * SymbolOptions.PROPERTY_textLetterSpacing - Float<br>
-   * SymbolOptions.PROPERTY_textJustify - String<br>
-   * SymbolOptions.PROPERTY_textAnchor - String<br>
-   * SymbolOptions.PROPERTY_textRotate - Float<br>
-   * SymbolOptions.PROPERTY_textTransform - String<br>
-   * SymbolOptions.PROPERTY_textOffset - Float[]<br>
-   * SymbolOptions.PROPERTY_iconOpacity - Float<br>
-   * SymbolOptions.PROPERTY_iconColor - String<br>
-   * SymbolOptions.PROPERTY_iconHaloColor - String<br>
-   * SymbolOptions.PROPERTY_iconHaloWidth - Float<br>
-   * SymbolOptions.PROPERTY_iconHaloBlur - Float<br>
-   * SymbolOptions.PROPERTY_textOpacity - Float<br>
-   * SymbolOptions.PROPERTY_textColor - String<br>
-   * SymbolOptions.PROPERTY_textHaloColor - String<br>
-   * SymbolOptions.PROPERTY_textHaloWidth - Float<br>
-   * SymbolOptions.PROPERTY_textHaloBlur - Float<br>
+   * SymbolOptions.PROPERTY_ICON_SIZE - Float<br>
+   * SymbolOptions.PROPERTY_ICON_IMAGE - String<br>
+   * SymbolOptions.PROPERTY_ICON_ROTATE - Float<br>
+   * SymbolOptions.PROPERTY_ICON_OFFSET - Float[]<br>
+   * SymbolOptions.PROPERTY_ICON_ANCHOR - String<br>
+   * SymbolOptions.PROPERTY_TEXT_FIELD - String<br>
+   * SymbolOptions.PROPERTY_TEXT_FONT - String[]<br>
+   * SymbolOptions.PROPERTY_TEXT_SIZE - Float<br>
+   * SymbolOptions.PROPERTY_TEXT_MAX_WIDTH - Float<br>
+   * SymbolOptions.PROPERTY_TEXT_LETTER_SPACING - Float<br>
+   * SymbolOptions.PROPERTY_TEXT_JUSTIFY - String<br>
+   * SymbolOptions.PROPERTY_TEXT_ANCHOR - String<br>
+   * SymbolOptions.PROPERTY_TEXT_ROTATE - Float<br>
+   * SymbolOptions.PROPERTY_TEXT_TRANSFORM - String<br>
+   * SymbolOptions.PROPERTY_TEXT_OFFSET - Float[]<br>
+   * SymbolOptions.PROPERTY_ICON_OPACITY - Float<br>
+   * SymbolOptions.PROPERTY_ICON_COLOR - String<br>
+   * SymbolOptions.PROPERTY_ICON_HALO_COLOR - String<br>
+   * SymbolOptions.PROPERTY_ICON_HALO_WIDTH - Float<br>
+   * SymbolOptions.PROPERTY_ICON_HALO_BLUR - Float<br>
+   * SymbolOptions.PROPERTY_TEXT_OPACITY - Float<br>
+   * SymbolOptions.PROPERTY_TEXT_COLOR - String<br>
+   * SymbolOptions.PROPERTY_TEXT_HALO_COLOR - String<br>
+   * SymbolOptions.PROPERTY_TEXT_HALO_WIDTH - Float<br>
+   * SymbolOptions.PROPERTY_TEXT_HALO_BLUR - Float<br>
    * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
    * <p>
    * Out of spec properties:<br>
@@ -282,31 +282,31 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * Symbols are going to be created only for features with a matching geometry.
    * <p>
    * All supported properties are:<br>
-   * SymbolOptions.PROPERTY_iconSize - Float<br>
-   * SymbolOptions.PROPERTY_iconImage - String<br>
-   * SymbolOptions.PROPERTY_iconRotate - Float<br>
-   * SymbolOptions.PROPERTY_iconOffset - Float[]<br>
-   * SymbolOptions.PROPERTY_iconAnchor - String<br>
-   * SymbolOptions.PROPERTY_textField - String<br>
-   * SymbolOptions.PROPERTY_textFont - String[]<br>
-   * SymbolOptions.PROPERTY_textSize - Float<br>
-   * SymbolOptions.PROPERTY_textMaxWidth - Float<br>
-   * SymbolOptions.PROPERTY_textLetterSpacing - Float<br>
-   * SymbolOptions.PROPERTY_textJustify - String<br>
-   * SymbolOptions.PROPERTY_textAnchor - String<br>
-   * SymbolOptions.PROPERTY_textRotate - Float<br>
-   * SymbolOptions.PROPERTY_textTransform - String<br>
-   * SymbolOptions.PROPERTY_textOffset - Float[]<br>
-   * SymbolOptions.PROPERTY_iconOpacity - Float<br>
-   * SymbolOptions.PROPERTY_iconColor - String<br>
-   * SymbolOptions.PROPERTY_iconHaloColor - String<br>
-   * SymbolOptions.PROPERTY_iconHaloWidth - Float<br>
-   * SymbolOptions.PROPERTY_iconHaloBlur - Float<br>
-   * SymbolOptions.PROPERTY_textOpacity - Float<br>
-   * SymbolOptions.PROPERTY_textColor - String<br>
-   * SymbolOptions.PROPERTY_textHaloColor - String<br>
-   * SymbolOptions.PROPERTY_textHaloWidth - Float<br>
-   * SymbolOptions.PROPERTY_textHaloBlur - Float<br>
+   * SymbolOptions.PROPERTY_ICON_SIZE - Float<br>
+   * SymbolOptions.PROPERTY_ICON_IMAGE - String<br>
+   * SymbolOptions.PROPERTY_ICON_ROTATE - Float<br>
+   * SymbolOptions.PROPERTY_ICON_OFFSET - Float[]<br>
+   * SymbolOptions.PROPERTY_ICON_ANCHOR - String<br>
+   * SymbolOptions.PROPERTY_TEXT_FIELD - String<br>
+   * SymbolOptions.PROPERTY_TEXT_FONT - String[]<br>
+   * SymbolOptions.PROPERTY_TEXT_SIZE - Float<br>
+   * SymbolOptions.PROPERTY_TEXT_MAX_WIDTH - Float<br>
+   * SymbolOptions.PROPERTY_TEXT_LETTER_SPACING - Float<br>
+   * SymbolOptions.PROPERTY_TEXT_JUSTIFY - String<br>
+   * SymbolOptions.PROPERTY_TEXT_ANCHOR - String<br>
+   * SymbolOptions.PROPERTY_TEXT_ROTATE - Float<br>
+   * SymbolOptions.PROPERTY_TEXT_TRANSFORM - String<br>
+   * SymbolOptions.PROPERTY_TEXT_OFFSET - Float[]<br>
+   * SymbolOptions.PROPERTY_ICON_OPACITY - Float<br>
+   * SymbolOptions.PROPERTY_ICON_COLOR - String<br>
+   * SymbolOptions.PROPERTY_ICON_HALO_COLOR - String<br>
+   * SymbolOptions.PROPERTY_ICON_HALO_WIDTH - Float<br>
+   * SymbolOptions.PROPERTY_ICON_HALO_BLUR - Float<br>
+   * SymbolOptions.PROPERTY_TEXT_OPACITY - Float<br>
+   * SymbolOptions.PROPERTY_TEXT_COLOR - String<br>
+   * SymbolOptions.PROPERTY_TEXT_HALO_COLOR - String<br>
+   * SymbolOptions.PROPERTY_TEXT_HALO_WIDTH - Float<br>
+   * SymbolOptions.PROPERTY_TEXT_HALO_BLUR - Float<br>
    * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
    * <p>
    * Out of spec properties:<br>
@@ -374,7 +374,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setSymbolPlacement(@Property.SYMBOL_PLACEMENT String value) {
     PropertyValue propertyValue = symbolPlacement(value);
-    constantPropertyUsageMap.put(PROPERTY_symbolPlacement, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_SYMBOL_PLACEMENT, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -400,7 +400,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setSymbolSpacing( Float value) {
     PropertyValue propertyValue = symbolSpacing(value);
-    constantPropertyUsageMap.put(PROPERTY_symbolSpacing, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_SYMBOL_SPACING, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -426,7 +426,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setSymbolAvoidEdges( Boolean value) {
     PropertyValue propertyValue = symbolAvoidEdges(value);
-    constantPropertyUsageMap.put(PROPERTY_symbolAvoidEdges, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_SYMBOL_AVOID_EDGES, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -452,7 +452,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setIconAllowOverlap( Boolean value) {
     PropertyValue propertyValue = iconAllowOverlap(value);
-    constantPropertyUsageMap.put(PROPERTY_iconAllowOverlap, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_ICON_ALLOW_OVERLAP, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -478,7 +478,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setIconIgnorePlacement( Boolean value) {
     PropertyValue propertyValue = iconIgnorePlacement(value);
-    constantPropertyUsageMap.put(PROPERTY_iconIgnorePlacement, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_ICON_IGNORE_PLACEMENT, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -504,7 +504,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setIconOptional( Boolean value) {
     PropertyValue propertyValue = iconOptional(value);
-    constantPropertyUsageMap.put(PROPERTY_iconOptional, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_ICON_OPTIONAL, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -530,7 +530,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setIconRotationAlignment(@Property.ICON_ROTATION_ALIGNMENT String value) {
     PropertyValue propertyValue = iconRotationAlignment(value);
-    constantPropertyUsageMap.put(PROPERTY_iconRotationAlignment, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_ICON_ROTATION_ALIGNMENT, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -556,7 +556,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setIconTextFit(@Property.ICON_TEXT_FIT String value) {
     PropertyValue propertyValue = iconTextFit(value);
-    constantPropertyUsageMap.put(PROPERTY_iconTextFit, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_ICON_TEXT_FIT, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -582,7 +582,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setIconTextFitPadding( Float[] value) {
     PropertyValue propertyValue = iconTextFitPadding(value);
-    constantPropertyUsageMap.put(PROPERTY_iconTextFitPadding, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_ICON_TEXT_FIT_PADDING, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -608,7 +608,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setIconPadding( Float value) {
     PropertyValue propertyValue = iconPadding(value);
-    constantPropertyUsageMap.put(PROPERTY_iconPadding, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_ICON_PADDING, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -634,7 +634,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setIconKeepUpright( Boolean value) {
     PropertyValue propertyValue = iconKeepUpright(value);
-    constantPropertyUsageMap.put(PROPERTY_iconKeepUpright, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_ICON_KEEP_UPRIGHT, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -660,7 +660,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setIconPitchAlignment(@Property.ICON_PITCH_ALIGNMENT String value) {
     PropertyValue propertyValue = iconPitchAlignment(value);
-    constantPropertyUsageMap.put(PROPERTY_iconPitchAlignment, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_ICON_PITCH_ALIGNMENT, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -686,7 +686,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setTextPitchAlignment(@Property.TEXT_PITCH_ALIGNMENT String value) {
     PropertyValue propertyValue = textPitchAlignment(value);
-    constantPropertyUsageMap.put(PROPERTY_textPitchAlignment, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_TEXT_PITCH_ALIGNMENT, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -712,7 +712,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setTextRotationAlignment(@Property.TEXT_ROTATION_ALIGNMENT String value) {
     PropertyValue propertyValue = textRotationAlignment(value);
-    constantPropertyUsageMap.put(PROPERTY_textRotationAlignment, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_TEXT_ROTATION_ALIGNMENT, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -738,7 +738,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setTextLineHeight( Float value) {
     PropertyValue propertyValue = textLineHeight(value);
-    constantPropertyUsageMap.put(PROPERTY_textLineHeight, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_TEXT_LINE_HEIGHT, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -764,7 +764,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setTextMaxAngle( Float value) {
     PropertyValue propertyValue = textMaxAngle(value);
-    constantPropertyUsageMap.put(PROPERTY_textMaxAngle, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_TEXT_MAX_ANGLE, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -790,7 +790,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setTextPadding( Float value) {
     PropertyValue propertyValue = textPadding(value);
-    constantPropertyUsageMap.put(PROPERTY_textPadding, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_TEXT_PADDING, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -816,7 +816,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setTextKeepUpright( Boolean value) {
     PropertyValue propertyValue = textKeepUpright(value);
-    constantPropertyUsageMap.put(PROPERTY_textKeepUpright, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_TEXT_KEEP_UPRIGHT, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -842,7 +842,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setTextAllowOverlap( Boolean value) {
     PropertyValue propertyValue = textAllowOverlap(value);
-    constantPropertyUsageMap.put(PROPERTY_textAllowOverlap, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_TEXT_ALLOW_OVERLAP, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -868,7 +868,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setTextIgnorePlacement( Boolean value) {
     PropertyValue propertyValue = textIgnorePlacement(value);
-    constantPropertyUsageMap.put(PROPERTY_textIgnorePlacement, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_TEXT_IGNORE_PLACEMENT, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -894,7 +894,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setTextOptional( Boolean value) {
     PropertyValue propertyValue = textOptional(value);
-    constantPropertyUsageMap.put(PROPERTY_textOptional, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_TEXT_OPTIONAL, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -920,7 +920,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setIconTranslate( Float[] value) {
     PropertyValue propertyValue = iconTranslate(value);
-    constantPropertyUsageMap.put(PROPERTY_iconTranslate, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_ICON_TRANSLATE, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -946,7 +946,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setIconTranslateAnchor(@Property.ICON_TRANSLATE_ANCHOR String value) {
     PropertyValue propertyValue = iconTranslateAnchor(value);
-    constantPropertyUsageMap.put(PROPERTY_iconTranslateAnchor, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_ICON_TRANSLATE_ANCHOR, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -972,7 +972,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setTextTranslate( Float[] value) {
     PropertyValue propertyValue = textTranslate(value);
-    constantPropertyUsageMap.put(PROPERTY_textTranslate, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_TEXT_TRANSLATE, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -998,7 +998,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   public void setTextTranslateAnchor(@Property.TEXT_TRANSLATE_ANCHOR String value) {
     PropertyValue propertyValue = textTranslateAnchor(value);
-    constantPropertyUsageMap.put(PROPERTY_textTranslateAnchor, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_TEXT_TRANSLATE_ANCHOR, propertyValue);
     layer.setProperties(propertyValue);
   }
 
