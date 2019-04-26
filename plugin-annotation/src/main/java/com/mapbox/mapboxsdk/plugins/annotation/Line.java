@@ -43,29 +43,29 @@ public class Line extends Annotation<LineString> {
 
   @Override
   void setUsedDataDrivenProperties() {
-    if (!(jsonObject.get(LineOptions.PROPERTY_lineJoin) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(LineOptions.PROPERTY_lineJoin);
+    if (!(jsonObject.get(LineOptions.PROPERTY_LINE_JOIN) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(LineOptions.PROPERTY_LINE_JOIN);
     }
-    if (!(jsonObject.get(LineOptions.PROPERTY_lineOpacity) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(LineOptions.PROPERTY_lineOpacity);
+    if (!(jsonObject.get(LineOptions.PROPERTY_LINE_OPACITY) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(LineOptions.PROPERTY_LINE_OPACITY);
     }
-    if (!(jsonObject.get(LineOptions.PROPERTY_lineColor) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(LineOptions.PROPERTY_lineColor);
+    if (!(jsonObject.get(LineOptions.PROPERTY_LINE_COLOR) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(LineOptions.PROPERTY_LINE_COLOR);
     }
-    if (!(jsonObject.get(LineOptions.PROPERTY_lineWidth) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(LineOptions.PROPERTY_lineWidth);
+    if (!(jsonObject.get(LineOptions.PROPERTY_LINE_WIDTH) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(LineOptions.PROPERTY_LINE_WIDTH);
     }
-    if (!(jsonObject.get(LineOptions.PROPERTY_lineGapWidth) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(LineOptions.PROPERTY_lineGapWidth);
+    if (!(jsonObject.get(LineOptions.PROPERTY_LINE_GAP_WIDTH) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(LineOptions.PROPERTY_LINE_GAP_WIDTH);
     }
-    if (!(jsonObject.get(LineOptions.PROPERTY_lineOffset) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(LineOptions.PROPERTY_lineOffset);
+    if (!(jsonObject.get(LineOptions.PROPERTY_LINE_OFFSET) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(LineOptions.PROPERTY_LINE_OFFSET);
     }
-    if (!(jsonObject.get(LineOptions.PROPERTY_lineBlur) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(LineOptions.PROPERTY_lineBlur);
+    if (!(jsonObject.get(LineOptions.PROPERTY_LINE_BLUR) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(LineOptions.PROPERTY_LINE_BLUR);
     }
-    if (!(jsonObject.get(LineOptions.PROPERTY_linePattern) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(LineOptions.PROPERTY_linePattern);
+    if (!(jsonObject.get(LineOptions.PROPERTY_LINE_PATTERN) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(LineOptions.PROPERTY_LINE_PATTERN);
     }
   }
 
@@ -111,7 +111,7 @@ public class Line extends Annotation<LineString> {
    * @return property wrapper value around String
    */
   public String getLineJoin() {
-    return jsonObject.get(LineOptions.PROPERTY_lineJoin).getAsString();
+    return jsonObject.get(LineOptions.PROPERTY_LINE_JOIN).getAsString();
   }
 
   /**
@@ -126,7 +126,7 @@ public class Line extends Annotation<LineString> {
    * @param value constant property value for String
    */
   public void setLineJoin(@Property.LINE_JOIN String value) {
-    jsonObject.addProperty(LineOptions.PROPERTY_lineJoin, value);
+    jsonObject.addProperty(LineOptions.PROPERTY_LINE_JOIN, value);
   }
 
   /**
@@ -138,7 +138,7 @@ public class Line extends Annotation<LineString> {
    * @return property wrapper value around Float
    */
   public Float getLineOpacity() {
-    return jsonObject.get(LineOptions.PROPERTY_lineOpacity).getAsFloat();
+    return jsonObject.get(LineOptions.PROPERTY_LINE_OPACITY).getAsFloat();
   }
 
   /**
@@ -153,7 +153,7 @@ public class Line extends Annotation<LineString> {
    * @param value constant property value for Float
    */
   public void setLineOpacity(Float value) {
-    jsonObject.addProperty(LineOptions.PROPERTY_lineOpacity, value);
+    jsonObject.addProperty(LineOptions.PROPERTY_LINE_OPACITY, value);
   }
 
   /**
@@ -166,7 +166,7 @@ public class Line extends Annotation<LineString> {
    */
   @ColorInt
   public int getLineColorAsInt() {
-    return ColorUtils.rgbaToColor(jsonObject.get(LineOptions.PROPERTY_lineColor).getAsString());
+    return ColorUtils.rgbaToColor(jsonObject.get(LineOptions.PROPERTY_LINE_COLOR).getAsString());
   }
 
   /**
@@ -178,7 +178,7 @@ public class Line extends Annotation<LineString> {
    * @return color value for String
    */
   public String getLineColor() {
-    return jsonObject.get(LineOptions.PROPERTY_lineColor).getAsString();
+    return jsonObject.get(LineOptions.PROPERTY_LINE_COLOR).getAsString();
   }
 
   /**
@@ -193,7 +193,7 @@ public class Line extends Annotation<LineString> {
    * @param color value for String
    */
   public void setLineColor(@ColorInt int color) {
-    jsonObject.addProperty(LineOptions.PROPERTY_lineColor, ColorUtils.colorToRgbaString(color));
+    jsonObject.addProperty(LineOptions.PROPERTY_LINE_COLOR, ColorUtils.colorToRgbaString(color));
   }
 
   /**
@@ -220,7 +220,7 @@ public class Line extends Annotation<LineString> {
    * @return property wrapper value around Float
    */
   public Float getLineWidth() {
-    return jsonObject.get(LineOptions.PROPERTY_lineWidth).getAsFloat();
+    return jsonObject.get(LineOptions.PROPERTY_LINE_WIDTH).getAsFloat();
   }
 
   /**
@@ -235,7 +235,7 @@ public class Line extends Annotation<LineString> {
    * @param value constant property value for Float
    */
   public void setLineWidth(Float value) {
-    jsonObject.addProperty(LineOptions.PROPERTY_lineWidth, value);
+    jsonObject.addProperty(LineOptions.PROPERTY_LINE_WIDTH, value);
   }
 
   /**
@@ -247,7 +247,7 @@ public class Line extends Annotation<LineString> {
    * @return property wrapper value around Float
    */
   public Float getLineGapWidth() {
-    return jsonObject.get(LineOptions.PROPERTY_lineGapWidth).getAsFloat();
+    return jsonObject.get(LineOptions.PROPERTY_LINE_GAP_WIDTH).getAsFloat();
   }
 
   /**
@@ -262,7 +262,7 @@ public class Line extends Annotation<LineString> {
    * @param value constant property value for Float
    */
   public void setLineGapWidth(Float value) {
-    jsonObject.addProperty(LineOptions.PROPERTY_lineGapWidth, value);
+    jsonObject.addProperty(LineOptions.PROPERTY_LINE_GAP_WIDTH, value);
   }
 
   /**
@@ -274,7 +274,7 @@ public class Line extends Annotation<LineString> {
    * @return property wrapper value around Float
    */
   public Float getLineOffset() {
-    return jsonObject.get(LineOptions.PROPERTY_lineOffset).getAsFloat();
+    return jsonObject.get(LineOptions.PROPERTY_LINE_OFFSET).getAsFloat();
   }
 
   /**
@@ -289,7 +289,7 @@ public class Line extends Annotation<LineString> {
    * @param value constant property value for Float
    */
   public void setLineOffset(Float value) {
-    jsonObject.addProperty(LineOptions.PROPERTY_lineOffset, value);
+    jsonObject.addProperty(LineOptions.PROPERTY_LINE_OFFSET, value);
   }
 
   /**
@@ -301,7 +301,7 @@ public class Line extends Annotation<LineString> {
    * @return property wrapper value around Float
    */
   public Float getLineBlur() {
-    return jsonObject.get(LineOptions.PROPERTY_lineBlur).getAsFloat();
+    return jsonObject.get(LineOptions.PROPERTY_LINE_BLUR).getAsFloat();
   }
 
   /**
@@ -316,7 +316,7 @@ public class Line extends Annotation<LineString> {
    * @param value constant property value for Float
    */
   public void setLineBlur(Float value) {
-    jsonObject.addProperty(LineOptions.PROPERTY_lineBlur, value);
+    jsonObject.addProperty(LineOptions.PROPERTY_LINE_BLUR, value);
   }
 
   /**
@@ -328,7 +328,7 @@ public class Line extends Annotation<LineString> {
    * @return property wrapper value around String
    */
   public String getLinePattern() {
-    return jsonObject.get(LineOptions.PROPERTY_linePattern).getAsString();
+    return jsonObject.get(LineOptions.PROPERTY_LINE_PATTERN).getAsString();
   }
 
   /**
@@ -343,7 +343,7 @@ public class Line extends Annotation<LineString> {
    * @param value constant property value for String
    */
   public void setLinePattern(String value) {
-    jsonObject.addProperty(LineOptions.PROPERTY_linePattern, value);
+    jsonObject.addProperty(LineOptions.PROPERTY_LINE_PATTERN, value);
   }
 
   @Override

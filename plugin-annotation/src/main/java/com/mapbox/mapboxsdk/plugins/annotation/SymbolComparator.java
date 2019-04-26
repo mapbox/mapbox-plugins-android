@@ -7,6 +7,6 @@ import java.util.Comparator;
 public class SymbolComparator implements Comparator<Feature> {
   @Override
   public int compare(Feature left, Feature right) {
-    return left.getProperty(SymbolOptions.PROPERTY_zIndex).getAsInt() - right.getProperty(SymbolOptions.PROPERTY_zIndex).getAsInt();
+    return left.getProperty(SymbolOptions.PROPERTY_Z_INDEX).getAsInt() - right.getProperty(SymbolOptions.PROPERTY_Z_INDEX).getAsInt();
   }
 }

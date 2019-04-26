@@ -34,9 +34,9 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
   public static final String ID_GEOJSON_SOURCE = "mapbox-android-fill-source";
   public static final String ID_GEOJSON_LAYER = "mapbox-android-fill-layer";
 
-  private static final String PROPERTY_fillAntialias = "fill-antialias";
-  private static final String PROPERTY_fillTranslate = "fill-translate";
-  private static final String PROPERTY_fillTranslateAnchor = "fill-translate-anchor";
+  private static final String PROPERTY_FILL_ANTIALIAS = "fill-antialias";
+  private static final String PROPERTY_FILL_TRANSLATE = "fill-translate";
+  private static final String PROPERTY_FILL_TRANSLATE_ANCHOR = "fill-translate-anchor";
 
   /**
    * Create a fill manager, used to manage fills.
@@ -97,26 +97,26 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
 
   @Override
   void initializeDataDrivenPropertyMap() {
-    dataDrivenPropertyUsageMap.put(FillOptions.PROPERTY_fillOpacity, false);
-    dataDrivenPropertyUsageMap.put(FillOptions.PROPERTY_fillColor, false);
-    dataDrivenPropertyUsageMap.put(FillOptions.PROPERTY_fillOutlineColor, false);
-    dataDrivenPropertyUsageMap.put(FillOptions.PROPERTY_fillPattern, false);
+    dataDrivenPropertyUsageMap.put(FillOptions.PROPERTY_FILL_OPACITY, false);
+    dataDrivenPropertyUsageMap.put(FillOptions.PROPERTY_FILL_COLOR, false);
+    dataDrivenPropertyUsageMap.put(FillOptions.PROPERTY_FILL_OUTLINE_COLOR, false);
+    dataDrivenPropertyUsageMap.put(FillOptions.PROPERTY_FILL_PATTERN, false);
   }
 
   @Override
   protected void setDataDrivenPropertyIsUsed(@NonNull String property) {
     switch (property) {
-      case FillOptions.PROPERTY_fillOpacity:
-        layer.setProperties(fillOpacity(get(FillOptions.PROPERTY_fillOpacity)));
+      case FillOptions.PROPERTY_FILL_OPACITY:
+        layer.setProperties(fillOpacity(get(FillOptions.PROPERTY_FILL_OPACITY)));
         break;
-      case FillOptions.PROPERTY_fillColor:
-        layer.setProperties(fillColor(get(FillOptions.PROPERTY_fillColor)));
+      case FillOptions.PROPERTY_FILL_COLOR:
+        layer.setProperties(fillColor(get(FillOptions.PROPERTY_FILL_COLOR)));
         break;
-      case FillOptions.PROPERTY_fillOutlineColor:
-        layer.setProperties(fillOutlineColor(get(FillOptions.PROPERTY_fillOutlineColor)));
+      case FillOptions.PROPERTY_FILL_OUTLINE_COLOR:
+        layer.setProperties(fillOutlineColor(get(FillOptions.PROPERTY_FILL_OUTLINE_COLOR)));
         break;
-      case FillOptions.PROPERTY_fillPattern:
-        layer.setProperties(fillPattern(get(FillOptions.PROPERTY_fillPattern)));
+      case FillOptions.PROPERTY_FILL_PATTERN:
+        layer.setProperties(fillPattern(get(FillOptions.PROPERTY_FILL_PATTERN)));
         break;
     }
   }
@@ -127,10 +127,10 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
    * Fills are going to be created only for features with a matching geometry.
    * <p>
    * All supported properties are:<br>
-   * FillOptions.PROPERTY_fillOpacity - Float<br>
-   * FillOptions.PROPERTY_fillColor - String<br>
-   * FillOptions.PROPERTY_fillOutlineColor - String<br>
-   * FillOptions.PROPERTY_fillPattern - String<br>
+   * FillOptions.PROPERTY_FILL_OPACITY - Float<br>
+   * FillOptions.PROPERTY_FILL_COLOR - String<br>
+   * FillOptions.PROPERTY_FILL_OUTLINE_COLOR - String<br>
+   * FillOptions.PROPERTY_FILL_PATTERN - String<br>
    * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
    * <p>
    * Out of spec properties:<br>
@@ -150,10 +150,10 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
    * Fills are going to be created only for features with a matching geometry.
    * <p>
    * All supported properties are:<br>
-   * FillOptions.PROPERTY_fillOpacity - Float<br>
-   * FillOptions.PROPERTY_fillColor - String<br>
-   * FillOptions.PROPERTY_fillOutlineColor - String<br>
-   * FillOptions.PROPERTY_fillPattern - String<br>
+   * FillOptions.PROPERTY_FILL_OPACITY - Float<br>
+   * FillOptions.PROPERTY_FILL_COLOR - String<br>
+   * FillOptions.PROPERTY_FILL_OUTLINE_COLOR - String<br>
+   * FillOptions.PROPERTY_FILL_PATTERN - String<br>
    * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
    * <p>
    * Out of spec properties:<br>
@@ -220,7 +220,7 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
    */
   public void setFillAntialias( Boolean value) {
     PropertyValue propertyValue = fillAntialias(value);
-    constantPropertyUsageMap.put(PROPERTY_fillAntialias, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_FILL_ANTIALIAS, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -246,7 +246,7 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
    */
   public void setFillTranslate( Float[] value) {
     PropertyValue propertyValue = fillTranslate(value);
-    constantPropertyUsageMap.put(PROPERTY_fillTranslate, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_FILL_TRANSLATE, propertyValue);
     layer.setProperties(propertyValue);
   }
 
@@ -272,7 +272,7 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
    */
   public void setFillTranslateAnchor(@Property.FILL_TRANSLATE_ANCHOR String value) {
     PropertyValue propertyValue = fillTranslateAnchor(value);
-    constantPropertyUsageMap.put(PROPERTY_fillTranslateAnchor, propertyValue);
+    constantPropertyUsageMap.put(PROPERTY_FILL_TRANSLATE_ANCHOR, propertyValue);
     layer.setProperties(propertyValue);
   }
 
