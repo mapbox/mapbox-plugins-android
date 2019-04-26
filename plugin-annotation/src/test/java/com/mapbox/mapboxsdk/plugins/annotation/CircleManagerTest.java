@@ -209,7 +209,12 @@ public class CircleManagerTest {
   @Test
   public void testGeometryCircle() {
     circleManager = new CircleManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
-    Circle circle = circleManager.create(new CircleOptions().withLatLng(new LatLng(12, 34)));
+    LatLng latLng = new LatLng(12, 34);
+    CircleOptions options = new CircleOptions().withLatLng(latLng);
+    Circle circle = circleManager.create(options);
+    assertEquals(options.getLatLng(), latLng);
+    assertEquals(circle.getLatLng(), latLng);
+    assertEquals(options.getGeometry(), Point.fromLngLat(34, 12));
     assertEquals(circle.getGeometry(), Point.fromLngLat(34, 12));
   }
 

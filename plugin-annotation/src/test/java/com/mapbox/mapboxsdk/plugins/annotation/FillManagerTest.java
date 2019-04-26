@@ -250,7 +250,17 @@ public class FillManagerTest {
     innerLatLngs.add(new LatLng(-1,-1));
     List<List<LatLng>>latLngs = new ArrayList<>();
     latLngs.add(innerLatLngs);
-    Fill fill = fillManager.create(new FillOptions().withLatLngs(latLngs));
+    FillOptions options = new FillOptions().withLatLngs(latLngs);
+    Fill fill = fillManager.create(options);
+    assertEquals(options.getLatLngs(), latLngs);
+    assertEquals(fill.getLatLngs(), latLngs);
+    assertEquals(options.getGeometry(), Polygon.fromLngLats(new ArrayList<List<Point>>() {{
+      add(new ArrayList<Point>() {{
+        add(Point.fromLngLat(0, 0));
+        add(Point.fromLngLat(1, 1));
+        add(Point.fromLngLat(-1, -1));
+      }});
+    }}));
     assertEquals(fill.getGeometry(), Polygon.fromLngLats(new ArrayList<List<Point>>() {{
       add(new ArrayList<Point>() {{
         add(Point.fromLngLat(0, 0));

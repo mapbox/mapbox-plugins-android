@@ -327,13 +327,25 @@ public class <%- camelize(type) %>ManagerTest {
   public void testGeometry<%- camelize(type) %>() {
     <%- type  %>Manager = new <%- camelize(type) %>Manager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
 <% if (type === "circle" || type === "symbol") { -%>
-    <%- camelize(type) %> <%- type %> = <%- type %>Manager.create(new <%- camelize(type) %>Options().withLatLng(new LatLng(12, 34)));
+    LatLng latLng = new LatLng(12, 34);
+    <%- camelize(type) %>Options options = new <%- camelize(type) %>Options().withLatLng(latLng);
+    <%- camelize(type) %> <%- type %> = <%- type %>Manager.create(options);
+    assertEquals(options.getLatLng(), latLng);
+    assertEquals(<%- type %>.getLatLng(), latLng);
+    assertEquals(options.getGeometry(), Point.fromLngLat(34, 12));
     assertEquals(<%- type  %>.getGeometry(), Point.fromLngLat(34, 12));
 <% } else if (type === "line") { -%>
     List<LatLng>latLngs = new ArrayList<>();
     latLngs.add(new LatLng());
     latLngs.add(new LatLng(1,1));
-    <%- camelize(type) %> <%- type %> = <%- type %>Manager.create(new <%- camelize(type) %>Options().withLatLngs(latLngs));
+    <%- camelize(type) %>Options options = new <%- camelize(type) %>Options().withLatLngs(latLngs);
+    <%- camelize(type) %> <%- type %> = <%- type %>Manager.create(options);
+    assertEquals(options.getLatLngs(), latLngs);
+    assertEquals(line.getLatLngs(), latLngs);
+    assertEquals(options.getGeometry(), LineString.fromLngLats(new ArrayList<Point>() {{
+          add(Point.fromLngLat(0, 0));
+          add(Point.fromLngLat(1, 1));
+    }}));
     assertEquals(line.getGeometry(), LineString.fromLngLats(new ArrayList<Point>() {{
       add(Point.fromLngLat(0, 0));
       add(Point.fromLngLat(1, 1));
@@ -345,7 +357,17 @@ public class <%- camelize(type) %>ManagerTest {
     innerLatLngs.add(new LatLng(-1,-1));
     List<List<LatLng>>latLngs = new ArrayList<>();
     latLngs.add(innerLatLngs);
-    Fill fill = fillManager.create(new <%- camelize(type) %>Options().withLatLngs(latLngs));
+    <%- camelize(type) %>Options options = new <%- camelize(type) %>Options().withLatLngs(latLngs);
+    Fill fill = fillManager.create(options);
+    assertEquals(options.getLatLngs(), latLngs);
+    assertEquals(fill.getLatLngs(), latLngs);
+    assertEquals(options.getGeometry(), Polygon.fromLngLats(new ArrayList<List<Point>>() {{
+      add(new ArrayList<Point>() {{
+        add(Point.fromLngLat(0, 0));
+        add(Point.fromLngLat(1, 1));
+        add(Point.fromLngLat(-1, -1));
+      }});
+    }}));
     assertEquals(fill.getGeometry(), Polygon.fromLngLats(new ArrayList<List<Point>>() {{
       add(new ArrayList<Point>() {{
         add(Point.fromLngLat(0, 0));

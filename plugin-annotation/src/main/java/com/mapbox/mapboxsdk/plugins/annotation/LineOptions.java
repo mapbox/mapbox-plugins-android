@@ -254,6 +254,21 @@ public class LineOptions extends Options<Line> {
   }
 
   /**
+   * Get a list of LatLng for the line, which represents the locations of the line on the map
+   *
+   * @return a list of the locations of the line in a longitude and latitude pairs
+   */
+  public List<LatLng> getLatLngs() {
+    List<LatLng>latLngs = new ArrayList<>();
+    if (geometry!=null) {
+      for (Point coordinate : geometry.coordinates()) {
+        latLngs.add(new LatLng(coordinate.latitude(), coordinate.longitude()));
+      }
+    }
+    return latLngs;
+  }
+
+  /**
    * Set the geometry of the line, which represents the location of the line on the map
    *
    * @param geometry the location of the line
@@ -262,6 +277,15 @@ public class LineOptions extends Options<Line> {
   public LineOptions withGeometry(LineString geometry) {
     this.geometry = geometry;
     return this;
+  }
+
+  /**
+   * Get the geometry of the line, which represents the location of the line on the map
+   *
+   * @return the location of the line
+   */
+  public LineString getGeometry() {
+    return geometry;
   }
 
   /**
