@@ -92,6 +92,18 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
   }
 
   /**
+   * Get the LatLng of the <%- type %>, which represents the location of the <%- type %> on the map
+   *
+   * @return the location of the <%- type %> in a longitude and latitude pair
+   */
+  public LatLng getLatLng() {
+    if (geometry == null) {
+      return null;
+    }
+    return new LatLng(geometry.latitude(), geometry.longitude());
+  }
+
+  /**
    * Set the geometry of the <%- type %>, which represents the location of the <%- type %> on the map
    *
    * @param geometry the location of the <%- type %>
@@ -100,6 +112,15 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
   public <%- camelize(type) %>Options withGeometry(<%- geometryType(type) %> geometry) {
     this.geometry = geometry;
     return this;
+  }
+
+  /**
+   * Get the geometry of the <%- type %>, which represents the location of the <%- type %> on the map
+   *
+   * @return the location of the <%- type %>
+   */
+  public Point getGeometry() {
+    return geometry;
   }
 <% } else if (type === "line") { -%>
 
@@ -119,6 +140,21 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
   }
 
   /**
+   * Get a list of LatLng for the line, which represents the locations of the line on the map
+   *
+   * @return a list of the locations of the line in a longitude and latitude pairs
+   */
+  public List<LatLng> getLatLngs() {
+    List<LatLng>latLngs = new ArrayList<>();
+    if (geometry!=null) {
+      for (Point coordinate : geometry.coordinates()) {
+        latLngs.add(new LatLng(coordinate.latitude(), coordinate.longitude()));
+      }
+    }
+    return latLngs;
+  }
+
+  /**
    * Set the geometry of the <%- type %>, which represents the location of the <%- type %> on the map
    *
    * @param geometry the location of the <%- type %>
@@ -127,6 +163,15 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
   public <%- camelize(type) %>Options withGeometry(LineString geometry) {
     this.geometry = geometry;
     return this;
+  }
+
+  /**
+   * Get the geometry of the <%- type %>, which represents the location of the <%- type %> on the map
+   *
+   * @return the location of the <%- type %>
+   */
+  public LineString getGeometry() {
+    return geometry;
   }
 <% } else { -%>
 
@@ -150,6 +195,25 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
   }
 
   /**
+   * Get a list of lists of LatLng for the fill, which represents the locations of the fill on the map
+   *
+   * @return a list of a lists of the locations of the line in a longitude and latitude pairs
+   */
+  public List<List<LatLng>> getLatLngs() {
+    List<List<LatLng>> points = new ArrayList<>();
+    if (geometry != null) {
+      for (List<Point> coordinates : geometry.coordinates()) {
+        List<LatLng> innerList = new ArrayList<>();
+        for (Point point : coordinates) {
+          innerList.add(new LatLng(point.latitude(), point.longitude()));
+        }
+        points.add(innerList);
+      }
+    }
+    return points;
+  }
+
+  /**
    * Set the geometry of the <%- type %>, which represents the location of the <%- type %> on the map
    *
    * @param geometry the location of the <%- type %>
@@ -158,6 +222,15 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
   public <%- camelize(type) %>Options withGeometry(Polygon geometry) {
     this.geometry = geometry;
     return this;
+  }
+
+  /**
+   * Get the geometry of the <%- type %>, which represents the location of the <%- type %> on the map
+   *
+   * @return the location of the <%- type %>
+   */
+  public Polygon getGeometry() {
+    return geometry;
   }
 <% } -%>
 <% if (type === "symbol") { -%>

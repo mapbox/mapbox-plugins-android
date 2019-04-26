@@ -224,6 +224,18 @@ public class CircleOptions extends Options<Circle> {
   }
 
   /**
+   * Get the LatLng of the circle, which represents the location of the circle on the map
+   *
+   * @return the location of the circle in a longitude and latitude pair
+   */
+  public LatLng getLatLng() {
+    if (geometry == null) {
+      return null;
+    }
+    return new LatLng(geometry.latitude(), geometry.longitude());
+  }
+
+  /**
    * Set the geometry of the circle, which represents the location of the circle on the map
    *
    * @param geometry the location of the circle
@@ -232,6 +244,15 @@ public class CircleOptions extends Options<Circle> {
   public CircleOptions withGeometry(Point geometry) {
     this.geometry = geometry;
     return this;
+  }
+
+  /**
+   * Get the geometry of the circle, which represents the location of the circle on the map
+   *
+   * @return the location of the circle
+   */
+  public Point getGeometry() {
+    return geometry;
   }
 
   /**

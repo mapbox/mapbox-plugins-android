@@ -694,6 +694,18 @@ public class SymbolOptions extends Options<Symbol> {
   }
 
   /**
+   * Get the LatLng of the symbol, which represents the location of the symbol on the map
+   *
+   * @return the location of the symbol in a longitude and latitude pair
+   */
+  public LatLng getLatLng() {
+    if (geometry == null) {
+      return null;
+    }
+    return new LatLng(geometry.latitude(), geometry.longitude());
+  }
+
+  /**
    * Set the geometry of the symbol, which represents the location of the symbol on the map
    *
    * @param geometry the location of the symbol
@@ -702,6 +714,15 @@ public class SymbolOptions extends Options<Symbol> {
   public SymbolOptions withGeometry(Point geometry) {
     this.geometry = geometry;
     return this;
+  }
+
+  /**
+   * Get the geometry of the symbol, which represents the location of the symbol on the map
+   *
+   * @return the location of the symbol
+   */
+  public Point getGeometry() {
+    return geometry;
   }
 
   /**

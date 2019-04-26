@@ -251,7 +251,12 @@ public class SymbolManagerTest {
   @Test
   public void testGeometrySymbol() {
     symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
-    Symbol symbol = symbolManager.create(new SymbolOptions().withLatLng(new LatLng(12, 34)));
+    LatLng latLng = new LatLng(12, 34);
+    SymbolOptions options = new SymbolOptions().withLatLng(latLng);
+    Symbol symbol = symbolManager.create(options);
+    assertEquals(options.getLatLng(), latLng);
+    assertEquals(symbol.getLatLng(), latLng);
+    assertEquals(options.getGeometry(), Point.fromLngLat(34, 12));
     assertEquals(symbol.getGeometry(), Point.fromLngLat(34, 12));
   }
 

@@ -229,7 +229,14 @@ public class LineManagerTest {
     List<LatLng>latLngs = new ArrayList<>();
     latLngs.add(new LatLng());
     latLngs.add(new LatLng(1,1));
-    Line line = lineManager.create(new LineOptions().withLatLngs(latLngs));
+    LineOptions options = new LineOptions().withLatLngs(latLngs);
+    Line line = lineManager.create(options);
+    assertEquals(options.getLatLngs(), latLngs);
+    assertEquals(line.getLatLngs(), latLngs);
+    assertEquals(options.getGeometry(), LineString.fromLngLats(new ArrayList<Point>() {{
+          add(Point.fromLngLat(0, 0));
+          add(Point.fromLngLat(1, 1));
+    }}));
     assertEquals(line.getGeometry(), LineString.fromLngLats(new ArrayList<Point>() {{
       add(Point.fromLngLat(0, 0));
       add(Point.fromLngLat(1, 1));

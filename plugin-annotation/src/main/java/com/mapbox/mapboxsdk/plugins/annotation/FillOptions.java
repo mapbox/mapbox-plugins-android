@@ -154,6 +154,25 @@ public class FillOptions extends Options<Fill> {
   }
 
   /**
+   * Get a list of lists of LatLng for the fill, which represents the locations of the fill on the map
+   *
+   * @return a list of a lists of the locations of the line in a longitude and latitude pairs
+   */
+  public List<List<LatLng>> getLatLngs() {
+    List<List<LatLng>> points = new ArrayList<>();
+    if (geometry != null) {
+      for (List<Point> coordinates : geometry.coordinates()) {
+        List<LatLng> innerList = new ArrayList<>();
+        for (Point point : coordinates) {
+          innerList.add(new LatLng(point.latitude(), point.longitude()));
+        }
+        points.add(innerList);
+      }
+    }
+    return points;
+  }
+
+  /**
    * Set the geometry of the fill, which represents the location of the fill on the map
    *
    * @param geometry the location of the fill
@@ -162,6 +181,15 @@ public class FillOptions extends Options<Fill> {
   public FillOptions withGeometry(Polygon geometry) {
     this.geometry = geometry;
     return this;
+  }
+
+  /**
+   * Get the geometry of the fill, which represents the location of the fill on the map
+   *
+   * @return the location of the fill
+   */
+  public Polygon getGeometry() {
+    return geometry;
   }
 
   /**
