@@ -26,6 +26,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Generic AnnotationManager, can be used to create annotation specific managers.
@@ -327,8 +328,6 @@ public abstract class AnnotationManager<
     longClickListeners.clear();
   }
 
-  abstract String getAnnotationLayerId();
-
   abstract String getAnnotationIdKey();
 
   abstract void initializeDataDrivenPropertyMap();
@@ -398,7 +397,7 @@ public abstract class AnnotationManager<
 
   @Nullable
   T queryMapForFeatures(@NonNull PointF point) {
-    List<Feature> features = mapboxMap.queryRenderedFeatures(point, getAnnotationLayerId());
+    List<Feature> features = mapboxMap.queryRenderedFeatures(point, coreElementProvider.getLayerId());
     if (!features.isEmpty()) {
       long id = features.get(0).getProperty(getAnnotationIdKey()).getAsLong();
       return annotations.get(id);

@@ -387,6 +387,7 @@ global.supportsPropertyFunction = function (property) {
 const annotationJava = ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation.java.ejs', 'utf8'), {strict: true});
 const annotationOptionsJava = ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation_options.java.ejs', 'utf8'), {strict: true});
 const annotationManagerJava = ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation_manager.java.ejs', 'utf8'), {strict: true});
+const annotationElementProvider = ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation_element_provider.java.ejs', 'utf8'), {strict: true});
 const annotationDragListener =  ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation_drag_listener.java.ejs', 'utf8'), {strict: true});
 const annotationClickListener =  ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation_click_listener.java.ejs', 'utf8'), {strict: true});
 const annotationLongClickListener =  ejs.compile(fs.readFileSync('plugin-annotation/scripts/annotation_long_click_listener.java.ejs', 'utf8'), {strict: true});
@@ -402,6 +403,7 @@ for (const layer of layers) {
       writeIfModified(`plugin-annotation/src/main/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}.java`, annotationJava(layer));
       writeIfModified(`plugin-annotation/src/main/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}Options.java`, annotationOptionsJava(layer));
       writeIfModified(`plugin-annotation/src/main/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}Manager.java`, annotationManagerJava(layer));
+      writeIfModified(`plugin-annotation/src/main/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}ElementProvider.java`, annotationElementProvider(layer));
       writeIfModified(`app/src/androidTest/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}Test.java`, annotationJavaInstrumentationTests(layer));
       writeIfModified(`app/src/androidTest/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}ManagerTest.java`, annotationManagerJavaInstrumentationTests(layer));
       writeIfModified(`plugin-annotation/src/test/java/com/mapbox/mapboxsdk/plugins/annotation/${camelize(layer.type)}ManagerTest.java`, annotationManagerJavaUnitTests(layer));

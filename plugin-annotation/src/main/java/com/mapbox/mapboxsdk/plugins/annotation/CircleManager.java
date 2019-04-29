@@ -17,7 +17,6 @@ import com.mapbox.mapboxsdk.style.layers.CircleLayer;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
@@ -30,9 +29,6 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
  * The circle manager allows to add circles to a map.
  */
 public class CircleManager extends AnnotationManager<CircleLayer, Circle, CircleOptions, OnCircleDragListener, OnCircleClickListener, OnCircleLongClickListener> {
-
-  public static final String ID_GEOJSON_SOURCE = "mapbox-android-circle-source";
-  public static final String ID_GEOJSON_LAYER = "mapbox-android-circle-layer";
 
   private static final String PROPERTY_CIRCLE_TRANSLATE = "circle-translate";
   private static final String PROPERTY_CIRCLE_TRANSLATE_ANCHOR = "circle-translate-anchor";
@@ -72,23 +68,7 @@ public class CircleManager extends AnnotationManager<CircleLayer, Circle, Circle
    */
   @UiThread
   public CircleManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions) {
-    this(mapView, mapboxMap, style,
-      new CoreElementProvider<CircleLayer>() {
-        @Override
-        public CircleLayer getLayer() {
-          return new CircleLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE);
-        }
-
-        @Override
-        public GeoJsonSource getSource(@Nullable GeoJsonOptions geoJsonOptions) {
-          if (geoJsonOptions != null) {
-            return new GeoJsonSource(ID_GEOJSON_SOURCE, geoJsonOptions);
-          } else {
-            return new GeoJsonSource(ID_GEOJSON_SOURCE);
-          }
-        }
-      },
-     belowLayerId, geoJsonOptions, new DraggableAnnotationController<>(mapView, mapboxMap));
+    this(mapView, mapboxMap, style, new CircleElementProvider(), belowLayerId, geoJsonOptions, new DraggableAnnotationController<>(mapView, mapboxMap));
   }
 
   @VisibleForTesting
@@ -194,16 +174,6 @@ public class CircleManager extends AnnotationManager<CircleLayer, Circle, Circle
       }
     }
     return create(options);
-  }
-
-  /**
-   * Get the layer id of the annotation layer.
-   *
-   * @return the layer id
-   */
-  @Override
-  String getAnnotationLayerId() {
-    return ID_GEOJSON_LAYER;
   }
 
   /**

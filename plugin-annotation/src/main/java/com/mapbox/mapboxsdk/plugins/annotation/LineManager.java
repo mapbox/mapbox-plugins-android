@@ -17,7 +17,6 @@ import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
@@ -30,9 +29,6 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
  * The line manager allows to add lines to a map.
  */
 public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions, OnLineDragListener, OnLineClickListener, OnLineLongClickListener> {
-
-  public static final String ID_GEOJSON_SOURCE = "mapbox-android-line-source";
-  public static final String ID_GEOJSON_LAYER = "mapbox-android-line-layer";
 
   private static final String PROPERTY_LINE_CAP = "line-cap";
   private static final String PROPERTY_LINE_MITER_LIMIT = "line-miter-limit";
@@ -74,23 +70,7 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    */
   @UiThread
   public LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions) {
-    this(mapView, mapboxMap, style,
-      new CoreElementProvider<LineLayer>() {
-        @Override
-        public LineLayer getLayer() {
-          return new LineLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE);
-        }
-
-        @Override
-        public GeoJsonSource getSource(@Nullable GeoJsonOptions geoJsonOptions) {
-          if (geoJsonOptions != null) {
-            return new GeoJsonSource(ID_GEOJSON_SOURCE, geoJsonOptions);
-          } else {
-            return new GeoJsonSource(ID_GEOJSON_SOURCE);
-          }
-        }
-      },
-     belowLayerId, geoJsonOptions, new DraggableAnnotationController<>(mapView, mapboxMap));
+    this(mapView, mapboxMap, style, new LineElementProvider(), belowLayerId, geoJsonOptions, new DraggableAnnotationController<>(mapView, mapboxMap));
   }
 
   @VisibleForTesting
@@ -202,16 +182,6 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
       }
     }
     return create(options);
-  }
-
-  /**
-   * Get the layer id of the annotation layer.
-   *
-   * @return the layer id
-   */
-  @Override
-  String getAnnotationLayerId() {
-    return ID_GEOJSON_LAYER;
   }
 
   /**
