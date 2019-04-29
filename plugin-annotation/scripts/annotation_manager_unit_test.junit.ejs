@@ -65,7 +65,7 @@ public class <%- camelize(type) %>ManagerTest {
       assertFalse(value);
     }
     verify(<%- type  %>Layer).setProperties(<%- type  %>Manager.constantPropertyUsageMap.values().toArray(new PropertyValue[0]));
-    verify(<%- type  %>Layer, times(0)).setFilter(any());
+    verify(<%- type  %>Layer, times(0)).setFilter(any(Expression.class));
     verify(draggableAnnotationController).onSourceUpdated();
     verify(geoJsonSource).setGeoJson(any(FeatureCollection.class));
   }
@@ -137,7 +137,7 @@ public class <%- camelize(type) %>ManagerTest {
       assertFalse(value);
     }
     verify(<%- type  %>Layer).setProperties(<%- type  %>Manager.constantPropertyUsageMap.values().toArray(new PropertyValue[0]));
-    verify(<%- type  %>Layer, times(0)).setFilter(any());
+    verify(<%- type  %>Layer, times(0)).setFilter(any(Expression.class));
     verify(draggableAnnotationController).onSourceUpdated();
     verify(optionedGeoJsonSource).setGeoJson(any(FeatureCollection.class));
   }
@@ -266,7 +266,7 @@ public class <%- camelize(type) %>ManagerTest {
       options.add(new LineOptions().withLatLngs(latLngs));
     }
 <% } else { -%>
-    List<List<LatLng>> latLngListOne = new ArrayList<>();
+    final List<List<LatLng>> latLngListOne = new ArrayList<>();
     latLngListOne.add(new ArrayList<LatLng>() {{
       add(new LatLng(2, 2));
       add(new LatLng(2, 3));
@@ -276,7 +276,7 @@ public class <%- camelize(type) %>ManagerTest {
       add(new LatLng(2, 3));
     }});
 
-    List<List<LatLng>> latLngListTwo = new ArrayList<>();
+    final List<List<LatLng>> latLngListTwo = new ArrayList<>();
     latLngListTwo.add(new ArrayList<LatLng>() {{
       add(new LatLng(5, 7));
       add(new LatLng(2, 3));

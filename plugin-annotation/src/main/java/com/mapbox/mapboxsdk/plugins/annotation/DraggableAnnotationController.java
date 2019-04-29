@@ -34,7 +34,7 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
 
   @VisibleForTesting
   public DraggableAnnotationController(MapView mapView, MapboxMap mapboxMap,
-                                       AndroidGesturesManager androidGesturesManager,
+                                       final AndroidGesturesManager androidGesturesManager,
                                        int touchAreaShiftX, int touchAreaShiftY,
                                        int touchAreaMaxX, int touchAreaMaxY) {
     this.mapboxMap = mapboxMap;

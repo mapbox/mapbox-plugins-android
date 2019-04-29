@@ -67,7 +67,7 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
    */
   @UiThread
   public FillManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions) {
-    this(mapView, mapboxMap, style, new FillElementProvider(), belowLayerId, geoJsonOptions, new DraggableAnnotationController<>(mapView, mapboxMap));
+    this(mapView, mapboxMap, style, new FillElementProvider(), belowLayerId, geoJsonOptions, new DraggableAnnotationController<Fill, OnFillDragListener>(mapView, mapboxMap));
   }
 
   @VisibleForTesting

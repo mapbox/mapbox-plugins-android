@@ -70,7 +70,7 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    */
   @UiThread
   public LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions) {
-    this(mapView, mapboxMap, style, new LineElementProvider(), belowLayerId, geoJsonOptions, new DraggableAnnotationController<>(mapView, mapboxMap));
+    this(mapView, mapboxMap, style, new LineElementProvider(), belowLayerId, geoJsonOptions, new DraggableAnnotationController<Line, OnLineDragListener>(mapView, mapboxMap));
   }
 
   @VisibleForTesting

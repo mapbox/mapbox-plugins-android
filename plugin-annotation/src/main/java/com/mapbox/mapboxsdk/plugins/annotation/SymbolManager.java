@@ -89,7 +89,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   @UiThread
   public SymbolManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions) {
-    this(mapView, mapboxMap, style, new SymbolElementProvider(), belowLayerId, geoJsonOptions, new DraggableAnnotationController<>(mapView, mapboxMap));
+    this(mapView, mapboxMap, style, new SymbolElementProvider(), belowLayerId, geoJsonOptions, new DraggableAnnotationController<Symbol, OnSymbolDragListener>(mapView, mapboxMap));
   }
 
   @VisibleForTesting

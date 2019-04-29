@@ -60,7 +60,7 @@ public class CircleManagerTest {
       assertFalse(value);
     }
     verify(circleLayer).setProperties(circleManager.constantPropertyUsageMap.values().toArray(new PropertyValue[0]));
-    verify(circleLayer, times(0)).setFilter(any());
+    verify(circleLayer, times(0)).setFilter(any(Expression.class));
     verify(draggableAnnotationController).onSourceUpdated();
     verify(geoJsonSource).setGeoJson(any(FeatureCollection.class));
   }
@@ -132,7 +132,7 @@ public class CircleManagerTest {
       assertFalse(value);
     }
     verify(circleLayer).setProperties(circleManager.constantPropertyUsageMap.values().toArray(new PropertyValue[0]));
-    verify(circleLayer, times(0)).setFilter(any());
+    verify(circleLayer, times(0)).setFilter(any(Expression.class));
     verify(draggableAnnotationController).onSourceUpdated();
     verify(optionedGeoJsonSource).setGeoJson(any(FeatureCollection.class));
   }

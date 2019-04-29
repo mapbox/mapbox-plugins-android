@@ -60,7 +60,7 @@ public class FillManagerTest {
       assertFalse(value);
     }
     verify(fillLayer).setProperties(fillManager.constantPropertyUsageMap.values().toArray(new PropertyValue[0]));
-    verify(fillLayer, times(0)).setFilter(any());
+    verify(fillLayer, times(0)).setFilter(any(Expression.class));
     verify(draggableAnnotationController).onSourceUpdated();
     verify(geoJsonSource).setGeoJson(any(FeatureCollection.class));
   }
@@ -132,7 +132,7 @@ public class FillManagerTest {
       assertFalse(value);
     }
     verify(fillLayer).setProperties(fillManager.constantPropertyUsageMap.values().toArray(new PropertyValue[0]));
-    verify(fillLayer, times(0)).setFilter(any());
+    verify(fillLayer, times(0)).setFilter(any(Expression.class));
     verify(draggableAnnotationController).onSourceUpdated();
     verify(optionedGeoJsonSource).setGeoJson(any(FeatureCollection.class));
   }
@@ -194,7 +194,7 @@ public class FillManagerTest {
   @Test
   public void addFills() {
     fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
-    List<List<LatLng>> latLngListOne = new ArrayList<>();
+    final List<List<LatLng>> latLngListOne = new ArrayList<>();
     latLngListOne.add(new ArrayList<LatLng>() {{
       add(new LatLng(2, 2));
       add(new LatLng(2, 3));
@@ -204,7 +204,7 @@ public class FillManagerTest {
       add(new LatLng(2, 3));
     }});
 
-    List<List<LatLng>> latLngListTwo = new ArrayList<>();
+    final List<List<LatLng>> latLngListTwo = new ArrayList<>();
     latLngListTwo.add(new ArrayList<LatLng>() {{
       add(new LatLng(5, 7));
       add(new LatLng(2, 3));

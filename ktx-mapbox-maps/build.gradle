@@ -25,11 +25,6 @@ android {
     tasks.withType(Javadoc).all {
         enabled = false
     }
-
-    compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
-    }
 }
 
 dependencies {
