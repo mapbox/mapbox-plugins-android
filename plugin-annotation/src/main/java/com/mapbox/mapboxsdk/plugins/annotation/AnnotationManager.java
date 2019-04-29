@@ -68,11 +68,11 @@ public abstract class AnnotationManager<
   private CoreElementProvider<L> coreElementProvider;
 
   @UiThread
-  protected AnnotationManager(MapView mapView, MapboxMap mapboxMap, Style style,
+  protected AnnotationManager(MapView mapView, final MapboxMap mapboxMap, Style style,
                               CoreElementProvider<L> coreElementProvider,
                               Comparator<Feature> comparator,
                               DraggableAnnotationController<T, D> draggableAnnotationController,
-                              String belowLayerId, GeoJsonOptions geoJsonOptions) {
+                              String belowLayerId, final GeoJsonOptions geoJsonOptions) {
     this.mapboxMap = mapboxMap;
     this.comparator = comparator;
     this.style = style;
@@ -90,12 +90,18 @@ public abstract class AnnotationManager<
 
     initializeSourcesAndLayers(geoJsonOptions);
 
-    mapView.addOnDidFinishLoadingStyleListener(() ->
-      mapboxMap.getStyle(loadedStyle -> {
-        this.style = loadedStyle;
-        initializeSourcesAndLayers(geoJsonOptions);
-      })
-    );
+    mapView.addOnDidFinishLoadingStyleListener(new MapView.OnDidFinishLoadingStyleListener() {
+      @Override
+      public void onDidFinishLoadingStyle() {
+        mapboxMap.getStyle(new Style.OnStyleLoaded() {
+          @Override
+          public void onStyleLoaded(@NonNull Style loadedStyle) {
+            AnnotationManager.this.style = loadedStyle;
+            initializeSourcesAndLayers(geoJsonOptions);
+          }
+        });
+      }
+    });
   }
 
   /**
