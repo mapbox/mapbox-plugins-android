@@ -17,7 +17,6 @@ import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
@@ -30,9 +29,6 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
  * The symbol manager allows to add symbols to a map.
  */
 public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, SymbolOptions, OnSymbolDragListener, OnSymbolClickListener, OnSymbolLongClickListener> {
-
-  public static final String ID_GEOJSON_SOURCE = "mapbox-android-symbol-source";
-  public static final String ID_GEOJSON_LAYER = "mapbox-android-symbol-layer";
 
   private static final String PROPERTY_SYMBOL_PLACEMENT = "symbol-placement";
   private static final String PROPERTY_SYMBOL_SPACING = "symbol-spacing";
@@ -93,23 +89,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   @UiThread
   public SymbolManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions) {
-    this(mapView, mapboxMap, style,
-      new CoreElementProvider<SymbolLayer>() {
-        @Override
-        public SymbolLayer getLayer() {
-          return new SymbolLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE);
-        }
-
-        @Override
-        public GeoJsonSource getSource(@Nullable GeoJsonOptions geoJsonOptions) {
-          if (geoJsonOptions != null) {
-            return new GeoJsonSource(ID_GEOJSON_SOURCE, geoJsonOptions);
-          } else {
-            return new GeoJsonSource(ID_GEOJSON_SOURCE);
-          }
-        }
-      },
-     belowLayerId, geoJsonOptions, new DraggableAnnotationController<>(mapView, mapboxMap));
+    this(mapView, mapboxMap, style, new SymbolElementProvider(), belowLayerId, geoJsonOptions, new DraggableAnnotationController<>(mapView, mapboxMap));
   }
 
   @VisibleForTesting
@@ -329,16 +309,6 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
       }
     }
     return create(options);
-  }
-
-  /**
-   * Get the layer id of the annotation layer.
-   *
-   * @return the layer id
-   */
-  @Override
-  String getAnnotationLayerId() {
-    return ID_GEOJSON_LAYER;
   }
 
   /**

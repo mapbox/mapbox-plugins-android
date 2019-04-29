@@ -17,7 +17,6 @@ import com.mapbox.mapboxsdk.style.layers.FillLayer;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
@@ -30,9 +29,6 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
  * The fill manager allows to add fills to a map.
  */
 public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions, OnFillDragListener, OnFillClickListener, OnFillLongClickListener> {
-
-  public static final String ID_GEOJSON_SOURCE = "mapbox-android-fill-source";
-  public static final String ID_GEOJSON_LAYER = "mapbox-android-fill-layer";
 
   private static final String PROPERTY_FILL_ANTIALIAS = "fill-antialias";
   private static final String PROPERTY_FILL_TRANSLATE = "fill-translate";
@@ -71,23 +67,7 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
    */
   @UiThread
   public FillManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions) {
-    this(mapView, mapboxMap, style,
-      new CoreElementProvider<FillLayer>() {
-        @Override
-        public FillLayer getLayer() {
-          return new FillLayer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE);
-        }
-
-        @Override
-        public GeoJsonSource getSource(@Nullable GeoJsonOptions geoJsonOptions) {
-          if (geoJsonOptions != null) {
-            return new GeoJsonSource(ID_GEOJSON_SOURCE, geoJsonOptions);
-          } else {
-            return new GeoJsonSource(ID_GEOJSON_SOURCE);
-          }
-        }
-      },
-     belowLayerId, geoJsonOptions, new DraggableAnnotationController<>(mapView, mapboxMap));
+    this(mapView, mapboxMap, style, new FillElementProvider(), belowLayerId, geoJsonOptions, new DraggableAnnotationController<>(mapView, mapboxMap));
   }
 
   @VisibleForTesting
@@ -175,16 +155,6 @@ public class FillManager extends AnnotationManager<FillLayer, Fill, FillOptions,
       }
     }
     return create(options);
-  }
-
-  /**
-   * Get the layer id of the annotation layer.
-   *
-   * @return the layer id
-   */
-  @Override
-  String getAnnotationLayerId() {
-    return ID_GEOJSON_LAYER;
   }
 
   /**

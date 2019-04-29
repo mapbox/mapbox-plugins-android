@@ -22,7 +22,6 @@ import com.mapbox.mapboxsdk.style.layers.<%- camelize(type) %>Layer;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
@@ -35,9 +34,6 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
  * The <%- type %> manager allows to add <%- type %>s to a map.
  */
 public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize(type) %>Layer, <%- camelize(type) %>, <%- camelize(type) %>Options, On<%- camelize(type) %>DragListener, On<%- camelize(type) %>ClickListener, On<%- camelize(type) %>LongClickListener> {
-
-  public static final String ID_GEOJSON_SOURCE = "mapbox-android-<%- type %>-source";
-  public static final String ID_GEOJSON_LAYER = "mapbox-android-<%- type %>-layer";
 
 <% for (const property of properties) { -%>
 <% if (!supportsPropertyFunction(property) && property.name !== "line-gradient" && property.name !== "symbol-z-order") { -%>
@@ -78,23 +74,7 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
    */
   @UiThread
   public <%- camelize(type) %>Manager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions) {
-    this(mapView, mapboxMap, style,
-      new CoreElementProvider<<%- camelize(type) %>Layer>() {
-        @Override
-        public <%- camelize(type) %>Layer getLayer() {
-          return new <%- camelize(type) %>Layer(ID_GEOJSON_LAYER, ID_GEOJSON_SOURCE);
-        }
-
-        @Override
-        public GeoJsonSource getSource(@Nullable GeoJsonOptions geoJsonOptions) {
-          if (geoJsonOptions != null) {
-            return new GeoJsonSource(ID_GEOJSON_SOURCE, geoJsonOptions);
-          } else {
-            return new GeoJsonSource(ID_GEOJSON_SOURCE);
-          }
-        }
-      },
-     belowLayerId, geoJsonOptions, new DraggableAnnotationController<>(mapView, mapboxMap));
+    this(mapView, mapboxMap, style, new <%- camelize(type) %>ElementProvider(), belowLayerId, geoJsonOptions, new DraggableAnnotationController<>(mapView, mapboxMap));
   }
 
   @VisibleForTesting
@@ -198,16 +178,6 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
       }
     }
     return create(options);
-  }
-
-  /**
-   * Get the layer id of the annotation layer.
-   *
-   * @return the layer id
-   */
-  @Override
-  String getAnnotationLayerId() {
-    return ID_GEOJSON_LAYER;
   }
 
   /**
