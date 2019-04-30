@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.util.LongSparseArray;
-
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -103,6 +102,7 @@ public abstract class AnnotationManager<
    * @return long sparse array of annotations
    */
   @UiThread
+  @NonNull
   public LongSparseArray<T> getAnnotations() {
     return annotations;
   }
@@ -114,7 +114,7 @@ public abstract class AnnotationManager<
    * @return the build annotation
    */
   @UiThread
-  public T create(S options) {
+  public T create(@NonNull S options) {
     T t = options.build(currentId, this);
     annotations.put(t.getId(), t);
     currentId++;
@@ -129,15 +129,17 @@ public abstract class AnnotationManager<
    * @return the list of build annotations
    */
   @UiThread
-  public List<T> create(List<S> optionsList) {
+  public List<T> create(@NonNull List<S> optionsList) {
     List<T> annotationList = new ArrayList<>();
-    for (S options : optionsList) {
-      T annotation = options.build(currentId, this);
-      annotationList.add(annotation);
-      annotations.put(annotation.getId(), annotation);
-      currentId++;
+    if (!optionsList.isEmpty()) {
+      for (S options : optionsList) {
+        T annotation = options.build(currentId, this);
+        annotationList.add(annotation);
+        annotations.put(annotation.getId(), annotation);
+        currentId++;
+      }
+      updateSource();
     }
-    updateSource();
     return annotationList;
   }
 
@@ -147,7 +149,7 @@ public abstract class AnnotationManager<
    * @param annotation annotation to be deleted
    */
   @UiThread
-  public void delete(T annotation) {
+  public void delete(@NonNull T annotation) {
     annotations.remove(annotation.getId());
     updateSource();
   }
@@ -158,7 +160,11 @@ public abstract class AnnotationManager<
    * @param annotationList the list of annotations to be deleted
    */
   @UiThread
-  public void delete(List<T> annotationList) {
+  public void delete(@NonNull List<T> annotationList) {
+    if (annotationList.isEmpty()) {
+      return;
+    }
+
     for (T annotation : annotationList) {
       annotations.remove(annotation.getId());
     }
@@ -180,7 +186,7 @@ public abstract class AnnotationManager<
    * @param annotation annotation to be updated
    */
   @UiThread
-  public void update(T annotation) {
+  public void update(@NonNull T annotation) {
     if (annotations.containsValue(annotation)) {
       annotations.put(annotation.getId(), annotation);
       updateSource();
@@ -197,7 +203,7 @@ public abstract class AnnotationManager<
    * @param annotationList list of annotation to be updated
    */
   @UiThread
-  public void update(List<T> annotationList) {
+  public void update(@NonNull List<T> annotationList) {
     for (T annotation : annotationList) {
       annotations.put(annotation.getId(), annotation);
     }
@@ -302,15 +308,19 @@ public abstract class AnnotationManager<
   }
 
   @VisibleForTesting
+  @NonNull
   List<U> getClickListeners() {
     return clickListeners;
   }
 
   @VisibleForTesting
+  @NonNull
   List<V> getLongClickListeners() {
     return longClickListeners;
   }
 
+  @VisibleForTesting
+  @NonNull
   List<D> getDragListeners() {
     return dragListeners;
   }
