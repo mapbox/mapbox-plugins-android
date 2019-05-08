@@ -83,6 +83,7 @@ public class BulkSymbolActivity extends AppCompatActivity implements AdapterView
     MenuItem item = menu.findItem(R.id.spinner);
     Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
     spinner.setAdapter(spinnerAdapter);
+    spinner.setSelection(0, false);
     spinner.setOnItemSelectedListener(BulkSymbolActivity.this);
     return true;
   }
@@ -99,7 +100,9 @@ public class BulkSymbolActivity extends AppCompatActivity implements AdapterView
   private void loadData(int position) {
     int amount = Integer.valueOf(getResources().getStringArray(R.array.bulk_marker_list)[position]);
     if (locations == null) {
-      progressDialog = ProgressDialog.show(this, "Loading", "Fetching markers", false);
+      if (progressDialog == null) {
+        progressDialog = ProgressDialog.show(this, "Loading", "Fetching markers", false, true);
+      }
       new LoadLocationTask(this, amount).execute();
     } else {
       showMarkers(amount);
@@ -107,7 +110,10 @@ public class BulkSymbolActivity extends AppCompatActivity implements AdapterView
   }
 
   private void onLatLngListLoaded(FeatureCollection featureCollection, int amount) {
-    progressDialog.hide();
+    if (progressDialog != null) {
+      progressDialog.dismiss();
+      progressDialog = null;
+    }
     locations = featureCollection;
     showMarkers(amount);
   }
