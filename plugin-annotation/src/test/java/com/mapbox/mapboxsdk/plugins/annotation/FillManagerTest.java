@@ -2,6 +2,7 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+import com.google.gson.JsonPrimitive;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -426,6 +427,21 @@ public class FillManagerTest {
     assertTrue(fillManager.getDragListeners().contains(listener));
     fillManager.removeDragListener(listener);
     assertTrue(fillManager.getDragListeners().isEmpty());
+  }
+
+  @Test
+  public void testCustomData() {
+    fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
+    List<LatLng>innerLatLngs = new ArrayList<>();
+    innerLatLngs.add(new LatLng());
+    innerLatLngs.add(new LatLng(1,1));
+    innerLatLngs.add(new LatLng(-1,-1));
+    List<List<LatLng>>latLngs = new ArrayList<>();
+    latLngs.add(innerLatLngs);
+    FillOptions options = new FillOptions().withLatLngs(latLngs);
+    options.withData(new JsonPrimitive("hello"));
+    Fill fill = fillManager.create(options);
+    assertEquals(new JsonPrimitive("hello"), fill.getData());
   }
 
   @Test

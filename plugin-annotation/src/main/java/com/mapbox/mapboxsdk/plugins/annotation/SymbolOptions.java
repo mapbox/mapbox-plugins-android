@@ -26,6 +26,7 @@ import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.toStringArray
 public class SymbolOptions extends Options<Symbol> {
 
   private boolean isDraggable;
+  private JsonElement data;
   private Point geometry;
   private Float iconSize;
   private String iconImage;
@@ -768,6 +769,26 @@ public class SymbolOptions extends Options<Symbol> {
     return this;
   }
 
+  /**
+   * Set the arbitrary json data of the annotation.
+   *
+   * @param jsonElement the arbitrary json element data
+   */
+  public SymbolOptions withData(@Nullable JsonElement jsonElement) {
+    this.data = jsonElement;
+    return this;
+  }
+
+  /**
+   * Get the arbitrary json data of the annotation.
+   *
+   * @return the arbitrary json object data if set, else null
+   */
+  @Nullable
+  public JsonElement getData() {
+    return data;
+  }
+
   @Override
   Symbol build(long id, AnnotationManager<?, Symbol, ?, ?, ?, ?> annotationManager) {
     if (geometry == null) {
@@ -802,6 +823,7 @@ public class SymbolOptions extends Options<Symbol> {
     jsonObject.addProperty(PROPERTY_Z_INDEX, zIndex);
     Symbol symbol = new Symbol(id, annotationManager, jsonObject, geometry);
     symbol.setDraggable(isDraggable);
+    symbol.setData(data);
     return symbol;
   }
 

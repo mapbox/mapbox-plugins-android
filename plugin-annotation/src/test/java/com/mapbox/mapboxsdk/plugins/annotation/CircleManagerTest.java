@@ -2,6 +2,7 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+import com.google.gson.JsonPrimitive;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -377,6 +378,15 @@ public class CircleManagerTest {
     assertTrue(circleManager.getDragListeners().contains(listener));
     circleManager.removeDragListener(listener);
     assertTrue(circleManager.getDragListeners().isEmpty());
+  }
+
+  @Test
+  public void testCustomData() {
+    circleManager = new CircleManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
+    CircleOptions options = new CircleOptions().withLatLng(new LatLng());
+    options.withData(new JsonPrimitive("hello"));
+    Circle circle = circleManager.create(options);
+    assertEquals(new JsonPrimitive("hello"), circle.getData());
   }
 
   @Test

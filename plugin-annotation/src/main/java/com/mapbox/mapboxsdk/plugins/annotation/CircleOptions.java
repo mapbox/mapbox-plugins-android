@@ -26,6 +26,7 @@ import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.toStringArray
 public class CircleOptions extends Options<Circle> {
 
   private boolean isDraggable;
+  private JsonElement data;
   private Point geometry;
   private Float circleRadius;
   private String circleColor;
@@ -275,6 +276,26 @@ public class CircleOptions extends Options<Circle> {
     return this;
   }
 
+  /**
+   * Set the arbitrary json data of the annotation.
+   *
+   * @param jsonElement the arbitrary json element data
+   */
+  public CircleOptions withData(@Nullable JsonElement jsonElement) {
+    this.data = jsonElement;
+    return this;
+  }
+
+  /**
+   * Get the arbitrary json data of the annotation.
+   *
+   * @return the arbitrary json object data if set, else null
+   */
+  @Nullable
+  public JsonElement getData() {
+    return data;
+  }
+
   @Override
   Circle build(long id, AnnotationManager<?, Circle, ?, ?, ?, ?> annotationManager) {
     if (geometry == null) {
@@ -290,6 +311,7 @@ public class CircleOptions extends Options<Circle> {
     jsonObject.addProperty(PROPERTY_CIRCLE_STROKE_OPACITY, circleStrokeOpacity);
     Circle circle = new Circle(id, annotationManager, jsonObject, geometry);
     circle.setDraggable(isDraggable);
+    circle.setData(data);
     return circle;
   }
 
