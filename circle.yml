@@ -27,6 +27,9 @@ jobs:
             - ~/.gradle
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
+          name: Run nitpick
+          command: ./gradlew plugin-annotation:nitpick
+      - run:
           name: Check Java code style
           command: make checkstyle
       - run:

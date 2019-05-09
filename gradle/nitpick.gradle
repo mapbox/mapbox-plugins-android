@@ -1,0 +1,30 @@
+apply from: "${rootDir}/gradle/dependencies.gradle"
+
+task nitpick {
+    doLast {
+        println "Running android nitpick script"
+        verifyAnnotationCodeGeneration()
+    }
+}
+
+private def verifyAnnotationCodeGeneration() {
+    println "Verify generated annotation plugin code:"
+    exec {
+        workingDir = "${rootDir}"
+        commandLine "make", "generate-annotation-code"
+    }
+    new ByteArrayOutputStream().withStream { os ->
+        exec {
+            workingDir = "${rootDir}"
+            commandLine "git", "status"
+            standardOutput = os
+        }
+        def result = os.toString()
+        if (!result.toString().contains("nothing to commit")) {
+            throw new RuntimeException("Running 'git status' after 'make generate-annotation-code' "
+                    + "has resulted in changes.\nPlease rerun the 'make generate-annotation-code' "
+                    + "command locally and commit any changes to make this verification succeed."
+            )
+        }
+    }
+}
