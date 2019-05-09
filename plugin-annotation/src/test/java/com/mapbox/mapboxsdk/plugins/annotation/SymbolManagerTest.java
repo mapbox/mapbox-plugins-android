@@ -161,6 +161,7 @@ public class SymbolManagerTest {
     Geometry geometry = Point.fromLngLat(10, 10);
 
     Feature feature = Feature.fromGeometry(geometry);
+    feature.addNumberProperty("symbol-sort-key", 0.3f);
     feature.addNumberProperty("icon-size", 0.3f);
     feature.addStringProperty("icon-image", "undefined");
     feature.addNumberProperty("icon-rotate", 0.3f);
@@ -171,7 +172,8 @@ public class SymbolManagerTest {
     feature.addNumberProperty("text-size", 0.3f);
     feature.addNumberProperty("text-max-width", 0.3f);
     feature.addNumberProperty("text-letter-spacing", 0.3f);
-    feature.addStringProperty("text-justify", TEXT_JUSTIFY_LEFT);
+    feature.addStringProperty("text-justify", TEXT_JUSTIFY_AUTO);
+    feature.addNumberProperty("text-radial-offset", 0.3f);
     feature.addStringProperty("text-anchor", TEXT_ANCHOR_CENTER);
     feature.addNumberProperty("text-rotate", 0.3f);
     feature.addStringProperty("text-transform", TEXT_TRANSFORM_NONE);
@@ -193,6 +195,7 @@ public class SymbolManagerTest {
     Symbol symbol = symbols.get(0);
 
     assertEquals(symbol.geometry, geometry);
+    assertEquals(symbol.getSymbolSortKey(), 0.3f);
     assertEquals(symbol.getIconSize(), 0.3f);
     assertEquals(symbol.getIconImage(), "undefined");
     assertEquals(symbol.getIconRotate(), 0.3f);
@@ -205,7 +208,8 @@ public class SymbolManagerTest {
     assertEquals(symbol.getTextSize(), 0.3f);
     assertEquals(symbol.getTextMaxWidth(), 0.3f);
     assertEquals(symbol.getTextLetterSpacing(), 0.3f);
-    assertEquals(symbol.getTextJustify(), TEXT_JUSTIFY_LEFT);
+    assertEquals(symbol.getTextJustify(), TEXT_JUSTIFY_AUTO);
+    assertEquals(symbol.getTextRadialOffset(), 0.3f);
     assertEquals(symbol.getTextAnchor(), TEXT_ANCHOR_CENTER);
     assertEquals(symbol.getTextRotate(), 0.3f);
     assertEquals(symbol.getTextTransform(), TEXT_TRANSFORM_NONE);
@@ -282,6 +286,19 @@ public class SymbolManagerTest {
     assertFalse(symbolZero.isDraggable());
   }
 
+
+  @Test
+  public void testSymbolSortKeyLayerProperty() {
+    symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
+    verify(symbolLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(symbolSortKey(get("symbol-sort-key")))));
+
+    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withSymbolSortKey(0.3f);
+    symbolManager.create(options);
+    verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(symbolSortKey(get("symbol-sort-key")))));
+
+    symbolManager.create(options);
+    verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(symbolSortKey(get("symbol-sort-key")))));
+  }
 
   @Test
   public void testIconSizeLayerProperty() {
@@ -418,12 +435,25 @@ public class SymbolManagerTest {
     symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(symbolLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(textJustify(get("text-justify")))));
 
-    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withTextJustify(TEXT_JUSTIFY_LEFT);
+    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withTextJustify(TEXT_JUSTIFY_AUTO);
     symbolManager.create(options);
     verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(textJustify(get("text-justify")))));
 
     symbolManager.create(options);
     verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(textJustify(get("text-justify")))));
+  }
+
+  @Test
+  public void testTextRadialOffsetLayerProperty() {
+    symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
+    verify(symbolLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(textRadialOffset(get("text-radial-offset")))));
+
+    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withTextRadialOffset(0.3f);
+    symbolManager.create(options);
+    verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(textRadialOffset(get("text-radial-offset")))));
+
+    symbolManager.create(options);
+    verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(textRadialOffset(get("text-radial-offset")))));
   }
 
   @Test

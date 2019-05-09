@@ -28,6 +28,7 @@ public class SymbolOptions extends Options<Symbol> {
   private boolean isDraggable;
   private JsonElement data;
   private Point geometry;
+  private Float symbolSortKey;
   private Float iconSize;
   private String iconImage;
   private Float iconRotate;
@@ -39,6 +40,7 @@ public class SymbolOptions extends Options<Symbol> {
   private Float textMaxWidth;
   private Float textLetterSpacing;
   private String textJustify;
+  private Float textRadialOffset;
   private String textAnchor;
   private Float textRotate;
   private String textTransform;
@@ -55,6 +57,7 @@ public class SymbolOptions extends Options<Symbol> {
   private Float textHaloBlur;
   private int zIndex;
 
+  static final String PROPERTY_SYMBOL_SORT_KEY = "symbol-sort-key";
   static final String PROPERTY_ICON_SIZE = "icon-size";
   static final String PROPERTY_ICON_IMAGE = "icon-image";
   static final String PROPERTY_ICON_ROTATE = "icon-rotate";
@@ -66,6 +69,7 @@ public class SymbolOptions extends Options<Symbol> {
   static final String PROPERTY_TEXT_MAX_WIDTH = "text-max-width";
   static final String PROPERTY_TEXT_LETTER_SPACING = "text-letter-spacing";
   static final String PROPERTY_TEXT_JUSTIFY = "text-justify";
+  static final String PROPERTY_TEXT_RADIAL_OFFSET = "text-radial-offset";
   static final String PROPERTY_TEXT_ANCHOR = "text-anchor";
   static final String PROPERTY_TEXT_ROTATE = "text-rotate";
   static final String PROPERTY_TEXT_TRANSFORM = "text-transform";
@@ -82,6 +86,30 @@ public class SymbolOptions extends Options<Symbol> {
   static final String PROPERTY_TEXT_HALO_BLUR = "text-halo-blur";
   static final String PROPERTY_Z_INDEX = "z-index";
   private static final String PROPERTY_IS_DRAGGABLE = "is-draggable";
+
+  /**
+   * Set symbol-sort-key to initialise the symbol with.
+   * <p>
+   * Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key when they overlap. Features with a lower sort key will have priority over other features when doing placement.
+   * </p>
+   * @param symbolSortKey the symbol-sort-key value
+   * @return this
+   */
+  public SymbolOptions withSymbolSortKey(Float symbolSortKey) {
+    this.symbolSortKey =  symbolSortKey;
+    return this;
+  }
+
+  /**
+   * Get the current configured  symbol-sort-key for the symbol
+   * <p>
+   * Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key when they overlap. Features with a lower sort key will have priority over other features when doing placement.
+   * </p>
+   * @return symbolSortKey value
+   */
+  public Float getSymbolSortKey() {
+    return symbolSortKey;
+  }
 
   /**
    * Set icon-size to initialise the symbol with.
@@ -345,6 +373,30 @@ public class SymbolOptions extends Options<Symbol> {
    */
   public String getTextJustify() {
     return textJustify;
+  }
+
+  /**
+   * Set text-radial-offset to initialise the symbol with.
+   * <p>
+   * Radial offset of text, in the direction of the symbol's anchor. Useful in combination with {@link PropertyFactory#textVariableAnchor}, which doesn't support the two-dimensional {@link PropertyFactory#textOffset}.
+   * </p>
+   * @param textRadialOffset the text-radial-offset value
+   * @return this
+   */
+  public SymbolOptions withTextRadialOffset(Float textRadialOffset) {
+    this.textRadialOffset =  textRadialOffset;
+    return this;
+  }
+
+  /**
+   * Get the current configured  text-radial-offset for the symbol
+   * <p>
+   * Radial offset of text, in the direction of the symbol's anchor. Useful in combination with {@link PropertyFactory#textVariableAnchor}, which doesn't support the two-dimensional {@link PropertyFactory#textOffset}.
+   * </p>
+   * @return textRadialOffset value
+   */
+  public Float getTextRadialOffset() {
+    return textRadialOffset;
   }
 
   /**
@@ -795,6 +847,7 @@ public class SymbolOptions extends Options<Symbol> {
       throw new RuntimeException("geometry field is required");
     }
     JsonObject jsonObject = new JsonObject();
+    jsonObject.addProperty(PROPERTY_SYMBOL_SORT_KEY, symbolSortKey);
     jsonObject.addProperty(PROPERTY_ICON_SIZE, iconSize);
     jsonObject.addProperty(PROPERTY_ICON_IMAGE, iconImage);
     jsonObject.addProperty(PROPERTY_ICON_ROTATE, iconRotate);
@@ -806,6 +859,7 @@ public class SymbolOptions extends Options<Symbol> {
     jsonObject.addProperty(PROPERTY_TEXT_MAX_WIDTH, textMaxWidth);
     jsonObject.addProperty(PROPERTY_TEXT_LETTER_SPACING, textLetterSpacing);
     jsonObject.addProperty(PROPERTY_TEXT_JUSTIFY, textJustify);
+    jsonObject.addProperty(PROPERTY_TEXT_RADIAL_OFFSET, textRadialOffset);
     jsonObject.addProperty(PROPERTY_TEXT_ANCHOR, textAnchor);
     jsonObject.addProperty(PROPERTY_TEXT_ROTATE, textRotate);
     jsonObject.addProperty(PROPERTY_TEXT_TRANSFORM, textTransform);
@@ -843,6 +897,9 @@ public class SymbolOptions extends Options<Symbol> {
 
     SymbolOptions options = new SymbolOptions();
     options.geometry = (Point) feature.geometry();
+    if (feature.hasProperty(PROPERTY_SYMBOL_SORT_KEY)) {
+      options.symbolSortKey = feature.getProperty(PROPERTY_SYMBOL_SORT_KEY).getAsFloat();
+    }
     if (feature.hasProperty(PROPERTY_ICON_SIZE)) {
       options.iconSize = feature.getProperty(PROPERTY_ICON_SIZE).getAsFloat();
     }
@@ -875,6 +932,9 @@ public class SymbolOptions extends Options<Symbol> {
     }
     if (feature.hasProperty(PROPERTY_TEXT_JUSTIFY)) {
       options.textJustify = feature.getProperty(PROPERTY_TEXT_JUSTIFY).getAsString();
+    }
+    if (feature.hasProperty(PROPERTY_TEXT_RADIAL_OFFSET)) {
+      options.textRadialOffset = feature.getProperty(PROPERTY_TEXT_RADIAL_OFFSET).getAsFloat();
     }
     if (feature.hasProperty(PROPERTY_TEXT_ANCHOR)) {
       options.textAnchor = feature.getProperty(PROPERTY_TEXT_ANCHOR).getAsString();
