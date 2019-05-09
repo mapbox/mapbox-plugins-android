@@ -7,6 +7,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -15,6 +19,7 @@ import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.annotation.Fill;
 import com.mapbox.mapboxsdk.plugins.annotation.FillManager;
 import com.mapbox.mapboxsdk.plugins.annotation.FillOptions;
+import com.mapbox.mapboxsdk.plugins.annotation.OnFillClickListener;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.Utils;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
@@ -47,11 +52,12 @@ public class FillActivity extends AppCompatActivity {
 
       fillManager = new FillManager(mapView, mapboxMap, style);
       fillManager.addClickListener(fill -> Toast.makeText(FillActivity.this,
-        String.format("Fill clicked %s", fill.getId()),
+        String.format("Fill clicked %s with title: %s", fill.getId(), getTitleFromFill(fill)),
         Toast.LENGTH_SHORT
       ).show());
+
       fillManager.addLongClickListener(fill -> Toast.makeText(FillActivity.this,
-        String.format("Fill long clicked %s", fill.getId()),
+        String.format("Fill long clicked %s with title: %s", fill.getId(), getTitleFromFill(fill)),
         Toast.LENGTH_SHORT
       ).show());
 
@@ -66,12 +72,13 @@ public class FillActivity extends AppCompatActivity {
 
       FillOptions fillOptions = new FillOptions()
         .withLatLngs(latLngs)
+        .withData(new JsonPrimitive("Foobar"))
         .withFillColor(ColorUtils.colorToRgbaString(Color.RED));
       fillManager.create(fillOptions);
 
       // random add fills across the globe
       List<FillOptions> fillOptionsList = new ArrayList<>();
-      for (int i = 0; i < 20; i++) {
+      for (int i = 0; i < 3; i++) {
         int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
         fillOptionsList.add(new FillOptions()
           .withLatLngs(createRandomLatLngs())
@@ -86,6 +93,15 @@ public class FillActivity extends AppCompatActivity {
         throw new RuntimeException("Unable to parse annotations.json");
       }
     }));
+  }
+
+  private String getTitleFromFill(Fill fill) {
+    String title = "unknown";
+    JsonElement customData = fill.getData();
+    if (!(customData.isJsonNull())) {
+      title = customData.getAsString();
+    }
+    return title;
   }
 
   private List<List<LatLng>> createRandomLatLngs() {

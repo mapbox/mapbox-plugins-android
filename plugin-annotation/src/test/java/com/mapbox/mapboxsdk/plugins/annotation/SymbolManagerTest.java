@@ -2,6 +2,7 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+import com.google.gson.JsonPrimitive;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -665,6 +666,15 @@ public class SymbolManagerTest {
     assertTrue(symbolManager.getDragListeners().contains(listener));
     symbolManager.removeDragListener(listener);
     assertTrue(symbolManager.getDragListeners().isEmpty());
+  }
+
+  @Test
+  public void testCustomData() {
+    symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
+    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng());
+    options.withData(new JsonPrimitive("hello"));
+    Symbol symbol = symbolManager.create(options);
+    assertEquals(new JsonPrimitive("hello"), symbol.getData());
   }
 
   @Test

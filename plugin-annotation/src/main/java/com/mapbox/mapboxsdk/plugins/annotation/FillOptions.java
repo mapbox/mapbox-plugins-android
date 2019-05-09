@@ -26,6 +26,7 @@ import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.toStringArray
 public class FillOptions extends Options<Fill> {
 
   private boolean isDraggable;
+  private JsonElement data;
   private Polygon geometry;
   private Float fillOpacity;
   private String fillColor;
@@ -212,6 +213,26 @@ public class FillOptions extends Options<Fill> {
     return this;
   }
 
+  /**
+   * Set the arbitrary json data of the annotation.
+   *
+   * @param jsonElement the arbitrary json element data
+   */
+  public FillOptions withData(@Nullable JsonElement jsonElement) {
+    this.data = jsonElement;
+    return this;
+  }
+
+  /**
+   * Get the arbitrary json data of the annotation.
+   *
+   * @return the arbitrary json object data if set, else null
+   */
+  @Nullable
+  public JsonElement getData() {
+    return data;
+  }
+
   @Override
   Fill build(long id, AnnotationManager<?, Fill, ?, ?, ?, ?> annotationManager) {
     if (geometry == null) {
@@ -224,6 +245,7 @@ public class FillOptions extends Options<Fill> {
     jsonObject.addProperty(PROPERTY_FILL_PATTERN, fillPattern);
     Fill fill = new Fill(id, annotationManager, jsonObject, geometry);
     fill.setDraggable(isDraggable);
+    fill.setData(data);
     return fill;
   }
 

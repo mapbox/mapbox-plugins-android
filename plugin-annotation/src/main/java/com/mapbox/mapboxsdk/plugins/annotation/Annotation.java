@@ -3,6 +3,7 @@ package com.mapbox.mapboxsdk.plugins.annotation;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mapbox.android.gestures.MoveDistancesObject;
 import com.mapbox.geojson.Geometry;
@@ -11,6 +12,7 @@ import com.mapbox.mapboxsdk.maps.Projection;
 public abstract class Annotation<T extends Geometry> {
 
   static final String ID_KEY = "id";
+  static final String ID_DATA = "custom_data";
   protected JsonObject jsonObject;
   protected T geometry;
   private boolean isDraggable;
@@ -73,6 +75,25 @@ public abstract class Annotation<T extends Geometry> {
    */
   public void setDraggable(boolean draggable) {
     isDraggable = draggable;
+  }
+
+  /**
+   * Set the arbitrary json data of the annotation.
+   *
+   * @param jsonElement the arbitrary json object data
+   */
+  public void setData(@Nullable JsonElement jsonElement) {
+    this.jsonObject.add(ID_DATA, jsonElement);
+  }
+
+  /**
+   * Get the arbitrary json object data of the annotation.
+   *
+   * @return the arbitrary json object data if set, else null
+   */
+  @Nullable
+  public JsonElement getData() {
+    return jsonObject.get(ID_DATA);
   }
 
   @Nullable

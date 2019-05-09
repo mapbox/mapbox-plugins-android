@@ -7,6 +7,7 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+import com.google.gson.JsonPrimitive;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -524,6 +525,30 @@ public class <%- camelize(type) %>ManagerTest {
     assertTrue(<%- type  %>Manager.getDragListeners().contains(listener));
     <%- type  %>Manager.removeDragListener(listener);
     assertTrue(<%- type  %>Manager.getDragListeners().isEmpty());
+  }
+
+  @Test
+  public void testCustomData() {
+    <%- type  %>Manager = new <%- camelize(type) %>Manager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
+<% if (type === "circle" || type === "symbol") { -%>
+    <%- camelize(type) %>Options options = new <%- camelize(type) %>Options().withLatLng(new LatLng());
+<% } else if (type === "line") { -%>
+    List<LatLng>latLngs = new ArrayList<>();
+    latLngs.add(new LatLng());
+    latLngs.add(new LatLng(1,1));
+    <%- camelize(type) %>Options options = new <%- camelize(type) %>Options().withLatLngs(latLngs);
+<% } else { -%>
+    List<LatLng>innerLatLngs = new ArrayList<>();
+    innerLatLngs.add(new LatLng());
+    innerLatLngs.add(new LatLng(1,1));
+    innerLatLngs.add(new LatLng(-1,-1));
+    List<List<LatLng>>latLngs = new ArrayList<>();
+    latLngs.add(innerLatLngs);
+    <%- camelize(type) %>Options options = new <%- camelize(type) %>Options().withLatLngs(latLngs);
+<% } -%>
+    options.withData(new JsonPrimitive("hello"));
+    <%- camelize(type) %> <%- type  %> = <%- type  %>Manager.create(options);
+    assertEquals(new JsonPrimitive("hello"), <%- type  %>.getData());
   }
 
   @Test

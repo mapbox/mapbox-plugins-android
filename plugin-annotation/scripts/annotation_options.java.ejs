@@ -31,6 +31,7 @@ import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.toStringArray
 public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>> {
 
   private boolean isDraggable;
+  private JsonElement data;
   private <%- geometryType(type) %> geometry;
 <% for (const property of properties) { -%>
 <% if (supportsPropertyFunction(property)) { -%>
@@ -279,6 +280,26 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
     return this;
   }
 
+  /**
+   * Set the arbitrary json data of the annotation.
+   *
+   * @param jsonElement the arbitrary json element data
+   */
+  public <%- camelize(type) %>Options withData(@Nullable JsonElement jsonElement) {
+    this.data = jsonElement;
+    return this;
+  }
+
+  /**
+   * Get the arbitrary json data of the annotation.
+   *
+   * @return the arbitrary json object data if set, else null
+   */
+  @Nullable
+  public JsonElement getData() {
+    return data;
+  }
+
   @Override
   <%- camelize(type) %> build(long id, AnnotationManager<?, <%- camelize(type) %>, ?, ?, ?, ?> annotationManager) {
     if (geometry == null) {
@@ -299,6 +320,7 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
 <% } -%>
     <%- camelize(type) %> <%- type %> = new <%- camelize(type) %>(id, annotationManager, jsonObject, geometry);
     <%- type %>.setDraggable(isDraggable);
+    <%- type %>.setData(data);
     return <%- type %>;
   }
 

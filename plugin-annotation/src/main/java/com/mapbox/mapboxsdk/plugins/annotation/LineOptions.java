@@ -26,6 +26,7 @@ import static com.mapbox.mapboxsdk.plugins.annotation.ConvertUtils.toStringArray
 public class LineOptions extends Options<Line> {
 
   private boolean isDraggable;
+  private JsonElement data;
   private LineString geometry;
   private String lineJoin;
   private Float lineOpacity;
@@ -308,6 +309,26 @@ public class LineOptions extends Options<Line> {
     return this;
   }
 
+  /**
+   * Set the arbitrary json data of the annotation.
+   *
+   * @param jsonElement the arbitrary json element data
+   */
+  public LineOptions withData(@Nullable JsonElement jsonElement) {
+    this.data = jsonElement;
+    return this;
+  }
+
+  /**
+   * Get the arbitrary json data of the annotation.
+   *
+   * @return the arbitrary json object data if set, else null
+   */
+  @Nullable
+  public JsonElement getData() {
+    return data;
+  }
+
   @Override
   Line build(long id, AnnotationManager<?, Line, ?, ?, ?, ?> annotationManager) {
     if (geometry == null) {
@@ -324,6 +345,7 @@ public class LineOptions extends Options<Line> {
     jsonObject.addProperty(PROPERTY_LINE_PATTERN, linePattern);
     Line line = new Line(id, annotationManager, jsonObject, geometry);
     line.setDraggable(isDraggable);
+    line.setData(data);
     return line;
   }
 
