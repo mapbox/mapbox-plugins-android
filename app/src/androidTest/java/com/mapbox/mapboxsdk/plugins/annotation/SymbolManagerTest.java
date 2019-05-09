@@ -234,6 +234,19 @@ public class SymbolManagerTest extends BaseActivityTest {
   }
 
   @Test
+  public void testTextVariableAnchorAsConstant() {
+    validateTestSetup();
+    setupSymbolManager();
+    Timber.i("text-variable-anchor");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbolManager);
+
+      symbolManager.setTextVariableAnchor(new String[]{TEXT_ANCHOR_RIGHT, TEXT_ANCHOR_TOP});
+      assertEquals((String[]) symbolManager.getTextVariableAnchor(), (String[]) new String[]{TEXT_ANCHOR_RIGHT, TEXT_ANCHOR_TOP});
+    });
+  }
+
+  @Test
   public void testTextMaxAngleAsConstant() {
     validateTestSetup();
     setupSymbolManager();

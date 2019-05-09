@@ -43,6 +43,9 @@ public class Symbol extends Annotation<Point> {
 
   @Override
   void setUsedDataDrivenProperties() {
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_SYMBOL_SORT_KEY) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_SYMBOL_SORT_KEY);
+    }
     if (!(jsonObject.get(SymbolOptions.PROPERTY_ICON_SIZE) instanceof JsonNull)) {
       annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_ICON_SIZE);
     }
@@ -75,6 +78,9 @@ public class Symbol extends Annotation<Point> {
     }
     if (!(jsonObject.get(SymbolOptions.PROPERTY_TEXT_JUSTIFY) instanceof JsonNull)) {
       annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_TEXT_JUSTIFY);
+    }
+    if (!(jsonObject.get(SymbolOptions.PROPERTY_TEXT_RADIAL_OFFSET) instanceof JsonNull)) {
+      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_TEXT_RADIAL_OFFSET);
     }
     if (!(jsonObject.get(SymbolOptions.PROPERTY_TEXT_ANCHOR) instanceof JsonNull)) {
       annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_TEXT_ANCHOR);
@@ -170,6 +176,33 @@ public class Symbol extends Annotation<Point> {
   }
 
   // Property accessors
+
+  /**
+   * Get the SymbolSortKey property
+   * <p>
+   * Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key when they overlap. Features with a lower sort key will have priority over other features when doing placement.
+   * </p>
+   *
+   * @return property wrapper value around Float
+   */
+  public Float getSymbolSortKey() {
+    return jsonObject.get(SymbolOptions.PROPERTY_SYMBOL_SORT_KEY).getAsFloat();
+  }
+
+  /**
+   * Set the SymbolSortKey property
+   * <p>
+   * Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key when they overlap. Features with a lower sort key will have priority over other features when doing placement.
+   * </p>
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
+   *
+   * @param value constant property value for Float
+   */
+  public void setSymbolSortKey(Float value) {
+    jsonObject.addProperty(SymbolOptions.PROPERTY_SYMBOL_SORT_KEY, value);
+  }
 
   /**
    * Get the IconSize property
@@ -479,6 +512,33 @@ public class Symbol extends Annotation<Point> {
    */
   public void setTextJustify(@Property.TEXT_JUSTIFY String value) {
     jsonObject.addProperty(SymbolOptions.PROPERTY_TEXT_JUSTIFY, value);
+  }
+
+  /**
+   * Get the TextRadialOffset property
+   * <p>
+   * Radial offset of text, in the direction of the symbol's anchor. Useful in combination with {@link PropertyFactory#textVariableAnchor}, which doesn't support the two-dimensional {@link PropertyFactory#textOffset}.
+   * </p>
+   *
+   * @return property wrapper value around Float
+   */
+  public Float getTextRadialOffset() {
+    return jsonObject.get(SymbolOptions.PROPERTY_TEXT_RADIAL_OFFSET).getAsFloat();
+  }
+
+  /**
+   * Set the TextRadialOffset property
+   * <p>
+   * Radial offset of text, in the direction of the symbol's anchor. Useful in combination with {@link PropertyFactory#textVariableAnchor}, which doesn't support the two-dimensional {@link PropertyFactory#textOffset}.
+   * </p>
+   * <p>
+   * To update the symbol on the map use {@link SymbolManager#update(Annotation)}.
+   * <p>
+   *
+   * @param value constant property value for Float
+   */
+  public void setTextRadialOffset(Float value) {
+    jsonObject.addProperty(SymbolOptions.PROPERTY_TEXT_RADIAL_OFFSET, value);
   }
 
   /**

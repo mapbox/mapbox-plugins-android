@@ -45,6 +45,19 @@ public class SymbolTest extends BaseActivityTest {
   }
 
   @Test
+  public void testSymbolSortKey() {
+    validateTestSetup();
+    setupAnnotation();
+    Timber.i("symbol-sort-key");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setSymbolSortKey(0.3f);
+      assertEquals((Float) symbol.getSymbolSortKey(), (Float) 0.3f);
+    });
+  }
+
+  @Test
   public void testIconSize() {
     validateTestSetup();
     setupAnnotation();
@@ -182,8 +195,21 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setTextJustify(TEXT_JUSTIFY_LEFT);
-      assertEquals((String) symbol.getTextJustify(), (String) TEXT_JUSTIFY_LEFT);
+      symbol.setTextJustify(TEXT_JUSTIFY_AUTO);
+      assertEquals((String) symbol.getTextJustify(), (String) TEXT_JUSTIFY_AUTO);
+    });
+  }
+
+  @Test
+  public void testTextRadialOffset() {
+    validateTestSetup();
+    setupAnnotation();
+    Timber.i("text-radial-offset");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbol);
+
+      symbol.setTextRadialOffset(0.3f);
+      assertEquals((Float) symbol.getTextRadialOffset(), (Float) 0.3f);
     });
   }
 
