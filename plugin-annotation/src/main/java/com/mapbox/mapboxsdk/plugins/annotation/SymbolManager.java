@@ -45,6 +45,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
   private static final String PROPERTY_TEXT_PITCH_ALIGNMENT = "text-pitch-alignment";
   private static final String PROPERTY_TEXT_ROTATION_ALIGNMENT = "text-rotation-alignment";
   private static final String PROPERTY_TEXT_LINE_HEIGHT = "text-line-height";
+  private static final String PROPERTY_TEXT_VARIABLE_ANCHOR = "text-variable-anchor";
   private static final String PROPERTY_TEXT_MAX_ANGLE = "text-max-angle";
   private static final String PROPERTY_TEXT_PADDING = "text-padding";
   private static final String PROPERTY_TEXT_KEEP_UPRIGHT = "text-keep-upright";
@@ -99,6 +100,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
 
   @Override
   void initializeDataDrivenPropertyMap() {
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_SYMBOL_SORT_KEY, false);
     dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_ICON_SIZE, false);
     dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_ICON_IMAGE, false);
     dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_ICON_ROTATE, false);
@@ -110,6 +112,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
     dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_MAX_WIDTH, false);
     dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_LETTER_SPACING, false);
     dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_JUSTIFY, false);
+    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_RADIAL_OFFSET, false);
     dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_ANCHOR, false);
     dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_ROTATE, false);
     dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_TRANSFORM, false);
@@ -130,6 +133,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
   @Override
   protected void setDataDrivenPropertyIsUsed(@NonNull String property) {
     switch (property) {
+      case SymbolOptions.PROPERTY_SYMBOL_SORT_KEY:
+        layer.setProperties(symbolSortKey(get(SymbolOptions.PROPERTY_SYMBOL_SORT_KEY)));
+        break;
       case SymbolOptions.PROPERTY_ICON_SIZE:
         layer.setProperties(iconSize(get(SymbolOptions.PROPERTY_ICON_SIZE)));
         break;
@@ -162,6 +168,9 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
         break;
       case SymbolOptions.PROPERTY_TEXT_JUSTIFY:
         layer.setProperties(textJustify(get(SymbolOptions.PROPERTY_TEXT_JUSTIFY)));
+        break;
+      case SymbolOptions.PROPERTY_TEXT_RADIAL_OFFSET:
+        layer.setProperties(textRadialOffset(get(SymbolOptions.PROPERTY_TEXT_RADIAL_OFFSET)));
         break;
       case SymbolOptions.PROPERTY_TEXT_ANCHOR:
         layer.setProperties(textAnchor(get(SymbolOptions.PROPERTY_TEXT_ANCHOR)));
@@ -217,6 +226,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * Symbols are going to be created only for features with a matching geometry.
    * <p>
    * All supported properties are:<br>
+   * SymbolOptions.PROPERTY_SYMBOL_SORT_KEY - Float<br>
    * SymbolOptions.PROPERTY_ICON_SIZE - Float<br>
    * SymbolOptions.PROPERTY_ICON_IMAGE - String<br>
    * SymbolOptions.PROPERTY_ICON_ROTATE - Float<br>
@@ -228,6 +238,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * SymbolOptions.PROPERTY_TEXT_MAX_WIDTH - Float<br>
    * SymbolOptions.PROPERTY_TEXT_LETTER_SPACING - Float<br>
    * SymbolOptions.PROPERTY_TEXT_JUSTIFY - String<br>
+   * SymbolOptions.PROPERTY_TEXT_RADIAL_OFFSET - Float<br>
    * SymbolOptions.PROPERTY_TEXT_ANCHOR - String<br>
    * SymbolOptions.PROPERTY_TEXT_ROTATE - Float<br>
    * SymbolOptions.PROPERTY_TEXT_TRANSFORM - String<br>
@@ -262,6 +273,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * Symbols are going to be created only for features with a matching geometry.
    * <p>
    * All supported properties are:<br>
+   * SymbolOptions.PROPERTY_SYMBOL_SORT_KEY - Float<br>
    * SymbolOptions.PROPERTY_ICON_SIZE - Float<br>
    * SymbolOptions.PROPERTY_ICON_IMAGE - String<br>
    * SymbolOptions.PROPERTY_ICON_ROTATE - Float<br>
@@ -273,6 +285,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * SymbolOptions.PROPERTY_TEXT_MAX_WIDTH - Float<br>
    * SymbolOptions.PROPERTY_TEXT_LETTER_SPACING - Float<br>
    * SymbolOptions.PROPERTY_TEXT_JUSTIFY - String<br>
+   * SymbolOptions.PROPERTY_TEXT_RADIAL_OFFSET - Float<br>
    * SymbolOptions.PROPERTY_TEXT_ANCHOR - String<br>
    * SymbolOptions.PROPERTY_TEXT_ROTATE - Float<br>
    * SymbolOptions.PROPERTY_TEXT_TRANSFORM - String<br>
@@ -709,6 +722,32 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
   public void setTextLineHeight( Float value) {
     PropertyValue propertyValue = textLineHeight(value);
     constantPropertyUsageMap.put(PROPERTY_TEXT_LINE_HEIGHT, propertyValue);
+    layer.setProperties(propertyValue);
+  }
+
+  /**
+   * Get the TextVariableAnchor property
+   * <p>
+   * To increase the chance of placing high-priority labels on the map, you can provide an array of {@link Property.TEXT_ANCHOR} locations: the render will attempt to place the label at each location, in order, before moving onto the next label. Use `text-justify: auto` to choose justification based on anchor position. To apply an offset, use the {@link PropertyFactory#textRadialOffset} instead of the two-dimensional {@link PropertyFactory#textOffset}.
+   * </p>
+   *
+   * @return property wrapper value around String[]
+   */
+  public String[] getTextVariableAnchor() {
+    return layer.getTextVariableAnchor().value;
+  }
+
+  /**
+   * Set the TextVariableAnchor property
+   * <p>
+   * To increase the chance of placing high-priority labels on the map, you can provide an array of {@link Property.TEXT_ANCHOR} locations: the render will attempt to place the label at each location, in order, before moving onto the next label. Use `text-justify: auto` to choose justification based on anchor position. To apply an offset, use the {@link PropertyFactory#textRadialOffset} instead of the two-dimensional {@link PropertyFactory#textOffset}.
+   * </p>
+   *
+   * @param value property wrapper value around String[]
+   */
+  public void setTextVariableAnchor( String[] value) {
+    PropertyValue propertyValue = textVariableAnchor(value);
+    constantPropertyUsageMap.put(PROPERTY_TEXT_VARIABLE_ANCHOR, propertyValue);
     layer.setProperties(propertyValue);
   }
 

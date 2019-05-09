@@ -228,6 +228,9 @@ global.defaultValueJava = function(property) {
     if(property.name.endsWith("-font")) {
         return 'new String[]{"Open Sans Regular", "Arial Unicode MS Regular"}';
     }
+    if(property.name.endsWith("text-variable-anchor")){
+        return 'new String[]{TEXT_ANCHOR_RIGHT, TEXT_ANCHOR_TOP}'
+    }
      switch (property.type) {
       case 'boolean':
         return 'true';
