@@ -3,11 +3,10 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity.scalebar
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.plugins.markerview.MarkerViewManager
+import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.plugins.testapp.R
 import com.mapbox.pluginscalebar.ScaleBar
-import kotlinx.android.synthetic.main.activity_annotation.*
+import kotlinx.android.synthetic.main.activity_scalebar.*
 
 /**
  * Activity showing a scalebar used on mapview.
@@ -19,9 +18,14 @@ class ScalebarActivity : AppCompatActivity() {
         setContentView(R.layout.activity_scalebar)
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync { mapboxMap ->
-            mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2.0))
-            scaleBar = ScaleBar(mapView, mapboxMap)
-            scaleBar?.isEnabled = true
+            mapboxMap.setStyle(Style.MAPBOX_STREETS) { _ ->
+                mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2.0))
+                scaleBar = ScaleBar(mapView, mapboxMap)
+                scaleBar!!.isEnabled = true
+                fabScaleWidget.setOnClickListener {
+                    scaleBar!!.isEnabled = !scaleBar?.isEnabled!!
+                }
+            }
         }
     }
 
