@@ -1,83 +1,72 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name" tools:ignore="PrivateResource">Map Plugins</string>
+  <string name="app_name" tools:ignore="PrivateResource">Map Plugins</string>
 
-    <!-- Categories -->
-    <string name="category">category</string>
-    <string name="category_extrusions">Extrusions</string>
-    <string name="category_navigation">Navigation</string>
-    <string name="category_location">Location</string>
-    <string name="category_runtime_loading">Navigation</string>
-    <string name="category_places">Places</string>
-    <string name="category_offline">Offline</string>
-    <string name="category_scalebar">Scalebar</string>
-    <string name="category_localization">Localization</string>
-    <string name="category_annotation">Annotation plugin</string>
-    <string name="category_ktx">Kotlin extension functions</string>
-    <string name="category_markerview">View synchronisation</string>
+  <!-- Categories -->
+  <string name="category">category</string>
+  <string name="category_extrusions">Extrusions</string>
+  <string name="category_navigation">Navigation</string>
+  <string name="category_runtime_loading">Navigation</string>
+  <string name="category_places">Places</string>
+  <string name="category_offline">Offline</string>
+  <string name="category_localization">Localization</string>
+  <string name="category_annotation">Annotation plugin</string>
+  <string name="category_ktx">Kotlin extension functions</string>
+  <string name="category_markerview">View synchronisation</string>
+  <string name="category_scalebar">Scalebar</string>
 
-    <!-- Titles -->
-    <string name="title_traffic">Traffic Plugin</string>
-    <string name="title_building">Building Plugin</string>
-    <string name="title_location_modes">Location Modes</string>
-    <string name="title_location_map_change">Location Layer Map Change</string>
-    <string name="title_location_manual_update">Toggle Manual Location Updates</string>
-    <string name="title_compass_listener">Compass Listener</string>
-    <string name="title_places_autocomplete">Places Autocomplete</string>
-    <string name="title_places_autocomplete_fragment">Places Autocomplete Fragment</string>
-    <string name="title_offline_plugin">Create region</string>
-    <string name="title_offline_regions">List regions</string>
-    <string name="title_place_picker">Place picker</string>
-    <string name="title_localization">Localization Plugin</string>
-    <string name="title_offline_ui_components">Offline Ui Components</string>
-    <string name="title_location_fragment">Location Fragment</string>
-    <string name="title_symbol">Symbol</string>
-    <string name="title_fill">Fill</string>
-    <string name="title_circle">Circle</string>
-    <string name="title_line">Line</string>
-    <string name="title_markerview">MarkerView plugin</string>
-    <string name="title_ktx">Mapbox Maps KTX</string>
-    <string name="title_scalebar">Scale bar</string>
+  <!-- Titles -->
+  <string name="title_traffic">Traffic Plugin</string>
+  <string name="title_building">Building Plugin</string>
+  <string name="title_places_autocomplete">Places Autocomplete</string>
+  <string name="title_places_autocomplete_fragment">Places Autocomplete Fragment</string>
+  <string name="title_offline_plugin">Create region</string>
+  <string name="title_offline_regions">List regions</string>
+  <string name="title_place_picker">Place picker</string>
+  <string name="title_localization">Localization Plugin</string>
+  <string name="title_offline_ui_components">Offline Ui Components</string>
+  <string name="title_symbol">Symbol</string>
+  <string name="title_symbol_press">Press for Symbol</string>
+  <string name="title_symbol_bulk">Bulk amount of Symbols</string>
+  <string name="title_symbol_change">Change Symbol</string>
+  <string name="title_fill">Fill</string>
+  <string name="title_fill_change">Change Fill</string>
+  <string name="title_circle">Circle</string>
+  <string name="title_line">Line</string>
+  <string name="title_line_change">Change Line</string>
+  <string name="title_markerview">MarkerView plugin</string>
+  <string name="title_ktx">Mapbox Maps KTX</string>
+  <string name="title_scalebar">Scale bar</string>
 
-    <!-- Descriptions -->
-    <string name="description_traffic">Add Traffic layers to any Mapbox basemap.</string>
-    <string name="description_building">Add 3D Building layer to a Mapbox map.</string>
-    <string name="description_location_modes">Switch between the different location modes.</string>
-    <string name="description_location_map_change">Change map styles while the location layers on the map.</string>
-    <string name="description_location_manual_update">Toggle the user location manual mode on and off.</string>
-    <string name="description_compass_listener">Add a compass listener to know when heading changes or when the accuracy drops.</string>
-    <string name="description_autocomplete">Launch the autocomplete activity.</string>
-    <string name="description_autocomplete_fragment">Launch the autocomplete fragment inside an activity</string>
-    <string name="description_offline_plugin">Use a form to create an offline region.</string>
-    <string name="description_offline_regions">List all offline regions.</string>
-    <string name="description_place_picker">Launch the place picker activity and receive result</string>
-    <string name="description_localization">Automatically localize the map labels into the device\'s set language.</string>
-    <string name="description_offline_ui_components">Shows off the UI components included in the offline plugin.</string>
-    <string name="description_location_fragment">Show current location in the Fragment</string>
-    <string name="description_symbol">Show symbols on a map</string>
-    <string name="description_line">Show lines on a map</string>
-    <string name="description_fill">Show fills on a map</string>
-    <string name="description_circle">Show circles on a map</string>
-    <string name="description_markerview">Synchronise a view on a map</string>
-    <string name="description_ktx">Test Mapbox Maps SDK for Android Kotlin extension functions</string>
-    <string name="description_scalebar">Show scale bar on a map</string>
+  <!-- Descriptions -->
+  <string name="description_traffic">Add Traffic layers to any Mapbox basemap.</string>
+  <string name="description_building">Add 3D Building layer to a Mapbox map.</string>
+  <string name="description_autocomplete">Launch the autocomplete activity.</string>
+  <string name="description_autocomplete_fragment">Launch the autocomplete fragment inside an activity</string>
+  <string name="description_offline_plugin">Use a form to create an offline region.</string>
+  <string name="description_offline_regions">List all offline regions.</string>
+  <string name="description_place_picker">Launch the place picker activity and receive result</string>
+  <string name="description_localization">Automatically localize the map labels into the device\'s set language.</string>
+  <string name="description_offline_ui_components">Shows off the UI components included in the offline plugin.</string>
+  <string name="description_symbol">Show symbols on a map</string>
+  <string name="description_symbol_press">Show a symbol by pressing the map</string>
+  <string name="description_symbol_change">Dynamically change a symbol on the map</string>
+  <string name="description_symbol_bulk">Show fire hydrants in Washington DC area</string>
+  <string name="description_line">Show lines on a map</string>
+  <string name="description_line_change">Show changing lines on a map</string>
+  <string name="description_fill">Show fills on a map</string>
+  <string name="description_fill_change">Show changing a fill on a map</string>
+  <string name="description_circle">Show circles on a map</string>
+  <string name="description_markerview">Synchronise a view on a map</string>
+  <string name="description_ktx">Test Mapbox Maps SDK for Android Kotlin extension functions</string>
+  <string name="description_scalebar">Show scale bar on a map</string>
 
-    <!-- Buttons -->
-    <string name="button_location_mode_none">None</string>
-    <string name="button_location_mode_normal">Normal</string>
-    <string name="button_location_mode_tracking">Tracking</string>
-    <string name="button_location_mode_compass">Compass</string>
-    <string name="button_location_mode_navigation">Nav</string>
+  <!-- Place picker -->
+  <string name="detailed_description_place_picker">Example shows how to launch the Place Picker using the Floating action button and receiving a result in onActivityResult.</string>
 
-    <!-- Place picker -->
-    <string name="detailed_description_place_picker">Example shows how to launch the Place Picker using the Floating action button and receiving a result in onActivityResult.</string>
-
-    <!-- Misc -->
-    <string name="min_zoom_textview">Min zoom: %1$d</string>
-    <string name="max_zoom_textview">Max zoom: %1$d</string>
-    <string name="change_language_instruction">Make sure that the device\'s default language is not English</string>
-    <string name="map_not_localized">Map not localized to device language and now set to French</string>
-    <string name="map_localized">Map localized to device language</string>
-    <string name="tracking">Tracking:</string>
-    <string name="mode">Mode:</string>
-
+  <!-- Misc -->
+  <string name="min_zoom_textview">Min zoom: %1$d</string>
+  <string name="max_zoom_textview">Max zoom: %1$d</string>
+  <string name="change_language_instruction">Make sure that the device\'s default language is not English</string>
+  <string name="map_not_localized">Map not localized to device language and now set to French</string>
+  <string name="map_localized">Map localized to device language</string>
 </resources>
