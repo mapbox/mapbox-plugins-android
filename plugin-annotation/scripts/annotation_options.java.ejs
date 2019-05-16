@@ -38,17 +38,11 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
   private <%- propertyType(property) %> <%- camelizeWithLeadingLowercase(property.name) %>;
 <% } -%>
 <% } -%>
-<% if (type === "symbol") { -%>
-  private int zIndex;
-<% } -%>
 
 <% for (const property of properties) { -%>
 <% if (supportsPropertyFunction(property)) { -%>
   static final String PROPERTY_<%- snakeCaseUpper(property.name) %> = "<%- property.name %>";
 <% } -%>
-<% } -%>
-<% if (type === "symbol") { -%>
-  static final String PROPERTY_Z_INDEX = "z-index";
 <% } -%>
   private static final String PROPERTY_IS_DRAGGABLE = "is-draggable";
 <% for (const property of properties) { -%>
@@ -234,31 +228,6 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
     return geometry;
   }
 <% } -%>
-<% if (type === "symbol") { -%>
-
-  /**
-   * Set the zIndex of the symbol, which represents the place of the symbol on the map inside a layer.
-   * <p>
-   * A higher value brings the symbol to the front.
-   * </p>
-   *
-   * @param zIndex the z index
-   * @return this
-   */
-  public SymbolOptions withZIndex(int zIndex) {
-    this.zIndex = zIndex;
-    return this;
-  }
-
-  /**
-   * Get the zIndex of the symbol, which represents the place of the symbol on the map inside a layer.
-   *
-   * @return the z index
-   */
-  public int getZIndex() {
-    return zIndex;
-  }
-<% } -%>
 
   /**
    * Returns whether this <%- type %> is draggable, meaning it can be dragged across the screen when touched and moved.
@@ -315,9 +284,6 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
 <% } -%>
 <% } -%>
 <% } -%>
-<% if (type === "symbol") { -%>
-    jsonObject.addProperty(PROPERTY_Z_INDEX, zIndex);
-<% } -%>
     <%- camelize(type) %> <%- type %> = new <%- camelize(type) %>(id, annotationManager, jsonObject, geometry);
     <%- type %>.setDraggable(isDraggable);
     <%- type %>.setData(data);
@@ -357,11 +323,6 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
     }
 <% } -%>
 <% } -%>
-<% } -%>
-<% if (type === "symbol") { -%>
-    if (feature.hasProperty(PROPERTY_Z_INDEX)) {
-      options.zIndex = feature.getProperty(PROPERTY_Z_INDEX).getAsInt();
-    }
 <% } -%>
     if (feature.hasProperty(PROPERTY_IS_DRAGGABLE)) {
       options.isDraggable = feature.getProperty(PROPERTY_IS_DRAGGABLE).getAsBoolean();

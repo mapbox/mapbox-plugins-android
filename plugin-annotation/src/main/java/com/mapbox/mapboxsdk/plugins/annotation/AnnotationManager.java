@@ -62,7 +62,6 @@ public abstract class AnnotationManager<
   protected L layer;
   private GeoJsonSource geoJsonSource;
   private final MapClickResolver mapClickResolver;
-  private final Comparator<Feature> comparator;
   private Style style;
   private String belowLayerId;
   private CoreElementProvider<L> coreElementProvider;
@@ -70,11 +69,9 @@ public abstract class AnnotationManager<
   @UiThread
   protected AnnotationManager(MapView mapView, final MapboxMap mapboxMap, Style style,
                               CoreElementProvider<L> coreElementProvider,
-                              Comparator<Feature> comparator,
                               DraggableAnnotationController<T, D> draggableAnnotationController,
                               String belowLayerId, final GeoJsonOptions geoJsonOptions) {
     this.mapboxMap = mapboxMap;
-    this.comparator = comparator;
     this.style = style;
     this.belowLayerId = belowLayerId;
     this.coreElementProvider = coreElementProvider;
@@ -233,9 +230,6 @@ public abstract class AnnotationManager<
       t.setUsedDataDrivenProperties();
     }
 
-    if (comparator != null) {
-      Collections.sort(features, comparator);
-    }
     geoJsonSource.setGeoJson(FeatureCollection.fromFeatures(features));
   }
 
