@@ -79,11 +79,7 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
 
   @VisibleForTesting
   <%- camelize(type) %>Manager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @NonNull CoreElementProvider<<%- camelize(type) %>Layer> coreElementProvider, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions, DraggableAnnotationController<<%- camelize(type) %>, On<%- camelize(type) %>DragListener> draggableAnnotationController) {
-<% if (type === "symbol") { -%>
-    super(mapView, mapboxMap, style, coreElementProvider, new SymbolComparator(), draggableAnnotationController, belowLayerId, geoJsonOptions);
-<% } else { -%>
-    super(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController, belowLayerId, geoJsonOptions);
-<% } -%>
+    super(mapView, mapboxMap, style, coreElementProvider, draggableAnnotationController, belowLayerId, geoJsonOptions);
   }
 
   @Override
@@ -92,9 +88,6 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
 <% if (supportsPropertyFunction(property)) { -%>
     dataDrivenPropertyUsageMap.put(<%- camelize(type) %>Options.PROPERTY_<%- snakeCaseUpper(property.name) %>, false);
 <% } -%>
-<% } -%>
-<% if (type === "symbol") { -%>
-    dataDrivenPropertyUsageMap.put(<%- camelize(type) %>Options.PROPERTY_Z_INDEX, false);
 <% } -%>
   }
 
@@ -107,11 +100,6 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
         layer.setProperties(<%- camelizeWithLeadingLowercase(property.name) %>(get(<%- camelize(type) %>Options.PROPERTY_<%- snakeCaseUpper(property.name) %>)));
         break;
 <% } -%>
-<% } -%>
-<% if (type === "symbol") { -%>
-      case <%- camelize(type) %>Options.PROPERTY_Z_INDEX:
-        layer.setProperties(symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE));
-        break;
 <% } -%>
     }
   }
@@ -130,9 +118,6 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
    * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
    * <p>
    * Out of spec properties:<br>
-<% if (type === "symbol") { -%>
-   * "z-index" - Integer, z-index of the feature within the manager<br>
-<% } -%>
    * "is-draggable" - Boolean, true if the <%- type %> should be draggable, false otherwise
    *
    * @param json the GeoJSON defining the list of <%- type %>s to build
@@ -157,9 +142,6 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
    * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
    * <p>
    * Out of spec properties:<br>
-<% if (type === "symbol") { -%>
-   * "z-index" - Integer, z-index of the feature within the manager<br>
-<% } -%>
    * "is-draggable" - Boolean, true if the <%- type %> should be draggable, false otherwise
    *
    * @param featureCollection the featureCollection defining the list of <%- type %>s to build

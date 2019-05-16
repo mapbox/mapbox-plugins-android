@@ -209,9 +209,6 @@ public class <%- camelize(type) %>ManagerTest {
 <% } -%>
 <% } -%>
 <% } -%>
-<% if (type === "symbol") { -%>
-    feature.addNumberProperty("z-index", 2);
-<% } -%>
     feature.addBooleanProperty("is-draggable", true);
 
     List<<%- camelize(type) %>> <%- type %>s = <%- type %>Manager.create(FeatureCollection.fromFeature(feature));
@@ -234,9 +231,6 @@ public class <%- camelize(type) %>ManagerTest {
     assertEquals(<%- type %>.get<%- camelize(property.name) %>(), <%- defaultValueJava(property) %>);
 <% } -%>
 <% } -%>
-<% } -%>
-<% if (type === "symbol") { -%>
-    assertEquals(<%- type %>.getZIndex(), 2);
 <% } -%>
     assertTrue(<%- type %>.isDraggable());
   }
@@ -463,21 +457,6 @@ public class <%- camelize(type) %>ManagerTest {
     verify(<%- type  %>Layer, times(1)).setProperties(argThat(new PropertyValueMatcher(<%- camelizeWithLeadingLowercase(property.name) %>(get("<%- property.name %>")))));
   }
 <% } -%>
-<% } -%>
-
-<% if (type === "symbol") { -%>
-  @Test
-  public void testSymbolZOrderLayerProperty() {
-    <%- type  %>Manager = new <%- camelize(type) %>Manager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
-    verify(<%- type  %>Layer, times(0)).setProperties(argThat(new PropertyValueMatcher(symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE))));
-
-    <%- camelize(type) %>Options options = new <%- camelize(type) %>Options().withLatLng(new LatLng());
-    <%- type  %>Manager.create(options);
-    verify(<%- type  %>Layer, times(1)).setProperties(argThat(new PropertyValueMatcher(symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE))));
-
-    <%- type  %>Manager.create(options);
-    verify(<%- type  %>Layer, times(1)).setProperties(argThat(new PropertyValueMatcher(symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE))));
-  }
 <% } -%>
 
   @Test

@@ -55,7 +55,6 @@ public class SymbolOptions extends Options<Symbol> {
   private String textHaloColor;
   private Float textHaloWidth;
   private Float textHaloBlur;
-  private int zIndex;
 
   static final String PROPERTY_SYMBOL_SORT_KEY = "symbol-sort-key";
   static final String PROPERTY_ICON_SIZE = "icon-size";
@@ -84,7 +83,6 @@ public class SymbolOptions extends Options<Symbol> {
   static final String PROPERTY_TEXT_HALO_COLOR = "text-halo-color";
   static final String PROPERTY_TEXT_HALO_WIDTH = "text-halo-width";
   static final String PROPERTY_TEXT_HALO_BLUR = "text-halo-blur";
-  static final String PROPERTY_Z_INDEX = "z-index";
   private static final String PROPERTY_IS_DRAGGABLE = "is-draggable";
 
   /**
@@ -779,29 +777,6 @@ public class SymbolOptions extends Options<Symbol> {
   }
 
   /**
-   * Set the zIndex of the symbol, which represents the place of the symbol on the map inside a layer.
-   * <p>
-   * A higher value brings the symbol to the front.
-   * </p>
-   *
-   * @param zIndex the z index
-   * @return this
-   */
-  public SymbolOptions withZIndex(int zIndex) {
-    this.zIndex = zIndex;
-    return this;
-  }
-
-  /**
-   * Get the zIndex of the symbol, which represents the place of the symbol on the map inside a layer.
-   *
-   * @return the z index
-   */
-  public int getZIndex() {
-    return zIndex;
-  }
-
-  /**
    * Returns whether this symbol is draggable, meaning it can be dragged across the screen when touched and moved.
    *
    * @return draggable when touched
@@ -874,7 +849,6 @@ public class SymbolOptions extends Options<Symbol> {
     jsonObject.addProperty(PROPERTY_TEXT_HALO_COLOR, textHaloColor);
     jsonObject.addProperty(PROPERTY_TEXT_HALO_WIDTH, textHaloWidth);
     jsonObject.addProperty(PROPERTY_TEXT_HALO_BLUR, textHaloBlur);
-    jsonObject.addProperty(PROPERTY_Z_INDEX, zIndex);
     Symbol symbol = new Symbol(id, annotationManager, jsonObject, geometry);
     symbol.setDraggable(isDraggable);
     symbol.setData(data);
@@ -977,9 +951,6 @@ public class SymbolOptions extends Options<Symbol> {
     }
     if (feature.hasProperty(PROPERTY_TEXT_HALO_BLUR)) {
       options.textHaloBlur = feature.getProperty(PROPERTY_TEXT_HALO_BLUR).getAsFloat();
-    }
-    if (feature.hasProperty(PROPERTY_Z_INDEX)) {
-      options.zIndex = feature.getProperty(PROPERTY_Z_INDEX).getAsInt();
     }
     if (feature.hasProperty(PROPERTY_IS_DRAGGABLE)) {
       options.isDraggable = feature.getProperty(PROPERTY_IS_DRAGGABLE).getAsBoolean();

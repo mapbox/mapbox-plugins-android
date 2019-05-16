@@ -381,7 +381,6 @@ public class FillManagerTest {
     verify(fillLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(fillPattern(get("fill-pattern")))));
   }
 
-
   @Test
   public void testFillLayerFilter() {
     fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);

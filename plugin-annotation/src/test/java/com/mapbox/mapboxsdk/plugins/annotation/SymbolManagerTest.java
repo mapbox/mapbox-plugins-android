@@ -188,7 +188,6 @@ public class SymbolManagerTest {
     feature.addStringProperty("text-halo-color", "rgba(0, 0, 0, 1)");
     feature.addNumberProperty("text-halo-width", 0.3f);
     feature.addNumberProperty("text-halo-blur", 0.3f);
-    feature.addNumberProperty("z-index", 2);
     feature.addBooleanProperty("is-draggable", true);
 
     List<Symbol> symbols = symbolManager.create(FeatureCollection.fromFeature(feature));
@@ -226,7 +225,6 @@ public class SymbolManagerTest {
     assertEquals(symbol.getTextHaloColor(), "rgba(0, 0, 0, 1)");
     assertEquals(symbol.getTextHaloWidth(), 0.3f);
     assertEquals(symbol.getTextHaloBlur(), 0.3f);
-    assertEquals(symbol.getZIndex(), 2);
     assertTrue(symbol.isDraggable());
   }
 
@@ -636,19 +634,6 @@ public class SymbolManagerTest {
 
     symbolManager.create(options);
     verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(textHaloBlur(get("text-halo-blur")))));
-  }
-
-  @Test
-  public void testSymbolZOrderLayerProperty() {
-    symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
-    verify(symbolLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE))));
-
-    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng());
-    symbolManager.create(options);
-    verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE))));
-
-    symbolManager.create(options);
-    verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE))));
   }
 
   @Test
