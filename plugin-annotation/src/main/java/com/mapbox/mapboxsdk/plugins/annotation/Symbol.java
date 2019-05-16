@@ -124,9 +124,6 @@ public class Symbol extends Annotation<Point> {
     if (!(jsonObject.get(SymbolOptions.PROPERTY_TEXT_HALO_BLUR) instanceof JsonNull)) {
       annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_TEXT_HALO_BLUR);
     }
-    if (!(jsonObject.get(SymbolOptions.PROPERTY_Z_INDEX) instanceof JsonNull)) {
-      annotationManager.enableDataDrivenProperty(SymbolOptions.PROPERTY_Z_INDEX);
-    }
   }
 
   /**
@@ -149,30 +146,6 @@ public class Symbol extends Annotation<Point> {
   @NonNull
   public LatLng getLatLng() {
     return new LatLng(geometry.latitude(), geometry.longitude());
-  }
-
-  /**
-   * Set the z-index of a symbol.
-   * <p>
-   * If a symbol z-index is higher as another symbol it will be rendered above it.
-   * </p>
-   * <p>
-   * Default value is 0.
-   * </p>
-   *
-   * @param index the z-index value
-   */
-  public void setZIndex(int index) {
-    jsonObject.addProperty(SymbolOptions.PROPERTY_Z_INDEX, index);
-  }
-
-  /**
-   * Get the z-index of a symbol.
-   *
-   * @return the z-index value, 0 if not set
-   */
-  public int getZIndex() {
-    return jsonObject.get(SymbolOptions.PROPERTY_Z_INDEX).getAsInt();
   }
 
   // Property accessors

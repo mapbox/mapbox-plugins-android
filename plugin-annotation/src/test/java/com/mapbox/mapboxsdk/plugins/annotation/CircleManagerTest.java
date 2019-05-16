@@ -332,7 +332,6 @@ public class CircleManagerTest {
     verify(circleLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(circleStrokeOpacity(get("circle-stroke-opacity")))));
   }
 
-
   @Test
   public void testCircleLayerFilter() {
     circleManager = new CircleManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);

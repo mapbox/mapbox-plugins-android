@@ -400,7 +400,6 @@ public class LineManagerTest {
     verify(lineLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(linePattern(get("line-pattern")))));
   }
 
-
   @Test
   public void testLineLayerFilter() {
     lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);

@@ -98,7 +98,7 @@ public class SymbolActivity extends AppCompatActivity {
         .withLatLng(new LatLng(6.687337, 0.381457))
         .withIconImage(ID_ICON_AIRPORT)
         .withIconSize(1.3f)
-        .withZIndex(10)
+        .withSymbolSortKey(10.0f)
         .withDraggable(true);
       symbol = symbolManager.create(symbolOptions);
       Timber.e(symbol.toString());
@@ -109,7 +109,7 @@ public class SymbolActivity extends AppCompatActivity {
         .withIconImage(MAKI_ICON_CIRCLE)
         .withIconColor(ColorUtils.colorToRgbaString(Color.YELLOW))
         .withIconSize(2.5f)
-        .withZIndex(5)
+        .withSymbolSortKey(5.0f)
         .withDraggable(true);
       symbolManager.create(nearbyOptions);
 
@@ -196,7 +196,7 @@ public class SymbolActivity extends AppCompatActivity {
     } else if (item.getItemId() == R.id.menu_action_text_size) {
       symbol.setTextSize(22f);
     } else if (item.getItemId() == R.id.menu_action_z_index) {
-      symbol.setZIndex(0);
+      symbol.setSymbolSortKey(0.0f);
     } else if (item.getItemId() == R.id.menu_action_halo) {
       symbol.setIconHaloWidth(5.0f);
       symbol.setIconHaloColor(Color.RED);

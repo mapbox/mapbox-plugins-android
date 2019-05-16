@@ -95,7 +95,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
 
   @VisibleForTesting
   SymbolManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @NonNull CoreElementProvider<SymbolLayer> coreElementProvider, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions, DraggableAnnotationController<Symbol, OnSymbolDragListener> draggableAnnotationController) {
-    super(mapView, mapboxMap, style, coreElementProvider, new SymbolComparator(), draggableAnnotationController, belowLayerId, geoJsonOptions);
+    super(mapView, mapboxMap, style, coreElementProvider, draggableAnnotationController, belowLayerId, geoJsonOptions);
   }
 
   @Override
@@ -127,7 +127,6 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
     dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_HALO_COLOR, false);
     dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_HALO_WIDTH, false);
     dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_TEXT_HALO_BLUR, false);
-    dataDrivenPropertyUsageMap.put(SymbolOptions.PROPERTY_Z_INDEX, false);
   }
 
   @Override
@@ -214,9 +213,6 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
       case SymbolOptions.PROPERTY_TEXT_HALO_BLUR:
         layer.setProperties(textHaloBlur(get(SymbolOptions.PROPERTY_TEXT_HALO_BLUR)));
         break;
-      case SymbolOptions.PROPERTY_Z_INDEX:
-        layer.setProperties(symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE));
-        break;
     }
   }
 
@@ -256,7 +252,6 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
    * <p>
    * Out of spec properties:<br>
-   * "z-index" - Integer, z-index of the feature within the manager<br>
    * "is-draggable" - Boolean, true if the symbol should be draggable, false otherwise
    *
    * @param json the GeoJSON defining the list of symbols to build
@@ -303,7 +298,6 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    * Learn more about above properties in the <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/">Style specification</a>.
    * <p>
    * Out of spec properties:<br>
-   * "z-index" - Integer, z-index of the feature within the manager<br>
    * "is-draggable" - Boolean, true if the symbol should be draggable, false otherwise
    *
    * @param featureCollection the featureCollection defining the list of symbols to build

@@ -75,7 +75,7 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
 
   @VisibleForTesting
   LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @NonNull CoreElementProvider<LineLayer> coreElementProvider, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions, DraggableAnnotationController<Line, OnLineDragListener> draggableAnnotationController) {
-    super(mapView, mapboxMap, style, coreElementProvider, null, draggableAnnotationController, belowLayerId, geoJsonOptions);
+    super(mapView, mapboxMap, style, coreElementProvider, draggableAnnotationController, belowLayerId, geoJsonOptions);
   }
 
   @Override
