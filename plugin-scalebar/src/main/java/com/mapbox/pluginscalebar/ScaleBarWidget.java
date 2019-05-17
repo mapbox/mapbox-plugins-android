@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 /**
- * The scale widget is a visually representation of the scale plugin.
+ * The scale widget is a visual representation of the scale bar plugin.
  */
 class ScaleBarWidget extends View {
   private int textColor;
