@@ -9,7 +9,7 @@ import com.mapbox.pluginscalebar.ScaleBar
 import kotlinx.android.synthetic.main.activity_scalebar.*
 
 /**
- * Activity showing a scalebar used on mapview.
+ * Activity showing a scalebar used on a MapView.
  */
 class ScalebarActivity : AppCompatActivity() {
     private var scaleBar: ScaleBar? = null
