@@ -17,7 +17,7 @@ class ScaleBarWidget extends View {
   private int textColor;
   private int primaryColor;
   private int secondaryColor;
-  private int width;
+  private int mapViewWidth;
   private int margin;
   private int maxBarWidth;
   private double distancePerPixel;
@@ -47,7 +47,7 @@ class ScaleBarWidget extends View {
       return;
     }
     textPaint.setColor(textColor);
-    double maxDistance = width * distancePerPixel / 2;
+    double maxDistance = mapViewWidth * distancePerPixel / 2;
     Pair<Integer, Integer> pair = scaleTable.get(0);
     for (int i = 1; i < scaleTable.size(); i++) {
       pair = scaleTable.get(i);
@@ -101,12 +101,12 @@ class ScaleBarWidget extends View {
 
   /**
    * Set the width of current mapView.
-   * @param width mapView's width.
+   * @param mapViewWidth mapView's wdith.
    */
-  void setWidth(int width) {
-    this.width = width;
-    margin = width / 20;
-    maxBarWidth = width / 2 - margin;
+  void setMapViewWidth(int mapViewWidth) {
+    this.mapViewWidth = mapViewWidth;
+    margin = mapViewWidth / 20;
+    maxBarWidth = mapViewWidth / 2 - margin;
   }
 
   /**

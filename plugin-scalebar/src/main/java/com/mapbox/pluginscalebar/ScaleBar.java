@@ -4,7 +4,6 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 import android.view.View;
-
 import com.mapbox.android.gestures.StandardScaleGestureDetector;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -14,19 +13,21 @@ import com.mapbox.mapboxsdk.maps.Projection;
 /**
  * Plugin class that shows a scale bar on MapView and changes the scale corresponding to the MapView's scale.
  */
-public class ScaleBar implements MapboxMap.OnScaleListener {
+public class ScaleBar  {
   private MapboxMap mapboxMap;
   private Projection projection;
   private boolean enabled;
   private ScaleBarWidget scaleBarWidget;
+  private ScaleListener scaleListener;
 
   public ScaleBar(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
     this.projection = mapboxMap.getProjection();
     this.scaleBarWidget = new ScaleBarWidget(mapView.getContext());
     mapView.addView(scaleBarWidget);
-    mapboxMap.addOnScaleListener(this);
-    scaleBarWidget.setWidth(mapView.getWidth());
+    scaleListener = new ScaleListener();
+    mapboxMap.addOnScaleListener(scaleListener);
+    scaleBarWidget.setMapViewWidth(mapView.getWidth());
   }
 
   /**
@@ -55,21 +56,18 @@ public class ScaleBar implements MapboxMap.OnScaleListener {
     this.enabled = enabled;
     scaleBarWidget.setVisibility(enabled ? View.VISIBLE : View.GONE);
     if (enabled) {
-      mapboxMap.addOnScaleListener(this);
+      mapboxMap.addOnScaleListener(scaleListener);
     } else {
-      mapboxMap.removeOnScaleListener(this);
+      mapboxMap.removeOnScaleListener(scaleListener);
     }
   }
 
-  @Override
-  public void onScaleBegin(@NonNull StandardScaleGestureDetector detector) {
 
-  }
 
   /**
    * Set colors for the scale bar.
    *
-   * @param textColor      The color for the texts above scale bar.
+   * @param textColor      The color for the texts above the scale bar.
    * @param primaryColor   The color for odd number index bars.
    * @param secondaryColor The color for even number index bars.
    */
@@ -77,16 +75,22 @@ public class ScaleBar implements MapboxMap.OnScaleListener {
     scaleBarWidget.setColors(textColor, primaryColor, secondaryColor);
   }
 
-  @Override
-  public void onScale(@NonNull StandardScaleGestureDetector detector) {
-    CameraPosition cameraPosition = mapboxMap.getCameraPosition();
-    double metersPerPixel = projection.getMetersPerPixelAtLatitude(cameraPosition.target.getLatitude());
-    scaleBarWidget.setDistancePerPixel(projection.getMetersPerPixelAtLatitude(metersPerPixel));
+  class ScaleListener implements MapboxMap.OnScaleListener {
+    @Override
+    public void onScaleBegin(@NonNull StandardScaleGestureDetector detector) {
+
+    }
+
+    @Override
+    public void onScale(@NonNull StandardScaleGestureDetector detector) {
+      CameraPosition cameraPosition = mapboxMap.getCameraPosition();
+      double metersPerPixel = projection.getMetersPerPixelAtLatitude(cameraPosition.target.getLatitude());
+      scaleBarWidget.setDistancePerPixel(projection.getMetersPerPixelAtLatitude(metersPerPixel));
+    }
+
+    @Override
+    public void onScaleEnd(@NonNull StandardScaleGestureDetector detector) {
+
+    }
   }
-
-  @Override
-  public void onScaleEnd(@NonNull StandardScaleGestureDetector detector) {
-
-  }
-
 }

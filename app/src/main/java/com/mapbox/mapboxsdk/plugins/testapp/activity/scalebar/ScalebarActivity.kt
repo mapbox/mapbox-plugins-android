@@ -12,18 +12,17 @@ import kotlinx.android.synthetic.main.activity_scalebar.*
  * Activity showing a scalebar used on a MapView.
  */
 class ScalebarActivity : AppCompatActivity() {
-    private var scaleBar: ScaleBar? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scalebar)
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync { mapboxMap ->
-            mapboxMap.setStyle(Style.MAPBOX_STREETS) { _ ->
+            mapboxMap.setStyle(Style.MAPBOX_STREETS) {
                 mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2.0))
-                scaleBar = ScaleBar(mapView, mapboxMap)
-                scaleBar!!.isEnabled = true
+                val scaleBar = ScaleBar(mapView, mapboxMap)
+                scaleBar.isEnabled = true
                 fabScaleWidget.setOnClickListener {
-                    scaleBar!!.isEnabled = !scaleBar?.isEnabled!!
+                    scaleBar.isEnabled = !scaleBar.isEnabled
                 }
             }
         }
