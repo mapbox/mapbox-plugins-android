@@ -16,7 +16,7 @@ import com.mapbox.mapboxsdk.maps.Projection;
 public class ScaleBar  {
   private MapboxMap mapboxMap;
   private Projection projection;
-  private boolean enabled;
+  private boolean enabled = true;
   private ScaleBarWidget scaleBarWidget;
   private ScaleListener scaleListener;
 

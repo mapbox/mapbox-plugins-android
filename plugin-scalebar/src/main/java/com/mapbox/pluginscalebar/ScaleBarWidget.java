@@ -121,6 +121,22 @@ class ScaleBarWidget extends View {
     this.secondaryColor = secondaryColor;
   }
 
+  public int getTextColor() {
+    return textColor;
+  }
+
+  public int getPrimaryColor() {
+    return primaryColor;
+  }
+
+  public int getSecondaryColor() {
+    return secondaryColor;
+  }
+
+  public int getMapViewWidth() {
+    return mapViewWidth;
+  }
+
   /**
    * Helper class to determine the user measuring system.
    * <p>
