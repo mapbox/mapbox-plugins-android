@@ -30,11 +30,15 @@
   ]
 
   pluginVersion = [
-      checkstyle: '8.10.1',
-      gradle    : '3.4.0',
-      kotlin    : '1.3.20',
-      dokka     : '0.9.17',
-      kotlinLint: '8.1.0'
+      checkstyle      : '8.10.1',
+      gradle          : '3.4.0',
+      kotlin          : '1.3.20',
+      dokka           : '0.9.17',
+      kotlinLint      : '8.1.0',
+      dependencyGraph : '0.4.0',
+      bintray         : '1.8.4',
+      androidPublish  : '3.6.2',
+      artifactory     : '4.9.3'
   ]
 
   dependenciesList = [
@@ -92,10 +96,13 @@
   ]
 
   pluginDependencies = [
-      gradle    : "com.android.tools.build:gradle:${pluginVersion.gradle}",
-      checkstyle: "com.puppycrawl.tools:checkstyle:${pluginVersion.checkstyle}",
-      kotlin    : "org.jetbrains.kotlin:kotlin-gradle-plugin:${pluginVersion.kotlin}",
-      dokka     : "org.jetbrains.dokka:dokka-android-gradle-plugin:${pluginVersion.dokka}",
-      kotlinLint: "org.jlleitschuh.gradle:ktlint-gradle:${pluginVersion.kotlinLint}"
+      gradle                : "com.android.tools.build:gradle:${pluginVersion.gradle}",
+      checkstyle            : "com.puppycrawl.tools:checkstyle:${pluginVersion.checkstyle}",
+      kotlin                : "org.jetbrains.kotlin:kotlin-gradle-plugin:${pluginVersion.kotlin}",
+      dokka                 : "org.jetbrains.dokka:dokka-android-gradle-plugin:${pluginVersion.dokka}",
+      kotlinLint            : "org.jlleitschuh.gradle:ktlint-gradle:${pluginVersion.kotlinLint}",
+      bintray               : "com.jfrog.bintray.gradle:gradle-bintray-plugin:${pluginVersion.bintray}",
+      androidPublishPlugin  : "digital.wup:android-maven-publish:${pluginVersion.androidPublish}",
+      artifactory           : "org.jfrog.buildinfo:build-info-extractor-gradle:${pluginVersion.artifactory}"
   ]
 }

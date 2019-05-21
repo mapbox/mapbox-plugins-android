@@ -6,12 +6,18 @@ buildscript {
     jcenter()
     maven {   url "https://maven.google.com"   }
     maven { url "https://plugins.gradle.org/m2/" }
+    maven { url 'https://oss.jfrog.org/artifactory/oss-snapshot-local/' }
   }
 
   dependencies {
     classpath pluginDependencies.gradle
     classpath pluginDependencies.kotlin
     classpath pluginDependencies.kotlinLint
+
+    // These plugins are for publishing to Bintray
+    classpath pluginDependencies.bintray
+    classpath pluginDependencies.androidPublishPlugin
+    classpath pluginDependencies.artifactory
   }
 }
 
@@ -22,6 +28,9 @@ allprojects {
 //    SNAPSHOT repository
 //    maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
 //    maven { url 'https://oss.jfrog.org/artifactory/oss-snapshot-local/' }
+
+    // For publishing to Bintray
+    maven { url 'https://mapbox.bintray.com/mapbox' }
   }
 }
 

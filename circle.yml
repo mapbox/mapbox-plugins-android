@@ -14,7 +14,6 @@ jobs:
     environment:
       JVM_OPTS: -Xmx3200m
       BUILDTYPE: Debug
-      IS_LOCAL_DEVELOPMENT: false
     steps:
       - checkout
       - restore_cache:
@@ -85,33 +84,78 @@ jobs:
     working_directory: ~/code
     environment:
       BUILDTYPE: Release
-      IS_LOCAL_DEVELOPMENT: false
     steps:
       - checkout
       - run:
           name: Init submodules
           command: git submodule update --init --recursive
       - run:
-          name: Generate Maven credentials
+          name: Generate Bintray credentials
           shell: /bin/bash -euo pipefail
           command: |
-            if [ -n "${PUBLISH_NEXUS_USERNAME}" ]; then
-              aws s3 cp s3://mapbox/android/signing-credentials/secring.gpg secring.gpg
-              echo "NEXUS_USERNAME=$PUBLISH_NEXUS_USERNAME
-              NEXUS_PASSWORD=$PUBLISH_NEXUS_PASSWORD
-              signing.keyId=$SIGNING_KEYID
-              signing.password=$SIGNING_PASSWORD
-              signing.secretKeyRingFile=../secring.gpg" >> gradle.properties
+            if [ -n "${BINTRAY_USER}" ]; then
+              echo "BINTRAY_USER=$BINTRAY_USER
+              BINTRAY_API_KEY=$BINTRAY_API_KEY
+              GPG_PASSPHRASE=$GPG_PASSPHRASE"
+            fi   
+      - run:
+          name: Add bash environment variable to set which plugin is being released
+          command: |
+            if [[ $CIRCLE_TAG == v*-annotation ]]; then
+              echo 'export PLUGIN_BEING_RELEASED="annotation"' >> $BASH_ENV
+              source $PLUGIN_BEING_RELEASED            
+            fi  
+            if [[ $CIRCLE_TAG == v*-localization ]]; then
+              echo 'export PLUGIN_BEING_RELEASED="localization"' >> $BASH_ENV
+              source $PLUGIN_BEING_RELEASED              
+            fi
+            if [[ $CIRCLE_TAG == v*-building ]]; then
+              echo 'export PLUGIN_BEING_RELEASED="building"' >> $BASH_ENV
+              source $PLUGIN_BEING_RELEASED
+            fi
+            if [[ $CIRCLE_TAG == v*-markerview ]]; then
+              echo 'export PLUGIN_BEING_RELEASED="markerview"' >> $BASH_ENV
+              source $PLUGIN_BEING_RELEASED
+            fi
+            if [[ $CIRCLE_TAG == v*-offline ]]; then
+              echo 'export PLUGIN_BEING_RELEASED="offline"' >> $BASH_ENV
+              source $PLUGIN_BEING_RELEASED
+            fi
+            if [[ $CIRCLE_TAG == v*-places ]]; then
+              echo 'export PLUGIN_BEING_RELEASED="places"' >> $BASH_ENV
+              source $PLUGIN_BEING_RELEASED
+            fi
+            if [[ $CIRCLE_TAG == v*-scalebar ]]; then
+              echo 'export PLUGIN_BEING_RELEASED="scalebar"' >> $BASH_ENV
+              source $PLUGIN_BEING_RELEASED
+            fi
+            if [[ $CIRCLE_TAG == v*-traffic ]]; then
+              echo 'export PLUGIN_BEING_RELEASED="traffic"' >> $BASH_ENV
+              source $PLUGIN_BEING_RELEASED
+            fi
+      - run:
+          name: Print PLUGIN_BEING_RELEASED variable to confirm that right plugin is being released
+          command: |
+            echo $PLUGIN_BEING_RELEASED
+      - run:
+          name: Update the version name for the plugin being released
+          command: |
+            if [[ $CIRCLE_TAG == v* ]]; then
+              sed -i -e "s/^VERSION_NAME=.*/VERSION_NAME=${CIRCLE_TAG:9}/" plugin-$PLUGIN_BEING_RELEASED/gradle.properties
             fi
       - run:
           name: Build Plugins SDK
           command: make build-release
       - deploy:
-          name: Publish Plugins SDK To Maven Central
+          name: Publish the correct plugin to Bintray
           command: |
-            if [ -n "${PUBLISH_NEXUS_USERNAME}" ]; then
-              if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                make publish
+            if [[ $CIRCLE_BRANCH == master ]] || [[ $CIRCLE_TAG == v*- ]]; then
+              version=$(cat $PLUGIN_BEING_RELEASED/gradle.properties | grep "VERSION_NAME")
+              if [[ $version != *"SNAPSHOT"* ]]; then
+                make publish-$PLUGIN_BEING_RELEASED
+              fi
+              else
+                make publish-snapshot-$PLUGIN_BEING_RELEASED
               fi
             fi
       - store_artifacts:
