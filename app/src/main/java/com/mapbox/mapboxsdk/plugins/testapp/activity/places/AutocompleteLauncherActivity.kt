@@ -71,6 +71,7 @@ class AutocompleteLauncherActivity : AppCompatActivity(), OnMapReadyCallback {
                                 .backgroundColor(Color.WHITE)
                                 .addInjectedFeature(home)
                                 .addInjectedFeature(work)
+                                .statusbarColor(Color.MAGENTA)
                                 .build())
                         .build(this@AutocompleteLauncherActivity)
                 startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE)

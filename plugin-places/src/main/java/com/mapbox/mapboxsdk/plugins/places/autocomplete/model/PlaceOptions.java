@@ -170,6 +170,15 @@ public abstract class PlaceOptions implements Parcelable {
   public abstract int toolbarColor();
 
   /**
+   * Set the autocomplete's layout status bar color. Defaults {@link Color#BLACK}.
+   *
+   * @return the status bar color as a ColorInt
+   * @since 0.9.0
+   */
+  @ColorInt
+  public abstract int statusbarColor();
+
+  /**
    * Optionally set the hint string which is shown before the user inputs a search term inside the
    * top edit text.
    *
@@ -191,6 +200,7 @@ public abstract class PlaceOptions implements Parcelable {
     return new AutoValue_PlaceOptions.Builder()
       .backgroundColor(Color.TRANSPARENT)
       .toolbarColor(Color.WHITE)
+      .statusbarColor(Color.BLACK)
       .limit(10);
   }
 
@@ -397,6 +407,15 @@ public abstract class PlaceOptions implements Parcelable {
      * @since 0.1.0
      */
     public abstract Builder toolbarColor(@ColorInt int toolbarColor);
+
+    /**
+     * Set the autocomplete's layout status bar color. Defaults {@link Color#BLACK}.
+     *
+     * @param statusbarColor the views status bar color as a ColorInt
+     * @return this builder instance for chaining options together
+     * @since 0.9.0
+     */
+    public abstract Builder statusbarColor(@ColorInt int statusbarColor);
 
     /**
      * Optionally set the hint string which is shown before the user inputs a search term inside the
