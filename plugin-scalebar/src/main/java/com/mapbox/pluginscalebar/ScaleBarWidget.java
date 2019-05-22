@@ -3,10 +3,13 @@ package com.mapbox.pluginscalebar;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.ColorInt;
 import android.util.Pair;
 import android.view.View;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -14,6 +17,8 @@ import java.util.Locale;
  * The scale widget is a visual representation of the scale bar plugin.
  */
 class ScaleBarWidget extends View {
+  private static int MSG_WHAT = 0;
+  private static int REFRESH_DURATION = 300;
   private int textColor;
   private int primaryColor;
   private int secondaryColor;
@@ -26,6 +31,7 @@ class ScaleBarWidget extends View {
   private boolean isMetricSystem;
   private ArrayList<Pair<Integer, Integer>> scaleTable;
   private String unit;
+  private RefreshHandler refreshHandler;
 
   public ScaleBarWidget(Context context) {
     super(context);
@@ -39,6 +45,7 @@ class ScaleBarWidget extends View {
     isMetricSystem = LocaleUnitResolver.isMetricSystem();
     scaleTable = isMetricSystem ? ScaleBarConstants.metricTable : ScaleBarConstants.imperialTable;
     unit = isMetricSystem ? ScaleBarConstants.METER_UNIT : ScaleBarConstants.FEET_UNIT;
+    refreshHandler = new RefreshHandler(this);
   }
 
   @Override
@@ -86,21 +93,25 @@ class ScaleBarWidget extends View {
       canvas.drawRect(margin + unitBarWidth * i, margin, margin + unitBarWidth * (1 + i),
         margin + barHeight, barPaint);
     }
-    canvas.drawText(String.valueOf(unitDistance * i) + unit, margin + unitBarWidth * i, margin - barHeight, textPaint);
+    canvas.drawText(unitDistance * i + unit, margin + unitBarWidth * i, margin - barHeight, textPaint);
 
   }
 
   /**
    * Update the scale when mapView's scale has changed.
+   *
    * @param metersPerPixel how many meters in each pixel.
    */
   void setDistancePerPixel(double metersPerPixel) {
     this.distancePerPixel = isMetricSystem ? metersPerPixel : metersPerPixel * ScaleBarConstants.FEET_PER_METER;
-    invalidate();
+    if (!refreshHandler.hasMessages(MSG_WHAT)) {
+      refreshHandler.sendEmptyMessageDelayed(MSG_WHAT, REFRESH_DURATION);
+    }
   }
 
   /**
    * Set the width of current mapView.
+   *
    * @param mapViewWidth mapView's wdith.
    */
   void setMapViewWidth(int mapViewWidth) {
@@ -111,8 +122,9 @@ class ScaleBarWidget extends View {
 
   /**
    * Set colors for the scale bar.
-   * @param textColor The color for the texts above scale bar.
-   * @param primaryColor The color for odd number index bars.
+   *
+   * @param textColor      The color for the texts above scale bar.
+   * @param primaryColor   The color for odd number index bars.
    * @param secondaryColor The color for even number index bars.
    */
   void setColors(@ColorInt int textColor, @ColorInt int primaryColor, @ColorInt int secondaryColor) {
@@ -121,20 +133,37 @@ class ScaleBarWidget extends View {
     this.secondaryColor = secondaryColor;
   }
 
-  public int getTextColor() {
+  int getTextColor() {
     return textColor;
   }
 
-  public int getPrimaryColor() {
+  int getPrimaryColor() {
     return primaryColor;
   }
 
-  public int getSecondaryColor() {
+  int getSecondaryColor() {
     return secondaryColor;
   }
 
-  public int getMapViewWidth() {
+  int getMapViewWidth() {
     return mapViewWidth;
+  }
+
+  /**
+   * Handler class to limit the refresh frequent.
+   */
+  private static class RefreshHandler extends Handler {
+    WeakReference<ScaleBarWidget> scaleBarWidgetWeakReference;
+
+    RefreshHandler(ScaleBarWidget scaleBarWidget) {
+      scaleBarWidgetWeakReference = new WeakReference<>(scaleBarWidget);
+    }
+
+    public void handleMessage(Message msg) {
+      if (msg.what == MSG_WHAT && scaleBarWidgetWeakReference.get() != null) {
+        scaleBarWidgetWeakReference.get().invalidate();
+      }
+    }
   }
 
   /**

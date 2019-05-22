@@ -4,7 +4,6 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 import android.view.View;
-import com.mapbox.android.gestures.StandardScaleGestureDetector;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -18,15 +17,15 @@ public class ScaleBar  {
   private Projection projection;
   private boolean enabled = true;
   private ScaleBarWidget scaleBarWidget;
-  private ScaleListener scaleListener;
+  private CameraMoveListener cameraMoveListener;
 
   public ScaleBar(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
     this.projection = mapboxMap.getProjection();
     this.scaleBarWidget = new ScaleBarWidget(mapView.getContext());
     mapView.addView(scaleBarWidget);
-    scaleListener = new ScaleListener();
-    mapboxMap.addOnScaleListener(scaleListener);
+    cameraMoveListener = new CameraMoveListener();
+    mapboxMap.addOnCameraMoveListener(cameraMoveListener);
     scaleBarWidget.setMapViewWidth(mapView.getWidth());
   }
 
@@ -56,9 +55,9 @@ public class ScaleBar  {
     this.enabled = enabled;
     scaleBarWidget.setVisibility(enabled ? View.VISIBLE : View.GONE);
     if (enabled) {
-      mapboxMap.addOnScaleListener(scaleListener);
+      mapboxMap.addOnCameraMoveListener(cameraMoveListener);
     } else {
-      mapboxMap.removeOnScaleListener(scaleListener);
+      mapboxMap.removeOnCameraMoveListener(cameraMoveListener);
     }
   }
 
@@ -71,26 +70,16 @@ public class ScaleBar  {
    * @param primaryColor   The color for odd number index bars.
    * @param secondaryColor The color for even number index bars.
    */
-  public void setColors(@ColorInt int textColor, @ColorInt int primaryColor, @ColorInt int secondaryColor) {
+  void setColors(@ColorInt int textColor, @ColorInt int primaryColor, @ColorInt int secondaryColor) {
     scaleBarWidget.setColors(textColor, primaryColor, secondaryColor);
   }
 
-  class ScaleListener implements MapboxMap.OnScaleListener {
+  class CameraMoveListener implements MapboxMap.OnCameraMoveListener {
     @Override
-    public void onScaleBegin(@NonNull StandardScaleGestureDetector detector) {
-
-    }
-
-    @Override
-    public void onScale(@NonNull StandardScaleGestureDetector detector) {
+    public void onCameraMove() {
       CameraPosition cameraPosition = mapboxMap.getCameraPosition();
       double metersPerPixel = projection.getMetersPerPixelAtLatitude(cameraPosition.target.getLatitude());
       scaleBarWidget.setDistancePerPixel(projection.getMetersPerPixelAtLatitude(metersPerPixel));
-    }
-
-    @Override
-    public void onScaleEnd(@NonNull StandardScaleGestureDetector detector) {
-
     }
   }
 }
