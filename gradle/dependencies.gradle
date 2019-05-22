@@ -8,7 +8,7 @@ ext {
 
   version = [
       mapboxMapSdk       : '7.4.0',
-      mapboxJava         : '4.3.0',
+      mapboxJava         : '4.8.0',
       playLocation       : '16.0.0',
       autoValue          : '1.5.4',
       autoValueParcel    : '0.2.6',
@@ -40,6 +40,7 @@ ext {
       mapboxMapSdk           : "com.mapbox.mapboxsdk:mapbox-android-sdk:${version.mapboxMapSdk}",
       mapboxGeoJson          : "com.mapbox.mapboxsdk:mapbox-sdk-geojson:${version.mapboxJava}",
       mapboxGeocoding        : "com.mapbox.mapboxsdk:mapbox-sdk-services:${version.mapboxJava}",
+      mapboxTurf             : "com.mapbox.mapboxsdk:mapbox-sdk-turf:${version.mapboxJava}",
 
       // Google Play Location
       playLocation           : "com.google.android.gms:play-services-location:${version.playLocation}",

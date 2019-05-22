@@ -33,6 +33,7 @@
   <string name="title_line">Line</string>
   <string name="title_line_change">Change Line</string>
   <string name="title_markerview">MarkerView plugin</string>
+  <string name="title_animate_symbols">Animate symbols plugin</string>
   <string name="title_ktx">Mapbox Maps KTX</string>
 
   <!-- Descriptions -->
@@ -55,6 +56,8 @@
   <string name="description_fill_change">Show changing a fill on a map</string>
   <string name="description_circle">Show circles on a map</string>
   <string name="description_markerview">Synchronise a view on a map</string>
+  <string name="description_animatesymbol">Animate symbols on a map</string>
+
   <string name="description_ktx">Test Mapbox Maps SDK for Android Kotlin extension functions</string>
 
   <!-- Place picker -->
