@@ -168,8 +168,9 @@ public class ScaleBarWidget extends View {
     }
 
     public void handleMessage(Message msg) {
-      if (msg.what == MSG_WHAT && scaleBarWidgetWeakReference.get() != null) {
-        scaleBarWidgetWeakReference.get().invalidate();
+      ScaleBarWidget scaleBarWidget = scaleBarWidgetWeakReference.get();
+      if (msg.what == MSG_WHAT && scaleBarWidget != null) {
+        scaleBarWidget.invalidate();
       }
     }
   }
