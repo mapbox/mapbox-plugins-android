@@ -20,7 +20,6 @@ class ScalebarActivity : AppCompatActivity() {
             mapboxMap.setStyle(Style.MAPBOX_STREETS) {
                 mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2.0))
                 val scaleBar = ScaleBar(mapView, mapboxMap)
-                scaleBar.isEnabled = true
                 fabScaleWidget.setOnClickListener {
                     scaleBar.isEnabled = !scaleBar.isEnabled
                 }
