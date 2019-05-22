@@ -44,7 +44,7 @@ public class CarmenFeatureConverterTest {
   @Test
   public void fromCarmenFeature_doesSerializeCorrectly() {
     String json = "{\"type\":\"Feature\",\"id\":\"id\",\"geometry\":{\"type\":\"Point\","
-      + "\"coordinates\":[1.0, 2.0]},\"properties\":{\"hello\":\"world\"},\"address\":\"address\","
+      + "\"coordinates\":[1.0,2.0]},\"properties\":{\"hello\":\"world\"},\"address\":\"address\","
       + "\"matching_place_name\":\"matchingPlaceName\",\"language\":\"language\"}";
 
     JsonObject obj = new JsonObject();
