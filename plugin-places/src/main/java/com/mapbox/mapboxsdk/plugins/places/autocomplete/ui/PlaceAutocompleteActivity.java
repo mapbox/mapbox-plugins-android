@@ -29,7 +29,6 @@ public class PlaceAutocompleteActivity extends AppCompatActivity implements Plac
       } else {
         fragment = PlaceAutocompleteFragment.newInstance(accessToken);
       }
-
       getSupportFragmentManager().beginTransaction()
         .add(R.id.fragment_container, fragment, PlaceAutocompleteFragment.TAG).commit();
 

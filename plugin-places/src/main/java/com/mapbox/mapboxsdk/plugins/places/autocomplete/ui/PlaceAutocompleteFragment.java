@@ -1,7 +1,9 @@
 package com.mapbox.mapboxsdk.plugins.places.autocomplete.ui;
 
+import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -103,6 +105,11 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
       View toolbar = rootView.findViewById(R.id.toolbar);
       if (toolbar != null) {
         toolbar.setBackgroundColor(placeOptions.toolbarColor());
+      }
+
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        Activity context = (Activity) rootView.getContext();
+        context.getWindow().setStatusBarColor(placeOptions.statusbarColor());
       }
 
       searchView = rootView.findViewById(R.id.searchView);

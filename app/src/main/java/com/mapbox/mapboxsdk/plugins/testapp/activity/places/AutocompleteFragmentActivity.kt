@@ -1,5 +1,6 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.places
 
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -23,6 +24,7 @@ class AutocompleteFragmentActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             val placeOptions = PlaceOptions.builder()
                     .toolbarColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                    .statusbarColor(Color.YELLOW)
                     .hint("Begin searching...")
                     .build()
 
