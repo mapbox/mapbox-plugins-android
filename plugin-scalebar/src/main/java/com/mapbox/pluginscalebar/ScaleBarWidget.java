@@ -5,7 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
+import android.support.annotation.VisibleForTesting;
 import android.util.Pair;
 import android.view.View;
 
@@ -16,7 +17,8 @@ import java.util.Locale;
 /**
  * The scale widget is a visual representation of the scale bar plugin.
  */
-class ScaleBarWidget extends View {
+@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
+public class ScaleBarWidget extends View {
   private static int MSG_WHAT = 0;
   private static int REFRESH_DURATION = 300;
   private int textColor;
@@ -32,9 +34,11 @@ class ScaleBarWidget extends View {
   private ArrayList<Pair<Integer, Integer>> scaleTable;
   private String unit;
   private RefreshHandler refreshHandler;
+  private Context context;
 
   public ScaleBarWidget(Context context) {
     super(context);
+    this.context = context;
     textPaint.setAntiAlias(true);
     textPaint.setTextSize(20);
     textPaint.setTextAlign(Paint.Align.CENTER);
@@ -127,25 +131,29 @@ class ScaleBarWidget extends View {
    * @param primaryColor   The color for odd number index bars.
    * @param secondaryColor The color for even number index bars.
    */
-  void setColors(@ColorInt int textColor, @ColorInt int primaryColor, @ColorInt int secondaryColor) {
-    this.textColor = textColor;
-    this.primaryColor = primaryColor;
-    this.secondaryColor = secondaryColor;
+  void setColors(@ColorRes int textColor, @ColorRes int primaryColor, @ColorRes int secondaryColor) {
+    this.textColor = context.getResources().getColor(textColor);
+    this.primaryColor = context.getResources().getColor(primaryColor);
+    this.secondaryColor = context.getResources().getColor(secondaryColor);
   }
 
-  int getTextColor() {
+  @VisibleForTesting
+  public int getTextColor() {
     return textColor;
   }
 
-  int getPrimaryColor() {
+  @VisibleForTesting
+  public int getPrimaryColor() {
     return primaryColor;
   }
 
-  int getSecondaryColor() {
+  @VisibleForTesting
+  public int getSecondaryColor() {
     return secondaryColor;
   }
 
-  int getMapViewWidth() {
+  @VisibleForTesting
+  public int getMapViewWidth() {
     return mapViewWidth;
   }
 

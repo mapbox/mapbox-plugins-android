@@ -1,9 +1,11 @@
 package com.mapbox.pluginscalebar;
 
-import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
+import android.support.annotation.VisibleForTesting;
 import android.view.View;
+
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -12,7 +14,7 @@ import com.mapbox.mapboxsdk.maps.Projection;
 /**
  * Plugin class that shows a scale bar on MapView and changes the scale corresponding to the MapView's scale.
  */
-public class ScaleBar  {
+public class ScaleBar {
   private MapboxMap mapboxMap;
   private Projection projection;
   private boolean enabled = true;
@@ -62,7 +64,6 @@ public class ScaleBar  {
   }
 
 
-
   /**
    * Set colors for the scale bar.
    *
@@ -70,7 +71,7 @@ public class ScaleBar  {
    * @param primaryColor   The color for odd number index bars.
    * @param secondaryColor The color for even number index bars.
    */
-  void setColors(@ColorInt int textColor, @ColorInt int primaryColor, @ColorInt int secondaryColor) {
+  public void setColors(@ColorRes int textColor, @ColorRes int primaryColor, @ColorRes int secondaryColor) {
     scaleBarWidget.setColors(textColor, primaryColor, secondaryColor);
   }
 
@@ -81,5 +82,10 @@ public class ScaleBar  {
       double metersPerPixel = projection.getMetersPerPixelAtLatitude(cameraPosition.target.getLatitude());
       scaleBarWidget.setDistancePerPixel(projection.getMetersPerPixelAtLatitude(metersPerPixel));
     }
+  }
+
+  @VisibleForTesting
+  public ScaleBarWidget getScaleBarWidget() {
+    return scaleBarWidget;
   }
 }
