@@ -174,10 +174,12 @@ public class PlacePickerActivity extends AppCompatActivity implements OnMapReady
 
   private void makeReverseGeocodingSearch() {
     LatLng latLng = mapboxMap.getCameraPosition().target;
-    viewModel.reverseGeocode(
-      Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude()),
-      accessToken, options
-    );
+    if (latLng != null) {
+      viewModel.reverseGeocode(
+          Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude()),
+          accessToken, options
+      );
+    }
   }
 
   private void addChosenLocationButton() {
