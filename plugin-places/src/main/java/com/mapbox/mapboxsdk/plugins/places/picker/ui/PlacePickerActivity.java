@@ -56,6 +56,7 @@ public class PlacePickerActivity extends AppCompatActivity implements OnMapReady
   private MapboxMap mapboxMap;
   private String accessToken;
   private MapView mapView;
+  private boolean includeReverseGeocode;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,6 +75,7 @@ public class PlacePickerActivity extends AppCompatActivity implements OnMapReady
     if (savedInstanceState == null) {
       accessToken = getIntent().getStringExtra(PlaceConstants.ACCESS_TOKEN);
       options = getIntent().getParcelableExtra(PlaceConstants.PLACE_OPTIONS);
+      includeReverseGeocode = options.includeReverseGeocode();
     }
 
     // Initialize the view model.
@@ -82,7 +84,7 @@ public class PlacePickerActivity extends AppCompatActivity implements OnMapReady
 
     bindViews();
     addBackButtonListener();
-    addChosenLocationButton();
+    addPlaceSelectedButton();
     customizeViews();
 
     mapView.onCreate(savedInstanceState);
@@ -129,8 +131,10 @@ public class PlacePickerActivity extends AppCompatActivity implements OnMapReady
           }
         }
 
-        // Initialize with the markers current location information.
-        makeReverseGeocodingSearch();
+        if (includeReverseGeocode) {
+          // Initialize with the markers current location information.
+          makeReverseGeocodingSearch();
+        }
 
         PlacePickerActivity.this.mapboxMap.addOnCameraMoveStartedListener(PlacePickerActivity.this);
         PlacePickerActivity.this.mapboxMap.addOnCameraIdleListener(PlacePickerActivity.this);
@@ -144,8 +148,10 @@ public class PlacePickerActivity extends AppCompatActivity implements OnMapReady
     if (markerImage.getTranslationY() == 0) {
       markerImage.animate().translationY(-75)
         .setInterpolator(new OvershootInterpolator()).setDuration(250).start();
-      if (bottomSheet.isShowing()) {
-        bottomSheet.dismissPlaceDetails();
+      if (includeReverseGeocode) {
+        if (bottomSheet.isShowing()) {
+          bottomSheet.dismissPlaceDetails();
+        }
       }
     }
   }
@@ -155,8 +161,11 @@ public class PlacePickerActivity extends AppCompatActivity implements OnMapReady
     Timber.v("Map camera is now idling.");
     markerImage.animate().translationY(0)
       .setInterpolator(new OvershootInterpolator()).setDuration(250).start();
-    bottomSheet.setPlaceDetails(null);
-    makeReverseGeocodingSearch();
+    if (includeReverseGeocode) {
+      bottomSheet.setPlaceDetails(null);
+      // Initialize with the markers current location information.
+      makeReverseGeocodingSearch();
+    }
   }
 
   @Override
@@ -182,12 +191,12 @@ public class PlacePickerActivity extends AppCompatActivity implements OnMapReady
     }
   }
 
-  private void addChosenLocationButton() {
+  private void addPlaceSelectedButton() {
     FloatingActionButton placeSelectedButton = findViewById(R.id.place_chosen_button);
     placeSelectedButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        if (carmenFeature == null) {
+        if (carmenFeature == null && includeReverseGeocode) {
           Snackbar.make(bottomSheet,
             getString(R.string.mapbox_plugins_place_picker_not_valid_selection),
             LENGTH_LONG).show();
@@ -199,9 +208,11 @@ public class PlacePickerActivity extends AppCompatActivity implements OnMapReady
   }
 
   void placeSelected() {
-    String json = carmenFeature.toJson();
     Intent returningIntent = new Intent();
-    returningIntent.putExtra(PlaceConstants.RETURNING_CARMEN_FEATURE, json);
+    if (includeReverseGeocode) {
+      String json = carmenFeature.toJson();
+      returningIntent.putExtra(PlaceConstants.RETURNING_CARMEN_FEATURE, json);
+    }
     returningIntent.putExtra(PlaceConstants.MAP_CAMERA_POSITION, mapboxMap.getCameraPosition());
     setResult(AppCompatActivity.RESULT_OK, returningIntent);
     finish();
