@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.widget.Switch
 import android.widget.Toast
 
 import com.mapbox.mapboxsdk.Mapbox
@@ -20,12 +21,20 @@ class PickerLauncherActivity : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_picker_launcher)
+        reverseGeocodingSwitch.text = getString(R.string.reverse_geocoding_disabled)
+        reverseGeocodingSwitch.setOnCheckedChangeListener { compoundButton, checked ->
+            reverseGeocodingSwitch.text = if (checked)
+                getString(R.string.reverse_geocoding_enabled)
+            else getString(R.string.reverse_geocoding_disabled)
+        }
+
         fabLocationPicker.setOnClickListener { _ ->
             Mapbox.getAccessToken()?.let {
                 startActivityForResult(
                         PlacePicker.IntentBuilder()
                                 .accessToken(it)
                                 .placeOptions(PlacePickerOptions.builder()
+                                        .includeReverseGeocode(reverseGeocodingSwitch.isChecked)
                                         .statingCameraPosition(CameraPosition.Builder()
                                                 .target(LatLng(40.7544, -73.9862))
                                                 .zoom(16.0)
@@ -39,8 +48,13 @@ class PickerLauncherActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val carmenFeature = PlacePicker.getPlace(data)
-            Toast.makeText(this, carmenFeature?.placeName(), Toast.LENGTH_LONG).show()
+            if (reverseGeocodingSwitch.isChecked) {
+                val carmenFeature = PlacePicker.getPlace(data)
+                Toast.makeText(this, carmenFeature?.placeName(), Toast.LENGTH_LONG).show()
+            } else {
+                val cameraPosition = PlacePicker.getLastCameraPosition(data)
+                Toast.makeText(this, cameraPosition.target.toString(), Toast.LENGTH_LONG).show()
+            }
         }
     }
 
