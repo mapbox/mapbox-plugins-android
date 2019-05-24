@@ -22,6 +22,9 @@ jobs:
       - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
+      - run:
+          name: Init submodules
+          command: git submodule update --init --recursive
       - save_cache:
           paths:
             - ~/.gradle
@@ -85,6 +88,9 @@ jobs:
       IS_LOCAL_DEVELOPMENT: false
     steps:
       - checkout
+      - run:
+          name: Init submodules
+          command: git submodule update --init --recursive
       - run:
           name: Generate Maven credentials
           shell: /bin/bash -euo pipefail
