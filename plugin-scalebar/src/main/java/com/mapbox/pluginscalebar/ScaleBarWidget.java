@@ -5,50 +5,43 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.ColorRes;
-import android.support.annotation.VisibleForTesting;
+import android.support.annotation.ColorInt;
 import android.util.Pair;
 import android.view.View;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Locale;
 
 /**
  * The scale widget is a visual representation of the scale bar plugin.
  */
-@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
 public class ScaleBarWidget extends View {
   private static int MSG_WHAT = 0;
-  private static int REFRESH_DURATION = 300;
+  private final Paint textPaint = new Paint();
+  private final Paint barPaint = new Paint();
+  private int refreshDuration;
   private int textColor;
   private int primaryColor;
   private int secondaryColor;
   private int mapViewWidth;
-  private int margin;
-  private int maxBarWidth;
+  private float marginLeft;
+  private float marginTop;
+  private float textBarMargin;
+  private float maxBarWidth;
+  private float barHeight;
+  private float borderWidth;
+  private float textSize;
   private double distancePerPixel;
-  private final Paint textPaint = new Paint();
-  private final Paint barPaint = new Paint();
-  private boolean isMetricSystem;
+  private boolean isMetricUnit;
   private ArrayList<Pair<Integer, Integer>> scaleTable;
   private String unit;
   private RefreshHandler refreshHandler;
-  private Context context;
 
-  public ScaleBarWidget(Context context) {
+  ScaleBarWidget(Context context) {
     super(context);
-    this.context = context;
     textPaint.setAntiAlias(true);
-    textPaint.setTextSize(20);
     textPaint.setTextAlign(Paint.Align.CENTER);
     barPaint.setAntiAlias(true);
-    textColor = context.getResources().getColor(android.R.color.black);
-    primaryColor = context.getResources().getColor(android.R.color.black);
-    secondaryColor = context.getResources().getColor(android.R.color.white);
-    isMetricSystem = LocaleUnitResolver.isMetricSystem();
-    scaleTable = isMetricSystem ? ScaleBarConstants.metricTable : ScaleBarConstants.imperialTable;
-    unit = isMetricSystem ? ScaleBarConstants.METER_UNIT : ScaleBarConstants.FEET_UNIT;
     refreshHandler = new RefreshHandler(this);
   }
 
@@ -57,7 +50,6 @@ public class ScaleBarWidget extends View {
     if (distancePerPixel <= 0) {
       return;
     }
-    textPaint.setColor(textColor);
     double maxDistance = mapViewWidth * distancePerPixel / 2;
     Pair<Integer, Integer> pair = scaleTable.get(0);
     for (int i = 1; i < scaleTable.size(); i++) {
@@ -79,13 +71,18 @@ public class ScaleBarWidget extends View {
     //Drawing the surrounding borders
     barPaint.setStyle(Paint.Style.FILL_AND_STROKE);
     barPaint.setColor(secondaryColor);
-    int barHeight = 10;
-    int borderWidth = 2;
-    canvas.drawRect(margin - borderWidth * 2, margin - borderWidth * 2,
-      margin + unitBarWidth * pair.second + borderWidth * 2, margin + barHeight + borderWidth * 2, barPaint);
+
+    canvas.drawRect(marginLeft - borderWidth * 2,
+      textBarMargin + textSize + marginTop - borderWidth * 2,
+      marginLeft + unitBarWidth * pair.second + borderWidth * 2,
+      textBarMargin + textSize + marginTop + barHeight + borderWidth * 2,
+      barPaint);
     barPaint.setColor(primaryColor);
-    canvas.drawRect(margin - borderWidth, margin - borderWidth,
-      margin + unitBarWidth * pair.second + borderWidth, margin + barHeight + borderWidth, barPaint);
+    canvas.drawRect(marginLeft - borderWidth,
+      textBarMargin + textSize + marginTop - borderWidth,
+      marginLeft + unitBarWidth * pair.second + borderWidth,
+      textBarMargin + textSize + marginTop + barHeight + borderWidth,
+      barPaint);
 
     //Drawing the fill
     barPaint.setStyle(Paint.Style.FILL);
@@ -93,12 +90,20 @@ public class ScaleBarWidget extends View {
     for (; i < pair.second; i++) {
       barPaint.setColor(i % 2 == 0 ? primaryColor : secondaryColor);
       String text = i == 0 ? String.valueOf(unitDistance * i) : unitDistance * i + unit;
-      canvas.drawText(text, margin + unitBarWidth * i, margin - barHeight, textPaint);
-      canvas.drawRect(margin + unitBarWidth * i, margin, margin + unitBarWidth * (1 + i),
-        margin + barHeight, barPaint);
+      canvas.drawText(text,
+        marginLeft + unitBarWidth * i,
+        textSize + marginTop,
+        textPaint);
+      canvas.drawRect(marginLeft + unitBarWidth * i,
+        textBarMargin + textSize + marginTop,
+        marginLeft + unitBarWidth * (1 + i),
+        textBarMargin + textSize + marginTop + barHeight,
+        barPaint);
     }
-    canvas.drawText(unitDistance * i + unit, margin + unitBarWidth * i, margin - barHeight, textPaint);
-
+    canvas.drawText(unitDistance * i + unit,
+      marginLeft + unitBarWidth * i,
+      textSize + marginTop,
+      textPaint);
   }
 
   /**
@@ -107,54 +112,232 @@ public class ScaleBarWidget extends View {
    * @param metersPerPixel how many meters in each pixel.
    */
   void setDistancePerPixel(double metersPerPixel) {
-    this.distancePerPixel = isMetricSystem ? metersPerPixel : metersPerPixel * ScaleBarConstants.FEET_PER_METER;
+    this.distancePerPixel = isMetricUnit ? metersPerPixel : metersPerPixel * ScaleBarConstants.FEET_PER_METER;
     if (!refreshHandler.hasMessages(MSG_WHAT)) {
-      refreshHandler.sendEmptyMessageDelayed(MSG_WHAT, REFRESH_DURATION);
+      refreshHandler.sendEmptyMessageDelayed(MSG_WHAT, refreshDuration);
     }
+  }
+
+  /**
+   * Get the current setting  for refresh duration, in millisecond.
+   *
+   * @return refresh duration
+   */
+  public int getRefreshDuration() {
+    return refreshDuration;
+  }
+
+  /**
+   * Set the duration between two adjacent refreshment, in millisecond.
+   *
+   * @param refreshDuration the refresh duration.
+   */
+  public void setRefreshDuration(int refreshDuration) {
+    this.refreshDuration = refreshDuration;
+  }
+
+  /**
+   * Get the margin between text and blocks.
+   *
+   * @return margin between text and blocks, in pixel.
+   */
+  public float getTextBarMargin() {
+    return textBarMargin;
+  }
+
+  /**
+   * Set the margin between text and blocks inside scale bar.
+   *
+   * @param textBarMargin the margin between text and blocks inside scale bar, in pixel.
+   */
+  public void setTextBarMargin(float textBarMargin) {
+    this.textBarMargin = textBarMargin;
+  }
+
+  /**
+   * Get the left margin between scale bar and mapView.
+   *
+   * @return the left margin between scale bar and mapView, in pixel
+   */
+  public float getMarginLeft() {
+    return marginLeft;
+  }
+
+  /**
+   * Set the left margin between scale bar and mapView.
+   *
+   * @param marginLeft the left margin between scale bar and mapView, in pixel.
+   */
+  public void setMarginLeft(float marginLeft) {
+    this.marginLeft = marginLeft;
+    maxBarWidth = mapViewWidth / 2f - marginLeft;
+  }
+
+  /**
+   * Get the bar height for blocks.
+   *
+   * @return the height for blocks in scale bar, in pixel.
+   */
+  public float getBarHeight() {
+    return barHeight;
+  }
+
+  /**
+   * Set the height for blocks in scale bar.
+   *
+   * @param barHeight the height for blocks in scale bar, in pixel.
+   */
+  public void setBarHeight(float barHeight) {
+    this.barHeight = barHeight;
+  }
+
+  /**
+   * Get the margin between scale bar and the top of mapView,
+   *
+   * @return the margin between scale bar and the top of mapView, in pixel.
+   */
+  public float getMarginTop() {
+    return marginTop;
+  }
+
+  /**
+   * Set the margin between scale bar and the top of mapView。
+   *
+   * @param marginTop the margin between scale bar and the top of mapView, in pixel.
+   */
+  public void setMarginTop(float marginTop) {
+    this.marginTop = marginTop;
+  }
+
+  /**
+   * Get the border width in scale bar.
+   *
+   * @return the border width in scale bar, in pixel
+   */
+  public float getBorderWidth() {
+    return borderWidth;
+  }
+
+  /**
+   * Set the border width in scale bar.
+   *
+   * @param borderWidth the border width in scale bar, in pixel.
+   */
+  public void setBorderWidth(float borderWidth) {
+    this.borderWidth = borderWidth;
+  }
+
+  /**
+   * Get the text size of scale bar.
+   *
+   * @return the text size of scale bar, in pixel.
+   */
+  public float getTextSize() {
+    return textSize;
+  }
+
+  /**
+   * Set the text size of scale bar.
+   *
+   * @param textSize the text size of scale bar, in pixel.
+   */
+  public void setTextSize(float textSize) {
+    this.textSize = textSize;
+    textPaint.setTextSize(textSize);
+  }
+
+  /**
+   * Get the current setting for metrix unit.
+   *
+   * @return true if using metrix unit, otherwise false.
+   */
+  public boolean isMetricUnit() {
+    return isMetricUnit;
+  }
+
+  /**
+   * Set whether to use metric unit or not.
+   *
+   * @param metricUnit whether to use metric unit or not.
+   */
+  public void setMetricUnit(boolean metricUnit) {
+    isMetricUnit = metricUnit;
+    scaleTable = isMetricUnit ? ScaleBarConstants.metricTable : ScaleBarConstants.imperialTable;
+    unit = isMetricUnit ? ScaleBarConstants.METER_UNIT : ScaleBarConstants.FEET_UNIT;
+  }
+
+  /**
+   * Get the color for text.
+   *
+   * @return the color for text.
+   */
+  public int getTextColor() {
+    return textColor;
+  }
+
+  /**
+   * Set the text color on scale bar,
+   *
+   * @param textColor the text color on scale bar.
+   */
+  public void setTextColor(@ColorInt int textColor) {
+    this.textColor = textColor;
+    textPaint.setColor(textColor);
+  }
+
+  /**
+   * Get the primary color of the scale bar.
+   *
+   * @return the primary color of the scale bar.
+   */
+  public int getPrimaryColor() {
+    return primaryColor;
+  }
+
+  /**
+   * Set the primary color of the scale bar, will be used to draw odd index blocks,
+   *
+   * @param primaryColor the primary color of the scale bar, in pixel.
+   */
+  public void setPrimaryColor(@ColorInt int primaryColor) {
+    this.primaryColor = primaryColor;
+  }
+
+  /**
+   * Get the secondary color of the scale bar.
+   *
+   * @return the secondary color of the scale bar.
+   */
+  public int getSecondaryColor() {
+    return secondaryColor;
+  }
+
+  /**
+   * Set the secondary color of the scale bar, will be used to draw even index blocks,
+   *
+   * @param secondaryColor the secondaryColor color of the scale bar, in pixel.
+   */
+  public void setSecondaryColor(@ColorInt int secondaryColor) {
+    this.secondaryColor = secondaryColor;
+  }
+
+  /**
+   * Get the width of current mapView.
+   *
+   * @return the width of current mapView.
+   */
+  public int getMapViewWidth() {
+    return mapViewWidth;
   }
 
   /**
    * Set the width of current mapView.
    *
-   * @param mapViewWidth mapView's wdith.
+   * @param mapViewWidth mapView's width in pixel.
    */
   void setMapViewWidth(int mapViewWidth) {
     this.mapViewWidth = mapViewWidth;
-    margin = mapViewWidth / 20;
-    maxBarWidth = mapViewWidth / 2 - margin;
-  }
-
-  /**
-   * Set colors for the scale bar.
-   *
-   * @param textColor      The color for the texts above scale bar.
-   * @param primaryColor   The color for odd number index bars.
-   * @param secondaryColor The color for even number index bars.
-   */
-  void setColors(@ColorRes int textColor, @ColorRes int primaryColor, @ColorRes int secondaryColor) {
-    this.textColor = context.getResources().getColor(textColor);
-    this.primaryColor = context.getResources().getColor(primaryColor);
-    this.secondaryColor = context.getResources().getColor(secondaryColor);
-  }
-
-  @VisibleForTesting
-  public int getTextColor() {
-    return textColor;
-  }
-
-  @VisibleForTesting
-  public int getPrimaryColor() {
-    return primaryColor;
-  }
-
-  @VisibleForTesting
-  public int getSecondaryColor() {
-    return secondaryColor;
-  }
-
-  @VisibleForTesting
-  public int getMapViewWidth() {
-    return mapViewWidth;
+    maxBarWidth = mapViewWidth / 2f - marginLeft;
   }
 
   /**
@@ -175,41 +358,4 @@ public class ScaleBarWidget extends View {
     }
   }
 
-  /**
-   * Helper class to determine the user measuring system.
-   * <p>
-   * Currently supports differentiating between metric vs imperial system.
-   * </p>
-   * <p>
-   * Depends on {@link Locale#getDefault()} which returns the locale used at application startup.
-   * </p>
-   */
-  private static class LocaleUnitResolver {
-
-    /**
-     * Returns true if the user is in a country using the metric system.
-     *
-     * @return true if user country is using metric, false if imperial
-     */
-    static boolean isMetricSystem() {
-      String countryCode = Locale.getDefault().getCountry().toUpperCase();
-      switch (countryCode) {
-        case ImperialCountryCode.US:
-        case ImperialCountryCode.LIBERIA:
-        case ImperialCountryCode.MYANMAR:
-          return false;
-        default:
-          return true;
-      }
-    }
-
-    /**
-     * Data class containing uppercase country codes for countries using the imperial system.
-     */
-    static class ImperialCountryCode {
-      static final String US = "US";
-      static final String MYANMAR = "MM";
-      static final String LIBERIA = "LR";
-    }
-  }
 }

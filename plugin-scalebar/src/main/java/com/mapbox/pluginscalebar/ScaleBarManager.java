@@ -1,9 +1,7 @@
 package com.mapbox.pluginscalebar;
 
-import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
-import android.support.annotation.VisibleForTesting;
 import android.view.View;
 
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -14,21 +12,39 @@ import com.mapbox.mapboxsdk.maps.Projection;
 /**
  * Plugin class that shows a scale bar on MapView and changes the scale corresponding to the MapView's scale.
  */
-public class ScaleBar {
+public class ScaleBarManager {
   private MapboxMap mapboxMap;
   private Projection projection;
   private boolean enabled = true;
   private ScaleBarWidget scaleBarWidget;
   private CameraMoveListener cameraMoveListener;
+  private MapView mapView;
 
-  public ScaleBar(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
+  public ScaleBarManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
+    this.mapView = mapView;
     this.mapboxMap = mapboxMap;
     this.projection = mapboxMap.getProjection();
-    this.scaleBarWidget = new ScaleBarWidget(mapView.getContext());
-    mapView.addView(scaleBarWidget);
+  }
+
+  /**
+   * Create a scale bar widget on mapView.
+   *
+   * @param option The scale bar widget options that used to build scale bar widget.
+   * @return The created ScaleBarWidget instance.
+   */
+  public ScaleBarWidget create(ScaleBarOption option) {
+    if (scaleBarWidget != null) {
+      mapView.removeView(scaleBarWidget);
+    }
+    scaleBarWidget = option.build();
+    scaleBarWidget.setMapViewWidth(mapView.getWidth());
     cameraMoveListener = new CameraMoveListener();
     mapboxMap.addOnCameraMoveListener(cameraMoveListener);
-    scaleBarWidget.setMapViewWidth(mapView.getWidth());
+    mapView.addView(scaleBarWidget);
+    CameraPosition cameraPosition = mapboxMap.getCameraPosition();
+    double metersPerPixel = projection.getMetersPerPixelAtLatitude(cameraPosition.target.getLatitude());
+    scaleBarWidget.setDistancePerPixel(projection.getMetersPerPixelAtLatitude(metersPerPixel));
+    return scaleBarWidget;
   }
 
   /**
@@ -55,7 +71,9 @@ public class ScaleBar {
       return;
     }
     this.enabled = enabled;
-    scaleBarWidget.setVisibility(enabled ? View.VISIBLE : View.GONE);
+    if (scaleBarWidget != null) {
+      scaleBarWidget.setVisibility(enabled ? View.VISIBLE : View.GONE);
+    }
     if (enabled) {
       mapboxMap.addOnCameraMoveListener(cameraMoveListener);
     } else {
@@ -63,29 +81,12 @@ public class ScaleBar {
     }
   }
 
-
-  /**
-   * Set colors for the scale bar.
-   *
-   * @param textColor      The color for the texts above the scale bar.
-   * @param primaryColor   The color for odd number index bars.
-   * @param secondaryColor The color for even number index bars.
-   */
-  public void setColors(@ColorRes int textColor, @ColorRes int primaryColor, @ColorRes int secondaryColor) {
-    scaleBarWidget.setColors(textColor, primaryColor, secondaryColor);
-  }
-
-  class CameraMoveListener implements MapboxMap.OnCameraMoveListener {
+  private class CameraMoveListener implements MapboxMap.OnCameraMoveListener {
     @Override
     public void onCameraMove() {
       CameraPosition cameraPosition = mapboxMap.getCameraPosition();
       double metersPerPixel = projection.getMetersPerPixelAtLatitude(cameraPosition.target.getLatitude());
       scaleBarWidget.setDistancePerPixel(projection.getMetersPerPixelAtLatitude(metersPerPixel));
     }
-  }
-
-  @VisibleForTesting
-  public ScaleBarWidget getScaleBarWidget() {
-    return scaleBarWidget;
   }
 }
