@@ -28,15 +28,15 @@ class ScalebarActivity : AppCompatActivity() {
         val scaleBarManager = ScaleBarManager(mapView, mapboxMap)
         val scaleBarOption = ScaleBarOption(this)
         scaleBarOption
-                .setTextColor(this.resources.getColor(R.color.mapboxRed))
-                .setTextSize(8f)
-                .setBarHeight(5f)
-                .setBorderWidth(2f)
+                .setTextColor(R.color.mapboxRed)
+                .setTextSize(20f)
+                .setBarHeight(15f)
+                .setBorderWidth(5f)
                 .setMetricUnit(true)
-                .setRefreshDuration(100)
-                .setMarginTop(5f)
-                .setMarginLeft(6f)
-                .setTextBarMargin(5f)
+                .setRefreshInterval(15)
+                .setMarginTop(15f)
+                .setMarginLeft(16f)
+                .setTextBarMargin(15f)
 
         scaleBarManager.create(scaleBarOption)
         fabScaleWidget.setOnClickListener {

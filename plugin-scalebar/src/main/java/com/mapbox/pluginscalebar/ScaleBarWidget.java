@@ -19,7 +19,7 @@ public class ScaleBarWidget extends View {
   private static int MSG_WHAT = 0;
   private final Paint textPaint = new Paint();
   private final Paint barPaint = new Paint();
-  private int refreshDuration;
+  private int refreshInterval;
   private int textColor;
   private int primaryColor;
   private int secondaryColor;
@@ -35,7 +35,7 @@ public class ScaleBarWidget extends View {
   private boolean isMetricUnit;
   private ArrayList<Pair<Integer, Integer>> scaleTable;
   private String unit;
-  private RefreshHandler refreshHandler;
+  private final RefreshHandler refreshHandler;
 
   ScaleBarWidget(Context context) {
     super(context);
@@ -114,26 +114,26 @@ public class ScaleBarWidget extends View {
   void setDistancePerPixel(double metersPerPixel) {
     this.distancePerPixel = isMetricUnit ? metersPerPixel : metersPerPixel * ScaleBarConstants.FEET_PER_METER;
     if (!refreshHandler.hasMessages(MSG_WHAT)) {
-      refreshHandler.sendEmptyMessageDelayed(MSG_WHAT, refreshDuration);
+      refreshHandler.sendEmptyMessageDelayed(MSG_WHAT, refreshInterval);
     }
   }
 
   /**
-   * Get the current setting  for refresh duration, in millisecond.
+   * Get plugin's minimum refresh interval, in millisecond.
    *
    * @return refresh duration
    */
-  public int getRefreshDuration() {
-    return refreshDuration;
+  public int getRefreshInterval() {
+    return refreshInterval;
   }
 
   /**
-   * Set the duration between two adjacent refreshment, in millisecond.
+   * Set plugin's minimum refresh interval, in millisecond.
    *
-   * @param refreshDuration the refresh duration.
+   * @param refreshInterval the refresh duration.
    */
-  public void setRefreshDuration(int refreshDuration) {
-    this.refreshDuration = refreshDuration;
+  public void setRefreshInterval(int refreshInterval) {
+    this.refreshInterval = refreshInterval;
   }
 
   /**

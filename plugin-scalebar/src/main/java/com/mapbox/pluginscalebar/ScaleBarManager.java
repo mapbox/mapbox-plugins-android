@@ -13,12 +13,20 @@ import com.mapbox.mapboxsdk.maps.Projection;
  * Plugin class that shows a scale bar on MapView and changes the scale corresponding to the MapView's scale.
  */
 public class ScaleBarManager {
-  private MapboxMap mapboxMap;
-  private Projection projection;
+  private final MapView mapView;
+  private final MapboxMap mapboxMap;
+  private final Projection projection;
   private boolean enabled = true;
   private ScaleBarWidget scaleBarWidget;
-  private CameraMoveListener cameraMoveListener;
-  private MapView mapView;
+
+  private final MapboxMap.OnCameraMoveListener cameraMoveListener = new MapboxMap.OnCameraMoveListener() {
+    @Override
+    public void onCameraMove() {
+      CameraPosition cameraPosition = mapboxMap.getCameraPosition();
+      double metersPerPixel = projection.getMetersPerPixelAtLatitude(cameraPosition.target.getLatitude());
+      scaleBarWidget.setDistancePerPixel(projection.getMetersPerPixelAtLatitude(metersPerPixel));
+    }
+  };
 
   public ScaleBarManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
     this.mapView = mapView;
@@ -38,7 +46,6 @@ public class ScaleBarManager {
     }
     scaleBarWidget = option.build();
     scaleBarWidget.setMapViewWidth(mapView.getWidth());
-    cameraMoveListener = new CameraMoveListener();
     mapboxMap.addOnCameraMoveListener(cameraMoveListener);
     mapView.addView(scaleBarWidget);
     CameraPosition cameraPosition = mapboxMap.getCameraPosition();
@@ -81,12 +88,4 @@ public class ScaleBarManager {
     }
   }
 
-  private class CameraMoveListener implements MapboxMap.OnCameraMoveListener {
-    @Override
-    public void onCameraMove() {
-      CameraPosition cameraPosition = mapboxMap.getCameraPosition();
-      double metersPerPixel = projection.getMetersPerPixelAtLatitude(cameraPosition.target.getLatitude());
-      scaleBarWidget.setDistancePerPixel(projection.getMetersPerPixelAtLatitude(metersPerPixel));
-    }
-  }
 }

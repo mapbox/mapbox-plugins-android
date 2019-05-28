@@ -1,7 +1,8 @@
 package com.mapbox.pluginscalebar;
 
 import android.content.Context;
-import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DimenRes;
 import android.support.annotation.VisibleForTesting;
 import android.util.DisplayMetrics;
 
@@ -11,15 +12,10 @@ import java.util.Locale;
  * Builder class from which a scale bar is created.
  */
 public class ScaleBarOption {
-  public static final int REFRESH_DURATION_DEFAULT = 100;
-  public static final int BAR_HEIGHT_DEFAULT = 4;
-  public static final int BORDER_WIDTH_DEFAULT = 1;
-  public static final int TEXT_SIZE_DEFAULT = 6;
-  public static final int MARGIN_TOP_DEFAULT = 8;
-  public static final int MARGIN_LEFT_DEFAULT = 10;
-  public static final int TEXT_BAR_MARGIN_DEFAULT = 2;
+  public static final int REFRESH_INTERVAL_DEFAULT = 15;
+
   private final Context context;
-  private int refreshDuration;
+  private int refreshInterval;
   private int textColor;
   private int primaryColor;
   private int secondaryColor;
@@ -33,17 +29,17 @@ public class ScaleBarOption {
 
   public ScaleBarOption(Context context) {
     this.context = context;
-    refreshDuration = REFRESH_DURATION_DEFAULT;
-    setBarHeight(BAR_HEIGHT_DEFAULT);
-    setBorderWidth(BORDER_WIDTH_DEFAULT);
-    setTextSize(TEXT_SIZE_DEFAULT);
-    setMarginTop(MARGIN_TOP_DEFAULT);
-    setMarginLeft(MARGIN_LEFT_DEFAULT);
-    setTextBarMargin(TEXT_BAR_MARGIN_DEFAULT);
+    refreshInterval = REFRESH_INTERVAL_DEFAULT;
+    setBarHeight(R.dimen.mapbox_scale_bar_height);
+    setBorderWidth(R.dimen.mapbox_scale_bar_border_width);
+    setTextSize(R.dimen.mapbox_scale_bar_text_size);
+    setMarginTop(R.dimen.mapbox_scale_bar_margin_top);
+    setMarginLeft(R.dimen.mapbox_scale_bar_margin_left);
+    setTextBarMargin(R.dimen.mapbox_scale_bar_text_margin);
     isMetricUnit = LocaleUnitResolver.isMetricSystem();
-    textColor = context.getResources().getColor(android.R.color.black);
-    primaryColor = context.getResources().getColor(android.R.color.black);
-    secondaryColor = context.getResources().getColor(android.R.color.white);
+    setTextColor(android.R.color.black);
+    setPrimaryColor(android.R.color.black);
+    setSecondaryColor(android.R.color.white);
   }
 
   /**
@@ -59,7 +55,7 @@ public class ScaleBarOption {
     scaleBarWidget.setMarginTop(marginTop);
     scaleBarWidget.setTextBarMargin(textBarMargin);
     scaleBarWidget.setMetricUnit(isMetricUnit);
-    scaleBarWidget.setRefreshDuration(refreshDuration);
+    scaleBarWidget.setRefreshInterval(refreshInterval);
     scaleBarWidget.setPrimaryColor(primaryColor);
     scaleBarWidget.setSecondaryColor(secondaryColor);
     scaleBarWidget.setTextColor(textColor);
@@ -68,14 +64,14 @@ public class ScaleBarOption {
   }
 
   /**
-   * Set the duration between two adjacent refreshment,
-   * default value is {@link #REFRESH_DURATION_DEFAULT}.
+   * Set plugin's minimum refresh interval,
+   * default value is {@link #REFRESH_INTERVAL_DEFAULT}.
    *
-   * @param refreshDuration the refresh duration, in millisecond.
+   * @param refreshInterval the min refresh interval, in millisecond.
    * @return this
    */
-  public ScaleBarOption setRefreshDuration(int refreshDuration) {
-    this.refreshDuration = refreshDuration;
+  public ScaleBarOption setRefreshInterval(int refreshInterval) {
+    this.refreshInterval = refreshInterval;
     return this;
   }
 
@@ -86,8 +82,8 @@ public class ScaleBarOption {
    * @param textColor the text color on scale bar.
    * @return this.
    */
-  public ScaleBarOption setTextColor(@ColorInt int textColor) {
-    this.textColor = textColor;
+  public ScaleBarOption setTextColor(@ColorRes int textColor) {
+    this.textColor = context.getResources().getColor(textColor);
     return this;
   }
 
@@ -98,8 +94,8 @@ public class ScaleBarOption {
    * @param primaryColor the primary color of the scale bar.
    * @return this.
    */
-  public ScaleBarOption setPrimaryColor(@ColorInt int primaryColor) {
-    this.primaryColor = primaryColor;
+  public ScaleBarOption setPrimaryColor(@ColorRes int primaryColor) {
+    this.primaryColor = context.getResources().getColor(primaryColor);
     return this;
   }
 
@@ -110,53 +106,96 @@ public class ScaleBarOption {
    * @param secondaryColor the secondaryColor color of the scale bar.
    * @return this.
    */
-  public ScaleBarOption setSecondaryColor(@ColorInt int secondaryColor) {
-    this.secondaryColor = secondaryColor;
+  public ScaleBarOption setSecondaryColor(@ColorRes int secondaryColor) {
+    this.secondaryColor = context.getResources().getColor(secondaryColor);
     return this;
   }
 
   /**
-   * Set the margin between scale bar and the top of mapView,
-   * default value is {@link #MARGIN_TOP_DEFAULT}.
+   * Set the margin between scale bar and the top of mapView.
+   *
+   * @param marginTop the margin between scale bar and the top of mapView, in pixel.
+   * @return this.
+   */
+  public ScaleBarOption setMarginTop(float marginTop) {
+    this.marginTop = marginTop;
+    return this;
+  }
+
+  /**
+   * Set the margin between scale bar and the top of mapView.
    *
    * @param marginTop the margin between scale bar and the top of mapView, in dp.
    * @return this.
    */
-  public ScaleBarOption setMarginTop(float marginTop) {
-    this.marginTop = convertDpToPixel(marginTop);
+  public ScaleBarOption setMarginTop(@DimenRes int marginTop) {
+    this.marginTop = convertDpToPixel(context.getResources().getDimension(marginTop));
     return this;
   }
 
   /**
-   * Set the height for blocks in scale bar, default value is {@link #BAR_HEIGHT_DEFAULT}.
+   * Set the height for blocks in scale bar.
+   *
+   * @param barHeight the height for blocks in scale bar, in pixel.
+   * @return this.
+   */
+  public ScaleBarOption setBarHeight(float barHeight) {
+    this.barHeight = barHeight;
+    return this;
+  }
+
+  /**
+   * Set the height for blocks in scale bar.
    *
    * @param barHeight the height for blocks in scale bar, in dp.
    * @return this.
    */
-  public ScaleBarOption setBarHeight(float barHeight) {
-    this.barHeight = convertDpToPixel(barHeight);
+  public ScaleBarOption setBarHeight(@DimenRes int barHeight) {
+    this.barHeight = convertDpToPixel(context.getResources().getDimension(barHeight));
     return this;
   }
 
   /**
-   * Set the border width in scale bar, default value is {@link #BORDER_WIDTH_DEFAULT}.
+   * Set the border width in scale bar.
+   *
+   * @param borderWidth the border width in scale bar, in pixel.
+   * @return this.
+   */
+  public ScaleBarOption setBorderWidth(float borderWidth) {
+    this.borderWidth = borderWidth;
+    return this;
+  }
+
+  /**
+   * Set the border width in scale bar.
    *
    * @param borderWidth the border width in scale bar, in dp.
    * @return this.
    */
-  public ScaleBarOption setBorderWidth(float borderWidth) {
-    this.borderWidth = convertDpToPixel(borderWidth);
+  public ScaleBarOption setBorderWidth(@DimenRes int borderWidth) {
+    this.borderWidth = convertDpToPixel(context.getResources().getDimension(borderWidth));
     return this;
   }
 
   /**
-   * Set the text size of scale bar, default size is  {@link #TEXT_SIZE_DEFAULT}.
+   * Set the text size of scale bar.
+   *
+   * @param textSize the text size of scale bar, in pixel.
+   * @return this.
+   */
+  public ScaleBarOption setTextSize(float textSize) {
+    this.textSize = textSize;
+    return this;
+  }
+
+  /**
+   * Set the text size of scale bar.
    *
    * @param textSize the text size of scale bar, in dp.
    * @return this.
    */
-  public ScaleBarOption setTextSize(float textSize) {
-    this.textSize = convertDpToPixel(textSize);
+  public ScaleBarOption setTextSize(@DimenRes int textSize) {
+    this.textSize = convertDpToPixel(context.getResources().getDimension(textSize));
     return this;
   }
 
@@ -172,26 +211,46 @@ public class ScaleBarOption {
   }
 
   /**
-   * Set the left margin between scale bar and mapView,
-   * default value is {@link #MARGIN_LEFT_DEFAULT}.
+   * Set the left margin between scale bar and mapView.
    *
-   * @param marginLeft the left margin between scale bar and mapView, in dp.
+   * @param marginLeft the left margin between scale bar and mapView, in pixel.
    * @return this.
    */
   public ScaleBarOption setMarginLeft(float marginLeft) {
-    this.marginLeft = convertDpToPixel(marginLeft);
+    this.marginLeft = marginLeft;
     return this;
   }
 
   /**
-   * Set the margin between text and blocks inside scale bar,
-   * default value is {@link #TEXT_BAR_MARGIN_DEFAULT}.
+   * Set the left margin between scale bar and mapView.
+   *
+   * @param marginLeft the left margin between scale bar and mapView, in dp.
+   * @return this.
+   */
+  public ScaleBarOption setMarginLeft(@DimenRes int marginLeft) {
+    this.marginLeft = convertDpToPixel(context.getResources().getDimension(marginLeft));
+    return this;
+  }
+
+  /**
+   * Set the margin between text and blocks inside scale bar.
+   *
+   * @param textBarMargin the margin between text and blocks inside scale bar, in pixel.
+   * @return this.
+   */
+  public ScaleBarOption setTextBarMargin(float textBarMargin) {
+    this.textBarMargin = textBarMargin;
+    return this;
+  }
+
+  /**
+   * Set the margin between text and blocks inside scale bar.
    *
    * @param textBarMargin the margin between text and blocks inside scale bar, in dp.
    * @return this.
    */
-  public ScaleBarOption setTextBarMargin(float textBarMargin) {
-    this.textBarMargin = convertDpToPixel(textBarMargin);
+  public ScaleBarOption setTextBarMargin(@DimenRes int textBarMargin) {
+    this.textBarMargin = convertDpToPixel(context.getResources().getDimension(textBarMargin));
     return this;
   }
 

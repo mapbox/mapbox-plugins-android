@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="mapbox_scale_bar_margin_top">8dp</dimen>
+    <dimen name="mapbox_scale_bar_margin_left">10dp</dimen>
+    <dimen name="mapbox_scale_bar_text_margin">2dp</dimen>
+    <dimen name="mapbox_scale_bar_text_size">6dp</dimen>
+    <dimen name="mapbox_scale_bar_border_width">1dp</dimen>
+    <dimen name="mapbox_scale_bar_height">4dp</dimen>
+</resources>

@@ -73,9 +73,9 @@ public class ScaleBarTest extends BaseActivityTest {
       assertEquals(activity.getResources().getColor(android.R.color.white), scaleBarWidget.getSecondaryColor());
 
 
-      int textColor = activity.getResources().getColor(R.color.colorAccent);
-      int colorPrimary = activity.getResources().getColor(R.color.colorPrimary);
-      int colorSecondary = activity.getResources().getColor(R.color.colorPrimaryDark);
+      int textColor = R.color.colorAccent;
+      int colorPrimary = R.color.colorPrimary;
+      int colorSecondary = R.color.colorPrimaryDark;
 
       ScaleBarOption option = new ScaleBarOption(activity);
       option.setTextColor(textColor);
@@ -83,9 +83,9 @@ public class ScaleBarTest extends BaseActivityTest {
       option.setSecondaryColor(colorSecondary);
       scaleBarWidget = scaleBarManager.create(option);
       assertNotNull(scaleBarWidget);
-      assertEquals(textColor, scaleBarWidget.getTextColor());
-      assertEquals(colorPrimary, scaleBarWidget.getPrimaryColor());
-      assertEquals(colorSecondary, scaleBarWidget.getSecondaryColor());
+      assertEquals(activity.getResources().getColor(textColor), scaleBarWidget.getTextColor());
+      assertEquals(activity.getResources().getColor(colorPrimary), scaleBarWidget.getPrimaryColor());
+      assertEquals(activity.getResources().getColor(colorSecondary), scaleBarWidget.getSecondaryColor());
     });
   }
 
@@ -105,19 +105,35 @@ public class ScaleBarTest extends BaseActivityTest {
     validateTestSetup();
     setupScaleBar();
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      assertEquals(convertDpToPixel(ScaleBarOption.MARGIN_LEFT_DEFAULT), scaleBarWidget.getMarginLeft(), 0);
-      assertEquals(convertDpToPixel(ScaleBarOption.MARGIN_TOP_DEFAULT), scaleBarWidget.getMarginTop(), 0);
-      assertEquals(convertDpToPixel(ScaleBarOption.TEXT_BAR_MARGIN_DEFAULT), scaleBarWidget.getTextBarMargin(), 0);
+      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_margin_left)),
+        scaleBarWidget.getMarginLeft(), 0);
+      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_margin_top)),
+        scaleBarWidget.getMarginTop(), 0);
+      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_text_margin)),
+        scaleBarWidget.getTextBarMargin(), 0);
 
       ScaleBarOption option = new ScaleBarOption(activity);
-      option.setMarginLeft(100);
-      option.setMarginTop(50);
-      option.setTextBarMargin(30);
+      option.setMarginLeft(R.dimen.fab_margin);
+      option.setMarginTop(R.dimen.fab_margin);
+      option.setTextBarMargin(R.dimen.fab_margin);
       scaleBarWidget = scaleBarManager.create(option);
       assertNotNull(scaleBarWidget);
-      assertEquals(convertDpToPixel(100), scaleBarWidget.getMarginLeft(), 0);
-      assertEquals(convertDpToPixel(50), scaleBarWidget.getMarginTop(), 0);
-      assertEquals(convertDpToPixel(30), scaleBarWidget.getTextBarMargin(), 0);
+      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.fab_margin)),
+        scaleBarWidget.getMarginLeft(), 0);
+      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.fab_margin)),
+        scaleBarWidget.getMarginTop(), 0);
+      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.fab_margin)),
+        scaleBarWidget.getTextBarMargin(), 0);
+
+      option = new ScaleBarOption(activity);
+      option.setMarginLeft(100f);
+      option.setMarginTop(50f);
+      option.setTextBarMargin(30f);
+      scaleBarWidget = scaleBarManager.create(option);
+      assertNotNull(scaleBarWidget);
+      assertEquals(100f, scaleBarWidget.getMarginLeft(), 0);
+      assertEquals(50f, scaleBarWidget.getMarginTop(), 0);
+      assertEquals(30f, scaleBarWidget.getTextBarMargin(), 0);
 
     });
   }
@@ -127,13 +143,21 @@ public class ScaleBarTest extends BaseActivityTest {
     validateTestSetup();
     setupScaleBar();
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      assertEquals(convertDpToPixel(ScaleBarOption.BAR_HEIGHT_DEFAULT), scaleBarWidget.getBarHeight(), 0);
+      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_height)),
+        scaleBarWidget.getBarHeight(), 0);
 
       ScaleBarOption option = new ScaleBarOption(activity);
-      option.setBarHeight(100);
+      option.setBarHeight(R.dimen.fab_margin);
       scaleBarWidget = scaleBarManager.create(option);
       assertNotNull(scaleBarWidget);
-      assertEquals(convertDpToPixel(100), scaleBarWidget.getBarHeight(), 0);
+      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.fab_margin)),
+        scaleBarWidget.getBarHeight(), 0);
+
+      option = new ScaleBarOption(activity);
+      option.setBarHeight(100f);
+      scaleBarWidget = scaleBarManager.create(option);
+      assertNotNull(scaleBarWidget);
+      assertEquals(100f, scaleBarWidget.getBarHeight(), 0);
 
     });
   }
@@ -143,13 +167,21 @@ public class ScaleBarTest extends BaseActivityTest {
     validateTestSetup();
     setupScaleBar();
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      assertEquals(convertDpToPixel(ScaleBarOption.TEXT_SIZE_DEFAULT), scaleBarWidget.getTextSize(), 0);
+      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_text_size)),
+        scaleBarWidget.getTextSize(), 0);
 
       ScaleBarOption option = new ScaleBarOption(activity);
-      option.setTextSize(100);
+      option.setTextSize(R.dimen.fab_margin);
       scaleBarWidget = scaleBarManager.create(option);
       assertNotNull(scaleBarWidget);
-      assertEquals(convertDpToPixel(100), scaleBarWidget.getTextSize(), 0);
+      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.fab_margin)),
+        scaleBarWidget.getTextSize(), 0);
+
+      option = new ScaleBarOption(activity);
+      option.setTextSize(100f);
+      scaleBarWidget = scaleBarManager.create(option);
+      assertNotNull(scaleBarWidget);
+      assertEquals(100f, scaleBarWidget.getTextSize(), 0);
 
     });
   }
@@ -159,30 +191,38 @@ public class ScaleBarTest extends BaseActivityTest {
     validateTestSetup();
     setupScaleBar();
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      assertEquals(convertDpToPixel(ScaleBarOption.BORDER_WIDTH_DEFAULT), scaleBarWidget.getBorderWidth(), 0);
+      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_border_width)),
+        scaleBarWidget.getBorderWidth(), 0);
 
       ScaleBarOption option = new ScaleBarOption(activity);
-      option.setBorderWidth(100);
+      option.setBorderWidth(R.dimen.fab_margin);
       scaleBarWidget = scaleBarManager.create(option);
       assertNotNull(scaleBarWidget);
-      assertEquals(convertDpToPixel(100), scaleBarWidget.getBorderWidth(), 0);
+      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.fab_margin)),
+        scaleBarWidget.getBorderWidth(), 0);
+
+      option = new ScaleBarOption(activity);
+      option.setBorderWidth(100f);
+      scaleBarWidget = scaleBarManager.create(option);
+      assertNotNull(scaleBarWidget);
+      assertEquals(100f, scaleBarWidget.getBorderWidth(), 0);
 
     });
   }
 
 
   @Test
-  public void testRefreshDuration() {
+  public void testRefreshInterval() {
     validateTestSetup();
     setupScaleBar();
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      assertEquals(ScaleBarOption.REFRESH_DURATION_DEFAULT, scaleBarWidget.getRefreshDuration(), 0);
+      assertEquals(ScaleBarOption.REFRESH_INTERVAL_DEFAULT, scaleBarWidget.getRefreshInterval(), 0);
 
       ScaleBarOption option = new ScaleBarOption(activity);
-      option.setRefreshDuration(1000);
+      option.setRefreshInterval(1000);
       scaleBarWidget = scaleBarManager.create(option);
       assertNotNull(scaleBarWidget);
-      assertEquals(1000, scaleBarWidget.getRefreshDuration(), 0);
+      assertEquals(1000, scaleBarWidget.getRefreshInterval(), 0);
 
     });
   }
