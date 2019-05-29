@@ -25,7 +25,7 @@ class ScalebarActivity : AppCompatActivity() {
     }
 
     private fun addScalebar(mapboxMap: MapboxMap) {
-        val scaleBarManager = ScaleBarPlugin(mapView, mapboxMap)
+        val scaleBarPlugin = ScaleBarPlugin(mapView, mapboxMap)
         val scaleBarOption = ScaleBarOption(this)
         scaleBarOption
                 .setTextColor(R.color.mapboxRed)
