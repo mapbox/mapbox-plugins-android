@@ -11,7 +11,7 @@ import java.util.Locale;
 /**
  * Builder class from which a scale bar is created.
  */
-public class ScaleBarOption {
+public class ScaleBarOptions {
   public static final int REFRESH_INTERVAL_DEFAULT = 15;
 
   private final Context context;
