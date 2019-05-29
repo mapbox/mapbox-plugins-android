@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.VisibleForTesting;
-import android.util.DisplayMetrics;
+import android.support.v4.content.ContextCompat;
 
 import java.util.Locale;
 
@@ -83,7 +83,7 @@ public class ScaleBarOption {
    * @return this.
    */
   public ScaleBarOption setTextColor(@ColorRes int textColor) {
-    this.textColor = context.getResources().getColor(textColor);
+    this.textColor = ContextCompat.getColor(context, textColor);
     return this;
   }
 
@@ -95,7 +95,7 @@ public class ScaleBarOption {
    * @return this.
    */
   public ScaleBarOption setPrimaryColor(@ColorRes int primaryColor) {
-    this.primaryColor = context.getResources().getColor(primaryColor);
+    this.primaryColor = ContextCompat.getColor(context, primaryColor);
     return this;
   }
 
@@ -107,7 +107,7 @@ public class ScaleBarOption {
    * @return this.
    */
   public ScaleBarOption setSecondaryColor(@ColorRes int secondaryColor) {
-    this.secondaryColor = context.getResources().getColor(secondaryColor);
+    this.secondaryColor = ContextCompat.getColor(context, secondaryColor);
     return this;
   }
 
@@ -129,7 +129,7 @@ public class ScaleBarOption {
    * @return this.
    */
   public ScaleBarOption setMarginTop(@DimenRes int marginTop) {
-    this.marginTop = convertDpToPixel(context.getResources().getDimension(marginTop));
+    this.marginTop = context.getResources().getDimension(marginTop);
     return this;
   }
 
@@ -151,7 +151,7 @@ public class ScaleBarOption {
    * @return this.
    */
   public ScaleBarOption setBarHeight(@DimenRes int barHeight) {
-    this.barHeight = convertDpToPixel(context.getResources().getDimension(barHeight));
+    this.barHeight = context.getResources().getDimension(barHeight);
     return this;
   }
 
@@ -173,7 +173,7 @@ public class ScaleBarOption {
    * @return this.
    */
   public ScaleBarOption setBorderWidth(@DimenRes int borderWidth) {
-    this.borderWidth = convertDpToPixel(context.getResources().getDimension(borderWidth));
+    this.borderWidth = context.getResources().getDimension(borderWidth);
     return this;
   }
 
@@ -195,7 +195,7 @@ public class ScaleBarOption {
    * @return this.
    */
   public ScaleBarOption setTextSize(@DimenRes int textSize) {
-    this.textSize = convertDpToPixel(context.getResources().getDimension(textSize));
+    this.textSize = context.getResources().getDimension(textSize);
     return this;
   }
 
@@ -228,7 +228,7 @@ public class ScaleBarOption {
    * @return this.
    */
   public ScaleBarOption setMarginLeft(@DimenRes int marginLeft) {
-    this.marginLeft = convertDpToPixel(context.getResources().getDimension(marginLeft));
+    this.marginLeft = context.getResources().getDimension(marginLeft);
     return this;
   }
 
@@ -250,19 +250,8 @@ public class ScaleBarOption {
    * @return this.
    */
   public ScaleBarOption setTextBarMargin(@DimenRes int textBarMargin) {
-    this.textBarMargin = convertDpToPixel(context.getResources().getDimension(textBarMargin));
+    this.textBarMargin = context.getResources().getDimension(textBarMargin);
     return this;
-  }
-
-  /**
-   * This method converts dp unit to equivalent pixels, depending on device density.
-   *
-   * @param dp A value in dp (density independent pixels) unit. Which we need to convert into pixels
-   * @return A float value to represent px equivalent to dp depending on device density
-   */
-  private float convertDpToPixel(float dp) {
-    return dp * ((float) context.getResources()
-      .getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
   }
 
   /**

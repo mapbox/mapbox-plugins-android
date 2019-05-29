@@ -12,7 +12,7 @@ import com.mapbox.mapboxsdk.maps.Projection;
 /**
  * Plugin class that shows a scale bar on MapView and changes the scale corresponding to the MapView's scale.
  */
-public class ScaleBarManager {
+public class ScaleBarPlugin {
   private final MapView mapView;
   private final MapboxMap mapboxMap;
   private final Projection projection;
@@ -28,7 +28,7 @@ public class ScaleBarManager {
     }
   };
 
-  public ScaleBarManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
+  public ScaleBarPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
     this.mapView = mapView;
     this.mapboxMap = mapboxMap;
     this.projection = mapboxMap.getProjection();

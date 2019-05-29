@@ -5,8 +5,8 @@ import android.support.v7.app.AppCompatActivity
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.plugins.testapp.R
-import com.mapbox.pluginscalebar.ScaleBarManager
 import com.mapbox.pluginscalebar.ScaleBarOption
+import com.mapbox.pluginscalebar.ScaleBarPlugin
 import kotlinx.android.synthetic.main.activity_scalebar.*
 
 /**
@@ -25,7 +25,7 @@ class ScalebarActivity : AppCompatActivity() {
     }
 
     private fun addScalebar(mapboxMap: MapboxMap) {
-        val scaleBarManager = ScaleBarManager(mapView, mapboxMap)
+        val scaleBarManager = ScaleBarPlugin(mapView, mapboxMap)
         val scaleBarOption = ScaleBarOption(this)
         scaleBarOption
                 .setTextColor(R.color.mapboxRed)

@@ -3,15 +3,15 @@ package com.mapbox.mapboxsdk.plugins.scalebar;
 
 import android.app.Activity;
 import android.support.test.runner.AndroidJUnit4;
-import android.util.DisplayMetrics;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.plugins.BaseActivityTest;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.TestActivity;
-import com.mapbox.pluginscalebar.ScaleBarManager;
 import com.mapbox.pluginscalebar.ScaleBarOption;
+import com.mapbox.pluginscalebar.ScaleBarPlugin;
 import com.mapbox.pluginscalebar.ScaleBarWidget;
 
 import org.junit.Test;
@@ -30,7 +30,7 @@ import static org.junit.Assert.assertNotNull;
  */
 @RunWith(AndroidJUnit4.class)
 public class ScaleBarTest extends BaseActivityTest {
-  private ScaleBarManager scaleBarManager;
+  private ScaleBarPlugin scaleBarManager;
   private Activity activity;
   private ScaleBarWidget scaleBarWidget;
 
@@ -42,7 +42,7 @@ public class ScaleBarTest extends BaseActivityTest {
   private void setupScaleBar() {
     Timber.i("Retrieving layer");
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      scaleBarManager = new ScaleBarManager(idlingResource.getMapView(), mapboxMap);
+      scaleBarManager = new ScaleBarPlugin(idlingResource.getMapView(), mapboxMap);
       activity = rule.getActivity();
       scaleBarWidget = scaleBarManager.create(new ScaleBarOption(activity));
       assertNotNull(scaleBarManager);
@@ -68,9 +68,9 @@ public class ScaleBarTest extends BaseActivityTest {
     validateTestSetup();
     setupScaleBar();
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      assertEquals(activity.getResources().getColor(android.R.color.black), scaleBarWidget.getTextColor());
-      assertEquals(activity.getResources().getColor(android.R.color.black), scaleBarWidget.getPrimaryColor());
-      assertEquals(activity.getResources().getColor(android.R.color.white), scaleBarWidget.getSecondaryColor());
+      assertEquals(ContextCompat.getColor(activity, android.R.color.black), scaleBarWidget.getTextColor());
+      assertEquals(ContextCompat.getColor(activity, android.R.color.black), scaleBarWidget.getPrimaryColor());
+      assertEquals(ContextCompat.getColor(activity, android.R.color.white), scaleBarWidget.getSecondaryColor());
 
 
       int textColor = R.color.colorAccent;
@@ -83,9 +83,9 @@ public class ScaleBarTest extends BaseActivityTest {
       option.setSecondaryColor(colorSecondary);
       scaleBarWidget = scaleBarManager.create(option);
       assertNotNull(scaleBarWidget);
-      assertEquals(activity.getResources().getColor(textColor), scaleBarWidget.getTextColor());
-      assertEquals(activity.getResources().getColor(colorPrimary), scaleBarWidget.getPrimaryColor());
-      assertEquals(activity.getResources().getColor(colorSecondary), scaleBarWidget.getSecondaryColor());
+      assertEquals(ContextCompat.getColor(activity, textColor), scaleBarWidget.getTextColor());
+      assertEquals(ContextCompat.getColor(activity, colorPrimary), scaleBarWidget.getPrimaryColor());
+      assertEquals(ContextCompat.getColor(activity, colorSecondary), scaleBarWidget.getSecondaryColor());
     });
   }
 
@@ -105,11 +105,11 @@ public class ScaleBarTest extends BaseActivityTest {
     validateTestSetup();
     setupScaleBar();
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_margin_left)),
+      assertEquals(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_margin_left),
         scaleBarWidget.getMarginLeft(), 0);
-      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_margin_top)),
+      assertEquals(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_margin_top),
         scaleBarWidget.getMarginTop(), 0);
-      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_text_margin)),
+      assertEquals(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_text_margin),
         scaleBarWidget.getTextBarMargin(), 0);
 
       ScaleBarOption option = new ScaleBarOption(activity);
@@ -118,11 +118,11 @@ public class ScaleBarTest extends BaseActivityTest {
       option.setTextBarMargin(R.dimen.fab_margin);
       scaleBarWidget = scaleBarManager.create(option);
       assertNotNull(scaleBarWidget);
-      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.fab_margin)),
+      assertEquals(activity.getResources().getDimension(R.dimen.fab_margin),
         scaleBarWidget.getMarginLeft(), 0);
-      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.fab_margin)),
+      assertEquals(activity.getResources().getDimension(R.dimen.fab_margin),
         scaleBarWidget.getMarginTop(), 0);
-      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.fab_margin)),
+      assertEquals(activity.getResources().getDimension(R.dimen.fab_margin),
         scaleBarWidget.getTextBarMargin(), 0);
 
       option = new ScaleBarOption(activity);
@@ -143,14 +143,14 @@ public class ScaleBarTest extends BaseActivityTest {
     validateTestSetup();
     setupScaleBar();
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_height)),
+      assertEquals(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_height),
         scaleBarWidget.getBarHeight(), 0);
 
       ScaleBarOption option = new ScaleBarOption(activity);
       option.setBarHeight(R.dimen.fab_margin);
       scaleBarWidget = scaleBarManager.create(option);
       assertNotNull(scaleBarWidget);
-      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.fab_margin)),
+      assertEquals(activity.getResources().getDimension(R.dimen.fab_margin),
         scaleBarWidget.getBarHeight(), 0);
 
       option = new ScaleBarOption(activity);
@@ -167,14 +167,14 @@ public class ScaleBarTest extends BaseActivityTest {
     validateTestSetup();
     setupScaleBar();
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_text_size)),
+      assertEquals(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_text_size),
         scaleBarWidget.getTextSize(), 0);
 
       ScaleBarOption option = new ScaleBarOption(activity);
       option.setTextSize(R.dimen.fab_margin);
       scaleBarWidget = scaleBarManager.create(option);
       assertNotNull(scaleBarWidget);
-      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.fab_margin)),
+      assertEquals(activity.getResources().getDimension(R.dimen.fab_margin),
         scaleBarWidget.getTextSize(), 0);
 
       option = new ScaleBarOption(activity);
@@ -191,14 +191,14 @@ public class ScaleBarTest extends BaseActivityTest {
     validateTestSetup();
     setupScaleBar();
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_border_width)),
+      assertEquals(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_border_width),
         scaleBarWidget.getBorderWidth(), 0);
 
       ScaleBarOption option = new ScaleBarOption(activity);
       option.setBorderWidth(R.dimen.fab_margin);
       scaleBarWidget = scaleBarManager.create(option);
       assertNotNull(scaleBarWidget);
-      assertEquals(convertDpToPixel(activity.getResources().getDimension(R.dimen.fab_margin)),
+      assertEquals(activity.getResources().getDimension(R.dimen.fab_margin),
         scaleBarWidget.getBorderWidth(), 0);
 
       option = new ScaleBarOption(activity);
@@ -246,10 +246,5 @@ public class ScaleBarTest extends BaseActivityTest {
       assertNotNull(scaleBarWidget);
       assertFalse(scaleBarWidget.isMetricUnit());
     });
-  }
-
-
-  private float convertDpToPixel(float dp) {
-    return dp * ((float) activity.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
   }
 }
