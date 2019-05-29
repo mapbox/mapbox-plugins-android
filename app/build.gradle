@@ -113,6 +113,7 @@ dependencies {
   implementation project(':plugin-annotation')
   implementation project(':plugin-markerview')
   implementation project(':ktx-mapbox-maps')
+  implementation project(':plugin-scalebar')
 }
 
 apply from: "${rootDir}/gradle/checkstyle.gradle"

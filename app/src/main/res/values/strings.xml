@@ -12,6 +12,7 @@
   <string name="category_annotation">Annotation plugin</string>
   <string name="category_ktx">Kotlin extension functions</string>
   <string name="category_markerview">View synchronisation</string>
+  <string name="category_scalebar">Scalebar</string>
 
   <!-- Titles -->
   <string name="title_traffic">Traffic Plugin</string>
@@ -34,6 +35,7 @@
   <string name="title_line_change">Change Line</string>
   <string name="title_markerview">MarkerView plugin</string>
   <string name="title_ktx">Mapbox Maps KTX</string>
+  <string name="title_scalebar">Scale bar</string>
 
   <!-- Descriptions -->
   <string name="description_traffic">Add Traffic layers to any Mapbox basemap.</string>
@@ -56,6 +58,7 @@
   <string name="description_circle">Show circles on a map</string>
   <string name="description_markerview">Synchronise a view on a map</string>
   <string name="description_ktx">Test Mapbox Maps SDK for Android Kotlin extension functions</string>
+  <string name="description_scalebar">Show scale bar on a map</string>
 
   <!-- Place picker -->
   <string name="detailed_description_place_picker">Example shows how to launch the Place Picker using the Floating action button and receiving a result in onActivityResult.</string>
