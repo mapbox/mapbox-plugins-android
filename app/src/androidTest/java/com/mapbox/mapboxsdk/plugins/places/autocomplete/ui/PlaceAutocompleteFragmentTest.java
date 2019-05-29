@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.net.wifi.WifiManager;
 import android.support.test.espresso.action.ViewActions;
+import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -22,13 +23,14 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasBackground;
+import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -98,6 +100,36 @@ import static org.mockito.Mockito.verify;
     placeAutocompleteFragment.setOnPlaceSelectedListener(listener);
     placeAutocompleteFragment.onBackButtonPress();
     verify(listener, times(1)).onCancel();
+  }
+
+  @Test
+  public void onClearSearchQueryTextButtonPress_doesClearEditText() throws Exception {
+    ClearButtonListener clearButtonListener = mock(ClearButtonListener.class);
+    placeAutocompleteFragment.setOnClearButtonListener(clearButtonListener);
+    onView(withId(R.id.edittext_search)).check(ViewAssertions.matches((withText(""))));
+  }
+
+  @Test
+  public void onClearSearchQueryTextButtonPress_doesInvokeOnCancelCallback() throws Exception {
+    ClearButtonListener clearButtonListener = mock(ClearButtonListener.class);
+    placeAutocompleteFragment.setOnClearButtonListener(clearButtonListener);
+    verify(clearButtonListener, times(1)).onCancel();
+  }
+
+  @Test
+  public void onSearchQueryEditTextPress_doesAddFocusToEditText() throws Exception {
+    QueryFocusListener searchUiHasFocusListener = mock(QueryFocusListener.class);
+    placeAutocompleteFragment.setOnSearchUiHasFocusListener(searchUiHasFocusListener);
+    onView(withId(R.id.edittext_search)).perform(ViewActions.click());
+    onView(withId(R.id.edittext_search)).check(matches(hasFocus()));
+  }
+
+  @Test
+  public void onResultPress_doesRemoveFocus() throws Exception {
+    PlaceSelectionListener listener = mock(PlaceSelectionListener.class);
+    placeAutocompleteFragment.setOnPlaceSelectedListener(listener);
+    onView(withId(R.id.scroll_view_results)).perform(ViewActions.click());
+    onView(withId(R.id.edittext_search)).check(matches(not(hasFocus())));
   }
 
   //

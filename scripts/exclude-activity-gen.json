@@ -9,5 +9,6 @@
   "LocationLayerFragmentActivity",
   "LocationLayerMapChangeActivity",
   "LocationLayerModesActivity",
-  "ManualLocationUpdatesActivity"
+  "ManualLocationUpdatesActivity",
+  "PickerAutocompleteCombinedActivity"
 ]

@@ -1,20 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  tools:context="com.mapbox.mapboxsdk.plugins.places.picker.ui.PlacePickerActivity">
-
-  <android.support.design.widget.AppBarLayout
-    android:id="@+id/place_picker_app_bar_layout"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    tools:context="com.mapbox.mapboxsdk.plugins.places.picker.ui.PlacePickerActivity">
 
-    <include layout="@layout/mapbox_toolbar_place_picker"/>
+    <android.support.v7.widget.CardView
+        android:id="@+id/optional_search_autocomplete_cardview"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:visibility="invisible"
+        tools:visibility="invisible">
 
-  </android.support.design.widget.AppBarLayout>
+        <FrameLayout
+            android:id="@+id/optional_search_autocomplete_cardview_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-  <include layout="@layout/mapbox_content_place_picker"/>
+    </android.support.v7.widget.CardView>
 
-</android.support.design.widget.CoordinatorLayout>
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/place_picker_app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/mapbox_toolbar_place_picker" />
+
+    </android.support.design.widget.AppBarLayout>
+
+
+
+    <include layout="@layout/mapbox_content_place_picker" />
+
+</FrameLayout>

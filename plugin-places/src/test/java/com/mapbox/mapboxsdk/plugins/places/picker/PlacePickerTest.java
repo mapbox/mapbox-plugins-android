@@ -7,7 +7,9 @@ import android.os.Parcel;
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.places.common.PlaceConstants;
+import com.mapbox.mapboxsdk.plugins.places.picker.model.PlacePickerOptions;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -69,6 +71,25 @@ public class PlacePickerTest {
   @Test
   public void intentBuilder_initializesCorrectly() throws Exception {
     PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+    assertNotNull(builder);
+  }
+
+  @Test
+  public void intentBuilder_initializesCorrectlyWithSearchIncluded() throws Exception {
+    PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+    builder.placeOptions(PlacePickerOptions.builder()
+        .includeReverseGeocode(true)
+        .includeSearch(true)
+        .build());
+    assertNotNull(builder);
+  }
+
+  @Test
+  public void intentBuilder_initializesCorrectlyWithCustomMapStyleIncluded() throws Exception {
+    PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+    builder.placeOptions(PlacePickerOptions.builder()
+        .mapStyle(Style.SATELLITE)
+        .build());
     assertNotNull(builder);
   }
 

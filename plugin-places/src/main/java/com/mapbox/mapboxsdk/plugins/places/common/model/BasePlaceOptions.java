@@ -16,4 +16,6 @@ public interface BasePlaceOptions {
 
   Integer toolbarColor();
 
+  Integer statusBarColor();
+
 }

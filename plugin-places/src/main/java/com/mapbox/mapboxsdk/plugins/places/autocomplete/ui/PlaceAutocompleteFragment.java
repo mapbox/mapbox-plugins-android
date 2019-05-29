@@ -3,15 +3,21 @@ package com.mapbox.mapboxsdk.plugins.places.autocomplete.ui;
 import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -24,18 +30,23 @@ import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.viewmodel.PlaceAutocompleteViewModel;
 import com.mapbox.mapboxsdk.plugins.places.common.PlaceConstants;
 import com.mapbox.mapboxsdk.plugins.places.common.utils.KeyboardUtils;
+import com.mapbox.mapboxsdk.plugins.places.picker.ui.PlacePickerActivity;
 
 import java.util.List;
 
 import timber.log.Timber;
 
 public class PlaceAutocompleteFragment extends Fragment implements ResultClickCallback,
-  SearchView.QueryListener, SearchView.BackButtonListener,
+  QueryListener, QueryFocusListener, BackButtonListener, ClearButtonListener,
   ViewTreeObserver.OnScrollChangedListener {
 
   public static final String TAG = "PlaceAutocompleteFragment";
 
   private PlaceSelectionListener placeSelectionListener;
+  private QueryFocusListener queryFocusListener;
+  private QueryListener searchQueryListener;
+  private ClearButtonListener clearButtonListener;
+  private SearchHistoryCountListener searchHistoryCountListener;
   private PlaceAutocompleteViewModel viewModel;
   private ResultView searchHistoryView;
   private ResultView searchResultView;
@@ -48,7 +59,9 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
   private String accessToken;
   private Integer historyCount;
   private View rootView;
+  private Activity context;
   private int mode;
+  private EditText searchEditText;
 
   public static PlaceAutocompleteFragment newInstance(@NonNull String accessToken) {
     PlaceAutocompleteFragment fragment = new PlaceAutocompleteFragment();
@@ -81,6 +94,7 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
     }
 
     mode = placeOptions.viewMode();
+    placeOptions.toolbarColor();
     rootView = inflater.inflate(
       mode == PlaceOptions.MODE_CARDS ? R.layout.mapbox_fragment_autocomplete_card
         : R.layout.mapbox_fragment_autocomplete_full,
@@ -96,6 +110,8 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
     super.onViewCreated(view, savedInstanceState);
     resultScrollView.getViewTreeObserver().addOnScrollChangedListener(this);
     styleView();
+    KeyboardUtils.showKeyboard(context.getWindow().getDecorView());
+    searchEditText.requestFocus();
   }
 
   private void styleView() {
@@ -105,17 +121,28 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
       View toolbar = rootView.findViewById(R.id.toolbar);
       if (toolbar != null) {
         toolbar.setBackgroundColor(placeOptions.toolbarColor());
+        if (placeOptions.toolbarColor() != Color.WHITE) {
+          swapUiColor();
+        }
       }
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        Activity context = (Activity) rootView.getContext();
+        context = (Activity) rootView.getContext();
         context.getWindow().setStatusBarColor(placeOptions.statusbarColor());
       }
 
       searchView = rootView.findViewById(R.id.searchView);
       searchView.setHint(placeOptions.hint() == null
         ? getString(R.string.mapbox_plugins_autocomplete_search_hint) : placeOptions.hint());
+
+      searchEditText = searchView.findViewById(R.id.edittext_search);
     }
+  }
+
+  private void swapUiColor() {
+    changeBackButtonColorToWhite();
+    changeClearSearchTextButtonColorToWhite();
+    changeSearchTextColorToWhite();
   }
 
   @Override
@@ -153,6 +180,9 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
   @Override
   public void onQueryChange(CharSequence charSequence) {
     viewModel.onQueryChange(charSequence);
+    if (searchQueryListener != null) {
+      searchQueryListener.onQueryChange(charSequence);
+    }
     if (charSequence.length() <= 0) {
       searchResultView.getResultsList().clear();
       searchResultView.setVisibility(
@@ -163,10 +193,48 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
   }
 
   @Override
+  public void onClearButtonPress() {
+    if (clearButtonListener != null) {
+      clearButtonListener.onClearButtonPress();
+    }
+  }
+
+  @Override
   public void onClick(CarmenFeature carmenFeature) {
+    searchEditText.clearFocus();
     viewModel.saveCarmenFeatureToDatabase(carmenFeature);
     if (placeSelectionListener != null) {
       placeSelectionListener.onPlaceSelected(carmenFeature);
+    }
+  }
+
+  private void changeBackButtonColorToWhite() {
+    ImageView clearButtonImageView = searchView.findViewById(R.id.button_search_clear);
+    Drawable clearButtonVectorDrawable = VectorDrawableCompat.create(
+      getResources(),
+      R.drawable.mapbox_ic_clear,
+      null);
+    Drawable clearButtonDrawable = DrawableCompat.wrap(clearButtonVectorDrawable);
+    DrawableCompat.setTint(clearButtonDrawable.mutate(), Color.WHITE);
+    clearButtonImageView.setImageDrawable(clearButtonDrawable);
+  }
+
+  private void changeClearSearchTextButtonColorToWhite() {
+    ImageView backButtonImageView = searchView.findViewById(R.id.button_search_back);
+    Drawable backButtonVectorDrawable = VectorDrawableCompat.create(
+      getResources(),
+      R.drawable.mapbox_ic_arrow_back,
+      null);
+    Drawable backButtonDrawable = DrawableCompat.wrap(backButtonVectorDrawable);
+    DrawableCompat.setTint(backButtonDrawable.mutate(), Color.WHITE);
+    backButtonImageView.setImageDrawable(backButtonDrawable);
+  }
+
+  private void changeSearchTextColorToWhite() {
+    EditText searchEditText = searchView.findViewById(R.id.edittext_search);
+    if (searchEditText != null) {
+      searchEditText.setTextColor(Color.WHITE);
+      searchEditText.setHintTextColor(Color.WHITE);
     }
   }
 
@@ -175,14 +243,81 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
     if (resultScrollView != null) {
       resultScrollView.getViewTreeObserver().removeOnScrollChangedListener(this);
     }
-    placeSelectionListener = null;
+    if (placeSelectionListener != null) {
+      placeSelectionListener = null;
+    }
+    if (placeSelectionListener != null) {
+      placeSelectionListener = null;
+    }
+    if (searchQueryListener != null) {
+      searchQueryListener = null;
+    }
+    if (clearButtonListener != null) {
+      clearButtonListener = null;
+    }
+    if (searchHistoryCountListener != null) {
+      searchHistoryCountListener = null;
+    }
     super.onDestroyView();
   }
 
   @Override
   public void onBackButtonPress() {
-    if (placeSelectionListener != null) {
-      placeSelectionListener.onCancel();
+    if (searchEditText.hasFocus()) {
+      // Remove focus from the search UI EditText
+      searchEditText.clearFocus();
+
+      // Hide the keyboard
+      KeyboardUtils.hideKeyboard(rootView);
+
+      // Shrink the results CardView if using PlacePickerActivity and search UI is enabled
+      if (context instanceof PlacePickerActivity) {
+        if (!((PlacePickerActivity) context).resultsCardViewListIsCollapsed) {
+          ((PlacePickerActivity) context).adjustResultsCardViewHeight(false);
+        }
+      }
+    } else {
+      if (placeSelectionListener != null) {
+        placeSelectionListener.onCancel();
+      }
+      if (queryFocusListener != null) {
+        queryFocusListener.onCancel();
+      }
+      if (searchQueryListener != null) {
+        searchQueryListener.onCancel();
+      }
+      if (clearButtonListener != null) {
+        clearButtonListener.onCancel();
+      }
+      if (searchHistoryCountListener != null) {
+        searchHistoryCountListener.onCancel();
+      }
+    }
+  }
+
+  @Override
+  public void onCancel() {
+    if (queryFocusListener != null) {
+      queryFocusListener.onCancel();
+    }
+    if (searchQueryListener != null) {
+      searchQueryListener.onCancel();
+    }
+    if (queryFocusListener != null) {
+      queryFocusListener.onCancel();
+    }
+    if (searchQueryListener != null) {
+      searchQueryListener.onCancel();
+    }
+    if (clearButtonListener != null) {
+      clearButtonListener.onCancel();
+    }
+  }
+
+  @Override
+  public void onSearchViewEditTextHasFocus() {
+    if (queryFocusListener != null) {
+      queryFocusListener.onSearchViewEditTextHasFocus();
     }
   }
 
@@ -190,12 +325,30 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
     placeSelectionListener = listener;
   }
 
+  public void setOnSearchUiHasFocusListener(QueryFocusListener listener) {
+    queryFocusListener = listener;
+  }
+
+  public void setOnSearchQueryListener(QueryListener listener) {
+    searchQueryListener = listener;
+  }
+
+  public void setOnClearButtonListener(ClearButtonListener listener) {
+    clearButtonListener = listener;
+  }
+
+  public void setOnHistoryCountListener(SearchHistoryCountListener listener) {
+    searchHistoryCountListener = listener;
+  }
+
   private void bindClickListeners() {
     searchHistoryView.setOnItemClickListener(this);
     searchResultView.setOnItemClickListener(this);
     starredView.setOnItemClickListener(this);
     searchView.setBackButtonListener(this);
+    searchView.setClearButtonListener(this);
     searchView.setQueryListener(this);
+    searchView.setQueryFocusListener(this);
   }
 
   private void bindViews() {
@@ -212,6 +365,9 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
   void updateSearchHistoryView(@Nullable List<SearchHistoryEntity> searchHistoryEntities) {
     searchHistoryView.getResultsList().clear();
     if (searchHistoryEntities != null) {
+      if (searchHistoryCountListener != null) {
+        searchHistoryCountListener.onNewHistoryCount(searchHistoryEntities.size());
+      }
       if (placeOptions.historyCount() != null) {
         historyCount = placeOptions.historyCount();
         for (int x = 0; x < historyCount; x++) {
@@ -287,5 +443,12 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
 
   public Integer getHistoryCount() {
     return historyCount;
+  }
+
+  public interface SearchHistoryCountListener {
+
+    void onNewHistoryCount(int count);
+
+    void onCancel();
   }
 }

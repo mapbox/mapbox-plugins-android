@@ -19,17 +19,21 @@ import android.widget.LinearLayout;
 import com.mapbox.mapboxsdk.places.R;
 
 public class SearchView extends LinearLayout implements ImageButton.OnClickListener, TextWatcher,
-  LifecycleObserver {
+  LifecycleObserver, View.OnFocusChangeListener {
 
   @Nullable
   private BackButtonListener backButtonListener;
   @Nullable
+  private ClearButtonListener clearButtonListener;
+  @Nullable
   private QueryListener queryListener;
+  @Nullable
+  private QueryFocusListener focusListener;
 
   private final ImageView backButton;
   private final ImageView clearButton;
   private final EditText searchEditText;
-
+  
   public SearchView(@NonNull Context context) {
     this(context, null);
   }
@@ -51,6 +55,7 @@ public class SearchView extends LinearLayout implements ImageButton.OnClickListe
     backButton.setOnClickListener(this);
     clearButton.setOnClickListener(this);
     searchEditText.addTextChangedListener(this);
+    searchEditText.setOnFocusChangeListener(this);
     ((LifecycleOwner) getContext()).getLifecycle().addObserver(this);
   }
 
@@ -62,6 +67,18 @@ public class SearchView extends LinearLayout implements ImageButton.OnClickListe
       }
     } else {
       searchEditText.getText().clear();
+      if (clearButtonListener != null) {
+        clearButtonListener.onClearButtonPress();
+      }
+    }
+  }
+
+  @Override
+  public void onFocusChange(View view, boolean hasFocus) {
+    if (view.getId() == searchEditText.getId()) {
+      if (focusListener != null) {
+        focusListener.onSearchViewEditTextHasFocus();
+      }
     }
   }
 
@@ -69,6 +86,8 @@ public class SearchView extends LinearLayout implements ImageButton.OnClickListe
   public void onDestroy() {
     backButtonListener = null;
     queryListener = null;
+    focusListener = null;
+    clearButtonListener = null;
   }
 
   public void setHint(String hint) {
@@ -76,7 +95,7 @@ public class SearchView extends LinearLayout implements ImageButton.OnClickListe
   }
 
   @Override
-  public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+  public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
     if (queryListener != null) {
       queryListener.onQueryChange(charSequence);
     }
@@ -84,7 +103,7 @@ public class SearchView extends LinearLayout implements ImageButton.OnClickListe
   }
 
   @Override
-  public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+  public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
     // Not used
   }
 
@@ -97,15 +116,15 @@ public class SearchView extends LinearLayout implements ImageButton.OnClickListe
     this.backButtonListener = backButtonListener;
   }
 
+  public void setClearButtonListener(@Nullable ClearButtonListener clearButtonListener) {
+    this.clearButtonListener = clearButtonListener;
+  }
+
   public void setQueryListener(@Nullable QueryListener queryListener) {
     this.queryListener = queryListener;
   }
 
-  interface QueryListener {
-    void onQueryChange(CharSequence charSequence);
-  }
-
-  interface BackButtonListener {
-    void onBackButtonPress();
+  public void setQueryFocusListener(@Nullable QueryFocusListener focusListener) {
+    this.focusListener = focusListener;
   }
 }

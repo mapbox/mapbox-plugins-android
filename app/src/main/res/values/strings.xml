@@ -19,6 +19,7 @@
   <string name="title_building">Building Plugin</string>
   <string name="title_places_autocomplete">Places Autocomplete</string>
   <string name="title_places_autocomplete_fragment">Places Autocomplete Fragment</string>
+  <string name="title_place_picker_autocomplete_combo">Autocomplete and Place Picker Combination</string>
   <string name="title_offline_plugin">Create region</string>
   <string name="title_offline_regions">List regions</string>
   <string name="title_place_picker">Place picker</string>
@@ -42,6 +43,7 @@
   <string name="description_building">Add 3D Building layer to a Mapbox map.</string>
   <string name="description_autocomplete">Launch the autocomplete activity.</string>
   <string name="description_autocomplete_fragment">Launch the autocomplete fragment inside an activity</string>
+  <string name="description_place_picker_autocomplete_combo">Show the Place Picker and autocomplete UI together.</string>
   <string name="description_offline_plugin">Use a form to create an offline region.</string>
   <string name="description_offline_regions">List all offline regions.</string>
   <string name="description_place_picker">Launch the place picker activity and receive result</string>
@@ -62,10 +64,13 @@
 
   <!-- Place picker -->
   <string name="detailed_description_place_picker">Example shows how to launch the Place Picker using the Floating action button and receiving a result in onActivityResult.</string>
+  <string name="detailed_description_place_picker_combo">PickerAutocompleteCombinedActivity: Example shows how to launch the Place Picker combined with the autocomplete geocoding search UI.</string>
   <string name="reverse_geocoding_enabled">Reverse geocoding enabled</string>
   <string name="reverse_geocoding_disabled">Reverse geocoding disabled</string>
   <string name="user_location_button_enabled">User location button enabled</string>
   <string name="user_location_button_disabled">User location button disabled</string>
+  <string name="search_ui_enabled">Search autocomplete UI enabled</string>
+  <string name="search_ui_disabled">Search autocomplete UI disabled</string>
 
   <!-- Misc -->
   <string name="min_zoom_textview">Min zoom: %1$d</string>
