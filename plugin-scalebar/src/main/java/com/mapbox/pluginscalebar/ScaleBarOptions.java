@@ -3,6 +3,7 @@ package com.mapbox.pluginscalebar;
 import android.content.Context;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.content.ContextCompat;
 
@@ -27,7 +28,7 @@ public class ScaleBarOptions {
   private float textSize;
   private boolean isMetricUnit;
 
-  public ScaleBarOptions(Context context) {
+  public ScaleBarOptions(@NonNull Context context) {
     this.context = context;
     refreshInterval = REFRESH_INTERVAL_DEFAULT;
     setBarHeight(R.dimen.mapbox_scale_bar_height);

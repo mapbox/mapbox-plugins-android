@@ -23,7 +23,6 @@ android {
 }
 
 dependencies {
-    implementation dependenciesList.supportAppcompatV7
     implementation dependenciesList.mapboxMapSdk
     javadocDeps dependenciesList.mapboxMapSdk
     testImplementation dependenciesList.junit

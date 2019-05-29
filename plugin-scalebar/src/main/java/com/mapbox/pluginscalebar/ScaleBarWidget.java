@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.util.Pair;
 import android.view.View;
 
@@ -37,7 +38,7 @@ public class ScaleBarWidget extends View {
   private String unit;
   private final RefreshHandler refreshHandler;
 
-  ScaleBarWidget(Context context) {
+  ScaleBarWidget(@NonNull Context context) {
     super(context);
     textPaint.setAntiAlias(true);
     textPaint.setTextAlign(Paint.Align.CENTER);

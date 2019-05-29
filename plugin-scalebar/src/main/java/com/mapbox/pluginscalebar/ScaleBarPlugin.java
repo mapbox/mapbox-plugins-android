@@ -40,7 +40,7 @@ public class ScaleBarPlugin {
    * @param option The scale bar widget options that used to build scale bar widget.
    * @return The created ScaleBarWidget instance.
    */
-  public ScaleBarWidget create(ScaleBarOptions option) {
+  public ScaleBarWidget create(@NonNull ScaleBarOptions option) {
     if (scaleBarWidget != null) {
       mapView.removeView(scaleBarWidget);
     }
@@ -66,9 +66,10 @@ public class ScaleBarPlugin {
   /**
    * Toggles the scale plugin state.
    * <p>
-   * If the scale plugin wasn't enabled, a {@link com.mapbox.mapboxsdk.maps.MapboxMap.OnScaleListener}
+   * If the scale plugin wasn't enabled, a {@link com.mapbox.mapboxsdk.maps.MapboxMap.OnCameraMoveListener}
    * will be added to the {@link MapView} to listen to scale change events to update the state of this plugin. If the
-   * plugin was enabled the {@link com.mapbox.mapboxsdk.maps.MapboxMap.OnScaleListener} will be removed from the map.
+   * plugin was enabled the {@link com.mapbox.mapboxsdk.maps.MapboxMap.OnCameraMoveListener}
+   * will be removed from the map.
    * </p>
    */
   @UiThread
