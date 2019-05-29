@@ -10,7 +10,7 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.plugins.BaseActivityTest;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.TestActivity;
-import com.mapbox.pluginscalebar.ScaleBarOption;
+import com.mapbox.pluginscalebar.ScaleBarOptions;
 import com.mapbox.pluginscalebar.ScaleBarPlugin;
 import com.mapbox.pluginscalebar.ScaleBarWidget;
 
@@ -44,7 +44,7 @@ public class ScaleBarTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       scaleBarManager = new ScaleBarPlugin(idlingResource.getMapView(), mapboxMap);
       activity = rule.getActivity();
-      scaleBarWidget = scaleBarManager.create(new ScaleBarOption(activity));
+      scaleBarWidget = scaleBarManager.create(new ScaleBarOptions(activity));
       assertNotNull(scaleBarManager);
       assertNotNull(scaleBarWidget);
     });
@@ -77,7 +77,7 @@ public class ScaleBarTest extends BaseActivityTest {
       int colorPrimary = R.color.colorPrimary;
       int colorSecondary = R.color.colorPrimaryDark;
 
-      ScaleBarOption option = new ScaleBarOption(activity);
+      ScaleBarOptions option = new ScaleBarOptions(activity);
       option.setTextColor(textColor);
       option.setPrimaryColor(colorPrimary);
       option.setSecondaryColor(colorSecondary);
@@ -112,7 +112,7 @@ public class ScaleBarTest extends BaseActivityTest {
       assertEquals(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_text_margin),
         scaleBarWidget.getTextBarMargin(), 0);
 
-      ScaleBarOption option = new ScaleBarOption(activity);
+      ScaleBarOptions option = new ScaleBarOptions(activity);
       option.setMarginLeft(R.dimen.fab_margin);
       option.setMarginTop(R.dimen.fab_margin);
       option.setTextBarMargin(R.dimen.fab_margin);
@@ -125,7 +125,7 @@ public class ScaleBarTest extends BaseActivityTest {
       assertEquals(activity.getResources().getDimension(R.dimen.fab_margin),
         scaleBarWidget.getTextBarMargin(), 0);
 
-      option = new ScaleBarOption(activity);
+      option = new ScaleBarOptions(activity);
       option.setMarginLeft(100f);
       option.setMarginTop(50f);
       option.setTextBarMargin(30f);
@@ -146,14 +146,14 @@ public class ScaleBarTest extends BaseActivityTest {
       assertEquals(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_height),
         scaleBarWidget.getBarHeight(), 0);
 
-      ScaleBarOption option = new ScaleBarOption(activity);
+      ScaleBarOptions option = new ScaleBarOptions(activity);
       option.setBarHeight(R.dimen.fab_margin);
       scaleBarWidget = scaleBarManager.create(option);
       assertNotNull(scaleBarWidget);
       assertEquals(activity.getResources().getDimension(R.dimen.fab_margin),
         scaleBarWidget.getBarHeight(), 0);
 
-      option = new ScaleBarOption(activity);
+      option = new ScaleBarOptions(activity);
       option.setBarHeight(100f);
       scaleBarWidget = scaleBarManager.create(option);
       assertNotNull(scaleBarWidget);
@@ -170,14 +170,14 @@ public class ScaleBarTest extends BaseActivityTest {
       assertEquals(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_text_size),
         scaleBarWidget.getTextSize(), 0);
 
-      ScaleBarOption option = new ScaleBarOption(activity);
+      ScaleBarOptions option = new ScaleBarOptions(activity);
       option.setTextSize(R.dimen.fab_margin);
       scaleBarWidget = scaleBarManager.create(option);
       assertNotNull(scaleBarWidget);
       assertEquals(activity.getResources().getDimension(R.dimen.fab_margin),
         scaleBarWidget.getTextSize(), 0);
 
-      option = new ScaleBarOption(activity);
+      option = new ScaleBarOptions(activity);
       option.setTextSize(100f);
       scaleBarWidget = scaleBarManager.create(option);
       assertNotNull(scaleBarWidget);
@@ -194,14 +194,14 @@ public class ScaleBarTest extends BaseActivityTest {
       assertEquals(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_border_width),
         scaleBarWidget.getBorderWidth(), 0);
 
-      ScaleBarOption option = new ScaleBarOption(activity);
+      ScaleBarOptions option = new ScaleBarOptions(activity);
       option.setBorderWidth(R.dimen.fab_margin);
       scaleBarWidget = scaleBarManager.create(option);
       assertNotNull(scaleBarWidget);
       assertEquals(activity.getResources().getDimension(R.dimen.fab_margin),
         scaleBarWidget.getBorderWidth(), 0);
 
-      option = new ScaleBarOption(activity);
+      option = new ScaleBarOptions(activity);
       option.setBorderWidth(100f);
       scaleBarWidget = scaleBarManager.create(option);
       assertNotNull(scaleBarWidget);
@@ -216,9 +216,9 @@ public class ScaleBarTest extends BaseActivityTest {
     validateTestSetup();
     setupScaleBar();
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      assertEquals(ScaleBarOption.REFRESH_INTERVAL_DEFAULT, scaleBarWidget.getRefreshInterval(), 0);
+      assertEquals(ScaleBarOptions.REFRESH_INTERVAL_DEFAULT, scaleBarWidget.getRefreshInterval(), 0);
 
-      ScaleBarOption option = new ScaleBarOption(activity);
+      ScaleBarOptions option = new ScaleBarOptions(activity);
       option.setRefreshInterval(1000);
       scaleBarWidget = scaleBarManager.create(option);
       assertNotNull(scaleBarWidget);
@@ -232,15 +232,15 @@ public class ScaleBarTest extends BaseActivityTest {
     validateTestSetup();
     setupScaleBar();
     invoke(mapboxMap, (uiController, mapboxMap) -> {
-      assertEquals(ScaleBarOption.LocaleUnitResolver.isMetricSystem(), scaleBarWidget.isMetricUnit());
+      assertEquals(ScaleBarOptions.LocaleUnitResolver.isMetricSystem(), scaleBarWidget.isMetricUnit());
 
-      ScaleBarOption option = new ScaleBarOption(activity);
+      ScaleBarOptions option = new ScaleBarOptions(activity);
       option.setMetricUnit(true);
       scaleBarWidget = scaleBarManager.create(option);
       assertNotNull(scaleBarWidget);
       assertTrue(scaleBarWidget.isMetricUnit());
 
-      option = new ScaleBarOption(activity);
+      option = new ScaleBarOptions(activity);
       option.setMetricUnit(false);
       scaleBarWidget = scaleBarManager.create(option);
       assertNotNull(scaleBarWidget);

@@ -40,7 +40,7 @@ public class ScaleBarPlugin {
    * @param option The scale bar widget options that used to build scale bar widget.
    * @return The created ScaleBarWidget instance.
    */
-  public ScaleBarWidget create(ScaleBarOption option) {
+  public ScaleBarWidget create(ScaleBarOptions option) {
     if (scaleBarWidget != null) {
       mapView.removeView(scaleBarWidget);
     }
