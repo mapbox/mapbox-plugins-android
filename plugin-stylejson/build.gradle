@@ -1,0 +1,34 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion androidVersions.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion androidVersions.minSdkVersion
+        targetSdkVersion androidVersions.targetSdkVersion
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    configurations {
+        javadocDeps
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues true
+    }
+}
+
+dependencies {
+    implementation dependenciesList.mapboxMapSdk
+    javadocDeps dependenciesList.mapboxMapSdk
+    testImplementation dependenciesList.junit
+    testImplementation dependenciesList.mockito
+}
+
+apply from: "${rootDir}/gradle/javadoc.gradle"
+apply from: "${rootDir}/gradle/publish.gradle"
+apply from: "${rootDir}/gradle/checkstyle.gradle"
