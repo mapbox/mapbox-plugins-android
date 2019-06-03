@@ -16,7 +16,6 @@ object StyleJsonContants {
     val SOURCE_IMAGE = "image"
     val SOURCE_RASTER_DEM = "rasterdem"
     val SOURCE_RASTER = "raster"
-    val SOURCE_UNKNOW = "unknow"
     val SOURCE_VECTOR = "vector"
 
     const val GEO_JSON_FEATURE = "Feature"

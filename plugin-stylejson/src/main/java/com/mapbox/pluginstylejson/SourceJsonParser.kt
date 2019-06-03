@@ -1,10 +1,8 @@
 package com.mapbox.pluginstylejson
 
-import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.mapbox.geojson.*
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
-import com.mapbox.mapboxsdk.style.sources.VectorSource
+import com.mapbox.mapboxsdk.style.sources.*
 import com.mapbox.pluginstylejson.StyleJsonContants.GEO_JSON_FEATURE
 import com.mapbox.pluginstylejson.StyleJsonContants.GEO_JSON_FEATURE_COLLECTION
 import com.mapbox.pluginstylejson.StyleJsonContants.GEO_JSON_GEOMETRY_COLLECTION
@@ -15,14 +13,12 @@ import com.mapbox.pluginstylejson.StyleJsonContants.GEO_JSON_NULTI_LINE_STRING
 import com.mapbox.pluginstylejson.StyleJsonContants.GEO_JSON_POINT
 import com.mapbox.pluginstylejson.StyleJsonContants.GEO_JSON_POLYGON
 
-class StyleJsonParser {
-      private val gson = Gson()
+class SourceJsonParser {
 
-    internal fun parserGeoJsonSource(id: String, json: String): GeoJsonSource {
+    internal fun parserGeoJsonSource(id: String, json: JsonObject): GeoJsonSource {
         val geoJsonSource = GeoJsonSource(id)
-        val source = gson.fromJson<JsonObject>(json, JsonObject::class.java)
-        if (source.has("data")) {
-            val data = source.getAsJsonObject("data")
+        if (json.has("data")) {
+            val data = json.getAsJsonObject("data")
             val dataString = data.asString
             if (dataString.startsWith("http")) {
                 geoJsonSource.url = dataString
@@ -45,7 +41,23 @@ class StyleJsonParser {
         return geoJsonSource
     }
 
-    internal fun parserVectorSource(id: String, json: String): VectorSource {
+    internal fun parserVectorSource(id: String, json: JsonObject): VectorSource {
+        return VectorSource(id, "")
+    }
 
+    internal fun parserCustomGeometrySource(id: String, json: JsonObject): CustomGeometrySource {
+        return CustomGeometrySource(id, null)
+    }
+
+    internal fun parserImageSource(id: String, json: JsonObject): ImageSource {
+        return ImageSource(id, null, 0)
+    }
+
+    internal fun parserRasterDemSource(id: String, json: JsonObject): RasterDemSource {
+        return RasterDemSource(id, "")
+    }
+
+    internal fun parserRasterSource(id: String, json: JsonObject): RasterSource {
+        return RasterSource(id, "")
     }
 }
