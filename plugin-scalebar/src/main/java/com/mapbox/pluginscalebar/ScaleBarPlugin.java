@@ -23,8 +23,7 @@ public class ScaleBarPlugin {
     @Override
     public void onCameraMove() {
       CameraPosition cameraPosition = mapboxMap.getCameraPosition();
-      double metersPerPixel = projection.getMetersPerPixelAtLatitude(cameraPosition.target.getLatitude());
-      scaleBarWidget.setDistancePerPixel(projection.getMetersPerPixelAtLatitude(metersPerPixel));
+      scaleBarWidget.setDistancePerPixel(projection.getMetersPerPixelAtLatitude(cameraPosition.target.getLatitude()));
     }
   };
 
@@ -49,8 +48,7 @@ public class ScaleBarPlugin {
     mapboxMap.addOnCameraMoveListener(cameraMoveListener);
     mapView.addView(scaleBarWidget);
     CameraPosition cameraPosition = mapboxMap.getCameraPosition();
-    double metersPerPixel = projection.getMetersPerPixelAtLatitude(cameraPosition.target.getLatitude());
-    scaleBarWidget.setDistancePerPixel(projection.getMetersPerPixelAtLatitude(metersPerPixel));
+    scaleBarWidget.setDistancePerPixel(projection.getMetersPerPixelAtLatitude(cameraPosition.target.getLatitude()));
     return scaleBarWidget;
   }
 
