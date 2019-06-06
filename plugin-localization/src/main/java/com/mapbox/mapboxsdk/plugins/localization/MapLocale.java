@@ -192,6 +192,20 @@ public final class MapLocale {
     .include(new LatLng(27.4335426, -18.3936845))
     .include(new LatLng(43.9933088, 4.5918885)).build();
 
+  /**
+   * Portugal Bounding box extracted from Open Street Map
+   */
+  static final LatLngBounds PORTUGAL_BBOX = new LatLngBounds.Builder()
+    .include(new LatLng(27.4335426, -18.3936845))
+    .include(new LatLng(42.280468655, -6.3890876937)).build();
+
+  /**
+   * Brazil Bounding box extracted from Open Street Map
+   */
+  static final LatLngBounds BRAZIL_BBOX = new LatLngBounds.Builder()
+    .include(new LatLng(5.2842873, -33.8689056))
+    .include(new LatLng(-28.6341164, -73.9830625)).build();
+
   /*
    * Some MapLocales already defined (these match with the predefined ones in the Locale class)
    */
@@ -267,6 +281,16 @@ public final class MapLocale {
   public static final MapLocale SPAIN = new MapLocale(SPANISH, SPAIN_BBOX);
 
   /**
+   * Useful constant for country.
+   */
+  public static final MapLocale PORTUGAL = new MapLocale(PORTUGUESE, PORTUGAL_BBOX);
+
+  /**
+   * Useful constant for country.
+   */
+  public static final MapLocale BRAZIL = new MapLocale(PORTUGUESE, BRAZIL_BBOX);
+
+  /**
    * Maps out the Matching pair of {@link Locale} and {@link MapLocale}. In other words, if I have a
    * {@link Locale#CANADA}, this should be matched up with {@link MapLocale#CANADA}.
    */
@@ -286,6 +310,8 @@ public final class MapLocale {
     LOCALE_SET.put(Locale.FRANCE, MapLocale.FRANCE);
     LOCALE_SET.put(new Locale("ru", "RU"), RUSSIA);
     LOCALE_SET.put(new Locale("es", "ES"), SPAIN);
+    LOCALE_SET.put(new Locale("pt", "PT"), PORTUGAL);
+    LOCALE_SET.put(new Locale("pt", "BR"), BRAZIL);
 
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
       Locale zh_CN_Hans = new Locale.Builder().setLanguage("zh").setRegion("CN").setScript("Hans").build();
