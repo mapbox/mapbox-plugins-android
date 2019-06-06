@@ -202,7 +202,7 @@ public class ScaleBarWidget extends View {
   }
 
   /**
-   * Set the margin between scale bar and the top of mapView。
+   * Set the margin between scale bar and the top of mapView.
    *
    * @param marginTop the margin between scale bar and the top of mapView, in pixel.
    */
