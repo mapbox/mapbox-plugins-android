@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Class responsible for synchronising views at a LatLng on top of a Map.
  */
-public class MarkerViewManager implements MapView.OnDidFinishRenderingFrameListener {
+public class MarkerViewManager implements MapView.OnCameraDidChangeListener {
 
   private final MapView mapView;
   private final MapboxMap mapboxMap;
@@ -39,7 +39,7 @@ public class MarkerViewManager implements MapView.OnDidFinishRenderingFrameListe
   @UiThread
   public void onDestroy() {
     markers.clear();
-    mapView.removeOnDidFinishRenderingFrameListener(this);
+    mapView.removeOnCameraDidChangeListener(this);
     initialised = false;
   }
 
@@ -56,11 +56,12 @@ public class MarkerViewManager implements MapView.OnDidFinishRenderingFrameListe
 
     if (!initialised) {
       initialised = true;
-      mapView.addOnDidFinishRenderingFrameListener(this);
+      mapView.addOnCameraDidChangeListener(this);
     }
     markerView.setProjection(mapboxMap.getProjection());
     mapView.addView(markerView.getView());
     markers.add(markerView);
+    markerView.update();
   }
 
   /**
@@ -78,16 +79,14 @@ public class MarkerViewManager implements MapView.OnDidFinishRenderingFrameListe
     markers.remove(markerView);
   }
 
-  @Override
-  public void onDidFinishRenderingFrame(boolean fully) {
-    if (fully) {
-      update();
-    }
-  }
-
   private void update() {
     for (MarkerView marker : markers) {
       marker.update();
     }
+  }
+
+  @Override
+  public void onCameraDidChange(boolean animated) {
+    update();
   }
 }
