@@ -2,6 +2,15 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### mapbox-android-plugin-annotation-v8:0.7.0 - June 11, 2019
+#### Features
+- uppercase static fields [#939](https://github.com/mapbox/mapbox-plugins-android/pull/939)
+- add multi manager support [#941](https://github.com/mapbox/mapbox-plugins-android/pull/941)
+- add getGeometry [#940](https://github.com/mapbox/mapbox-plugins-android/pull/940)
+- remove java 8 language support [#943](https://github.com/mapbox/mapbox-plugins-android/pull/943)
+- allow to set custom arbitrary data on an annotation [#948](https://github.com/mapbox/mapbox-plugins-android/pull/948)
+- Update style spec, gen new features, remove obsolete zIndex [#947](https://github.com/mapbox/mapbox-plugins-android/pull/947)
+
 ### mapbox-android-plugin-annotation-v7:0.6.0 - April 5, 2019
 #### Features
 - Maps SDK bump to 7.3.0 [#895](https://github.com/mapbox/mapbox-plugins-android/pull/895)

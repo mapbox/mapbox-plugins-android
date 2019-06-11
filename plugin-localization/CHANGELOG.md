@@ -2,6 +2,11 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+
+### mapbox-android-plugin-localization-v8:0.10.0 - June 11, 2019
+#### Features
+- Adding Portuguese language support to Localization Plugin [#979](https://github.com/mapbox/mapbox-plugins-android/pull/979)
+
 ### mapbox-android-plugin-localization-v7:0.9.0 - April 5, 2019
 #### Features
 - Maps SDK bump to 7.3.0 [#895](https://github.com/mapbox/mapbox-plugins-android/pull/895)

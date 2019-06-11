@@ -2,6 +2,14 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### mapbox-android-plugin-places-v8:0.9.0 - June 11, 2019
+#### Features
+- Adding visual limit option to the number of recently seached places [#922](https://github.com/mapbox/mapbox-plugins-android/pull/922)
+- Adding ability to set status bar color in places plugin search UI [#962](https://github.com/mapbox/mapbox-plugins-android/pull/962)
+- Bump java services version to v4.6.0 [#923](https://github.com/mapbox/mapbox-plugins-android/pull/923)
+- Added check for null latLng in PlacePickerActivity makeReverseGeocodingSearch()[#964](https://github.com/mapbox/mapbox-plugins-android/pull/964)
+- Adding includeReverseGeocoding call method to PlacePickerOptions [#965](https://github.com/mapbox/mapbox-plugins-android/pull/965)
+
 ### mapbox-android-plugin-places-v7:0.8.0 - April 5, 2019
 #### Features
 - Maps SDK bump to 7.3.0 [#895](https://github.com/mapbox/mapbox-plugins-android/pull/895)

@@ -110,7 +110,7 @@ jobs:
           name: Publish Plugins SDK To Maven Central
           command: |
             if [ -n "${PUBLISH_NEXUS_USERNAME}" ]; then
-              if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              if [ "${CIRCLE_BRANCH}" == "ls-giant-plugin-release-for-maps-sdk-8.0.0" ]; then
                 make publish
               fi
             fi
