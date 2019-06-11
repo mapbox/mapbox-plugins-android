@@ -1,4 +1,4 @@
-# Mapbox building plugin
+# Mapbox Building Plugin
 
 ![buildings-plugin](https://user-images.githubusercontent.com/4394910/28844435-71442d04-76b9-11e7-8866-ee6a94306353.gif)
 
@@ -18,7 +18,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-building-v7:0.5.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-building-v8:0.6.0'
 }
 ```
 
@@ -35,7 +35,7 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-building-v7:0.6.0-SNAPSHOT'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-building-v8:0.7.0-SNAPSHOT'
 }
 ```
 
