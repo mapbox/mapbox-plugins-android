@@ -34,6 +34,8 @@ Plugins are single-purpose libraries built on top of the [Mapbox Maps SDK for An
 
 * [**Localization:** Have your map's text automatically match the device's default language setting.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-localization)
 
+* [**Scale bar:** Provide a visual map scale bar for your users to determine distance.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-scalebar)
+
 ## Installing a plugin
 
 By using a plugin, you also have to include the Mapbox Maps SDK for Android which means that you'll need to setup your project to use the Maps SDK if you haven't already. Head over to the [overview page for the Maps SDK](https://www.mapbox.com/android-docs/map-sdk/overview/) to learn more.

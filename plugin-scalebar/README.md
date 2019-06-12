@@ -1,14 +1,12 @@
-# Mapbox Traffic Plugin
+# Mapbox Scale Bar Plugin
 
-The traffic plugin adds a real-time traffic layer to any Mapbox basemap. 
+The scale bar plugin adds a responsive scale bar on top of the map. The scale bar gives a visual indication of how far various map features are from one another at a certain zoom level. The scale bar can be customized with options such as the text color/size, referesh interval, margins, and border width.
 
-![ezgif com-crop](https://cloud.githubusercontent.com/assets/4394910/24972279/bf88b170-1f6f-11e7-8638-6afe08369d9d.gif)
+![ezgif com-resize (2)](https://user-images.githubusercontent.com/8577318/57837052-89416280-77f4-11e9-9d97-f164737acd46.gif)
 
 ## Getting Started
 
-[More documentation about the plugin can be found here](https://www.mapbox.com/android-docs/plugins/overview/traffic/)
-
-To use the traffic plugin, you include it in your `build.gradle` file.
+To use the scale bar plugin, you include it in your `build.gradle` file.
 
 ```
 // In the root build.gradle file
@@ -20,11 +18,11 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-traffic-v8:0.9.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-scalebar-v8:0.1.0'
 }
 ```
 
-The traffic plugin is published to Maven Central and nightly SNAPSHOTs are available on Sonatype:
+The scale bar plugin is published to Maven Central and nightly SNAPSHOTs are available on Sonatype:
 
 ```
 // In the root build.gradle file
@@ -37,14 +35,13 @@ repositories {
 
 // In the app build.gradle file
 dependencies {
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-traffic-v8:0.10.0-SNAPSHOT'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-scalebar-v8:0.2.0-SNAPSHOT'
 }
 ```
 
-## Traffic plugin examples
+## Scale bar plugin examples
 
-- [In this repo's test app](https://github.com/mapbox/mapbox-plugins-android/blob/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/traffic/TrafficActivity.kt)
-- [In the Mapbox Android demo app](https://github.com/mapbox/mapbox-android-demo/blob/a411fa95cd71c1b90a30895060b319310444aebb/MapboxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/examples/plugins/TrafficPluginActivity.java) – (Don't have the app? [Download it on Google Play](https://play.google.com/store/apps/details?id=com.mapbox.mapboxandroiddemo).)
+- [In this repo's test app](https://github.com/mapbox/mapbox-plugins-android/blob/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/activity/scalebar/ScalebarActivity.kt)
 
 ## Help and Usage
 
