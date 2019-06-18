@@ -209,7 +209,7 @@ public final class LocalizationPlugin {
       Timber.d("Locale: %s, set MapLocale: %s", locale.toString(), mapLocale.getMapLanguage());
       setMapLanguage(mapLocale);
     } else {
-      Timber.e("Couldn't match Locale %s %s to a MapLocale", locale.toString(), locale.getDisplayName());
+      Timber.d("Couldn't match Locale %s %s to a MapLocale", locale.toString(), locale.getDisplayName());
     }
   }
 
@@ -329,7 +329,7 @@ public final class LocalizationPlugin {
     if (mapLocale != null) {
       setCameraToLocaleCountry(mapLocale, padding);
     } else {
-      Timber.e("Couldn't match Locale %s to a MapLocale", locale.getDisplayName());
+      Timber.d("Couldn't match Locale %s to a MapLocale", locale.getDisplayName());
     }
   }
 
