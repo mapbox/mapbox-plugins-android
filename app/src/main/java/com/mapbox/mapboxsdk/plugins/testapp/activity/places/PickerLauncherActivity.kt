@@ -28,6 +28,13 @@ class PickerLauncherActivity : AppCompatActivity() {
             else getString(R.string.reverse_geocoding_disabled)
         }
 
+        userLocationSwitch.text = getString(R.string.user_location_button_disabled)
+        userLocationSwitch.setOnCheckedChangeListener { compoundButton, checked ->
+            userLocationSwitch.text = if (checked)
+                getString(R.string.user_location_button_enabled)
+            else getString(R.string.user_location_button_disabled)
+        }
+
         fabLocationPicker.setOnClickListener { _ ->
             Mapbox.getAccessToken()?.let {
                 startActivityForResult(
@@ -35,6 +42,7 @@ class PickerLauncherActivity : AppCompatActivity() {
                                 .accessToken(it)
                                 .placeOptions(PlacePickerOptions.builder()
                                         .includeReverseGeocode(reverseGeocodingSwitch.isChecked)
+                                        .includeDeviceLocationButton(userLocationSwitch.isChecked)
                                         .statingCameraPosition(CameraPosition.Builder()
                                                 .target(LatLng(40.7544, -73.9862))
                                                 .zoom(16.0)

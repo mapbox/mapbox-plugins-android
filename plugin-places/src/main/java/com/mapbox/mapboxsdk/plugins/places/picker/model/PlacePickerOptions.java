@@ -35,9 +35,12 @@ public abstract class PlacePickerOptions implements BasePlaceOptions, Parcelable
 
   public abstract boolean includeReverseGeocode();
 
+  public abstract boolean includeDeviceLocationButton();
+
   public static Builder builder() {
     return new AutoValue_PlacePickerOptions.Builder()
-        .includeReverseGeocode(true);
+        .includeReverseGeocode(true)
+        .includeDeviceLocationButton(false);
   }
 
   @AutoValue.Builder
@@ -59,6 +62,10 @@ public abstract class PlacePickerOptions implements BasePlaceOptions, Parcelable
     public abstract Builder statingCameraPosition(@NonNull CameraPosition cameraPosition);
 
     /**
+     * Determine whether to include a bottom sheet in the PlacePickerActivity to display
+     * geocoding information associated with coordinates at the center of the map. A new
+     * geocoding call is made every time the map is moved when true is passed through
+     * includeReverseGeocode().
      *
      * @param includeReverseGeocode whether or not to make a reverse geocoding call to
      *                              retrieve and display information associated with
@@ -67,6 +74,18 @@ public abstract class PlacePickerOptions implements BasePlaceOptions, Parcelable
      * @return this builder instance for chaining options together
      */
     public abstract Builder includeReverseGeocode(boolean includeReverseGeocode);
+
+    /**
+     * Determine whether an Android-system Floating Action Button is included in
+     * the PlacePickerActivity UI. Clicking on this Floating Action Button will
+     * move the map camera to the device's location. False is the default if
+     * this method isn't used in building the PlacePickerOptions object.
+     *
+     * @param includeDeviceLocationButton
+     *
+     * @return this builder instance for chaining options together
+     */
+    public abstract Builder includeDeviceLocationButton(boolean includeDeviceLocationButton);
 
     public abstract PlacePickerOptions build();
   }
