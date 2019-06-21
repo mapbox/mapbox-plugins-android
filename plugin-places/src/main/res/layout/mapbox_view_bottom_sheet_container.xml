@@ -1,66 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:layout_gravity="bottom">
-
-  <!-- TODO add move camera to user location fab -->
-  <!--<android.support.design.widget.FloatingActionButton-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="top|end"-->
-    <!--android:layout_marginEnd="8dp"-->
-    <!--android:layout_marginRight="8dp"-->
-    <!--app:elevation="3dp"-->
-    <!--app:layout_anchor="@id/place_chosen_button"-->
-    <!--app:layout_anchorGravity="top"-->
-    <!--app:backgroundTint="@color/mapbox_plugins_white"-->
-    <!--app:useCompatPadding="true"-->
-    <!--app:srcCompat="@drawable/mapbox_plugins_ic_user_location"/>-->
-
-  <android.support.design.widget.FloatingActionButton
-    android:id="@+id/place_chosen_button"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:tint="@color/mapbox_plugins_white"
-    android:layout_margin="16dp"
-    app:backgroundTint="@color/mapbox_plugins_green"
-    app:elevation="3dp"
-    app:layout_anchor="@id/root_bottom_sheet"
-    app:layout_anchorGravity="top|end"
-    app:srcCompat="@drawable/mapbox_ic_check"/>
-
-  <ImageView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="start"
-    android:layout_marginLeft="4dp"
-    android:layout_marginStart="4dp"
-    android:paddingBottom="4dp"
-    app:layout_anchor="@id/root_bottom_sheet"
-    app:srcCompat="@drawable/mapbox_logo_icon"/>
-
-  <LinearLayout
-    android:id="@+id/root_bottom_sheet"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+    android:layout_height="match_parent"
+    android:layout_gravity="bottom">
 
-    <View
-      android:id="@+id/shadow"
-      android:layout_width="match_parent"
-      android:layout_height="4dp"
-      android:layout_gravity="top"
-      android:background="@drawable/mapbox_gradient_shadow_up"
-      app:layout_anchor="@+id/root_bottom_sheet"
-      app:layout_anchorGravity="top"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/user_location_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:visibility="gone"
+        app:backgroundTint="@color/mapbox_plugins_white"
+        app:elevation="3dp"
+        app:layout_anchor="@id/place_chosen_button"
+        app:layout_anchorGravity="top"
+        app:srcCompat="@drawable/mapbox_plugins_ic_user_location"
+        app:useCompatPadding="true" />
 
-    <include
-      layout="@layout/mapbox_view_details_bottom_header"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/place_chosen_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tint="@color/mapbox_plugins_white"
+        android:layout_margin="16dp"
+        app:backgroundTint="@color/mapbox_plugins_green"
+        app:elevation="3dp"
+        app:layout_anchor="@id/root_bottom_sheet"
+        app:layout_anchorGravity="top|end"
+        app:srcCompat="@drawable/mapbox_ic_check"/>
 
-  </LinearLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginLeft="4dp"
+        android:layout_marginStart="4dp"
+        android:paddingBottom="4dp"
+        app:layout_anchor="@id/root_bottom_sheet"
+        app:srcCompat="@drawable/mapbox_logo_icon"/>
+
+    <LinearLayout
+        android:id="@+id/root_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+        <View
+            android:id="@+id/shadow"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_gravity="top"
+            android:background="@drawable/mapbox_gradient_shadow_up"
+            app:layout_anchor="@+id/root_bottom_sheet"
+            app:layout_anchorGravity="top"/>
+
+        <include
+            layout="@layout/mapbox_view_details_bottom_header"/>
+
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

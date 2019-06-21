@@ -17,4 +17,8 @@
   <string name="mapbox_plugins_cd_search_clear_button">Clear Search Query</string>
   <string name="mapbox_plugins_cd_offline_icon">Offline icon</string>
 
+  <!-- PlacePicker Activity device location toasts -->
+  <string name="mapbox_plugins_place_picker_user_location_permission_explanation">This app needs location permissions in order to find the device location.</string>
+  <string name="mapbox_plugins_place_picker_user_location_permission_not_granted">Location permissions not granted.</string>
+  <string name="mapbox_plugins_place_picker_user_location_not_found">Location can\'t be found.</string>
 </resources>
