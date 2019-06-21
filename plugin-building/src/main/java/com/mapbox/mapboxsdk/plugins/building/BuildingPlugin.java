@@ -42,7 +42,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
  */
 public final class BuildingPlugin {
 
-  private static final String LAYER_ID = "mapbox-android-plugin-3d-buildings";
+  public static final String LAYER_ID = "mapbox-android-plugin-3d-buildings";
 
   private FillExtrusionLayer fillExtrusionLayer;
   private boolean visible;
