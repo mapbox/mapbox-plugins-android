@@ -42,6 +42,9 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
  */
 public final class BuildingPlugin {
 
+  /**
+   * LAYER_ID is exposed public so it can be utilized by layerBelow and layerAbove arguments
+   */
   public static final String LAYER_ID = "mapbox-android-plugin-3d-buildings";
 
   private FillExtrusionLayer fillExtrusionLayer;
