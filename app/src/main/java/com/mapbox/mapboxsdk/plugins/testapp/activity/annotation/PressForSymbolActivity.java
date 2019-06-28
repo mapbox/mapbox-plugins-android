@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -15,6 +16,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.plugins.annotation.AnnotationManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
@@ -145,6 +147,21 @@ public class PressForSymbolActivity extends AppCompatActivity {
       drawable.draw(canvas);
       return bitmap;
     }
+  }
+
+  @VisibleForTesting
+  public MapView getMapView(){
+    return mapView;
+  }
+
+  @VisibleForTesting
+  public SymbolManager getSymbolManager(){
+    return symbolManager;
+  }
+
+  @VisibleForTesting
+  public MapboxMap getMapboxMap(){
+    return mapboxMap;
   }
 }
 

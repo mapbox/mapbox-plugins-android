@@ -46,7 +46,6 @@ import static com.mapbox.mapboxsdk.style.expressions.Expression.toNumber;
  */
 public class SymbolActivity extends AppCompatActivity {
 
-  private static final String ID_ICON_AIRPORT = "airport";
   private static final String MAKI_ICON_CAR = "car-15";
   private static final String MAKI_ICON_CAFE = "cafe-15";
   private static final String MAKI_ICON_CIRCLE = "fire-station-15";
@@ -72,10 +71,6 @@ public class SymbolActivity extends AppCompatActivity {
 
       mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
 
-      style.addImage(ID_ICON_AIRPORT,
-        BitmapUtils.getBitmapFromDrawable(getResources().getDrawable(R.drawable.ic_airplanemode_active_black_24dp)),
-        true);
-
       // create symbol manager
       GeoJsonOptions geoJsonOptions = new GeoJsonOptions().withTolerance(0.4f);
       symbolManager = new SymbolManager(mapView, mapboxMap, style, null, geoJsonOptions);
@@ -96,7 +91,7 @@ public class SymbolActivity extends AppCompatActivity {
       // create a symbol
       SymbolOptions symbolOptions = new SymbolOptions()
         .withLatLng(new LatLng(6.687337, 0.381457))
-        .withIconImage(ID_ICON_AIRPORT)
+        .withIconImage("ic_airplanemode_active_black_24dp")
         .withIconSize(1.3f)
         .withSymbolSortKey(10.0f)
         .withDraggable(true);

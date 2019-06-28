@@ -2,6 +2,8 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+import android.content.Context;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -155,6 +157,19 @@ public class SymbolOptions extends Options<Symbol> {
    */
   public String getIconImage() {
     return iconImage;
+  }
+
+  /**
+   * Set icon-image resource id to initialise the symbol with.
+   * <p>
+   * Name of resource to use for drawing an image background.
+   * </p>
+   * @param resourceDrawable the icon-image resource drawable id value
+   * @return this
+   */
+  public SymbolOptions withIconImage(@NonNull Context context, @DrawableRes int resourceDrawable) {
+    this.iconImage =  context.getResources().getResourceEntryName(resourceDrawable);
+    return this;
   }
 
   /**

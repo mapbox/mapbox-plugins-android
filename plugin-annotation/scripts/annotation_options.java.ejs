@@ -7,6 +7,10 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
+<% if ( type === "symbol") { -%>
+import android.content.Context;
+import android.support.annotation.DrawableRes;
+<% } -%>
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -45,9 +49,9 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
 <% } -%>
 <% } -%>
   private static final String PROPERTY_IS_DRAGGABLE = "is-draggable";
+
 <% for (const property of properties) { -%>
 <% if (supportsPropertyFunction(property)) { -%>
-
   /**
    * Set <%- property.name %> to initialise the <%- type %> with.
    * <p>
@@ -71,10 +75,25 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
   public <%- propertyType(property) %> get<%- camelize(property.name) %>() {
     return <%- camelizeWithLeadingLowercase(property.name) %>;
   }
+
+<% if (property.name === 'icon-image') { -%>
+  /**
+   * Set icon-image resource id to initialise the symbol with.
+   * <p>
+   * Name of resource to use for drawing an image background.
+   * </p>
+   * @param resourceDrawable the icon-image resource drawable id value
+   * @return this
+   */
+  public SymbolOptions withIconImage(@NonNull Context context, @DrawableRes int resourceDrawable) {
+    this.iconImage =  context.getResources().getResourceEntryName(resourceDrawable);
+    return this;
+  }
+
+<% } -%>
 <% } -%>
 <% } -%>
 <% if (type === "circle" || type === "symbol") { -%>
-
   /**
    * Set the LatLng of the <%- type %>, which represents the location of the <%- type %> on the map
    *
@@ -117,8 +136,8 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
   public Point getGeometry() {
     return geometry;
   }
-<% } else if (type === "line") { -%>
 
+<% } else if (type === "line") { -%>
   /**
    * Set a list of LatLng for the line, which represents the locations of the line on the map
    *
@@ -168,8 +187,8 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
   public LineString getGeometry() {
     return geometry;
   }
-<% } else { -%>
 
+<% } else { -%>
   /**
    * Set a list of lists of LatLng for the fill, which represents the locations of the fill on the map
    *
@@ -227,8 +246,8 @@ public class <%- camelize(type) %>Options extends Options<<%- camelize(type) %>>
   public Polygon getGeometry() {
     return geometry;
   }
-<% } -%>
 
+<% } -%>
   /**
    * Returns whether this <%- type %> is draggable, meaning it can be dragged across the screen when touched and moved.
    *
