@@ -51,6 +51,7 @@
   <string name="description_symbol_press">Show a symbol by pressing the map</string>
   <string name="description_symbol_change">Dynamically change a symbol on the map</string>
   <string name="description_symbol_bulk">Show fire hydrants in Washington DC area</string>
+  <string name="description_infowindow">Select annotation show infowindow on map</string>
   <string name="description_line">Show lines on a map</string>
   <string name="description_line_change">Show changing lines on a map</string>
   <string name="description_fill">Show fills on a map</string>

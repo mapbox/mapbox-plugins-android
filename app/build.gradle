@@ -64,6 +64,7 @@ dependencies {
     exclude group: 'com.google.android.gms'
   })
   implementation dependenciesList.mapboxGeocoding
+  implementation 'com.mapbox.mapboxsdk:mapbox-sdk-turf:4.8.0'
 
   // Architecture
   implementation dependenciesList.lifecycleExtensions

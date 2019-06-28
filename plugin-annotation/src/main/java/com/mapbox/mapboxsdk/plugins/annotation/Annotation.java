@@ -16,6 +16,7 @@ public abstract class Annotation<T extends Geometry> {
   protected JsonObject jsonObject;
   protected T geometry;
   private boolean isDraggable;
+  private boolean isSelected;
 
   Annotation(long id, JsonObject jsonObject, T geometry) {
     this.jsonObject = jsonObject;
@@ -75,6 +76,14 @@ public abstract class Annotation<T extends Geometry> {
    */
   public void setDraggable(boolean draggable) {
     isDraggable = draggable;
+  }
+
+  public boolean isSelected() {
+    return isSelected;
+  }
+
+  public void setSelected(boolean selected) {
+    isSelected = selected;
   }
 
   /**
