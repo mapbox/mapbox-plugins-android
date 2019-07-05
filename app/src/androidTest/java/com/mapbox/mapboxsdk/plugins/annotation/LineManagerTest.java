@@ -3,6 +3,7 @@
 package com.mapbox.mapboxsdk.plugins.annotation;
 
 import android.support.test.runner.AndroidJUnit4;
+import com.mapbox.geojson.Point;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.TestActivity;
@@ -12,6 +13,8 @@ import timber.log.Timber;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static com.mapbox.mapboxsdk.plugins.annotation.MapboxMapAction.invoke;
@@ -115,4 +118,23 @@ public class LineManagerTest extends BaseActivityTest {
       assertEquals((Float[]) lineManager.getLineDasharray(), (Float[]) new Float[] {});
     });
   }
+
+  @Test
+  public void testDeleteEmptyList() {
+    validateTestSetup();
+    setupLineManager();
+    Timber.i("delete-empty-list");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(lineManager);
+      List<LatLng>latLngs = new ArrayList<>();
+      latLngs.add(new LatLng());
+      latLngs.add(new LatLng(1,1));
+      LineOptions options = new LineOptions().withLatLngs(latLngs);
+
+      lineManager.create(options);
+      lineManager.delete(new ArrayList<>());
+      assertEquals(1, lineManager.getAnnotations().size());
+    });
+  }
+
 }

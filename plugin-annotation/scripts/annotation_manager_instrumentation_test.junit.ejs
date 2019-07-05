@@ -7,6 +7,7 @@
 package com.mapbox.mapboxsdk.plugins.annotation;
 
 import android.support.test.runner.AndroidJUnit4;
+import com.mapbox.geojson.Point;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.TestActivity;
@@ -16,6 +17,8 @@ import timber.log.Timber;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static com.mapbox.mapboxsdk.plugins.annotation.MapboxMapAction.invoke;
@@ -58,4 +61,35 @@ public class <%- camelize(type) %>ManagerTest extends BaseActivityTest {
   }
 <% } -%>
 <% } -%>
+
+  @Test
+  public void testDeleteEmptyList() {
+    validateTestSetup();
+    setup<%- camelize(type) %>Manager();
+    Timber.i("delete-empty-list");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(<%- type %>Manager);
+<% if (type === "circle" || type === "symbol") { -%>
+      <%- camelize(type) %>Options options = new <%- camelize(type) %>Options().withLatLng(new LatLng());
+<% } else if (type === "line") { -%>
+      List<LatLng>latLngs = new ArrayList<>();
+      latLngs.add(new LatLng());
+      latLngs.add(new LatLng(1,1));
+      <%- camelize(type) %>Options options = new <%- camelize(type) %>Options().withLatLngs(latLngs);
+<% } else { -%>
+      List<LatLng>innerLatLngs = new ArrayList<>();
+      innerLatLngs.add(new LatLng());
+      innerLatLngs.add(new LatLng(1,1));
+      innerLatLngs.add(new LatLng(-1,-1));
+      List<List<LatLng>>latLngs = new ArrayList<>();
+      latLngs.add(innerLatLngs);
+      <%- camelize(type) %>Options options = new <%- camelize(type) %>Options().withLatLngs(latLngs);
+<% } -%>
+
+      <%- type %>Manager.create(options);
+      <%- type %>Manager.delete(new ArrayList<>());
+      assertEquals(1, <%- type %>Manager.getAnnotations().size());
+    });
+  }
+
 }

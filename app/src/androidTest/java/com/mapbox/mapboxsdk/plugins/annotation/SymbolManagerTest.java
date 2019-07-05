@@ -3,6 +3,7 @@
 package com.mapbox.mapboxsdk.plugins.annotation;
 
 import android.support.test.runner.AndroidJUnit4;
+import com.mapbox.geojson.Point;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.TestActivity;
@@ -12,6 +13,8 @@ import timber.log.Timber;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static com.mapbox.mapboxsdk.plugins.annotation.MapboxMapAction.invoke;
@@ -362,4 +365,20 @@ public class SymbolManagerTest extends BaseActivityTest {
       assertEquals((String) symbolManager.getTextTranslateAnchor(), (String) TEXT_TRANSLATE_ANCHOR_MAP);
     });
   }
+
+  @Test
+  public void testDeleteEmptyList() {
+    validateTestSetup();
+    setupSymbolManager();
+    Timber.i("delete-empty-list");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbolManager);
+      SymbolOptions options = new SymbolOptions().withLatLng(new LatLng());
+
+      symbolManager.create(options);
+      symbolManager.delete(new ArrayList<>());
+      assertEquals(1, symbolManager.getAnnotations().size());
+    });
+  }
+
 }

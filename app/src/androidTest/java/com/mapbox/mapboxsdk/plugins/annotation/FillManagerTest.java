@@ -3,6 +3,7 @@
 package com.mapbox.mapboxsdk.plugins.annotation;
 
 import android.support.test.runner.AndroidJUnit4;
+import com.mapbox.geojson.Point;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.testapp.activity.TestActivity;
@@ -12,6 +13,8 @@ import timber.log.Timber;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static com.mapbox.mapboxsdk.plugins.annotation.MapboxMapAction.invoke;
@@ -76,4 +79,26 @@ public class FillManagerTest extends BaseActivityTest {
       assertEquals((String) fillManager.getFillTranslateAnchor(), (String) FILL_TRANSLATE_ANCHOR_MAP);
     });
   }
+
+  @Test
+  public void testDeleteEmptyList() {
+    validateTestSetup();
+    setupFillManager();
+    Timber.i("delete-empty-list");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(fillManager);
+      List<LatLng>innerLatLngs = new ArrayList<>();
+      innerLatLngs.add(new LatLng());
+      innerLatLngs.add(new LatLng(1,1));
+      innerLatLngs.add(new LatLng(-1,-1));
+      List<List<LatLng>>latLngs = new ArrayList<>();
+      latLngs.add(innerLatLngs);
+      FillOptions options = new FillOptions().withLatLngs(latLngs);
+
+      fillManager.create(options);
+      fillManager.delete(new ArrayList<>());
+      assertEquals(1, fillManager.getAnnotations().size());
+    });
+  }
+
 }
