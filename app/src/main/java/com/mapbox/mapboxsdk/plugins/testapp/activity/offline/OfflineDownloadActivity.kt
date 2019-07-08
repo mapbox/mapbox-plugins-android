@@ -5,21 +5,18 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.ArrayAdapter
 import android.widget.SeekBar
 import android.widget.Toast
-
 import com.mapbox.mapboxsdk.constants.MapboxConstants
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition
-import com.mapbox.mapboxsdk.plugins.offline.offline.OfflinePlugin
 import com.mapbox.mapboxsdk.plugins.offline.model.NotificationOptions
 import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions
+import com.mapbox.mapboxsdk.plugins.offline.offline.OfflinePlugin
 import com.mapbox.mapboxsdk.plugins.offline.utils.OfflineUtils
 import com.mapbox.mapboxsdk.plugins.testapp.R
-
-import java.util.ArrayList
-
 import kotlinx.android.synthetic.main.activity_offline_download.*
+import java.util.*
 
 /**
  * Activity showing a form to configure the download of an offline region.
@@ -85,11 +82,11 @@ class OfflineDownloadActivity : AppCompatActivity() {
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
-
+                // Empty on purpose
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-
+                // Empty on purpose
             }
         })
 
@@ -99,11 +96,11 @@ class OfflineDownloadActivity : AppCompatActivity() {
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
-
+                // Empty on purpose
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-
+                // Empty on purpose
             }
         })
     }
@@ -152,8 +149,13 @@ class OfflineDownloadActivity : AppCompatActivity() {
         )
     }
 
-    private fun validCoordinates(latitudeNorth: Double, longitudeEast: Double, latitudeSouth: Double,
-                                 longitudeWest: Double): Boolean {
+    private fun validCoordinates(
+        latitudeNorth: Double,
+        longitudeEast: Double,
+        latitudeSouth: Double,
+        longitudeWest: Double
+    ): Boolean {
+
         if (latitudeNorth < -90 || latitudeNorth > 90) {
             return false
         } else if (longitudeEast < -180 || longitudeEast > 180) {

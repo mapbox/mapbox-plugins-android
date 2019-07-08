@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.plugins.offline.OfflineRegionSelector
@@ -13,17 +12,17 @@ import com.mapbox.mapboxsdk.plugins.offline.model.NotificationOptions
 import com.mapbox.mapboxsdk.plugins.offline.model.RegionSelectionOptions
 import com.mapbox.mapboxsdk.plugins.offline.offline.OfflinePlugin
 import com.mapbox.mapboxsdk.plugins.testapp.R
-
-import java.util.Locale
-
 import kotlinx.android.synthetic.main.activity_offline_ui_components.*
+import java.util.*
 
 class OfflineUiComponentsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_offline_ui_components)
-        fabRegionSelector.setOnClickListener{onOfflineRegionSelectorButtonClicked()}
+        fabRegionSelector.setOnClickListener {
+            onOfflineRegionSelectorButtonClicked()
+        }
     }
 
     fun onOfflineRegionSelectorButtonClicked() {

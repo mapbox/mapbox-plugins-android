@@ -26,7 +26,7 @@ class MapboxKtxActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.OnM
         this.mapboxMap = mapboxMap
         mapboxMap.setStyle(Style.MAPBOX_STREETS) {
             mapboxMap.addOnMapClickListener(this)
-            Toast.makeText(this,"Click on the map", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Click on the map", Toast.LENGTH_SHORT).show()
         }
     }
 
