@@ -66,7 +66,7 @@ public class BulkSymbolActivity extends AppCompatActivity implements AdapterView
       )
     );
 
-    mapboxMap.setStyle(new Style.Builder().fromUrl(Style.MAPBOX_STREETS), style -> {
+    mapboxMap.setStyle(new Style.Builder().fromUri(Style.MAPBOX_STREETS), style -> {
       findViewById(R.id.fabStyles).setOnClickListener(v -> mapboxMap.setStyle(Utils.INSTANCE.getNextStyle()));
       symbolManager = new SymbolManager(mapView, mapboxMap, style);
       symbolManager.setIconAllowOverlap(true);

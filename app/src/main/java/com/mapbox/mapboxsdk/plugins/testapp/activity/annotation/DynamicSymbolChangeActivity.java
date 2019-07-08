@@ -59,7 +59,7 @@ public class DynamicSymbolChangeActivity extends AppCompatActivity {
       ));
 
       mapboxMap.setStyle(new Style.Builder()
-          .fromUrl(Style.MAPBOX_STREETS)
+          .fromUri(Style.MAPBOX_STREETS)
           .withImage(ID_ICON_1, generateBitmap(R.drawable.mapbox_ic_place), true)
           .withImage(ID_ICON_2, generateBitmap(R.drawable.mapbox_ic_offline), true)
         , style -> {

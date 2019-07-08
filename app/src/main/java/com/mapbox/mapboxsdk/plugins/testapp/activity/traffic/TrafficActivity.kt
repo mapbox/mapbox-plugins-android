@@ -35,7 +35,7 @@ class TrafficActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         fabStyles.setOnClickListener {
-            mapboxMap?.setStyle(Style.Builder().fromUrl(Utils.nextStyle))
+            mapboxMap?.setStyle(Style.Builder().fromUri(Utils.nextStyle))
         }
     }
 
