@@ -77,7 +77,7 @@ public class FillChangeActivity extends AppCompatActivity implements OnMapReadyC
 
   @Override
   public void onMapReady(@NonNull MapboxMap map) {
-    map.setStyle(new Style.Builder().fromUrl(Style.MAPBOX_STREETS), style -> {
+    map.setStyle(new Style.Builder().fromUri(Style.MAPBOX_STREETS), style -> {
       fillManager = new FillManager(mapView, map, style, "aerialway");
       fillManager.addClickListener(fill -> Toast.makeText(
         FillChangeActivity.this,
