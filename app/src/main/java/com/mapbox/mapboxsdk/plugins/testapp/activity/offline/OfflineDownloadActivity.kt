@@ -150,10 +150,10 @@ class OfflineDownloadActivity : AppCompatActivity() {
     }
 
     private fun validCoordinates(
-        latitudeNorth: Double,
-        longitudeEast: Double,
-        latitudeSouth: Double,
-        longitudeWest: Double
+      latitudeNorth: Double,
+      longitudeEast: Double,
+      latitudeSouth: Double,
+      longitudeWest: Double
     ): Boolean {
 
         if (latitudeNorth < -90 || latitudeNorth > 90) {
