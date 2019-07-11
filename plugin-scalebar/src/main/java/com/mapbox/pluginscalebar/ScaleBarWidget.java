@@ -15,8 +15,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import static com.mapbox.pluginscalebar.ScaleBarConstants.FEET_PER_MILE;
-import static com.mapbox.pluginscalebar.ScaleBarConstants.KILO_METER;
-import static com.mapbox.pluginscalebar.ScaleBarConstants.KILO_METER_UNIT;
+import static com.mapbox.pluginscalebar.ScaleBarConstants.KILOMETER;
+import static com.mapbox.pluginscalebar.ScaleBarConstants.KILOMETER_UNIT;
 import static com.mapbox.pluginscalebar.ScaleBarConstants.MILE_UNIT;
 
 /**
@@ -355,8 +355,8 @@ public class ScaleBarWidget extends View {
    */
   private String getDistanceText(int distance) {
     if (ScaleBarConstants.METER_UNIT.equals(unit)) {
-      return distance < KILO_METER ? distance + unit
-        : decimalFormat.format(distance * 1.0 / KILO_METER) + KILO_METER_UNIT;
+      return distance < KILOMETER ? distance + unit
+        : decimalFormat.format(distance * 1.0 / KILOMETER) + KILOMETER_UNIT;
     } else {
       return distance < FEET_PER_MILE ? distance + unit
         : decimalFormat.format(distance * 1.0 / FEET_PER_MILE) + MILE_UNIT;
