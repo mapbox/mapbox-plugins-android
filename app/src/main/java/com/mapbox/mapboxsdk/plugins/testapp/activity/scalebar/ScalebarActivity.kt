@@ -32,7 +32,6 @@ class ScalebarActivity : AppCompatActivity() {
                 .setTextSize(20f)
                 .setBarHeight(15f)
                 .setBorderWidth(5f)
-                .setMetricUnit(true)
                 .setRefreshInterval(15)
                 .setMarginTop(15f)
                 .setMarginLeft(16f)

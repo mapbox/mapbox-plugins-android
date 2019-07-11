@@ -6,9 +6,12 @@ import java.util.ArrayList;
 
 class ScaleBarConstants {
   static double FEET_PER_METER = 3.2808;
+  static int KILO_METER = 1000;
   static int FEET_PER_MILE = 5280;
   static String METER_UNIT = " m";
   static String FEET_UNIT = " ft";
+  static String KILO_METER_UNIT = " km";
+  static String MILE_UNIT = " mile";
   static ArrayList<Pair<Integer, Integer>> metricTable = new ArrayList<Pair<Integer, Integer>>() {
     {
       add(new Pair<>(1, 2));

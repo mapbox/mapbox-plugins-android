@@ -11,7 +11,13 @@ import android.util.Pair;
 import android.view.View;
 
 import java.lang.ref.WeakReference;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import static com.mapbox.pluginscalebar.ScaleBarConstants.FEET_PER_MILE;
+import static com.mapbox.pluginscalebar.ScaleBarConstants.KILO_METER;
+import static com.mapbox.pluginscalebar.ScaleBarConstants.KILO_METER_UNIT;
+import static com.mapbox.pluginscalebar.ScaleBarConstants.MILE_UNIT;
 
 /**
  * The scale widget is a visual representation of the scale bar plugin.
@@ -37,6 +43,7 @@ public class ScaleBarWidget extends View {
   private ArrayList<Pair<Integer, Integer>> scaleTable;
   private String unit;
   private final RefreshHandler refreshHandler;
+  private DecimalFormat decimalFormat = new DecimalFormat("0.0");
 
   ScaleBarWidget(@NonNull Context context) {
     super(context);
@@ -90,7 +97,7 @@ public class ScaleBarWidget extends View {
     int i = 0;
     for (; i < pair.second; i++) {
       barPaint.setColor(i % 2 == 0 ? primaryColor : secondaryColor);
-      String text = i == 0 ? String.valueOf(unitDistance * i) : unitDistance * i + unit;
+      String text = i == 0 ? String.valueOf(unitDistance * i) : getDistanceText(unitDistance * i);
       canvas.drawText(text,
         marginLeft + unitBarWidth * i,
         textSize + marginTop,
@@ -101,7 +108,7 @@ public class ScaleBarWidget extends View {
         textBarMargin + textSize + marginTop + barHeight,
         barPaint);
     }
-    canvas.drawText(unitDistance * i + unit,
+    canvas.drawText(getDistanceText(unitDistance * i),
       marginLeft + unitBarWidth * i,
       textSize + marginTop,
       textPaint);
@@ -339,6 +346,21 @@ public class ScaleBarWidget extends View {
   void setMapViewWidth(int mapViewWidth) {
     this.mapViewWidth = mapViewWidth;
     maxBarWidth = mapViewWidth / 2f - marginLeft;
+  }
+
+  /**
+   * Get the formatted distance text according unit and distance
+   * @param distance original distance
+   * @return Formatted distance text
+   */
+  private String getDistanceText(int distance) {
+    if (ScaleBarConstants.METER_UNIT.equals(unit)) {
+      return distance < KILO_METER ? distance + unit
+        : decimalFormat.format(distance * 1.0 / KILO_METER) + KILO_METER_UNIT;
+    } else {
+      return distance < FEET_PER_MILE ? distance + unit
+        : decimalFormat.format(distance * 1.0 / FEET_PER_MILE) + MILE_UNIT;
+    }
   }
 
   /**
