@@ -30,6 +30,10 @@ android {
     abortOnError false
   }
 
+  kotlinter {
+    indentSize = 2
+  }
+
   dexOptions {
     maxProcessCount 8
     javaMaxHeapSize "2g"
