@@ -6,7 +6,10 @@ MBGL_ANDROID_PLUGINS += places;plugin-places
 MBGL_ANDROID_PLUGINS += localization;plugin-localization
 
 checkstyle:
-	./gradlew checkstyle
+	./gradlew checkstyle && ./gradlew ktlintCheck
+
+kotlin-lint:
+	./gradlew ktlintCheck
 
 test:
 	./gradlew test --info

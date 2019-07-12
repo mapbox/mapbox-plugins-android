@@ -43,7 +43,7 @@ class BuildingActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(mapboxMap: MapboxMap) {
         this.mapboxMap = mapboxMap
-        mapboxMap.setStyle(Style.MAPBOX_STREETS){
+        mapboxMap.setStyle(Style.MAPBOX_STREETS) {
             buildingPlugin = BuildingPlugin(mapView, mapboxMap, it)
             buildingPlugin?.setMinZoomLevel(15f)
             fabBuilding.visibility = View.VISIBLE

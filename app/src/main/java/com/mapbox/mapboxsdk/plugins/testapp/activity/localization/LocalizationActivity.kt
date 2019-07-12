@@ -173,4 +173,3 @@ class LocalizationActivity : AppCompatActivity(), OnMapReadyCallback {
       }
   }
 }
-
