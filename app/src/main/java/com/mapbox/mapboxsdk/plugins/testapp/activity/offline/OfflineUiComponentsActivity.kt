@@ -23,7 +23,9 @@ class OfflineUiComponentsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_offline_ui_components)
-        fabRegionSelector.setOnClickListener{onOfflineRegionSelectorButtonClicked()}
+        fabRegionSelector.setOnClickListener {
+          onOfflineRegionSelectorButtonClicked()
+        }
     }
 
     fun onOfflineRegionSelectorButtonClicked() {

@@ -85,11 +85,11 @@ class OfflineDownloadActivity : AppCompatActivity() {
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
-
+              // Empty on purpose
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-
+              // Empty on purpose
             }
         })
 
@@ -99,11 +99,11 @@ class OfflineDownloadActivity : AppCompatActivity() {
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
-
+              // Empty on purpose
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-
+              // Empty on purpose
             }
         })
     }
@@ -152,8 +152,12 @@ class OfflineDownloadActivity : AppCompatActivity() {
         )
     }
 
-    private fun validCoordinates(latitudeNorth: Double, longitudeEast: Double, latitudeSouth: Double,
-                                 longitudeWest: Double): Boolean {
+    private fun validCoordinates(
+      latitudeNorth: Double,
+      longitudeEast: Double,
+      latitudeSouth: Double,
+      longitudeWest: Double
+    ): Boolean {
         if (latitudeNorth < -90 || latitudeNorth > 90) {
             return false
         } else if (longitudeEast < -180 || longitudeEast > 180) {

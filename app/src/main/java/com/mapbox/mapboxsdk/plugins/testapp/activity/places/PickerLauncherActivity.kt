@@ -4,16 +4,13 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.widget.Switch
 import android.widget.Toast
-
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.plugins.places.picker.PlacePicker
 import com.mapbox.mapboxsdk.plugins.places.picker.model.PlacePickerOptions
 import com.mapbox.mapboxsdk.plugins.testapp.R
-
 import kotlinx.android.synthetic.main.activity_picker_launcher.*
 
 class PickerLauncherActivity : AppCompatActivity() {

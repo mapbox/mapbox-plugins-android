@@ -44,7 +44,6 @@ class ScalebarActivity : AppCompatActivity() {
         }
     }
 
-
     override fun onStart() {
         super.onStart()
         mapView.onStart()

@@ -12,7 +12,6 @@ import java.io.Reader
 import java.nio.charset.Charset
 import java.util.*
 
-
 /**
  * Useful utilities used throughout the testapp.
  */
