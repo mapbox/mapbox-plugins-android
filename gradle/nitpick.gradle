@@ -13,10 +13,16 @@ private def verifyAnnotationCodeGeneration() {
         workingDir = "${rootDir}"
         commandLine "make", "generate-annotation-code"
     }
+    checkDirectoryForChanges("app/src/androidTest/java/com/mapbox/mapboxsdk/plugins/annotation")
+    checkDirectoryForChanges("plugin-annotation/src/test/java/com/mapbox/mapboxsdk/plugins/annotation")
+    checkDirectoryForChanges("plugin-annotation/src/main/java/com/mapbox/mapboxsdk/plugins/annotation")
+}
+
+private checkDirectoryForChanges(dir) {
     new ByteArrayOutputStream().withStream { os ->
         exec {
             workingDir = "${rootDir}"
-            commandLine "git", "status"
+            commandLine "git", "status", dir
             standardOutput = os
         }
         def result = os.toString()
