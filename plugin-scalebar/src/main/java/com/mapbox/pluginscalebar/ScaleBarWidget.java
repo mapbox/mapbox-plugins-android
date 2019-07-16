@@ -43,7 +43,7 @@ public class ScaleBarWidget extends View {
   private ArrayList<Pair<Integer, Integer>> scaleTable;
   private String unit;
   private final RefreshHandler refreshHandler;
-  private DecimalFormat decimalFormat = new DecimalFormat("0.0");
+  private DecimalFormat decimalFormat = new DecimalFormat("0.#");
 
   ScaleBarWidget(@NonNull Context context) {
     super(context);
