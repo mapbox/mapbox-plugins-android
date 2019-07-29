@@ -4,6 +4,7 @@ MBGL_ANDROID_PLUGINS += building;plugin-building
 MBGL_ANDROID_PLUGINS += offline;plugin-offline
 MBGL_ANDROID_PLUGINS += places;plugin-places
 MBGL_ANDROID_PLUGINS += localization;plugin-localization
+MBGL_ANDROID_PLUGINS += scalebar;plugin-scalebar
 
 checkstyle:
 	./gradlew checkstyle && ./gradlew ktlintCheck
