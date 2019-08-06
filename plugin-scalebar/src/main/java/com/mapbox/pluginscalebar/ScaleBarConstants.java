@@ -41,6 +41,10 @@ class ScaleBarConstants {
       add(new Pair<>(500000, 2));
       add(new Pair<>(600000, 3));
       add(new Pair<>(800000, 2));
+      add(new Pair<>(1000000, 2));
+      add(new Pair<>(2000000, 2));
+      add(new Pair<>(3000000, 3));
+      add(new Pair<>(4000000, 2));
     }
   };
 
@@ -77,6 +81,11 @@ class ScaleBarConstants {
       add(new Pair<>(200 * FEET_PER_MILE, 2));
       add(new Pair<>(300 * FEET_PER_MILE, 3));
       add(new Pair<>(400 * FEET_PER_MILE, 2));
+      add(new Pair<>(600 * FEET_PER_MILE, 3));
+      add(new Pair<>(1000 * FEET_PER_MILE, 2));
+      add(new Pair<>(1500 * FEET_PER_MILE, 3));
+      add(new Pair<>(2000 * FEET_PER_MILE, 2));
+      add(new Pair<>(3000 * FEET_PER_MILE, 2));
     }
   };
 }
