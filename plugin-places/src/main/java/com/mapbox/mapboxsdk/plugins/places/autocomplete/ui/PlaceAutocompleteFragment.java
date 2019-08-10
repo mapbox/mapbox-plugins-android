@@ -96,6 +96,8 @@ public class PlaceAutocompleteFragment extends Fragment implements ResultClickCa
     super.onViewCreated(view, savedInstanceState);
     resultScrollView.getViewTreeObserver().addOnScrollChangedListener(this);
     styleView();
+    KeyboardUtils.showKeyboard(getActivity().getWindow().getDecorView());
+    searchView.requestFocus();
   }
 
   private void styleView() {
