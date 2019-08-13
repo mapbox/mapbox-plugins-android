@@ -99,6 +99,7 @@ public class ScaleBarPlugin {
     scaleBarWidget.setVisibility(enabled ? View.VISIBLE : View.GONE);
     if (enabled) {
       addCameraListeners();
+      invalidateScaleBar();
     } else {
       removeCameraListeners();
     }

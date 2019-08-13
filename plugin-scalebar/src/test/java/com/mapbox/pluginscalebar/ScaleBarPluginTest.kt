@@ -107,4 +107,17 @@ class ScaleBarPluginTest {
     verify(exactly = 1) { mapboxMap.addOnCameraMoveListener(scaleBarPlugin.cameraMoveListener) }
     verify(exactly = 1) { mapboxMap.addOnCameraIdleListener(scaleBarPlugin.cameraIdleListener) }
   }
+
+  @Test
+  fun toggled_invalidateWidget() {
+    val scaleBarPlugin = ScaleBarPlugin(mapView, mapboxMap)
+    scaleBarPlugin.create(scaleBarOptions)
+    verify(exactly = 1) { mapboxMap.cameraPosition }
+    verify(exactly = 1) { scaleBarWidget.setDistancePerPixel(100_000.0) }
+    scaleBarPlugin.isEnabled = false
+    scaleBarPlugin.isEnabled = true
+
+    verify(exactly = 2) { mapboxMap.cameraPosition }
+    verify(exactly = 2) { scaleBarWidget.setDistancePerPixel(100_000.0) }
+  }
 }
