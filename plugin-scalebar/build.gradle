@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion androidVersions.compileSdkVersion
@@ -25,8 +26,9 @@ android {
 dependencies {
     implementation dependenciesList.mapboxMapSdk
     javadocDeps dependenciesList.mapboxMapSdk
+    testImplementation dependenciesList.kotlin
+    testImplementation dependenciesList.mockk
     testImplementation dependenciesList.junit
-    testImplementation dependenciesList.mockito
 }
 
 apply from: "${rootDir}/gradle/javadoc.gradle"
