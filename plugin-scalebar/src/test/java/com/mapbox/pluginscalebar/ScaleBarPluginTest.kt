@@ -6,7 +6,6 @@ import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Projection
 import io.mockk.MockKAnnotations
-import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
@@ -56,6 +55,7 @@ class ScaleBarPluginTest {
     assertTrue(scaleBarPlugin.isEnabled)
     verify { scaleBarWidget.visibility = View.VISIBLE }
     verify(exactly = 1) { mapboxMap.addOnCameraMoveListener(scaleBarPlugin.cameraMoveListener) }
+    verify(exactly = 1) { mapboxMap.addOnCameraIdleListener(scaleBarPlugin.cameraIdleListener) }
   }
 
   @Test
@@ -67,6 +67,7 @@ class ScaleBarPluginTest {
     assertFalse(scaleBarPlugin.isEnabled)
     verify { scaleBarWidget.visibility = View.GONE }
     verify { mapboxMap.removeOnCameraMoveListener(scaleBarPlugin.cameraMoveListener) }
+    verify { mapboxMap.removeOnCameraIdleListener(scaleBarPlugin.cameraIdleListener) }
   }
 
   @Test
@@ -74,6 +75,7 @@ class ScaleBarPluginTest {
     val scaleBarPlugin = ScaleBarPlugin(mapView, mapboxMap)
     scaleBarPlugin.create(scaleBarOptions)
     verify(exactly = 1) { mapboxMap.addOnCameraMoveListener(scaleBarPlugin.cameraMoveListener) }
+    verify(exactly = 1) { mapboxMap.addOnCameraIdleListener(scaleBarPlugin.cameraIdleListener) }
     verify(exactly = 1) { scaleBarWidget.visibility = View.VISIBLE }
     scaleBarPlugin.isEnabled = false
     scaleBarPlugin.isEnabled = true
@@ -81,6 +83,7 @@ class ScaleBarPluginTest {
     assertTrue(scaleBarPlugin.isEnabled)
     verify(exactly = 2) { scaleBarWidget.visibility = View.VISIBLE }
     verify(exactly = 2) { mapboxMap.addOnCameraMoveListener(scaleBarPlugin.cameraMoveListener) }
+    verify(exactly = 2) { mapboxMap.addOnCameraIdleListener(scaleBarPlugin.cameraIdleListener) }
   }
 
   @Test
@@ -90,6 +93,7 @@ class ScaleBarPluginTest {
     scaleBarPlugin.isEnabled = true
 
     verify(exactly = 0) { mapboxMap.addOnCameraMoveListener(scaleBarPlugin.cameraMoveListener) }
+    verify(exactly = 0) { mapboxMap.addOnCameraIdleListener(scaleBarPlugin.cameraIdleListener) }
   }
 
   @Test
@@ -101,5 +105,6 @@ class ScaleBarPluginTest {
     assertTrue(scaleBarPlugin.isEnabled)
     verify { scaleBarWidget.visibility = View.VISIBLE }
     verify(exactly = 1) { mapboxMap.addOnCameraMoveListener(scaleBarPlugin.cameraMoveListener) }
+    verify(exactly = 1) { mapboxMap.addOnCameraIdleListener(scaleBarPlugin.cameraIdleListener) }
   }
 }

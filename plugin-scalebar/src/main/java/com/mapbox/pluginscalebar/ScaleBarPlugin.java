@@ -31,6 +31,14 @@ public class ScaleBarPlugin {
     }
   };
 
+  @VisibleForTesting
+  final MapboxMap.OnCameraIdleListener cameraIdleListener = new MapboxMap.OnCameraIdleListener() {
+    @Override
+    public void onCameraIdle() {
+      invalidateScaleBar();
+    }
+  };
+
   public ScaleBarPlugin(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap) {
     this.mapView = mapView;
     this.mapboxMap = mapboxMap;
@@ -53,7 +61,7 @@ public class ScaleBarPlugin {
 
     scaleBarWidget.setVisibility(enabled ? View.VISIBLE : View.GONE);
     if (enabled) {
-      mapboxMap.addOnCameraMoveListener(cameraMoveListener);
+      addCameraListeners();
       invalidateScaleBar();
     }
     return scaleBarWidget;
@@ -90,14 +98,24 @@ public class ScaleBarPlugin {
     this.enabled = enabled;
     scaleBarWidget.setVisibility(enabled ? View.VISIBLE : View.GONE);
     if (enabled) {
-      mapboxMap.addOnCameraMoveListener(cameraMoveListener);
+      addCameraListeners();
     } else {
-      mapboxMap.removeOnCameraMoveListener(cameraMoveListener);
+      removeCameraListeners();
     }
   }
 
   private void invalidateScaleBar() {
     CameraPosition cameraPosition = mapboxMap.getCameraPosition();
     scaleBarWidget.setDistancePerPixel(projection.getMetersPerPixelAtLatitude(cameraPosition.target.getLatitude()));
+  }
+
+  private void addCameraListeners() {
+    mapboxMap.addOnCameraMoveListener(cameraMoveListener);
+    mapboxMap.addOnCameraIdleListener(cameraIdleListener);
+  }
+
+  private void removeCameraListeners() {
+    mapboxMap.removeOnCameraMoveListener(cameraMoveListener);
+    mapboxMap.removeOnCameraIdleListener(cameraIdleListener);
   }
 }
