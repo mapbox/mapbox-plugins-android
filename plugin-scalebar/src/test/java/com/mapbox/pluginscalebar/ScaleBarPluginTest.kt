@@ -6,7 +6,6 @@ import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Projection
 import io.mockk.MockKAnnotations
-import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
@@ -101,5 +100,18 @@ class ScaleBarPluginTest {
     assertTrue(scaleBarPlugin.isEnabled)
     verify { scaleBarWidget.visibility = View.VISIBLE }
     verify(exactly = 1) { mapboxMap.addOnCameraMoveListener(scaleBarPlugin.cameraMoveListener) }
+  }
+
+  @Test
+  fun toggled_invalidateWidget() {
+    val scaleBarPlugin = ScaleBarPlugin(mapView, mapboxMap)
+    scaleBarPlugin.create(scaleBarOptions)
+    verify(exactly = 1) { mapboxMap.cameraPosition }
+    verify(exactly = 1) { scaleBarWidget.setDistancePerPixel(100_000.0) }
+    scaleBarPlugin.isEnabled = false
+    scaleBarPlugin.isEnabled = true
+
+    verify(exactly = 2) { mapboxMap.cameraPosition }
+    verify(exactly = 2) { scaleBarWidget.setDistancePerPixel(100_000.0) }
   }
 }

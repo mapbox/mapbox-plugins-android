@@ -91,6 +91,7 @@ public class ScaleBarPlugin {
     scaleBarWidget.setVisibility(enabled ? View.VISIBLE : View.GONE);
     if (enabled) {
       mapboxMap.addOnCameraMoveListener(cameraMoveListener);
+      invalidateScaleBar();
     } else {
       mapboxMap.removeOnCameraMoveListener(cameraMoveListener);
     }
