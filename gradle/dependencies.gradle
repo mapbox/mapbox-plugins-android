@@ -16,6 +16,7 @@
       supportLib         : '28.0.0',
       constraintLayout   : '1.1.2',
       mockito            : '2.23.4',
+      mockk              : '1.9.3',
       leakCanary         : '1.6.3',
       timber             : '4.7.1',
       testRunner         : '1.0.2',
@@ -80,6 +81,7 @@
       testArchCore           : "android.arch.core:core-testing:${version.androidArchCore}",
       mockitoCore            : "org.mockito:mockito-core:${version.mockito}",
       mockitoAndroid         : "org.mockito:mockito-android:${version.mockito}",
+      mockk                  : "io.mockk:mockk:${version.mockk}",
 
       // unit test
       junit                  : "junit:junit:${version.junit}",

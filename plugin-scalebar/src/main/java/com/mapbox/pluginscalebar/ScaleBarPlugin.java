@@ -2,9 +2,11 @@ package com.mapbox.pluginscalebar;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
+import android.support.annotation.VisibleForTesting;
 import android.view.View;
 
 import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.log.Logger;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Projection;
@@ -13,17 +15,19 @@ import com.mapbox.mapboxsdk.maps.Projection;
  * Plugin class that shows a scale bar on MapView and changes the scale corresponding to the MapView's scale.
  */
 public class ScaleBarPlugin {
+  private static final String TAG = "Mbgl-ScaleBarPlugin";
+
   private final MapView mapView;
   private final MapboxMap mapboxMap;
   private final Projection projection;
   private boolean enabled = true;
   private ScaleBarWidget scaleBarWidget;
 
-  private final MapboxMap.OnCameraMoveListener cameraMoveListener = new MapboxMap.OnCameraMoveListener() {
+  @VisibleForTesting
+  final MapboxMap.OnCameraMoveListener cameraMoveListener = new MapboxMap.OnCameraMoveListener() {
     @Override
     public void onCameraMove() {
-      CameraPosition cameraPosition = mapboxMap.getCameraPosition();
-      scaleBarWidget.setDistancePerPixel(projection.getMetersPerPixelAtLatitude(cameraPosition.target.getLatitude()));
+      invalidateScaleBar();
     }
   };
 
@@ -45,10 +49,13 @@ public class ScaleBarPlugin {
     }
     scaleBarWidget = option.build();
     scaleBarWidget.setMapViewWidth(mapView.getWidth());
-    mapboxMap.addOnCameraMoveListener(cameraMoveListener);
     mapView.addView(scaleBarWidget);
-    CameraPosition cameraPosition = mapboxMap.getCameraPosition();
-    scaleBarWidget.setDistancePerPixel(projection.getMetersPerPixelAtLatitude(cameraPosition.target.getLatitude()));
+
+    scaleBarWidget.setVisibility(enabled ? View.VISIBLE : View.GONE);
+    if (enabled) {
+      mapboxMap.addOnCameraMoveListener(cameraMoveListener);
+      invalidateScaleBar();
+    }
     return scaleBarWidget;
   }
 
@@ -64,22 +71,24 @@ public class ScaleBarPlugin {
   /**
    * Toggles the scale plugin state.
    * <p>
-   * If the scale plugin wasn't enabled, a {@link com.mapbox.mapboxsdk.maps.MapboxMap.OnCameraMoveListener}
+   * If the scale plugin wasn enabled, a {@link com.mapbox.mapboxsdk.maps.MapboxMap.OnCameraMoveListener}
    * will be added to the {@link MapView} to listen to scale change events to update the state of this plugin. If the
-   * plugin was enabled the {@link com.mapbox.mapboxsdk.maps.MapboxMap.OnCameraMoveListener}
+   * plugin was disabled the {@link com.mapbox.mapboxsdk.maps.MapboxMap.OnCameraMoveListener}
    * will be removed from the map.
    * </p>
    */
   @UiThread
   public void setEnabled(boolean enabled) {
+    if (scaleBarWidget == null) {
+      Logger.w(TAG, "Create a widget before changing ScalebBarPlugin's state. Ignoring.");
+      return;
+    }
     if (this.enabled == enabled) {
       // already in correct state
       return;
     }
     this.enabled = enabled;
-    if (scaleBarWidget != null) {
-      scaleBarWidget.setVisibility(enabled ? View.VISIBLE : View.GONE);
-    }
+    scaleBarWidget.setVisibility(enabled ? View.VISIBLE : View.GONE);
     if (enabled) {
       mapboxMap.addOnCameraMoveListener(cameraMoveListener);
     } else {
@@ -87,4 +96,8 @@ public class ScaleBarPlugin {
     }
   }
 
+  private void invalidateScaleBar() {
+    CameraPosition cameraPosition = mapboxMap.getCameraPosition();
+    scaleBarWidget.setDistancePerPixel(projection.getMetersPerPixelAtLatitude(cameraPosition.target.getLatitude()));
+  }
 }
