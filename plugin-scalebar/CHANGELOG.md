@@ -1,6 +1,15 @@
-# Changelog for the Mapbox Scalebar Plugin
+# Changelog for the Mapbox Scale Bar Plugin
 
 Mapbox welcomes participation and contributions from everyone.
+
+### mapbox-android-plugin-scalebar-v8:0.3.0 - August 20, 2019
+
+#### Features
+- Refactor plugins state management in case of widget recreation [#1033](https://github.com/mapbox/mapbox-plugins-android/pull/1033)
+
+#### Bugs
+- Listen for camera idle event [#1035](https://github.com/mapbox/mapbox-plugins-android/pull/1035)
+- Invalidate the widget when plugin is toggled [#1036](https://github.com/mapbox/mapbox-plugins-android/pull/1036)
 
 
 ### mapbox-android-plugin-scalebar-v8:0.2.0 - July 29, 2019
