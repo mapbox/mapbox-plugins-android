@@ -2,6 +2,9 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### mapbox-android-plugin-localization-v8:0.11.0 - August 20, 2019
+#### Features
+- adjusted Timber.e to Timber.d [#993](https://github.com/mapbox/mapbox-plugins-android/pull/993)
 
 ### mapbox-android-plugin-localization-v8:0.10.0 - June 11, 2019
 #### Features
