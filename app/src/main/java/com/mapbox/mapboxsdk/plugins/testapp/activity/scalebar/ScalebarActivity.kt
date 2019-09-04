@@ -46,6 +46,7 @@ class ScalebarActivity : AppCompatActivity() {
                 .setMarginTop(15f)
                 .setMarginLeft(16f)
                 .setTextBarMargin(15f)
+                .setRatio(ScaleBarOptions.ScaleBarRatio.QUARTER)
 
         scaleBarPlugin.create(scaleBarOptions)
         fabScaleWidget.setOnClickListener {

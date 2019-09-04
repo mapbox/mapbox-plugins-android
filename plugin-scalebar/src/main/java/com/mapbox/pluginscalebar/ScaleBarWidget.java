@@ -19,6 +19,9 @@ import static com.mapbox.pluginscalebar.ScaleBarConstants.FEET_PER_MILE;
 import static com.mapbox.pluginscalebar.ScaleBarConstants.KILOMETER;
 import static com.mapbox.pluginscalebar.ScaleBarConstants.KILOMETER_UNIT;
 import static com.mapbox.pluginscalebar.ScaleBarConstants.MILE_UNIT;
+import static com.mapbox.pluginscalebar.ScaleBarOptions.ScaleBarRatio.HALF;
+import static com.mapbox.pluginscalebar.ScaleBarOptions.ScaleBarRatio.QUARTER;
+import static com.mapbox.pluginscalebar.ScaleBarOptions.ScaleBarRatio.THIRD;
 
 /**
  * The scale widget is a visual representation of the scale bar plugin.
@@ -41,6 +44,7 @@ public class ScaleBarWidget extends View {
   private float textSize;
   private double distancePerPixel;
   private boolean isMetricUnit;
+  private float ratio;
   private ArrayList<Pair<Integer, Integer>> scaleTable;
   private String unit;
   private final RefreshHandler refreshHandler;
@@ -59,7 +63,7 @@ public class ScaleBarWidget extends View {
     if (distancePerPixel <= 0) {
       return;
     }
-    double maxDistance = mapViewWidth * distancePerPixel / 2;
+    double maxDistance = mapViewWidth * distancePerPixel * ratio;
     Pair<Integer, Integer> pair = scaleTable.get(0);
     for (int i = 1; i < scaleTable.size(); i++) {
       pair = scaleTable.get(i);
@@ -71,7 +75,7 @@ public class ScaleBarWidget extends View {
     }
 
     int unitDistance = pair.first / pair.second;
-    float unitBarWidth = maxBarWidth / 2f;
+    float unitBarWidth = maxBarWidth / pair.second;
     if (unitDistance == 0) {
       unitDistance = 1;
     } else {
@@ -179,7 +183,7 @@ public class ScaleBarWidget extends View {
    */
   public void setMarginLeft(float marginLeft) {
     this.marginLeft = marginLeft;
-    maxBarWidth = mapViewWidth / 2f - marginLeft;
+    maxBarWidth = mapViewWidth * ratio - marginLeft;
   }
 
   /**
@@ -346,7 +350,7 @@ public class ScaleBarWidget extends View {
    */
   void setMapViewWidth(int mapViewWidth) {
     this.mapViewWidth = mapViewWidth;
-    maxBarWidth = mapViewWidth / 2f - marginLeft;
+    maxBarWidth = mapViewWidth * ratio - marginLeft;
   }
 
   /**
@@ -362,6 +366,31 @@ public class ScaleBarWidget extends View {
       return distance < FEET_PER_MILE ? distance + unit
         : decimalFormat.format(distance * 1.0 / FEET_PER_MILE) + MILE_UNIT;
     }
+  }
+
+  /**
+   * Set the ratio of scale bar max width compared with MapView width.
+   * @param ratio the ratio scale bar will use.
+   */
+  public void setRatio(ScaleBarOptions.ScaleBarRatio ratio) {
+    switch (ratio) {
+      case HALF:
+        this.ratio = 0.5f;
+        break;
+      case THIRD:
+        this.ratio = 0.33f;
+        break;
+      default:
+        this.ratio = 0.25f;
+    }
+  }
+
+  /**
+   * Get the current ratio of scale bar.
+   * @return current ratio.
+   */
+  public ScaleBarOptions.ScaleBarRatio getRatio() {
+    return this.ratio == 0.5f ? HALF : this.ratio == 0.33f ? THIRD : QUARTER;
   }
 
   /**

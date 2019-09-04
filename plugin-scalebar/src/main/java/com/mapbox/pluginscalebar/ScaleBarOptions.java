@@ -16,6 +16,15 @@ import java.util.Locale;
 public class ScaleBarOptions {
   public static final int REFRESH_INTERVAL_DEFAULT = 15;
 
+  /**
+   * Enum for scale bar max width ratio compared with MapView width.
+   */
+  public enum ScaleBarRatio {
+    HALF,
+    THIRD,
+    QUARTER
+  }
+
   private final Context context;
   private int refreshInterval;
   private int textColor;
@@ -28,6 +37,7 @@ public class ScaleBarOptions {
   private float borderWidth;
   private float textSize;
   private boolean isMetricUnit;
+  private ScaleBarRatio ratio;
 
   public ScaleBarOptions(@NonNull Context context) {
     this.context = context;
@@ -42,6 +52,7 @@ public class ScaleBarOptions {
     setTextColor(android.R.color.black);
     setPrimaryColor(android.R.color.black);
     setSecondaryColor(android.R.color.white);
+    setRatio(ScaleBarRatio.HALF);
   }
 
   /**
@@ -62,6 +73,7 @@ public class ScaleBarOptions {
     scaleBarWidget.setSecondaryColor(secondaryColor);
     scaleBarWidget.setTextColor(textColor);
     scaleBarWidget.setTextSize(textSize);
+    scaleBarWidget.setRatio(ratio);
     return scaleBarWidget;
   }
 
@@ -253,6 +265,16 @@ public class ScaleBarOptions {
    */
   public ScaleBarOptions setTextBarMargin(@DimenRes int textBarMargin) {
     this.textBarMargin = context.getResources().getDimension(textBarMargin);
+    return this;
+  }
+
+  /**
+   * Set the ratio of scale bar max width compared with MapView width.
+   *
+   * @param ratio the ratio scale bar will use.
+   */
+  public ScaleBarOptions setRatio(ScaleBarRatio ratio) {
+    this.ratio = ratio;
     return this;
   }
 
