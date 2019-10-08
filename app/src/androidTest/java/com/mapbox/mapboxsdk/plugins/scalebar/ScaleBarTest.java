@@ -20,9 +20,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import timber.log.Timber;
 
 import static com.mapbox.mapboxsdk.plugins.annotation.MapboxMapAction.invoke;
-import static com.mapbox.pluginscalebar.ScaleBarOptions.ScaleBarRatio.HALF;
-import static com.mapbox.pluginscalebar.ScaleBarOptions.ScaleBarRatio.QUARTER;
-import static com.mapbox.pluginscalebar.ScaleBarOptions.ScaleBarRatio.THIRD;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -255,20 +252,20 @@ public class ScaleBarTest extends BaseActivityTest {
   public void testRatio() {
     validateTestSetup();
     setupScaleBar();
-    assertEquals(HALF,scaleBarWidget.getRatio());
+    assertEquals(0.5f,scaleBarWidget.getRatio(), 0f);
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       ScaleBarOptions option = new ScaleBarOptions(activity);
-      option.setRatio(THIRD);
+      option.setRatio(0.1f);
       scaleBarWidget = scaleBarPlugin.create(option);
       assertNotNull(scaleBarWidget);
-      assertEquals(THIRD, scaleBarWidget.getRatio());
+      assertEquals(0.1f, scaleBarWidget.getRatio(), 0f);
     });
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       ScaleBarOptions option = new ScaleBarOptions(activity);
-      option.setRatio(QUARTER);
+      option.setRatio(1.0f);
       scaleBarWidget = scaleBarPlugin.create(option);
       assertNotNull(scaleBarWidget);
-      assertEquals(QUARTER, scaleBarWidget.getRatio());
+      assertEquals(1.0f, scaleBarWidget.getRatio(), 0f);
     });
   }
 }

@@ -19,9 +19,6 @@ import static com.mapbox.pluginscalebar.ScaleBarConstants.FEET_PER_MILE;
 import static com.mapbox.pluginscalebar.ScaleBarConstants.KILOMETER;
 import static com.mapbox.pluginscalebar.ScaleBarConstants.KILOMETER_UNIT;
 import static com.mapbox.pluginscalebar.ScaleBarConstants.MILE_UNIT;
-import static com.mapbox.pluginscalebar.ScaleBarOptions.ScaleBarRatio.HALF;
-import static com.mapbox.pluginscalebar.ScaleBarOptions.ScaleBarRatio.QUARTER;
-import static com.mapbox.pluginscalebar.ScaleBarOptions.ScaleBarRatio.THIRD;
 
 /**
  * The scale widget is a visual representation of the scale bar plugin.
@@ -372,25 +369,16 @@ public class ScaleBarWidget extends View {
    * Set the ratio of scale bar max width compared with MapView width.
    * @param ratio the ratio scale bar will use.
    */
-  public void setRatio(ScaleBarOptions.ScaleBarRatio ratio) {
-    switch (ratio) {
-      case HALF:
-        this.ratio = 0.5f;
-        break;
-      case THIRD:
-        this.ratio = 0.33f;
-        break;
-      default:
-        this.ratio = 0.25f;
-    }
+  public void setRatio(float ratio) {
+    this.ratio = ratio;
   }
 
   /**
    * Get the current ratio of scale bar.
    * @return current ratio.
    */
-  public ScaleBarOptions.ScaleBarRatio getRatio() {
-    return this.ratio == 0.5f ? HALF : this.ratio == 0.33f ? THIRD : QUARTER;
+  public float getRatio() {
+    return this.ratio;
   }
 
   /**
