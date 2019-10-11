@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -28,13 +29,14 @@ import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 import com.mapbox.mapboxsdk.utils.BitmapUtils;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
-import timber.log.Timber;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+
+import timber.log.Timber;
 
 import static com.mapbox.mapboxsdk.style.expressions.Expression.eq;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
@@ -68,13 +70,14 @@ public class SymbolActivity extends AppCompatActivity {
     mapView = findViewById(R.id.mapView);
     mapView.onCreate(savedInstanceState);
     mapView.getMapAsync(mapboxMap -> mapboxMap.setStyle(Style.MAPBOX_STREETS, style -> {
-      findViewById(R.id.fabStyles).setOnClickListener(v -> mapboxMap.setStyle(Utils.INSTANCE.getNextStyle()));
+      findViewById(R.id.fabStyles).setOnClickListener(v -> {
+        mapboxMap.setStyle(Utils.INSTANCE.getNextStyle());
+        mapboxMap.getStyle(this::addAirplaneImageToStyle);
+      });
 
       mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
 
-      style.addImage(ID_ICON_AIRPORT,
-        BitmapUtils.getBitmapFromDrawable(getResources().getDrawable(R.drawable.ic_airplanemode_active_black_24dp)),
-        true);
+      addAirplaneImageToStyle(style);
 
       // create symbol manager
       GeoJsonOptions geoJsonOptions = new GeoJsonOptions().withTolerance(0.4f);
@@ -154,6 +157,12 @@ public class SymbolActivity extends AppCompatActivity {
   private LatLng createRandomLatLng() {
     return new LatLng((random.nextDouble() * -180.0) + 90.0,
       (random.nextDouble() * -360.0) + 180.0);
+  }
+
+  private void addAirplaneImageToStyle(Style style) {
+    style.addImage(ID_ICON_AIRPORT,
+      BitmapUtils.getBitmapFromDrawable(getResources().getDrawable(R.drawable.ic_airplanemode_active_black_24dp)),
+      true);
   }
 
   @Override
