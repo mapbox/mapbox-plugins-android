@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
+
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Point;
@@ -20,6 +23,9 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.plugins.annotation.Annotation;
+import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolClickListener;
+import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolLongClickListener;
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
@@ -43,6 +49,7 @@ public class BulkSymbolActivity extends AppCompatActivity implements AdapterView
   private SymbolManager symbolManager;
   private List<Symbol> symbols = new ArrayList<>();
 
+  private static final String MAKI_ICON_CAFE = "cafe-15";
   private MapboxMap mapboxMap;
   private MapView mapView;
   private FeatureCollection locations;
@@ -71,6 +78,23 @@ public class BulkSymbolActivity extends AppCompatActivity implements AdapterView
       symbolManager = new SymbolManager(mapView, mapboxMap, style);
       symbolManager.setIconAllowOverlap(true);
       loadData(0);
+      // Add click listener and change the symbol to a cafe icon on click
+      symbolManager.addClickListener(new OnSymbolClickListener() {
+        @Override
+        public void onAnnotationClick(Symbol symbol) {
+          symbol.setIconImage(MAKI_ICON_CAFE);
+          symbolManager.update(symbol);
+        }
+      });
+      // Add long click listener that removes the icon from the map on long click
+      symbolManager.addLongClickListener((new OnSymbolLongClickListener() {
+        @Override
+        public void onAnnotationLongClick(Symbol symbol) {
+          Toast.makeText(BulkSymbolActivity.this,
+                  "Symbol removed from map!", Toast.LENGTH_SHORT).show();
+          symbolManager.delete(symbol);
+        }
+      }));
     });
   }
 
