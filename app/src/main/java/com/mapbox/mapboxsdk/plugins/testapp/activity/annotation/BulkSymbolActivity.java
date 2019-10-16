@@ -82,6 +82,10 @@ public class BulkSymbolActivity extends AppCompatActivity implements AdapterView
       symbolManager.addClickListener(new OnSymbolClickListener() {
         @Override
         public void onAnnotationClick(Symbol symbol) {
+          Toast.makeText(BulkSymbolActivity.this,
+                  String.format("Symbol %s clicked", symbol.getId()),
+                  Toast.LENGTH_SHORT
+          ).show();
           symbol.setIconImage(MAKI_ICON_CAFE);
           symbolManager.update(symbol);
         }
