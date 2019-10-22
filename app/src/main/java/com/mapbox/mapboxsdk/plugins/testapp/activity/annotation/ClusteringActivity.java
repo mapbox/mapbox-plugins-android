@@ -25,6 +25,7 @@ import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.Utils;
+import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 
 import timber.log.Timber;
 
@@ -68,7 +69,12 @@ public class ClusteringActivity extends AppCompatActivity implements AdapterView
 
         mapboxMap.setStyle(new Style.Builder().fromUri(Style.MAPBOX_STREETS), style -> {
             findViewById(R.id.fabStyles).setOnClickListener(v -> mapboxMap.setStyle(Utils.INSTANCE.getNextStyle()));
-            symbolManager = new SymbolManager(mapView, mapboxMap, style);
+            /* Create a GeoJsonOptions instance to specify the clustering parameters. */
+            GeoJsonOptions geoJsonOptions = new GeoJsonOptions()
+                    .withCluster(true)
+                    .withClusterMaxZoom(14)
+                    .withClusterRadius(10);
+            symbolManager = new SymbolManager(mapView, mapboxMap, style, null, geoJsonOptions);
             symbolManager.setIconAllowOverlap(true);
             loadData(0);
         });
