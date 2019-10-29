@@ -26,7 +26,7 @@
     <string name="title_offline_ui_components">Offline Ui Components</string>
     <string name="title_symbol">Symbol</string>
     <string name="title_symbol_press">Press for Symbol</string>
-    <string name="title_symbol_bulk">Bulk amount of Symbols</string>
+    <string name="title_symbol_bulk">Bulk amount of Symbols with clustering</string>
     <string name="title_clustering">Clustering Symbols</string>
     <string name="title_symbol_change">Change Symbol</string>
     <string name="title_fill">Fill</string>

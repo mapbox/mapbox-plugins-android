@@ -25,6 +25,7 @@ import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.Utils;
+import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 
 import timber.log.Timber;
 
@@ -68,6 +69,10 @@ public class BulkSymbolActivity extends AppCompatActivity implements AdapterView
 
     mapboxMap.setStyle(new Style.Builder().fromUri(Style.MAPBOX_STREETS), style -> {
       findViewById(R.id.fabStyles).setOnClickListener(v -> mapboxMap.setStyle(Utils.INSTANCE.getNextStyle()));
+      GeoJsonOptions geoJsonOptions = new GeoJsonOptions()
+              .withCluster(true)
+              .withClusterMaxZoom(14)
+              .withClusterRadius(10);
       symbolManager = new SymbolManager(mapView, mapboxMap, style);
       symbolManager.setIconAllowOverlap(true);
       loadData(0);
