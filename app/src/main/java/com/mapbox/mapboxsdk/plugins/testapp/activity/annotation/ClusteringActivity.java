@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
+
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -69,9 +70,6 @@ public class ClusteringActivity extends AppCompatActivity implements AdapterView
 
         mapboxMap.setStyle(new Style.Builder().fromUri(Style.MAPBOX_STREETS), style -> {
             findViewById(R.id.fabStyles).setOnClickListener(v -> mapboxMap.setStyle(Utils.INSTANCE.getNextStyle()));
-//            symbolManager = new SymbolManager(mapView, mapboxMap, style, null, geoJsonOptions);
-//            symbolManager.setIconAllowOverlap(true);
-//            loadData(0);
             initLayerIcons(style);
             addClusteredGeoJsonSource(style);
         });
@@ -102,7 +100,9 @@ public class ClusteringActivity extends AppCompatActivity implements AdapterView
             Timber.e("Check the URL %s" , uriSyntaxException.getMessage());
         }
 
+
         // Creating a SymbolLayer icon layer for single data/icon points
+        // Alternatively, could use a SymbolManager for managing this layer which corresponds to single data points
         loadedMapStyle.addLayer(new SymbolLayer("unclustered-points", "earthquakes").withProperties(
                 iconImage("single-quake-icon-id"),
                 iconSize(

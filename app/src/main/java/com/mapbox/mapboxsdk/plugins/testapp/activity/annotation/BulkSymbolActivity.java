@@ -73,7 +73,7 @@ public class BulkSymbolActivity extends AppCompatActivity implements AdapterView
               .withCluster(true)
               .withClusterMaxZoom(14)
               .withClusterRadius(10);
-      symbolManager = new SymbolManager(mapView, mapboxMap, style);
+      symbolManager = new SymbolManager(mapView, mapboxMap, style, null, geoJsonOptions);
       symbolManager.setIconAllowOverlap(true);
       loadData(0);
     });
