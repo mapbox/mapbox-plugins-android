@@ -38,6 +38,7 @@ public class LineManagerTest {
   private Style style = mock(Style.class);
   private GeoJsonSource geoJsonSource = mock(GeoJsonSource.class);
   private GeoJsonSource optionedGeoJsonSource = mock(GeoJsonSource.class);
+  private String layerId = "annotation_layer";
   private LineLayer lineLayer = mock(LineLayer.class);
   private LineManager lineManager;
   private CoreElementProvider<LineLayer> coreElementProvider = mock(CoreElementProvider.class);
@@ -45,6 +46,7 @@ public class LineManagerTest {
 
   @Before
   public void beforeTest() {
+    when(lineLayer.getId()).thenReturn(layerId);
     when(coreElementProvider.getLayer()).thenReturn(lineLayer);
     when(coreElementProvider.getSource(null)).thenReturn(geoJsonSource);
     when(coreElementProvider.getSource(geoJsonOptions)).thenReturn(optionedGeoJsonSource);
@@ -146,6 +148,12 @@ public class LineManagerTest {
     when(style.isFullyLoaded()).thenReturn(false);
     lineManager.updateSource();
     verify(geoJsonSource, times(1)).setGeoJson(any(FeatureCollection.class));
+  }
+
+  @Test
+  public void testLayerId() {
+    lineManager = new LineManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
+    assertEquals(layerId, lineManager.getLayerId());
   }
 
   @Test

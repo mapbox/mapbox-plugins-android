@@ -43,6 +43,7 @@ public class <%- camelize(type) %>ManagerTest {
   private Style style = mock(Style.class);
   private GeoJsonSource geoJsonSource = mock(GeoJsonSource.class);
   private GeoJsonSource optionedGeoJsonSource = mock(GeoJsonSource.class);
+  private String layerId = "annotation_layer";
   private <%- camelize(type) %>Layer <%- type  %>Layer = mock(<%- camelize(type) %>Layer.class);
   private <%- camelize(type) %>Manager <%- type  %>Manager;
   private CoreElementProvider<<%- camelize(type) %>Layer> coreElementProvider = mock(CoreElementProvider.class);
@@ -50,6 +51,7 @@ public class <%- camelize(type) %>ManagerTest {
 
   @Before
   public void beforeTest() {
+    when(<%- type  %>Layer.getId()).thenReturn(layerId);
     when(coreElementProvider.getLayer()).thenReturn(<%- type  %>Layer);
     when(coreElementProvider.getSource(null)).thenReturn(geoJsonSource);
     when(coreElementProvider.getSource(geoJsonOptions)).thenReturn(optionedGeoJsonSource);
@@ -151,6 +153,12 @@ public class <%- camelize(type) %>ManagerTest {
     when(style.isFullyLoaded()).thenReturn(false);
     <%- type  %>Manager.updateSource();
     verify(geoJsonSource, times(1)).setGeoJson(any(FeatureCollection.class));
+  }
+
+  @Test
+  public void testLayerId() {
+    <%- type  %>Manager = new <%- camelize(type) %>Manager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
+    assertEquals(layerId, <%- type  %>Manager.getLayerId());
   }
 
   @Test

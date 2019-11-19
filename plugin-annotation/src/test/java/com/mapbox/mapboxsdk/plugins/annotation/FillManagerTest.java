@@ -38,6 +38,7 @@ public class FillManagerTest {
   private Style style = mock(Style.class);
   private GeoJsonSource geoJsonSource = mock(GeoJsonSource.class);
   private GeoJsonSource optionedGeoJsonSource = mock(GeoJsonSource.class);
+  private String layerId = "annotation_layer";
   private FillLayer fillLayer = mock(FillLayer.class);
   private FillManager fillManager;
   private CoreElementProvider<FillLayer> coreElementProvider = mock(CoreElementProvider.class);
@@ -45,6 +46,7 @@ public class FillManagerTest {
 
   @Before
   public void beforeTest() {
+    when(fillLayer.getId()).thenReturn(layerId);
     when(coreElementProvider.getLayer()).thenReturn(fillLayer);
     when(coreElementProvider.getSource(null)).thenReturn(geoJsonSource);
     when(coreElementProvider.getSource(geoJsonOptions)).thenReturn(optionedGeoJsonSource);
@@ -146,6 +148,12 @@ public class FillManagerTest {
     when(style.isFullyLoaded()).thenReturn(false);
     fillManager.updateSource();
     verify(geoJsonSource, times(1)).setGeoJson(any(FeatureCollection.class));
+  }
+
+  @Test
+  public void testLayerId() {
+    fillManager = new FillManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
+    assertEquals(layerId, fillManager.getLayerId());
   }
 
   @Test
