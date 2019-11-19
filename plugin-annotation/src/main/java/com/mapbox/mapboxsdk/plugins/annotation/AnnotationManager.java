@@ -102,6 +102,17 @@ public abstract class AnnotationManager<
   }
 
   /**
+   * Returns a layer ID that annotations created by this manager are laid out on.
+   *
+   * This reference can be used together with {@link Style#addLayerAbove(Layer, String)}
+   * or {@link Style#addLayerBelow(Layer, String)} to improve other layers positioning in relation to this manager.
+   * @return underlying layer's ID
+   */
+  public String getLayerId() {
+    return layer.getId();
+  }
+
+  /**
    * Get a list of current annotations.
    *
    * @return long sparse array of annotations

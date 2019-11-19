@@ -38,6 +38,7 @@ public class SymbolManagerTest {
   private Style style = mock(Style.class);
   private GeoJsonSource geoJsonSource = mock(GeoJsonSource.class);
   private GeoJsonSource optionedGeoJsonSource = mock(GeoJsonSource.class);
+  private String layerId = "annotation_layer";
   private SymbolLayer symbolLayer = mock(SymbolLayer.class);
   private SymbolManager symbolManager;
   private CoreElementProvider<SymbolLayer> coreElementProvider = mock(CoreElementProvider.class);
@@ -45,6 +46,7 @@ public class SymbolManagerTest {
 
   @Before
   public void beforeTest() {
+    when(symbolLayer.getId()).thenReturn(layerId);
     when(coreElementProvider.getLayer()).thenReturn(symbolLayer);
     when(coreElementProvider.getSource(null)).thenReturn(geoJsonSource);
     when(coreElementProvider.getSource(geoJsonOptions)).thenReturn(optionedGeoJsonSource);
@@ -146,6 +148,12 @@ public class SymbolManagerTest {
     when(style.isFullyLoaded()).thenReturn(false);
     symbolManager.updateSource();
     verify(geoJsonSource, times(1)).setGeoJson(any(FeatureCollection.class));
+  }
+
+  @Test
+  public void testLayerId() {
+    symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
+    assertEquals(layerId, symbolManager.getLayerId());
   }
 
   @Test

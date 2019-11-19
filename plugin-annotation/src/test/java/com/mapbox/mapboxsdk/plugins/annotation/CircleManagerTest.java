@@ -38,6 +38,7 @@ public class CircleManagerTest {
   private Style style = mock(Style.class);
   private GeoJsonSource geoJsonSource = mock(GeoJsonSource.class);
   private GeoJsonSource optionedGeoJsonSource = mock(GeoJsonSource.class);
+  private String layerId = "annotation_layer";
   private CircleLayer circleLayer = mock(CircleLayer.class);
   private CircleManager circleManager;
   private CoreElementProvider<CircleLayer> coreElementProvider = mock(CoreElementProvider.class);
@@ -45,6 +46,7 @@ public class CircleManagerTest {
 
   @Before
   public void beforeTest() {
+    when(circleLayer.getId()).thenReturn(layerId);
     when(coreElementProvider.getLayer()).thenReturn(circleLayer);
     when(coreElementProvider.getSource(null)).thenReturn(geoJsonSource);
     when(coreElementProvider.getSource(geoJsonOptions)).thenReturn(optionedGeoJsonSource);
@@ -146,6 +148,12 @@ public class CircleManagerTest {
     when(style.isFullyLoaded()).thenReturn(false);
     circleManager.updateSource();
     verify(geoJsonSource, times(1)).setGeoJson(any(FeatureCollection.class));
+  }
+
+  @Test
+  public void testLayerId() {
+    circleManager = new CircleManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
+    assertEquals(layerId, circleManager.getLayerId());
   }
 
   @Test
