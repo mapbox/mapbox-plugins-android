@@ -252,7 +252,7 @@ public final class LocalizationPlugin {
         if (url == null) {
           url = "not found";
         }
-        Timber.w("The %s (%s) source is not based on Mapbox Vector Tiles. Supported sources:\n %s",
+        Timber.d("The %s (%s) source is not based on Mapbox Vector Tiles. Supported sources:\n %s",
           source.getId(), url, SUPPORTED_SOURCES);
       }
     }
