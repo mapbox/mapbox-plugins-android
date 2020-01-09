@@ -8,8 +8,8 @@
 
   version = [
       mapboxMapSdk       : '8.6.2',
-      mapboxJava         : '4.9.0',
-      mapboxTurf         : '4.9.0',
+      mapboxJava         : '5.0.0',
+      mapboxTurf         : '5.0.0',
       playLocation       : '16.0.0',
       autoValue          : '1.5.4',
       autoValueParcel    : '0.2.6',
