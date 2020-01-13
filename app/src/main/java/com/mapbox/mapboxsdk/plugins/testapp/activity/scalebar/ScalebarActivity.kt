@@ -20,7 +20,6 @@ import com.mapbox.turf.TurfConstants
 
 import java.util.*
 
-
 /**
  * Activity showing a scalebar used on a MapView.
  */
@@ -59,7 +58,7 @@ class ScalebarActivity : AppCompatActivity() {
     private fun setupTestLine(style: Style) {
         val source = GeoJsonSource("source-id")
         val lineLayer = LineLayer("layer-id", source.id)
-        val startPoint: Point = Point.fromLngLat(-122.447244,37.769145)
+        val startPoint: Point = Point.fromLngLat(-122.447244, 37.769145)
         val endPoint: Point = TurfMeasurement.destination(startPoint, 200.0, 90.0, TurfConstants.UNIT_METERS)
         val pointList: List<Point> = listOf(startPoint, endPoint)
         source.setGeoJson(LineString.fromLngLats(pointList))
