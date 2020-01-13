@@ -65,6 +65,7 @@ dependencies {
     exclude group: 'com.google.android.gms'
   })
   implementation dependenciesList.mapboxGeocoding
+  implementation dependenciesList.mapboxTurf
 
   // Architecture
   implementation dependenciesList.lifecycleExtensions
