@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         app:mapbox_cameraTargetLat="37.769145"
         app:mapbox_cameraTargetLng="-122.447244"
-        app:mapbox_cameraZoom="9" />
+        app:mapbox_cameraZoom="15.5" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabScaleWidget"
