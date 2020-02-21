@@ -27,35 +27,38 @@ class LocalizationActivity : AppCompatActivity(), OnMapReadyCallback {
     Toast.makeText(this, R.string.change_language_instruction, Toast.LENGTH_LONG).show()
     mapView.onCreate(savedInstanceState)
     mapView.getMapAsync(this)
-
-    fabLocalize.setOnClickListener {
-      mapIsLocalized = if (mapIsLocalized) {
-        localizationPlugin?.setMapLanguage(MapLocale(MapLocale.FRENCH))
-        Toast.makeText(this, R.string.map_not_localized, Toast.LENGTH_SHORT).show()
-        false
-      } else {
-        localizationPlugin?.matchMapLanguageWithDeviceDefault()
-        Toast.makeText(this, R.string.map_localized, Toast.LENGTH_SHORT).show()
-        true
-      }
-    }
-
-    fabCamera.setOnClickListener {
-      val locale = nextMapLocale
-      localizationPlugin?.setMapLanguage(locale)
-      localizationPlugin?.setCameraToLocaleCountry(locale, 25)
-    }
-
-    fabStyles.setOnClickListener {
-      mapboxMap?.setStyle(Style.Builder().fromUri(Utils.nextStyle))
-    }
   }
 
   override fun onMapReady(mapboxMap: MapboxMap) {
-    this.mapboxMap = mapboxMap
-    mapboxMap.setStyle(Style.MAPBOX_STREETS) {
-      localizationPlugin = LocalizationPlugin(mapView, mapboxMap, it)
-      localizationPlugin?.matchMapLanguageWithDeviceDefault()
+    mapboxMap.setStyle(Style.MAPBOX_STREETS) { style ->
+      this.mapboxMap = mapboxMap
+      localizationPlugin = LocalizationPlugin(mapView, mapboxMap, style).also { localizationPlugin ->
+        localizationPlugin.matchMapLanguageWithDeviceDefault()
+      }
+
+      fabLocalize.setOnClickListener {
+        mapIsLocalized = if (mapIsLocalized) {
+          localizationPlugin?.setMapLanguage(MapLocale(MapLocale.FRENCH))
+          Toast.makeText(this, R.string.map_not_localized, Toast.LENGTH_SHORT).show()
+          false
+        } else {
+          localizationPlugin?.matchMapLanguageWithDeviceDefault()
+          Toast.makeText(this, R.string.map_localized, Toast.LENGTH_SHORT).show()
+          true
+        }
+      }
+
+      fabCamera.setOnClickListener {
+        val locale = nextMapLocale
+        localizationPlugin?.apply {
+          setMapLanguage(locale)
+          setCameraToLocaleCountry(locale, 25)
+        }
+      }
+
+      fabStyles.setOnClickListener {
+        mapboxMap.setStyle(Style.Builder().fromUri(Utils.nextStyle))
+      }
     }
   }
 
@@ -145,6 +148,14 @@ class LocalizationActivity : AppCompatActivity(), OnMapReadyCallback {
         localizationPlugin?.setMapLanguage(MapLocale.KOREAN)
         return true
       }
+      R.id.vietnamese -> {
+        localizationPlugin?.setMapLanguage(MapLocale.VIETNAMESE)
+        return true
+      }
+      R.id.italian -> {
+        localizationPlugin?.setMapLanguage(MapLocale.ITALIAN)
+        return true
+      }
       R.id.local -> {
         localizationPlugin?.setMapLanguage(MapLocale.LOCAL_NAME)
         return true
@@ -159,7 +170,10 @@ class LocalizationActivity : AppCompatActivity(), OnMapReadyCallback {
 
   companion object {
 
-    private val LOCALES = arrayOf(MapLocale.CANADA, MapLocale.GERMANY, MapLocale.CHINA, MapLocale.US, MapLocale.CANADA_FRENCH, MapLocale.JAPAN, MapLocale.KOREA, MapLocale.FRANCE, MapLocale.SPAIN)
+    private val LOCALES = arrayOf(MapLocale.CANADA, MapLocale.GERMANY, MapLocale.CHINA,
+      MapLocale.US, MapLocale.CANADA_FRENCH, MapLocale.JAPAN, MapLocale.KOREA,
+      MapLocale.FRANCE, MapLocale.SPAIN, MapLocale.VIETNAM, MapLocale.ITALY, MapLocale.UK
+    )
 
     private var index: Int = 0
 

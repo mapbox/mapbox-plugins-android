@@ -106,9 +106,19 @@ public final class MapLocale {
    */
   public static final String KOREAN = "name_ko";
 
+  /**
+   * Vietnamese (if available)
+   */
+  public static final String VIETNAMESE = "name_vi";
+
+  /**
+   * Italy (if available)
+   */
+  public static final String ITALIAN = "name_it";
+
   @Retention(SOURCE)
   @StringDef( {LOCAL_NAME, ARABIC, CHINESE, SIMPLIFIED_CHINESE, TRADITIONAL_CHINESE, ENGLISH,
-          FRENCH, GERMAN, JAPANESE, KOREAN, PORTUGUESE, RUSSIAN, SPANISH})
+          FRENCH, GERMAN, JAPANESE, KOREAN, PORTUGUESE, RUSSIAN, SPANISH, VIETNAMESE, ITALIAN})
   public @interface Languages {
   }
 
@@ -117,95 +127,109 @@ public final class MapLocale {
    */
 
   /**
-   * USA Bounding box excluding Hawaii and Alaska extracted from Open Street Map
+   * Approximate USA bounding box, excluding Hawaii and Alaska
    */
   static final LatLngBounds USA_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(49.388611, -124.733253))
     .include(new LatLng(24.544245, -66.954811)).build();
 
   /**
-   * UK Bounding Box extracted from Open Street Map
+   * Approximate UK bounding box
    */
   static final LatLngBounds UK_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(59.360249, -8.623555))
     .include(new LatLng(49.906193, 1.759)).build();
 
   /**
-   * Canada Bounding Box extracted from Open Street Map
+   * Approximate Canada bounding box
    */
   static final LatLngBounds CANADA_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(83.110626, -141.0))
     .include(new LatLng(41.67598, -52.636291)).build();
 
   /**
-   * China Bounding Box extracted from Open Street Map
+   * Approximate China bounding box
    */
   static final LatLngBounds CHINA_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(53.56086, 73.557693))
     .include(new LatLng(15.775416, 134.773911)).build();
 
   /**
-   * Taiwan Bounding Box extracted from Open Street Map
+   * Approximate Taiwan bounding box
    */
   static final LatLngBounds TAIWAN_BBOX = new LatLngBounds.Builder()
           .include(new LatLng(26.389444, 118.115255566105))
           .include(new LatLng(21.733333, 122.107778)).build();
 
   /**
-   * Germany Bounding Box extracted from Open Street Map
+   * Approximate Germany bounding box
    */
   static final LatLngBounds GERMANY_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(55.055637, 5.865639))
     .include(new LatLng(47.275776, 15.039889)).build();
 
   /**
-   * Korea Bounding Box extracted from Open Street Map
+   * Approximate Korea bounding box
    */
   static final LatLngBounds KOREA_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(38.612446, 125.887108))
     .include(new LatLng(33.190945, 129.584671)).build();
 
   /**
-   * Japan Bounding Box extracted from Open Street Map
+   * Approximate Japan bounding box
    */
   static final LatLngBounds JAPAN_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(45.52314, 122.93853))
     .include(new LatLng(24.249472, 145.820892)).build();
 
   /**
-   * France Bounding Box extracted from Open Street Map
+   * Approximate France bounding box
    */
   static final LatLngBounds FRANCE_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(51.092804, -5.142222))
     .include(new LatLng(41.371582, 9.561556)).build();
 
   /**
-   * Russian Bounding box extracted from Open Street Map
+   * Approximate Russian bounding box
    */
   static final LatLngBounds RUSSIA_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(81.856903, -168.997849))
     .include(new LatLng(41.185902, 19.638861)).build();
 
   /**
-   * Spain Bounding box extracted from Open Street Map
+   * Approximate Spain bounding box
    */
   static final LatLngBounds SPAIN_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(27.4335426, -18.3936845))
     .include(new LatLng(43.9933088, 4.5918885)).build();
 
   /**
-   * Portugal Bounding box extracted from Open Street Map
+   * Approximate Portugal bounding box
    */
   static final LatLngBounds PORTUGAL_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(27.4335426, -18.3936845))
     .include(new LatLng(42.280468655, -6.3890876937)).build();
 
   /**
-   * Brazil Bounding box extracted from Open Street Map
+   * Approximate Brazil bounding box
    */
   static final LatLngBounds BRAZIL_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(5.2842873, -33.8689056))
     .include(new LatLng(-28.6341164, -73.9830625)).build();
+
+  /**
+   * Approximate Vietnam bounding box
+   */
+  static final LatLngBounds VIETNAM_BBOX = new LatLngBounds.Builder()
+    .include(new LatLng(8.383333, 102.216667))
+    .include(new LatLng(23.666667, 109.466667)).build();
+
+  /**
+   * Approximate Italy bounding box
+   */
+  static final LatLngBounds ITALY_BBOX = new LatLngBounds.Builder()
+          .include(new LatLng(36.619987291,6.7499552751))
+          .include(new LatLng(47.1153931748,18.4802470232)).build();
 
   /*
    * Some MapLocales already defined (these match with the predefined ones in the Locale class)
@@ -292,6 +316,16 @@ public final class MapLocale {
   public static final MapLocale BRAZIL = new MapLocale(PORTUGUESE, BRAZIL_BBOX);
 
   /**
+   * Useful constant for country.
+   */
+  public static final MapLocale VIETNAM = new MapLocale(VIETNAMESE, VIETNAM_BBOX);
+
+  /**
+   * Useful constant for country.
+   */
+  public static final MapLocale ITALY = new MapLocale(ITALIAN, ITALY_BBOX);
+
+  /**
    * Maps out the Matching pair of {@link Locale} and {@link MapLocale}. In other words, if I have a
    * {@link Locale#CANADA}, this should be matched up with {@link MapLocale#CANADA}.
    */
@@ -313,6 +347,8 @@ public final class MapLocale {
     LOCALE_SET.put(new Locale("es", "ES"), SPAIN);
     LOCALE_SET.put(new Locale("pt", "PT"), PORTUGAL);
     LOCALE_SET.put(new Locale("pt", "BR"), BRAZIL);
+    LOCALE_SET.put(new Locale("vi", "VN"), VIETNAM);
+    LOCALE_SET.put(Locale.ITALY, MapLocale.ITALY);
 
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
       Locale zh_CN_Hans = new Locale.Builder().setLanguage("zh").setRegion("CN").setScript("Hans").build();
