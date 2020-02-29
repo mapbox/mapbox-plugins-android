@@ -1,18 +1,19 @@
 package com.mapbox.mapboxsdk.plugins.places.picker.ui;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.mapboxsdk.places.R;
 
-import static android.support.design.widget.BottomSheetBehavior.STATE_COLLAPSED;
-import static android.support.design.widget.BottomSheetBehavior.STATE_HIDDEN;
+import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
+import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED;
+import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN;
 import static com.mapbox.mapboxsdk.plugins.places.common.utils.GeocodingUtils.removeNameFromAddress;
 
 public class CurrentPlaceSelectionBottomSheet extends CoordinatorLayout {

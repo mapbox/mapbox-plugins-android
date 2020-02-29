@@ -1,8 +1,5 @@
 package com.mapbox.pluginscalebar;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.UiThread;
-import android.support.annotation.VisibleForTesting;
 import android.view.View;
 
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -10,6 +7,10 @@ import com.mapbox.mapboxsdk.log.Logger;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Projection;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.UiThread;
+import androidx.annotation.VisibleForTesting;
 
 /**
  * Plugin class that shows a scale bar on MapView and changes the scale corresponding to the MapView's scale.

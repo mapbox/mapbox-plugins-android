@@ -2,7 +2,6 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity.annotation;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Activity showcasing adding circles using the annotation plugin

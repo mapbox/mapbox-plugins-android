@@ -5,14 +5,15 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
 import android.util.Pair;
 import android.view.View;
 
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
 
 import static com.mapbox.pluginscalebar.ScaleBarConstants.FEET_PER_MILE;
 import static com.mapbox.pluginscalebar.ScaleBarConstants.KILOMETER;

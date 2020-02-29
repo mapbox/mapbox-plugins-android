@@ -2,10 +2,10 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.UiThread;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.annotation.VisibleForTesting;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;

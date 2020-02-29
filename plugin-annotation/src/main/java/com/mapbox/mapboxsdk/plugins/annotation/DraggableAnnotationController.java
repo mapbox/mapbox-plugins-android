@@ -2,9 +2,6 @@ package com.mapbox.mapboxsdk.plugins.annotation;
 
 import android.annotation.SuppressLint;
 import android.graphics.PointF;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -15,6 +12,10 @@ import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+
 final class DraggableAnnotationController<T extends Annotation, D extends OnAnnotationDragListener<T>> {
   private final MapboxMap mapboxMap;
   private AnnotationManager<?, T, ?, D, ?, ?> annotationManager;
@@ -24,7 +25,8 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
   private final int touchAreaMaxX;
   private final int touchAreaMaxY;
 
-  @Nullable private T draggedAnnotation;
+  @Nullable
+  private T draggedAnnotation;
 
   @SuppressLint("ClickableViewAccessibility")
   DraggableAnnotationController(MapView mapView, MapboxMap mapboxMap) {

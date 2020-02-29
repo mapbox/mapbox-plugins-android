@@ -1,7 +1,7 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.scalebar
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.turf.TurfMeasurement
 import com.mapbox.mapboxsdk.maps.Style
@@ -17,8 +17,6 @@ import com.mapbox.mapboxsdk.style.layers.LineLayer
 
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.turf.TurfConstants
-
-import java.util.*
 
 /**
  * Activity showing a scalebar used on a MapView.

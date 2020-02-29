@@ -2,14 +2,15 @@ package com.mapbox.mapboxsdk.plugins.places.picker;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.plugins.places.common.PlaceConstants;
 import com.mapbox.mapboxsdk.plugins.places.picker.model.PlacePickerOptions;
 import com.mapbox.mapboxsdk.plugins.places.picker.ui.PlacePickerActivity;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 
 public final class PlacePicker {

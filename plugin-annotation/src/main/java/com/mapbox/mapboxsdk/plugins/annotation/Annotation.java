@@ -1,13 +1,13 @@
 package com.mapbox.mapboxsdk.plugins.annotation;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mapbox.android.gestures.MoveDistancesObject;
 import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.maps.Projection;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public abstract class Annotation<T extends Geometry> {
 

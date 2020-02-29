@@ -3,7 +3,6 @@ package com.mapbox.mapboxsdk.plugins.places.autocomplete;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.SearchHistoryDatabase;
@@ -12,6 +11,8 @@ import com.mapbox.mapboxsdk.plugins.places.autocomplete.ui.PlaceAutocompleteActi
 import com.mapbox.mapboxsdk.plugins.places.common.PlaceConstants;
 
 import java.util.ArrayList;
+
+import androidx.annotation.NonNull;
 
 /**
  * PlaceAutocomplete provides an activity that allows a user to start typing a place name or an

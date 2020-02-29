@@ -1,14 +1,15 @@
 package com.mapbox.mapboxsdk.plugins.places.autocomplete;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.Observer;
-import android.support.annotation.Nullable;
 
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.SearchHistoryDatabase;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.entity.SearchHistoryEntity;
 
 import java.util.List;
+
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.Observer;
 
 
 /**

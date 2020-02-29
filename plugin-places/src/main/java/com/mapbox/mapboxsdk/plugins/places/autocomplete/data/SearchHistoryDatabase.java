@@ -1,19 +1,20 @@
 package com.mapbox.mapboxsdk.plugins.places.autocomplete.data;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.converter.CarmenFeatureConverter;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.dao.SearchHistoryDao;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.entity.SearchHistoryEntity;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.room.Database;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 @Database(entities = {SearchHistoryEntity.class}, version = 1)
 @TypeConverters(CarmenFeatureConverter.class)
