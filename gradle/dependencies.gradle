@@ -39,58 +39,58 @@
   ]
 
   dependenciesList = [
-      // mapbox
-      mapboxMapSdk           : "com.mapbox.mapboxsdk:mapbox-android-sdk:${version.mapboxMapSdk}",
-      mapboxGeoJson          : "com.mapbox.mapboxsdk:mapbox-sdk-geojson:${version.mapboxJava}",
-      mapboxGeocoding        : "com.mapbox.mapboxsdk:mapbox-sdk-services:${version.mapboxJava}",
-      mapboxTurf             : "com.mapbox.mapboxsdk:mapbox-sdk-turf:${version.mapboxTurf}",
+          // mapbox
+          mapboxMapSdk           : "com.mapbox.mapboxsdk:mapbox-android-sdk:${version.mapboxMapSdk}",
+          mapboxGeoJson          : "com.mapbox.mapboxsdk:mapbox-sdk-geojson:${version.mapboxJava}",
+          mapboxGeocoding        : "com.mapbox.mapboxsdk:mapbox-sdk-services:${version.mapboxJava}",
+          mapboxTurf             : "com.mapbox.mapboxsdk:mapbox-sdk-turf:${version.mapboxTurf}",
 
-      // Google Play Location
-      playLocation           : "com.google.android.gms:play-services-location:${version.playLocation}",
+          // Google Play Location
+          playLocation           : "com.google.android.gms:play-services-location:${version.playLocation}",
 
-      // AutoValue
-      autoValue              : "com.google.auto.value:auto-value:${version.autoValue}",
-      autoValuesParcel       : "com.ryanharter.auto.value:auto-value-parcel:${version.autoValueParcel}",
-      autoValuesParcelAdapter: "com.ryanharter.auto.value:auto-value-parcel-adapter:${version.autoValueParcel}",
+          // AutoValue
+          autoValue              : "com.google.auto.value:auto-value:${version.autoValue}",
+          autoValuesParcel       : "com.ryanharter.auto.value:auto-value-parcel:${version.autoValueParcel}",
+          autoValuesParcelAdapter: "com.ryanharter.auto.value:auto-value-parcel-adapter:${version.autoValueParcel}",
 
-      // support
-      supportAnnotation      : "com.android.support:support-annotations:${version.supportLib}",
-      supportAppcompatV7     : "com.android.support:appcompat-v7:${version.supportLib}",
-      supportV4              : "com.android.support:support-v4:${version.supportLib}",
-      supportDesign          : "com.android.support:design:${version.supportLib}",
-      supportRecyclerView    : "com.android.support:recyclerview-v7:${version.supportLib}",
-      supportCardView        : "com.android.support:cardview-v7:${version.supportLib}",
-      supportConstraintLayout: "com.android.support.constraint:constraint-layout:${version.constraintLayout}",
+          // support
+          supportAnnotation      : 'androidx.annotation:annotation:1.0.0',
+          supportAppcompatV7     : 'androidx.appcompat:appcompat:1.0.0',
+          supportV4              : 'androidx.legacy:legacy-support-v4:1.0.0',
+          supportDesign          : 'com.google.android.material:material:1.0.0',
+          supportRecyclerView    : 'androidx.recyclerview:recyclerview:1.0.0',
+          supportCardView        : 'androidx.cardview:cardview:1.0.0',
+          supportConstraintLayout: 'androidx.constraintlayout:constraintlayout:1.1.3',
 
-      // architecture
-      lifecycleExtensions    : "android.arch.lifecycle:extensions:${version.lifecycleExtensions}",
-      lifecycleCompiler      : "android.arch.lifecycle:compiler:${version.lifecycleCompiler}",
-      roomRuntime            : "android.arch.persistence.room:runtime:${version.room}",
-      roomCompiler           : "android.arch.persistence.room:compiler:${version.room}",
+          // architecture
+          lifecycleExtensions    : 'androidx.lifecycle:lifecycle-extensions:2.0.0',
+          lifecycleCompiler      : "android.arch.lifecycle:compiler:${version.lifecycleCompiler}",
+          roomRuntime            : 'androidx.room:room-runtime:2.0.0',
+          roomCompiler           : 'androidx.room:room-compiler:2.0.0',
 
-      // square crew
-      timber                 : "com.jakewharton.timber:timber:${version.timber}",
-      leakCanaryDebug        : "com.squareup.leakcanary:leakcanary-android:${version.leakCanary}",
-      leakCanaryRelease      : "com.squareup.leakcanary:leakcanary-android-no-op:${version.leakCanary}",
-      leakCanaryTest         : "com.squareup.leakcanary:leakcanary-android-no-op:${version.leakCanary}",
+          // square crew
+          timber                 : "com.jakewharton.timber:timber:${version.timber}",
+          leakCanaryDebug        : "com.squareup.leakcanary:leakcanary-android:${version.leakCanary}",
+          leakCanaryRelease      : "com.squareup.leakcanary:leakcanary-android-no-op:${version.leakCanary}",
+          leakCanaryTest         : "com.squareup.leakcanary:leakcanary-android-no-op:${version.leakCanary}",
 
-      // instrumentation test
-      testRunner             : "com.android.support.test:runner:${version.testRunner}",
-      testRules              : "com.android.support.test:rules:${version.testRunner}",
-      testEspressoCore       : "com.android.support.test.espresso:espresso-core:${version.espresso}",
-      testEspressoIntents    : "com.android.support.test.espresso:espresso-intents:${version.espresso}",
-      testRoom               : "android.arch.persistence.room:testing:${version.room}",
-      testArchCore           : "android.arch.core:core-testing:${version.androidArchCore}",
-      mockitoCore            : "org.mockito:mockito-core:${version.mockito}",
-      mockitoAndroid         : "org.mockito:mockito-android:${version.mockito}",
-      mockk                  : "io.mockk:mockk:${version.mockk}",
+          // instrumentation test
+          testRunner             : 'androidx.test.ext:junit:1.1.1',
+          testRules              : 'androidx.test:rules:1.1.1',
+          testEspressoCore       : 'androidx.test.espresso:espresso-core:3.1.0',
+          testEspressoIntents    : "com.android.support.test.espresso:espresso-intents:${version.espresso}",
+          testRoom               : 'androidx.room:room-testing:2.0.0',
+          testArchCore           : 'androidx.arch.core:core-testing:2.0.0',
+          mockitoCore            : "org.mockito:mockito-core:${version.mockito}",
+          mockitoAndroid         : "org.mockito:mockito-android:${version.mockito}",
+          mockk                  : "io.mockk:mockk:${version.mockk}",
 
-      // unit test
-      junit                  : "junit:junit:${version.junit}",
-      mockito                : "org.mockito:mockito-inline:${version.mockito}",
-      androidArchCore        : "android.arch.core:core-testing:${version.androidArchCore}",
-      robolectric            : "org.robolectric:robolectric:${version.robolectric}",
-      kotlin                 : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${pluginVersion.kotlin}",
+          // unit test
+          junit                  : "junit:junit:${version.junit}",
+          mockito                : "org.mockito:mockito-inline:${version.mockito}",
+          androidArchCore        : 'androidx.arch.core:core-testing:2.0.0',
+          robolectric            : "org.robolectric:robolectric:${version.robolectric}",
+          kotlin                 : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${pluginVersion.kotlin}",
   ]
 
   pluginDependencies = [

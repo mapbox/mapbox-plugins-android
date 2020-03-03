@@ -2,7 +2,7 @@
 
 package com.mapbox.mapboxsdk.plugins.annotation;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import com.mapbox.mapboxsdk.style.layers.CircleLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;

@@ -2,11 +2,11 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity.building
 
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.SeekBar
+import androidx.appcompat.app.AppCompatActivity
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback

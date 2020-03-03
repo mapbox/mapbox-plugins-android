@@ -2,7 +2,6 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity.markerview
 
 import android.animation.ValueAnimator
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -18,6 +17,7 @@ import com.mapbox.mapboxsdk.plugins.testapp.R
 import java.util.Random
 
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import androidx.appcompat.app.AppCompatActivity
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.plugins.testapp.Utils
 import kotlinx.android.synthetic.main.activity_annotation.*

@@ -1,9 +1,6 @@
 package com.mapbox.mapboxsdk.plugins.places.picker.model;
 
 import android.os.Parcelable;
-import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
 import com.mapbox.api.geocoding.v5.GeocodingCriteria.GeocodingTypeCriteria;
@@ -11,6 +8,10 @@ import com.mapbox.core.utils.TextUtils;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.plugins.places.common.model.BasePlaceOptions;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 @AutoValue
 public abstract class PlacePickerOptions implements BasePlaceOptions, Parcelable {

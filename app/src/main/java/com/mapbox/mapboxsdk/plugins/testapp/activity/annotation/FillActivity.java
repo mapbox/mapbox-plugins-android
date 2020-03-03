@@ -2,14 +2,11 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity.annotation;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -19,7 +16,6 @@ import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.annotation.Fill;
 import com.mapbox.mapboxsdk.plugins.annotation.FillManager;
 import com.mapbox.mapboxsdk.plugins.annotation.FillOptions;
-import com.mapbox.mapboxsdk.plugins.annotation.OnFillClickListener;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.Utils;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
@@ -28,6 +24,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Activity showcasing adding fills using the annotation plugin

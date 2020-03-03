@@ -1,9 +1,10 @@
 package com.mapbox.mapboxsdk.plugins.places.autocomplete.data.converter;
 
-import android.arch.persistence.room.TypeConverter;
-import android.support.annotation.NonNull;
 
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
+
+import androidx.annotation.NonNull;
+import androidx.room.TypeConverter;
 
 public final class CarmenFeatureConverter {
 

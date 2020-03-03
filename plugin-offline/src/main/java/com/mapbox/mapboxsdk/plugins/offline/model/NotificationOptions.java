@@ -2,10 +2,11 @@ package com.mapbox.mapboxsdk.plugins.offline.model;
 
 import android.content.Context;
 import android.os.Parcelable;
-import android.support.annotation.DrawableRes;
 
 import com.google.auto.value.AutoValue;
 import com.mapbox.mapboxsdk.plugins.offline.R;
+
+import androidx.annotation.DrawableRes;
 
 @AutoValue
 public abstract class NotificationOptions implements Parcelable {

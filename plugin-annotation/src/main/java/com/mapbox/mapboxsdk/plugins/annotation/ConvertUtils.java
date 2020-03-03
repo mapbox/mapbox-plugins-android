@@ -1,8 +1,8 @@
 package com.mapbox.mapboxsdk.plugins.annotation;
 
-import android.support.annotation.Nullable;
-
 import com.google.gson.JsonArray;
+
+import androidx.annotation.Nullable;
 
 class ConvertUtils {
 

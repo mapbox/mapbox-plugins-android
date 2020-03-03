@@ -10,7 +10,7 @@ android {
     minSdkVersion androidVersions.minSdkVersion
     targetSdkVersion androidVersions.targetSdkVersion
     applicationId "com.mapbox.mapboxsdk.plugins.testapp"
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     vectorDrawables.useSupportLibrary = true
   }
 

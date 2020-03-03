@@ -1,7 +1,5 @@
 package com.mapbox.mapboxsdk.plugins.localization;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.UiThread;
 
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
@@ -20,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.UiThread;
 import timber.log.Timber;
 
 import static com.mapbox.mapboxsdk.style.expressions.Expression.raw;

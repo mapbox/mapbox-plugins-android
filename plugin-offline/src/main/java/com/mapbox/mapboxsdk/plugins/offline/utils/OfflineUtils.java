@@ -1,12 +1,13 @@
 package com.mapbox.mapboxsdk.plugins.offline.utils;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.offline.OfflineRegionDefinition;
 
 import org.json.JSONObject;
+
+import androidx.annotation.NonNull;
 
 public class OfflineUtils {
 

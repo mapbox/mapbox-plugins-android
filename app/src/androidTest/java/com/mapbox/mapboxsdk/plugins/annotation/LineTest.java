@@ -3,7 +3,7 @@
 package com.mapbox.mapboxsdk.plugins.annotation;
 
 import android.graphics.PointF;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.plugins.BaseActivityTest;

@@ -1,16 +1,17 @@
 package com.mapbox.mapboxsdk.plugins.building;
 
 import android.graphics.Color;
-import android.support.annotation.ColorInt;
-import android.support.annotation.FloatRange;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.layers.FillExtrusionLayer;
 import com.mapbox.mapboxsdk.style.light.Light;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.FloatRange;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import static com.mapbox.mapboxsdk.constants.MapboxConstants.MAXIMUM_ZOOM;
 import static com.mapbox.mapboxsdk.constants.MapboxConstants.MINIMUM_ZOOM;

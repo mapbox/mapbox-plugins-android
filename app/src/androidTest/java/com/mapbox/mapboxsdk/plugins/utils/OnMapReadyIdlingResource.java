@@ -3,14 +3,15 @@ package com.mapbox.mapboxsdk.plugins.utils;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.test.espresso.IdlingResource;
 
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
+
+import androidx.annotation.NonNull;
+import androidx.test.espresso.IdlingResource;
 
 public class OnMapReadyIdlingResource implements IdlingResource, OnMapReadyCallback {
 

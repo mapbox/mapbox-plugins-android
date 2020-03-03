@@ -2,8 +2,6 @@ package com.mapbox.mapboxsdk.plugins.scalebar;
 
 
 import android.app.Activity;
-import android.support.test.runner.AndroidJUnit4;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -17,6 +15,8 @@ import com.mapbox.pluginscalebar.ScaleBarWidget;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidx.core.content.ContextCompat;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import timber.log.Timber;
 
 import static com.mapbox.mapboxsdk.plugins.annotation.MapboxMapAction.invoke;

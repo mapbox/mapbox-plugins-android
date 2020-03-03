@@ -1,9 +1,5 @@
 package com.mapbox.mapboxsdk.plugins.places.autocomplete.data;
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule;
-import android.arch.persistence.room.Room;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
 
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.LiveDataTestUtil;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.data.dao.SearchHistoryDao;
@@ -17,6 +13,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.List;
+
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.room.Room;
+import androidx.test.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import static com.mapbox.mapboxsdk.plugins.places.autocomplete.data.TestData.SEARCH_HISTORY_ENTITY;
 import static com.mapbox.mapboxsdk.plugins.places.autocomplete.data.TestData.SEARCH_HISTORY_ENTITY_TWO;

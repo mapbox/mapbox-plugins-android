@@ -2,9 +2,9 @@ package com.mapbox.mapboxsdk.plugins.testapp.activity.places
 
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 
 import com.mapbox.api.geocoding.v5.models.CarmenFeature
 import com.mapbox.mapboxsdk.Mapbox

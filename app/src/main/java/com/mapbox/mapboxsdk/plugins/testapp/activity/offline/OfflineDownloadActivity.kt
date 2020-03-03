@@ -1,10 +1,10 @@
 package com.mapbox.mapboxsdk.plugins.testapp.activity.offline
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.widget.ArrayAdapter
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 
 import com.mapbox.mapboxsdk.constants.MapboxConstants
 import com.mapbox.mapboxsdk.geometry.LatLng
