@@ -2,6 +2,11 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### mapbox-android-plugin-places-v9:0.10.0 - March 5, 2020
+#### Features
+- Switching all plugins to AndroidX [#1100](https://github.com/mapbox/mapbox-plugins-android/pull/1100)
+- Added user location button to Places Plugin's PlacePickerActivity [#994](https://github.com/mapbox/mapbox-plugins-android/pull/994)
+
 ### mapbox-android-plugin-places-v8:0.9.0 - June 11, 2019
 #### Features
 - Adding visual limit option to the number of recently seached places [#922](https://github.com/mapbox/mapbox-plugins-android/pull/922)

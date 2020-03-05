@@ -2,6 +2,12 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### mapbox-android-plugin-scalebar-v9:0.4.0 - March 5, 2020
+#### Features
+- Switching all plugins to AndroidX [#1100](https://github.com/mapbox/mapbox-plugins-android/pull/1100)
+#### Bugs
+- Fix scale bar incorrect scale [#1088](https://github.com/mapbox/mapbox-plugins-android/pull/1088)
+
 ### mapbox-android-plugin-scalebar-v8:0.3.0 - August 20, 2019
 
 #### Features

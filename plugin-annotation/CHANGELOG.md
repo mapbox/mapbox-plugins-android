@@ -2,6 +2,11 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### mapbox-android-plugin-annotation-v9:0.8.0 - March 5, 2020
+#### Features
+- Switching all plugins to AndroidX [#1100](https://github.com/mapbox/mapbox-plugins-android/pull/1100)
+- Expose underlying, generated Layer ID [#1071](https://github.com/mapbox/mapbox-plugins-android/pull/1071)
+
 ### mapbox-android-plugin-annotation-v8:0.7.0 - June 11, 2019
 #### Features
 - uppercase static fields [#939](https://github.com/mapbox/mapbox-plugins-android/pull/939)
