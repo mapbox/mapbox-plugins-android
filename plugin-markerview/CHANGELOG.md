@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### mapbox-android-plugin-markerview-v9:0.4.0 - March 5, 2020
+#### Features
+- Switching all plugins to AndroidX [#1100](https://github.com/mapbox/mapbox-plugins-android/pull/1100)
+
 ### mapbox-android-plugin-markerview-v8:0.3.0 - June 11, 2019
 #### Features
 - remove obsolete build tools declaration [#827](https://github.com/mapbox/mapbox-plugins-android/pull/827)

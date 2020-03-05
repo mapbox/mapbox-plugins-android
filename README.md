@@ -24,7 +24,7 @@ Plugins are single-purpose libraries built on top of the [Mapbox Maps SDK for An
  
 * [**Traffic:** Adds a real-time traffic layer to any Mapbox base map.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-traffic)
 
-* [**Location layer:** Add a location marker on your map indicating the user's location.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-locationlayer)
+* [**Location layer:** [Deprecated] Add a location marker on your map indicating the user's location.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-locationlayer)
 
 * [**Building:** Add extruded "3D" buildings in your map style.](https://github.com/mapbox/mapbox-plugins-android/tree/master/plugin-building)
 
