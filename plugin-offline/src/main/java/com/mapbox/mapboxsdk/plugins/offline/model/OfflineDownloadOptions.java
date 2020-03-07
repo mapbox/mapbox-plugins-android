@@ -1,10 +1,12 @@
 package com.mapbox.mapboxsdk.plugins.offline.model;
 
+import android.content.Context;
 import android.os.Parcelable;
 
 import com.google.auto.value.AutoValue;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
 import com.mapbox.mapboxsdk.offline.OfflineRegionDefinition;
+import com.mapbox.mapboxsdk.plugins.offline.R;
 import com.mapbox.mapboxsdk.plugins.offline.offline.OfflineDownloadService;
 import com.mapbox.mapboxsdk.plugins.offline.offline.OfflinePlugin;
 
@@ -92,12 +94,21 @@ public abstract class OfflineDownloadOptions implements Parcelable {
    * @return this classes builder class
    * @since 0.1.0
    */
-  public static Builder builder() {
+  public static Builder builder(Context context) {
     return new AutoValue_OfflineDownloadOptions.Builder()
       .uuid(UUID.randomUUID().getMostSignificantBits())
-      .metadata(new byte[] {})
+      .metadata(new byte[]{})
+      .notificationOptions(
+          NotificationOptions.builder(context)
+              .smallIconRes(android.R.drawable.stat_sys_download)
+              .contentTitle(context.getString(R.string.mapbox_offline_notification_default_content_title))
+              .contentText(context.getString(R.string.mapbox_offline_notification_default_content_text))
+              .cancelText(context.getString(R.string.mapbox_offline_notification_action_cancel))
+              .requestMapSnapshot(true)
+              .returnActivity(context.getClass().getName())
+              .build()
+      )
       .progress(0);
-    // TODO user must provide a notificationOptions object
   }
 
   /**

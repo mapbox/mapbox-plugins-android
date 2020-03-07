@@ -59,8 +59,9 @@ public class OfflineRegionSelector {
    * {@link com.mapbox.mapboxsdk.plugins.offline.offline.OfflinePlugin#startDownload(OfflineDownloadOptions)}
    * @since 0.1.0
    */
-  public static OfflineDownloadOptions getOfflineDownloadOptions(final Intent data, byte[] metadata) {
-    return OfflineDownloadOptions.builder()
+  public static OfflineDownloadOptions getOfflineDownloadOptions(Context context,
+                                                                 final Intent data, byte[] metadata) {
+    return OfflineDownloadOptions.builder(context)
       .definition(getRegionDefinition(data))
       .regionName(getRegionName(data))
       .metadata(metadata)
@@ -81,9 +82,9 @@ public class OfflineRegionSelector {
    * {@link com.mapbox.mapboxsdk.plugins.offline.offline.OfflinePlugin#startDownload(OfflineDownloadOptions)}
    * @since 0.1.0
    */
-  public static OfflineDownloadOptions getOfflineDownloadOptions(final Intent data,
+  public static OfflineDownloadOptions getOfflineDownloadOptions(Context context, final Intent data,
                                                                  NotificationOptions notificationOptions) {
-    return OfflineDownloadOptions.builder()
+    return OfflineDownloadOptions.builder(context)
       .definition(getRegionDefinition(data))
       .regionName(getRegionName(data))
       .notificationOptions(notificationOptions)
@@ -107,10 +108,10 @@ public class OfflineRegionSelector {
    * {@link com.mapbox.mapboxsdk.plugins.offline.offline.OfflinePlugin#startDownload(OfflineDownloadOptions)}
    * @since 0.1.0
    */
-  public static OfflineDownloadOptions getOfflineDownloadOptions(final Intent data,
+  public static OfflineDownloadOptions getOfflineDownloadOptions(Context context, final Intent data,
                                                                  NotificationOptions notificationOptions,
                                                                  byte[] metadata) {
-    return OfflineDownloadOptions.builder()
+    return OfflineDownloadOptions.builder(context)
       .definition(getRegionDefinition(data))
       .regionName(getRegionName(data))
       .notificationOptions(notificationOptions)

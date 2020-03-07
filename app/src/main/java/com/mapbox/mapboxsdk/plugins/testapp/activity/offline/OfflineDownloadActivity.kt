@@ -144,10 +144,10 @@ class OfflineDownloadActivity : AppCompatActivity() {
 
         // start offline download
         OfflinePlugin.getInstance(this).startDownload(
-                OfflineDownloadOptions.builder()
+                OfflineDownloadOptions.builder(this)
                         .definition(definition)
                         .metadata(OfflineUtils.convertRegionName(regionName))
-                        .notificationOptions(notificationOptions)
+//                        .notificationOptions(notificationOptions)
                         .build()
         )
     }

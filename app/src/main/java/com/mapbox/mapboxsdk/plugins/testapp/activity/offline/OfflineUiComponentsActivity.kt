@@ -53,7 +53,8 @@ class OfflineUiComponentsActivity : AppCompatActivity() {
                 builder.contentText(OfflineRegionSelector.getRegionName(data))
             }
 
-            val options = OfflineRegionSelector.getOfflineDownloadOptions(data, builder.build())
+            val options = OfflineRegionSelector
+              .getOfflineDownloadOptions(this, data, builder.build())
             OfflinePlugin.getInstance(this).startDownload(options)
 
             Toast.makeText(this, String.format(Locale.US, "Region name: %s", data?.let { OfflineRegionSelector.getRegionName(it) } ?: "null"), Toast.LENGTH_LONG).show()

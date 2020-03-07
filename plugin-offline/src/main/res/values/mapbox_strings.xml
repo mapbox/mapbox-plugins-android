@@ -9,7 +9,7 @@
 
   <!-- Notification strings -->
   <string name="mapbox_offline_notification_default_content_title">Offline download</string>
-  <string name="mapbox_offline_notification_default_content_text">Downloading..</string>
+  <string name="mapbox_offline_notification_default_content_text">Downloading...</string>
   <string name="mapbox_offline_notification_action_cancel">Cancel</string>
 
   <!-- Accessibility -->
