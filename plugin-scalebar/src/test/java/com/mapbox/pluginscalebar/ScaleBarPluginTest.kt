@@ -50,6 +50,7 @@ class ScaleBarPluginTest {
     every { mapboxMap.cameraPosition } returns CameraPosition.DEFAULT
     every { scaleBarOptions.build() } returns scaleBarWidget
     every { mapView.context} returns context
+    every { mapView.pixelRatio } returns 2f
     every { context.resources} returns resources
     every { resources.displayMetrics} returns displayMetrics
   }
