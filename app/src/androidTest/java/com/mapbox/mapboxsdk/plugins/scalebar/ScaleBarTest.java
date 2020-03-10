@@ -255,14 +255,14 @@ public class ScaleBarTest extends BaseActivityTest {
     assertEquals(0.5f,scaleBarWidget.getRatio(), 0f);
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       ScaleBarOptions option = new ScaleBarOptions(activity);
-      option.setRatio(0.1f);
+      option.setMaxWidthRatio(0.1f);
       scaleBarWidget = scaleBarPlugin.create(option);
       assertNotNull(scaleBarWidget);
       assertEquals(0.1f, scaleBarWidget.getRatio(), 0f);
     });
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       ScaleBarOptions option = new ScaleBarOptions(activity);
-      option.setRatio(1.0f);
+      option.setMaxWidthRatio(1.0f);
       scaleBarWidget = scaleBarPlugin.create(option);
       assertNotNull(scaleBarWidget);
       assertEquals(1.0f, scaleBarWidget.getRatio(), 0f);

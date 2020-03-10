@@ -4,6 +4,7 @@ import android.content.Context;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
+import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.core.content.ContextCompat;
@@ -43,7 +44,7 @@ public class ScaleBarOptions {
     setTextColor(android.R.color.black);
     setPrimaryColor(android.R.color.black);
     setSecondaryColor(android.R.color.white);
-    setRatio(0.5f);
+    setMaxWidthRatio(0.5f);
   }
 
   /**
@@ -264,7 +265,7 @@ public class ScaleBarOptions {
    *
    * @param ratio the ratio scale bar will use, must be in the range from 0.1f to 1.0f.
    */
-  public ScaleBarOptions setRatio(@FloatRange(from = 0.1f, to = 1.0f) float ratio) {
+  public ScaleBarOptions setMaxWidthRatio(@FloatRange(from = 0.1f, to = 1.0f) float ratio) {
     this.ratio = ratio;
     return this;
   }
