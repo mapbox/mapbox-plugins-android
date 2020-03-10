@@ -109,7 +109,7 @@ public class ScaleBarPlugin {
   private void invalidateScaleBar() {
     CameraPosition cameraPosition = mapboxMap.getCameraPosition();
     scaleBarWidget.setDistancePerPixel((projection.getMetersPerPixelAtLatitude(cameraPosition.target.getLatitude()))
-      / mapView.getContext().getResources().getDisplayMetrics().density);
+      / mapView.getPixelRatio());
   }
 
   private void addCameraListeners() {
