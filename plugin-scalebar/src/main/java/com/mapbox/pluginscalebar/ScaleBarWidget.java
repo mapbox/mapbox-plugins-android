@@ -41,6 +41,7 @@ public class ScaleBarWidget extends View {
   private float textSize;
   private double distancePerPixel;
   private boolean isMetricUnit;
+  private float ratio;
   private ArrayList<Pair<Integer, Integer>> scaleTable;
   private String unit;
   private final RefreshHandler refreshHandler;
@@ -59,7 +60,7 @@ public class ScaleBarWidget extends View {
     if (distancePerPixel <= 0) {
       return;
     }
-    double maxDistance = mapViewWidth * distancePerPixel / 2;
+    double maxDistance = mapViewWidth * distancePerPixel * ratio;
     Pair<Integer, Integer> pair = scaleTable.get(0);
     for (int i = 1; i < scaleTable.size(); i++) {
       pair = scaleTable.get(i);
@@ -71,7 +72,7 @@ public class ScaleBarWidget extends View {
     }
 
     int unitDistance = pair.first / pair.second;
-    float unitBarWidth = maxBarWidth / 2f;
+    float unitBarWidth = maxBarWidth / pair.second;
     if (unitDistance == 0) {
       unitDistance = 1;
     } else {
@@ -179,7 +180,7 @@ public class ScaleBarWidget extends View {
    */
   public void setMarginLeft(float marginLeft) {
     this.marginLeft = marginLeft;
-    maxBarWidth = mapViewWidth / 2f - marginLeft;
+    maxBarWidth = mapViewWidth * ratio - marginLeft;
   }
 
   /**
@@ -346,7 +347,7 @@ public class ScaleBarWidget extends View {
    */
   void setMapViewWidth(int mapViewWidth) {
     this.mapViewWidth = mapViewWidth;
-    maxBarWidth = mapViewWidth / 2f - marginLeft;
+    maxBarWidth = mapViewWidth * ratio - marginLeft;
   }
 
   /**
@@ -362,6 +363,22 @@ public class ScaleBarWidget extends View {
       return distance < FEET_PER_MILE ? distance + unit
         : decimalFormat.format(distance * 1.0 / FEET_PER_MILE) + MILE_UNIT;
     }
+  }
+
+  /**
+   * Set the ratio of scale bar max width compared with MapView width.
+   * @param ratio the ratio scale bar will use.
+   */
+  public void setRatio(float ratio) {
+    this.ratio = ratio;
+  }
+
+  /**
+   * Get the current ratio of scale bar.
+   * @return current ratio.
+   */
+  public float getRatio() {
+    return this.ratio;
   }
 
   /**
