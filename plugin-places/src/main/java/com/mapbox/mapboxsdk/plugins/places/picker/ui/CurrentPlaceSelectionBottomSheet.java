@@ -77,7 +77,8 @@ public class CurrentPlaceSelectionBottomSheet extends CoordinatorLayout {
 
   private void toggleBottomSheet() {
     bottomSheetBehavior.setPeekHeight(rootView.findViewById(R.id.bottom_sheet_header).getHeight());
-    bottomSheetBehavior.setHideable(isShowing());
-    bottomSheetBehavior.setState(isShowing() ? STATE_HIDDEN : STATE_COLLAPSED);
+    boolean isShowing = isShowing();
+    bottomSheetBehavior.setHideable(isShowing);
+    bottomSheetBehavior.setState(isShowing ? STATE_HIDDEN : STATE_COLLAPSED);
   }
 }
