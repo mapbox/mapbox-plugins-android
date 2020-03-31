@@ -2,6 +2,15 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### mapbox-android-plugin-scalebar-v9:0.5.0 - March 31, 2020
+####Features
+
+- Add option to config max width of scalebar [#1048](https://github.com/mapbox/mapbox-plugins-android/pull/1048)
+
+####Bugs
+
+- Fix scalebar not show correctly when pixelRatio is set  [#1104](https://github.com/mapbox/mapbox-plugins-android/pull/1104)
+
 ### mapbox-android-plugin-scalebar-v9:0.4.0 - March 5, 2020
 #### Features
 - Switching all plugins to AndroidX [#1100](https://github.com/mapbox/mapbox-plugins-android/pull/1100)

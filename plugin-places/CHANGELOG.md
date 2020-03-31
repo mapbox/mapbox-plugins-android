@@ -2,6 +2,11 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### mapbox-android-plugin-places-v9:0.11.0 - March 31, 2020
+####Bugs
+
+- Setting reverse geocoding BottomSheetBehavior hideable to true [#1107](https://github.com/mapbox/mapbox-plugins-android/pull/1107)
+
 ### mapbox-android-plugin-places-v9:0.10.0 - March 5, 2020
 #### Features
 - Switching all plugins to AndroidX [#1100](https://github.com/mapbox/mapbox-plugins-android/pull/1100)
