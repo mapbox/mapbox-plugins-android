@@ -10,6 +10,7 @@ limitPerRun: 1
 # SEMVER-MAJOR - @tobrun
 exemptLabels:
   - SEMVER-MAJOR
+  - confirmed
 
 pulls:
   daysUntilStale: 60
