@@ -46,7 +46,6 @@ Note that depending on the plugin you add, there might be required permissions a
 2. Open up your application's `build.gradle`
 3. Make sure that your project's `minSdkVersion` is at API 14 or higher
 4. Under dependencies, add a new build rule for the latest plugin version you are trying to use.
-
 ```gradle
 repositories {
   mavenCentral()
