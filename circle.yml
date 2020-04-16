@@ -96,7 +96,7 @@ jobs:
           shell: /bin/bash -euo pipefail
           command: |
             if [ -n "${PUBLISH_NEXUS_USERNAME}" ]; then
-              aws s3 cp s3://mapbox/android/signing-credentials/secring.gpg secring.gpg
+              aws s3 cp s3://mapbox-android/signing-credentials/secring.gpg secring.gpg
               echo "NEXUS_USERNAME=$PUBLISH_NEXUS_USERNAME
               NEXUS_PASSWORD=$PUBLISH_NEXUS_PASSWORD
               signing.keyId=$SIGNING_KEYID
