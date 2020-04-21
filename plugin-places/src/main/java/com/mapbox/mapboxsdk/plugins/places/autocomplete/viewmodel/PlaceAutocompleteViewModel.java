@@ -43,6 +43,9 @@ public class PlaceAutocompleteViewModel extends AndroidViewModel
     geocoderBuilder = MapboxGeocoding.builder().autocomplete(true);
     geocoderBuilder.accessToken(accessToken);
     geocoderBuilder.limit(placeOptions.limit());
+    if (placeOptions.baseUrl() != null) {
+      geocoderBuilder.baseUrl(placeOptions.baseUrl());
+    }
 
     // Proximity
     Point proximityPoint = placeOptions.proximity();

@@ -29,7 +29,7 @@ import androidx.annotation.Nullable;
  * <li><strong>Full screen mode</strong>: will place all the search history, results, and injected
  * places into a view which has a width equal to the app width.</li>
  * <li><strong>Card view mode</strong>: the place  search history, results, and injected places in
- * an Android Support Library {@link android.support.v7.widget.CardView}</li>
+ * into a {@link androidx.cardview.widget.CardView}</li>
  * </ul>
  *
  * @since 0.1.0
@@ -189,6 +189,16 @@ public abstract class PlaceOptions implements Parcelable {
    */
   @Nullable
   public abstract String hint();
+
+  /**
+   * Optionally change the base URL of the geocoding request
+   * to something other then the default Mapbox one.
+   *
+   * @return base url of geocoding request
+   * @since 0.12.0
+   */
+  @Nullable
+  public abstract String baseUrl();
 
   /**
    * Build a new instance of the {@link PlaceOptions} class using this method. It will return the
@@ -428,6 +438,16 @@ public abstract class PlaceOptions implements Parcelable {
      * @since 0.1.0
      */
     public abstract Builder hint(@Nullable String hint);
+
+    /**
+     * Optionally change the base URL of the geocoding request
+     * to something other then the default Mapbox one.
+     *
+     * @param baseUrl base url of geocoding request
+     * @return this builder instance for chaining options together
+     * @since 0.12.0
+     */
+    public abstract Builder baseUrl(@Nullable String baseUrl);
 
     abstract PlaceOptions autoBuild();
 
