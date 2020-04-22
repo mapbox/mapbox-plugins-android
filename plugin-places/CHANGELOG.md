@@ -2,6 +2,13 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### mapbox-android-plugin-places-v9:0.12.0 - April 22, 2020
+
+- Bumped Maps SDK to 9.1.0 [#1113](https://github.com/mapbox/mapbox-plugins-android/pull/1113)
+ 
+####Features
+- Added .baseUrl() to Places Plugin's PlaceOptions builder [#1116](https://github.com/mapbox/mapbox-plugins-android/pull/1116)
+
 ### mapbox-android-plugin-places-v9:0.11.0 - March 31, 2020
 ####Bugs
 
