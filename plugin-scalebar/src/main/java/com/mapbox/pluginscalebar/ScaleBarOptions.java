@@ -42,7 +42,7 @@ public class ScaleBarOptions {
     setMarginTop(R.dimen.mapbox_scale_bar_margin_top);
     setMarginLeft(R.dimen.mapbox_scale_bar_margin_left);
     setTextBarMargin(R.dimen.mapbox_scale_bar_text_margin);
-    setTextBorderWidth(R.dimen.mapbox_scale_bar_border_width);
+    setTextBorderWidth(R.dimen.mapbox_scale_bar_text_border_width);
     setShowTextBorder(true);
     isMetricUnit = LocaleUnitResolver.isMetricSystem();
     setTextColor(android.R.color.black);

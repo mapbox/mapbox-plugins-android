@@ -90,6 +90,37 @@ public class ScaleBarTest extends BaseActivityTest {
   }
 
   @Test
+  public void testTextBorder() {
+    validateTestSetup();
+    setupScaleBar();
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertEquals(activity.getResources().getDimension(R.dimen.mapbox_scale_bar_text_border_width),
+        scaleBarWidget.getTextBorderWidth(), 0);
+      assertTrue(scaleBarWidget.isShowTextBorder());
+
+      ScaleBarOptions option = new ScaleBarOptions(activity);
+      option.setTextBorderWidth(R.dimen.fab_margin);
+      scaleBarWidget = scaleBarPlugin.create(option);
+      assertNotNull(scaleBarWidget);
+
+      assertEquals(activity.getResources().getDimension(R.dimen.fab_margin),
+        scaleBarWidget.getTextBorderWidth(), 0);
+
+      option = new ScaleBarOptions(activity);
+      option.setTextBorderWidth(100f);
+      scaleBarWidget = scaleBarPlugin.create(option);
+      assertNotNull(scaleBarWidget);
+      assertEquals(100f, scaleBarWidget.getTextBorderWidth(), 0);
+
+      option = new ScaleBarOptions(activity);
+      option.setShowTextBorder(false);
+      scaleBarWidget = scaleBarPlugin.create(option);
+      assertNotNull(scaleBarWidget);
+      assertFalse(scaleBarWidget.isShowTextBorder());
+    });
+  }
+
+  @Test
   public void testScaleBarWidth() {
     validateTestSetup();
     setupScaleBar();
@@ -252,7 +283,7 @@ public class ScaleBarTest extends BaseActivityTest {
   public void testRatio() {
     validateTestSetup();
     setupScaleBar();
-    assertEquals(0.5f,scaleBarWidget.getRatio(), 0f);
+    assertEquals(0.5f, scaleBarWidget.getRatio(), 0f);
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       ScaleBarOptions option = new ScaleBarOptions(activity);
       option.setMaxWidthRatio(0.1f);
