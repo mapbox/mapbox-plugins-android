@@ -30,6 +30,8 @@ public class ScaleBarOptions {
   private float textSize;
   private boolean isMetricUnit;
   private float ratio;
+  private boolean showTextBorder;
+  private float textBorderWidth;
 
   public ScaleBarOptions(@NonNull Context context) {
     this.context = context;
@@ -40,6 +42,8 @@ public class ScaleBarOptions {
     setMarginTop(R.dimen.mapbox_scale_bar_margin_top);
     setMarginLeft(R.dimen.mapbox_scale_bar_margin_left);
     setTextBarMargin(R.dimen.mapbox_scale_bar_text_margin);
+    setTextBorderWidth(R.dimen.mapbox_scale_bar_border_width);
+    setShowTextBorder(true);
     isMetricUnit = LocaleUnitResolver.isMetricSystem();
     setTextColor(android.R.color.black);
     setPrimaryColor(android.R.color.black);
@@ -66,6 +70,8 @@ public class ScaleBarOptions {
     scaleBarWidget.setTextColor(textColor);
     scaleBarWidget.setTextSize(textSize);
     scaleBarWidget.setRatio(ratio);
+    scaleBarWidget.setShowTextBorder(showTextBorder);
+    scaleBarWidget.setTextBorderWidth(textBorderWidth);
     return scaleBarWidget;
   }
 
@@ -180,6 +186,40 @@ public class ScaleBarOptions {
    */
   public ScaleBarOptions setBorderWidth(@DimenRes int borderWidth) {
     this.borderWidth = context.getResources().getDimension(borderWidth);
+    return this;
+  }
+
+  /**
+   * Set the border width for texts in scale bar.
+   *
+   * @param textBorderWidth the border width for texts in scale bar, in dp.
+   * @return this.
+   */
+  public ScaleBarOptions setTextBorderWidth(@DimenRes int textBorderWidth) {
+    this.textBorderWidth = context.getResources().getDimension(textBorderWidth);
+    return this;
+  }
+
+
+  /**
+   * Set the border width for texts in scale bar.
+   *
+   * @param textBorderWidth the border width for texts in scale bar, in pixel.
+   * @return this.
+   */
+  public ScaleBarOptions setTextBorderWidth(float textBorderWidth) {
+    this.textBorderWidth = textBorderWidth;
+    return this;
+  }
+
+  /**
+   * Set whether to show the text border.
+   *
+   * @param showTextBorder whether to show the text border or not.
+   * @return this.
+   */
+  public ScaleBarOptions setShowTextBorder(boolean showTextBorder) {
+    this.showTextBorder = showTextBorder;
     return this;
   }
 

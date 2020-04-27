@@ -2,7 +2,9 @@ package com.mapbox.pluginscalebar;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Pair;
@@ -27,6 +29,7 @@ public class ScaleBarWidget extends View {
   private static int MSG_WHAT = 0;
   private final Paint textPaint = new Paint();
   private final Paint barPaint = new Paint();
+  private final Paint strokePaint = new Paint();
   private int refreshInterval;
   private int textColor;
   private int primaryColor;
@@ -39,6 +42,8 @@ public class ScaleBarWidget extends View {
   private float barHeight;
   private float borderWidth;
   private float textSize;
+  private float textBorderWidth;
+  private boolean showTextBorder;
   private double distancePerPixel;
   private boolean isMetricUnit;
   private float ratio;
@@ -46,11 +51,18 @@ public class ScaleBarWidget extends View {
   private String unit;
   private final RefreshHandler refreshHandler;
   private DecimalFormat decimalFormat = new DecimalFormat("0.#");
+  private Path path = new Path();
 
   ScaleBarWidget(@NonNull Context context) {
     super(context);
     textPaint.setAntiAlias(true);
     textPaint.setTextAlign(Paint.Align.CENTER);
+
+    strokePaint.setAntiAlias(true);
+    strokePaint.setTextAlign(Paint.Align.CENTER);
+    strokePaint.setStyle(Paint.Style.STROKE);
+    strokePaint.setColor(Color.WHITE);
+
     barPaint.setAntiAlias(true);
     refreshHandler = new RefreshHandler(this);
   }
@@ -100,20 +112,28 @@ public class ScaleBarWidget extends View {
     for (; i < pair.second; i++) {
       barPaint.setColor(i % 2 == 0 ? primaryColor : secondaryColor);
       String text = i == 0 ? String.valueOf(unitDistance * i) : getDistanceText(unitDistance * i);
-      canvas.drawText(text,
-        marginLeft + unitBarWidth * i,
-        textSize + marginTop,
-        textPaint);
+
+      textPaint.getTextPath(text, 0, text.length(), marginLeft + unitBarWidth * i, textSize + marginTop, path);
+      if (showTextBorder) {
+        canvas.drawPath(path, strokePaint);
+      }
+      canvas.drawPath(path, textPaint);
+
       canvas.drawRect(marginLeft + unitBarWidth * i,
         textBarMargin + textSize + marginTop,
         marginLeft + unitBarWidth * (1 + i),
         textBarMargin + textSize + marginTop + barHeight,
         barPaint);
     }
-    canvas.drawText(getDistanceText(unitDistance * i),
-      marginLeft + unitBarWidth * i,
-      textSize + marginTop,
-      textPaint);
+
+    String distanceText = getDistanceText(unitDistance * i);
+    textPaint.getTextPath(distanceText, 0, distanceText.length(), marginLeft + unitBarWidth * i,
+      textSize + marginTop, path);
+    if (showTextBorder) {
+      canvas.drawPath(path, strokePaint);
+    }
+    canvas.drawPath(path, textPaint);
+
   }
 
   /**
@@ -254,6 +274,7 @@ public class ScaleBarWidget extends View {
   public void setTextSize(float textSize) {
     this.textSize = textSize;
     textPaint.setTextSize(textSize);
+    strokePaint.setTextSize(textSize);
   }
 
   /**
@@ -352,6 +373,7 @@ public class ScaleBarWidget extends View {
 
   /**
    * Get the formatted distance text according unit and distance
+   *
    * @param distance original distance
    * @return Formatted distance text
    */
@@ -367,6 +389,7 @@ public class ScaleBarWidget extends View {
 
   /**
    * Set the ratio of scale bar max width compared with MapView width.
+   *
    * @param ratio the ratio scale bar will use.
    */
   public void setRatio(float ratio) {
@@ -375,10 +398,48 @@ public class ScaleBarWidget extends View {
 
   /**
    * Get the current ratio of scale bar.
+   *
    * @return current ratio.
    */
   public float getRatio() {
     return this.ratio;
+  }
+
+  /**
+   * Get the current text border width.
+   *
+   * @return current text border width.
+   */
+  public float getTextBorderWidth() {
+    return textBorderWidth;
+  }
+
+  /**
+   * Set the border width for texts in scale bar.
+   *
+   * @param textBorderWidth the border width for texts in scale bar, in pixel.
+   */
+  public void setTextBorderWidth(float textBorderWidth) {
+    this.textBorderWidth = textBorderWidth;
+    strokePaint.setStrokeWidth(textBorderWidth);
+  }
+
+  /**
+   * Get the current value for show text border.
+   *
+   * @return current value for show text border.
+   */
+  public boolean isShowTextBorder() {
+    return showTextBorder;
+  }
+
+  /**
+   * Set whether to show the text border.
+   *
+   * @param showTextBorder whether to show the text border or not.
+   */
+  public void setShowTextBorder(boolean showTextBorder) {
+    this.showTextBorder = showTextBorder;
   }
 
   /**
