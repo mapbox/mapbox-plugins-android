@@ -11,7 +11,7 @@ class ScaleBarConstants {
   static String METER_UNIT = " m";
   static String FEET_UNIT = " ft";
   static String KILOMETER_UNIT = " km";
-  static String MILE_UNIT = " mile";
+  static String MILE_UNIT = " mi";
   static ArrayList<Pair<Integer, Integer>> metricTable = new ArrayList<Pair<Integer, Integer>>() {
     {
       add(new Pair<>(1, 2));
