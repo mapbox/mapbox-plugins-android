@@ -5,5 +5,6 @@
     <dimen name="mapbox_scale_bar_text_margin">2dp</dimen>
     <dimen name="mapbox_scale_bar_text_size">8dp</dimen>
     <dimen name="mapbox_scale_bar_border_width">1dp</dimen>
-    <dimen name="mapbox_scale_bar_height">4dp</dimen>
+    <dimen name="mapbox_scale_bar_height">2dp</dimen>
+    <dimen name="mapbox_scale_bar_text_border_width">2dp</dimen>
 </resources>
