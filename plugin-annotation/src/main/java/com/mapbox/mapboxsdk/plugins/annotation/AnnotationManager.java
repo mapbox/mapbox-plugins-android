@@ -377,7 +377,9 @@ public abstract class AnnotationManager<
       T annotation = queryMapForFeatures(point);
       if (annotation != null) {
         for (U clickListener : clickListeners) {
-          clickListener.onAnnotationClick(annotation);
+          if (clickListener.onAnnotationClick(annotation)) {
+            return true;
+          }
         }
       }
       return false;
@@ -392,7 +394,9 @@ public abstract class AnnotationManager<
       T annotation = queryMapForFeatures(point);
       if (annotation != null) {
         for (V clickListener : longClickListeners) {
-          clickListener.onAnnotationLongClick(annotation);
+          if (clickListener.onAnnotationLongClick(annotation)) {
+            return true;
+          }
         }
       }
       return false;
