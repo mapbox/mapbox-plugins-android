@@ -46,14 +46,20 @@ public class LineActivity extends AppCompatActivity {
       mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
 
       lineManager = new LineManager(mapView, mapboxMap, style);
-      lineManager.addClickListener(line -> Toast.makeText(LineActivity.this,
-        String.format("Line clicked %s", line.getId()),
-        Toast.LENGTH_SHORT
-      ).show());
-      lineManager.addLongClickListener(line -> Toast.makeText(LineActivity.this,
-        String.format("Line long clicked %s", line.getId()),
-        Toast.LENGTH_SHORT
-      ).show());
+      lineManager.addClickListener(line -> {
+        Toast.makeText(LineActivity.this,
+                String.format("Line clicked %s", line.getId()),
+                Toast.LENGTH_SHORT
+        ).show();
+        return false;
+      });
+      lineManager.addLongClickListener(line -> {
+        Toast.makeText(LineActivity.this,
+                String.format("Line long clicked %s", line.getId()),
+                Toast.LENGTH_SHORT
+        ).show();
+        return false;
+      });
 
       // create a fixed line
       List<LatLng> latLngs = new ArrayList<>();

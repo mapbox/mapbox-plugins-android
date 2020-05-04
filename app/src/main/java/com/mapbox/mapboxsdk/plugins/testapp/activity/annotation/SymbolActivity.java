@@ -82,15 +82,20 @@ public class SymbolActivity extends AppCompatActivity {
       // create symbol manager
       GeoJsonOptions geoJsonOptions = new GeoJsonOptions().withTolerance(0.4f);
       symbolManager = new SymbolManager(mapView, mapboxMap, style, null, geoJsonOptions);
-      symbolManager.addClickListener(symbol -> Toast.makeText(SymbolActivity.this,
-        String.format("Symbol clicked %s", symbol.getId()),
-        Toast.LENGTH_SHORT
-      ).show());
-      symbolManager.addLongClickListener(symbol ->
+      symbolManager.addClickListener(symbol -> {
         Toast.makeText(SymbolActivity.this,
-          String.format("Symbol long clicked %s", symbol.getId()),
-          Toast.LENGTH_SHORT
-        ).show());
+                String.format("Symbol clicked %s", symbol.getId()),
+                Toast.LENGTH_SHORT
+        ).show();
+        return false;
+      });
+      symbolManager.addLongClickListener(symbol -> {
+        Toast.makeText(SymbolActivity.this,
+                String.format("Symbol long clicked %s", symbol.getId()),
+                Toast.LENGTH_SHORT
+        ).show();
+        return false;
+      });
 
       // set non data driven properties
       symbolManager.setIconAllowOverlap(true);

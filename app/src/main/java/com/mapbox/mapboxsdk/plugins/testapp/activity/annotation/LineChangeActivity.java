@@ -73,10 +73,13 @@ public class LineChangeActivity extends AppCompatActivity {
 
         lineManager = new LineManager(mapView, mapboxMap, style);
         lines = lineManager.create(getAllPolylines());
-        lineManager.addClickListener(line -> Toast.makeText(
-          LineChangeActivity.this,
-          "Clicked: " + line.getId(),
-          Toast.LENGTH_SHORT).show());
+        lineManager.addClickListener(line -> {
+          Toast.makeText(
+                  LineChangeActivity.this,
+                  "Clicked: " + line.getId(),
+                  Toast.LENGTH_SHORT).show();
+          return false;
+        });
 
         LineManager dottedLineManger = new LineManager(mapView, mapboxMap, style);
         dottedLineManger.create(new LineOptions()
