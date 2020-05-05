@@ -48,16 +48,21 @@ public class FillActivity extends AppCompatActivity {
 
       mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
 
-      fillManager = new FillManager(mapView, mapboxMap, style);
-      fillManager.addClickListener(fill -> Toast.makeText(FillActivity.this,
-        String.format("Fill clicked %s with title: %s", fill.getId(), getTitleFromFill(fill)),
-        Toast.LENGTH_SHORT
-      ).show());
+      fillManager.addClickListener(fill -> {
+        Toast.makeText(FillActivity.this,
+            String.format("Fill clicked %s with title: %s", fill.getId(), getTitleFromFill(fill)),
+            Toast.LENGTH_SHORT
+        ).show();
+        return false;
+      });
 
-      fillManager.addLongClickListener(fill -> Toast.makeText(FillActivity.this,
-        String.format("Fill long clicked %s with title: %s", fill.getId(), getTitleFromFill(fill)),
-        Toast.LENGTH_SHORT
-      ).show());
+      fillManager.addLongClickListener(fill -> {
+        Toast.makeText(FillActivity.this,
+            String.format("Fill long clicked %s with title: %s", fill.getId(), getTitleFromFill(fill)),
+            Toast.LENGTH_SHORT
+        ).show();
+        return false;
+      });
 
       // create a fixed fill
       List<LatLng> innerLatLngs = new ArrayList<>();
