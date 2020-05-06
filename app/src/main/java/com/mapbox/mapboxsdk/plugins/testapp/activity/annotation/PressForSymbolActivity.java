@@ -14,12 +14,15 @@ import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.mapbox.mapboxsdk.plugins.testapp.R;
 import com.mapbox.mapboxsdk.plugins.testapp.Utils;
+import com.mapbox.mapboxsdk.style.layers.Property;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+
+import static com.mapbox.mapboxsdk.style.layers.Property.ICON_ANCHOR_BOTTOM;
 
 /**
  * Test activity showcasing to add a Symbol on click.
@@ -71,6 +74,7 @@ public class PressForSymbolActivity extends AppCompatActivity {
     symbolManager.create(new SymbolOptions()
       .withLatLng(point)
       .withIconImage(ID_ICON)
+      .withIconAnchor(ICON_ANCHOR_BOTTOM)
     );
     return true;
   }

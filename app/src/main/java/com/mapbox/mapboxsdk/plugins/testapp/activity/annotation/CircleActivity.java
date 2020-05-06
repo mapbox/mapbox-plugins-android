@@ -54,14 +54,20 @@ public class CircleActivity extends AppCompatActivity {
 
       // create circle manager
       circleManager = new CircleManager(mapView, mapboxMap, style);
-      circleManager.addClickListener(circle -> Toast.makeText(CircleActivity.this,
-        String.format("Circle clicked %s", circle.getId()),
-        Toast.LENGTH_SHORT
-      ).show());
-      circleManager.addLongClickListener(circle -> Toast.makeText(CircleActivity.this,
-        String.format("Circle long clicked %s", circle.getId()),
-        Toast.LENGTH_SHORT
-      ).show());
+      circleManager.addClickListener(circle -> {
+        Toast.makeText(CircleActivity.this,
+            String.format("Circle clicked %s", circle.getId()),
+            Toast.LENGTH_SHORT
+        ).show();
+        return false;
+      });
+      circleManager.addLongClickListener(circle -> {
+        Toast.makeText(CircleActivity.this,
+            String.format("Circle long clicked %s", circle.getId()),
+            Toast.LENGTH_SHORT
+        ).show();
+        return false;
+      });
 
       // create a fixed circle
       CircleOptions circleOptions = new CircleOptions()

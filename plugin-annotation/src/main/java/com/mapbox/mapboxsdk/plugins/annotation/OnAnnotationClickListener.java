@@ -11,7 +11,8 @@ public interface OnAnnotationClickListener<T extends Annotation> {
    * Called when an annotation has been clicked
    *
    * @param t the annotation clicked.
+   * @return True if this click should be consumed and not passed further to other listeners
+   * registered afterwards, false otherwise.
    */
-  void onAnnotationClick(T t);
-
+  boolean onAnnotationClick(T t);
 }
