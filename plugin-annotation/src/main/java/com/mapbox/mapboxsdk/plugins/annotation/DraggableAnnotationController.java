@@ -9,16 +9,21 @@ import com.mapbox.android.gestures.AndroidGesturesManager;
 import com.mapbox.android.gestures.MoveDistancesObject;
 import com.mapbox.android.gestures.MoveGestureDetector;
 import com.mapbox.geojson.Geometry;
+import com.mapbox.mapboxsdk.log.Logger;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
-final class DraggableAnnotationController<T extends Annotation, D extends OnAnnotationDragListener<T>> implements MapboxMap.OnMoveListener {
+final class DraggableAnnotationController<T extends Annotation, D extends OnAnnotationDragListener<T>> {
   private final MapboxMap mapboxMap;
   private AnnotationManager<?, T, ?, D, ?, ?> annotationManager;
+  private AndroidGesturesManager androidGesturesManager;
 
   private final int touchAreaShiftX;
   private final int touchAreaShiftY;
@@ -26,12 +31,16 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
   private final int touchAreaMaxY;
 
   @Nullable
+  private static AndroidGesturesManager activeGestureManager = null;
+  private static final List<AndroidGesturesManager> androidGesturesManagers = new ArrayList<>();
+
+  @Nullable
   private T draggedAnnotation;
 
   @SuppressLint("ClickableViewAccessibility")
   DraggableAnnotationController(MapView mapView, MapboxMap mapboxMap) {
     this(mapView, mapboxMap, new AndroidGesturesManager(mapView.getContext(), false),
-      mapView.getScrollX(), mapView.getScrollY(), mapView.getMeasuredWidth(), mapView.getMeasuredHeight());
+            mapView.getScrollX(), mapView.getScrollY(), mapView.getMeasuredWidth(), mapView.getMeasuredHeight());
   }
 
   @VisibleForTesting
@@ -44,17 +53,45 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
     this.touchAreaShiftY = touchAreaShiftY;
     this.touchAreaMaxX = touchAreaMaxX;
     this.touchAreaMaxY = touchAreaMaxY;
+    this.androidGesturesManager = androidGesturesManager;
 
-    //androidGesturesManager.setMoveGestureListener(new AnnotationMoveGestureListener());
+    androidGesturesManager.setMoveGestureListener(new AnnotationMoveGestureListener());
+    synchronized (androidGesturesManagers) {
+      Logger.w("TEST", "Android gesture add");
+      androidGesturesManagers.add(androidGesturesManager);
+    }
 
-//    mapView.setOnTouchListener(new View.OnTouchListener() {
-//      @Override
-//      public boolean onTouch(View v, MotionEvent event) {
-//        androidGesturesManager.onTouchEvent(event);
-//        // if drag is started, don't pass motion events further
-//        return draggedAnnotation != null;
-//      }
-//    });
+    mapView.setOnTouchListener(new View.OnTouchListener() {
+      @Override
+      public boolean onTouch(View v, MotionEvent event) {
+        synchronized (androidGesturesManagers) {
+          // Using active gesture manager
+          if (activeGestureManager != null) {
+            AndroidGesturesManager oldActiveGestureManager = activeGestureManager;
+            activeGestureManager.onTouchEvent(event);
+            if (activeGestureManager != null || oldActiveGestureManager != activeGestureManager) {
+              return true;
+            }
+          } else { // Otherwise iterate
+            for (AndroidGesturesManager manager : androidGesturesManagers) {
+              AndroidGesturesManager oldActiveGestureManager = activeGestureManager;
+              manager.onTouchEvent(event);
+              // if drag is started, don't pass motion events further
+              if (activeGestureManager != null || oldActiveGestureManager != activeGestureManager) {
+                return true;
+              }
+            }
+          }
+          return false;
+        }
+      }
+    });
+  }
+
+  void clear() {
+    synchronized(androidGesturesManagers) {
+      androidGesturesManagers.remove(androidGesturesManager);
+    }
   }
 
   void injectAnnotationManager(AnnotationManager<?, T, ?, D, ?, ?> annotationManager) {
@@ -65,22 +102,21 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
     stopDragging(draggedAnnotation);
   }
 
-  @Override
-  public void onMoveBegin(MoveGestureDetector detector) {
+  boolean onMoveBegin(MoveGestureDetector detector) {
     if (detector.getPointersCount() == 1) {
       T annotation = annotationManager.queryMapForFeatures(detector.getFocalPoint());
       if (annotation != null) {
-        startDragging(annotation);
+        return startDragging(annotation);
       }
     }
+    return false;
   }
 
-  @Override
-  public void onMove(MoveGestureDetector detector) {
+  boolean onMove(MoveGestureDetector detector) {
     if (draggedAnnotation != null && (detector.getPointersCount() > 1 || !draggedAnnotation.isDraggable())) {
       // Stopping the drag when we don't work with a simple, on-pointer move anymore
       stopDragging(draggedAnnotation);
-      return;
+      return true;
     }
 
     // Updating symbol's position
@@ -94,16 +130,16 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
 
       if (pointF.x < 0 || pointF.y < 0 || pointF.x > touchAreaMaxX || pointF.y > touchAreaMaxY) {
         stopDragging(draggedAnnotation);
-        return;
+        return true;
       }
 
       Geometry shiftedGeometry = draggedAnnotation.getOffsetGeometry(
-        mapboxMap.getProjection(), moveObject, touchAreaShiftX, touchAreaShiftY
+              mapboxMap.getProjection(), moveObject, touchAreaShiftX, touchAreaShiftY
       );
 
       if (shiftedGeometry != null) {
         draggedAnnotation.setGeometry(
-          shiftedGeometry
+                shiftedGeometry
         );
         annotationManager.internalUpdateSource();
         if (!annotationManager.getDragListeners().isEmpty()) {
@@ -111,12 +147,14 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
             d.onAnnotationDrag(draggedAnnotation);
           }
         }
+        return true;
       }
     }
+
+    return false;
   }
 
-  @Override
-  public void onMoveEnd(@NonNull MoveGestureDetector detector) {
+  void onMoveEnd() {
     // Stopping the drag when move ends
     stopDragging(draggedAnnotation);
   }
@@ -129,8 +167,10 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
         }
       }
       draggedAnnotation = annotation;
+      activeGestureManager = androidGesturesManager;
       return true;
     }
+    activeGestureManager = null;
     return false;
   }
 
@@ -142,24 +182,25 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
         }
       }
     }
+    activeGestureManager = null;
     draggedAnnotation = null;
   }
 
-//  private class AnnotationMoveGestureListener implements MoveGestureDetector.OnMoveGestureListener {
-//
-//    @Override
-//    public boolean onMoveBegin(MoveGestureDetector detector) {
-//      return DraggableAnnotationController.this.onMoveBegin(detector);
-//    }
-//
-//    @Override
-//    public boolean onMove(MoveGestureDetector detector, float distanceX, float distanceY) {
-//      return DraggableAnnotationController.this.onMove(detector);
-//    }
-//
-//    @Override
-//    public void onMoveEnd(MoveGestureDetector detector, float velocityX, float velocityY) {
-//      DraggableAnnotationController.this.onMoveEnd();
-//    }
-//  }
+  private class AnnotationMoveGestureListener implements MoveGestureDetector.OnMoveGestureListener {
+
+    @Override
+    public boolean onMoveBegin(MoveGestureDetector detector) {
+      return DraggableAnnotationController.this.onMoveBegin(detector);
+    }
+
+    @Override
+    public boolean onMove(MoveGestureDetector detector, float distanceX, float distanceY) {
+      return DraggableAnnotationController.this.onMove(detector);
+    }
+
+    @Override
+    public void onMoveEnd(MoveGestureDetector detector, float velocityX, float velocityY) {
+      DraggableAnnotationController.this.onMoveEnd();
+    }
+  }
 }
