@@ -9,7 +9,6 @@ import com.mapbox.android.gestures.AndroidGesturesManager;
 import com.mapbox.android.gestures.MoveDistancesObject;
 import com.mapbox.android.gestures.MoveGestureDetector;
 import com.mapbox.geojson.Geometry;
-import com.mapbox.mapboxsdk.log.Logger;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
@@ -40,7 +39,7 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
   @SuppressLint("ClickableViewAccessibility")
   DraggableAnnotationController(MapView mapView, MapboxMap mapboxMap) {
     this(mapView, mapboxMap, new AndroidGesturesManager(mapView.getContext(), false),
-            mapView.getScrollX(), mapView.getScrollY(), mapView.getMeasuredWidth(), mapView.getMeasuredHeight());
+    mapView.getScrollX(), mapView.getScrollY(), mapView.getMeasuredWidth(), mapView.getMeasuredHeight());
   }
 
   @VisibleForTesting
@@ -133,12 +132,12 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
       }
 
       Geometry shiftedGeometry = draggedAnnotation.getOffsetGeometry(
-              mapboxMap.getProjection(), moveObject, touchAreaShiftX, touchAreaShiftY
+        mapboxMap.getProjection(), moveObject, touchAreaShiftX, touchAreaShiftY
       );
 
       if (shiftedGeometry != null) {
         draggedAnnotation.setGeometry(
-                shiftedGeometry
+          shiftedGeometry
         );
         annotationManager.internalUpdateSource();
         if (!annotationManager.getDragListeners().isEmpty()) {
