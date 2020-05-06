@@ -36,12 +36,12 @@ import androidx.collection.LongSparseArray;
  * @param <V> type of annotation long click listener, depends on generic T
  */
 public abstract class AnnotationManager<
-  L extends Layer,
-  T extends Annotation,
-  S extends Options<T>,
-  D extends OnAnnotationDragListener<T>,
-  U extends OnAnnotationClickListener<T>,
-  V extends OnAnnotationLongClickListener<T>> {
+        L extends Layer,
+        T extends Annotation,
+        S extends Options<T>,
+        D extends OnAnnotationDragListener<T>,
+        U extends OnAnnotationClickListener<T>,
+        V extends OnAnnotationLongClickListener<T>> {
 
   private static final String TAG = "AnnotationManager";
 
@@ -78,10 +78,9 @@ public abstract class AnnotationManager<
       throw new RuntimeException("The style has to be non-null and fully loaded.");
     }
 
-    this.draggableAnnotationController = draggableAnnotationController;
     mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver());
     mapboxMap.addOnMapLongClickListener(mapClickResolver);
-    mapboxMap.addOnMoveListener(draggableAnnotationController);
+    this.draggableAnnotationController = draggableAnnotationController;
     draggableAnnotationController.injectAnnotationManager(this);
 
     initializeSourcesAndLayers(geoJsonOptions);
@@ -200,8 +199,8 @@ public abstract class AnnotationManager<
       updateSource();
     } else {
       Logger.e(TAG, "Can't update annotation: "
-        + annotation.toString()
-        + ", the annotation isn't active annotation.");
+              + annotation.toString()
+              + ", the annotation isn't active annotation.");
     }
   }
 
@@ -333,7 +332,7 @@ public abstract class AnnotationManager<
   public void onDestroy() {
     mapboxMap.removeOnMapClickListener(mapClickResolver);
     mapboxMap.removeOnMapLongClickListener(mapClickResolver);
-    mapboxMap.removeOnMoveListener(draggableAnnotationController);
+    draggableAnnotationController.clear();
     dragListeners.clear();
     clickListeners.clear();
     longClickListeners.clear();
