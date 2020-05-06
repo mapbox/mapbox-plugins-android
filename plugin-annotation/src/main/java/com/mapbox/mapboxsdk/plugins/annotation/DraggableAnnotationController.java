@@ -57,14 +57,12 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
 
     androidGesturesManager.setMoveGestureListener(new AnnotationMoveGestureListener());
     synchronized (androidGesturesManagers) {
-      Logger.w("TEST", "Android gesture add");
       androidGesturesManagers.add(androidGesturesManager);
     }
 
     mapView.setOnTouchListener(new View.OnTouchListener() {
       @Override
       public boolean onTouch(View v, MotionEvent event) {
-        synchronized (androidGesturesManagers) {
           // Using active gesture manager
           if (activeGestureManager != null) {
             AndroidGesturesManager oldActiveGestureManager = activeGestureManager;
@@ -73,18 +71,19 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
               return true;
             }
           } else { // Otherwise iterate
-            for (AndroidGesturesManager manager : androidGesturesManagers) {
-              AndroidGesturesManager oldActiveGestureManager = activeGestureManager;
-              manager.onTouchEvent(event);
-              // if drag is started, don't pass motion events further
-              if (activeGestureManager != null || oldActiveGestureManager != activeGestureManager) {
-                return true;
+            synchronized (androidGesturesManagers) {
+              for (AndroidGesturesManager manager : androidGesturesManagers) {
+                AndroidGesturesManager oldActiveGestureManager = activeGestureManager;
+                manager.onTouchEvent(event);
+                // if drag is started, don't pass motion events further
+                if (activeGestureManager != null || oldActiveGestureManager != activeGestureManager) {
+                  return true;
+                }
               }
             }
           }
           return false;
         }
-      }
     });
   }
 

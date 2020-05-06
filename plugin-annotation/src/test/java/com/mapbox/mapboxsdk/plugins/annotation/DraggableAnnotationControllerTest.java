@@ -70,7 +70,7 @@ public class DraggableAnnotationControllerTest {
   public void before() {
     MockitoAnnotations.initMocks(this);
     draggableAnnotationController = new DraggableAnnotationController(mapView, mapboxMap, androidGesturesManager,
-            0, 0, touchAreaMaxX, touchAreaMaxY);
+      0, 0, touchAreaMaxX, touchAreaMaxY);
     draggableAnnotationController.injectAnnotationManager(annotationManager);
     dragListenerList = new ArrayList<>();
     dragListenerList.add(dragListener);
