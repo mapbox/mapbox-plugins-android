@@ -78,9 +78,10 @@ public abstract class AnnotationManager<
       throw new RuntimeException("The style has to be non-null and fully loaded.");
     }
 
+    this.draggableAnnotationController = draggableAnnotationController;
     mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver());
     mapboxMap.addOnMapLongClickListener(mapClickResolver);
-    this.draggableAnnotationController = draggableAnnotationController;
+    mapboxMap.addOnMoveListener(draggableAnnotationController);
     draggableAnnotationController.injectAnnotationManager(this);
 
     initializeSourcesAndLayers(geoJsonOptions);
@@ -332,6 +333,7 @@ public abstract class AnnotationManager<
   public void onDestroy() {
     mapboxMap.removeOnMapClickListener(mapClickResolver);
     mapboxMap.removeOnMapLongClickListener(mapClickResolver);
+    mapboxMap.removeOnMoveListener(draggableAnnotationController);
     dragListeners.clear();
     clickListeners.clear();
     longClickListeners.clear();

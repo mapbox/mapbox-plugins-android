@@ -16,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
-final class DraggableAnnotationController<T extends Annotation, D extends OnAnnotationDragListener<T>> {
+final class DraggableAnnotationController<T extends Annotation, D extends OnAnnotationDragListener<T>> implements MapboxMap.OnMoveListener {
   private final MapboxMap mapboxMap;
   private AnnotationManager<?, T, ?, D, ?, ?> annotationManager;
 
@@ -45,16 +45,16 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
     this.touchAreaMaxX = touchAreaMaxX;
     this.touchAreaMaxY = touchAreaMaxY;
 
-    androidGesturesManager.setMoveGestureListener(new AnnotationMoveGestureListener());
+    //androidGesturesManager.setMoveGestureListener(new AnnotationMoveGestureListener());
 
-    mapView.setOnTouchListener(new View.OnTouchListener() {
-      @Override
-      public boolean onTouch(View v, MotionEvent event) {
-        androidGesturesManager.onTouchEvent(event);
-        // if drag is started, don't pass motion events further
-        return draggedAnnotation != null;
-      }
-    });
+//    mapView.setOnTouchListener(new View.OnTouchListener() {
+//      @Override
+//      public boolean onTouch(View v, MotionEvent event) {
+//        androidGesturesManager.onTouchEvent(event);
+//        // if drag is started, don't pass motion events further
+//        return draggedAnnotation != null;
+//      }
+//    });
   }
 
   void injectAnnotationManager(AnnotationManager<?, T, ?, D, ?, ?> annotationManager) {
@@ -65,21 +65,22 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
     stopDragging(draggedAnnotation);
   }
 
-  boolean onMoveBegin(MoveGestureDetector detector) {
+  @Override
+  public void onMoveBegin(MoveGestureDetector detector) {
     if (detector.getPointersCount() == 1) {
       T annotation = annotationManager.queryMapForFeatures(detector.getFocalPoint());
       if (annotation != null) {
-        return startDragging(annotation);
+        startDragging(annotation);
       }
     }
-    return false;
   }
 
-  boolean onMove(MoveGestureDetector detector) {
+  @Override
+  public void onMove(MoveGestureDetector detector) {
     if (draggedAnnotation != null && (detector.getPointersCount() > 1 || !draggedAnnotation.isDraggable())) {
       // Stopping the drag when we don't work with a simple, on-pointer move anymore
       stopDragging(draggedAnnotation);
-      return true;
+      return;
     }
 
     // Updating symbol's position
@@ -93,7 +94,7 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
 
       if (pointF.x < 0 || pointF.y < 0 || pointF.x > touchAreaMaxX || pointF.y > touchAreaMaxY) {
         stopDragging(draggedAnnotation);
-        return true;
+        return;
       }
 
       Geometry shiftedGeometry = draggedAnnotation.getOffsetGeometry(
@@ -110,14 +111,12 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
             d.onAnnotationDrag(draggedAnnotation);
           }
         }
-        return true;
       }
     }
-
-    return false;
   }
 
-  void onMoveEnd() {
+  @Override
+  public void onMoveEnd(@NonNull MoveGestureDetector detector) {
     // Stopping the drag when move ends
     stopDragging(draggedAnnotation);
   }
@@ -146,21 +145,21 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
     draggedAnnotation = null;
   }
 
-  private class AnnotationMoveGestureListener implements MoveGestureDetector.OnMoveGestureListener {
-
-    @Override
-    public boolean onMoveBegin(MoveGestureDetector detector) {
-      return DraggableAnnotationController.this.onMoveBegin(detector);
-    }
-
-    @Override
-    public boolean onMove(MoveGestureDetector detector, float distanceX, float distanceY) {
-      return DraggableAnnotationController.this.onMove(detector);
-    }
-
-    @Override
-    public void onMoveEnd(MoveGestureDetector detector, float velocityX, float velocityY) {
-      DraggableAnnotationController.this.onMoveEnd();
-    }
-  }
+//  private class AnnotationMoveGestureListener implements MoveGestureDetector.OnMoveGestureListener {
+//
+//    @Override
+//    public boolean onMoveBegin(MoveGestureDetector detector) {
+//      return DraggableAnnotationController.this.onMoveBegin(detector);
+//    }
+//
+//    @Override
+//    public boolean onMove(MoveGestureDetector detector, float distanceX, float distanceY) {
+//      return DraggableAnnotationController.this.onMove(detector);
+//    }
+//
+//    @Override
+//    public void onMoveEnd(MoveGestureDetector detector, float velocityX, float velocityY) {
+//      DraggableAnnotationController.this.onMoveEnd();
+//    }
+//  }
 }
