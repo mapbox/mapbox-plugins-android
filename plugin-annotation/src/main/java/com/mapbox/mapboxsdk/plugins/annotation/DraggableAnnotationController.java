@@ -19,7 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
-final class DraggableAnnotationController <T extends Annotation, D extends OnAnnotationDragListener<T>> {
+public final class DraggableAnnotationController <T extends Annotation, D extends OnAnnotationDragListener<T>> {
 
   private static DraggableAnnotationController INSTANCE = null;
 
@@ -76,16 +76,15 @@ final class DraggableAnnotationController <T extends Annotation, D extends OnAnn
     });
   }
 
-  void clear() {
-    // TODO
-  }
-
-  void addAnnotationManager(AnnotationManager annotationManager) {
+  synchronized void addAnnotationManager(AnnotationManager annotationManager) {
     this.annotationManagers.add(annotationManager);
   }
 
-  void removeAnnotationManager(AnnotationManager annotationManager) {
+  synchronized void removeAnnotationManager(AnnotationManager annotationManager) {
     this.annotationManagers.remove(annotationManager);
+    if(annotationManagers.isEmpty()) {
+      INSTANCE = null;
+    }
   }
 
   void onSourceUpdated() {
@@ -156,7 +155,7 @@ final class DraggableAnnotationController <T extends Annotation, D extends OnAnn
   boolean startDragging(@NonNull Annotation annotation, @NonNull AnnotationManager annotationManager) {
     if (annotation.isDraggable()) {
       if (!annotationManager.getDragListeners().isEmpty()) {
-        for (OnAnnotationDragListener d : (List<OnAnnotationDragListener>)draggedAnnotationManager.getDragListeners()) {
+        for (OnAnnotationDragListener d : (List<OnAnnotationDragListener>)annotationManager.getDragListeners()) {
           d.onAnnotationDragStarted(annotation);
         }
       }
@@ -167,10 +166,10 @@ final class DraggableAnnotationController <T extends Annotation, D extends OnAnn
     return false;
   }
 
-  void stopDragging(@Nullable Annotation annotation, @NonNull AnnotationManager annotationManager) {
-    if (annotation != null) {
+  void stopDragging(@Nullable Annotation annotation, @Nullable AnnotationManager annotationManager) {
+    if (annotation != null && annotationManager != null) {
       if (!annotationManager.getDragListeners().isEmpty()) {
-        for (OnAnnotationDragListener d : (List<OnAnnotationDragListener>)draggedAnnotationManager.getDragListeners()) {
+        for (OnAnnotationDragListener d : (List<OnAnnotationDragListener>)annotationManager.getDragListeners()) {
           d.onAnnotationDragFinished(annotation);
         }
       }
