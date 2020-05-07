@@ -12,12 +12,12 @@ import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+
+import java.util.ArrayList;
+import java.util.List;
 
 final class DraggableAnnotationController <T extends Annotation, D extends OnAnnotationDragListener<T>> {
 
