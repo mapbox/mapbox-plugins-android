@@ -71,7 +71,7 @@ public class DraggableAnnotationControllerTest {
     MockitoAnnotations.initMocks(this);
     draggableAnnotationController = new DraggableAnnotationController(mapView, mapboxMap, androidGesturesManager,
       0, 0, touchAreaMaxX, touchAreaMaxY);
-    draggableAnnotationController.injectAnnotationManager(annotationManager);
+    draggableAnnotationController.addAnnotationManager(annotationManager);
     dragListenerList = new ArrayList<>();
     dragListenerList.add(dragListener);
   }
@@ -79,7 +79,7 @@ public class DraggableAnnotationControllerTest {
   @Test
   public void annotationNotDraggableTest() {
     when(annotation.isDraggable()).thenReturn(false);
-    draggableAnnotationController.startDragging(annotation);
+    draggableAnnotationController.startDragging(annotation, annotationManager);
     verify(dragListener, times(0)).onAnnotationDragStarted(annotation);
   }
 
@@ -87,13 +87,13 @@ public class DraggableAnnotationControllerTest {
   public void annotationDragStartTest() {
     when(annotation.isDraggable()).thenReturn(true);
     when(annotationManager.getDragListeners()).thenReturn(dragListenerList);
-    draggableAnnotationController.startDragging(annotation);
+    draggableAnnotationController.startDragging(annotation, annotationManager);
     verify(dragListener, times(1)).onAnnotationDragStarted(annotation);
   }
 
   @Test
   public void annotationDragStopNoneTest() {
-    draggableAnnotationController.stopDragging(null);
+    draggableAnnotationController.stopDragging(null, null);
     verify(dragListener, times(0)).onAnnotationDragFinished(annotation);
   }
 
@@ -101,7 +101,7 @@ public class DraggableAnnotationControllerTest {
   public void annotationDragStopTest() {
     when(annotation.isDraggable()).thenReturn(true);
     when(annotationManager.getDragListeners()).thenReturn(dragListenerList);
-    draggableAnnotationController.stopDragging(annotation);
+    draggableAnnotationController.stopDragging(annotation, annotationManager);
     verify(dragListener, times(1)).onAnnotationDragFinished(annotation);
   }
 
@@ -109,7 +109,7 @@ public class DraggableAnnotationControllerTest {
   public void annotationDragStopSourceUpdateTest() {
     when(annotation.isDraggable()).thenReturn(true);
     when(annotationManager.getDragListeners()).thenReturn(dragListenerList);
-    draggableAnnotationController.startDragging(annotation);
+    draggableAnnotationController.startDragging(annotation, annotationManager);
     draggableAnnotationController.onSourceUpdated();
     verify(dragListener, times(1)).onAnnotationDragFinished(annotation);
   }
@@ -152,7 +152,7 @@ public class DraggableAnnotationControllerTest {
   public void gestureOnMoveMoveWrongPointersTest() {
     when(annotation.isDraggable()).thenReturn(true);
     when(annotationManager.getDragListeners()).thenReturn(dragListenerList);
-    draggableAnnotationController.startDragging(annotation);
+    draggableAnnotationController.startDragging(annotation, annotationManager);
 
     when(moveGestureDetector.getPointersCount()).thenReturn(2);
 
@@ -181,7 +181,7 @@ public class DraggableAnnotationControllerTest {
   public void gestureOnMoveMoveOutOfBoundsTest() {
     when(annotation.isDraggable()).thenReturn(true);
     when(annotationManager.getDragListeners()).thenReturn(dragListenerList);
-    draggableAnnotationController.startDragging(annotation);
+    draggableAnnotationController.startDragging(annotation, annotationManager);
 
     when(moveGestureDetector.getPointersCount()).thenReturn(1);
     when(moveGestureDetector.getMoveObject(0)).thenReturn(moveObject);
@@ -192,17 +192,17 @@ public class DraggableAnnotationControllerTest {
 
     when(moveObject.getCurrentX()).thenReturn(10f);
     when(moveObject.getCurrentY()).thenReturn(touchAreaMaxY + 1f);
-    draggableAnnotationController.startDragging(annotation);
+    draggableAnnotationController.startDragging(annotation, annotationManager);
     draggableAnnotationController.onMove(moveGestureDetector);
 
     when(moveObject.getCurrentX()).thenReturn(-1f);
     when(moveObject.getCurrentY()).thenReturn(10f);
-    draggableAnnotationController.startDragging(annotation);
+    draggableAnnotationController.startDragging(annotation, annotationManager);
     draggableAnnotationController.onMove(moveGestureDetector);
 
     when(moveObject.getCurrentX()).thenReturn(10f);
     when(moveObject.getCurrentY()).thenReturn(-1f);
-    draggableAnnotationController.startDragging(annotation);
+    draggableAnnotationController.startDragging(annotation, annotationManager);
     draggableAnnotationController.onMove(moveGestureDetector);
 
     verify(dragListener, times(0)).onAnnotationDrag(annotation);
@@ -213,7 +213,7 @@ public class DraggableAnnotationControllerTest {
   public void gestureOnMoveMoveNoGeometryTest() {
     when(annotation.isDraggable()).thenReturn(true);
     when(annotationManager.getDragListeners()).thenReturn(dragListenerList);
-    draggableAnnotationController.startDragging(annotation);
+    draggableAnnotationController.startDragging(annotation, annotationManager);
 
     when(moveGestureDetector.getPointersCount()).thenReturn(1);
     when(moveGestureDetector.getMoveObject(0)).thenReturn(moveObject);
@@ -234,7 +234,7 @@ public class DraggableAnnotationControllerTest {
   public void gestureOnMoveTest() {
     when(annotation.isDraggable()).thenReturn(true);
     when(annotationManager.getDragListeners()).thenReturn(dragListenerList);
-    draggableAnnotationController.startDragging(annotation);
+    draggableAnnotationController.startDragging(annotation, annotationManager);
 
     when(moveGestureDetector.getPointersCount()).thenReturn(1);
     when(moveGestureDetector.getMoveObject(0)).thenReturn(moveObject);
@@ -257,7 +257,7 @@ public class DraggableAnnotationControllerTest {
   public void gestureOnMoveEndTest() {
     when(annotation.isDraggable()).thenReturn(true);
     when(annotationManager.getDragListeners()).thenReturn(dragListenerList);
-    draggableAnnotationController.startDragging(annotation);
+    draggableAnnotationController.startDragging(annotation, annotationManager);
 
     draggableAnnotationController.onMoveEnd();
     verify(dragListener, times(1)).onAnnotationDragFinished(annotation);
@@ -267,7 +267,7 @@ public class DraggableAnnotationControllerTest {
   public void startedNotDraggableTest() {
     when(annotation.isDraggable()).thenReturn(false);
     when(annotationManager.getDragListeners()).thenReturn(dragListenerList);
-    draggableAnnotationController.startDragging(annotation);
+    draggableAnnotationController.startDragging(annotation, annotationManager);
 
     when(moveGestureDetector.getPointersCount()).thenReturn(1);
     when(moveGestureDetector.getMoveObject(0)).thenReturn(moveObject);
@@ -288,7 +288,7 @@ public class DraggableAnnotationControllerTest {
   public void moveNotDraggableTest() {
     when(annotation.isDraggable()).thenReturn(true);
     when(annotationManager.getDragListeners()).thenReturn(dragListenerList);
-    draggableAnnotationController.startDragging(annotation);
+    draggableAnnotationController.startDragging(annotation, annotationManager);
 
     when(moveGestureDetector.getPointersCount()).thenReturn(1);
     when(moveGestureDetector.getMoveObject(0)).thenReturn(moveObject);
