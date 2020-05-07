@@ -19,7 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
-public final class DraggableAnnotationController <T extends Annotation, D extends OnAnnotationDragListener<T>> {
+final class DraggableAnnotationController <T extends Annotation, D extends OnAnnotationDragListener<T>> {
 
   private static DraggableAnnotationController INSTANCE = null;
 
@@ -65,14 +65,14 @@ public final class DraggableAnnotationController <T extends Annotation, D extend
     mapView.setOnTouchListener(new View.OnTouchListener() {
       @Override
       public boolean onTouch(View v, MotionEvent event) {
-          // Using active gesture manager
-          Annotation oldAnnotation = draggedAnnotation;
-          androidGesturesManager.onTouchEvent(event);
-          if (draggedAnnotation != null || oldAnnotation != draggedAnnotation) {
-            return true;
-          }
-          return false;
+        // Using active gesture manager
+        Annotation oldAnnotation = draggedAnnotation;
+        androidGesturesManager.onTouchEvent(event);
+        if (draggedAnnotation != null || oldAnnotation != draggedAnnotation) {
+          return true;
         }
+        return false;
+      }
     });
   }
 
