@@ -51,7 +51,6 @@ public abstract class AnnotationManager<
   final Map<String, PropertyValue> constantPropertyUsageMap = new HashMap<>();
   Expression layerFilter;
 
-  private final DraggableAnnotationController<T, D> draggableAnnotationController;
   private final List<D> dragListeners = new ArrayList<>();
   private final List<U> clickListeners = new ArrayList<>();
   private final List<V> longClickListeners = new ArrayList<>();
@@ -63,16 +62,18 @@ public abstract class AnnotationManager<
   private Style style;
   private String belowLayerId;
   private CoreElementProvider<L> coreElementProvider;
+  private DraggableAnnotationController draggableAnnotationController;
 
   @UiThread
   protected AnnotationManager(MapView mapView, final MapboxMap mapboxMap, Style style,
                               CoreElementProvider<L> coreElementProvider,
-                              DraggableAnnotationController<T, D> draggableAnnotationController,
+                              DraggableAnnotationController draggableAnnotationController,
                               String belowLayerId, final GeoJsonOptions geoJsonOptions) {
     this.mapboxMap = mapboxMap;
     this.style = style;
     this.belowLayerId = belowLayerId;
     this.coreElementProvider = coreElementProvider;
+    this.draggableAnnotationController = draggableAnnotationController;
 
     if (!style.isFullyLoaded()) {
       throw new RuntimeException("The style has to be non-null and fully loaded.");
@@ -80,8 +81,7 @@ public abstract class AnnotationManager<
 
     mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver());
     mapboxMap.addOnMapLongClickListener(mapClickResolver);
-    this.draggableAnnotationController = draggableAnnotationController;
-    draggableAnnotationController.injectAnnotationManager(this);
+    draggableAnnotationController.addAnnotationManager(this);
 
     initializeSourcesAndLayers(geoJsonOptions);
 
@@ -332,7 +332,7 @@ public abstract class AnnotationManager<
   public void onDestroy() {
     mapboxMap.removeOnMapClickListener(mapClickResolver);
     mapboxMap.removeOnMapLongClickListener(mapClickResolver);
-    draggableAnnotationController.clear();
+    draggableAnnotationController.removeAnnotationManager(this);
     dragListeners.clear();
     clickListeners.clear();
     longClickListeners.clear();
