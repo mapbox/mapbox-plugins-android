@@ -48,6 +48,7 @@ public class FillActivity extends AppCompatActivity {
 
       mapboxMap.moveCamera(CameraUpdateFactory.zoomTo(2));
 
+      fillManager = new FillManager(mapView, mapboxMap, style);
       fillManager.addClickListener(fill -> {
         Toast.makeText(FillActivity.this,
             String.format("Fill clicked %s with title: %s", fill.getId(), getTitleFromFill(fill)),

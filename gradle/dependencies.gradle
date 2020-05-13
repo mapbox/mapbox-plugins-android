@@ -7,7 +7,7 @@
   ]
 
   version = [
-      mapboxMapSdk       : '9.1.0',
+      mapboxMapSdk       : '9.2.0',
       mapboxJava         : '5.2.1',
       mapboxTurf         : '5.2.1',
       playLocation       : '16.0.0',
