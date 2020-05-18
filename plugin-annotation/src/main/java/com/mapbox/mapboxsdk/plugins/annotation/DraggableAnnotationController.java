@@ -101,13 +101,18 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
       );
 
       if (shiftedGeometry != null) {
+        Geometry oldGeometry = draggedAnnotation.geometry;
         draggedAnnotation.setGeometry(
           shiftedGeometry
         );
         annotationManager.internalUpdateSource();
         if (!annotationManager.getDragListeners().isEmpty()) {
           for (D d : annotationManager.getDragListeners()) {
-            d.onAnnotationDrag(draggedAnnotation);
+            if (!d.onAnnotationDrag(draggedAnnotation)) {
+              draggedAnnotation.setGeometry(oldGeometry);
+              stopDragging(draggedAnnotation);
+              return true;
+            }
           }
         }
         return true;
