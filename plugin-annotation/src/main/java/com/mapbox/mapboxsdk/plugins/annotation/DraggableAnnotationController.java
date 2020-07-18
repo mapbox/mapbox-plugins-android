@@ -50,9 +50,10 @@ final class DraggableAnnotationController<T extends Annotation, D extends OnAnno
     mapView.setOnTouchListener(new View.OnTouchListener() {
       @Override
       public boolean onTouch(View v, MotionEvent event) {
+        Annotation oldAnnotation = draggedAnnotation;
         androidGesturesManager.onTouchEvent(event);
-        // if drag is started, don't pass motion events further
-        return draggedAnnotation != null;
+        // if drag is started or drag is finished, don't pass motion events further
+        return draggedAnnotation != null || oldAnnotation != draggedAnnotation;
       }
     });
   }
