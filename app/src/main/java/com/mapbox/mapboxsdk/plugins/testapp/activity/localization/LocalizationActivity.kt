@@ -145,6 +145,14 @@ class LocalizationActivity : AppCompatActivity(), OnMapReadyCallback {
         localizationPlugin?.setMapLanguage(MapLocale.KOREAN)
         return true
       }
+      R.id.italian -> {
+        localizationPlugin?.setMapLanguage(MapLocale.ITALIAN)
+        return true
+      }
+      R.id.vietnamese -> {
+        localizationPlugin?.setMapLanguage(MapLocale.VIETNAMESE)
+        return true
+      }
       R.id.local -> {
         localizationPlugin?.setMapLanguage(MapLocale.LOCAL_NAME)
         return true
@@ -159,7 +167,9 @@ class LocalizationActivity : AppCompatActivity(), OnMapReadyCallback {
 
   companion object {
 
-    private val LOCALES = arrayOf(MapLocale.CANADA, MapLocale.GERMANY, MapLocale.CHINA, MapLocale.US, MapLocale.CANADA_FRENCH, MapLocale.JAPAN, MapLocale.KOREA, MapLocale.FRANCE, MapLocale.SPAIN)
+    private val LOCALES = arrayOf(MapLocale.CANADA, MapLocale.GERMANY,
+      MapLocale.CHINA, MapLocale.US, MapLocale.CANADA_FRENCH, MapLocale.JAPAN, MapLocale.KOREA,
+      MapLocale.FRANCE, MapLocale.SPAIN, MapLocale.VIETNAM, MapLocale.ITALY)
 
     private var index: Int = 0
 

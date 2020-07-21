@@ -87,12 +87,12 @@ public final class MapLocale {
   public static final String CHINESE = "name_zh";
 
   /**
-   * Traditional Chinese (if available)
+   * Traditional Chinese characters (if available)
    */
   static final String TRADITIONAL_CHINESE = "name_zh-Hant";
 
   /**
-   * Simplified Chinese (if available)
+   * Simplified Chinese characters (if available)
    */
   public static final String SIMPLIFIED_CHINESE = "name_zh-Hans";
 
@@ -106,109 +106,122 @@ public final class MapLocale {
    */
   public static final String KOREAN = "name_ko";
 
+  /**
+   * Italian (if available)
+   */
+  public static final String ITALIAN = "name_it";
+
   @Retention(SOURCE)
   @StringDef( {LOCAL_NAME, ARABIC, CHINESE, SIMPLIFIED_CHINESE, TRADITIONAL_CHINESE, ENGLISH,
-          FRENCH, GERMAN, JAPANESE, KOREAN, PORTUGUESE, RUSSIAN, SPANISH})
+          FRENCH, GERMAN, JAPANESE, KOREAN, PORTUGUESE, RUSSIAN, SPANISH, ITALIAN})
   public @interface Languages {
   }
 
   /*
-   * Some Country Bounding Boxes used for the default provided MapLocales.
+   * Some country bounding boxes used for the default provided MapLocales.
    */
 
   /**
-   * USA Bounding box excluding Hawaii and Alaska extracted from Open Street Map
+   * USA bounding box extracted from Open Street Map. This box excludes Hawaii and Alaska.
    */
   static final LatLngBounds USA_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(49.388611, -124.733253))
     .include(new LatLng(24.544245, -66.954811)).build();
 
   /**
-   * UK Bounding Box extracted from Open Street Map
+   * UK bounding Box extracted from Open Street Map
    */
   static final LatLngBounds UK_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(59.360249, -8.623555))
     .include(new LatLng(49.906193, 1.759)).build();
 
   /**
-   * Canada Bounding Box extracted from Open Street Map
+   * Canada bounding Box extracted from Open Street Map
    */
   static final LatLngBounds CANADA_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(83.110626, -141.0))
     .include(new LatLng(41.67598, -52.636291)).build();
 
   /**
-   * China Bounding Box extracted from Open Street Map
+   * China bounding Box extracted from Open Street Map
    */
   static final LatLngBounds CHINA_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(53.56086, 73.557693))
     .include(new LatLng(15.775416, 134.773911)).build();
 
   /**
-   * Taiwan Bounding Box extracted from Open Street Map
+   * Taiwan bounding Box extracted from Open Street Map
    */
   static final LatLngBounds TAIWAN_BBOX = new LatLngBounds.Builder()
           .include(new LatLng(26.389444, 118.115255566105))
           .include(new LatLng(21.733333, 122.107778)).build();
 
   /**
-   * Germany Bounding Box extracted from Open Street Map
+   * Germany bounding Box extracted from Open Street Map
    */
   static final LatLngBounds GERMANY_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(55.055637, 5.865639))
     .include(new LatLng(47.275776, 15.039889)).build();
 
   /**
-   * Korea Bounding Box extracted from Open Street Map
+   * Korea bounding Box extracted from Open Street Map
    */
   static final LatLngBounds KOREA_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(38.612446, 125.887108))
     .include(new LatLng(33.190945, 129.584671)).build();
 
   /**
-   * Japan Bounding Box extracted from Open Street Map
+   * Japan bounding Box extracted from Open Street Map
    */
   static final LatLngBounds JAPAN_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(45.52314, 122.93853))
     .include(new LatLng(24.249472, 145.820892)).build();
 
   /**
-   * France Bounding Box extracted from Open Street Map
+   * France bounding Box extracted from Open Street Map
    */
   static final LatLngBounds FRANCE_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(51.092804, -5.142222))
     .include(new LatLng(41.371582, 9.561556)).build();
 
   /**
-   * Russian Bounding box extracted from Open Street Map
+   * Russian bounding box extracted from Open Street Map
    */
   static final LatLngBounds RUSSIA_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(81.856903, -168.997849))
     .include(new LatLng(41.185902, 19.638861)).build();
 
   /**
-   * Spain Bounding box extracted from Open Street Map
+   * Spain bounding box extracted from Open Street Map
    */
   static final LatLngBounds SPAIN_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(27.4335426, -18.3936845))
     .include(new LatLng(43.9933088, 4.5918885)).build();
 
   /**
-   * Portugal Bounding box extracted from Open Street Map
+   * Portugal bounding box extracted from Open Street Map
    */
   static final LatLngBounds PORTUGAL_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(27.4335426, -18.3936845))
     .include(new LatLng(42.280468655, -6.3890876937)).build();
 
   /**
-   * Brazil Bounding box extracted from Open Street Map
+   * Brazil bounding box extracted from Open Street Map
    */
   static final LatLngBounds BRAZIL_BBOX = new LatLngBounds.Builder()
     .include(new LatLng(5.2842873, -33.8689056))
     .include(new LatLng(-28.6341164, -73.9830625)).build();
 
+  /**
+   * Italy bounding box extracted from Open Street Map
+   */
+  static final LatLngBounds ITALY_BBOX = new LatLngBounds.Builder()
+      .include(new LatLng(47.1153931, 18.4802470))
+      .include(new LatLng(36.6199872, 6.74995527)).build();
+
   /*
-   * Some MapLocales already defined (these match with the predefined ones in the Locale class)
+   * Some MapLocales are already define. The following ones match with the
+   * predefined ones in the Locale.java class.
    */
 
   /**
@@ -242,12 +255,12 @@ public final class MapLocale {
   public static final MapLocale TAIWAN = new MapLocale(TRADITIONAL_CHINESE, TAIWAN_BBOX);
 
   /**
-   * Useful constant for country. General Simplified Chinese
+   * Useful constant for Simplified Chinese characters.
    */
   public static final MapLocale  CHINESE_HANS = new MapLocale(SIMPLIFIED_CHINESE);
 
   /**
-   * Useful constant for country. General Traditional Chinese
+   * Useful constant for Traditional Chinese characters.
    */
   public static final MapLocale CHINESE_HANT = new MapLocale(TRADITIONAL_CHINESE);
 
@@ -292,6 +305,11 @@ public final class MapLocale {
   public static final MapLocale BRAZIL = new MapLocale(PORTUGUESE, BRAZIL_BBOX);
 
   /**
+   * Useful constant for country.
+   */
+  public static final MapLocale ITALY = new MapLocale(ITALIAN, ITALY_BBOX);
+
+  /**
    * Maps out the Matching pair of {@link Locale} and {@link MapLocale}. In other words, if I have a
    * {@link Locale#CANADA}, this should be matched up with {@link MapLocale#CANADA}.
    */
@@ -313,6 +331,7 @@ public final class MapLocale {
     LOCALE_SET.put(new Locale("es", "ES"), SPAIN);
     LOCALE_SET.put(new Locale("pt", "PT"), PORTUGAL);
     LOCALE_SET.put(new Locale("pt", "BR"), BRAZIL);
+    LOCALE_SET.put(Locale.ITALY, MapLocale.ITALY);
 
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
       Locale zh_CN_Hans = new Locale.Builder().setLanguage("zh").setRegion("CN").setScript("Hans").build();
