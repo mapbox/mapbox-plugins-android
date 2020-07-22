@@ -68,6 +68,7 @@ final class DraggableAnnotationController <T extends Annotation, D extends OnAnn
         // Using active gesture manager
         Annotation oldAnnotation = draggedAnnotation;
         androidGesturesManager.onTouchEvent(event);
+        // if drag is started or drag is finished, don't pass motion events further
         return draggedAnnotation != null || oldAnnotation != draggedAnnotation;
       }
     });
