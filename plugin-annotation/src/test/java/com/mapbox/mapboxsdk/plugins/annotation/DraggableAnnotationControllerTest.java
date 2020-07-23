@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricTestRunner.class)
 public class DraggableAnnotationControllerTest {
@@ -81,6 +82,21 @@ public class DraggableAnnotationControllerTest {
     when(annotation.isDraggable()).thenReturn(false);
     draggableAnnotationController.startDragging(annotation, annotationManager);
     verify(dragListener, times(0)).onAnnotationDragStarted(annotation);
+  }
+
+  @Test
+  public void annotationDragStartOnAdditionalManagerTest() {
+    AnnotationManager additionalAnnotationManager = mock(AnnotationManager.class);
+    draggableAnnotationController.addAnnotationManager(additionalAnnotationManager);
+
+    when(annotation.isDraggable()).thenReturn(true);
+    when(additionalAnnotationManager.getDragListeners()).thenReturn(dragListenerList);
+    draggableAnnotationController.startDragging(annotation, additionalAnnotationManager);
+    verify(dragListener, times(1)).onAnnotationDragStarted(annotation);
+    draggableAnnotationController.stopDragging(annotation, additionalAnnotationManager);
+    verify(dragListener, times(1)).onAnnotationDragFinished(annotation);
+
+    draggableAnnotationController.removeAnnotationManager(additionalAnnotationManager);
   }
 
   @Test

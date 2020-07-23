@@ -22,12 +22,22 @@ import java.util.List;
 final class DraggableAnnotationController <T extends Annotation, D extends OnAnnotationDragListener<T>> {
 
   private static DraggableAnnotationController INSTANCE = null;
+  private static MapView MAP_VIEW = null;
+  private static MapboxMap MAPBOX_MAP = null;
 
   public static synchronized DraggableAnnotationController getInstance(MapView mapView, MapboxMap mapboxMap) {
-    if(INSTANCE == null){
-      INSTANCE = new DraggableAnnotationController(mapView, mapboxMap);
+    if(INSTANCE == null || MAP_VIEW != mapView || MAPBOX_MAP != mapboxMap) {
+      MAPBOX_MAP = mapboxMap;
+      MAP_VIEW = mapView;
+      INSTANCE = new DraggableAnnotationController(MAP_VIEW, MAPBOX_MAP);
     }
     return INSTANCE;
+  }
+
+  private static synchronized void clearInstance() {
+    INSTANCE = null;
+    MAP_VIEW = null;
+    MAPBOX_MAP = null;
   }
 
   private final MapboxMap mapboxMap;
@@ -69,7 +79,7 @@ final class DraggableAnnotationController <T extends Annotation, D extends OnAnn
         Annotation oldAnnotation = draggedAnnotation;
         androidGesturesManager.onTouchEvent(event);
         // if drag is started or drag is finished, don't pass motion events further
-        return draggedAnnotation != null || oldAnnotation != draggedAnnotation;
+        return draggedAnnotation != null || oldAnnotation != null;
       }
     });
   }
@@ -81,7 +91,7 @@ final class DraggableAnnotationController <T extends Annotation, D extends OnAnn
   synchronized void removeAnnotationManager(AnnotationManager annotationManager) {
     this.annotationManagers.remove(annotationManager);
     if(annotationManagers.isEmpty()) {
-      INSTANCE = null;
+      clearInstance();
     }
   }
 
