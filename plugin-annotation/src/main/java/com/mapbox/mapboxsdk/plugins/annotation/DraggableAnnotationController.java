@@ -19,7 +19,7 @@ import androidx.annotation.VisibleForTesting;
 import java.util.ArrayList;
 import java.util.List;
 
-final class DraggableAnnotationController <T extends Annotation, D extends OnAnnotationDragListener<T>> {
+final class DraggableAnnotationController {
 
   private static DraggableAnnotationController INSTANCE = null;
   private static MapView MAP_VIEW = null;
@@ -103,10 +103,8 @@ final class DraggableAnnotationController <T extends Annotation, D extends OnAnn
     for (AnnotationManager annotationManager : annotationManagers) {
       if (detector.getPointersCount() == 1) {
         Annotation annotation = annotationManager.queryMapForFeatures(detector.getFocalPoint());
-        if (annotation != null) {
-          if (startDragging(annotation, annotationManager)) {
-            return true;
-          }
+        if (annotation != null && startDragging(annotation, annotationManager)) {
+          return true;
         }
       }
     }
@@ -143,10 +141,8 @@ final class DraggableAnnotationController <T extends Annotation, D extends OnAnn
           shiftedGeometry
         );
         draggedAnnotationManager.internalUpdateSource();
-        if (!draggedAnnotationManager.getDragListeners().isEmpty()) {
-          for (OnAnnotationDragListener d : (List<OnAnnotationDragListener>)draggedAnnotationManager.getDragListeners()) {
-            d.onAnnotationDrag(draggedAnnotation);
-          }
+        for (OnAnnotationDragListener d : (List<OnAnnotationDragListener>)draggedAnnotationManager.getDragListeners()) {
+          d.onAnnotationDrag(draggedAnnotation);
         }
         return true;
       }
@@ -162,10 +158,8 @@ final class DraggableAnnotationController <T extends Annotation, D extends OnAnn
 
   boolean startDragging(@NonNull Annotation annotation, @NonNull AnnotationManager annotationManager) {
     if (annotation.isDraggable()) {
-      if (!annotationManager.getDragListeners().isEmpty()) {
-        for (OnAnnotationDragListener d : (List<OnAnnotationDragListener>)annotationManager.getDragListeners()) {
-          d.onAnnotationDragStarted(annotation);
-        }
+      for (OnAnnotationDragListener d : (List<OnAnnotationDragListener>)annotationManager.getDragListeners()) {
+        d.onAnnotationDragStarted(annotation);
       }
       draggedAnnotation = annotation;
       draggedAnnotationManager = annotationManager;
@@ -176,10 +170,8 @@ final class DraggableAnnotationController <T extends Annotation, D extends OnAnn
 
   void stopDragging(@Nullable Annotation annotation, @Nullable AnnotationManager annotationManager) {
     if (annotation != null && annotationManager != null) {
-      if (!annotationManager.getDragListeners().isEmpty()) {
-        for (OnAnnotationDragListener d : (List<OnAnnotationDragListener>)annotationManager.getDragListeners()) {
-          d.onAnnotationDragFinished(annotation);
-        }
+      for (OnAnnotationDragListener d : (List<OnAnnotationDragListener>)annotationManager.getDragListeners()) {
+        d.onAnnotationDragFinished(annotation);
       }
     }
     draggedAnnotation = null;

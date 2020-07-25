@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
 
 public class FillManagerTest {
 
-  private DraggableAnnotationController<Fill, OnFillDragListener> draggableAnnotationController = mock(DraggableAnnotationController.class);
+  private DraggableAnnotationController draggableAnnotationController = mock(DraggableAnnotationController.class);
   private MapView mapView = mock(MapView.class);
   private MapboxMap mapboxMap = mock(MapboxMap.class);
   private Style style = mock(Style.class);
