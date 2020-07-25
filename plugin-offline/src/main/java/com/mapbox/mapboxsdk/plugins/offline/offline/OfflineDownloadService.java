@@ -156,10 +156,10 @@ public class OfflineDownloadService extends Service {
       createMapSnapshot(offlineDownload.definition(), new MapSnapshotter.SnapshotReadyCallback() {
         @Override
         public void onSnapshotReady(MapSnapshot snapshot) {
-          final int regionId = offlineDownload.uuid().intValue();
+          final Long regionId = offlineDownload.uuid();
           if (regionLongSparseArray.get(regionId) != null) {
             notificationBuilder.setLargeIcon(snapshot.getBitmap());
-            notificationManager.notify(regionId, notificationBuilder.build());
+            notificationManager.notify(regionId.intValue(), notificationBuilder.build());
           }
         }
       });
@@ -180,7 +180,7 @@ public class OfflineDownloadService extends Service {
   }
 
   private void cancelDownload(final OfflineDownloadOptions offlineDownload) {
-    int serviceId = offlineDownload.uuid().intValue();
+    final Long serviceId = offlineDownload.uuid();
     OfflineRegion offlineRegion = regionLongSparseArray.get(serviceId);
     if (offlineRegion != null) {
       offlineRegion.setDownloadState(OfflineRegion.STATE_INACTIVE);
@@ -198,7 +198,7 @@ public class OfflineDownloadService extends Service {
       });
     }
     OfflineDownloadStateReceiver.dispatchCancelBroadcast(getApplicationContext(), offlineDownload);
-    removeOfflineRegion(serviceId);
+    removeOfflineRegion(serviceId.intValue());
   }
 
   private synchronized void removeOfflineRegion(int regionId) {
