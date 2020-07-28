@@ -142,12 +142,13 @@ public class SymbolActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onAnnotationDrag(Symbol annotation) {
+        public boolean onAnnotationDrag(Symbol annotation) {
           draggableInfoTv.setText(String.format(
             Locale.US,
             "ID: %s\nLatLng:%f, %f",
             annotation.getId(),
             annotation.getLatLng().getLatitude(), annotation.getLatLng().getLongitude()));
+          return true;
         }
 
         @Override

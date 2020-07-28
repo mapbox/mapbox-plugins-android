@@ -18,8 +18,9 @@ public interface OnAnnotationDragListener<T extends Annotation> {
    * Called when an annotation dragging is in progress.
    *
    * @param annotation the annotation
+   * @return False if this drag should be canceled, true otherwise.
    */
-  void onAnnotationDrag(T annotation);
+  boolean onAnnotationDrag(T annotation);
 
   /**
    * Called when an annotation dragging has finished.

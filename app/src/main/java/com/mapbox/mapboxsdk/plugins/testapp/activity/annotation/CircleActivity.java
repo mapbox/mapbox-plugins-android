@@ -103,12 +103,13 @@ public class CircleActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onAnnotationDrag(Circle annotation) {
+        public boolean onAnnotationDrag(Circle annotation) {
           draggableInfoTv.setText(String.format(
             Locale.US,
             "ID: %s\nLatLng:%f, %f",
             annotation.getId(),
             annotation.getLatLng().getLatitude(), annotation.getLatLng().getLongitude()));
+          return true;
         }
 
         @Override
