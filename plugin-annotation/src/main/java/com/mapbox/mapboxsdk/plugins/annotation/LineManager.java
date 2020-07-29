@@ -70,11 +70,11 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    */
   @UiThread
   public LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions) {
-    this(mapView, mapboxMap, style, new LineElementProvider(), belowLayerId, geoJsonOptions, new DraggableAnnotationController<Line, OnLineDragListener>(mapView, mapboxMap));
+    this(mapView, mapboxMap, style, new LineElementProvider(), belowLayerId, geoJsonOptions, DraggableAnnotationController.getInstance(mapView, mapboxMap));
   }
 
   @VisibleForTesting
-  LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @NonNull CoreElementProvider<LineLayer> coreElementProvider, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions, DraggableAnnotationController<Line, OnLineDragListener> draggableAnnotationController) {
+  LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @NonNull CoreElementProvider<LineLayer> coreElementProvider, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions, DraggableAnnotationController draggableAnnotationController) {
     super(mapView, mapboxMap, style, coreElementProvider, draggableAnnotationController, belowLayerId, geoJsonOptions);
   }
 

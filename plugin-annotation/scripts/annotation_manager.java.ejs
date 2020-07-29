@@ -74,11 +74,11 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
    */
   @UiThread
   public <%- camelize(type) %>Manager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions) {
-    this(mapView, mapboxMap, style, new <%- camelize(type) %>ElementProvider(), belowLayerId, geoJsonOptions, new DraggableAnnotationController<<%- camelize(type) %>, On<%- camelize(type) %>DragListener>(mapView, mapboxMap));
+    this(mapView, mapboxMap, style, new <%- camelize(type) %>ElementProvider(), belowLayerId, geoJsonOptions, DraggableAnnotationController.getInstance(mapView, mapboxMap));
   }
 
   @VisibleForTesting
-  <%- camelize(type) %>Manager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @NonNull CoreElementProvider<<%- camelize(type) %>Layer> coreElementProvider, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions, DraggableAnnotationController<<%- camelize(type) %>, On<%- camelize(type) %>DragListener> draggableAnnotationController) {
+  <%- camelize(type) %>Manager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @NonNull CoreElementProvider<<%- camelize(type) %>Layer> coreElementProvider, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions, DraggableAnnotationController draggableAnnotationController) {
     super(mapView, mapboxMap, style, coreElementProvider, draggableAnnotationController, belowLayerId, geoJsonOptions);
   }
 
