@@ -2,7 +2,7 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-### mapbox-android-plugin-annotation-v9:0.9.0 - XXX
+### mapbox-android-plugin-annotation-v9:0.9.0 - August 13, 2020
 #### Bugs
 - Consumable events for click listeners [1124](https://github.com/mapbox/mapbox-plugins-android/pull/1124)
 - Support multiple manager to be draggable [1125](https://github.com/mapbox/mapbox-plugins-android/pull/1125)
