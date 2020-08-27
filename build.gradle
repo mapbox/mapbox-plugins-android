@@ -19,6 +19,16 @@ allprojects {
   repositories {
     google()
     jcenter()
+    maven {
+      url 'https://api.mapbox.com/downloads/v2/releases/maven'
+      authentication {
+        basic(BasicAuthentication)
+      }
+      credentials {
+        username "mapbox"
+        password = project.hasProperty('SDK_REGISTRY_TOKEN') ? project.property('SDK_REGISTRY_TOKEN') : System.getenv('SDK_REGISTRY_TOKEN')
+      }
+    }
 //    SNAPSHOT repository
 //    maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
 //    maven { url 'https://oss.jfrog.org/artifactory/oss-snapshot-local/' }
