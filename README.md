@@ -49,12 +49,23 @@ Note that depending on the plugin you add, there might be required permissions a
 ```gradle
 repositories {
   mavenCentral()
+  maven {
+    url 'https://api.mapbox.com/downloads/v2/releases/maven'
+    authentication {
+      basic(BasicAuthentication)
+    }
+    credentials {
+      username "mapbox"
+      password = "SDK_REGISTRY_TOKEN"
+    }
+  }
 }
 
 dependencies {
   implementation 'com.mapbox.mapboxsdk:{PLUGIN_NAME}-v{MAJOR_MAPS_SDK_VERSION_NUMBER}:PLUGIN_VERSION_NUMBER'
 }
 ```
+5. Replace SDK_REGISTRY_TOKEN with a Mapbox access token that has the downloads scope
 
 Plugin artifacts are versioned based on the major release of the Maps SDK for Android, which means, that each artifact's name has a major version of the Maps SDK it's compatible with appended.
 
