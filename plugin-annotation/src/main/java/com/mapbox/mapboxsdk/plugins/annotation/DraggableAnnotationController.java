@@ -74,7 +74,7 @@ final class DraggableAnnotationController {
 
     androidGesturesManager.setMoveGestureListener(new AnnotationMoveGestureListener());
 
-    mapView.setOnTouchListener(new View.OnTouchListener() {
+    mapView.addOnTouchListener(new View.OnTouchListener() {
       @Override
       public boolean onTouch(View v, MotionEvent event) {
         // Using active gesture manager
