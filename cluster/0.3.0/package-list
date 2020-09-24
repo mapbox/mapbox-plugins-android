@@ -1,0 +1,9 @@
+com.mapbox.mapboxsdk.plugins.cluster
+com.mapbox.mapboxsdk.plugins.cluster.clustering
+com.mapbox.mapboxsdk.plugins.cluster.clustering.algo
+com.mapbox.mapboxsdk.plugins.cluster.clustering.view
+com.mapbox.mapboxsdk.plugins.cluster.data
+com.mapbox.mapboxsdk.plugins.cluster.geometry
+com.mapbox.mapboxsdk.plugins.cluster.projection
+com.mapbox.mapboxsdk.plugins.cluster.quadtree
+com.mapbox.mapboxsdk.plugins.cluster.ui

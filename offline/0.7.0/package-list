@@ -1,0 +1,5 @@
+com.mapbox.mapboxsdk.plugins.offline
+com.mapbox.mapboxsdk.plugins.offline.model
+com.mapbox.mapboxsdk.plugins.offline.offline
+com.mapbox.mapboxsdk.plugins.offline.ui
+com.mapbox.mapboxsdk.plugins.offline.utils

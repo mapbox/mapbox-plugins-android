@@ -1,0 +1,15 @@
+com.mapbox.mapboxsdk.plugins.places.autocomplete
+com.mapbox.mapboxsdk.plugins.places.autocomplete.data
+com.mapbox.mapboxsdk.plugins.places.autocomplete.data.converter
+com.mapbox.mapboxsdk.plugins.places.autocomplete.data.dao
+com.mapbox.mapboxsdk.plugins.places.autocomplete.data.entity
+com.mapbox.mapboxsdk.plugins.places.autocomplete.model
+com.mapbox.mapboxsdk.plugins.places.autocomplete.ui
+com.mapbox.mapboxsdk.plugins.places.autocomplete.viewmodel
+com.mapbox.mapboxsdk.plugins.places.common
+com.mapbox.mapboxsdk.plugins.places.common.model
+com.mapbox.mapboxsdk.plugins.places.common.utils
+com.mapbox.mapboxsdk.plugins.places.picker
+com.mapbox.mapboxsdk.plugins.places.picker.model
+com.mapbox.mapboxsdk.plugins.places.picker.ui
+com.mapbox.mapboxsdk.plugins.places.picker.viewmodel
