@@ -183,7 +183,7 @@ public class FillManagerTest {
     Geometry geometry = Polygon.fromLngLats(points);
 
     Feature feature = Feature.fromGeometry(geometry);
-    feature.addNumberProperty("fill-opacity", 0.3f);
+    feature.addNumberProperty("fill-opacity", 2.0f);
     feature.addStringProperty("fill-color", "rgba(0, 0, 0, 1)");
     feature.addStringProperty("fill-outline-color", "rgba(0, 0, 0, 1)");
     feature.addStringProperty("fill-pattern", "pedestrian-polygon");
@@ -193,7 +193,7 @@ public class FillManagerTest {
     Fill fill = fills.get(0);
 
     assertEquals(fill.geometry, geometry);
-    assertEquals(fill.getFillOpacity(), 0.3f);
+    assertEquals(fill.getFillOpacity(), 2.0f);
     assertEquals(fill.getFillColor(), "rgba(0, 0, 0, 1)");
     assertEquals(fill.getFillOutlineColor(), "rgba(0, 0, 0, 1)");
     assertEquals(fill.getFillPattern(), "pedestrian-polygon");
@@ -324,7 +324,7 @@ public class FillManagerTest {
     innerLatLngs.add(new LatLng(-1,-1));
     List<List<LatLng>>latLngs = new ArrayList<>();
     latLngs.add(innerLatLngs);
-    FillOptions options = new FillOptions().withLatLngs(latLngs).withFillOpacity(0.3f);
+    FillOptions options = new FillOptions().withLatLngs(latLngs).withFillOpacity(2.0f);
     fillManager.create(options);
     verify(fillLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(fillOpacity(get("fill-opacity")))));
 
