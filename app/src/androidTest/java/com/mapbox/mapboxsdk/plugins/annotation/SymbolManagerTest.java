@@ -59,8 +59,8 @@ public class SymbolManagerTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbolManager);
 
-      symbolManager.setSymbolSpacing(0.3f);
-      assertEquals((Float) symbolManager.getSymbolSpacing(), (Float) 0.3f);
+      symbolManager.setSymbolSpacing(2.0f);
+      assertEquals((Float) symbolManager.getSymbolSpacing(), (Float) 2.0f);
     });
   }
 
