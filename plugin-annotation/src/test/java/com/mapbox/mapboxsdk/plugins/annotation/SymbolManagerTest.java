@@ -169,70 +169,70 @@ public class SymbolManagerTest {
     Geometry geometry = Point.fromLngLat(10, 10);
 
     Feature feature = Feature.fromGeometry(geometry);
-    feature.addNumberProperty("symbol-sort-key", 0.3f);
-    feature.addNumberProperty("icon-size", 0.3f);
+    feature.addNumberProperty("symbol-sort-key", 2.0f);
+    feature.addNumberProperty("icon-size", 2.0f);
     feature.addStringProperty("icon-image", "undefined");
-    feature.addNumberProperty("icon-rotate", 0.3f);
+    feature.addNumberProperty("icon-rotate", 2.0f);
     feature.addProperty("icon-offset", convertArray(new Float[] {0f, 0f}));
     feature.addStringProperty("icon-anchor", ICON_ANCHOR_CENTER);
     feature.addStringProperty("text-field", "");
     feature.addProperty("text-font", convertArray(new String[]{"Open Sans Regular", "Arial Unicode MS Regular"}));
-    feature.addNumberProperty("text-size", 0.3f);
-    feature.addNumberProperty("text-max-width", 0.3f);
-    feature.addNumberProperty("text-letter-spacing", 0.3f);
+    feature.addNumberProperty("text-size", 2.0f);
+    feature.addNumberProperty("text-max-width", 2.0f);
+    feature.addNumberProperty("text-letter-spacing", 2.0f);
     feature.addStringProperty("text-justify", TEXT_JUSTIFY_AUTO);
-    feature.addNumberProperty("text-radial-offset", 0.3f);
+    feature.addNumberProperty("text-radial-offset", 2.0f);
     feature.addStringProperty("text-anchor", TEXT_ANCHOR_CENTER);
-    feature.addNumberProperty("text-rotate", 0.3f);
+    feature.addNumberProperty("text-rotate", 2.0f);
     feature.addStringProperty("text-transform", TEXT_TRANSFORM_NONE);
     feature.addProperty("text-offset", convertArray(new Float[] {0f, 0f}));
-    feature.addNumberProperty("icon-opacity", 0.3f);
+    feature.addNumberProperty("icon-opacity", 2.0f);
     feature.addStringProperty("icon-color", "rgba(0, 0, 0, 1)");
     feature.addStringProperty("icon-halo-color", "rgba(0, 0, 0, 1)");
-    feature.addNumberProperty("icon-halo-width", 0.3f);
-    feature.addNumberProperty("icon-halo-blur", 0.3f);
-    feature.addNumberProperty("text-opacity", 0.3f);
+    feature.addNumberProperty("icon-halo-width", 2.0f);
+    feature.addNumberProperty("icon-halo-blur", 2.0f);
+    feature.addNumberProperty("text-opacity", 2.0f);
     feature.addStringProperty("text-color", "rgba(0, 0, 0, 1)");
     feature.addStringProperty("text-halo-color", "rgba(0, 0, 0, 1)");
-    feature.addNumberProperty("text-halo-width", 0.3f);
-    feature.addNumberProperty("text-halo-blur", 0.3f);
+    feature.addNumberProperty("text-halo-width", 2.0f);
+    feature.addNumberProperty("text-halo-blur", 2.0f);
     feature.addBooleanProperty("is-draggable", true);
 
     List<Symbol> symbols = symbolManager.create(FeatureCollection.fromFeature(feature));
     Symbol symbol = symbols.get(0);
 
     assertEquals(symbol.geometry, geometry);
-    assertEquals(symbol.getSymbolSortKey(), 0.3f);
-    assertEquals(symbol.getIconSize(), 0.3f);
+    assertEquals(symbol.getSymbolSortKey(), 2.0f);
+    assertEquals(symbol.getIconSize(), 2.0f);
     assertEquals(symbol.getIconImage(), "undefined");
-    assertEquals(symbol.getIconRotate(), 0.3f);
+    assertEquals(symbol.getIconRotate(), 2.0f);
     PointF iconOffsetExpected = new PointF(new Float[] {0f, 0f}[0], new Float[] {0f, 0f}[1]);
     assertEquals(iconOffsetExpected.x, symbol.getIconOffset().x);
     assertEquals(iconOffsetExpected.y, symbol.getIconOffset().y);
     assertEquals(symbol.getIconAnchor(), ICON_ANCHOR_CENTER);
     assertEquals(symbol.getTextField(), "");
     assertTrue(Arrays.equals(symbol.getTextFont(), new String[]{"Open Sans Regular", "Arial Unicode MS Regular"}));
-    assertEquals(symbol.getTextSize(), 0.3f);
-    assertEquals(symbol.getTextMaxWidth(), 0.3f);
-    assertEquals(symbol.getTextLetterSpacing(), 0.3f);
+    assertEquals(symbol.getTextSize(), 2.0f);
+    assertEquals(symbol.getTextMaxWidth(), 2.0f);
+    assertEquals(symbol.getTextLetterSpacing(), 2.0f);
     assertEquals(symbol.getTextJustify(), TEXT_JUSTIFY_AUTO);
-    assertEquals(symbol.getTextRadialOffset(), 0.3f);
+    assertEquals(symbol.getTextRadialOffset(), 2.0f);
     assertEquals(symbol.getTextAnchor(), TEXT_ANCHOR_CENTER);
-    assertEquals(symbol.getTextRotate(), 0.3f);
+    assertEquals(symbol.getTextRotate(), 2.0f);
     assertEquals(symbol.getTextTransform(), TEXT_TRANSFORM_NONE);
     PointF textOffsetExpected = new PointF(new Float[] {0f, 0f}[0], new Float[] {0f, 0f}[1]);
     assertEquals(textOffsetExpected.x, symbol.getTextOffset().x);
     assertEquals(textOffsetExpected.y, symbol.getTextOffset().y);
-    assertEquals(symbol.getIconOpacity(), 0.3f);
+    assertEquals(symbol.getIconOpacity(), 2.0f);
     assertEquals(symbol.getIconColor(), "rgba(0, 0, 0, 1)");
     assertEquals(symbol.getIconHaloColor(), "rgba(0, 0, 0, 1)");
-    assertEquals(symbol.getIconHaloWidth(), 0.3f);
-    assertEquals(symbol.getIconHaloBlur(), 0.3f);
-    assertEquals(symbol.getTextOpacity(), 0.3f);
+    assertEquals(symbol.getIconHaloWidth(), 2.0f);
+    assertEquals(symbol.getIconHaloBlur(), 2.0f);
+    assertEquals(symbol.getTextOpacity(), 2.0f);
     assertEquals(symbol.getTextColor(), "rgba(0, 0, 0, 1)");
     assertEquals(symbol.getTextHaloColor(), "rgba(0, 0, 0, 1)");
-    assertEquals(symbol.getTextHaloWidth(), 0.3f);
-    assertEquals(symbol.getTextHaloBlur(), 0.3f);
+    assertEquals(symbol.getTextHaloWidth(), 2.0f);
+    assertEquals(symbol.getTextHaloBlur(), 2.0f);
     assertTrue(symbol.isDraggable());
   }
 
@@ -298,7 +298,7 @@ public class SymbolManagerTest {
     symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(symbolLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(symbolSortKey(get("symbol-sort-key")))));
 
-    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withSymbolSortKey(0.3f);
+    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withSymbolSortKey(2.0f);
     symbolManager.create(options);
     verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(symbolSortKey(get("symbol-sort-key")))));
 
@@ -311,7 +311,7 @@ public class SymbolManagerTest {
     symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(symbolLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(iconSize(get("icon-size")))));
 
-    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withIconSize(0.3f);
+    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withIconSize(2.0f);
     symbolManager.create(options);
     verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(iconSize(get("icon-size")))));
 
@@ -337,7 +337,7 @@ public class SymbolManagerTest {
     symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(symbolLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(iconRotate(get("icon-rotate")))));
 
-    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withIconRotate(0.3f);
+    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withIconRotate(2.0f);
     symbolManager.create(options);
     verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(iconRotate(get("icon-rotate")))));
 
@@ -402,7 +402,7 @@ public class SymbolManagerTest {
     symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(symbolLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(textSize(get("text-size")))));
 
-    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withTextSize(0.3f);
+    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withTextSize(2.0f);
     symbolManager.create(options);
     verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(textSize(get("text-size")))));
 
@@ -415,7 +415,7 @@ public class SymbolManagerTest {
     symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(symbolLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(textMaxWidth(get("text-max-width")))));
 
-    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withTextMaxWidth(0.3f);
+    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withTextMaxWidth(2.0f);
     symbolManager.create(options);
     verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(textMaxWidth(get("text-max-width")))));
 
@@ -428,7 +428,7 @@ public class SymbolManagerTest {
     symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(symbolLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(textLetterSpacing(get("text-letter-spacing")))));
 
-    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withTextLetterSpacing(0.3f);
+    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withTextLetterSpacing(2.0f);
     symbolManager.create(options);
     verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(textLetterSpacing(get("text-letter-spacing")))));
 
@@ -454,7 +454,7 @@ public class SymbolManagerTest {
     symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(symbolLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(textRadialOffset(get("text-radial-offset")))));
 
-    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withTextRadialOffset(0.3f);
+    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withTextRadialOffset(2.0f);
     symbolManager.create(options);
     verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(textRadialOffset(get("text-radial-offset")))));
 
@@ -480,7 +480,7 @@ public class SymbolManagerTest {
     symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(symbolLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(textRotate(get("text-rotate")))));
 
-    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withTextRotate(0.3f);
+    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withTextRotate(2.0f);
     symbolManager.create(options);
     verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(textRotate(get("text-rotate")))));
 
@@ -519,7 +519,7 @@ public class SymbolManagerTest {
     symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(symbolLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(iconOpacity(get("icon-opacity")))));
 
-    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withIconOpacity(0.3f);
+    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withIconOpacity(2.0f);
     symbolManager.create(options);
     verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(iconOpacity(get("icon-opacity")))));
 
@@ -558,7 +558,7 @@ public class SymbolManagerTest {
     symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(symbolLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(iconHaloWidth(get("icon-halo-width")))));
 
-    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withIconHaloWidth(0.3f);
+    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withIconHaloWidth(2.0f);
     symbolManager.create(options);
     verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(iconHaloWidth(get("icon-halo-width")))));
 
@@ -571,7 +571,7 @@ public class SymbolManagerTest {
     symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(symbolLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(iconHaloBlur(get("icon-halo-blur")))));
 
-    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withIconHaloBlur(0.3f);
+    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withIconHaloBlur(2.0f);
     symbolManager.create(options);
     verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(iconHaloBlur(get("icon-halo-blur")))));
 
@@ -584,7 +584,7 @@ public class SymbolManagerTest {
     symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(symbolLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(textOpacity(get("text-opacity")))));
 
-    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withTextOpacity(0.3f);
+    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withTextOpacity(2.0f);
     symbolManager.create(options);
     verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(textOpacity(get("text-opacity")))));
 
@@ -623,7 +623,7 @@ public class SymbolManagerTest {
     symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(symbolLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(textHaloWidth(get("text-halo-width")))));
 
-    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withTextHaloWidth(0.3f);
+    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withTextHaloWidth(2.0f);
     symbolManager.create(options);
     verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(textHaloWidth(get("text-halo-width")))));
 
@@ -636,7 +636,7 @@ public class SymbolManagerTest {
     symbolManager = new SymbolManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(symbolLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(textHaloBlur(get("text-halo-blur")))));
 
-    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withTextHaloBlur(0.3f);
+    SymbolOptions options = new SymbolOptions().withLatLng(new LatLng()).withTextHaloBlur(2.0f);
     symbolManager.create(options);
     verify(symbolLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(textHaloBlur(get("text-halo-blur")))));
 

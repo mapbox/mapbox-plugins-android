@@ -52,8 +52,8 @@ public class CircleTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(circle);
 
-      circle.setCircleRadius(0.3f);
-      assertEquals((Float) circle.getCircleRadius(), (Float) 0.3f);
+      circle.setCircleRadius(2.0f);
+      assertEquals((Float) circle.getCircleRadius(), (Float) 2.0f);
     });
   }
 
@@ -91,8 +91,8 @@ public class CircleTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(circle);
 
-      circle.setCircleBlur(0.3f);
-      assertEquals((Float) circle.getCircleBlur(), (Float) 0.3f);
+      circle.setCircleBlur(2.0f);
+      assertEquals((Float) circle.getCircleBlur(), (Float) 2.0f);
     });
   }
 
@@ -104,8 +104,8 @@ public class CircleTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(circle);
 
-      circle.setCircleOpacity(0.3f);
-      assertEquals((Float) circle.getCircleOpacity(), (Float) 0.3f);
+      circle.setCircleOpacity(2.0f);
+      assertEquals((Float) circle.getCircleOpacity(), (Float) 2.0f);
     });
   }
 
@@ -117,8 +117,8 @@ public class CircleTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(circle);
 
-      circle.setCircleStrokeWidth(0.3f);
-      assertEquals((Float) circle.getCircleStrokeWidth(), (Float) 0.3f);
+      circle.setCircleStrokeWidth(2.0f);
+      assertEquals((Float) circle.getCircleStrokeWidth(), (Float) 2.0f);
     });
   }
 
@@ -156,8 +156,8 @@ public class CircleTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(circle);
 
-      circle.setCircleStrokeOpacity(0.3f);
-      assertEquals((Float) circle.getCircleStrokeOpacity(), (Float) 0.3f);
+      circle.setCircleStrokeOpacity(2.0f);
+      assertEquals((Float) circle.getCircleStrokeOpacity(), (Float) 2.0f);
     });
   }
 }

@@ -169,26 +169,26 @@ public class CircleManagerTest {
     Geometry geometry = Point.fromLngLat(10, 10);
 
     Feature feature = Feature.fromGeometry(geometry);
-    feature.addNumberProperty("circle-radius", 0.3f);
+    feature.addNumberProperty("circle-radius", 2.0f);
     feature.addStringProperty("circle-color", "rgba(0, 0, 0, 1)");
-    feature.addNumberProperty("circle-blur", 0.3f);
-    feature.addNumberProperty("circle-opacity", 0.3f);
-    feature.addNumberProperty("circle-stroke-width", 0.3f);
+    feature.addNumberProperty("circle-blur", 2.0f);
+    feature.addNumberProperty("circle-opacity", 2.0f);
+    feature.addNumberProperty("circle-stroke-width", 2.0f);
     feature.addStringProperty("circle-stroke-color", "rgba(0, 0, 0, 1)");
-    feature.addNumberProperty("circle-stroke-opacity", 0.3f);
+    feature.addNumberProperty("circle-stroke-opacity", 2.0f);
     feature.addBooleanProperty("is-draggable", true);
 
     List<Circle> circles = circleManager.create(FeatureCollection.fromFeature(feature));
     Circle circle = circles.get(0);
 
     assertEquals(circle.geometry, geometry);
-    assertEquals(circle.getCircleRadius(), 0.3f);
+    assertEquals(circle.getCircleRadius(), 2.0f);
     assertEquals(circle.getCircleColor(), "rgba(0, 0, 0, 1)");
-    assertEquals(circle.getCircleBlur(), 0.3f);
-    assertEquals(circle.getCircleOpacity(), 0.3f);
-    assertEquals(circle.getCircleStrokeWidth(), 0.3f);
+    assertEquals(circle.getCircleBlur(), 2.0f);
+    assertEquals(circle.getCircleOpacity(), 2.0f);
+    assertEquals(circle.getCircleStrokeWidth(), 2.0f);
     assertEquals(circle.getCircleStrokeColor(), "rgba(0, 0, 0, 1)");
-    assertEquals(circle.getCircleStrokeOpacity(), 0.3f);
+    assertEquals(circle.getCircleStrokeOpacity(), 2.0f);
     assertTrue(circle.isDraggable());
   }
 
@@ -254,7 +254,7 @@ public class CircleManagerTest {
     circleManager = new CircleManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(circleLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(circleRadius(get("circle-radius")))));
 
-    CircleOptions options = new CircleOptions().withLatLng(new LatLng()).withCircleRadius(0.3f);
+    CircleOptions options = new CircleOptions().withLatLng(new LatLng()).withCircleRadius(2.0f);
     circleManager.create(options);
     verify(circleLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(circleRadius(get("circle-radius")))));
 
@@ -280,7 +280,7 @@ public class CircleManagerTest {
     circleManager = new CircleManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(circleLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(circleBlur(get("circle-blur")))));
 
-    CircleOptions options = new CircleOptions().withLatLng(new LatLng()).withCircleBlur(0.3f);
+    CircleOptions options = new CircleOptions().withLatLng(new LatLng()).withCircleBlur(2.0f);
     circleManager.create(options);
     verify(circleLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(circleBlur(get("circle-blur")))));
 
@@ -293,7 +293,7 @@ public class CircleManagerTest {
     circleManager = new CircleManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(circleLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(circleOpacity(get("circle-opacity")))));
 
-    CircleOptions options = new CircleOptions().withLatLng(new LatLng()).withCircleOpacity(0.3f);
+    CircleOptions options = new CircleOptions().withLatLng(new LatLng()).withCircleOpacity(2.0f);
     circleManager.create(options);
     verify(circleLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(circleOpacity(get("circle-opacity")))));
 
@@ -306,7 +306,7 @@ public class CircleManagerTest {
     circleManager = new CircleManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(circleLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(circleStrokeWidth(get("circle-stroke-width")))));
 
-    CircleOptions options = new CircleOptions().withLatLng(new LatLng()).withCircleStrokeWidth(0.3f);
+    CircleOptions options = new CircleOptions().withLatLng(new LatLng()).withCircleStrokeWidth(2.0f);
     circleManager.create(options);
     verify(circleLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(circleStrokeWidth(get("circle-stroke-width")))));
 
@@ -332,7 +332,7 @@ public class CircleManagerTest {
     circleManager = new CircleManager(mapView, mapboxMap, style, coreElementProvider, null, null, draggableAnnotationController);
     verify(circleLayer, times(0)).setProperties(argThat(new PropertyValueMatcher(circleStrokeOpacity(get("circle-stroke-opacity")))));
 
-    CircleOptions options = new CircleOptions().withLatLng(new LatLng()).withCircleStrokeOpacity(0.3f);
+    CircleOptions options = new CircleOptions().withLatLng(new LatLng()).withCircleStrokeOpacity(2.0f);
     circleManager.create(options);
     verify(circleLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(circleStrokeOpacity(get("circle-stroke-opacity")))));
 

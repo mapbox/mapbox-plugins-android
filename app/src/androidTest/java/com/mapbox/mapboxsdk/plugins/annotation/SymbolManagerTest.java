@@ -59,8 +59,8 @@ public class SymbolManagerTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbolManager);
 
-      symbolManager.setSymbolSpacing(0.3f);
-      assertEquals((Float) symbolManager.getSymbolSpacing(), (Float) 0.3f);
+      symbolManager.setSymbolSpacing(2.0f);
+      assertEquals((Float) symbolManager.getSymbolSpacing(), (Float) 2.0f);
     });
   }
 
@@ -163,8 +163,8 @@ public class SymbolManagerTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbolManager);
 
-      symbolManager.setIconPadding(0.3f);
-      assertEquals((Float) symbolManager.getIconPadding(), (Float) 0.3f);
+      symbolManager.setIconPadding(2.0f);
+      assertEquals((Float) symbolManager.getIconPadding(), (Float) 2.0f);
     });
   }
 
@@ -228,8 +228,8 @@ public class SymbolManagerTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbolManager);
 
-      symbolManager.setTextLineHeight(0.3f);
-      assertEquals((Float) symbolManager.getTextLineHeight(), (Float) 0.3f);
+      symbolManager.setTextLineHeight(2.0f);
+      assertEquals((Float) symbolManager.getTextLineHeight(), (Float) 2.0f);
     });
   }
 
@@ -254,8 +254,8 @@ public class SymbolManagerTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbolManager);
 
-      symbolManager.setTextMaxAngle(0.3f);
-      assertEquals((Float) symbolManager.getTextMaxAngle(), (Float) 0.3f);
+      symbolManager.setTextMaxAngle(2.0f);
+      assertEquals((Float) symbolManager.getTextMaxAngle(), (Float) 2.0f);
     });
   }
 
@@ -267,8 +267,8 @@ public class SymbolManagerTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbolManager);
 
-      symbolManager.setTextPadding(0.3f);
-      assertEquals((Float) symbolManager.getTextPadding(), (Float) 0.3f);
+      symbolManager.setTextPadding(2.0f);
+      assertEquals((Float) symbolManager.getTextPadding(), (Float) 2.0f);
     });
   }
 

@@ -59,8 +59,8 @@ public class LineManagerTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(lineManager);
 
-      lineManager.setLineMiterLimit(0.3f);
-      assertEquals((Float) lineManager.getLineMiterLimit(), (Float) 0.3f);
+      lineManager.setLineMiterLimit(2.0f);
+      assertEquals((Float) lineManager.getLineMiterLimit(), (Float) 2.0f);
     });
   }
 
@@ -72,8 +72,8 @@ public class LineManagerTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(lineManager);
 
-      lineManager.setLineRoundLimit(0.3f);
-      assertEquals((Float) lineManager.getLineRoundLimit(), (Float) 0.3f);
+      lineManager.setLineRoundLimit(2.0f);
+      assertEquals((Float) lineManager.getLineRoundLimit(), (Float) 2.0f);
     });
   }
 

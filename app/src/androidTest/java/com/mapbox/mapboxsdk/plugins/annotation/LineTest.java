@@ -68,8 +68,8 @@ public class LineTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(line);
 
-      line.setLineOpacity(0.3f);
-      assertEquals((Float) line.getLineOpacity(), (Float) 0.3f);
+      line.setLineOpacity(2.0f);
+      assertEquals((Float) line.getLineOpacity(), (Float) 2.0f);
     });
   }
 
@@ -107,8 +107,8 @@ public class LineTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(line);
 
-      line.setLineWidth(0.3f);
-      assertEquals((Float) line.getLineWidth(), (Float) 0.3f);
+      line.setLineWidth(2.0f);
+      assertEquals((Float) line.getLineWidth(), (Float) 2.0f);
     });
   }
 
@@ -120,8 +120,8 @@ public class LineTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(line);
 
-      line.setLineGapWidth(0.3f);
-      assertEquals((Float) line.getLineGapWidth(), (Float) 0.3f);
+      line.setLineGapWidth(2.0f);
+      assertEquals((Float) line.getLineGapWidth(), (Float) 2.0f);
     });
   }
 
@@ -133,8 +133,8 @@ public class LineTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(line);
 
-      line.setLineOffset(0.3f);
-      assertEquals((Float) line.getLineOffset(), (Float) 0.3f);
+      line.setLineOffset(2.0f);
+      assertEquals((Float) line.getLineOffset(), (Float) 2.0f);
     });
   }
 
@@ -146,8 +146,8 @@ public class LineTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(line);
 
-      line.setLineBlur(0.3f);
-      assertEquals((Float) line.getLineBlur(), (Float) 0.3f);
+      line.setLineBlur(2.0f);
+      assertEquals((Float) line.getLineBlur(), (Float) 2.0f);
     });
   }
 
