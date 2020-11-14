@@ -17,6 +17,7 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -375,8 +376,7 @@ public abstract class AnnotationManager<
         return false;
       }
 
-      T annotation = queryMapForFeatures(point);
-      if (annotation != null) {
+      for (T annotation : queryMapForAllFeatures(point)) {
         for (U clickListener : clickListeners) {
           if (clickListener.onAnnotationClick(annotation)) {
             return true;
@@ -392,8 +392,7 @@ public abstract class AnnotationManager<
         return false;
       }
 
-      T annotation = queryMapForFeatures(point);
-      if (annotation != null) {
+      for (T annotation : queryMapForAllFeatures(point)) {
         for (V clickListener : longClickListeners) {
           if (clickListener.onAnnotationLongClick(annotation)) {
             return true;
@@ -405,11 +404,6 @@ public abstract class AnnotationManager<
   }
 
   @Nullable
-  private T queryMapForFeatures(@NonNull LatLng point) {
-    return queryMapForFeatures(mapboxMap.getProjection().toScreenLocation(point));
-  }
-
-  @Nullable
   T queryMapForFeatures(@NonNull PointF point) {
     List<Feature> features = mapboxMap.queryRenderedFeatures(point, coreElementProvider.getLayerId());
     if (!features.isEmpty()) {
@@ -417,5 +411,24 @@ public abstract class AnnotationManager<
       return annotations.get(id);
     }
     return null;
+  }
+
+  @NonNull
+  private List<T> queryMapForAllFeatures(@NonNull LatLng point) {
+    return queryMapForAllFeatures(mapboxMap.getProjection().toScreenLocation(point));
+  }
+
+  @NonNull
+  List<T> queryMapForAllFeatures(@NonNull PointF point) {
+    List<T> annotations = new LinkedList<T>();
+    List<Feature> features = mapboxMap.queryRenderedFeatures(point, coreElementProvider.getLayerId());
+    for (Feature feature : features) {
+      long id = feature.getProperty(getAnnotationIdKey()).getAsLong();
+      T annotation = this.annotations.get(id);
+      if (annotation != null) {
+        annotations.add(annotation);
+      }
+    }
+    return annotations;
   }
 }
