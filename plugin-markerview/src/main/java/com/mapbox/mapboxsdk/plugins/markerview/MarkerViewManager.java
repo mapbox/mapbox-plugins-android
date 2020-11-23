@@ -13,7 +13,7 @@ import androidx.annotation.UiThread;
 /**
  * Class responsible for synchronising views at a LatLng on top of a Map.
  */
-public class MarkerViewManager implements MapView.OnCameraDidChangeListener {
+public class MarkerViewManager implements MapView.OnCameraDidChangeListener, MapView.OnCameraIsChangingListener {
 
   private final MapView mapView;
   private final MapboxMap mapboxMap;
@@ -41,6 +41,7 @@ public class MarkerViewManager implements MapView.OnCameraDidChangeListener {
   public void onDestroy() {
     markers.clear();
     mapView.removeOnCameraDidChangeListener(this);
+    mapView.removeOnCameraIsChangingListener(this);
     initialised = false;
   }
 
@@ -58,6 +59,7 @@ public class MarkerViewManager implements MapView.OnCameraDidChangeListener {
     if (!initialised) {
       initialised = true;
       mapView.addOnCameraDidChangeListener(this);
+      mapView.addOnCameraIsChangingListener(this);
     }
     markerView.setProjection(mapboxMap.getProjection());
     mapView.addView(markerView.getView());
@@ -88,6 +90,11 @@ public class MarkerViewManager implements MapView.OnCameraDidChangeListener {
 
   @Override
   public void onCameraDidChange(boolean animated) {
+    update();
+  }
+
+  @Override
+  public void onCameraIsChanging() {
     update();
   }
 }
