@@ -65,7 +65,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   @UiThread
   public SymbolManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style) {
-    this(mapView, mapboxMap, style, null, null);
+    this(mapView, mapboxMap, style, null, (GeoJsonOptions) null);
   }
 
   /**
@@ -77,7 +77,7 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
    */
   @UiThread
   public SymbolManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId) {
-    this(mapView, mapboxMap, style, belowLayerId, null);
+    this(mapView, mapboxMap, style, belowLayerId, (GeoJsonOptions) null);
   }
 
   /**
@@ -91,6 +91,20 @@ public class SymbolManager extends AnnotationManager<SymbolLayer, Symbol, Symbol
   @UiThread
   public SymbolManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions) {
     this(mapView, mapboxMap, style, new SymbolElementProvider(), belowLayerId, geoJsonOptions, DraggableAnnotationController.getInstance(mapView, mapboxMap));
+  }
+
+  /**
+   * Create a symbol manager, used to manage symbols.
+   *
+   * @param mapboxMap the map object to add symbols to
+   * @param style a valid a fully loaded style object
+   * @param belowLayerId the id of the layer above the circle layer
+   * @param clusterOptions options for the clustering configuration
+   */
+  @UiThread
+  public SymbolManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId, @NonNull ClusterOptions clusterOptions) {
+    this(mapView, mapboxMap, style, new SymbolElementProvider(), belowLayerId, new GeoJsonOptions().withCluster(true).withClusterRadius(clusterOptions.getClusterRadius()).withClusterMaxZoom(clusterOptions.getClusterMaxZoom()), DraggableAnnotationController.getInstance(mapView, mapboxMap));
+    clusterOptions.apply(style, coreElementProvider.getSourceId());
   }
 
   @VisibleForTesting

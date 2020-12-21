@@ -33,6 +33,11 @@ class FillElementProvider implements CoreElementProvider<FillLayer>{
   }
 
   @Override
+  public String getSourceId() {
+    return sourceId;
+  }
+
+  @Override
   public FillLayer getLayer() {
     return new FillLayer(layerId, sourceId);
   }

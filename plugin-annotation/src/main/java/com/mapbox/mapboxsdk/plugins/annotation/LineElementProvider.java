@@ -33,6 +33,11 @@ class LineElementProvider implements CoreElementProvider<LineLayer>{
   }
 
   @Override
+  public String getSourceId() {
+    return sourceId;
+  }
+
+  @Override
   public LineLayer getLayer() {
     return new LineLayer(layerId, sourceId);
   }

@@ -160,6 +160,17 @@
               android:value=".activity.FeatureOverviewActivity" />
     </activity>
     <activity
+        android:name=".activity.annotation.ClusterSymbolActivity"
+        android:description="@string/description_symbol_cluster"
+        android:label="@string/title_symbol_cluster">
+      <meta-data
+          android:name="@string/category"
+          android:value="@string/category_annotation" />
+      <meta-data
+          android:name="android.support.PARENT_ACTIVITY"
+          android:value=".activity.FeatureOverviewActivity" />
+    </activity>
+    <activity
             android:name=".activity.annotation.DynamicSymbolChangeActivity"
             android:description="@string/description_symbol_change"
             android:label="@string/title_symbol_change">

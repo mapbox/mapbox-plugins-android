@@ -57,11 +57,11 @@ public abstract class AnnotationManager<
   private long currentId;
 
   protected L layer;
-  private GeoJsonSource geoJsonSource;
+  protected GeoJsonSource geoJsonSource;
   private final MapClickResolver mapClickResolver;
   private Style style;
   private String belowLayerId;
-  private CoreElementProvider<L> coreElementProvider;
+  protected CoreElementProvider<L> coreElementProvider;
   private DraggableAnnotationController draggableAnnotationController;
 
   @UiThread
