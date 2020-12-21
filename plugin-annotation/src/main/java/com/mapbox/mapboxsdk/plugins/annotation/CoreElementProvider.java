@@ -10,6 +10,8 @@ interface CoreElementProvider<L extends Layer> {
 
   String getLayerId();
 
+  String getSourceId();
+
   L getLayer();
 
   GeoJsonSource getSource(@Nullable GeoJsonOptions geoJsonOptions);

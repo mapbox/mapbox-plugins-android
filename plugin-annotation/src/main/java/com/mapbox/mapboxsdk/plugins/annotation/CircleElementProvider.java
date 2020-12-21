@@ -33,6 +33,11 @@ class CircleElementProvider implements CoreElementProvider<CircleLayer>{
   }
 
   @Override
+  public String getSourceId() {
+    return sourceId;
+  }
+
+  @Override
   public CircleLayer getLayer() {
     return new CircleLayer(layerId, sourceId);
   }

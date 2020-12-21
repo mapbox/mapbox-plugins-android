@@ -33,6 +33,11 @@ class SymbolElementProvider implements CoreElementProvider<SymbolLayer>{
   }
 
   @Override
+  public String getSourceId() {
+    return sourceId;
+  }
+
+  @Override
   public SymbolLayer getLayer() {
     return new SymbolLayer(layerId, sourceId);
   }

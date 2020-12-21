@@ -45,7 +45,7 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    */
   @UiThread
   public LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style) {
-    this(mapView, mapboxMap, style, null, null);
+    this(mapView, mapboxMap, style, null, (GeoJsonOptions) null);
   }
 
   /**
@@ -57,7 +57,7 @@ public class LineManager extends AnnotationManager<LineLayer, Line, LineOptions,
    */
   @UiThread
   public LineManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId) {
-    this(mapView, mapboxMap, style, belowLayerId, null);
+    this(mapView, mapboxMap, style, belowLayerId, (GeoJsonOptions) null);
   }
 
   /**

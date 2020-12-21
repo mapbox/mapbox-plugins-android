@@ -43,7 +43,7 @@ public class CircleManager extends AnnotationManager<CircleLayer, Circle, Circle
    */
   @UiThread
   public CircleManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style) {
-    this(mapView, mapboxMap, style, null, null);
+    this(mapView, mapboxMap, style, null, (GeoJsonOptions) null);
   }
 
   /**
@@ -55,7 +55,7 @@ public class CircleManager extends AnnotationManager<CircleLayer, Circle, Circle
    */
   @UiThread
   public CircleManager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId) {
-    this(mapView, mapboxMap, style, belowLayerId, null);
+    this(mapView, mapboxMap, style, belowLayerId, (GeoJsonOptions) null);
   }
 
   /**

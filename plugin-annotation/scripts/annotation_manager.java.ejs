@@ -49,7 +49,7 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
    */
   @UiThread
   public <%- camelize(type) %>Manager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style) {
-    this(mapView, mapboxMap, style, null, null);
+    this(mapView, mapboxMap, style, null, (GeoJsonOptions) null);
   }
 
   /**
@@ -61,7 +61,7 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
    */
   @UiThread
   public <%- camelize(type) %>Manager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId) {
-    this(mapView, mapboxMap, style, belowLayerId, null);
+    this(mapView, mapboxMap, style, belowLayerId, (GeoJsonOptions) null);
   }
 
   /**
@@ -76,6 +76,22 @@ public class <%- camelize(type) %>Manager extends AnnotationManager<<%- camelize
   public <%- camelize(type) %>Manager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions) {
     this(mapView, mapboxMap, style, new <%- camelize(type) %>ElementProvider(), belowLayerId, geoJsonOptions, DraggableAnnotationController.getInstance(mapView, mapboxMap));
   }
+<% if (type === "symbol") { -%>
+
+  /**
+   * Create a <%- type %> manager, used to manage <%- type %>s.
+   *
+   * @param mapboxMap the map object to add <%- type %>s to
+   * @param style a valid a fully loaded style object
+   * @param belowLayerId the id of the layer above the circle layer
+   * @param clusterOptions options for the clustering configuration
+   */
+  @UiThread
+  public <%- camelize(type) %>Manager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @Nullable String belowLayerId, @NonNull ClusterOptions clusterOptions) {
+    this(mapView, mapboxMap, style, new SymbolElementProvider(), belowLayerId, new GeoJsonOptions().withCluster(true).withClusterRadius(clusterOptions.getClusterRadius()).withClusterMaxZoom(clusterOptions.getClusterMaxZoom()), DraggableAnnotationController.getInstance(mapView, mapboxMap));
+    clusterOptions.apply(style, coreElementProvider.getSourceId());
+  }
+<% } -%>
 
   @VisibleForTesting
   <%- camelize(type) %>Manager(@NonNull MapView mapView, @NonNull MapboxMap mapboxMap, @NonNull Style style, @NonNull CoreElementProvider<<%- camelize(type) %>Layer> coreElementProvider, @Nullable String belowLayerId, @Nullable GeoJsonOptions geoJsonOptions, DraggableAnnotationController draggableAnnotationController) {

@@ -38,6 +38,11 @@ class <%- camelize(type) %>ElementProvider implements CoreElementProvider<<%- ca
   }
 
   @Override
+  public String getSourceId() {
+    return sourceId;
+  }
+
+  @Override
   public <%- camelize(type) %>Layer getLayer() {
     return new <%- camelize(type) %>Layer(layerId, sourceId);
   }
