@@ -176,12 +176,12 @@ public class LineManagerTest {
 
     Feature feature = Feature.fromGeometry(geometry);
     feature.addStringProperty("line-join", LINE_JOIN_BEVEL);
-    feature.addNumberProperty("line-opacity", 0.3f);
+    feature.addNumberProperty("line-opacity", 2.0f);
     feature.addStringProperty("line-color", "rgba(0, 0, 0, 1)");
-    feature.addNumberProperty("line-width", 0.3f);
-    feature.addNumberProperty("line-gap-width", 0.3f);
-    feature.addNumberProperty("line-offset", 0.3f);
-    feature.addNumberProperty("line-blur", 0.3f);
+    feature.addNumberProperty("line-width", 2.0f);
+    feature.addNumberProperty("line-gap-width", 2.0f);
+    feature.addNumberProperty("line-offset", 2.0f);
+    feature.addNumberProperty("line-blur", 2.0f);
     feature.addStringProperty("line-pattern", "pedestrian-polygon");
     feature.addBooleanProperty("is-draggable", true);
 
@@ -190,12 +190,12 @@ public class LineManagerTest {
 
     assertEquals(line.geometry, geometry);
     assertEquals(line.getLineJoin(), LINE_JOIN_BEVEL);
-    assertEquals(line.getLineOpacity(), 0.3f);
+    assertEquals(line.getLineOpacity(), 2.0f);
     assertEquals(line.getLineColor(), "rgba(0, 0, 0, 1)");
-    assertEquals(line.getLineWidth(), 0.3f);
-    assertEquals(line.getLineGapWidth(), 0.3f);
-    assertEquals(line.getLineOffset(), 0.3f);
-    assertEquals(line.getLineBlur(), 0.3f);
+    assertEquals(line.getLineWidth(), 2.0f);
+    assertEquals(line.getLineGapWidth(), 2.0f);
+    assertEquals(line.getLineOffset(), 2.0f);
+    assertEquals(line.getLineBlur(), 2.0f);
     assertEquals(line.getLinePattern(), "pedestrian-polygon");
     assertTrue(line.isDraggable());
   }
@@ -304,7 +304,7 @@ public class LineManagerTest {
     List<LatLng>latLngs = new ArrayList<>();
     latLngs.add(new LatLng());
     latLngs.add(new LatLng(1,1));
-    LineOptions options = new LineOptions().withLatLngs(latLngs).withLineOpacity(0.3f);
+    LineOptions options = new LineOptions().withLatLngs(latLngs).withLineOpacity(2.0f);
     lineManager.create(options);
     verify(lineLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(lineOpacity(get("line-opacity")))));
 
@@ -336,7 +336,7 @@ public class LineManagerTest {
     List<LatLng>latLngs = new ArrayList<>();
     latLngs.add(new LatLng());
     latLngs.add(new LatLng(1,1));
-    LineOptions options = new LineOptions().withLatLngs(latLngs).withLineWidth(0.3f);
+    LineOptions options = new LineOptions().withLatLngs(latLngs).withLineWidth(2.0f);
     lineManager.create(options);
     verify(lineLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(lineWidth(get("line-width")))));
 
@@ -352,7 +352,7 @@ public class LineManagerTest {
     List<LatLng>latLngs = new ArrayList<>();
     latLngs.add(new LatLng());
     latLngs.add(new LatLng(1,1));
-    LineOptions options = new LineOptions().withLatLngs(latLngs).withLineGapWidth(0.3f);
+    LineOptions options = new LineOptions().withLatLngs(latLngs).withLineGapWidth(2.0f);
     lineManager.create(options);
     verify(lineLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(lineGapWidth(get("line-gap-width")))));
 
@@ -368,7 +368,7 @@ public class LineManagerTest {
     List<LatLng>latLngs = new ArrayList<>();
     latLngs.add(new LatLng());
     latLngs.add(new LatLng(1,1));
-    LineOptions options = new LineOptions().withLatLngs(latLngs).withLineOffset(0.3f);
+    LineOptions options = new LineOptions().withLatLngs(latLngs).withLineOffset(2.0f);
     lineManager.create(options);
     verify(lineLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(lineOffset(get("line-offset")))));
 
@@ -384,7 +384,7 @@ public class LineManagerTest {
     List<LatLng>latLngs = new ArrayList<>();
     latLngs.add(new LatLng());
     latLngs.add(new LatLng(1,1));
-    LineOptions options = new LineOptions().withLatLngs(latLngs).withLineBlur(0.3f);
+    LineOptions options = new LineOptions().withLatLngs(latLngs).withLineBlur(2.0f);
     lineManager.create(options);
     verify(lineLayer, times(1)).setProperties(argThat(new PropertyValueMatcher(lineBlur(get("line-blur")))));
 

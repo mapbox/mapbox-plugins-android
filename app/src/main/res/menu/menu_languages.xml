@@ -59,6 +59,16 @@
         app:showAsAction="never"/>
 
     <item
+        android:id="@+id/vietnamese"
+        android:title="Vietnamese"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/italian"
+        android:title="Italian"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/local"
         android:title="Local names"
         app:showAsAction="never"/>

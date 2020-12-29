@@ -235,7 +235,7 @@ global.defaultValueJava = function(property) {
       case 'boolean':
         return 'true';
       case 'number':
-        return '0.3f';
+        return '2.0f';
       case 'formatted':
       case 'string':
         return '"' + property['default'] + '"';

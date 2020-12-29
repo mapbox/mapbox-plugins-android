@@ -52,8 +52,8 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setSymbolSortKey(0.3f);
-      assertEquals((Float) symbol.getSymbolSortKey(), (Float) 0.3f);
+      symbol.setSymbolSortKey(2.0f);
+      assertEquals((Float) symbol.getSymbolSortKey(), (Float) 2.0f);
     });
   }
 
@@ -65,8 +65,8 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setIconSize(0.3f);
-      assertEquals((Float) symbol.getIconSize(), (Float) 0.3f);
+      symbol.setIconSize(2.0f);
+      assertEquals((Float) symbol.getIconSize(), (Float) 2.0f);
     });
   }
 
@@ -91,8 +91,8 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setIconRotate(0.3f);
-      assertEquals((Float) symbol.getIconRotate(), (Float) 0.3f);
+      symbol.setIconRotate(2.0f);
+      assertEquals((Float) symbol.getIconRotate(), (Float) 2.0f);
     });
   }
 
@@ -156,8 +156,8 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setTextSize(0.3f);
-      assertEquals((Float) symbol.getTextSize(), (Float) 0.3f);
+      symbol.setTextSize(2.0f);
+      assertEquals((Float) symbol.getTextSize(), (Float) 2.0f);
     });
   }
 
@@ -169,8 +169,8 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setTextMaxWidth(0.3f);
-      assertEquals((Float) symbol.getTextMaxWidth(), (Float) 0.3f);
+      symbol.setTextMaxWidth(2.0f);
+      assertEquals((Float) symbol.getTextMaxWidth(), (Float) 2.0f);
     });
   }
 
@@ -182,8 +182,8 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setTextLetterSpacing(0.3f);
-      assertEquals((Float) symbol.getTextLetterSpacing(), (Float) 0.3f);
+      symbol.setTextLetterSpacing(2.0f);
+      assertEquals((Float) symbol.getTextLetterSpacing(), (Float) 2.0f);
     });
   }
 
@@ -208,8 +208,8 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setTextRadialOffset(0.3f);
-      assertEquals((Float) symbol.getTextRadialOffset(), (Float) 0.3f);
+      symbol.setTextRadialOffset(2.0f);
+      assertEquals((Float) symbol.getTextRadialOffset(), (Float) 2.0f);
     });
   }
 
@@ -234,8 +234,8 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setTextRotate(0.3f);
-      assertEquals((Float) symbol.getTextRotate(), (Float) 0.3f);
+      symbol.setTextRotate(2.0f);
+      assertEquals((Float) symbol.getTextRotate(), (Float) 2.0f);
     });
   }
 
@@ -273,8 +273,8 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setIconOpacity(0.3f);
-      assertEquals((Float) symbol.getIconOpacity(), (Float) 0.3f);
+      symbol.setIconOpacity(2.0f);
+      assertEquals((Float) symbol.getIconOpacity(), (Float) 2.0f);
     });
   }
 
@@ -338,8 +338,8 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setIconHaloWidth(0.3f);
-      assertEquals((Float) symbol.getIconHaloWidth(), (Float) 0.3f);
+      symbol.setIconHaloWidth(2.0f);
+      assertEquals((Float) symbol.getIconHaloWidth(), (Float) 2.0f);
     });
   }
 
@@ -351,8 +351,8 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setIconHaloBlur(0.3f);
-      assertEquals((Float) symbol.getIconHaloBlur(), (Float) 0.3f);
+      symbol.setIconHaloBlur(2.0f);
+      assertEquals((Float) symbol.getIconHaloBlur(), (Float) 2.0f);
     });
   }
 
@@ -364,8 +364,8 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setTextOpacity(0.3f);
-      assertEquals((Float) symbol.getTextOpacity(), (Float) 0.3f);
+      symbol.setTextOpacity(2.0f);
+      assertEquals((Float) symbol.getTextOpacity(), (Float) 2.0f);
     });
   }
 
@@ -429,8 +429,8 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setTextHaloWidth(0.3f);
-      assertEquals((Float) symbol.getTextHaloWidth(), (Float) 0.3f);
+      symbol.setTextHaloWidth(2.0f);
+      assertEquals((Float) symbol.getTextHaloWidth(), (Float) 2.0f);
     });
   }
 
@@ -442,8 +442,8 @@ public class SymbolTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(symbol);
 
-      symbol.setTextHaloBlur(0.3f);
-      assertEquals((Float) symbol.getTextHaloBlur(), (Float) 0.3f);
+      symbol.setTextHaloBlur(2.0f);
+      assertEquals((Float) symbol.getTextHaloBlur(), (Float) 2.0f);
     });
   }
 }

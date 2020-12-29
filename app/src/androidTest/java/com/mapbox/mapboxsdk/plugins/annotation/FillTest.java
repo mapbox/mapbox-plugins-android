@@ -58,8 +58,8 @@ public class FillTest extends BaseActivityTest {
     invoke(mapboxMap, (uiController, mapboxMap) -> {
       assertNotNull(fill);
 
-      fill.setFillOpacity(0.3f);
-      assertEquals((Float) fill.getFillOpacity(), (Float) 0.3f);
+      fill.setFillOpacity(2.0f);
+      assertEquals((Float) fill.getFillOpacity(), (Float) 2.0f);
     });
   }
 
