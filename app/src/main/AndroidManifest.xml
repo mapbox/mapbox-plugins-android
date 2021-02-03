@@ -68,6 +68,7 @@
     </activity>
     <activity
       android:name=".activity.offline.OfflineDownloadActivity"
+        android:exported="true"
       android:description="@string/description_offline_plugin"
       android:label="@string/title_offline_plugin">
       <meta-data

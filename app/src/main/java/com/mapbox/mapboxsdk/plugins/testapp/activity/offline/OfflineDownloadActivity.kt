@@ -5,21 +5,23 @@ import android.widget.ArrayAdapter
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-
+import com.mapbox.geojson.LineString
+import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.constants.MapboxConstants
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.offline.OfflineGeometryRegionDefinition
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition
-import com.mapbox.mapboxsdk.plugins.offline.offline.OfflinePlugin
 import com.mapbox.mapboxsdk.plugins.offline.model.NotificationOptions
 import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions
+import com.mapbox.mapboxsdk.plugins.offline.offline.OfflineDownloadChangeListener
+import com.mapbox.mapboxsdk.plugins.offline.offline.OfflinePlugin
 import com.mapbox.mapboxsdk.plugins.offline.utils.OfflineUtils
 import com.mapbox.mapboxsdk.plugins.testapp.R
-
-import java.util.ArrayList
-
 import kotlinx.android.synthetic.main.activity_offline_download.*
+import timber.log.Timber
+import java.util.*
 
 /**
  * Activity showing a form to configure the download of an offline region.
@@ -124,33 +126,72 @@ class OfflineDownloadActivity : AppCompatActivity() {
             return
         }
 
-        // create offline definition from data
-        val definition = OfflineTilePyramidRegionDefinition(
-                styleUrl,
-                LatLngBounds.Builder()
-                        .include(LatLng(latitudeNorth, longitudeEast))
-                        .include(LatLng(latitudeSouth, longitudeWest))
-                        .build(),
-                minZoom.toDouble(),
-                maxZoom.toDouble(),
-                resources.displayMetrics.density
-        )
+    // create offline definition from data
+    val detailDownloadDefinition = OfflineGeometryRegionDefinition(
+      styleUrl,
+      LineString.fromLngLats(listOf(Point.fromLngLat(latitudeNorth, longitudeEast), Point.fromLngLat(latitudeSouth, longitudeWest))),
 
-        // customize notification appearance
-        val notificationOptions = NotificationOptions.builder(this)
-                .smallIconRes(R.drawable.mapbox_logo_icon)
-                .returnActivity(OfflineRegionDetailActivity::class.java.name)
-                .build()
+      14.0,
+      19.0,
+      resources.displayMetrics.density
+    )
 
-        // start offline download
-        OfflinePlugin.getInstance(this).startDownload(
-                OfflineDownloadOptions.builder()
-                        .definition(definition)
-                        .metadata(OfflineUtils.convertRegionName(regionName))
-                        .notificationOptions(notificationOptions)
-                        .build()
-        )
-    }
+    val overviewDownloadOptions = OfflineTilePyramidRegionDefinition(
+      styleUrl,
+      LatLngBounds.Builder()
+        .include(LatLng(latitudeNorth, longitudeEast))
+        .include(LatLng(latitudeSouth, longitudeWest))
+        .build(),
+      0.0,
+      13.0,
+      resources.displayMetrics.density
+    )
+    // customize notification appearance
+    val notificationOptions = NotificationOptions.builder(this)
+      .smallIconRes(R.drawable.mapbox_logo_icon)
+      .returnActivity(OfflineRegionDetailActivity::class.java.name)
+      .build()
+
+    OfflinePlugin.getInstance(this).addOfflineDownloadStateChangeListener(object : OfflineDownloadChangeListener {
+      override fun onCreate(offlineDownload: OfflineDownloadOptions?) {
+        Timber.d("onCreate: ${offlineDownload?.uuid()}")
+      }
+
+      override fun onSuccess(offlineDownload: OfflineDownloadOptions?) {
+        Timber.d("onSuccess: ${offlineDownload?.uuid()}")
+      }
+
+      override fun onCancel(offlineDownload: OfflineDownloadOptions?) {
+        Timber.d("onCancel: ${offlineDownload?.uuid()}")
+      }
+
+      override fun onError(offlineDownload: OfflineDownloadOptions?, error: String?, message: String?) {
+        Timber.d("onError: ${offlineDownload?.uuid()}")
+      }
+
+      override fun onProgress(offlineDownload: OfflineDownloadOptions?, progress: Int) {
+        Timber.d("onProgress:${offlineDownload?.uuid()}")
+      }
+
+    })
+    // start offline download
+    OfflinePlugin.getInstance(this).startDownload(
+      OfflineDownloadOptions.builder()
+        .definition(detailDownloadDefinition)
+        .regionName(regionName)
+        .metadata(OfflineUtils.convertRegionName(regionName))
+        .notificationOptions(notificationOptions)
+        .build()
+    )
+    OfflinePlugin.getInstance(this).startDownload(
+      OfflineDownloadOptions.builder()
+        .definition(overviewDownloadOptions)
+        .regionName(regionName)
+        .metadata(OfflineUtils.convertRegionName(regionName))
+        .notificationOptions(notificationOptions)
+        .build()
+    )
+  }
 
     private fun validCoordinates(
       latitudeNorth: Double,
