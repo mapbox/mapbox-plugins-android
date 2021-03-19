@@ -149,8 +149,11 @@ public class OfflineDownloadService extends Service {
         getApplicationContext(), offlineDownload), offlineDownload.notificationOptions(),
       OfflineDownloadStateReceiver.createCancelIntent(getApplicationContext(), offlineDownload)
     );
-    startForeground(offlineDownload.uuid().intValue(), notificationBuilder.build());
-
+    if (regionLongSparseArray.isEmpty()) {
+      startForeground(offlineDownload.uuid().intValue(), notificationBuilder.build());
+    } else {
+      notificationManager.notify(offlineDownload.uuid().intValue(), notificationBuilder.build());
+    }
     if (offlineDownload.notificationOptions().requestMapSnapshot()) {
       // create map bitmap to show as notification icon
       createMapSnapshot(offlineDownload.definition(), new MapSnapshotter.SnapshotReadyCallback() {
