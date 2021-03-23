@@ -25,7 +25,7 @@ javadoc:
 
 # Uploads the compiled Android SDK to Mapbox SDK Registry
 publish:
-	export ./gradlew mapboxSDKRegistryUpload
+	./gradlew mapboxSDKRegistryUpload
 
 generate-sanity-test:
 	npm install && node scripts/generate-activity-test.js
@@ -51,7 +51,7 @@ javadoc-$1:
 	./gradlew :$2:javadocrelease
 
 publish-$1:
-	export./gradlew :$2:mapboxSDKRegistryUpload
+	./gradlew :$2:mapboxSDKRegistryUpload
 
 endef
 

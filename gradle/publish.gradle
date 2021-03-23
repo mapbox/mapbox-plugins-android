@@ -59,7 +59,7 @@ task androidJavadocs(type: Javadoc) {
 }
 
 task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-    classifier = 'javadoc'
+    classifier = 'dokka'
     from androidJavadocs.destinationDir
 }
 
