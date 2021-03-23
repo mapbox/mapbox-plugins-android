@@ -23,12 +23,9 @@ javadoc:
 	# Output is ./mapbox/*/build/docs/javadoc/release
 	./gradlew javadocrelease
 
+# Uploads the compiled Android SDK to Mapbox SDK Registry
 publish:
-	export IS_LOCAL_DEVELOPMENT=false; ./gradlew uploadArchives
-
-publish-local:
-	# This publishes to ~/.m2/repository/com/mapbox/mapboxsdk
-	export IS_LOCAL_DEVELOPMENT=true; ./gradlew uploadArchives
+	./gradlew mapboxSDKRegistryUpload
 
 generate-sanity-test:
 	npm install && node scripts/generate-activity-test.js
@@ -54,11 +51,7 @@ javadoc-$1:
 	./gradlew :$2:javadocrelease
 
 publish-$1:
-	export IS_LOCAL_DEVELOPMENT=false; ./gradlew :$2:uploadArchives
-
-publish-local-$1:
-	# This publishes to ~/.m2/repository/com/mapbox/mapboxsdk
-	export IS_LOCAL_DEVELOPMENT=true; ./gradlew :$2:uploadArchives
+	./gradlew :$2:mapboxSDKRegistryUpload
 
 endef
 
