@@ -77,9 +77,13 @@ The Mapbox Plugins for Android are heavily dependent on the major semantic versi
 
 ## Help and Usage
 
-This repository includes an app that shows how to use each plugins in this repository. [Check out its code](https://github.com/mapbox/mapbox-plugins-android/tree/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp) for ready-to-use snippets.
+A plugin is simply a library module built on top of the Mapbox Maps SDK for Android. Plugins can be easy to use. Currently, we are not requiring plugins to register themselves or to implement any specific interfaces so that they're simple to consume.
 
-Plugins are easy to use. A plugin is simply a library module built on top of the Mapbox Maps SDK for Android. Currently, we are not requiring plugins to register themselves or to implement any specific interfaces so that they're simple to consume.
+### Test app
+
+This repository includes an app with examples showing how you can use each plugin.
+- To access ready-to-use snippets, [see its code here](https://github.com/mapbox/mapbox-plugins-android/tree/master/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp).
+- To run the application locally, open the [`PluginApplication`](https://github.com/mapbox/mapbox-plugins-android/blob/4ff768983323cc4a57791bcb577639109e4fd9ce/app/src/main/java/com/mapbox/mapboxsdk/plugins/testapp/PluginApplication.kt) file and replace `mapbox_access_token` with your own Mapbox token from [https://account.mapbox.com](https://account.mapbox.com).
 
 This might change in the future as we build more plugins and learn how you use them. We'd love to [hear your feedback](https://github.com/mapbox/mapbox-plugins-android/issues).
 
