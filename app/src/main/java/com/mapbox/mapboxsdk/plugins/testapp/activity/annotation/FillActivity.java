@@ -67,10 +67,11 @@ public class FillActivity extends AppCompatActivity {
 
       // create a fixed fill
       List<LatLng> innerLatLngs = new ArrayList<>();
-      innerLatLngs.add(new LatLng(-10.733102, -3.363937));
-      innerLatLngs.add(new LatLng(-19.716317, 1.754703));
-      innerLatLngs.add(new LatLng(-21.085074, -15.747196));
-      innerLatLngs.add(new LatLng(-10.733102, -3.363937));
+      innerLatLngs.add(new LatLng(-35.317366, -74.179687));
+      innerLatLngs.add(new LatLng(-35.317366, -30.761718));
+      innerLatLngs.add(new LatLng(  4.740675, -30.761718));
+      innerLatLngs.add(new LatLng(  4.740675, -74.179687));
+      innerLatLngs.add(new LatLng(-35.317366, -74.179687));
       List<List<LatLng>> latLngs = new ArrayList<>();
       latLngs.add(innerLatLngs);
 
