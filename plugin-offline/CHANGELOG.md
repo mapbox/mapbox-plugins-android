@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### mapbox-android-plugin-offline-v9:0.8.0 - XXX
+#### Bugs
+- Cancel download should remove region definition [#1145](https://github.com/mapbox/mapbox-plugins-android/pull/1145)
+
 ### mapbox-android-plugin-offline-v9:0.7.0 - March 5, 2020
 #### Features
 - Switching all plugins to AndroidX [#1100](https://github.com/mapbox/mapbox-plugins-android/pull/1100)
