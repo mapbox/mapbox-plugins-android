@@ -81,7 +81,12 @@ final class DraggableAnnotationController {
         Annotation oldAnnotation = draggedAnnotation;
         androidGesturesManager.onTouchEvent(event);
         // if drag is started or drag is finished, don't pass motion events further
-        return draggedAnnotation != null || oldAnnotation != null;
+
+        // Note(leo): added check for MotionEvent.ACTION_MOVE,
+        // without this all the draggable markers will receive onLongClick event when you single tapped :/
+        // and that is coming from an android View (perform long click)
+        return draggedAnnotation != null || oldAnnotation != null
+            && event.getAction() == MotionEvent.ACTION_MOVE;
       }
     });
   }
@@ -131,6 +136,12 @@ final class DraggableAnnotationController {
 
       if (pointF.x < 0 || pointF.y < 0 || pointF.x > touchAreaMaxX || pointF.y > touchAreaMaxY) {
         stopDragging(draggedAnnotation, draggedAnnotationManager);
+        return true;
+      }
+
+      if (moveObject.getDistanceXSinceStart() == 0 && moveObject.getDistanceYSinceStart() == 0
+          && moveObject.getDistanceXSinceLast() == 0 && moveObject.getDistanceYSinceLast() == 0) {
+        // fix the bug where you didn't actually touch drag with a finger but get the marker moved
         return true;
       }
 
