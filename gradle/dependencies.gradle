@@ -76,8 +76,6 @@
           // square crew
           timber                 : "com.jakewharton.timber:timber:${version.timber}",
           leakCanaryDebug        : "com.squareup.leakcanary:leakcanary-android:${version.leakCanary}",
-          leakCanaryRelease      : "com.squareup.leakcanary:leakcanary-android-no-op:${version.leakCanary}",
-          leakCanaryTest         : "com.squareup.leakcanary:leakcanary-android-no-op:${version.leakCanary}",
 
           // instrumentation test
           testRunner             : 'androidx.test.ext:junit:1.1.1',
