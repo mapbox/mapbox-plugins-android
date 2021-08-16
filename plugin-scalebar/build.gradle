@@ -25,6 +25,8 @@ android {
 
 dependencies {
     implementation dependenciesList.mapboxMapSdk
+    implementation dependenciesList.supportAnnotation
+    implementation dependenciesList.androidCore
     javadocDeps dependenciesList.mapboxMapSdk
     testImplementation dependenciesList.kotlin
     testImplementation dependenciesList.mockk

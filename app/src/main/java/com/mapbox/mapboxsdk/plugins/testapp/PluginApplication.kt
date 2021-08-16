@@ -1,21 +1,15 @@
 package com.mapbox.mapboxsdk.plugins.testapp
 
-import android.app.Application
+import androidx.multidex.MultiDexApplication
 
 import com.mapbox.mapboxsdk.Mapbox
-import com.squareup.leakcanary.LeakCanary
 
 import timber.log.Timber
 
-class PluginApplication : Application() {
+class PluginApplication : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return
-        }
-
-        LeakCanary.install(this)
         initializeLogger()
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token))
     }

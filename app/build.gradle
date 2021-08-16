@@ -12,6 +12,7 @@ android {
     applicationId "com.mapbox.mapboxsdk.plugins.testapp"
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     vectorDrawables.useSupportLibrary = true
+    multiDexEnabled = true
   }
 
   buildTypes {
@@ -64,12 +65,15 @@ dependencies {
     exclude group: 'android.arch.lifecycle'
     exclude group: 'com.google.android.gms'
   })
-  implementation dependenciesList.mapboxGeocoding
+  implementation (dependenciesList.mapboxGeocoding, {
+    exclude group: 'com.squareup.okhttp3'
+  })
   implementation dependenciesList.mapboxTurf
 
   // Architecture
   implementation dependenciesList.lifecycleExtensions
   implementation dependenciesList.roomRuntime
+  implementation dependenciesList.androidxMultidex
   kapt dependenciesList.roomCompiler
 
   // Google Play Services
