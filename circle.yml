@@ -70,7 +70,7 @@ jobs:
               gcloud firebase test android run --type instrumentation \
                 --app app/build/outputs/apk/debug/app-debug.apk \
                 --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
-                --device-ids sailfish --os-version-ids 26 --locales en --orientations portrait --timeout 20m
+                --device-ids blueline --os-version-ids 28 --locales en --orientations portrait --timeout 20m
             fi
       - store_artifacts:
           path: app/build/reports
@@ -91,18 +91,6 @@ jobs:
       - run:
           name: Init submodules
           command: git submodule update --init --recursive
-      - run:
-          name: Generate Maven credentials
-          shell: /bin/bash -euo pipefail
-          command: |
-            if [ -n "${PUBLISH_NEXUS_USERNAME}" ]; then
-              aws s3 cp s3://mapbox/android/signing-credentials/secring.gpg secring.gpg
-              echo "NEXUS_USERNAME=$PUBLISH_NEXUS_USERNAME
-              NEXUS_PASSWORD=$PUBLISH_NEXUS_PASSWORD
-              signing.keyId=$SIGNING_KEYID
-              signing.password=$SIGNING_PASSWORD
-              signing.secretKeyRingFile=../secring.gpg" >> gradle.properties
-            fi
       - run:
           name: Build Plugins SDK
           command: make build-release
