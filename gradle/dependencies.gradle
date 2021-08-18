@@ -7,7 +7,7 @@
   ]
 
   version = [
-      mapboxMapSdk       : '9.6.0',
+      mapboxMapSdk       : '9.6.2',
       mapboxJava         : '5.5.0',
       mapboxTurf         : '5.5.0',
       playLocation       : '16.0.0',
@@ -18,7 +18,7 @@
       constraintLayout   : '1.1.2',
       mockito            : '2.23.4',
       mockk              : '1.9.3',
-      leakCanary         : '1.6.3',
+      leakCanary         : '2.7',
       timber             : '4.7.1',
       testRunner         : '1.0.2',
       espresso           : '3.0.2',
@@ -27,7 +27,9 @@
       lifecycleLiveData  : '1.1.1',
       room               : '1.1.0',
       androidArchCore    : '1.1.0',
-      robolectric        : '3.8'
+      robolectric        : '3.8',
+      androidXCore       : '1.5.0',
+      androidxMultidex   : '2.0.1'
   ]
 
   pluginVersion = [
@@ -56,6 +58,7 @@
           autoValuesParcelAdapter: "com.ryanharter.auto.value:auto-value-parcel-adapter:${version.autoValueParcel}",
 
           // support
+          androidCore            : "androidx.core:core:${version.androidXCore}",
           supportAnnotation      : 'androidx.annotation:annotation:1.0.0',
           supportAppcompatV7     : 'androidx.appcompat:appcompat:1.0.0',
           supportV4              : 'androidx.legacy:legacy-support-v4:1.0.0',
@@ -69,12 +72,10 @@
           lifecycleCompiler      : "android.arch.lifecycle:compiler:${version.lifecycleCompiler}",
           roomRuntime            : 'androidx.room:room-runtime:2.0.0',
           roomCompiler           : 'androidx.room:room-compiler:2.0.0',
-
+          androidxMultidex       : "androidx.multidex:multidex:${version.androidxMultidex}",
           // square crew
           timber                 : "com.jakewharton.timber:timber:${version.timber}",
           leakCanaryDebug        : "com.squareup.leakcanary:leakcanary-android:${version.leakCanary}",
-          leakCanaryRelease      : "com.squareup.leakcanary:leakcanary-android-no-op:${version.leakCanary}",
-          leakCanaryTest         : "com.squareup.leakcanary:leakcanary-android-no-op:${version.leakCanary}",
 
           // instrumentation test
           testRunner             : 'androidx.test.ext:junit:1.1.1',

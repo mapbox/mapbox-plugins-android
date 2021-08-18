@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 import com.mapbox.mapboxsdk.plugins.offline.model.OfflineDownloadOptions;
 
@@ -90,6 +91,10 @@ public class OfflineDownloadStateReceiver extends BroadcastReceiver {
   }
 
   static PendingIntent createNotificationIntent(Context context, OfflineDownloadOptions offlineDownload) {
+    int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      flags |= PendingIntent.FLAG_IMMUTABLE;
+    }
     Class returnActivity = offlineDownload.notificationOptions().getReturnActivity();
     Intent notificationIntent = new Intent(context, returnActivity);
     notificationIntent.putExtra(KEY_BUNDLE, offlineDownload);
@@ -97,7 +102,7 @@ public class OfflineDownloadStateReceiver extends BroadcastReceiver {
       context,
       0,
       notificationIntent,
-      PendingIntent.FLAG_UPDATE_CURRENT
+      flags
     );
   }
 }

@@ -42,6 +42,10 @@ public class NotificationUtils {
                                                                  PendingIntent contentIntent,
                                                                  NotificationOptions options,
                                                                  Intent cancelIntent) {
+    int flags = PendingIntent.FLAG_CANCEL_CURRENT;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      flags |= PendingIntent.FLAG_IMMUTABLE;
+    }
     return new NotificationCompat.Builder(context, OfflineConstants.NOTIFICATION_CHANNEL)
       .setContentTitle(options.contentTitle())
       .setContentText(options.contentText())
@@ -51,7 +55,6 @@ public class NotificationUtils {
       .setContentIntent(contentIntent)
       .addAction(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? 0 : R.drawable.ic_cancel,
         options.cancelText(),
-        PendingIntent.getService(context, offlineDownload.uuid().intValue(), cancelIntent,
-          PendingIntent.FLAG_CANCEL_CURRENT));
+        PendingIntent.getService(context, offlineDownload.uuid().intValue(), cancelIntent, flags));
   }
 }

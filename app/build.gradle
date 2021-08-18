@@ -12,6 +12,7 @@ android {
     applicationId "com.mapbox.mapboxsdk.plugins.testapp"
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     vectorDrawables.useSupportLibrary = true
+    multiDexEnabled = true
   }
 
   buildTypes {
@@ -42,19 +43,6 @@ android {
   }
 }
 
-// Disable Leak Canary for UI and unit test.
-configurations.all { config ->
-  if (config.name.contains('UnitTest') || config.name.contains('AndroidTest')) {
-    config.resolutionStrategy.eachDependency { details ->
-      if (details.requested.group == 'com.squareup.leakcanary'
-          && details.requested.name == 'leakcanary-android') {
-        details.useTarget(group: details.requested.group, name: 'leakcanary-android-no-op',
-            version: details.requested.version)
-      }
-    }
-  }
-}
-
 dependencies {
   // Kotlin
   implementation dependenciesList.kotlin
@@ -64,12 +52,15 @@ dependencies {
     exclude group: 'android.arch.lifecycle'
     exclude group: 'com.google.android.gms'
   })
-  implementation dependenciesList.mapboxGeocoding
+  implementation (dependenciesList.mapboxGeocoding, {
+    exclude group: 'com.squareup.okhttp3'
+  })
   implementation dependenciesList.mapboxTurf
 
   // Architecture
   implementation dependenciesList.lifecycleExtensions
   implementation dependenciesList.roomRuntime
+  implementation dependenciesList.androidxMultidex
   kapt dependenciesList.roomCompiler
 
   // Google Play Services
@@ -103,8 +94,6 @@ dependencies {
 
   // Leak canary
   debugImplementation dependenciesList.leakCanaryDebug
-  releaseImplementation dependenciesList.leakCanaryRelease
-  testImplementation dependenciesList.leakCanaryTest
 
   // Plugin modules
   implementation project(':plugin-traffic')
