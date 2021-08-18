@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### mapbox-android-plugin-offline-v9:0.9.0 - August 18, 2021
+- Update compatibility for Android 12 [#1194](https://github.com/mapbox/mapbox-plugins-android/pull/1194)
+- Bump maps sdk to 9.6.2 [#1194](https://github.com/mapbox/mapbox-plugins-android/pull/1194)
+
 ### mapbox-android-plugin-offline-v9:0.8.0 - March 23, 2021
 #### Bugs
 - Fix download notification doesn't dismiss issue. [#1176](https://github.com/mapbox/mapbox-plugins-android/pull/1176)
