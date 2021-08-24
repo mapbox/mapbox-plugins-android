@@ -2,6 +2,9 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### mapbox-android-plugin-offline-v9:0.10.0 - August 24, 2021
+- Add throttle for offline plugin notification update [#1200](https://github.com/mapbox/mapbox-plugins-android/pull/1200)
+
 ### mapbox-android-plugin-offline-v9:0.9.0 - August 18, 2021
 - Update compatibility for Android 12 [#1194](https://github.com/mapbox/mapbox-plugins-android/pull/1194)
 - Bump maps sdk to 9.6.2 [#1194](https://github.com/mapbox/mapbox-plugins-android/pull/1194)

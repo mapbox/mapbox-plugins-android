@@ -52,6 +52,7 @@ public class OfflineDownloadService extends Service {
   // map offline regions to requests, ids are received with onStartCommand, these match serviceId
   // in OfflineDownloadOptions
   final LongSparseArray<OfflineRegion> regionLongSparseArray = new LongSparseArray<>();
+  final LongSparseArray<Integer> regionProgressSparseArray = new LongSparseArray<>();
 
   @Override
   public void onCreate() {
@@ -130,7 +131,7 @@ public class OfflineDownloadService extends Service {
               = offlineDownload.toBuilder().uuid(offlineRegion.getID()).build();
             OfflineDownloadStateReceiver.dispatchStartBroadcast(getApplicationContext(), options);
             regionLongSparseArray.put(options.uuid(), offlineRegion);
-
+            regionProgressSparseArray.put(options.uuid(), 0);
             launchDownload(options, offlineRegion);
             showNotification(options);
           }
@@ -209,6 +210,7 @@ public class OfflineDownloadService extends Service {
       notificationManager.cancel(regionId);
     }
     regionLongSparseArray.remove(regionId);
+    regionProgressSparseArray.remove(regionId);
     if (regionLongSparseArray.size() == 0) {
       stopForeground(true);
     }
@@ -266,11 +268,15 @@ public class OfflineDownloadService extends Service {
 
     offlineDownload = offlineDownload.toBuilder().progress(percentage).build();
 
-    if (percentage % 2 == 0 && regionLongSparseArray.get(offlineDownload.uuid().intValue()) != null) {
+    int uuid = offlineDownload.uuid().intValue();
+    Integer lastPercent = regionProgressSparseArray.get(uuid);
+    if (percentage % 2 == 0 && regionLongSparseArray.get(uuid) != null
+            && lastPercent != null && percentage != lastPercent) {
+      regionProgressSparseArray.put(uuid, percentage);
       OfflineDownloadStateReceiver.dispatchProgressChanged(this, offlineDownload, percentage);
       if (notificationBuilder != null) {
         notificationBuilder.setProgress(100, percentage, false);
-        notificationManager.notify(offlineDownload.uuid().intValue(), notificationBuilder.build());
+        notificationManager.notify(uuid, notificationBuilder.build());
       }
     }
   }
