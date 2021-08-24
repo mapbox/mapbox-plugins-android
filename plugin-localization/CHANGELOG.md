@@ -2,6 +2,11 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### mapbox-android-plugin-localization-v9:0.13.0 - August 24, 2021
+
+- Adding Vietnamese and Italian support to Localization Plugin[#1098](https://github.com/mapbox/mapbox-plugins-android/pull/1098)
+- Bump maps sdk to 9.6.2 [#1194](https://github.com/mapbox/mapbox-plugins-android/pull/1194)
+
 ### mapbox-android-plugin-localization-v9:0.12.0 - March 5, 2020
 #### Features
 - Switching all plugins to AndroidX [#1100](https://github.com/mapbox/mapbox-plugins-android/pull/1100)
