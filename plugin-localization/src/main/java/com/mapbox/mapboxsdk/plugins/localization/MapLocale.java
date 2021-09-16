@@ -348,6 +348,7 @@ public final class MapLocale {
     LOCALE_SET.put(new Locale("pt", "PT"), PORTUGAL);
     LOCALE_SET.put(new Locale("pt", "BR"), BRAZIL);
     LOCALE_SET.put(new Locale("vi", "VN"), VIETNAM);
+    LOCALE_SET.put(new Locale("vi"), VIETNAM);
     LOCALE_SET.put(Locale.ITALY, MapLocale.ITALY);
 
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
