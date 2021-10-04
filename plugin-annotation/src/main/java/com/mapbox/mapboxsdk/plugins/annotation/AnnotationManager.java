@@ -413,7 +413,7 @@ public abstract class AnnotationManager<
   T queryMapForFeatures(@NonNull PointF point) {
     List<Feature> features = mapboxMap.queryRenderedFeatures(point, coreElementProvider.getLayerId());
     if (!features.isEmpty()) {
-      long id = features.get(0).getProperty(getAnnotationIdKey()).getAsLong();
+      long id = features.get(features.size()-1).getProperty(getAnnotationIdKey()).getAsLong();
       return annotations.get(id);
     }
     return null;
